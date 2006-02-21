@@ -66,7 +66,7 @@ function module_builder_menu($may_cache) {
 function module_builder_settings() {
   $form['module_builder_hooks_path'] = array(
     '#type' => 'textfield',
-    '#title' => t('Path to hook documentation directory (with trailing slash)'),
+    '#title' => t('Path to hook documentation directory'),
     '#description' => t('Absolute path to the docs/developer/hooks directory of a local checkout of the contributions repository.'),
     '#default_value' => variable_get('module_builder_hooks_path', NULL),
   );
@@ -213,9 +213,9 @@ function module_builder_process($edit) {
 
   // Begin module output
   $header = t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $edit['module_root_name']));
-  $header .= '<pre>';
+  $header .= '<div class="codebox" style="height: 25em; overflow: auto;"><pre>';
   $output = $header_file;
-  $footer = '</pre>';
+  $footer = '</pre></div>';
   
   // Determine which hooks are to be implemented
   $implemented_hooks = array();
@@ -259,6 +259,9 @@ function module_builder_process($edit) {
  * @return unknown
  */
 function module_builder_get_hooks($path, $type = HOOK_NAME) {
+
+  // Add the trailing slash if we need it
+  $path = rtrim($path, '/') .'/';
 
   // Get list of files
   $files = module_builder_get_doc_files($path);
