@@ -6,8 +6,6 @@
  * Builds scaffolding for custom modules.
  */
 
-error_reporting(E_ALL);
-
 /** Type of hook information to extract from hook files */
 define('HOOK_FUNCTION_BODY', 1);
 define('HOOK_DEFINITION', 2);
@@ -207,7 +205,7 @@ function module_builder_process($edit) {
   $count = count($matches[0]);
   for ($i = 0; $i < $count; $i++) {
     $key = $matches[1][$i];
-    $value = $matches[2][$i];
+    $value = trim($matches[2][$i]);
     $hook_custom_definitions[$key] = $value;
   }
 
@@ -227,7 +225,7 @@ function module_builder_process($edit) {
 /**
  * Implementation of $hook().
  */
- ";
+";
 
         // See if function bodies exist; if so, use function bodies from template
         if (array_key_exists($hook, $hook_custom_definitions)) {
@@ -244,11 +242,14 @@ function module_builder_process($edit) {
   // Replace variables
   $variables = array(
     '%module' => $edit['module_root_name'],
-    '%description' => $edit['module_description'],
-    '%help' => isset($edit['module_help_text']) ? $edit['module_help_text'] : t('TODO: Create admin help text.'),
-    '%readable' => $edit['module_readable_name'],
+    '%description' => str_replace("'", "\'", $edit['module_short_description']),
+    '%help' => isset($edit['module_help_text']) ? str_replace("'", "\'", $edit['module_help_text']) : t('TODO: Create admin help text.'),
+    '%readable' => str_replace("'", "\'", $edit['module_readable_name']),
   );
   $output = strtr($output, $variables);
+
+  // Replace full-blown $Id$ tag with just starter
+  $output = preg_replace('#\/\/ \$Id(.*?)\$#', '// $Id$', $output);
 
   return $header . check_plain($output) . $footer;
 }
