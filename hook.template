@@ -33,7 +33,7 @@ function %module_block($op = 'list', $delta = 0, $edit = array()) {
 
 == START hook_elements ==
 function %module_elements() {
-  $type['example'] = array('#property' => t('TODO: Fill in appropriate properties and values for element type.');
+  $type['example'] = array('#property' => t('TODO: Fill in appropriate properties and values for element type.'));
   // OPTIONAL: Define additional element types.
   return $type;
 }
