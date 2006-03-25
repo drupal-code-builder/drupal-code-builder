@@ -210,11 +210,8 @@ function module_builder_process($edit) {
   }
 
   // Begin module output
-  $header = t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $edit['module_root_name']));
-  $header .= '<div class="codebox" style="height: 25em; overflow: auto;"><pre>';
   $output = $header_file;
-  $footer = '</pre></div>';
-  
+
   // Determine which hooks are to be implemented
   $implemented_hooks = array();
   foreach ($edit['hooks'] as $hooks) {
@@ -249,9 +246,33 @@ function module_builder_process($edit) {
   $output = strtr($output, $variables);
 
   // Replace full-blown $Id$ tag with just starter
-  $output = preg_replace('#\/\/ \$Id(.*?)\$#', '// $Id$', $output);
+  // (excuse the weird concatenation stuff; CVS hijacks it otherwise :))
+  $output = preg_replace('#\/\/ \$Id(.*?)\$#', '// $'. 'Id$', $output);
 
-  return $header . check_plain($output) . $footer;
+  // Prepare final output
+  $output = $header . check_plain($output) . $footer;
+
+  return theme('module_builder_results', $edit['module_root_name'], $output);
+}
+
+
+/**
+ * Theme function for displaying module_builder results.
+ *
+ * @param $name
+ *   The name of the module
+ * @param $code
+ *   The generated source code
+ * @return string
+ *   HTML output to display form
+ */
+function theme_module_builder_results($name, $code) {
+  $output = t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $name));
+  $output .= '<textarea cols="70" rows="40">';
+  $output .= $code;
+  $output .= '</textarea>';
+
+  return $output;
 }
 
 /**
