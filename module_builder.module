@@ -233,7 +233,7 @@ function module_builder_process($edit) {
         }
         else {
           // Otherwise, just use a generic one
-          $output .= $hook_default_definitions[$hook] ."\n\n}\n\n";
+          $output .= str_replace('hook', $edit['module_root_name'], $hook_default_definitions[$hook] ."\n\n}\n\n");
         }
       }
     }
