@@ -6,10 +6,13 @@
  * Builds scaffolding for custom modules.
  */
 
-/** Type of hook information to extract from hook files */
+/* Type of hook information to extract from hook files */
 define('HOOK_FUNCTION_BODY', 1);
 define('HOOK_DEFINITION', 2);
 define('HOOK_NAME', 3);
+
+/* Version of hook info to retrieve */
+define('MODULE_BUILDER_VERSION', 'HEAD');
 
 /**
  * @defgroup module_builder_core Core Drupal hooks
@@ -62,14 +65,46 @@ function module_builder_menu($may_cache) {
  * @ingroup module_builder_core
  */
 function module_builder_settings() {
-  $form['module_builder_hooks_path'] = array(
+  $op = $_POST['op'];
+
+  _module_builder_check_settings();
+
+  $form['module_builder_hooks_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to hook documentation directory'),
-    '#description' => t('Absolute path to the docs/developer/hooks directory of a local checkout of the contributions repository.'),
-    '#default_value' => variable_get('module_builder_hooks_path', NULL),
+    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => '<em>'. variable_get('file_directory_path', 'files') .'/</em>')),
+    '#default_value' => variable_get('module_builder_hooks_directory', 'hooks'),
+  );
+
+  if ($op == t('Update')) {
+    module_builder_update_documentation();
+  }
+
+  $form['module_builder_update'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Update hook documentation'),
+    '#description' => t('Your last hook documentation update was %date.', array('%date' => '<strong>'. variable_get('module_builder_last_update', 0) .'</strong>')),
+  );
+  $form['module_builder_update']['update'] = array(
+    '#type' => 'button',
+    '#value' => t('Update'),
   );
 
   return $form;
+}
+
+/**
+ * Create a directory to store hook files if it does not exist.
+ * 
+ * This logic blatantly ripped off from image.module -- thanks James! :)
+ */
+function _module_builder_check_settings() {
+  $hooks_path = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
+  file_check_directory($hooks_path, FILE_CREATE_DIRECTORY, 'module_builder_hooks_directory');
+  $last_update = variable_get('module_builder_last_update', 0);
+  if (!$last_update) {
+    module_builder_update_documentation();
+  }
 }
 
 /**
@@ -84,6 +119,8 @@ function module_builder_settings() {
  *   Form for entering module options
  */
 function module_builder_page() {
+
+  _module_builder_check_settings();
 
   // Check for form submission
   $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
@@ -121,7 +158,7 @@ function module_builder_page() {
   );
 
   // Get list of hooks
-  $hook_groups = module_builder_get_hooks(variable_get('module_builder_hooks_path', NULL));
+  $hook_groups = module_builder_get_hooks();
 
   if (!is_array($hook_groups) || !count($hook_groups)) {
     form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="%settings">admininster >> settings >> modulebuilder</a> page.', array('%settings' => url('admin/settings/module_builder'))));
@@ -178,6 +215,7 @@ function module_builder_validate($form_id, $form_values) {
  * Proceses form once submitted.
  */
 function module_builder_process($edit) {
+
   $path = drupal_get_path('module', 'module_builder');
 
   // Check for custom header file, else use the default
@@ -197,7 +235,7 @@ function module_builder_process($edit) {
   }
 
   // Get array of default hook definitions
-  $hook_default_definitions = module_builder_get_hooks(variable_get('module_builder_hooks_path', NULL), HOOK_DEFINITION);
+  $hook_default_definitions = module_builder_get_hooks(HOOK_DEFINITION);
 
   // Get array of custom hook definitions
   $hook_custom_definitions = array();
@@ -280,10 +318,10 @@ function theme_module_builder_results($name, $code) {
  *
  * @return unknown
  */
-function module_builder_get_hooks($path, $type = HOOK_NAME) {
+function module_builder_get_hooks($type = HOOK_NAME) {
 
-  // Add the trailing slash if we need it
-  $path = rtrim($path, '/') .'/';
+  // Find path of hooks directory
+  $path = file_create_path(variable_get('module_builder_hooks_directory', 'hooks')) .'/';
 
   // Get list of files
   $files = module_builder_get_doc_files($path);
@@ -385,4 +423,42 @@ function _module_builder_extract_hook_data($path, $file, $type = HOOK_NAME) {
     }
     return $matches_array;
   }
+}
+
+/**
+ * Initiates documentation upate routine.
+ */
+function module_builder_update_documentation() {
+  // Retrieve remote hook file listing from cvs.drupal.org
+  $hook_listing = drupal_http_request('http://cvs.drupal.org/viewcvs/drupal/contributions/docs/developer/hooks/?only_with_tag='. MODULE_BUILDER_VERSION);
+  if ($hook_listing->error) {
+    return FALSE;
+  }
+
+  $url_pattern = '!<td>\&nbsp;<a href="(.*?)"!';
+  $file_pattern = '!(.*)/(.*?)\?!';
+  $hook_files = array();
+
+  // Parse out list of URLs
+  preg_match_all($url_pattern, $hook_listing->data, $url_matches);
+  foreach ($url_matches[1] as $url_match) {
+
+    // Parse out file name
+    preg_match($file_pattern, $url_match, $file_matches);
+
+    // Store value of URL to hook documentation file and its name
+    $hook_file_url = 'http://cvs.drupal.org'. $url_match;
+    $hook_file_name = $file_matches[2];
+    $hook_files[$hook_file_name] = $hook_file_url;
+  }
+
+  // Retrieve each file and store it in the hooks directory, overwriting what's currently there
+  $directory = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
+  foreach ($hook_files as $file_name => $file_url) {
+    $file_contents = drupal_http_request($file_url);
+    file_save_data($file_contents->data, "$directory/$file_name", FILE_EXISTS_REPLACE);
+  }
+
+  // Finally, set the last updated variable
+  variable_set('module_builder_last_update', format_date(time()));
 }
