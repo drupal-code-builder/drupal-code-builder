@@ -6,7 +6,6 @@
  */
 
 == START hook_block ==
-function %module_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
     $blocks[0]['info'] = t('TODO: Fill in block description');
     // OPTIONAL: Add additional block descriptions here, if required.
@@ -28,19 +27,15 @@ function %module_block($op = 'list', $delta = 0, $edit = array()) {
     }
     return $block;
   }
-}
 == END hook_block ==
 
 == START hook_elements ==
-function %module_elements() {
   $type['example'] = array('#property' => t('TODO: Fill in appropriate properties and values for element type.'));
   // OPTIONAL: Define additional element types.
   return $type;
-}
 == END hook_elements ==
 
 == START hook_filter ==
-function %module_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
       return array(t('TODO: Fill in name of filter.'));
@@ -59,11 +54,9 @@ function %module_filter($op, $delta = 0, $format = -1, $text = '') {
     default:
       return $text;
   }
-}
 == END hook_filter ==
 
 == START hook_filter_tips ==
-function %module_filter_tips($delta, $format, $long = false) {
   // OPTIONAL: If more than one filter was defined in hook_filter, perform switch on $delta
   switch ($long) {
     case 0:
@@ -71,11 +64,9 @@ function %module_filter_tips($delta, $format, $long = false) {
     case 1:
       return t("TODO: Enter filter's full description");
   }
-}
 == END hook_filter_tips ==
 
 == START hook_help ==
-function %module_help($section) {
   switch ($section) {
     case 'admin/help#%module':
       return t('%help');
@@ -83,11 +74,9 @@ function %module_help($section) {
       return t('%description');
     // OPTIONAL: Add additional cases for other paths that should display help text.
   }
-}
 == END hook_help ==
 
 == START hook_link ==
-function %module_link($type, $node = 0, $main = 0) {
   $links = array();
   
   // TODO: Perform logic to determine when link should appear
@@ -95,11 +84,9 @@ function %module_link($type, $node = 0, $main = 0) {
   // OPTIONAL: Add additional links
   
   return $links;
-}
 == END hook_link ==
 
 == START hook_menu ==
-function %module_menu($may_cache) {
   global $user;
   $items = array();
 
@@ -113,12 +100,9 @@ function %module_menu($may_cache) {
   }
   // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
 
-  return $items;
-}
 == END hook_menu ==
 
 == START hook_nodeapi ==
-function %module_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   switch ($op) {
     case 'load':
       // OPTIONAL: Insert code to execute when node is loaded from database.
@@ -153,11 +137,8 @@ function %module_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
       // OPTIONAL: Prepare node for printer-friendly view.
       break;    
   }
-}
 == END hook_nodeapi ==
 
 == START hook_perm ==
-function %module_perm() {
   return array('TODO: Insert permission name');
-}
 == END hook_perm ==

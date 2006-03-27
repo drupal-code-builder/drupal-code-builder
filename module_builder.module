@@ -274,12 +274,11 @@ function module_builder_process($edit) {
 
   // Get array of custom hook declarations
   $hook_custom_declarations = array();
-  preg_match_all('#== START (.*?) ==(.*?)== END .*? ==#ms', $hook_file, $matches);
+  preg_match_all('#== START (.*?) ==\n(.*?)\n== END .*? ==#ms', $hook_file, $matches);
   $count = count($matches[0]);
   for ($i = 0; $i < $count; $i++) {
     $key = $matches[1][$i];
-    $value = trim($matches[2][$i]);
-    $hook_custom_declarations[$key] = $value;
+    $hook_custom_declarations[$key] = $matches[2][$i];
   }
 
   // Begin module output
@@ -297,14 +296,15 @@ function module_builder_process($edit) {
  */
 ";
 
+        $output .= str_replace('hook', $edit['module_root_name'], $hook_default_declarations[$hook]) ."\n";
         // See if function bodies exist; if so, use function bodies from template
         if (array_key_exists($hook, $hook_custom_declarations)) {
-          $output .= $hook_custom_declarations[$hook] ."\n\n";
+          $output .= $hook_custom_declarations[$hook] ."\n";
         }
         else {
-          // Otherwise, just use a generic one
-          $output .= str_replace('hook', $edit['module_root_name'], $hook_default_declarations[$hook] ."\n\n}\n\n");
+          $output .= "\n";
         }
+        $output .= "}\n\n";
       }
     }
   }
@@ -313,7 +313,7 @@ function module_builder_process($edit) {
   $variables = array(
     '%module' => $edit['module_root_name'],
     '%description' => str_replace("'", "\'", $edit['module_short_description']),
-    '%help' => isset($edit['module_help_text']) ? str_replace("'", "\'", $edit['module_help_text']) : t('TODO: Create admin help text.'),
+    '%help' => !empty($edit['module_help_text']) ? str_replace("'", "\'", $edit['module_help_text']) : t('TODO: Create admin help text.'),
     '%readable' => str_replace("'", "\'", $edit['module_readable_name']),
   );
   $output = strtr($output, $variables);
