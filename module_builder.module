@@ -207,6 +207,8 @@ function module_builder_page() {
           $form['hooks'][$hook_group][$name]['#default_value'] = 1;
         }
       }
+      // Sort list alphabetically
+      ksort($form['hooks'][$hook_group]);
     }
 
     $form['op'] = array(
