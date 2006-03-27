@@ -75,6 +75,19 @@ function module_builder_settings() {
     '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => '<em>'. variable_get('file_directory_path', 'files') .'/</em>')),
     '#default_value' => variable_get('module_builder_hooks_directory', 'hooks'),
   );
+  $form['module_builder_header'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Default header'),
+    '#description' => t('This is the default text that will be displayed at the top of your module file.'),
+    '#rows' => 15,
+    '#default_value' => variable_get('module_builder_header', '// $'.'Id$
+
+/**
+ * @file
+ * TODO: Enter file description here.
+ */
+'),
+  );
 
   if ($op == t('Update')) {
     module_builder_update_documentation();
@@ -255,13 +268,14 @@ function module_builder_process($edit) {
 
   $path = drupal_get_path('module', 'module_builder');
 
-  // Check for custom header file, else use the default
-  if (file_exists("$path/header-custom.template")) {
-    $header_file = file_get_contents("$path/header-custom.template");
-  }
-  else {
-    $header_file = file_get_contents("$path/header.template");
-  }
+  // Grab header from settings
+  $header = "<?php\n". variable_get('module_builder_header', '// $'.'Id$
+
+/**
+ * @file
+ * TODO: Enter file description here.
+ */
+');
 
   // Check for custom functions file, else use default
   if (file_exists("$path/hook-custom.template")) {
@@ -281,7 +295,7 @@ function module_builder_process($edit) {
   }
 
   // Begin module output
-  $output = $header_file;
+  $output = '';
 
   // Determine which hooks are to be implemented
   foreach ($edit['hooks'] as $hooks) {
