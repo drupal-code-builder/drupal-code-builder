@@ -20,7 +20,7 @@ define('MODULE_BUILDER_VERSION', 'HEAD');
 
 /**
  * Implementation of hook_help().
- * 
+ *
  * @ingroup module_builder_core
  */
 function module_builder_help($section) {
@@ -32,7 +32,7 @@ function module_builder_help($section) {
 
 /**
  * Implementation of hook_perm().
- * 
+ *
  * @ingroup module_builder_core
  */
 function module_builder_perm() {
@@ -41,7 +41,7 @@ function module_builder_perm() {
 
 /**
  * Implementation of hook_menu().
- * 
+ *
  * @ingroup module_builder_core
  */
 function module_builder_menu($may_cache) {
@@ -61,7 +61,7 @@ function module_builder_menu($may_cache) {
 
 /**
  * Implementation of hook_settings().
- * 
+ *
  * @ingroup module_builder_core
  */
 function module_builder_settings() {
@@ -95,7 +95,7 @@ function module_builder_settings() {
 
 /**
  * Create a directory to store hook files if it does not exist.
- * 
+ *
  * This logic blatantly ripped off from image.module -- thanks James! :)
  */
 function _module_builder_check_settings() {
@@ -113,7 +113,7 @@ function _module_builder_check_settings() {
 
 /**
  * Displays module builder interface.
- * 
+ *
  * @ingroup module_builder_callback
  * @return
  *   Form for entering module options
@@ -163,7 +163,7 @@ function module_builder_page() {
 
   // Get list of hooks
   $hook_groups = module_builder_get_hook_data();
-  
+
   if (!is_array($hook_groups) || !count($hook_groups)) {
     form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="%settings">admininster >> settings >> modulebuilder</a> page.', array('%settings' => url('admin/settings/module_builder'))));
   }
@@ -198,7 +198,7 @@ function module_builder_page() {
           // TODO: I would *like* to do something like the following, so some of the long
           // descriptions don't totally mangle the page output, but need a way to do like
           // a "onmouseover" effect to display the full thing. Note that 'title' is not
-          // a valid attribute for divs. :\ 
+          // a valid attribute for divs. :\
           //'#description' => truncate_utf8($desc, 40, TRUE, TRUE),
 
         );
@@ -275,19 +275,15 @@ function module_builder_process($edit) {
   $hook_default_declarations = module_builder_get_hook_data(HOOK_DECLARATIONS);
 
   // Get array of custom hook declarations
-  $hook_custom_declarations = array();
-  preg_match_all('#== START (.*?) ==\n(.*?)\n== END .*? ==#ms', $hook_file, $matches);
-  $count = count($matches[0]);
-  for ($i = 0; $i < $count; $i++) {
-    $key = $matches[1][$i];
-    $hook_custom_declarations[$key] = $matches[2][$i];
+  $custom_hooks = module_builder_parse_template($hook_file);
+  foreach ($custom_hooks as $hook) {
+    $hook_custom_declarations[$hook['title']] = $hook['data'];
   }
 
   // Begin module output
   $output = $header_file;
 
   // Determine which hooks are to be implemented
-  $implemented_hooks = array();
   foreach ($edit['hooks'] as $hooks) {
     foreach ($hooks as $hook => $value) {
       if ($value) {
@@ -353,6 +349,35 @@ function theme_module_builder_results($name, $code) {
 
   return $output;
 }
+
+/**
+ * Parse a module_builder template file.
+ *
+ * Template files are composed of several sections in the form of:
+ *
+ * == START [title of template section] ==
+ * [the body of the template section]
+ * == END ==
+ *
+ * @param string $file
+ *   The template file to parse
+ * @return Array
+ *   Return array of template section titles and their associated data
+ */
+function module_builder_parse_template($file) {
+  $hook_custom_declarations = array();
+  preg_match_all('#== START (.*?) ==\n(.*?)\n== END ==#ms', $file, $matches);
+  $count = count($matches[0]);
+  for ($i = 0; $i < $count; $i++) {
+    $key = $matches[1][$i];
+    $hook_custom_declarations[] = array(
+      'title' => $matches[1][$i],
+      'data' => $matches[2][$i]
+    );
+  }
+  return $hook_custom_declarations;
+}
+
 
 /**
  * Retrieves hook data of given type

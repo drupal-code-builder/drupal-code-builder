@@ -27,13 +27,13 @@
     }
     return $block;
   }
-== END hook_block ==
+== END ==
 
 == START hook_elements ==
   $type['example'] = array('#property' => t('TODO: Fill in appropriate properties and values for element type.'));
   // OPTIONAL: Define additional element types.
   return $type;
-== END hook_elements ==
+== END ==
 
 == START hook_filter ==
   switch ($op) {
@@ -54,7 +54,7 @@
     default:
       return $text;
   }
-== END hook_filter ==
+== END ==
 
 == START hook_filter_tips ==
   // OPTIONAL: If more than one filter was defined in hook_filter, perform switch on $delta
@@ -64,7 +64,7 @@
     case 1:
       return t("TODO: Enter filter's full description");
   }
-== END hook_filter_tips ==
+== END ==
 
 == START hook_help ==
   switch ($section) {
@@ -74,7 +74,7 @@
       return t('%description');
     // OPTIONAL: Add additional cases for other paths that should display help text.
   }
-== END hook_help ==
+== END ==
 
 == START hook_link ==
   $links = array();
@@ -84,7 +84,7 @@
   // OPTIONAL: Add additional links
   
   return $links;
-== END hook_link ==
+== END ==
 
 == START hook_menu ==
   global $user;
@@ -100,7 +100,7 @@
   }
   // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
 
-== END hook_menu ==
+== END ==
 
 == START hook_nodeapi ==
   switch ($op) {
@@ -137,8 +137,8 @@
       // OPTIONAL: Prepare node for printer-friendly view.
       break;    
   }
-== END hook_nodeapi ==
+== END ==
 
 == START hook_perm ==
   return array('TODO: Insert permission name');
-== END hook_perm ==
+== END ==
