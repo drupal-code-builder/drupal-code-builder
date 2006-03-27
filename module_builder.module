@@ -133,6 +133,10 @@ function module_builder_page() {
   // Start form
   $form['#action'] = url('module_builder');
 
+  // Include CSS for formatting
+  $path = drupal_get_path('module', 'module_builder');
+  theme_add_style($path . '/module_builder.css');
+
   // Module properties
   $form['module_root_name'] = array(
     '#type' => 'textfield',
@@ -175,6 +179,9 @@ function module_builder_page() {
       $form['hooks'][$hook_group] = array(
         '#type' => 'fieldset',
         '#title' => $hook_group . ' hooks',
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+        '#theme' => 'module_builder_hook_list',
       );
       foreach ($hooks as $hook) {
         $form['hooks'][$hook_group][$hook] = array(
@@ -201,6 +208,18 @@ function module_builder_page() {
 }
 
 /**
+ * Theme function for hook list
+ */
+function theme_module_builder_hook_list($form) {
+  $output = "<ul class=\"hook-group\">\n";
+  foreach (element_children($form) as $key) {
+    $output .= "  <li>". form_render($form[$key]) ."</li>\n";
+  }
+  $output .= "</ul>\n";
+  return $output;
+}
+
+/**
  * Implementation of hook_form_validate().
  */
 function module_builder_validate($form_id, $form_values) {
@@ -215,6 +234,11 @@ function module_builder_validate($form_id, $form_values) {
  * Proceses form once submitted.
  */
 function module_builder_process($edit) {
+
+  // Include link in breadcrumb to go back to main module builder form
+  $breadcrumb = drupal_get_breadcrumb();
+  $breadcrumb[] = l(t('module builder'), 'module_builder');
+  drupal_set_breadcrumb($breadcrumb);
 
   $path = drupal_get_path('module', 'module_builder');
 
@@ -305,10 +329,14 @@ function module_builder_process($edit) {
  *   HTML output to display form
  */
 function theme_module_builder_results($name, $code) {
-  $output = t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $name));
-  $output .= '<textarea cols="70" rows="40">';
+  $output  = "<div id=\"module-message\">\n";
+  $output .= t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $name)) . "\n";
+  $output .= "</div>\n";
+  $output .= "<div id=\"module-code\">\n";
+  $output .= "  <textarea cols=\"70\" rows=\"40\">\n";
   $output .= $code;
-  $output .= '</textarea>';
+  $output .= "  </textarea>\n";
+  $output .= "</div>\n";
 
   return $output;
 }
