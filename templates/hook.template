@@ -1,0 +1,144 @@
+// $Id$
+
+/**
+ * @file
+ * Defines default templates for hook functions.
+ */
+
+== START hook_block ==
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('TODO: Fill in block description');
+    // OPTIONAL: Add additional block descriptions here, if required.
+    return $blocks;
+  }
+  else if ($op == 'configure') {
+    // OPTIONAL: Enter form elements to add to block configuration screen, if required.    
+  }
+  else if ($op == 'save') {
+    // OPTIONAL: Add code to trigger when block configuration is saved, if required.
+  }
+  else if ($op == 'view') {
+    switch ($delta) {
+      case 0:
+        $block['subject'] = t('TODO: Enter block title');
+        $block['content'] = t('TODO: Enter block content');
+        break;
+      // OPTIONAL: Enter additional cases for each additional block, if defined.
+    }
+    return $block;
+  }
+== END ==
+
+== START hook_elements ==
+  $type['example'] = array('#property' => t('TODO: Fill in appropriate properties and values for element type.'));
+  // OPTIONAL: Define additional element types.
+  return $type;
+== END ==
+
+== START hook_filter ==
+  switch ($op) {
+    case 'list':
+      return array(t('TODO: Fill in name of filter.'));
+
+    case 'description':
+      return t('TODO: Fill in filter description.');
+
+    case 'process':
+      // TODO: Code function call for filter to run text through.
+      return;
+
+    case 'settings':
+      // OPTIONAL: Add additional settings for filter.
+      return;
+
+    default:
+      return $text;
+  }
+== END ==
+
+== START hook_filter_tips ==
+  // OPTIONAL: If more than one filter was defined in hook_filter, perform switch on $delta
+  switch ($long) {
+    case 0:
+      return t("TODO: Enter the filter's short-hand description");
+    case 1:
+      return t("TODO: Enter filter's full description");
+  }
+== END ==
+
+== START hook_help ==
+  switch ($section) {
+    case 'admin/help#%module':
+      return t('%help');
+    case 'admin/modules#description':
+      return t('%description');
+    // OPTIONAL: Add additional cases for other paths that should display help text.
+  }
+== END ==
+
+== START hook_link ==
+  $links = array();
+  
+  // TODO: Perform logic to determine when link should appear
+  $links[] = l(t('TODO: Fill in link title'), 'TODO: Fill in link path', array('title' => t('TODO: Fill in link title attribute.')));
+  // OPTIONAL: Add additional links
+  
+  return $links;
+== END ==
+
+== START hook_menu ==
+  global $user;
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'TODO: Enter path',
+      'title' => t('TODO: Enter menu item title'),
+      // OPTIONAL: Fill in other properties such as 'access' and 'type'
+    );
+    // OPTIONAL: Fill in additional static menu items
+  }
+  // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
+
+== END ==
+
+== START hook_nodeapi ==
+  switch ($op) {
+    case 'load':
+      // OPTIONAL: Insert code to execute when node is loaded from database.
+      break;
+    case 'insert':
+      // OPTIONAL: Insert code to execute when node is inserted.
+      break;
+    case 'update':
+      // OPTIONAL: Insert code to execute when node is updated.
+      break;
+    case 'delete':
+      // OPTIONAL: Insert code to execute when node is deleted.
+      break;
+    case 'execute':
+      // OPTIONAL: Insert code to fire after validation and before node is saved.
+      break;
+    case 'validate':
+      // OPTIONAL: Insert code to execute when node is validated upon form submission.
+      break;
+    case 'view':
+      // OPTIONAL: Insert code to add additional items to node view.
+      break;
+    case 'fields':
+      // OPTIONAL: Return array of additional fields to save to the node table.
+      break;
+    case 'search result':
+      // OPTIONAL: Display extra node information with search result.
+      break;
+    case 'update index':
+      // OPTIONAL: Insert code to index additional node properties.
+    case 'print':
+      // OPTIONAL: Prepare node for printer-friendly view.
+      break;    
+  }
+== END ==
+
+== START hook_perm ==
+  return array('TODO: Insert permission name');
+== END ==
