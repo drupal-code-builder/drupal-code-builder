@@ -177,6 +177,51 @@ function module_builder_page() {
     '#description' => t('Help text (HTML) to appear in <a href="%help">administer >> help >> module_name</a> page', array('%help' => url('admin/help'))),
   );
 
+  // Check for custom hook_groups file, else use default
+  $path = drupal_get_path('module', 'module_builder');
+  if (file_exists("$path/hook_groups-custom.template")) {
+    $template_file = file_get_contents("$path/hook_groups-custom.template");
+  }
+  else {
+    $template_file = file_get_contents("$path/hook_groups.template");
+  }
+
+  $form['hook_groups'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Hook groupings'),
+    '#description' => t('Selecting one or more of these features will automatically select appropriate hooks for you.'),
+  );
+
+  $path = drupal_get_path('module', 'module_builder');
+  drupal_add_js($path .'/module_builder.js');
+
+  // Get list of hook groups
+  $hook_groups = module_builder_parse_template($template_file);
+  $count = count($hook_groups);
+  for ($i = 0; $i < $count; $i++) {
+    $hooks = explode("\n", $hook_groups[$i]['data']);
+    $hook_array = array();
+    foreach ($hooks as $hook) {
+      $hook = trim($hook);
+      if (!empty($hook)) {
+        $hook_array[] = "'$hook'";
+      }
+    }
+
+    $form['hook_groups']['groups-' .$i] = array(
+      '#type' => 'checkbox',
+      '#title' => $hook_groups[$i]['title'],
+      '#attributes' => array(
+        'onclick' => 'check_hooks(this, ['. implode(', ', $hook_array) .'])',
+      ),
+      //'#description' => $hook_groups[$i]['data'],
+
+      // TODO: For some reason this gives me some wacky error under PHP 5:
+      // Fatal error: Cannot use string offset as an array
+      //'#default_value' => $edit['hook_groups'][$i],
+    );
+  }
+
   // Get list of hooks
   $hook_groups = module_builder_get_hook_data();
 
@@ -188,7 +233,7 @@ function module_builder_page() {
     // Build hooks list
     $form['hooks'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Use the following hooks'),
+      '#title' => t('Use the following specific hooks'),
     );
 
     foreach ($hook_groups as $hook_group => $hooks) {
@@ -196,7 +241,7 @@ function module_builder_page() {
         '#type' => 'fieldset',
         '#title' => $hook_group . ' hooks',
         '#collapsible' => TRUE,
-        '#collapsed' => FALSE,
+        '#collapsed' => TRUE,
         '#theme' => 'module_builder_hook_list',
       );
       foreach ($hooks as $hook) {
@@ -206,6 +251,9 @@ function module_builder_page() {
           '#type' => 'checkbox',
           '#title' => $name,
           '#description' => $desc,
+          '#attributes' => array(
+            'id' => "edit-hooks-$name",
+          ),
 
           // TODO: For some reason this gives me some wacky error under PHP 5:
           // Fatal error: Cannot use string offset as an array
@@ -319,17 +367,17 @@ function module_builder_process() {
   // Check for custom functions file, else use default
   $path = drupal_get_path('module', 'module_builder');
   if (file_exists("$path/hook-custom.template")) {
-    $hook_file = file_get_contents("$path/hook-custom.template");
+    $template_file = file_get_contents("$path/hook-custom.template");
   }
   else {
-    $hook_file = file_get_contents("$path/hook.template");
+    $template_file = file_get_contents("$path/hook.template");
   }
 
   // Get array of default hook declarations
   $hook_default_declarations = module_builder_get_hook_data(HOOK_DECLARATIONS);
 
   // Get array of custom hook declarations
-  $custom_hooks = module_builder_parse_template($hook_file);
+  $custom_hooks = module_builder_parse_template($template_file);
   foreach ($custom_hooks as $hook) {
     $hook_custom_declarations[$hook['title']] = $hook['data'];
   }
@@ -420,10 +468,10 @@ function theme_module_builder_results($name, $code) {
  */
 function module_builder_parse_template($file) {
   $hook_custom_declarations = array();
-  preg_match_all('#== START (.*?) ==\n(.*?)\n== END ==#ms', $file, $matches);
+  //preg_match_all('#== START (.*?) ==\n(.*?)\n== END ==#ms', $file, $matches);
+  preg_match_all('#== START (.*?) ==(.*?)== END ==#ms', $file, $matches);
   $count = count($matches[0]);
   for ($i = 0; $i < $count; $i++) {
-    $key = $matches[1][$i];
     $hook_custom_declarations[] = array(
       'title' => $matches[1][$i],
       'data' => $matches[2][$i]

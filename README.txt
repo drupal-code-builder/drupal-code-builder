@@ -17,6 +17,7 @@ FEATURES
 * Saves you the trouble of looking at drupaldocs.org 50 times a day to 
   remember what arguments and what order different hooks use. Score one
   for laziness! ;)
+* NEW! Automatically selects hooks based on your needs.
 
 INSTALL/CONFIG
 --------------
@@ -25,15 +26,13 @@ INSTALL/CONFIG
 2. Enable it from administer >> modules.
 3. Go to administer >> settings >> module_builder and specify the path
    to save the hook documentation files
-4. (Optional) Create custom function declaration or header files if you
+4. (Optional) Create custom function declaration template file if you
    don't like the default output.
+5. (Optional) Create your own hook groupings if you don't like the 
+   default ones.
 
 TODO/WISHLIST
 -------------
-* I want to make a selection of module types and create a list of 
-  dependencies (example: node modules need hook_node_info, hook_insert,
-  etc.) I need a fancy JavaScript/AJAX guru to hook up magic so this
-  auto-selection happens
 * Maybe some nicer theming/swooshy boxes on hook descriptions or 
   something to make the form look nicer/less cluttered
 * I would like to add the option to import help text from a Drupal.org
@@ -42,6 +41,15 @@ TODO/WISHLIST
 
 KNOWN ISSUES
 ------------
-* Form validation routines don't fire
 * Can't set default values in PHP 5 for some strange reason
-* Nothing is done with the 'readable' name yet.
+* Nothing is done with the 'readable' name (or node types in general) yet.
+
+CONTRIBUTORS
+------------
+* Owen Barton (grugnog2), Chad Phillips (hunmonk), and Chris Johnson 
+  (chrisxj) for initial brainstorming stuff @ OSCMS in Vancouver
+* Jeff Robbins for the nice mockup to work from and some great suggestions
+* Karthik/Zen/|gatsby| for helping debug some hairy Forms API issues
+* Steven Wittens and David Carrington for their nice JS checkbox magic
+* Folks who have submitted bug reports and given encouragement, thank you
+  so much! :)
