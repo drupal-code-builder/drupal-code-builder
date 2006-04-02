@@ -151,7 +151,7 @@ function module_builder_page() {
 
   // Include CSS for formatting
   $path = drupal_get_path('module', 'module_builder');
-  theme_add_style($path . '/module_builder.css');
+  theme_add_style($path . '/includes/module_builder.css');
 
   // Module properties
   $form['module_root_name'] = array(
@@ -178,7 +178,7 @@ function module_builder_page() {
   );
 
   // Check for custom hook_groups file, else use default
-  $path = drupal_get_path('module', 'module_builder');
+  $path = drupal_get_path('module', 'module_builder') . '/templates';
   if (file_exists("$path/hook_groups-custom.template")) {
     $template_file = file_get_contents("$path/hook_groups-custom.template");
   }
@@ -193,7 +193,7 @@ function module_builder_page() {
   );
 
   $path = drupal_get_path('module', 'module_builder');
-  drupal_add_js($path .'/module_builder.js');
+  drupal_add_js($path .'/includes/module_builder.js');
 
   // Get list of hook groups
   $hook_groups = module_builder_parse_template($template_file);
@@ -365,7 +365,7 @@ function module_builder_process() {
   $footer = variable_get('module_builder_footer', '');
 
   // Check for custom functions file, else use default
-  $path = drupal_get_path('module', 'module_builder');
+  $path = drupal_get_path('module', 'module_builder') .'/templates';
   if (file_exists("$path/hook-custom.template")) {
     $template_file = file_get_contents("$path/hook-custom.template");
   }
