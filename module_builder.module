@@ -142,16 +142,6 @@ function module_builder_page() {
 
   _module_builder_check_settings();
 
-  // Check for form submission
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-  // TODO: This is not properly halting when errors are encountered :(
-  if ($op == t('Submit') && !form_get_errors()) {
-    return module_builder_process($edit);
-  }
-
-  // Start form
-  $form['#action'] = url('module_builder');
 
   // Include CSS for formatting
   $path = drupal_get_path('module', 'module_builder');
@@ -237,7 +227,7 @@ function module_builder_page() {
     );
   }
 
-  return drupal_get_form('module_builder', $form);
+  return drupal_get_form('module_builder_page', $form);
 }
 
 /**
@@ -255,18 +245,37 @@ function theme_module_builder_hook_list($form) {
 /**
  * Implementation of hook_form_validate().
  */
-function module_builder_validate($form_id, $form_values) {
-  // Check module_root_name for special characters
+function module_builder_page_validate($form_id, $form_values) {
+  // Ensure module_root_name was entered, and check for special characters
   // Took this regex from the PHP manual page on Functions
-  if (!preg_match('#[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*#', $form_values['module_root_name'])) {
-    form_set_error('module_root_name', t('The module root name must only contain letters, numbers, and underscores, and may not start with a number.'));
+  if (!empty($form_values['module_root_name'])) {
+    if (!preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*#', $form_values['module_root_name'])) {
+      form_set_error('module_root_name', t('The module root name must only contain letters, numbers, and underscores, and may not start with a number.'));
+    }
+  }
+
+  // Make sure at least one hook was chosen
+  $hook_selected = false;
+  foreach ($form_values['hooks'] as $file => $hooks) {
+    foreach ($hooks as $hook) {
+      if ($hook == 1) {
+        $hook_selected = true;
+        break;
+      }
+    }
+    if ($hook_selected) {
+      break;
+    }
+  }
+  if (!$hook_selected) {
+    form_set_error('hooks', t('You must select at least one hook.'));
   }
 }
 
 /**
- * Proceses form once submitted.
+ * Implementation of hook_form_submit().
  */
-function module_builder_process($edit) {
+function module_builder_page_submit($form_id, $edit) {
 
   // Include link in breadcrumb to go back to main module builder form
   $breadcrumb = drupal_get_breadcrumb();
@@ -346,7 +355,7 @@ function module_builder_process($edit) {
   // Prepare final output
   $output = $header . check_plain($output) . $footer;
 
-  return theme('module_builder_results', $edit['module_root_name'], $output);
+  echo theme('page', theme('module_builder_results', $edit['module_root_name'], $output));
 }
 
 
