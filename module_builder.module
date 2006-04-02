@@ -54,6 +54,13 @@ function module_builder_menu($may_cache) {
       'callback' => 'module_builder_page',
       'access' => user_access('access module builder'),
     );
+    $items[] = array(
+      'path' => 'module_builder_process',
+      'title' => t('module builder'),
+      'callback' => 'module_builder_process',
+      'access' => user_access('access module builder'),
+      'type' => MENU_CALLBACK,
+    );
   }
 
   return $items;
@@ -141,7 +148,6 @@ function _module_builder_check_settings() {
 function module_builder_page() {
 
   _module_builder_check_settings();
-
 
   // Include CSS for formatting
   $path = drupal_get_path('module', 'module_builder');
@@ -275,7 +281,23 @@ function module_builder_page_validate($form_id, $form_values) {
 /**
  * Implementation of hook_form_submit().
  */
-function module_builder_page_submit($form_id, $edit) {
+function module_builder_page_submit($form_id, $form_values) {
+  $_SESSION['module_builder_values'] = $form_values;
+  drupal_goto('module_builder_process');
+}
+
+/**
+ * Generate module file
+ */
+function module_builder_process() {
+
+  if (isset($_SESSION['module_builder_values'])) {
+    $edit = $_SESSION['module_builder_values'];
+    unset($_SESSION['module_builder_values']);
+  }
+  else {
+    drupal_goto('module_builder');
+  }
 
   // Include link in breadcrumb to go back to main module builder form
   $breadcrumb = drupal_get_breadcrumb();
