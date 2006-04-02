@@ -377,7 +377,7 @@ function module_builder_process() {
   // Prepare final output
   $output = $header . check_plain($output) . $footer;
 
-  echo theme('page', theme('module_builder_results', $edit['module_root_name'], $output));
+  return theme('module_builder_results', $edit['module_root_name'], $output);
 }
 
 
