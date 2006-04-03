@@ -87,7 +87,6 @@
 == END ==
 
 == START hook_menu ==
-  global $user;
   $items = array();
 
   if ($may_cache) {
@@ -100,6 +99,7 @@
   }
   // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
 
+  return $items;
 == END ==
 
 == START hook_nodeapi ==

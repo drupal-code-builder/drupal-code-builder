@@ -367,11 +367,11 @@ function module_builder_process() {
 
   // Check for custom functions file, else use default
   $path = drupal_get_path('module', 'module_builder') .'/templates';
-  if (file_exists("$path/hook-custom.template")) {
-    $template_file = file_get_contents("$path/hook-custom.template");
+  if (file_exists("$path/hooks-custom.template")) {
+    $template_file = file_get_contents("$path/hooks-custom.template");
   }
   else {
-    $template_file = file_get_contents("$path/hook.template");
+    $template_file = file_get_contents("$path/hooks.template");
   }
 
   // Get array of default hook declarations
@@ -381,6 +381,20 @@ function module_builder_process() {
   $custom_hooks = module_builder_parse_template($template_file);
   foreach ($custom_hooks as $hook) {
     $hook_custom_declarations[$hook['title']] = $hook['data'];
+  }
+  
+  // Check for node hooks; these will overwrite core hooks if found
+  if ($_SESSION['module_builder_is_node']) {
+    if (file_exists("$path/node_hooks-custom.template")) {
+      $template_file = file_get_contents("$path/node_hooks-custom.template");
+    }
+    else {
+      $template_file = file_get_contents("$path/node_hooks.template");
+    }
+    $custom_hooks = module_builder_parse_template($template_file);
+    foreach ($custom_hooks as $hook) {
+      $hook_custom_declarations[$hook['title']] = $hook['data'];
+    }
   }
 
   // Begin module output

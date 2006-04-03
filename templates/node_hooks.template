@@ -1,0 +1,129 @@
+// $Id$
+
+/**
+ * @file
+ * Defines default templates for node hook functions.
+ *
+ * Some of these are duplicated from the "normal" hooks template, because 
+ * nodes do things a little differently than "normal" nodes. :)
+ */
+
+== START hook_help ==
+  switch ($section) {
+    case 'admin/help#%module':
+      return t('%help');
+    case 'admin/modules#description':
+      return t('%description');
+    case 'node/add#%module':
+      return t('TODO: enter description of node.');
+    // OPTIONAL: Add additional cases for other paths that should display help text.
+  }
+== END ==
+
+== START hook_menu ==
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'node/add/%module',
+      'title' => t('%name'),
+      'access' => user_access('create %name'),
+      // OPTIONAL: Fill in other properties
+    );
+    // OPTIONAL: Fill in additional static menu items
+  }
+  // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
+
+  return $items;
+== END ==
+
+== START hook_node_info ==
+  return array('%module' => array('name' => t('%name'), 'base' => '%module'));
+== END ==
+
+== START hook_access ==
+  global $user;
+
+  if ($op == 'create') {
+    return user_access('create %name');
+  }
+
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own %name') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+== END ==
+
+== START hook_perm ==
+  return array('create %name', 'edit own %name');
+== END ==
+
+== START hook_form ==
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
+    '#weight' => -5
+  );
+
+  $form['body_filter']['body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => $node->body,
+    '#required' => FALSE
+  );
+  $form['body_filter']['filter'] = filter_form($node->format);
+
+  // TODO: Enter additional form elements
+
+  return $form;
+== END ==
+
+== START hook_validate ==
+  // TODO: Enter form validation code here
+== END ==
+
+== START hook_insert ==
+  // TODO: Enter database insertion query here, for example:
+  // db_query("INSERT INTO {node_example} (vid, nid, color, quantity) VALUES (%d, %d, '%s', %d)", $node->vid, $node->nid, $node->color, $node->quantity);
+== END ==
+
+== START hook_update ==
+  if ($node->revision) {
+    %module_insert($node);
+  }
+  else {
+    // TODO: Enter database update query here, for example:
+    // db_query("UPDATE {node_example} SET color = '%s', quantity = %d WHERE vid = %d", $node->color, $node->quantity, $node->vid);
+  }
+== END ==
+
+== START hook_delete ==
+  // TODO: Enter database deletion query here, for example:
+  // db_query('DELETE FROM {node_example} WHERE nid = %d', $node->nid);
+== END ==
+
+== START hook_nodeapi ==
+  switch ($op) {
+    case 'delete revision':
+      // TODO: Enter revision deletion query here, for example:
+      // db_query('DELETE FROM {node_example} WHERE vid = %d', $node->vid);
+      break;
+  }
+== END ==
+
+== START hook_load ==
+  // TODO: Obtain and return additional fields added to the node type, for example:
+  // $additions = db_fetch_object(db_query('SELECT color, quantity FROM {node_example} WHERE vid = %d', $node->vid));
+  // return $additions;
+== END ==
+
+== START hook_view ==
+  // TODO: Insert additional code (call to theme functions, etc.) to execute when viewing a node, for example:
+  // $node = node_prepare($node, $teaser);
+  // $order_info = theme('node_example_order_info', $node);
+  // $node->body .= $order_info;
+  // $node->teaser .= $order_info;
+== END ==
