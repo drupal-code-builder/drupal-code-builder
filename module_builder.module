@@ -260,7 +260,7 @@ function module_builder_page() {
         $desc = $hook['description'];
         $form['hooks'][$hook_group][$name] = array(
           '#type' => 'checkbox',
-          '#title' => $name,
+          '#title' => str_replace('hook_', '', $name),
           '#description' => $desc,
           '#attributes' => array(
             'id' => "edit-hooks-$name",
