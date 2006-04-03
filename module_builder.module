@@ -103,6 +103,17 @@ function module_builder_settings() {
     '#default_value' => variable_get('module_builder_footer', ''),
   );
 
+  $form['module_builder_detail'] = array(
+    '#type' => 'radios',
+    '#title' => t('Code detail level'),
+    '#description' => t('This setting will either display or suppress additional explanatory comments in the resulting module code to help new developers.'),
+    '#options' => array(
+      1 => t("<strong>Beginner</strong>: I'm just starting out with Drupal development; please display lots of helpful comments in my module code!"),
+      0 => t("<strong>Advanced</strong>: I already know what I'm doing; don't put in a bunch of crap in my module file that I don't need!"),
+    ),
+    '#default_value' => variable_get('module_builder_detail', 0),
+  );
+
   if ($op == t('Update')) {
     module_builder_update_documentation();
   }
@@ -382,7 +393,7 @@ function module_builder_process() {
   foreach ($custom_hooks as $hook) {
     $hook_custom_declarations[$hook['title']] = $hook['data'];
   }
-  
+
   // Check for node hooks; these will overwrite core hooks if found
   if ($_SESSION['module_builder_is_node']) {
     if (file_exists("$path/node_hooks-custom.template")) {
@@ -394,6 +405,13 @@ function module_builder_process() {
     $custom_hooks = module_builder_parse_template($template_file);
     foreach ($custom_hooks as $hook) {
       $hook_custom_declarations[$hook['title']] = $hook['data'];
+    }
+  }
+
+  // Strip out INFO: comments for advanced users
+  if (!variable_get('module_builder_detail', 0)) {
+    foreach ($hook_custom_declarations as $hook => $data) {
+      $hook_custom_declarations[$hook] = preg_replace('#(\s+)\/\* INFO:(.*?)\*\/#ms', '', $data);
     }
   }
 

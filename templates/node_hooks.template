@@ -9,6 +9,12 @@
  */
 
 == START hook_help ==
+  /* INFO:
+   * The help hook is for displaying helpful messages at the top of pages indicated
+   * by $section to further explain how they work. Adding certain "keywords" to the end of 
+   * a given path (like admin/modules#description) will cause this text to display elsewhere
+   * in the page as well (in this case, in the description section for the given module).
+   */
   switch ($section) {
     case 'admin/help#%module':
       return t('%help');
