@@ -331,6 +331,7 @@ function module_builder_page_validate($form_id, $form_values) {
  */
 function module_builder_page_submit($form_id, $form_values) {
   $_SESSION['module_builder_values'] = $form_values;
+  $_SESSION['module_builder_is_node'] = $form_values['hooks']['node']['hook_node_info'];
   drupal_goto('module_builder_process');
 }
 
@@ -396,13 +397,13 @@ function module_builder_process() {
  */
 ";
 
-        $output .= str_replace('hook', $edit['module_root_name'], $hook_default_declarations[$hook]) ."\n";
+        $output .= str_replace('hook', $edit['module_root_name'], $hook_default_declarations[$hook]);
         // See if function bodies exist; if so, use function bodies from template
         if (array_key_exists($hook, $hook_custom_declarations)) {
-          $output .= $hook_custom_declarations[$hook] ."\n";
+          $output .= $hook_custom_declarations[$hook];
         }
         else {
-          $output .= "\n";
+          $output .= "\n\n";
         }
         $output .= "}\n\n";
       }
@@ -413,6 +414,7 @@ function module_builder_process() {
   $variables = array(
     '%module' => $edit['module_root_name'],
     '%description' => str_replace("'", "\'", $edit['module_short_description']),
+    '%name' => !empty($edit['module_readable_name']) ? str_replace("'", "\'", $edit['module_readable_name']) : $edit['module_root_name'],
     '%help' => !empty($edit['module_help_text']) ? str_replace("'", "\'", $edit['module_help_text']) : t('TODO: Create admin help text.'),
     '%readable' => str_replace("'", "\'", $edit['module_readable_name']),
   );
