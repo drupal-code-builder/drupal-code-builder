@@ -458,7 +458,7 @@ function module_builder_process() {
   $output = preg_replace('#\/\/ \$Id(.*?)\$#', '// $'. 'Id$', $output);
 
   // Prepare final output
-  $output = $header . check_plain($output) . $footer;
+  $output = $header . $output . $footer;
 
   return theme('module_builder_results', $edit['module_root_name'], $output);
 }
