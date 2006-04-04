@@ -142,6 +142,7 @@ function _module_builder_check_settings() {
   $last_update = variable_get('module_builder_last_update', 0);
   if (!$last_update) {
     module_builder_update_documentation();
+    drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"%api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get('module_builder_hooks_directory', 'hooks'), '%api' => url('http://api.drupal.org/api/HEAD', NULL, NULL, TRUE))));
   }
 }
 
