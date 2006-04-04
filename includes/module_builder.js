@@ -16,6 +16,7 @@ function check_hooks(grouping, hooks) {
       id = 'edit-hooks-' + group + '-' + hook;
       if (document.getElementById(id)) {
         checkbox = document.getElementById(id);
+        break;
       }
     }
 
