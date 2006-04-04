@@ -303,7 +303,7 @@ function theme_module_builder_hook_list($form) {
   foreach (element_children($form) as $key) {
     $output .= "  <li>". form_render($form[$key]) ."</li>\n";
   }
-  $output .= "</ul>\n";
+  $output .= "</ul><br clear=\"all\" />\n";
   return $output;
 }
 
