@@ -71,5 +71,6 @@ CONTRIBUTORS
 * Jeff Robbins for the nice mockup to work from and some great suggestions
 * Karthik/Zen/|gatsby| for helping debug some hairy Forms API issues
 * Steven Wittens and David Carrington for their nice JS checkbox magic
+* jsloan for the excellent "automatically generate module file" feature
 * Folks who have submitted bug reports and given encouragement, thank you
   so much! :)

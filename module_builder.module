@@ -114,6 +114,17 @@ function module_builder_settings() {
     '#default_value' => variable_get('module_builder_detail', 0),
   );
 
+  $form['module_builder_download'] = array(
+    '#type' => 'radios',
+    '#title' => t('Download module file checkbox defaults to:'),
+    '#description' => t('When checked, this will automatically generate your module file for you and prompt your browser to download it.'),
+    '#options' => array(
+      1 => t('Enabled'),
+      0 => t('Disabled'),
+    ),
+    '#default_value' => variable_get('module_builder_download', 1),
+  );
+
   if ($op == t('Update')) {
     module_builder_update_documentation();
   }
@@ -286,6 +297,13 @@ function module_builder_page() {
       // Sort list alphabetically
       ksort($form['hooks'][$hook_group]);
     }
+
+    $form['download'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Automatically generate module file for download?'),
+      '#description' => t('When checked, this will automatically generate your module file for you and prompt your browser to download it.'),
+      '#default_value' => variable_get('module_builder_download', 1),
+    );
 
     $form['op'] = array(
       '#type' => 'submit',
@@ -460,6 +478,21 @@ function module_builder_process() {
   // Prepare final output
   $output = $header . $output . $footer;
 
+  // Check if file was selected for download; if so, send to browser
+  if ($edit['download']) {
+    $file_content= $output;
+    $download_file= $edit['module_root_name'] .'.module';
+    header("Content-disposition: attachment; filename=$download_file");
+    header('Content-Type: application/force-download');
+    header('Content-Transfer-Encoding: binary');
+    header('Content-Length: ' .strlen($filecontent));
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    echo $file_content;
+    exit();
+  }
+
+  // Otherwise, return the contents in a regular Drupal page
   return theme('module_builder_results', $edit['module_root_name'], $output);
 }
 
