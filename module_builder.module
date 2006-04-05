@@ -426,6 +426,7 @@ function module_builder_process() {
       $hook_custom_declarations[$hook['title']] = $hook['data'];
     }
   }
+  unset($_SESSION['module_builder_is_node']);
 
   // Strip out INFO: comments for advanced users
   if (!variable_get('module_builder_detail', 0)) {
