@@ -1,0 +1,5 @@
+; $Id$
+name = Module Builder
+description = Builds scaffolding for custom modules.
+package = Development
+version = "$Name$"
