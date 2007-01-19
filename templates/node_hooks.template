@@ -33,6 +33,7 @@
     $items[] = array(
       'path' => 'node/add/%module',
       'title' => t('%name'),
+      'description' => t('%description'),
       'access' => user_access('create %name'),
       // OPTIONAL: Fill in other properties
     );

@@ -19,18 +19,6 @@ define('MODULE_BUILDER_VERSION', 'HEAD');
  */
 
 /**
- * Implementation of hook_help().
- *
- * @ingroup module_builder_core
- */
-function module_builder_help($section) {
-  switch ($section) {
-    case 'admin/modules#description':
-      return t('Builds scaffolding for custom modules.');
-  }
-}
-
-/**
  * Implementation of hook_perm().
  *
  * @ingroup module_builder_core
@@ -50,13 +38,25 @@ function module_builder_menu($may_cache) {
   if ($may_cache) {
     $items[] = array(
       'path' => 'module_builder',
-      'title' => t('module builder'),
-      'callback' => 'module_builder_page',
+      'title' => t('Module Builder'),
+      'description' => t('Builds scaffolding for custom modules.'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('module_builder_page'),
       'access' => user_access('access module builder'),
+      'type' => MENU_NORMAL_ITEM,
+    );
+    $items[] = array(
+      'path' => 'admin/settings/module_builder',
+      'title' => t('Module Builder'),
+      'description' => t('Configure Module Builder.'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('module_builder_admin_settings'),
+      'access' => user_access('access module builder'),
+      'type' => MENU_NORMAL_ITEM,
     );
     $items[] = array(
       'path' => 'module_builder_process',
-      'title' => t('module builder'),
+      'title' => t('Module Builder'),
       'callback' => 'module_builder_process',
       'access' => user_access('access module builder'),
       'type' => MENU_CALLBACK,
@@ -71,15 +71,12 @@ function module_builder_menu($may_cache) {
  *
  * @ingroup module_builder_core
  */
-function module_builder_settings() {
-  $op = $_POST['op'];
-
-  _module_builder_check_settings();
+function module_builder_admin_settings() {
 
   $form['module_builder_hooks_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to hook documentation directory'),
-    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => '<em>'. variable_get('file_directory_path', 'files') .'/</em>')),
+    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')),
     '#default_value' => variable_get('module_builder_hooks_directory', 'hooks'),
   );
   $form['module_builder_header'] = array(
@@ -116,7 +113,7 @@ function module_builder_settings() {
 
   $form['module_builder_download'] = array(
     '#type' => 'radios',
-    '#title' => t('Download module file checkbox defaults to:'),
+    '#title' => t('Download module file checkbox defaults to'),
     '#description' => t('When checked, this will automatically generate your module file for you and prompt your browser to download it.'),
     '#options' => array(
       1 => t('Enabled'),
@@ -125,21 +122,33 @@ function module_builder_settings() {
     '#default_value' => variable_get('module_builder_download', 1),
   );
 
-  if ($op == t('Update')) {
-    module_builder_update_documentation();
-  }
-
   $form['module_builder_update'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update hook documentation'),
-    '#description' => t('Your last hook documentation update was %date.', array('%date' => '<strong>'. variable_get('module_builder_last_update', 0) .'</strong>')),
+    '#description' => t('Your last hook documentation update was %date.', array('%date' => variable_get('module_builder_last_update', 0))),
   );
   $form['module_builder_update']['update'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Update'),
   );
 
-  return $form;
+  return system_settings_form($form);
+
+}
+
+/**
+ * Implementation of submit handler for settings page.
+ *
+ * @ingroup module_builder_core
+ */
+function module_builder_admin_settings_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Update')) {
+    module_builder_update_documentation();
+    drupal_set_message(t('Hook documentation has been updated.'));
+  }
+  // In order to get regular settings page processing we need to 
+  // pass controll off to the system.module submit handler.
+  return system_settings_form_submit($form_id, $form_values);
 }
 
 /**
@@ -173,8 +182,7 @@ function module_builder_page() {
   _module_builder_check_settings();
 
   // Include CSS for formatting
-  $path = drupal_get_path('module', 'module_builder');
-  theme_add_style($path . '/includes/module_builder.css');
+  drupal_add_css(drupal_get_path('module', 'module_builder') .'/includes/module_builder.css');
 
   // Module properties
   $form['module_root_name'] = array(
@@ -186,7 +194,7 @@ function module_builder_page() {
   $form['module_short_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Module short description'),
-    '#description' => t('Will appear in the module listing at <a href="%listing">administer >> modules</a>.', array('%listing' => url('admin/modules'))),
+    '#description' => t('Will appear in the module listing at <a href="!listing">administer >> modules</a>.', array('!listing' => url('admin/build/modules'))),
     '#required' => TRUE,
   );
   $form['module_readable_name'] = array(
@@ -197,16 +205,16 @@ function module_builder_page() {
   $form['module_help_text'] = array(
     '#type' => 'textarea',
     '#title' => t('Help text'),
-    '#description' => t('Help text (HTML) to appear in <a href="%help">administer >> help >> module_name</a> page', array('%help' => url('admin/help'))),
+    '#description' => t('Help text (HTML) to appear in <a href="!help">administer >> help >> module_name</a> page', array('!help' => url('admin/help'))),
   );
 
   // Check for custom hook_groups file, else use default
-  $path = drupal_get_path('module', 'module_builder') . '/templates';
+  $path = drupal_get_path('module', 'module_builder');
   if (file_exists("$path/hook_groups-custom.template")) {
-    $template_file = file_get_contents("$path/hook_groups-custom.template");
+    $template_file = file_get_contents("$path/templates/hook_groups-custom.template");
   }
   else {
-    $template_file = file_get_contents("$path/hook_groups.template");
+    $template_file = file_get_contents("$path/templates/hook_groups.template");
   }
 
   $form['hook_groups'] = array(
@@ -215,7 +223,6 @@ function module_builder_page() {
     '#description' => t('Selecting one or more of these features will automatically select appropriate hooks for you.'),
   );
 
-  $path = drupal_get_path('module', 'module_builder');
   drupal_add_js($path .'/includes/module_builder.js');
 
   // Get list of hook groups
@@ -231,7 +238,7 @@ function module_builder_page() {
       }
     }
 
-    $form['hook_groups']['groups-' .$i] = array(
+    $form['hook_groups']['groups-'. $i] = array(
       '#type' => 'checkbox',
       '#title' => $hook_groups[$i]['title'],
       '#attributes' => array(
@@ -249,7 +256,7 @@ function module_builder_page() {
   $hook_groups = module_builder_get_hook_data();
 
   if (!is_array($hook_groups) || !count($hook_groups)) {
-    form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="%settings">admininster >> settings >> modulebuilder</a> page.', array('%settings' => url('admin/settings/module_builder'))));
+    form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="!settings">admininster >> settings >> modulebuilder</a> page.', array('!settings' => url('admin/settings/module_builder'))));
   }
   else {
 
@@ -262,7 +269,7 @@ function module_builder_page() {
     foreach ($hook_groups as $hook_group => $hooks) {
       $form['hooks'][$hook_group] = array(
         '#type' => 'fieldset',
-        '#title' => $hook_group . ' hooks',
+        '#title' => $hook_group .' hooks',
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#theme' => 'module_builder_hook_list',
@@ -311,7 +318,7 @@ function module_builder_page() {
     );
   }
 
-  return drupal_get_form('module_builder_page', $form);
+  return $form;
 }
 
 /**
@@ -320,7 +327,7 @@ function module_builder_page() {
 function theme_module_builder_hook_list($form) {
   $output = "<ul class=\"hook-group\">\n";
   foreach (element_children($form) as $key) {
-    $output .= "  <li>". form_render($form[$key]) ."</li>\n";
+    $output .= "  <li>". drupal_render($form[$key]) ."</li>\n";
   }
   $output .= "</ul><br clear=\"all\" />\n";
   return $output;
@@ -380,7 +387,7 @@ function module_builder_process() {
 
   // Include link in breadcrumb to go back to main module builder form
   $breadcrumb = drupal_get_breadcrumb();
-  $breadcrumb[] = l(t('module builder'), 'module_builder');
+  $breadcrumb[] = l(t('Module Builder'), 'module_builder');
   drupal_set_breadcrumb($breadcrumb);
 
   // Grab header from settings
@@ -474,7 +481,7 @@ function module_builder_process() {
 
   // Replace full-blown Id tag with just starter
   // (excuse the weird concatenation stuff; CVS hijacks it otherwise :))
-  $output = preg_replace('#\/\/ \$Id(.*?)\$#', '// $'. 'Id$', $output);
+  $output = preg_replace('#\/\/ \$Id(.*?)\$#', '// $'.'Id$', $output);
 
   // Prepare final output
   $output = $header . $output . $footer;
@@ -486,7 +493,7 @@ function module_builder_process() {
     header("Content-disposition: attachment; filename=$download_file");
     header('Content-Type: application/force-download');
     header('Content-Transfer-Encoding: binary');
-    header('Content-Length: ' .strlen($filecontent));
+    header('Content-Length: '. strlen($filecontent));
     header('Pragma: no-cache');
     header('Expires: 0');
     echo $file_content;
@@ -510,7 +517,7 @@ function module_builder_process() {
  */
 function theme_module_builder_results($name, $code) {
   $output  = "<div id=\"module-message\">\n";
-  $output .= t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $name)) . "\n";
+  $output .= t('Please copy and paste the following text into a file called <strong>%module.module</strong>.', array('%module' => $name)) ."\n";
   $output .= "</div>\n";
   $output .= "<div id=\"module-code\">\n";
   $output .= "<textarea cols=\"70\" rows=\"40\">\n";
@@ -674,10 +681,9 @@ function module_builder_extract_hook_data($path, $file, $type = HOOK_NAMES) {
 function module_builder_update_documentation() {
   // Retrieve remote hook file listing from cvs.drupal.org
   $hook_listing = drupal_http_request('http://cvs.drupal.org/viewcvs/drupal/contributions/docs/developer/hooks/?only_with_tag='. MODULE_BUILDER_VERSION);
-  if ($hook_listing->error) {
+  if (isset($hook_listing->error)) {
     return FALSE;
   }
-
   $url_pattern = '!<td>\&nbsp;<a href="(.*?)"!';
   $file_pattern = '!(.*)/(.*?)\?!';
   $hook_files = array();

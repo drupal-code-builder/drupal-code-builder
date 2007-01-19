@@ -17,8 +17,8 @@ FEATURES
 * Saves you the trouble of looking at drupaldocs.org 50 times a day to 
   remember what arguments and what order different hooks use. Score one
   for laziness! ;)
-* NEW! Automatically selects hooks based on your needs.
-* NEW! Advanced switch allows you to turn off informative comments.
+* Automatically selects hooks based on your needs.
+* Option allows you to turn off informative comments.
 
 INSTALL/CONFIG
 --------------
@@ -27,10 +27,10 @@ INSTALL/CONFIG
 2. Enable it from administer >> modules.
 3. Go to administer >> settings >> module_builder and specify the path
    to save the hook documentation files
-4. The first time you visit the settings page or the module builder form,
-   the module will retrieve hook documentation from cvs.drupal.org and 
-   store it locally. When you want to update this documentation later on,
-   return to the settings page and click the "Update" button.
+4. The first time you visit the module builder form, the module will 
+   retrieve hook documentation from cvs.drupal.org and store it locally. 
+   When you want to update this documentation later on, return to the 
+   settings page and click the "Update" button.
 5. (Optional) Create custom function declaration template file(s) if you
    don't like the default output.
 6. (Optional) Create your own hook groupings if you don't like the 
@@ -46,8 +46,9 @@ USING THE MODULE
    hooks individually.
 4. Click the "Submit" button and watch your module's code generated
    before your eyes! ;)
-5. Copy and paste the code into a file called <your_module>.module and
-   save it in your modules directory.
+5. Copy and paste the code into a files called <your_module>.module,
+   <your_module>.info and <your_module>.install and save them to
+   a <your_module> directory under one of the modules directories.
 6. Start customizing it to your needs; most of the tedious work is 
    already done for you! ;)
 
