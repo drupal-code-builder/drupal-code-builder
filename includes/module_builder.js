@@ -13,7 +13,7 @@ function check_hooks(grouping, hooks) {
     // Find the relevant checkbox
     hook_groups = Array('authentication', 'core', 'node');
     for (j = 0; group = hook_groups[j]; j++) {
-      id = 'edit-hooks-' + group + '-' + hook;
+      id = 'edit-hooks-' + group + '-' + hook.replace(/_/g, '-');
       if (document.getElementById(id)) {
         checkbox = document.getElementById(id);
         break;
