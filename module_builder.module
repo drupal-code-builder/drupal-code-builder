@@ -384,7 +384,7 @@ function module_builder_page() {
 
         );
         // Set some default hooks
-        if ($name == 'hook_help' || $name == 'hook_menu') {
+        if ($name == 'hook_menu') {
           $form['hooks'][$hook_group][$name]['#default_value'] = 1;
         }
       }
