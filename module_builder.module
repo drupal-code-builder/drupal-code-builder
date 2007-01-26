@@ -201,6 +201,7 @@ function module_builder_admin_settings() {
     ),
     '#default_value' => variable_get(MODULE_BUILDER_DETAIL_VARIABLE, MODULE_BUILDER_DETAIL_DEFAULT),
   );
+  /*
   $form['module_builder_download'] = array(
     '#type' => 'radios',
     '#title' => t('Download module file checkbox defaults to'),
@@ -211,6 +212,7 @@ function module_builder_admin_settings() {
     ),
     '#default_value' => variable_get(MODULE_BUILDER_DOWNLOAD_VARIABLE, MODULE_BUILDER_DOWNLOAD_DEFAULT),
   );
+  */
   $form['module_builder_update'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update hook documentation'),
@@ -407,12 +409,14 @@ function module_builder_page($form_values=NULL) {
       ksort($form['hooks'][$hook_group]);
     }
 
+    /*
     $form['download'] = array(
       '#type' => 'checkbox',
       '#title' => t('Automatically generate module file for download?'),
       '#description' => t('When checked, this will automatically generate your module file for you and prompt your browser to download it.'),
       '#default_value' => variable_get(MODULE_BUILDER_DOWNLOAD_VARIABLE, MODULE_BUILDER_DOWNLOAD_DEFAULT),
     );
+    */
     $form['op'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
