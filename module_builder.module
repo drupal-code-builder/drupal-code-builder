@@ -82,6 +82,11 @@ define('MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH', '/template/hook_groups
  */
 // The weird syntax stops this from getting mangled by CVS
 define('MODULE_BUILDER_ID_COMMENT', '// $'.'Id$');
+/**
+ * Used at the top of the .info file.
+ */
+// The weird syntax stops this from getting mangled by CVS
+define('MODULE_BUILDER_INFO_ID_COMMENT', '; $'.'Id$');
 
 
 /* Default variable names and their default values */
@@ -261,7 +266,7 @@ function _module_builder_check_settings() {
  * @return
  *   Form for entering module options
  */
-function module_builder_page() {
+function module_builder_page($form_values=NULL) {
 
   _module_builder_check_settings();
 
@@ -284,12 +289,22 @@ function module_builder_page() {
   $form['module_readable_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Module readable name'),
-    '#description' => t('Name of your module as it will appear to users. (Note: only for node modules)'),
+    '#description' => t('Name of your module as it will appear to users. (Note: only for node modules.)'),
   );
   $form['module_help_text'] = array(
     '#type' => 'textarea',
     '#title' => t('Help text'),
-    '#description' => t('Help text (HTML) to appear in <a href="!help">%administer >> %help >> module_name</a> page', array('!help' => url('admin/help'), '%administer' => 'Administer', '%help' => 'Help')),
+    '#description' => t('Help text (HTML) to appear in <a href="!help">%administer >> %help >> module_name</a> page.', array('!help' => url('admin/help'), '%administer' => 'Administer', '%help' => 'Help')),
+  );
+  $form['module_dependencies'] = array(
+  	'#type' => 'textfield',
+  	'#title' => t('Module dependencies'),
+  	'#description' => t('Space seperated list of other modules that your module requires.'),
+  );
+  $form['module_package'] = array(
+  	'#type' => 'textfield',
+  	'#title' => t('Module package'),
+  	'#description' => t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'),
   );
 
   // Check for custom hook_groups file, else use default
@@ -470,6 +485,40 @@ function module_builder_process() {
   $breadcrumb[] = l(t('Module Builder'), 'module_builder');
   drupal_set_breadcrumb($breadcrumb);
 
+  $code = generate_module($edit);
+  $info = generate_info($edit);
+  
+  $form['code_instructions'] = array(
+    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $edit['module_root_name'] . '.module')),
+    '#prefix' => '<div id="module-message">',
+    '#suffix' => '</div>',
+  ); 
+  $form['module_code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Module code'),
+    '#rows' => 20,
+    '#default_value' => $code,
+    '#prefix' => '<div id="module-code">',
+    '#suffix' => '</div>',
+  );
+  $form['info_instructions'] = array(
+    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $edit['module_root_name'] . '.info')),
+    '#prefix' => '<div id="module-message">',
+    '#suffix' => '</div>',
+  ); 
+  $form['module_info'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Module info'),
+    '#rows' => 20,
+    '#default_value' => $info,
+    '#prefix' => '<div id="module-info">',
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+function generate_module($form_values) {
   // Grab header from settings
   $header = "<?php\n". variable_get(MODULE_BUILDER_HEADER_VARIABLE, MODULE_BUILDER_HEADER_DEFAULT);
 
@@ -520,7 +569,7 @@ function module_builder_process() {
   $code = '';
 
   // Determine which hooks are to be implemented
-  foreach ($edit['hooks'] as $hooks) {
+  foreach ($form_values['hooks'] as $hooks) {
     foreach ($hooks as $hook => $value) {
       if ($value) {
         // Display PHP doc
@@ -530,7 +579,7 @@ function module_builder_process() {
  */
 ";
 
-        $code .= str_replace('hook', $edit['module_root_name'], $hook_default_declarations[$hook]);
+        $code .= str_replace('hook', $form_values['module_root_name'], $hook_default_declarations[$hook]);
         // See if function bodies exist; if so, use function bodies from template
         if (array_key_exists($hook, $hook_custom_declarations)) {
           $code .= $hook_custom_declarations[$hook];
@@ -545,11 +594,11 @@ function module_builder_process() {
 
   // Replace variables
   $variables = array(
-    '%module' => $edit['module_root_name'],
-    '%description' => str_replace("'", "\'", $edit['module_short_description']),
-    '%name' => !empty($edit['module_readable_name']) ? str_replace("'", "\'", $edit['module_readable_name']) : $edit['module_root_name'],
-    '%help' => !empty($edit['module_help_text']) ? str_replace("'", "\'", $edit['module_help_text']) : t('TODO: Create admin help text.'),
-    '%readable' => str_replace("'", "\'", $edit['module_readable_name']),
+    '%module' => $form_values['module_root_name'],
+    '%description' => str_replace("'", "\'", $form_values['module_short_description']),
+    '%name' => !empty($form_values['module_readable_name']) ? str_replace("'", "\'", $form_values['module_readable_name']) : $form_values['module_root_name'],
+    '%help' => !empty($form_values['module_help_text']) ? str_replace("'", "\'", $form_values['module_help_text']) : t('TODO: Create admin help text.'),
+    '%readable' => str_replace("'", "\'", $form_values['module_readable_name']),
   );
   $code = strtr($code, $variables);
 
@@ -559,22 +608,29 @@ function module_builder_process() {
 
   // Prepare final code
   $code = $header . $code . $footer;
-  
-  $form['page_instructions'] = array(
-    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $edit['module_root_name'] . '.module')),
-    '#prefix' => '<div id="module-message">',
-    '#suffix' => '</div>',
-  ); 
-  $form['module_code'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Module Code'),
-    '#rows' => 20,
-    '#default_value' => $code,
-    '#prefix' => '<div id="module-code">',
-    '#suffix' => '</div>',
-  );
 
-  return $form;
+  return $code;
+}
+
+function generate_info($form_values) {
+	$info = MODULE_BUILDER_INFO_ID_COMMENT . "\n";
+	$info .= 'name = ';
+	if(!empty($form_values['module_readable_name'])) {
+		$info .= $form_values['module_readable_name'];
+	}
+	else {
+		$info .= $form_values['module_root_name'];
+	}
+	$info .= "\n";
+	$info .= 'description = ' . $form_values['module_short_description'] . "\n";
+	if(!empty($form_values['module_dependencies'])) {
+		$info .= 'dependencies = ' . $form_values['module_dependencies'] . "\n";
+	}
+	if(!empty($form_values['module_package'])) {
+		$info .= 'package = ' . $form_values['module_package'] . "\n";
+	}
+	
+	return $info;
 }
 
 /**
