@@ -482,7 +482,7 @@ function module_builder_process() {
 
   // Include link in breadcrumb to go back to main module builder form
   $breadcrumb = drupal_get_breadcrumb();
-  $breadcrumb[] = l(t('Module Builder'), 'module_builder');
+  $breadcrumb[] = l(t('Module builder'), 'module_builder');
   drupal_set_breadcrumb($breadcrumb);
 
   $code = generate_module($edit);
