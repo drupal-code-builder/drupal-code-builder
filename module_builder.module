@@ -151,14 +151,6 @@ function module_builder_menu($may_cache) {
       'access' => user_access('access module builder'),
       'type' => MENU_NORMAL_ITEM,
     );
-    $items[] = array(
-      'path' => 'module_builder_process',
-      'title' => t('Module builder'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('module_builder_process'),
-      'access' => user_access('access module builder'),
-      'type' => MENU_CALLBACK,
-    );
   }
 
   return $items;
@@ -262,13 +254,114 @@ function _module_builder_check_settings() {
  */
 
 /**
- * Displays module builder interface.
+ * Displays module builder interface via a multi-step form.
+ * The steps are:
+ * 
+ * input => shows a form where the user can enter module options.
+ * module => shows the generated module and info files.
+ * download => pushes a file for download.
  *
  * @ingroup module_builder_callback
+ * @param $form_values will be NULL when the page is first displayed, 
+ *   when the form is submitted, this will be an array of the submitted
+ *   values.
  * @return
+ *   One of three results depending on the state of this multi-step form.
  *   Form for entering module options
+ *   Form showing built module and info file
+ *   Nothing, but file is pushed to client for download
  */
-function module_builder_page($form_values=NULL) {
+function module_builder_page($form_values = NULL) {
+  $step = 'input';
+  
+  //print_r('<pre>');
+  
+  if (isset($form_values) && isset($form_values['op'])) {
+    //print_r("VALUES:\n");
+    //print_r($form_values);
+    //print_r("\n");
+    if ($form_values['op'] == t('Generate')) {
+      $step = 'module';
+    }
+    else if (stripos($form_values['op'], t('Download')) !== false) {
+      $step = 'download';
+    }
+  }
+  
+  if ($step == 'module') {
+    $form = module_builder_page_module($form, $form_values);
+  } 
+  else if ($step == 'download') {
+    $form = module_builder_page_download($form, $form_values);
+  }
+  else {
+    $form = module_builder_page_input($form, $form_values);
+  } 
+  
+  $form = _module_builder_save_old_form_values($form, $form_values);
+  
+  //print_r("FORM:\n");
+  //print_r($form);
+  //print_r("\n");
+  
+  $form['#multistep'] = TRUE;
+  $form['#redirect'] = FALSE;
+
+  //print_r("</pre>\n");
+  
+  return $form;
+}
+
+/**
+ * This still needs some work. Set a bunch of check boxes, forward, back, uncheck 
+ * the boxes, forward and back and the boxes get turned back on for some reason.
+ * Otherwise this seems pretty good.
+ */
+function _module_builder_save_old_form_values($form, $form_values, $indent='') {
+  static $excludes;
+
+  if (!isset($excludes)) {
+    $excludes = array('op', 'form_build_id', 'form_token', 'form_id', 'generate_module', 'module_code', 'module_info');
+  }
+  if (isset($form['#multistep_excludes']) && is_array($form['#multistep_excludes'])) {
+    $excludes = array_merge($excludes, $form['#multistep_excludes']);
+  }
+  if (isset($form_values)) {
+    foreach ($form_values as $key => $value) {
+      //print_r($indent . $key .' => '. $value ."\n");
+      $include = true;
+      foreach ($excludes as $exclude) {
+        if ($key == $exclude) {
+          $include = false;  
+        }
+      }  
+      if ($include) {
+        if (is_array($value)) {
+          if (!isset($form[$key])) {
+            $form[$key] = array();
+          }
+          $form[$key] = _module_builder_save_old_form_values($form[$key], $value, $indent .'    ');
+          $form[$key]['#tree'] = TRUE;
+        }
+        else {
+          if (isset($form[$key])) {
+            $form[$key]['#value'] = $value;
+          }
+          else {
+            $form[$key] = array(
+              '#type' => 'hidden',
+              '#value' => $value,
+            );
+          }
+        }
+      }
+    }
+  }
+  
+  return $form;
+}
+
+function module_builder_page_input($form, $form_values) {
 
   _module_builder_check_settings();
 
@@ -299,14 +392,14 @@ function module_builder_page($form_values=NULL) {
     '#description' => t('Help text (HTML) to appear in <a href="!help">%administer >> %help >> module_name</a> page.', array('!help' => url('admin/help'), '%administer' => 'Administer', '%help' => 'Help')),
   );
   $form['module_dependencies'] = array(
-  	'#type' => 'textfield',
-  	'#title' => t('Module dependencies'),
-  	'#description' => t('Space seperated list of other modules that your module requires.'),
+    '#type' => 'textfield',
+    '#title' => t('Module dependencies'),
+    '#description' => t('Space seperated list of other modules that your module requires.'),
   );
   $form['module_package'] = array(
-  	'#type' => 'textfield',
-  	'#title' => t('Module package'),
-  	'#description' => t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'),
+    '#type' => 'textfield',
+    '#title' => t('Module package'),
+    '#description' => t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'),
   );
 
   // Check for custom hook_groups file, else use default
@@ -417,83 +510,35 @@ function module_builder_page($form_values=NULL) {
       '#default_value' => variable_get(MODULE_BUILDER_DOWNLOAD_VARIABLE, MODULE_BUILDER_DOWNLOAD_DEFAULT),
     );
     */
-    $form['op'] = array(
+    $form['generate_module'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#name' => 'op',
+      '#value' => t('Generate'),
     );
   }
 
   return $form;
 }
 
-/**
- * Makes sure that valid values have been provided to the Module Builder.
- * 
- * @ingroup module_builder_callback
- */
-function module_builder_page_validate($form_id, $form_values) {
-  // Ensure module_root_name was entered, and check for special characters
-  if (!empty($form_values['module_root_name'])) {
-    if (!preg_match(MODULE_BUILDER_FUNCTION_PATTERN, $form_values['module_root_name'])) {
-      form_set_error('module_root_name', t('The module root name must only contain letters, numbers, and underscores, and may not start with a number.'));
-    }
-  }
-
-  // Make sure at least one hook was chosen
-  $hook_selected = false;
-  foreach ($form_values['hooks'] as $file => $hooks) {
-    foreach ($hooks as $hook) {
-      if ($hook == 1) {
-        $hook_selected = true;
-        break;
-      }
-    }
-    if ($hook_selected) {
-      break;
-    }
-  }
-  if (!$hook_selected) {
-    form_set_error('hooks', t('You must select at least one hook.'));
-  }
-}
-
-/**
- * Passes control from a valid Module Builder submission to the module_builder_process 
- * which will actually generate the module and deliver it to the user.
- * 
- * @ingroup module_builder_callback
- */
-function module_builder_page_submit($form_id, $form_values) {
-  $_SESSION['module_builder_values'] = $form_values;
-  $_SESSION['module_builder_is_node'] = $form_values['hooks']['node']['hook_node_info'];
-  return 'module_builder_process';
-}
-
-/**
- * Generate module file
- * 
- * @ingroup module_builder_callback
- */
-function module_builder_process() {
-
-  if (isset($_SESSION['module_builder_values'])) {
-    $edit = $_SESSION['module_builder_values'];
-    unset($_SESSION['module_builder_values']);
-  }
-  else {
-    drupal_goto('module_builder');
-  }
+function module_builder_page_module($form, $form_values) {
 
   // Include link in breadcrumb to go back to main module builder form
+  /*
   $breadcrumb = drupal_get_breadcrumb();
   $breadcrumb[] = l(t('Module builder'), 'module_builder');
   drupal_set_breadcrumb($breadcrumb);
+  */
 
-  $code = generate_module($edit);
-  $info = generate_info($edit);
+  $code = generate_module($form_values);
+  $info = generate_info($form_values);
   
+  $form['back'] = array(
+    '#type' => 'submit',
+    '#name' => 'op',
+    '#value' => t('Back'),
+  );
   $form['code_instructions'] = array(
-    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $edit['module_root_name'] . '.module')),
+    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $form_values['module_root_name'] .'.module')),
     '#prefix' => '<div id="module-message">',
     '#suffix' => '</div>',
   ); 
@@ -505,8 +550,13 @@ function module_builder_process() {
     '#prefix' => '<div id="module-code">',
     '#suffix' => '</div>',
   );
+  $form['download_module'] = array(
+    '#type' => 'submit',
+    '#name' => 'op',
+    '#value' => t('Download module'),
+  );
   $form['info_instructions'] = array(
-    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $edit['module_root_name'] . '.info')),
+    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $form_values['module_root_name'] .'.info')),
     '#prefix' => '<div id="module-message">',
     '#suffix' => '</div>',
   ); 
@@ -518,8 +568,77 @@ function module_builder_process() {
     '#prefix' => '<div id="module-info">',
     '#suffix' => '</div>',
   );
+  $form['download_info'] = array(
+    '#type' => 'submit',
+    '#name' => 'op',
+    '#value' => t('Download info file'),
+  );
+  $form['#multistep_excludes'] = array('module_code', 'module_info');
 
   return $form;
+}
+
+function module_builder_page_download($form, $form_values) {
+  $file_content = '';
+  $file_ext = '.txt';
+  if ($form_values['op'] == t('Download module')) {
+    $file_content = $form_values['module_code'];
+    $file_ext = '.module';
+  }
+  else if ($form_values['op'] == t('Download info file')) {
+    $file_content = $form_values['module_info'];
+    $file_ext = '.info';
+  }
+  else {
+    form_set_error('Problem creating file for download.');
+    drupal_goto('module_builder');
+  }
+  
+  if (strlen($file_content) > 0) {
+    $file_name = $form_values['module_root_name'] . $file_ext;
+    header("Content-disposition: attachment; filename=$file_name");
+    header('Content-Type: application/force-download');
+    header('Content-Transfer-Encoding: binary');
+    header('Content-Length: '. strlen($file_content));
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    echo $file_content;
+    exit();
+  }
+}
+
+/**
+ * Makes sure that valid values have been provided to the Module Builder.
+ * 
+ * @ingroup module_builder_callback
+ */
+function module_builder_page_validate($form_id, $form_values) {
+
+  if ($form_values['op'] == 'input') {
+    // Ensure module_root_name was entered, and check for special characters
+    if (!empty($form_values['module_root_name'])) {
+      if (!preg_match(MODULE_BUILDER_FUNCTION_PATTERN, $form_values['module_root_name'])) {
+        form_set_error('module_root_name', t('The module root name must only contain letters, numbers, and underscores, and may not start with a number.'));
+      }
+    }
+  
+    // Make sure at least one hook was chosen
+    $hook_selected = false;
+    foreach ($form_values['hooks'] as $file => $hooks) {
+      foreach ($hooks as $hook) {
+        if ($hook == 1) {
+          $hook_selected = true;
+          break;
+        }
+      }
+      if ($hook_selected) {
+        break;
+      }
+    }
+    if (!$hook_selected) {
+      form_set_error('hooks', t('You must select at least one hook.'));
+    }
+  }
 }
 
 function generate_module($form_values) {
@@ -548,7 +667,7 @@ function generate_module($form_values) {
   }
 
   // Check for node hooks; these will overwrite core hooks if found
-  if ($_SESSION['module_builder_is_node']) {
+  if ($form_values['hooks']['node']['hook_node_info']) {
     if (file_exists("$path/node_hooks-custom.template")) {
       $template_file = file_get_contents("$path/node_hooks-custom.template");
     }
@@ -560,7 +679,6 @@ function generate_module($form_values) {
       $hook_custom_declarations[$hook['title']] = $hook['data'];
     }
   }
-  unset($_SESSION['module_builder_is_node']);
 
   // Strip out INFO: comments for advanced users
   if (!variable_get(MODULE_BUILDER_DETAIL_VARIABLE, MODULE_BUILDER_DETAIL_DEFAULT)) {
@@ -617,45 +735,24 @@ function generate_module($form_values) {
 }
 
 function generate_info($form_values) {
-	$info = MODULE_BUILDER_INFO_ID_COMMENT . "\n";
-	$info .= 'name = ';
-	if(!empty($form_values['module_readable_name'])) {
-		$info .= $form_values['module_readable_name'];
-	}
-	else {
-		$info .= $form_values['module_root_name'];
-	}
-	$info .= "\n";
-	$info .= 'description = ' . $form_values['module_short_description'] . "\n";
-	if(!empty($form_values['module_dependencies'])) {
-		$info .= 'dependencies = ' . $form_values['module_dependencies'] . "\n";
-	}
-	if(!empty($form_values['module_package'])) {
-		$info .= 'package = ' . $form_values['module_package'] . "\n";
-	}
-	
-	return $info;
-}
-
-/**
- * !!!
- * Need to move this logic somewhere so we can download several files, one at 
- * a time, or all at once via some zipping mechanism.
- */
-function download_file() {
-  // Check if file was selected for download; if so, send to browser
-  if ($edit['download']) {
-    $file_content= $output;
-    $download_file= $edit['module_root_name'] .'.module';
-    header("Content-disposition: attachment; filename=$download_file");
-    header('Content-Type: application/force-download');
-    header('Content-Transfer-Encoding: binary');
-    header('Content-Length: '. strlen($filecontent));
-    header('Pragma: no-cache');
-    header('Expires: 0');
-    echo $file_content;
-    exit();
+  $info = MODULE_BUILDER_INFO_ID_COMMENT ."\n";
+  $info .= 'name = ';
+  if (!empty($form_values['module_readable_name'])) {
+    $info .= $form_values['module_readable_name'];
   }
+  else {
+    $info .= $form_values['module_root_name'];
+  }
+  $info .= "\n";
+  $info .= 'description = '. $form_values['module_short_description'] ."\n";
+  if (!empty($form_values['module_dependencies'])) {
+    $info .= 'dependencies = '. $form_values['module_dependencies'] ."\n";
+  }
+  if (!empty($form_values['module_package'])) {
+    $info .= 'package = '. $form_values['module_package'] ."\n";
+  }
+  
+  return $info;
 }
 
 /**
