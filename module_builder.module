@@ -32,7 +32,7 @@ define('MODULE_BUILDER_CVS_URL', 'http://cvs.drupal.org');
 /**
  * URL for retreiving the hook description files.
  */
-define('MODULE_BUILDER_HOOKS_URL', MODULE_BUILDER_CVS_URL .'/viewcvs/drupal/contributions/docs/developer/hooks/?only_with_tag='. MODULE_BUILDER_VERSION);
+define('MODULE_BUILDER_HOOKS_URL', MODULE_BUILDER_CVS_URL .'/viewcvs/drupal/contributions/docs/developer/hooks/?pathrev='. MODULE_BUILDER_VERSION);
 /**
  * Pattern for finding the hook file URLs from the MODULE_BUILDER_HOOKS_URL page.
  */
