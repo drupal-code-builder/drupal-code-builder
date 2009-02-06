@@ -26,24 +26,6 @@
   }
 == END ==
 
-== START hook_menu ==
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'node/add/%module',
-      'title' => t('%name'),
-      'description' => t('%description'),
-      'access' => user_access('create %name'),
-      // OPTIONAL: Fill in other properties
-    );
-    // OPTIONAL: Fill in additional static menu items
-  }
-  // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
-
-  return $items;
-== END ==
-
 == START hook_node_info ==
   return array('%module' => array('name' => t('%name'), 'base' => '%module'));
 == END ==
@@ -133,4 +115,5 @@
   // $order_info = theme('node_example_order_info', $node);
   // $node->body .= $order_info;
   // $node->teaser .= $order_info;
+  return node_prepare($node, $teaser);  
 == END ==

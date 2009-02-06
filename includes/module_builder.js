@@ -28,3 +28,15 @@ function check_hooks(grouping, hooks) {
     checkbox.checked = checkbox.checkCount > 0;
   }
 }
+
+/**
+ * Clears the default texts on click.
+ */
+$(document).ready(function() {
+  $('.form-text.required').click(function () {
+    $(this).attr('value', '');
+    $(this).unbind('click');
+  });  
+});
+  
+

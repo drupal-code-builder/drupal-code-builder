@@ -7,22 +7,9 @@
  */
 
 /**
- * Index into MODULE_BUILDER_EXTRACT_HOOK_PATTERN capture list that returns the hook description from the hook files.
- */
-define('MODULE_BUILDER_HOOK_DESCRIPTIONS', 1);
-/**
- * Index into MODULE_BUILDER_EXTRACT_HOOK_PATTERN capture list that returns the hook declaration from the hook files.
- */
-define('MODULE_BUILDER_HOOK_DECLARATIONS', 2);
-/**
- * Index into MODULE_BUILDER_EXTRACT_HOOK_PATTERN capture list that returns the hook name from the hook files.
- */
-define('MODULE_BUILDER_HOOK_NAMES', 3);
-
-/**
  * Version of hook info to retrieve 
  */
-define('MODULE_BUILDER_VERSION', 'HEAD');
+define('MODULE_BUILDER_VERSION', 'DRUPAL-5');
 
 /* Constant values extracted from code */
 /**
@@ -41,6 +28,12 @@ define('MODULE_BUILDER_URL_PATTERN', '!<td>\&nbsp;<a href="(.*?)"!');
  * Pattern that captures 3 things about a hook from one of the hook files: Description, Declaraion and Name (in that order).
  */
 define('MODULE_BUILDER_EXTRACT_HOOK_PATTERN', '#\/\*\*\n \* (\w.*?)\s+\*\s+\*.*?(function (hook_.*?)\(.*?\) {)#ms');
+/**
+ * Indexes into MODULE_BUILDER_EXTRACT_HOOK_PATTERN capture list: that returns the hook description from the hook files.
+ */
+define('MODULE_BUILDER_HOOK_DESCRIPTIONS', 1); // returns the hook description
+define('MODULE_BUILDER_HOOK_DECLARATIONS', 2); // returns the hook declaration
+define('MODULE_BUILDER_HOOK_NAMES',        3); // returns the hook name
 /**
  * After finding a hook file URL with MODULE_BUILDER_URL_PATTERN, this captures the path and filename.
  */
@@ -62,14 +55,6 @@ define('MODULE_BUILDER_INFO_PATTERN', '#(\s+)\/\* INFO:(.*?)\*\/#ms');
  */
 define('MODULE_BUILDER_TEMPLATE_PATTERN', '#== START (.*?) ==(.*?)== END ==#ms');
 /**
- * Path from module base to the module builder css file.
- */
-define('MODULE_BUILDER_CSS_PATH', '/includes/module_builder.css');
-/**
- * Path from module base to the module builder java script file.
- */
-define('MODULE_BUILDER_JS_PATH', '/includes/module_builder.js');
-/**
  * Path from module base to the normal hook groups template. MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH used if it exists.
  */
 define('MODULE_BUILDER_HOOK_GROUPS_TEMPLATE_PATH', '/templates/hook_groups.template');
@@ -89,14 +74,7 @@ define('MODULE_BUILDER_ID_COMMENT', '// $'.'Id$');
 define('MODULE_BUILDER_INFO_ID_COMMENT', '; $'.'Id$');
 
 
-/* Default variable names and their default values */
-define('MODULE_BUILDER_DETAIL_VARIABLE', 'module_builder_detail');
-define('MODULE_BUILDER_DETAIL_DEFAULT', 0);
-define('MODULE_BUILDER_FILE_DIRECTORY_PATH_VARIABLE', 'file_directory_path');
-define('MODULE_BUILDER_FILE_DIRECTORY_PATH_DEFAULT', 'files');
-define('MODULE_BUILDER_HOOKS_DIRECTORY_VARIABLE', 'module_builder_hooks_directory');
-define('MODULE_BUILDER_HOOKS_DIRECTORY_DEFAULT', 'hooks');
-define('MODULE_BUILDER_HEADER_VARIABLE', 'module_builder_header');
+/* Default default values for some variables */
 define('MODULE_BUILDER_HEADER_DEFAULT', '// $'.'Id$
 
 /**
@@ -104,12 +82,6 @@ define('MODULE_BUILDER_HEADER_DEFAULT', '// $'.'Id$
  * TODO: Enter file description here.
  */
 ');
-define('MODULE_BUILDER_FOOTER_VARIABLE', 'module_builder_footer');
-define('MODULE_BUILDER_FOOTER_DEFAULT', '');
-define('MODULE_BUILDER_DOWNLOAD_VARIABLE', 'module_builder_download');
-define('MODULE_BUILDER_DOWNLOAD_DEFAULT', 1);
-define('MODULE_BUILDER_LAST_UPDATE_VARIABLE', 'module_builder_last_udpate');
-define('MODULE_BUILDER_LAST_UPDATE_DEFAULT', 0);
 
 /**
  * @defgroup module_builder_core Core Drupal hooks
@@ -166,22 +138,44 @@ function module_builder_admin_settings() {
   $form['module_builder_hooks_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to hook documentation directory'),
-    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => variable_get(MODULE_BUILDER_FILE_DIRECTORY_PATH_VARIABLE, MODULE_BUILDER_FILE_DIRECTORY_PATH_DEFAULT) .'/')),
-    '#default_value' => variable_get(MODULE_BUILDER_HOOKS_DIRECTORY_VARIABLE, MODULE_BUILDER_HOOKS_DIRECTORY_DEFAULT),
+    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')),
+    '#default_value' => variable_get('module_builder_hooks_directory', 'hooks'),
   );
+  
+  $last_update = variable_get('module_builder_last_update', 0);
+  $form['module_builder_update'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Update hook documentation'),
+    '#description' => $last_update ? 
+      t('Your last hook documentation update was %date.', array('%date' => $last_update)) :
+      t('The hook documentation has not yet been updated.'),
+  );
+  $form['module_builder_update']['update'] = array(
+    '#type' => 'button',
+    '#value' => t('Update'),
+  );
+  $form['#after_build'] = array('module_builder_update_button');
+
+  $form['module_builder_write_directory'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to write module files'),
+    '#description' => t('Subdirectory in the directory "%dir" where module files will be written.', array('%dir' => variable_get('file_directory_path', 'files') .'/')),
+    '#default_value' => variable_get('module_builder_write_directory', 'modules'),
+  );
+  
   $form['module_builder_header'] = array(
     '#type' => 'textarea',
     '#title' => t('Module header'),
     '#description' => t('This is the code that will be displayed at the top of your module file.'),
     '#rows' => 15,
-    '#default_value' => variable_get(MODULE_BUILDER_HEADER_VARIABLE, MODULE_BUILDER_HEADER_DEFAULT),
+    '#default_value' => variable_get('module_builder_header', MODULE_BUILDER_HEADER_DEFAULT),
   );
   $form['module_builder_footer'] = array(
     '#type' => 'textarea',
     '#title' => t('Module footer'),
     '#description' => t('This is the code that will be displayed at the bottom of your module file.'),
     '#rows' => 15,
-    '#default_value' => variable_get(MODULE_BUILDER_FOOTER_VARIABLE, MODULE_BUILDER_FOOTER_DEFAULT),
+    '#default_value' => variable_get('module_builder_footer', ''),
   );
   $form['module_builder_detail'] = array(
     '#type' => 'radios',
@@ -191,7 +185,7 @@ function module_builder_admin_settings() {
       1 => t("<strong>Beginner</strong>: I'm just starting out with Drupal development; please display lots of helpful comments in my module code!"),
       0 => t("<strong>Advanced</strong>: I already know what I'm doing; don't put in a bunch of crap in my module file that I don't need!"),
     ),
-    '#default_value' => variable_get(MODULE_BUILDER_DETAIL_VARIABLE, MODULE_BUILDER_DETAIL_DEFAULT),
+    '#default_value' => variable_get('module_builder_detail', 0),
   );
   /*
   $form['module_builder_download'] = array(
@@ -202,37 +196,28 @@ function module_builder_admin_settings() {
       1 => t('Enabled'),
       0 => t('Disabled'),
     ),
-    '#default_value' => variable_get(MODULE_BUILDER_DOWNLOAD_VARIABLE, MODULE_BUILDER_DOWNLOAD_DEFAULT),
+    '#default_value' => variable_get('module_builder_download', 1),
   );
   */
-  $form['module_builder_update'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Update hook documentation'),
-    '#description' => t('Your last hook documentation update was %date.', array('%date' => variable_get(MODULE_BUILDER_LAST_UPDATE_VARIABLE, MODULE_BUILDER_LAST_UPDATE_DEFAULT))),
-  );
-  $form['module_builder_update']['update'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update'),
-  );
-
+  
   return system_settings_form($form);
-
 }
 
 /**
- * Implementation of submit handler for settings page.
- *
- * @ingroup module_builder_core
+ * Form after_build handler.
+ * If update button was clicked, update hooks documentation. Rest of form is not submitted. 
+ * Cribbed from node_form_add_preview()
  */
-function module_builder_admin_settings_submit($form_id, $form_values) {
-  if ($form_values['op'] == t('Update')) {
+function module_builder_update_button($form) {
+  global $form_values;
+
+  $op = isset($form_values['op']) ? $form_values['op'] : '';
+  if ($op == t('Update')) { 
     module_builder_update_documentation();
-    drupal_set_message(t('Hook documentation has been updated.'));
   }
-  // In order to get regular settings page processing we need to 
-  // pass controll off to the system.module submit handler.
-  return system_settings_form_submit($form_id, $form_values);
+  return $form;
 }
+
 
 /**
  * Create a directory to store hook files if it does not exist.
@@ -240,13 +225,12 @@ function module_builder_admin_settings_submit($form_id, $form_values) {
  * This logic blatantly ripped off from image.module -- thanks James! :)
  */
 function _module_builder_check_settings() {
-  $hooks_path = file_create_path(variable_get(MODULE_BUILDER_HOOKS_DIRECTORY_VARIABLE, MODULE_BUILDER_HOOKS_DIRECTORY_DEFAULT));
+  // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
+  $files = file_create_path();
+  file_check_directory($files, FILE_CREATE_DIRECTORY);
+  // check hooks directory exists or create it
+  $hooks_path = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
   file_check_directory($hooks_path, FILE_CREATE_DIRECTORY, 'module_builder_hooks_directory');
-  $last_update = variable_get(MODULE_BUILDER_LAST_UPDATE_VARIABLE, MODULE_BUILDER_LAST_UPDATE_DEFAULT);
-  if (!$last_update) {
-    module_builder_update_documentation();
-    drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"!api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get(MODULE_BUILDER_HOOKS_DIRECTORY_VARIABLE, MODULE_BUILDER_HOOKS_DIRECTORY_DEFAULT), '!api' => url('http://api.drupal.org/api/HEAD', NULL, NULL, TRUE))));
-  }
 }
 
 /**
@@ -257,9 +241,10 @@ function _module_builder_check_settings() {
  * Displays module builder interface via a multi-step form.
  * The steps are:
  * 
- * input => shows a form where the user can enter module options.
- * module => shows the generated module and info files.
- * download => pushes a file for download.
+ * - input    => shows a form where the user can enter module options.
+ * - module   => shows the generated module and info files.
+ * - download => pushes a file for download.
+ * - write    => writes files.
  *
  * @ingroup module_builder_callback
  * @param $form_values will be NULL when the page is first displayed, 
@@ -272,9 +257,22 @@ function _module_builder_check_settings() {
  *   Nothing, but file is pushed to client for download
  */
 function module_builder_page($form_values = NULL) {
+  
+  if (!isset($form_values)) {
+      $count = 1;
+    }
+    else {
+      $count = $form_values['count'] + 1;
+    }
+
+  $form['count'] = array(
+    '#type' => 'hidden',
+    '#value' => $count,
+  );  
+  
   $step = 'input';
   
-  //print_r('<pre>');
+  #print_r('<pre>');
   
   if (isset($form_values) && isset($form_values['op'])) {
     //print_r("VALUES:\n");
@@ -283,20 +281,32 @@ function module_builder_page($form_values = NULL) {
     if ($form_values['op'] == t('Generate')) {
       $step = 'module';
     }
-    else if (stripos($form_values['op'], t('Download')) !== false) {
+    elseif (stripos($form_values['op'], t('Download')) !== false) {
       $step = 'download';
+    }
+    elseif (stripos($form_values['op'], t('Write')) !== false) {
+      #$step = 'write';
+      $step = 'module';
     }
   }
   
-  if ($step == 'module') {
-    $form = module_builder_page_module($form, $form_values);
-  } 
-  else if ($step == 'download') {
-    $form = module_builder_page_download($form, $form_values);
+  #print_r("$count - $step - $form_values[op]");
+  
+  
+  switch ($step) {
+    case 'input':    
+      $form = module_builder_page_input($form, $form_values);
+      break; 
+    case 'module':
+      $form = module_builder_page_module($form, $form_values);
+      break; 
+    case 'download':
+      $form = module_builder_page_download($form, $form_values);
+      break;
+    case 'write':
+      #$form = module_builder_page_write($form, $form_values);
+      break;
   }
-  else {
-    $form = module_builder_page_input($form, $form_values);
-  } 
   
   $form = _module_builder_save_old_form_values($form, $form_values);
   
@@ -307,7 +317,7 @@ function module_builder_page($form_values = NULL) {
   $form['#multistep'] = TRUE;
   $form['#redirect'] = FALSE;
 
-  //print_r("</pre>\n");
+  print_r("</pre>\n");
   
   return $form;
 }
@@ -329,12 +339,7 @@ function _module_builder_save_old_form_values($form, $form_values, $indent='') {
   if (isset($form_values)) {
     foreach ($form_values as $key => $value) {
       //print_r($indent . $key .' => '. $value ."\n");
-      $include = true;
-      foreach ($excludes as $exclude) {
-        if ($key == $exclude) {
-          $include = false;  
-        }
-      }  
+      $include = !in_array($key, $excludes);
       if ($include) {
         if (is_array($value)) {
           if (!isset($form[$key])) {
@@ -361,30 +366,37 @@ function _module_builder_save_old_form_values($form, $form_values, $indent='') {
   return $form;
 }
 
+/**
+ * Module form: 'input' step. Collect module data.
+ */
 function module_builder_page_input($form, $form_values) {
 
   _module_builder_check_settings();
 
   // Include CSS for formatting
-  drupal_add_css(drupal_get_path('module', 'module_builder') . MODULE_BUILDER_CSS_PATH);
+  drupal_add_css(drupal_get_path('module', 'module_builder') . '/includes/module_builder.css');
 
   // Module properties
   $form['module_root_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Module root name'),
-    '#description' => t('All of your functions will be prefixed with this string. This name must only contain letters, numbers, and underscores, and may not start with a number.'),
+    '#title' => t('Machine-readable name'),
+    '#description' => t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.'),
     '#required' => TRUE,
-  );
-  $form['module_short_description'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Module short description'),
-    '#description' => t('Will appear in the module listing at <a href="!listing">%administer >> %build >> %modules</a>.', array('!listing' => url('admin/build/modules'), '%administer' => 'Administer', '%build' => 'Site building', '%modules' => 'Modules')),
-    '#required' => TRUE,
+    '#default_value' => 'mymodule',
   );
   $form['module_readable_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Module readable name'),
-    '#description' => t('Name of your module as it will appear to users. (Note: only for node modules.)'),
+    '#title' => t('Name'),
+    '#description' => t('Name of your module as it will appear on the module admin page.'),
+    '#required' => TRUE,
+    '#default_value' => 'My Module',
+  );
+  $form['module_short_description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#description' => t('This text will appear in the module listing at <a href="!listing">%administer >> %build >> %modules</a>.', array('!listing' => url('admin/build/modules'), '%administer' => 'Administer', '%build' => 'Site building', '%modules' => 'Modules')),
+    '#required' => TRUE,
+    '#default_value' => 'Does awesome things. Makes tea. Washes up. Favours of a personal nature.',
   );
   $form['module_help_text'] = array(
     '#type' => 'textarea',
@@ -393,12 +405,12 @@ function module_builder_page_input($form, $form_values) {
   );
   $form['module_dependencies'] = array(
     '#type' => 'textfield',
-    '#title' => t('Module dependencies'),
+    '#title' => t('Dependencies'),
     '#description' => t('Space seperated list of other modules that your module requires.'),
   );
   $form['module_package'] = array(
     '#type' => 'textfield',
-    '#title' => t('Module package'),
+    '#title' => t('Package'),
     '#description' => t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'),
   );
 
@@ -417,13 +429,12 @@ function module_builder_page_input($form, $form_values) {
     '#description' => t('Selecting one or more of these features will automatically select appropriate hooks for you.'),
   );
 
-  drupal_add_js($path . MODULE_BUILDER_JS_PATH);
+  drupal_add_js($path . '/includes/module_builder.js');
 
-  // Get list of hook groups
+  // Get list of hook groups from installed template.
   $hook_groups = module_builder_parse_template($template_file);
-  $count = count($hook_groups);
-  for ($i = 0; $i < $count; $i++) {
-    $hooks = explode("\n", $hook_groups[$i]['data']);
+  foreach ($hook_groups as $hook_group_name => $hook_group ){ 
+    $hooks = explode("\n", $hook_group['template']);
     $hook_array = array();
     foreach ($hooks as $hook) {
       $hook = trim($hook);
@@ -432,9 +443,9 @@ function module_builder_page_input($form, $form_values) {
       }
     }
 
-    $form['hook_groups']['groups-'. $i] = array(
+    $form['hook_groups']['groups-'. $hook_group_name] = array(
       '#type' => 'checkbox',
-      '#title' => $hook_groups[$i]['title'],
+      '#title' => $hook_group_name,
       '#attributes' => array(
         'onclick' => 'check_hooks(this, ['. implode(', ', $hook_array) .'])',
       ),
@@ -446,7 +457,7 @@ function module_builder_page_input($form, $form_values) {
     );
   }
 
-  // Get list of hooks
+  // Get list of hooks from downloaded documentation, organized in fieldsets.
   $hook_groups = module_builder_get_hook_data();
 
   if (!is_array($hook_groups) || !count($hook_groups)) {
@@ -466,8 +477,7 @@ function module_builder_page_input($form, $form_values) {
         '#title' => $hook_group .' hooks',
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
-        '#prefix' => '<ul class="hook-group">',
-        '#suffix' => '</ul><br clear="all" />',
+        '#theme'  => 'module_builder_hook_list',
       );
       foreach ($hooks as $hook) {
         $name = $hook['name'];
@@ -476,11 +486,6 @@ function module_builder_page_input($form, $form_values) {
           '#type' => 'checkbox',
           '#title' => str_replace('hook_', '', $name),
           '#description' => $desc,
-          '#attributes' => array(
-            'id' => "edit-hooks-$name",
-          ),
-          '#prefix' => '<li>',
-          '#suffix' => '</li>',
 
           // TODO: For some reason this gives me some wacky error under PHP 5:
           // Fatal error: Cannot use string offset as an array
@@ -507,7 +512,7 @@ function module_builder_page_input($form, $form_values) {
       '#type' => 'checkbox',
       '#title' => t('Automatically generate module file for download?'),
       '#description' => t('When checked, this will automatically generate your module file for you and prompt your browser to download it.'),
-      '#default_value' => variable_get(MODULE_BUILDER_DOWNLOAD_VARIABLE, MODULE_BUILDER_DOWNLOAD_DEFAULT),
+      '#default_value' => variable_get('module_builder_download', 1),
     );
     */
     $form['generate_module'] = array(
@@ -520,6 +525,23 @@ function module_builder_page_input($form, $form_values) {
   return $form;
 }
 
+
+/**
+ * Theme function for hook list
+ */
+function theme_module_builder_hook_list($form) {
+  $output = "<ul class=\"hook-group clear-block\">\n";
+  foreach (element_children($form) as $key) {
+    $output .= "  <li>". drupal_render($form[$key]) ."</li>\n";
+  }
+  $output .= "</ul>\n";
+  return $output;
+}
+
+
+/**
+ * Module form: 'module' step. Generate the module code.
+ */
 function module_builder_page_module($form, $form_values) {
 
   // Include link in breadcrumb to go back to main module builder form
@@ -529,8 +551,9 @@ function module_builder_page_module($form, $form_values) {
   drupal_set_breadcrumb($breadcrumb);
   */
 
-  $code = generate_module($form_values);
-  $info = generate_info($form_values);
+  $code = $form_values['module_code'] ? $form_values['module_code'] : generate_module($form_values);
+  $info = $form_values['module_info'] ? $form_values['module_info'] : generate_info($form_values) ;
+    // damn I miss perl at times like this. fugly syntax.
   
   $form['back'] = array(
     '#type' => 'submit',
@@ -555,6 +578,11 @@ function module_builder_page_module($form, $form_values) {
     '#name' => 'op',
     '#value' => t('Download module'),
   );
+  $form['write_module'] = array(
+    '#type' => 'button',
+    '#value' => t('Write module file'),
+  );
+  
   $form['info_instructions'] = array(
     '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $form_values['module_root_name'] .'.info')),
     '#prefix' => '<div id="module-message">',
@@ -573,11 +601,21 @@ function module_builder_page_module($form, $form_values) {
     '#name' => 'op',
     '#value' => t('Download info file'),
   );
+  $form['write_info'] = array(
+    '#type' => 'button',
+    '#value' => t('Write info file'),
+  );
   $form['#multistep_excludes'] = array('module_code', 'module_info');
+
+  // handle the write buttons
+  $form['#after_build'] = array('module_builder_write_buttons');  
 
   return $form;
 }
 
+/**
+ * Module form: 'download' step. Download the files.
+ */
 function module_builder_page_download($form, $form_values) {
   $file_content = '';
   $file_ext = '.txt';
@@ -605,6 +643,97 @@ function module_builder_page_download($form, $form_values) {
     echo $file_content;
     exit();
   }
+}
+
+/*
+  $form['#after_build'] = array('module_builder_write_buttons');
+*/
+/**
+ * Form after build callback.
+ * If update button was clicked, update hooks documentation. Rest of form is not submitted. 
+ * Cribbed from node_form_add_preview()
+ */
+function module_builder_write_buttons($form) {
+  static $been_here = FALSE; // ugly but I'm going round in circles trying to figure out how best to do this
+  if ($been_here) {
+    return $form;
+  }
+  $been_here = TRUE;
+  
+  global $form_values;
+  
+  $op = isset($form_values['op']) ? $form_values['op'] : '';
+  
+  if ($op == t('Write module file')) {
+    _module_builder_write_file($form_values['module_root_name'], '.module', $form_values['module_code']);
+  }
+  elseif ($op == t('Write info file')) {
+    _module_builder_write_file($form_values['module_root_name'], '.info', $form_values['module_info']);
+  }
+  
+  return $form;
+}
+
+/**
+ * Helper function to write files
+ * saves moving this code while mucking about with different formsAPI approaches & quicker to shortcircuit
+ */
+function _module_builder_write_file($basename, $extension, $content) { 
+  if (strlen($content) == 0) {
+    return;
+  }
+  
+  $directory = file_create_path(variable_get('module_builder_module_write_directory', 'modules') .'/'. $basename);  
+  file_check_directory($directory, FILE_CREATE_DIRECTORY);
+  $file_name = $basename . $extension;
+
+  $created_file = file_save_data($content, "$directory/$file_name", FILE_EXISTS_REPLACE);
+
+  if ($created_file) {
+    drupal_set_message(t("File @file has been written.", array('@file' => $created_file)));
+  }
+  else {
+    drupal_set_message(t("There was a problem writing the file @file.", array('@file' => "$directory/$file_name")), 'error');     
+  }
+}
+
+/**
+ * Module form: 'write' step
+ */
+function Xmodule_builder_page_write($form, $form_values) {
+  ####### bug!!!!!!!!!
+  dpr('writing page: ' . $form_values['op']);
+  
+  if ($form_values['op'] == t('Write module file')) {
+    _module_builder_write_file($form_values['module_root_name'], '.module', $form_values['module_code']);
+  }
+  else if ($form_values['op'] == t('Write info file')) {
+    _module_builder_write_file($form_values['module_root_name'], '.info', $form_values['module_info']);
+  }
+  else {
+    form_set_error('Problem creating file for writing.');
+    drupal_goto('module_builder');
+  }
+  
+  if (strlen($file_content) > 0) {
+    $directory = file_create_path(variable_get('module_builder_module_write_directory', 'modules') .'/'. $form_values['module_root_name']);  
+    file_check_directory($directory, FILE_CREATE_DIRECTORY);
+    $file_name = $form_values['module_root_name'] . $file_ext;
+    
+    $created_file = file_save_data($file_content, "$directory/$file_name", FILE_EXISTS_REPLACE);
+    
+    if ($created_file) {
+      drupal_set_message(t("File @file has been written.", array('@file' => $created_file)));
+    }
+    else {
+      drupal_set_message(t("There was a problem writing the file @file.", array('@file' => "$directory/$file_name")), 'error');     
+    }
+  }
+  
+  // return to the module step to write or download some more.
+  //return module_builder_page_module($form, $form_values);
+
+  return $form;
 }
 
 /**
@@ -641,13 +770,19 @@ function module_builder_page_validate($form_id, $form_values) {
   }
 }
 
-function generate_module($form_values) {
+function generate_module($form_values) {  
   // Grab header from settings
-  $header = "<?php\n". variable_get(MODULE_BUILDER_HEADER_VARIABLE, MODULE_BUILDER_HEADER_DEFAULT);
+  $header = "<?php\n". variable_get('module_builder_header', MODULE_BUILDER_HEADER_DEFAULT);
 
   // Grab footer from settings
-  $footer = variable_get(MODULE_BUILDER_FOOTER_VARIABLE, MODULE_BUILDER_FOOTER_DEFAULT);
+  $footer = variable_get('module_builder_footer', '');
 
+  // begin assembling data
+  // build an array $hook_data of all the stuff we know about hooks
+  // of the form:
+  //  'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
+  $hook_data = array();
+  
   // Check for custom functions file, else use default
   $path = drupal_get_path('module', 'module_builder') .'/templates';
   if (file_exists("$path/hooks-custom.template")) {
@@ -656,16 +791,12 @@ function generate_module($form_values) {
   else {
     $template_file = file_get_contents("$path/hooks.template");
   }
-
-  // Get array of default hook declarations
-  $hook_default_declarations = module_builder_get_hook_data(MODULE_BUILDER_HOOK_DECLARATIONS);
-
-  // Get array of custom hook declarations
-  $custom_hooks = module_builder_parse_template($template_file);
-  foreach ($custom_hooks as $hook) {
-    $hook_custom_declarations[$hook['title']] = $hook['data'];
-  }
-
+  
+  // Get array of our hook function body templates from our own / custom template files.
+  // This is not necessarily all hooks that exist -- not all have template entries.
+  // This array is in the same order as they occur in the files and already in the format wanted.
+  $hook_data = module_builder_parse_template($template_file);
+   
   // Check for node hooks; these will overwrite core hooks if found
   if ($form_values['hooks']['node']['hook_node_info']) {
     if (file_exists("$path/node_hooks-custom.template")) {
@@ -675,44 +806,65 @@ function generate_module($form_values) {
       $template_file = file_get_contents("$path/node_hooks.template");
     }
     $custom_hooks = module_builder_parse_template($template_file);
-    foreach ($custom_hooks as $hook) {
-      $hook_custom_declarations[$hook['title']] = $hook['data'];
+    foreach ($custom_hooks as $hook_name => $hook_template) {
+      // add or clobber our existing templates
+      $hook_data[$hook_name] = $hook_template;
     }
+  }   
+  
+  // Get array of the hook function declarations from the downloaded hook data.
+  // This is a complete list of all hooks that exist.
+  // In the form: 'hook_foo' => 'declaration'
+  // This array is the order they are in the files from d.org: alphabetical apparently.
+  $hook_function_declarations = module_builder_get_hook_data(MODULE_BUILDER_HOOK_DECLARATIONS);
+    
+  // iterate over the downloaded declarations, 
+  // merge into our data, adding in those not yet in our data array.
+  foreach ($hook_function_declarations as $hook_name => $hook_declaration ) {
+    // this adds the declaration to the array items already there
+    // autovivification takes care of creating new array items if not already there
+    $hook_data[$hook_name]['declaration'] = $hook_declaration;
   }
-
-  // Strip out INFO: comments for advanced users
-  if (!variable_get(MODULE_BUILDER_DETAIL_VARIABLE, MODULE_BUILDER_DETAIL_DEFAULT)) {
-    foreach ($hook_custom_declarations as $hook => $data) {
-      $hook_custom_declarations[$hook] = preg_replace(MODULE_BUILDER_INFO_PATTERN, '', $data);
-    }
+  
+  // $hook_data is now a complete representation of all we know about hooks
+    
+  // now look at form values. These come in two arrays from the sets of checkboes in the UI.
+  // merge into one array of hook_name => TRUE/FALSE
+  $requested_hooks = array();
+  foreach ($form_values['hooks'] as $hook_group) {
+    $requested_hooks += $hook_group;
   }
-
+  
   // Begin code generation
   $code = '';
 
-  // Determine which hooks are to be implemented
-  foreach ($form_values['hooks'] as $hooks) {
-    foreach ($hooks as $hook => $value) {
-      if ($value) {
-        // Display PHP doc
-        $code .= "
-/**
- * Implementation of $hook().
- */
-";
-
-        $code .= str_replace('hook', $form_values['module_root_name'], $hook_default_declarations[$hook]);
-        // See if function bodies exist; if so, use function bodies from template
-        if (array_key_exists($hook, $hook_custom_declarations)) {
-          $code .= $hook_custom_declarations[$hook];
-        }
-        else {
-          $code .= "\n\n";
-        }
-        $code .= "}\n\n";
-      }
+  // iterate over our data array, because it's in a pretty order  
+  foreach ($hook_data as $hook_name => $hook) {
+    if (!$requested_hooks[$hook_name]) {
+      // don't want this one. skip it
+      continue;
     }
+    
+    // Display PHP doc
+    $code .= "
+/**
+ * Implementation of $hook_name().
+ */
+";    
+
+    // decode html entities and put in the module name
+    $code .= htmlspecialchars_decode(str_replace('hook', $form_values['module_root_name'], $hook['declaration']));
+    
+    // See if function bodies exist; if so, use function bodies from template
+    if ($hook['template']) {
+      $code .= $hook['template'];
+    }
+    else {
+      $code .= "\n\n";
+    }
+    $code .= "}\n\n";
   }
+  
 
   // Replace variables
   $variables = array(
@@ -767,31 +919,40 @@ function generate_info($form_values) {
  * @param string $file
  *   The template file to parse
  * @return Array
- *   Return array of template section titles and their associated data
+ *   Return array keyed by hook name, whose values are of the form: array('template' => TEMPLATE)
  */
 function module_builder_parse_template($file) {
-  $hook_custom_declarations = array();
+  $data = array();
   preg_match_all(MODULE_BUILDER_TEMPLATE_PATTERN, $file, $matches);
   $count = count($matches[0]);
   for ($i = 0; $i < $count; $i++) {
+    $data[$matches[1][$i]] = array(
+      #'title' => $matches[1][$i],
+      'template' => $matches[2][$i]
+    );
+    /*
     $hook_custom_declarations[] = array(
       'title' => $matches[1][$i],
       'data' => $matches[2][$i]
     );
+    */
   }
-  return $hook_custom_declarations;
+  return $data;
 }
 
 
 /**
- * Retrieves hook data of given type
+ * Retrieves hook data from downloaded files.
+ * 
+ * @ param string $type
+ *   Specify whether to return name, description, or whatever the third one is.
  *
  * @return
  *   Array of hook info
  */
 function module_builder_get_hook_data($type = MODULE_BUILDER_HOOK_NAMES) {
   // Find path of hook documentation directory
-  $path = file_create_path(variable_get(MODULE_BUILDER_HOOKS_DIRECTORY_VARIABLE, MODULE_BUILDER_HOOKS_DIRECTORY_DEFAULT)) .'/';
+  $path = file_create_path(variable_get('module_builder_hooks_directory', 'hooks')) .'/';
 
   // Get list of hook documentation files
   $files = module_builder_get_doc_files($path);
@@ -905,9 +1066,17 @@ function module_builder_extract_hook_data($path, $file, $type = MODULE_BUILDER_H
  * Initiates documentation upate routine.
  */
 function module_builder_update_documentation() {
+  // check we have a directory before we begin
+  // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
+  $files = file_create_path();
+  file_check_directory($files, FILE_CREATE_DIRECTORY);
+
+  $directory = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));  
+  
   // Retrieve remote hook file listing from cvs.drupal.org
   $hook_listing = drupal_http_request(MODULE_BUILDER_HOOKS_URL);
   if (isset($hook_listing->error)) {
+    drupal_set_message(t('Unable to obtain hook documentation from the <a href="@cvs-server">CVS server</a>.', array('@cvs-server' => url(MODULE_BUILDER_HOOKS_URL))), 'error');
     return FALSE;
   }
   $hook_files = array();
@@ -926,12 +1095,14 @@ function module_builder_update_documentation() {
   }
 
   // Retrieve each file and store it in the hooks directory, overwriting what's currently there
-  $directory = file_create_path(variable_get(MODULE_BUILDER_HOOKS_DIRECTORY_VARIABLE, MODULE_BUILDER_HOOKS_DIRECTORY_DEFAULT));
   foreach ($hook_files as $file_name => $file_url) {
     $file_contents = drupal_http_request($file_url);
     file_save_data($file_contents->data, "$directory/$file_name", FILE_EXISTS_REPLACE);
   }
 
   // Finally, set the last updated variable
-  variable_set(MODULE_BUILDER_LAST_UPDATE_VARIABLE, format_date(time()));
+  variable_set('module_builder_last_update', format_date(time()));
+
+  // inform that hook documentation has been downloaded.
+  drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"!api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get('module_builder_hooks_directory', 'hooks'), '!api' => url('http://api.drupal.org/api/HEAD', NULL, NULL, TRUE))));
 }
