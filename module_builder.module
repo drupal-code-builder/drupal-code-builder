@@ -9,7 +9,7 @@
 /**
  * Version of hook info to retrieve 
  */
-define('MODULE_BUILDER_VERSION', 'DRUPAL-5');
+define('MODULE_BUILDER_VERSION', 'DRUPAL-6');
 
 /* Constant values extracted from code */
 /**
@@ -101,65 +101,61 @@ function module_builder_perm() {
  *
  * @ingroup module_builder_core
  */
-function module_builder_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'module_builder',
-      'title' => t('Module builder'),
-      'description' => t('Builds scaffolding for custom modules.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('module_builder_page'),
-      'access' => user_access('access module builder'),
-      'type' => MENU_NORMAL_ITEM,
-    );
-    $items[] = array(
-      'path' => 'admin/settings/module_builder',
-      'title' => t('Module builder'),
-      'description' => t('Set default header and footer, api download location, defaults for detail and download and force the api to be re-downloaded.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('module_builder_admin_settings'),
-      'access' => user_access('access module builder'),
-      'type' => MENU_NORMAL_ITEM,
-    );
-  }
+function module_builder_menu() {
+  $items['module_builder'] = array(
+    'title' => 'Module builder',
+    'description' => t('Builds scaffolding for custom modules.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('module_builder_page'),
+    'access arguments' => array('access module builder'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/settings/module_builder'] = array(
+    'title' => 'Module builder',
+    'description' => t('Set default header and footer, api download location, defaults for detail and download and force the api to be re-downloaded.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('module_builder_admin_settings'),
+    'access arguments' => array('access module builder'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/settings/module_builder/settings'] = array(
+    'title' => 'Settings',
+    'description' => t('Set default header and footer, folder locations, and defaults for detail.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('module_builder_admin_settings'),
+    'access arguments' => array('access module builder'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/settings/module_builder/update'] = array(
+    'title' => 'Update hooks',
+    'description' => t('Download hook documentation.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('module_builder_admin_update'),
+    'access arguments' => array('access module builder'),
+    'type' => MENU_LOCAL_TASK,
+  );
 
   return $items;
 }
 
 /**
- * Implementation of hook_settings().
+ * Admin settings page.
  *
  * @ingroup module_builder_core
  */
-function module_builder_admin_settings() {
+function module_builder_admin_settings($form_state) {
 
   $form['module_builder_hooks_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to hook documentation directory'),
-    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')),
+    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => file_directory_path() .'/')),
     '#default_value' => variable_get('module_builder_hooks_directory', 'hooks'),
   );
   
-  $last_update = variable_get('module_builder_last_update', 0);
-  $form['module_builder_update'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Update hook documentation'),
-    '#description' => $last_update ? 
-      t('Your last hook documentation update was %date.', array('%date' => $last_update)) :
-      t('The hook documentation has not yet been updated.'),
-  );
-  $form['module_builder_update']['update'] = array(
-    '#type' => 'button',
-    '#value' => t('Update'),
-  );
-  $form['#after_build'] = array('module_builder_update_button');
-
   $form['module_builder_write_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to write module files'),
-    '#description' => t('Subdirectory in the directory "%dir" where module files will be written.', array('%dir' => variable_get('file_directory_path', 'files') .'/')),
+    '#description' => t('Subdirectory in the directory "%dir" where module files should be written.', array('%dir' => file_directory_path() .'/')),
     '#default_value' => variable_get('module_builder_write_directory', 'modules'),
   );
   
@@ -199,25 +195,38 @@ function module_builder_admin_settings() {
     '#default_value' => variable_get('module_builder_download', 1),
   );
   */
-  
   return system_settings_form($form);
 }
 
 /**
- * Form after_build handler.
- * If update button was clicked, update hooks documentation. Rest of form is not submitted. 
- * Cribbed from node_form_add_preview()
+ * Admin hook update form.
  */
-function module_builder_update_button($form) {
-  global $form_values;
-
-  $op = isset($form_values['op']) ? $form_values['op'] : '';
-  if ($op == t('Update')) { 
-    module_builder_update_documentation();
-  }
+function module_builder_admin_update($form_state) {
+  $last_update = variable_get('module_builder_last_update', 0);
+  
+  $form['last_update'] = array(
+    '#type' => 'item',
+    '#value' => $last_update ? 
+        t('Your last hook documentation update was %date.', array('%date' => $last_update)) :
+        t('The hook documentation has not yet been downloaded.'),
+  );
+  
+  $form['update'] = array(
+    '#type' => 'submit',
+    '#value' => 'Download',
+  );  
+  
   return $form;
 }
 
+/**
+ * Admin hook update form submit handler.
+ * Download hooks documentation. 
+ */
+function module_builder_admin_update_submit($form, $form_state) {
+  _module_builder_check_settings();
+  module_builder_update_documentation();  
+}
 
 /**
  * Create a directory to store hook files if it does not exist.
@@ -257,6 +266,19 @@ function _module_builder_check_settings() {
  *   Nothing, but file is pushed to client for download
  */
 function module_builder_page($form_values = NULL) {
+  # fun fun fun!
+  # http://drupal.org/node/144132
+
+  
+  $form['last_update'] = array(
+    '#type' => 'item',
+    '#value' => t("Greetings brave soul. This bit doesn't work yet. Stand by..."),
+  );
+
+  
+  return $form;
+  
+  ######################### old
   
   if (!isset($form_values)) {
       $count = 1;
@@ -741,8 +763,8 @@ function Xmodule_builder_page_write($form, $form_values) {
  * 
  * @ingroup module_builder_callback
  */
-function module_builder_page_validate($form_id, $form_values) {
-
+function module_builder_page_validate($form, &$form_state) {
+  # TODO
   if ($form_values['op'] == 'input') {
     // Ensure module_root_name was entered, and check for special characters
     if (!empty($form_values['module_root_name'])) {
@@ -1063,14 +1085,9 @@ function module_builder_extract_hook_data($path, $file, $type = MODULE_BUILDER_H
 }
 
 /**
- * Initiates documentation upate routine.
+ * Initiates documentation update routine. Settings have already been checked.
  */
 function module_builder_update_documentation() {
-  // check we have a directory before we begin
-  // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
-  $files = file_create_path();
-  file_check_directory($files, FILE_CREATE_DIRECTORY);
-
   $directory = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));  
   
   // Retrieve remote hook file listing from cvs.drupal.org
@@ -1080,7 +1097,7 @@ function module_builder_update_documentation() {
     return FALSE;
   }
   $hook_files = array();
-
+  
   // Parse out list of URLs
   preg_match_all(MODULE_BUILDER_URL_PATTERN, $hook_listing->data, $url_matches);
   foreach ($url_matches[1] as $url_match) {
@@ -1104,5 +1121,5 @@ function module_builder_update_documentation() {
   variable_set('module_builder_last_update', format_date(time()));
 
   // inform that hook documentation has been downloaded.
-  drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"!api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get('module_builder_hooks_directory', 'hooks'), '!api' => url('http://api.drupal.org/api/HEAD', NULL, NULL, TRUE))));
+  drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"!api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get('module_builder_hooks_directory', 'hooks'), '!api' => url('http://api.drupal.org/'))));
 }
