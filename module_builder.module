@@ -265,84 +265,100 @@ function _module_builder_check_settings() {
  *   Form showing built module and info file
  *   Nothing, but file is pushed to client for download
  */
-function module_builder_page($form_values = NULL) {
   # fun fun fun!
   # http://drupal.org/node/144132
-
-  
-  $form['last_update'] = array(
-    '#type' => 'item',
-    '#value' => t("Greetings brave soul. This bit doesn't work yet. Stand by..."),
-  );
-
-  
-  return $form;
-  
-  ######################### old
-  
-  if (!isset($form_values)) {
-      $count = 1;
-    }
-    else {
-      $count = $form_values['count'] + 1;
-    }
-
-  $form['count'] = array(
-    '#type' => 'hidden',
-    '#value' => $count,
-  );  
-  
+function module_builder_page($form_state) {
   $step = 'input';
-  
-  #print_r('<pre>');
-  
-  if (isset($form_values) && isset($form_values['op'])) {
-    //print_r("VALUES:\n");
-    //print_r($form_values);
-    //print_r("\n");
-    if ($form_values['op'] == t('Generate')) {
-      $step = 'module';
-    }
-    elseif (stripos($form_values['op'], t('Download')) !== false) {
-      $step = 'download';
-    }
-    elseif (stripos($form_values['op'], t('Write')) !== false) {
-      #$step = 'write';
-      $step = 'module';
-    }
-  }
-  
-  #print_r("$count - $step - $form_values[op]");
-  
-  
+  if (isset($form_state['clicked_button'])) {
+     $step = $form_state['clicked_button']['#name'];
+  }  
+  #dsm($step);
   switch ($step) {
     case 'input':    
-      $form = module_builder_page_input($form, $form_values);
+    case 'back':    
+      $form = module_builder_page_input($form_state);
       break; 
-    case 'module':
-      $form = module_builder_page_module($form, $form_values);
+    case 'generate':
+      $form = module_builder_page_generate($form_state);
       break; 
     case 'download':
-      $form = module_builder_page_download($form, $form_values);
+      $form = module_builder_page_download($form_state);
       break;
-    case 'write':
-      #$form = module_builder_page_write($form, $form_values);
-      break;
-  }
-  
-  $form = _module_builder_save_old_form_values($form, $form_values);
-  
-  //print_r("FORM:\n");
-  //print_r($form);
-  //print_r("\n");
-  
-  $form['#multistep'] = TRUE;
-  $form['#redirect'] = FALSE;
-
-  print_r("</pre>\n");
+  }  
   
   return $form;
 }
+
+// build page 1
+function module_builder_page_input($form_state) {
+  // built some default values. 
+  // these are either hardcoded or what the user already put into the form on a previous go round.
+  $form_default_values = array(
+    'module_root_name' => 'mymodule',
+  );
+  if (isset($form_state['storage']['input'])) {
+    $form_default_values = array_merge($form_default_values, $form_state['storage']['input']);
+  }
+
+  #dsm($form_default_values);
+  #dsm($form_state['storage']['input']);
+
+  $form['module_root_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Machine-readable name'),
+    '#description' => t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.'),
+    '#required' => TRUE,
+    '#default_value' => $form_default_values['module_root_name'],
+  );
+  $form['generate_module'] = array(
+    '#type' => 'submit',
+    '#name' => 'generate',
+    '#value' => t('Generate'),
+  );
+  $form['#submit'] = array('module_builder_page_input_submit');
+
+  return $form;
+}
+
+// submit page 1
+function module_builder_page_input_submit($form, &$form_state) {
+  // stash input.... these values will follow us around everywhere like a little dog...
+  $form_state['storage']['input'] = $form_state['values'];
+  foreach (array('generate', 'generate_module', 'form_build_id', 'form_token', 'form_id') as $key) {
+    unset($form_state['storage']['input'][$key]);
+  }
+}
+
+
+function module_builder_page_generate($form_state) {
+  $form['back'] = array(
+    '#type' => 'submit',
+    '#value' => t('Back'),
+    '#name' => 'back',
+  );
+  $form['module_code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Module code'),
+    '#rows' => 20,
+    '#default_value' => 'your module is called ' . $form_state['storage']['input']['module_root_name'],
+    '#prefix' => '<div id="module-code">',
+    '#suffix' => '</div>',
+  );
+  return $form;
+}
+
+
+
+
+
+
+
+
+
+
+############################# old code below here
+
+
 
 /**
  * This still needs some work. Set a bunch of check boxes, forward, back, uncheck 
@@ -391,7 +407,7 @@ function _module_builder_save_old_form_values($form, $form_values, $indent='') {
 /**
  * Module form: 'input' step. Collect module data.
  */
-function module_builder_page_input($form, $form_values) {
+function Xmodule_builder_page_input($form, $form_values) {
 
   _module_builder_check_settings();
 
@@ -564,7 +580,7 @@ function theme_module_builder_hook_list($form) {
 /**
  * Module form: 'module' step. Generate the module code.
  */
-function module_builder_page_module($form, $form_values) {
+function Xmodule_builder_page_module($form, $form_values) {
 
   // Include link in breadcrumb to go back to main module builder form
   /*
@@ -638,7 +654,7 @@ function module_builder_page_module($form, $form_values) {
 /**
  * Module form: 'download' step. Download the files.
  */
-function module_builder_page_download($form, $form_values) {
+function Xmodule_builder_page_download($form, $form_values) {
   $file_content = '';
   $file_ext = '.txt';
   if ($form_values['op'] == t('Download module')) {
@@ -675,7 +691,7 @@ function module_builder_page_download($form, $form_values) {
  * If update button was clicked, update hooks documentation. Rest of form is not submitted. 
  * Cribbed from node_form_add_preview()
  */
-function module_builder_write_buttons($form) {
+function Xmodule_builder_write_buttons($form) {
   static $been_here = FALSE; // ugly but I'm going round in circles trying to figure out how best to do this
   if ($been_here) {
     return $form;
@@ -763,7 +779,7 @@ function Xmodule_builder_page_write($form, $form_values) {
  * 
  * @ingroup module_builder_callback
  */
-function module_builder_page_validate($form, &$form_state) {
+function Xmodule_builder_page_validate($form, &$form_state) {
   # TODO
   if ($form_values['op'] == 'input') {
     // Ensure module_root_name was entered, and check for special characters
