@@ -4,8 +4,14 @@
  * @file
  * Defines default templates for hook functions.
  */
-
+ 
 == START hook_help ==
+  /* INFO:
+   * The help hook is for displaying helpful messages at the top of pages indicated
+   * by $section to further explain how they work. Adding certain "keywords" to the end of 
+   * a given path (like admin/modules#description) will cause this text to display elsewhere
+   * in the page as well (in this case, in the description section for the given module).
+   */
   switch ($section) {
     case 'admin/help#%module':
       return t('%help');
@@ -13,18 +19,28 @@
   }
 == END ==
 
-== START hook_menu ==
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'TODO: Enter path',
-      'title' => t('TODO: Enter menu item title'),
-      // OPTIONAL: Fill in other properties such as 'access' and 'type'
-    );
-    // OPTIONAL: Fill in additional static menu items
-  }
-  // OPTIONAL: Put in else statement for dynamic menu items that can't be cached.
+== START hook_menu == 
+  // This is the minimum information you can provide for a menu item.
+  $items['TODO: Enter path'] = array(
+    'title' => 'TODO: Enter menu item title',
+    'page callback' => 'TODO: Enter callback function',
+    'access arguments' => array('TODO: Enter user permissions'),
+  );
+  // more complex menu item
+  $items['TODO: Enter path'] = array(
+    'title' => 'TODO: Enter menu item title',
+    'description' => 'TODO: Enter description',
+    'page callback' => 'TODO: Enter callback function',
+    'page arguments' => '' // An array of arguments to pass to the page callback function. Integer values pass the corresponding URL component.
+    'access callback' => '' // defaults to user_access()
+    'access arguments' => array('TODO: Enter user permissions'),
+    'weight' => 0,
+    'type' => // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM / MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK
+    'menu_name' => '' // Menu to place this item in.
+    'title callback' => '' // Function to generate the title, defaults to t(). 
+    'title arguments' => '' // Arguments to send to t() or your custom callback. 
+  );
+  // OPTIONAL: Fill in additional static menu items
 
   return $items;
 == END ==
@@ -61,10 +77,18 @@
   $links = array();
   
   // TODO: Perform logic to determine when link should appear
-  $links['%module_KEY1'] = array(
+  $links['%module_KEY1'] = array( // a regular link
     'title' => t('TODO: Fill in link title'),
     'href' => 'TODO: Fill in link path',
     'attributes' => array('title' => t('TODO: Fill in link title attribute.')),  
+  );
+  $links['%module_KEY1'] = array( // a fake link that's just text
+    'title' => t('TODO: Fill in link title'),
+    'attributes' => array('title' => t('TODO: Fill in link title attribute.')),  
+  );
+  $links['%module_KEY1'] = array( // a link that's we're sending as HTML
+    'title' => t('TODO: Fill in link HTML'),
+    'html' => TRUE,
   );
   // OPTIONAL: Add additional links
   
@@ -73,38 +97,69 @@
 
 == START hook_nodeapi ==
   switch ($op) {
-    case 'load':
-      // OPTIONAL: Insert code to execute when node is loaded from database.
-      break;
-    case 'insert':
-      // OPTIONAL: Insert code to execute when node is inserted.
-      break;
-    case 'update':
-      // OPTIONAL: Insert code to execute when node is updated.
+    case 'alter':
+      // OPTIONAL: the $node->content array has been rendered, so the node body or
+      // teaser is filtered and now contains HTML. This op should only be used when
+      // text substitution, filtering, or other raw text operations are necessary.
       break;
     case 'delete':
-      // OPTIONAL: Insert code to execute when node is deleted.
+      // OPTIONAL: The node is being deleted.
       break;
-    case 'execute':
-      // OPTIONAL: Insert code to fire after validation and before node is saved.
+    case 'delete revision':
+      // OPTIONAL: The revision of the node is deleted. You can delete data
+      // associated with that revision.
       break;
-    case 'validate':
-      // OPTIONAL: Insert code to execute when node is validated upon form submission.
+    case 'insert':
+      // OPTIONAL: The node is being created (inserted in the database).
       break;
-    case 'view':
-      // OPTIONAL: Insert code to add additional items to node view.
+    case 'load':
+      // OPTIONAL: The node is about to be loaded from the database. This hook
+      // can be used to load additional data at this time.
       break;
-    case 'fields':
-      // OPTIONAL: Return array of additional fields to save to the node table.
+    case 'prepare':
+      // OPTIONAL: The node is about to be shown on the add/edit form.
+      break;
+    case 'prepare translation':
+      // OPTIONAL: The node is being cloned for translation. Load
+      // additional data or copy values from $node->translation_source.
+      break;
+    case 'print':
+      // OPTIONAL: Prepare a node view for printing. Used for printer-friendly
+      // view in book_module
+      break;
+    case 'rss item':
+      // OPTIONAL: An RSS feed is generated. The module can return properties
+      // to be added to the RSS item generated for this node. See comment_nodeapi()
+      // and upload_nodeapi() for examples. The $node passed can also be modified
+      // to add or remove contents to the feed item.
       break;
     case 'search result':
-      // OPTIONAL: Display extra node information with search result.
+      // OPTIONAL: The node is displayed as a search result. If you
+      // want to display extra information with the result, return it.
+      break;
+    case 'presave':
+      // OPTIONAL: The node passed validation and is about to be saved. Modules may
+      //  use this to make changes to the node before it is saved to the database.
+      break;
+    case 'update':
+      // OPTIONAL: The node is being updated.
       break;
     case 'update index':
-      // OPTIONAL: Insert code to index additional node properties.
-    case 'print':
-      // OPTIONAL: Prepare node for printer-friendly view.
-      break;    
+      // OPTIONAL: The node is being indexed. If you want additional
+      // information to be indexed which is not already visible through
+      // nodeapi "view", then you should return it here.
+      break;
+    case 'validate':
+      // OPTIONAL: The user has just finished editing the node and is
+      // trying to preview or submit it. This hook can be used to check
+      // the node data. Errors should be set with form_set_error().
+      break;
+    case 'view':
+      // OPTIONAL: The node content is being assembled before rendering. The module
+      // may add elements $node->content prior to rendering. This hook will be
+      // called after hook_view().  The format of $node->content is the same as
+      // used by Forms API.
+      break;
   }
 == END ==
 
@@ -138,9 +193,9 @@
 == START hook_filter_tips ==
   // OPTIONAL: If more than one filter was defined in hook_filter, perform switch on $delta
   switch ($long) {
-    case 0:
+    case FALSE:
       return t("TODO: Enter the filter's short-hand description");
-    case 1:
+    case TRUE:
       return t("TODO: Enter filter's full description");
   }
 == END ==

@@ -8,28 +8,33 @@
  * nodes do things a little differently than "normal" nodes. :)
  */
 
-== START hook_help ==
-  /* INFO:
-   * The help hook is for displaying helpful messages at the top of pages indicated
-   * by $section to further explain how they work. Adding certain "keywords" to the end of 
-   * a given path (like admin/modules#description) will cause this text to display elsewhere
-   * in the page as well (in this case, in the description section for the given module).
-   */
-  switch ($section) {
-    case 'admin/help#%module':
-      return t('%help');
-    case 'admin/modules#description':
-      return t('%description');
-    case 'node/add#%module':
-      return t('TODO: enter description of node.');
-    // OPTIONAL: Add additional cases for other paths that should display help text.
-  }
-== END ==
-
 == START hook_node_info ==
-  return array('%module' => array('name' => t('%name'), 'base' => '%module'));
-== END ==
 
+############## WORK: add INFO to these!!!!
+  return array(
+    '%module' => array(
+      'name' => '', 
+        /* INFO:  the human-readable name of the node type. Required. */
+      'module' => '', 
+        /* INFO: a string telling Drupal how a module's functions map to hooks
+        (i.e. if module is defined as example_foo, then example_foo_insert will
+        be called when inserting a node of that type). This string is usually
+        the name of the module in question, but not always. Required. */
+      'description' => '',
+      'help' => '',
+      'has_title' => '', 
+      'title_label' => '', 
+      'has_body' => '',
+      'body_label' => '',
+      'min_word_count' => '',
+      'locked' => '', 
+        /* INFO:  boolean indicating whether the machine-readable name of this
+        content type can (FALSE) or cannot (TRUE) be edited by a site
+        administrator. Optional (defaults to TRUE). */
+    ),
+    // add further types as needed
+  );
+== END ==
 == START hook_access ==
   global $user;
 
@@ -49,21 +54,28 @@
 == END ==
 
 == START hook_form ==
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Title'),
-    '#required' => TRUE,
-    '#default_value' => $node->title,
-    '#weight' => -5
-  );
+  // The site admin can decide if this node type has a title and body, and how
+  // the fields should be labeled. We need to load these settings so we can
+  // build the node form correctly.
+  $type = node_get_types('type', $node);
 
-  $form['body_filter']['body'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Body'),
-    '#default_value' => $node->body,
-    '#required' => FALSE
-  );
-  $form['body_filter']['filter'] = filter_form($node->format);
+  if ($type->has_title) {
+    $form['title'] = array(
+      '#type' => 'textfield',
+      '#title' => check_plain($type->title_label),
+      '#required' => TRUE,
+      '#default_value' => $node->title,
+      '#weight' => -5
+    );
+  }
+
+  if ($type->has_body) {
+    // In Drupal 6, we can use node_body_field() to get the body and filter
+    // elements. This replaces the old textarea + filter_form() method of
+    // setting this up. It will also ensure the teaser splitter gets set up
+    // properly.
+    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
+  }
 
   // TODO: Enter additional form elements
 
@@ -72,6 +84,9 @@
 
 == START hook_validate ==
   // TODO: Enter form validation code here
+  if (0) { // if bad stuff
+    form_set_error('FORM ELEMENT NAME', t('TODO: Write an error message.'));
+  }
 == END ==
 
 == START hook_insert ==
@@ -80,6 +95,7 @@
 == END ==
 
 == START hook_update ==
+  // if this is a new node or we're adding a new revision,
   if ($node->revision) {
     %module_insert($node);
   }
@@ -94,15 +110,6 @@
   // db_query('DELETE FROM {node_example} WHERE nid = %d', $node->nid);
 == END ==
 
-== START hook_nodeapi ==
-  switch ($op) {
-    case 'delete revision':
-      // TODO: Enter revision deletion query here, for example:
-      // db_query('DELETE FROM {node_example} WHERE vid = %d', $node->vid);
-      break;
-  }
-== END ==
-
 == START hook_load ==
   // TODO: Obtain and return additional fields added to the node type, for example:
   // $additions = db_fetch_object(db_query('SELECT color, quantity FROM {node_example} WHERE vid = %d', $node->vid));
@@ -112,8 +119,10 @@
 == START hook_view ==
   // TODO: Insert additional code (call to theme functions, etc.) to execute when viewing a node, for example:
   // $node = node_prepare($node, $teaser);
-  // $order_info = theme('node_example_order_info', $node);
-  // $node->body .= $order_info;
-  // $node->teaser .= $order_info;
-  return node_prepare($node, $teaser);  
+  // $node->content['myfield'] = array(
+  //   '#value' => theme('node_example_order_info', $node),
+  //   '#weight' => 1,
+  // );
+
+  return $node;
 == END ==
