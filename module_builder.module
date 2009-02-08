@@ -879,6 +879,11 @@ function generate_module($form_values) {
     
     // See if function bodies exist; if so, use function bodies from template
     if ($hook['template']) {
+      // Strip out INFO: comments for advanced users
+      if (!variable_get('module_builder_detail', 0)) {
+        $hook['template'] = preg_replace(MODULE_BUILDER_INFO_PATTERN, '', $hook['template']);
+      }
+      
       $code .= $hook['template'];
     }
     else {
