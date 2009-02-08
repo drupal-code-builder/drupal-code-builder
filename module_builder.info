@@ -2,3 +2,4 @@
 name = Module Builder
 description = Builds scaffolding for custom modules.
 package = Development
+core = 6.x
