@@ -49,7 +49,7 @@ define('MODULE_BUILDER_FUNCTION_PATTERN', '#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\
 /**
  * Used to strip INFO messages out of generated file for advanced users.
  */
-define('MODULE_BUILDER_INFO_PATTERN', '#(\s+)\/\* INFO:(.*?)\*\/#ms');
+define('MODULE_BUILDER_INFO_PATTERN', '#\s+/\* INFO:(.*?)\*/#ms');
 /**
  * Captures a template name and body from a template file.
  */
