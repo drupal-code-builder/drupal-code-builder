@@ -1,5 +1,4 @@
 fieldset {
-  width: 65%;
 }
 
 ul.hook-group {
@@ -12,6 +11,7 @@ ul.hook-group {
 
 ul.hook-group li {
   float: left;
+  width: 15em;
   width: 50%;
   margin: 0;
   padding: 0;
