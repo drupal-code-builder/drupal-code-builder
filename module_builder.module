@@ -56,12 +56,16 @@ function module_builder_init() {
 
 
 /**
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  *
  * @ingroup module_builder_core
  */
-function module_builder_perm() {
-  return array('access module builder');
+function module_builder_permission() {
+  return array(
+    'access module builder' => array(
+      'title' => t('Access module builder'),
+    ),
+  );
 }
 
 /**
@@ -79,7 +83,7 @@ function module_builder_menu() {
     'access arguments' => array('access module builder'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/settings/module_builder'] = array(
+  $items['admin/config/development/module_builder'] = array(
     'title' => 'Module builder',
     'description' => t('Set default header and footer, api download location, defaults for detail and download and force the api to be re-downloaded.'),
     'page callback' => 'drupal_get_form',
@@ -88,7 +92,7 @@ function module_builder_menu() {
     'access arguments' => array('access module builder'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/settings/module_builder/settings'] = array(
+  $items['admin/config/development/module_builder/settings'] = array(
     'title' => 'Settings',
     'description' => t('Set default header and footer, folder locations, and defaults for detail.'),
     'page callback' => 'drupal_get_form',
@@ -97,7 +101,7 @@ function module_builder_menu() {
     'access arguments' => array('access module builder'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/settings/module_builder/update'] = array(
+  $items['admin/config/development/module_builder/update'] = array(
     'title' => 'Update hooks',
     'description' => t('Download hook documentation.'),
     'page callback' => 'drupal_get_form',

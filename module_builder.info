@@ -2,4 +2,7 @@
 name = Module Builder
 description = Builds scaffolding for custom modules.
 package = Development
-core = 6.x
+core = 7.x
+
+files[] = module_builder.module
+files[] = includes/module_builder.admin.inc
