@@ -12,7 +12,7 @@
    * a given path (like admin/modules#description) will cause this text to display elsewhere
    * in the page as well (in this case, in the description section for the given module).
    */
-  switch ($section) {
+  switch ($path) {
     case 'admin/help#%module':
       return t('%help');
     // OPTIONAL: Add additional cases for other paths that should display help text.
@@ -31,14 +31,14 @@
     'title' => 'TODO: Enter menu item title',
     'description' => 'TODO: Enter description',
     'page callback' => 'TODO: Enter callback function',
-    'page arguments' => '' // An array of arguments to pass to the page callback function. Integer values pass the corresponding URL component.
-    'access callback' => '' // defaults to user_access()
+    'page arguments' => '', // An array of arguments to pass to the page callback function. Integer values pass the corresponding URL component.
+    'access callback' => '', // defaults to user_access()
     'access arguments' => array('TODO: Enter user permissions'),
     'weight' => 0,
-    'type' => // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM / MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK
-    'menu_name' => '' // Menu to place this item in.
-    'title callback' => '' // Function to generate the title, defaults to t(). 
-    'title arguments' => '' // Arguments to send to t() or your custom callback. 
+    'type' => MENU_NORMAL_ITEM, // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM / MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK
+    'menu_name' => '', // Menu to place this item in.
+    'title callback' => '', // Function to generate the title, defaults to t(). 
+    'title arguments' => '', // Arguments to send to t() or your custom callback. 
   );
   // OPTIONAL: Fill in additional static menu items
 
@@ -50,27 +50,47 @@
 == END ==
 
 == START hook_block ==
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('TODO: Fill in block description');
-    // OPTIONAL: Add additional block descriptions here, if required.
-    return $blocks;
-  }
-  else if ($op == 'configure') {
-    // OPTIONAL: Enter form elements to add to block configuration screen, if required.    
-  }
-  else if ($op == 'save') {
-    // OPTIONAL: Add code to trigger when block configuration is saved, if required.
-  }
-  else if ($op == 'view') {
-    switch ($delta) {
-      case 0:
-        $block['subject'] = t('TODO: Enter block title');
-        $block['content'] = t('TODO: Enter block content');
-        break;
+  switch ($op) {
+
+    case 'list':
+      $blocks[0]['info'] = t('Block 1');
+      $blocks[1]['info'] = t('Block 2');
+      // OPTIONAL: Add additional block descriptions here, if required.
+      return $blocks;
+
+    case 'configure':
+      // OPTIONAL: Enter form elements to add to block configuration screen, if required.    
+      if ($delta == 0 && user_access('administer module')) {
+        $form['module_block_1'] = array();
+      }
+      if ($delta == 1 && user_access('administer module')) {
+        $form['module_block_2'] = array();
+      }
+      return $form;
+
+    case 'save':
+      // OPTIONAL: Add code to trigger when block configuration is saved, if required.
+      if ($delta == 0) {
+        variable_set('module_block_setting_1', $edit['module_block_1']);
+      }
+      if ($delta == 1) {
+        variable_set('module_block_setting_2', $edit['module_block_2']);
+      }
+      break;
+
+    case 'view':
+      if ($delta == 0) {
+        $block['subject'] = t('Block 1 title');
+        $block['content'] = t('Block 1 content');
+      }
+      if ($delta == 1) {
+        $block['subject'] = t('Block 2 title');
+        $block['content'] = t('Block 2 content');
+      }
       // OPTIONAL: Enter additional cases for each additional block, if defined.
-    }
-    return $block;
-  }
+
+      return $block;
+  }    
 == END ==
 
 == START hook_link ==
@@ -177,6 +197,13 @@
     case 'description':
       return t('TODO: Fill in filter description.');
 
+    case 'no cache':
+      // TODO: This case can be removed for most filters, but returning TRUE is useful for development.
+      return FALSE;
+
+    case 'prepare':
+      return $text;
+
     case 'process':
       // TODO: Code function call for filter to run text through.
       return;
@@ -184,9 +211,6 @@
     case 'settings':
       // OPTIONAL: Add additional settings for filter.
       return;
-
-    default:
-      return $text;
   }
 == END ==
 
@@ -198,6 +222,34 @@
     case TRUE:
       return t("TODO: Enter filter's full description");
   }
+== END ==
+
+== START hook_theme ==
+  return array(
+    'my_simple_theme_function' => array(
+      'arguments' => array('arg1' => NULL, 'arg2' => 0, 'arg3' => FALSE),
+    ),
+  );
+== END ==
+
+== START hook_views_api ==
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', '%module'),
+  );
+== END ==
+
+== START hook_views_handlers ==
+  return array(
+    'info' => array(
+      'path' => drupal_get_path('module', '%module'),
+    ),
+    'handlers' => array(
+      '%module_handler_TYPE_TABLE_FIELDNAME' => array(
+        'parent' => 'views_handler_field_term_node_tid',
+      ),
+    ),
+  );
 == END ==
 
 

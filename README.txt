@@ -1,7 +1,7 @@
 $Id$
 
-Welcome to module_builder.module! This is an early prototype of a 
-module designed to help expedite the process of creating custom 
+Welcome to module_builder.module! 
+This is a module designed to help expedite the process of creating custom 
 modules. Simply fill out the form, select the hooks you want and the 
 script will automatically generate a skeleton module file for you, 
 along with PHPDoc comments and function definitions.
@@ -20,7 +20,7 @@ FEATURES
 * Automatically selects hooks based on your needs.
 * Option allows you to turn off informative comments.
 
-INSTALL/CONFIG
+INSTALL/CONFIG ON DRUPAL
 --------------
 1. Move this folder into your modules/ directory like you would any 
    other module.
@@ -35,6 +35,18 @@ INSTALL/CONFIG
    don't like the default output.
 6. (Optional) Create your own hook groupings if you don't like the 
    default ones.
+
+INSTALL/CONFIG ON DRUSH
+----------------
+1. Move this folder to somewhere where Drush can find the command. Inside drush/commands will do it, though then you have to watch you don't clobber it on upgrade. Drush documentation has details on other, better options.
+2. From a Drupal installation, do:
+$ drush mbdl
+This will download hook data to that Drupal's files/hooks folder. Hooks are downloaded for core and any other module builder-aware modules that are in this install of Drupal.
+3. You can now generate module code. For more help, do:
+$ drush help mb
+
+If you use Drush with multiple Drupal installations, you can store your hook data centrally, and so only download it once for all your sites.
+To do so, specify the --data option when both downloading hooks and generating code. You can use Drush's drushrc.php to set this option automatically.
 
 USING THE MODULE
 ----------------
@@ -64,6 +76,15 @@ KNOWN ISSUES
 ------------
 * Can't set default values in PHP 5 for some strange reason
 * Fieldsets in Opera look mondo bizarr-o
+
+API
+-------------
+This module can be considered to be an API and two wrappers: 
+- Drupal's web-based UI (referred to in code comments as Drupal UI or just Drupal)
+- Drush's command line
+Furthermore, while the Drupal part of the module is version-specific (that is, you download the version of the module to match your version of Drupal core as you would any module), the Drush part, works across versions in the same way as Drush itself.
+That is, you can download the current version of module builder, install it as a Drush command, and where you can use Drush you can use module builder. (Note this is still a work in progress...)
+
 
 CONTRIBUTORS
 ------------
