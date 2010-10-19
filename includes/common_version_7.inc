@@ -27,8 +27,7 @@ function module_builder_create_directory(&$directory, $common = FALSE) {
   else {
     // Relative, and so assumed to be in Drupal's files folder: prepend this to
     // the given directory.
-    $files = file_directory_path();
-    $directory = $files . '/' . $directory;
+    $directory = 'public://' . $directory;
   }
 
   // If the directory is common, append the version number subdir.

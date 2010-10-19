@@ -222,10 +222,12 @@ function _module_builder_invoke_hook() {
   $module_data = array();
   
   foreach ($mb_files as $file) {
-    include_once($file->filename);
+    include_once($file->uri);
     $module = str_replace('.module_builder.inc', '', $file->basename);
     // Note that bad data got back from the hook breaks things.
-    $module_data = array_merge($module_data, module_invoke($module, 'module_builder_info'));    
+    if ($result = module_invoke($module, 'module_builder_info')) {
+      $module_data = array_merge($module_data, $result);
+    }
   }
   
   //print_r($module_data);
