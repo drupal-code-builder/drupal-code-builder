@@ -44,6 +44,7 @@ function module_builder_drush_command() {
     ),
     'aliases' => array('mb'),
     'options' => array(
+      '--noi' => "Disables interactive mode.",
       '--data' => "Location to read hook data. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
       '--build' => "Which file type to generate: 'all', 'code', 'info', 'FILE'. " .
         "'all' generates everything: info and any code files needed by the requested hooks. " .
@@ -131,7 +132,9 @@ function module_builder_drush_command() {
 function module_builder_drush_help($section) {
   switch ($section) {
     case 'drush:mb-build':
-      return dt("Generates module code with the specified hooks.");
+      return dt('Generates and optionally writes module code with the specified hooks. ' .
+        'By default this runs in interactive mode, and will prompt you for each ' .
+        "of the module's properties. Use the --noi option to use as a single command.");
   }
 }
 
@@ -230,20 +233,95 @@ function module_builder_callback_build() {
  * Helper function to build the array of module_data.
  */
 function module_builder_build_data($commands) {
-  // The first argument is the module machine name.
-  $module_data['module_root_name'] = array_shift($commands);  
-  
   // Heap of defaults. Later find some nice way of asking for these. 
   //$data['module_readable_name'] = ucfirst($data['module_root_name']);
   //$data['module_short_description'] = 'Description';
   // todo: some function in common.inc to set defaults?
   
-  $module_data['module_readable_name']     = drush_get_option('name');
-  $module_data['module_short_description'] = drush_get_option('desc');
-  $module_data['module_help_text']         = drush_get_option('help');
-  $module_data['module_dependencies']      = drush_get_option('dep');
-  $module_data['module_package']           = drush_get_option('package');
+  // Determine whether we're in interactive mode.
+  $interactive = !drush_get_option(array('non-interactive', 'noi'));
+
+  // Information about the keys we need to build the module data.
+  $data = array(
+    'module_root_name' => array(
+      'commands' => 0,
+      'prompt' => dt('module name'),
+      'required' => TRUE,
+    ),
+    // It is essential this key follow the root name, so that the the root
+    // name gets to the commands array first.
+    'hooks' => array(
+      'commands' => 'all',
+      'prompt' => dt('required hooks'),
+      'required' => TRUE,
+    ),
+    'module_readable_name' => array(
+      'key' => 'name',
+      'prompt' => dt('human readable name'),
+      'required' => TRUE,
+    ),
+    'module_short_description' => array(
+      'key' => 'desc',
+      'prompt' => dt('description'),
+    ),
+    'module_help_text' => array(
+      'key' => 'help',
+      'prompt' => dt('help text'),
+    ),
+    'module_dependencies' => array(
+      'key' => 'dep',
+      'prompt' => dt('dependencies'),
+    ),
+    'module_package' => array(
+      'key' => 'package',
+      'prompt' => dt('package'),
+    ),
+  );
+
+  foreach ($data as $name => $definition) {
+    // Merge in default values.
+    $definition += array(
+      'required' => FALSE,
+    );
+    // First pass: get data from either drush command line options...
+    if (isset($definition['key'])) {
+      $module_data[$name] = drush_get_option($definition['key']);
+    }
+    // ... or the commands themselves.
+    elseif (isset($definition['commands'])) {
+      // A numeric value of 'commands' means take that index from the commands array.
+      if (is_numeric($definition['commands']) && isset($commands[$definition['commands']])) {
+        $module_data[$name] = $commands[$definition['commands']];
+        unset($commands[$definition['commands']]);
+      }
+      // Otherwise, take the whole thing.
+      // This depends on the module root name having been taken out first!
+      else {
+        $module_data[$name] = $commands;
+      }
+    }
+
+    // Second pass: prompt the user for data.
+    if ($interactive && empty($module_data[$name])) {
+      // We use 'required' in our array because that's like FormAPI: Drush has it backwards :/
+      $value = drush_prompt(dt('Enter the @type', array('@type' => $definition['prompt'])), NULL, !$definition['required']);
+      if ($value !== FALSE) {
+        $module_data[$name] = $value;
+      }
+    }
+  }
   
+  // Extra processing for the hooks array (or not).
+  if (!is_array($module_data['hooks'])) {
+    $module_data['hooks'] = preg_split('/\s+/', $module_data['hooks']);
+  }
+  // Convert the array from numeric to keyed by full hook name.
+  foreach ($module_data['hooks'] as $hook_name) {
+    $hooks["hook_$hook_name"] = TRUE;
+  }
+  $module_data['hooks'] = $hooks;
+
+  //print_r($module_data);
   return $module_data;
 }
 
@@ -260,13 +338,6 @@ function module_builder_build_data($commands) {
  *    'code' or 'all' means all of them.
  */  
 function module_builder_callback_module($commands, &$module_data, $build_list) {
-  // The first argument is the module machine name.
-  array_shift($commands);  
-    
-  foreach ($commands as $hook_name) {
-    $module_data['hooks']["hook_$hook_name"] = TRUE;    
-  }
-    
   //drush_print_r($module_data);
   //exit;
   /*
