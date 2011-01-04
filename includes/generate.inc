@@ -46,6 +46,7 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
 
   // Iterate over our data array, because it's in a pretty order.
   // by each needed file of code.
+  $module_code = array();
   foreach ($hook_file_data as $filename => $hook_data) {
     // Begin code generation for this file.
     $code = '';
@@ -61,7 +62,7 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
 
 
       // See if function bodies exist; if so, use function bodies from template
-      if ($hook['template']) {
+      if (isset($hook['template'])) {
         // Strip out INFO: comments for advanced users
         if (!variable_get('module_builder_detail', 0)) {
           // Used to strip INFO messages out of generated file for advanced users.
@@ -103,14 +104,14 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
     //dsm($code);
     //print $code;
 
-    $return[$filename] = $code;
+    $module_code[$filename] = $code;
     // Add the generated filename to the module data for the info generation to find.
     $module_data['module_files'][] = $filename;
   } // foreach file
 
   //print_r($module_data);
 
-  return $return;
+  return $module_code;
 }
 
 /**
@@ -182,7 +183,7 @@ function module_builder_get_templates($module_data) {
   // print_r($hook_data); ok!
 
   // Check for node hooks; these will overwrite core hooks if found.
-  if ($module_data['hooks']['hook_node_info']) {
+  if (isset($module_data['hooks']['hook_node_info'])) {
     if (file_exists("$path/node_hooks-custom.template")) {
       $template_file = file_get_contents("$path/node_hooks-custom.template");
     }

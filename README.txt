@@ -14,7 +14,7 @@ FEATURES
   you started and a default module header; but if you don't like those,
   simply rename the .template files to -custom.template instead and 
   create your own definitions!
-* Saves you the trouble of looking at drupaldocs.org 50 times a day to 
+* Saves you the trouble of looking at api.drupal.org 50 times a day to 
   remember what arguments and what order different hooks use. Score one
   for laziness! ;)
 * Automatically selects hooks based on your needs.
@@ -26,9 +26,10 @@ INSTALL/CONFIG ON DRUPAL
    other module.
 2. Enable it from administer >> modules.
 3. Go to administer >> settings >> module_builder and specify the path
-   to save the hook documentation files
-4. The first time you visit the module builder form, the module will 
-   retrieve hook documentation from cvs.drupal.org and store it locally. 
+   to save the hook documentation files.
+4. (On Drupal 5 and 6 only) The first time you visit the module builder form,
+   the module will retrieve hook documentation from cvs.drupal.org and store it
+   locally. 
    When you want to update this documentation later on, return to the 
    settings page and click the "Update" button.
 5. (Optional) Create custom function declaration template file(s) if you
@@ -38,17 +39,20 @@ INSTALL/CONFIG ON DRUPAL
 
 INSTALL/CONFIG ON DRUSH
 ----------------
-1. Move this folder to somewhere where Drush can find the command. Inside drush/commands will do it, though then you have to watch you don't clobber it on upgrade. Drush documentation has details on other, better options.
+1. Move the module folder to somewhere where Drush can find the command. 
+   Inside ~/.drush will do it. Drush documentation has details on other options.
 2. From a Drupal installation, do:
-$ drush mbdl
-This will download hook data to that Drupal's files/hooks folder. Hooks are downloaded for core and any other module builder-aware modules that are in this install of Drupal.
+     $ drush mbdl
+   This will download hook data to that Drupal's files/hooks folder. 
+   Hooks are downloaded for core and any other module builder-aware modules that
+   are in this install of Drupal.
 3. You can now generate module code. For more help, do:
-$ drush help mb
+     $ drush help mb
 
 If you use Drush with multiple Drupal installations, you can store your hook data centrally, and so only download it once for all your sites.
 To do so, specify the --data option when both downloading hooks and generating code. You can use Drush's drushrc.php to set this option automatically.
 
-USING THE MODULE
+USING THE MODULE ON DRUPAL
 ----------------
 1. Click the "module_builder" link in the menu (note: you will require
    'access module builder' privileges to see this link)

@@ -13,19 +13,20 @@
  *
  * @ingroup module_builder_core
  */
-function module_builder_admin_settings($form_state) {
+function module_builder_admin_settings($form, &$form_state) {
+  $public_dir = drupal_realpath(file_default_scheme() . '://');
 
   $form['module_builder_hooks_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to hook documentation directory'),
-    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => file_directory_path() .'/')),
+    '#description' => t('Subdirectory in the directory "%dir" where local copies of hook documentation should be stored.', array('%dir' => $public_dir)),
     '#default_value' => variable_get('module_builder_hooks_directory', 'hooks'),
   );
 
   $form['module_builder_write_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to write module files'),
-    '#description' => t('Subdirectory in the directory "%dir" where module files should be written.', array('%dir' => file_directory_path() .'/')),
+    '#description' => t('Subdirectory in the directory "%dir" where module files should be written.', array('%dir' => $public_dir)),
     '#default_value' => variable_get('module_builder_write_directory', 'modules'),
   );
 
@@ -72,32 +73,32 @@ function module_builder_admin_settings($form_state) {
 /**
  * Admin hook update form.
  */
-function module_builder_admin_update($form_state) {
+function module_builder_admin_update($form, &$form_state) {
   // Include generating component file.
   module_builder_include('process');
 
   $last_update = module_builder_get_hook_data_last_updated();
 
   $form['last_update'] = array(
-    '#type' => 'item',
-    '#value' => $last_update ?
+    '#markup' => '<p>' . (
+      $last_update ?
         t('Your last hook documentation update was %date.', array('%date' => $last_update)) :
-        t('The hook documentation has not yet been downloaded.'),
+        t('The hook documentation has not yet been downloaded.')
+      ) . '</p>',
   );
 
   $doc_files = module_builder_get_doc_files();
   $dir = _module_builder_get_hooks_directory();
   if (count($doc_files)) {
     $form["files"] = array(
-      '#type' => 'item',
-      '#value' => "You have the following hook definition files saved in $dir: " .
-         theme('item_list', $doc_files),
+      '#markup' => '<p>' . t('You have the following hook definition files saved in %dir: ', array('%dir' => $dir)) .
+         theme('item_list', array('items' => $doc_files)) . '</p>',
     );
   }
 
   $form['update'] = array(
     '#type' => 'submit',
-    '#value' => 'Download',
+    '#value' => 'Update',
   );
   
   return $form;
@@ -107,6 +108,5 @@ function module_builder_admin_update($form_state) {
  * Admin hook update form submit handler.
  */
 function module_builder_admin_update_submit($form, $form_state) {
-  _module_builder_check_settings();
   module_builder_update_data();
 }

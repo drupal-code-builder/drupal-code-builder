@@ -3,7 +3,9 @@
 
 /**
  * @file
- *   Module builder drush commands.
+ *  Module builder drush commands.
+ *
+ * IMPORTANT: This file should be identical across versions of Drupal.
  */
  
 /**
@@ -96,6 +98,12 @@ function module_builder_drush_command() {
   $items['mb-list'] = array(
     'callback' => 'module_builder_callback_hook_list',
     'description' => "List the hooks module_builder knows about.",
+  );
+
+  $items['mb-analyze'] = array(
+    'callback' => 'module_builder_callback_hook_analyze',
+    'description' => "List the hooks found in a given module.",
+    'aliases' => array('mban'),
   );
 
   $items['mb-dochooks'] = array(
@@ -200,11 +208,11 @@ function module_builder_callback_build() {
       return drush_set_error("DRUSH_NOT_COMPLETED', 'No hook definitions found. You need to download hook definitions before using this module: see the command 'mbdl'.");
     }
     
-    module_builder_callback_module($commands, $module_data, $build_list);        
+    module_builder_build_module($commands, $module_data, $build_list);        
   }
   // Build info code in cases 'info' and 'all'.
   if ($build == 'info' or $build == 'all') {
-    module_builder_callback_info($commands, $module_data);
+    module_builder_build_info($commands, $module_data);
   }
   
   /*
@@ -325,7 +333,7 @@ function module_builder_build_data($commands) {
 }
 
 /**
- * Handles the callback for module code generation.
+ * Generates and outputs module code.
  *
  * @param $commands
  *    The drush array of commands.
@@ -336,7 +344,7 @@ function module_builder_build_data($commands) {
  *    An array of requested code files to output
  *    'code' or 'all' means all of them.
  */  
-function module_builder_callback_module($commands, &$module_data, $build_list) {
+function module_builder_build_module($commands, &$module_data, $build_list) {
   //drush_print_r($module_data);
   //exit;
   /*
@@ -407,9 +415,9 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
 }
 
 /**
- * Handles the callback for info code generation.
+ * Generates and outputs info file code.
  */  
-function module_builder_callback_info($commands, $module_data) {
+function module_builder_build_info($commands, $module_data) {
   module_builder_include('generate_info');
   $info_code = module_builder_generate_info($module_data);
 
@@ -435,16 +443,33 @@ function module_builder_drush_output_code($module_root_name, $filename, $code) {
   if (drush_get_option(array('write', 'add', 'go'))) {
     
     $module_dir = pm_dl_destination('module');
+    
+    // Gee great. Drush HEAD doesn't give us the trailing /.
+    if (substr($module_dir, -1, 1) != '/') {
+      $module_dir .= '/';
+    }
+    
     if (drush_get_option('parent')) {
+      // The --parent option allows the user to specify a location for the new module folder.
       $parent_dir = drush_get_option('parent');
       if (substr($parent_dir, 0 , 1) == '.') {
-        $parent_dir = substr($parent_dir, 1);
-        $module_dir = drush_get_context('DRUSH_OLDCWD') . '/' . $parent_dir . '/';
+        // An initial . means to start from the current directory rather than 
+        // the modules folder, which allows submodules to be created where the
+        // user is standing.
+        $module_dir = drush_get_context('DRUSH_OLDCWD') . '/';
+        // Remove both the . and the following /.
+        $parent_dir = substr($parent_dir, 2);
+        if ($parent_dir) {
+          // If there's anything left (since just '.' is a valid option), append it.
+          $module_dir .= $parent_dir . '/';
+        }
       }
       else {
-        $module_dir .= $parent_dir;
+        $module_dir .= $parent_dir . '/';
       }
     }
+    // $module_dir should now be a full path to the parent of the destination
+    // folder, with a trailing slash.
     $module_dir .= $module_root_name;
     
     if (!is_dir($module_dir)) {
@@ -529,6 +554,39 @@ function module_builder_callback_hook_list() {
   //print_r($data);
 }
 
+/**
+ * Callback to list hook implementations found in a given module.
+ */
+function module_builder_callback_hook_analyze() {
+  $commands = func_get_args();
+  
+  // The first argument is the module machine name.
+  $module_root_name = array_shift($commands);  
+
+  // Include process component file.
+  module_builder_include('process');
+  $hooks = module_builder_get_hook_names(_module_builder_get_hooks_directory(), TRUE);
+  foreach ($hooks as $key => $hook) {
+    $hooks[$key] = $module_root_name . '_' . $hook;
+  }
+
+  $module_files = module_builder_get_module_files($module_root_name);
+  //drush_print_r($module_files);
+  
+  foreach ($module_files as $file) {
+    $functions = module_builder_get_functions($file);
+    
+    $module_hooks[$file] = array_intersect($functions, $hooks);
+  }
+  
+  if (drush_get_option('flat')) {
+
+  }  
+  
+  drush_print_r($module_hooks);
+  drush_print_r(array_merge($module_hooks));
+}
+
 /** 
  * Callback to add doc headers to existing hooks.
  */
@@ -538,18 +596,7 @@ function module_builder_callback_doc_hooks() {
   // The first argument is the module machine name.
   $module_root_name = array_shift($commands);  
   
-  $filepath = drupal_get_path('module', $module_root_name);
-
-  //$old_dir = getcwd();
-  //chdir($filepath);
-  $files = scandir($filepath);
-
-  foreach ($files as $filename) {
-    $ext = substr(strrchr($filename, '.'), 1);
-    if (in_array($ext, array('module', 'install', 'inc'))) {
-      $module_files[] = $filename;
-    }
-  }
+  $module_files = module_builder_get_module_files($module_root_name);
   
   // Include component files.
   module_builder_include('process');

@@ -30,35 +30,35 @@
  *   Form showing built module and info file
  *   Nothing, but file is pushed to client for download
  */
-  # fun fun fun!
-  # http://drupal.org/node/144132
-function module_builder_page($form_state) {
-  $step = 'input';
-  if (isset($form_state['clicked_button'])) {
-     $step = $form_state['clicked_button']['#name'];
+function module_builder_page($form, &$form_state) {
+  // Set up multistep form.
+  // Once again, thank you examples.module!
+  if (empty($form_state['step'])) {
+    $form_state['step'] = 'input';
+
+    // This array contains the function to be called at each step to get the
+    // relevant form elements. It will also store state information for each
+    // step.
+    $form_state['step_information'] = array(
+      'input'     => 'module_builder_page_input',
+      'generate'  => 'module_builder_page_generate',
+      // back: same as input
+      // download: 'module_builder_page_download'
+    );
   }
-  #dsm($step);
-  switch ($step) {
-    case 'input':
-      // sanity check first time around
-      _module_builder_check_settings();
-      // fall through
-    case 'back':
-      $form = module_builder_page_input($form_state);
-      break;
-    case 'generate':
-      $form = module_builder_page_generate($form_state);
-      break;
-    case 'download':
-      $form = module_builder_page_download($form_state);
-      break;
-  }
+
+  // Call the function named in $form_state['step_information'] to get the
+  // form elements to display for this step.
+  $form_builder_function = $form_state['step_information'][$form_state['step']];
+  $form = $form_builder_function($form, $form_state);
 
   return $form;
 }
 
-// build page 1
-function module_builder_page_input($form_state) {
+/**
+ * Form builder for page 1.
+ */
+function module_builder_page_input($form, &$form_state) {
   /*
   // built some default values.
   // these are either hardcoded or what the user already put into the form on a previous go round.
@@ -74,8 +74,6 @@ function module_builder_page_input($form_state) {
   dsm($form_state);
   */
 
-  // sanity check first time around
-  #_module_builder_check_settings(); // moved up to main form builder
   // Get list of hooks from downloaded documentation, organized in fieldsets.
   // include the data processing file
   // TODO: only need the data loading.
@@ -83,7 +81,15 @@ function module_builder_page_input($form_state) {
   
   $hook_groups = module_builder_get_hook_data();
   if (!is_array($hook_groups) || !count($hook_groups)) {
-    form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="!settings">%administer >> %settings >> %modulebuilder</a> page.', array('!settings' => url('admin/settings/module_builder'), '%administer' => 'Administer', '%settings' => 'Site configuration', '%modulebuilder' => "Module builder")));
+    form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.', 
+      array(
+        '!settings-url' => url('admin/config/development/module_builder'),
+        '%administer' => 'Administer',
+        '%config' => 'Site configuration',
+        '%develop' => 'Development',
+        '%modulebuilder' => "Module builder",
+      )
+    ));
     return $form;
   }
 
@@ -91,9 +97,14 @@ function module_builder_page_input($form_state) {
   drupal_add_css(drupal_get_path('module', 'module_builder') . '/theme/module_builder.css');
 
   // Mark form as fresh to enable JS clearing of fields with sample text.
+  // TODO: multiform re-fill may work differently on D7.
+  // Failing that, look into ctools?
+  $form['#attributes'] = array('class' => 'fresh');
+  /*
   if ($form_state['clicked_button']['#name'] != 'back') {
     $form['#attributes'] = array('class' => 'fresh');
   }
+  */
 
   // Module properties
   $form['module_root_name'] = array(
@@ -115,7 +126,12 @@ function module_builder_page_input($form_state) {
   $form['module_short_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description'),
-    '#description' => t('This text will appear in the module listing at <a href="!listing">%administer >> %build >> %modules</a>.', array('!listing' => url('admin/build/modules'), '%administer' => 'Administer', '%build' => 'Site building', '%modules' => 'Modules')),
+    '#description' => t('This text will appear in the module listing at <a href="!listing">%administer >> %modules</a>.',
+      array(
+        '!listing' => url('admin/build/modules'),
+        '%administer' => 'Administer',
+        '%modules' => 'Modules',
+      )),
     '#required' => TRUE,
     '#default_value' => t('Does awesome things. Makes tea. Washes up. Favours of a personal nature.'),
     '#repopulate' => TRUE,
@@ -123,7 +139,12 @@ function module_builder_page_input($form_state) {
   $form['module_help_text'] = array(
     '#type' => 'textarea',
     '#title' => t('Help text'),
-    '#description' => t('Help text (HTML) to appear in <a href="!help">%administer >> %help >> module_name</a> page.', array('!help' => url('admin/help'), '%administer' => 'Administer', '%help' => 'Help')),
+    '#description' => t('Help text (HTML) to appear in <a href="!help">%administer >> %help >> module_name</a> page.',
+      array(
+        '!help' => url('admin/help'),
+        '%administer' => 'Administer',
+        '%help' => 'Help',
+      )),
     '#repopulate' => TRUE,
   );
   $form['module_dependencies'] = array(
@@ -184,21 +205,20 @@ function module_builder_page_input($form_state) {
     );
   }
 
-
   // Build hooks list
   $form['hooks'] = array(
-    '#type' => 'checkboxes',
     '#title' => t('Use the following specific hooks'),
-   // '#description' =>  '(Note that for now, only core and node hooks will be generated: for the others use drush.)',
+    '#tree' => TRUE,
   );
 
   foreach ($hook_groups as $hook_group => $hooks) {
     $form['hooks'][$hook_group] = array(
       '#type' => 'fieldset',
-      '#title' => $hook_group .' hooks',
+      '#title' => $hook_group . ' hooks',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#theme'  => 'module_builder_hook_list',
+      //'#theme'  => 'module_builder_hook_list',
+      '#tree' => TRUE,
     );
     foreach ($hooks as $hook) {
       $name = $hook['name'];
@@ -238,11 +258,13 @@ function module_builder_page_input($form_state) {
   $form['#submit'] = array('module_builder_page_input_submit');
 
   #if ($form_state['rebuild']) { // fails as a test!?!?!
+  /*
   if ($form_state['values']) {
     #dsm('rebuild');
     $form = _form_repopulate($form, $form_state);
     #dsm($form_state['storage']['input']);
   }
+  */
 
   return $form;
 }
@@ -272,7 +294,9 @@ function _form_repopulate($form, $form_state) {
 /**
  * Theme function for hook list
  */
-function theme_module_builder_hook_list($form) {
+// FIXME: this goes into an endless loop with theme()!
+/*
+function Xtheme_module_builder_hook_list($form) {
   $output = "<ul class=\"hook-group clear-block\">\n";
   foreach (element_children($form) as $key) {
     $output .= "  <li>". drupal_render($form[$key]) ."</li>\n";
@@ -280,13 +304,17 @@ function theme_module_builder_hook_list($form) {
   $output .= "</ul>\n";
   return $output;
 }
+*/
 
 
 /**
- * submit page 1
+ * Form submit handler for page 1
  */
 function module_builder_page_input_submit($form, &$form_state) {
+  // Trigger multistep.
   $form_state['rebuild'] = TRUE;
+  // Set the next step.
+  $form_state['step'] = 'generate';
 
   // stash input.... these values will follow us around everywhere like a little dog...
   $form_state['storage']['input'] = $form_state['values'];
@@ -296,9 +324,9 @@ function module_builder_page_input_submit($form, &$form_state) {
 }
 
 /**
- * page 2: generate code
+ * Form builder for page 2: generate code.
  */
-function module_builder_page_generate($form_state) {
+function module_builder_page_generate($form, &$form_state) {
   module_builder_include('generate');
   
   // Build module data
@@ -322,14 +350,16 @@ function module_builder_page_generate($form_state) {
   }
   */
   module_builder_include('generate_info');  
-  $info = $form_state['values']['module_info'] ? $form_state['values']['module_info'] : module_builder_generate_info($module_data);
+  $info = isset($form_state['values']['module_info']) ? $form_state['values']['module_info'] : module_builder_generate_info($module_data);
     // damn I miss perl at times like this. fugly syntax.
 
+  /*
   $form['back'] = array(
     '#type' => 'submit',
     '#value' => t('Back'),
     '#name' => 'back',
   );
+  */
 
   foreach ($code_array as $filename => $code) {
     $form['code_instructions_' . $filename] = array(

@@ -253,10 +253,6 @@ function module_builder_get_doc_files() {
 function _module_builder_process_hook_file($filepath) {
 
   $contents = file_get_contents("$filepath");
-  
-  // Get the destination stored at the top of the file.
-  preg_match('[^// module builder: (\S+)\n]', $contents, $matches_dest);
-  $destination = $matches_dest[1];
  
   // The pattern for extracting function data: capture first line of doc,
   // function declaration, and hook name.
@@ -277,7 +273,6 @@ function _module_builder_process_hook_file($filepath) {
     'descriptions' => $matches[1],
     'definitions'  => $matches[2],
     'names'        => $matches[3], 
-    'destination'  => $destination,
   );
  
   return $data;

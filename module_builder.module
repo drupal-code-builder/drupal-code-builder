@@ -74,14 +74,15 @@ function module_builder_permission() {
  * @ingroup module_builder_core
  */
 function module_builder_menu() {
-  $items['module_builder'] = array(
+  $items['admin/modules/module_builder'] = array(
     'title' => 'Module builder',
     'description' => t('Builds scaffolding for custom modules.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('module_builder_page'),
     'file' => 'includes/module_builder.pages.inc',
     'access arguments' => array('access module builder'),
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => '50',
   );
   $items['admin/config/development/module_builder'] = array(
     'title' => 'Module builder',
@@ -121,7 +122,7 @@ function module_builder_menu() {
 function module_builder_theme($existing, $type, $theme, $path) {
   return array(
     'module_builder_hook_list' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
   );
 }
@@ -181,7 +182,7 @@ function _module_builder_save_old_form_values($form, $form_values, $indent='') {
  */
 function Xmodule_builder_page_input($form, $form_values) {
 
-  _module_builder_check_settings();
+  //_module_builder_check_settings();
 
   // Include CSS for formatting
   drupal_add_css(drupal_get_path('module', 'module_builder') . '/theme/module_builder.css');
