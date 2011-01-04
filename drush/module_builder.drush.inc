@@ -303,8 +303,7 @@ function module_builder_build_data($commands) {
 
     // Second pass: prompt the user for data.
     if ($interactive && empty($module_data[$name])) {
-      // We use 'required' in our array because that's like FormAPI: Drush has it backwards :/
-      $value = drush_prompt(dt('Enter the @type', array('@type' => $definition['prompt'])), NULL, !$definition['required']);
+      $value = drush_prompt(dt('Enter the @type', array('@type' => $definition['prompt'])), NULL, $definition['required']);
       if ($value !== FALSE) {
         $module_data[$name] = $value;
       }
