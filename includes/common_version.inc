@@ -49,5 +49,19 @@ function module_builder_create_directory(&$directory, $common = FALSE) {
  * A version-independent wrapper for drupal_system_listing().
  */
 function module_builder_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
-  return drupal_system_listing($mask, $directory, $key, $min_depth);
+  $files = drupal_system_listing($mask, $directory, $key, $min_depth);
+
+  // This one is actually only for Drupal 6.
+  // The file object is:
+  //    D6         D7         what it actually is
+  //  - filename | uri      | full path and name
+  //  - basename | filename | name with the extension
+  //  - name     | name     | name without the extension
+  // So we copy filename to uri, and then the caller can handle the returned
+  // array as if it were Drupal 7 style.
+  foreach ($files as $file) {
+    $file->uri = $file->filename;
+  }
+
+  return $files;
 }

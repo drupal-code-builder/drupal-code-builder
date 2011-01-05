@@ -272,6 +272,7 @@ function _module_builder_invoke_hook() {
   $module_data = array();
   
   foreach ($mb_files as $file) {
+    // Our system listing wrapper ensured that there is a uri property on all versions.
     include_once($file->uri);
     // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
     $module = str_replace('.module_builder', '', $file->name);
