@@ -25,12 +25,6 @@
  *     - 'module_package': the module package.
  */
 function module_builder_generate_info($module_data) {
-  // Merge in defaults.
-  $module_data += array(
-    'module_short_description' => 'TODO: Description of module',
-    'module_readable_name'     => ucfirst(str_replace('_', ' ', $module_data['module_root_name'])),
-  );
-
   // The weird syntax stops this from getting mangled by CVS
   $info = '; $' . 'Id$' . "\n";
   $info .= 'name = ' . $module_data['module_readable_name'] . "\n";

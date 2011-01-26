@@ -241,11 +241,6 @@ function module_builder_callback_build() {
  * Helper function to build the array of module_data.
  */
 function module_builder_build_data($commands) {
-  // Heap of defaults. Later find some nice way of asking for these. 
-  //$data['module_readable_name'] = ucfirst($data['module_root_name']);
-  //$data['module_short_description'] = 'Description';
-  // todo: some function in common.inc to set defaults?
-  
   // Determine whether we're in interactive mode.
   $interactive = !drush_get_option(array('non-interactive', 'noi'));
 
@@ -267,10 +262,14 @@ function module_builder_build_data($commands) {
       'key' => 'name',
       'prompt' => dt('human readable name'),
       'required' => TRUE,
+      // A callback to generate the default value of this key.
+      // The signature is foo($commands, $module_data)
+      'default_callback' => 'module_builder_default_readable_name',
     ),
     'module_short_description' => array(
       'key' => 'desc',
       'prompt' => dt('description'),
+      'default' => 'TODO: Description of module',
     ),
     'module_help_text' => array(
       'key' => 'help',
@@ -316,6 +315,16 @@ function module_builder_build_data($commands) {
         $module_data[$name] = $value;
       }
     }
+    
+    // Third pass: set a default value from the definition or a callback.
+    if (isset($definition['default'])) {
+      $module_data[$name] = $definition['default'];
+    }
+    elseif (isset($definition['default_callback'])) {
+      $function = $definition['default_callback'];
+      $module_data[$name] = $function($commands, $module_data);
+    }
+    
   }
   
   // Extra processing for the hooks array (or not).
@@ -330,6 +339,13 @@ function module_builder_build_data($commands) {
 
   //print_r($module_data);
   return $module_data;
+}
+
+/**
+ * Callback for generating default for module readable name. 
+ */
+function module_builder_default_readable_name($commands, $module_data) {
+  return ucfirst(str_replace('_', ' ', $module_data['module_root_name']));
 }
 
 /**
