@@ -317,14 +317,16 @@ function module_builder_build_data($commands) {
     }
     
     // Third pass: set a default value from the definition or a callback.
-    if (isset($definition['default'])) {
-      $module_data[$name] = $definition['default'];
+    if (empty($module_data[$name])) {
+      if (isset($definition['default'])) {
+        $module_data[$name] = $definition['default'];
+        continue;
+      }
+      elseif (isset($definition['default_callback'])) {
+        $function = $definition['default_callback'];
+        $module_data[$name] = $function($commands, $module_data);
+      }
     }
-    elseif (isset($definition['default_callback'])) {
-      $function = $definition['default_callback'];
-      $module_data[$name] = $function($commands, $module_data);
-    }
-    
   }
   
   // Extra processing for the hooks array (or not).
