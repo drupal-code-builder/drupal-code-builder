@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file common_version.inc

@@ -1,4 +1,3 @@
-/* $Id$ */
 
 /**
  * For a given hook grouping, selects/deselects all hooks associated with it.

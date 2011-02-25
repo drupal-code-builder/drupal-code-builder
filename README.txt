@@ -1,4 +1,3 @@
-$Id$
 
 Welcome to module_builder.module! 
 This is a module designed to help expedite the process of creating custom 
