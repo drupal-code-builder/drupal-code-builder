@@ -58,7 +58,6 @@ abstract class ModuleBuilderGenerator {
   function build() {
     $output = '';
     $output .= $this->file_header();
-    $output .= $this->cvs_header();
     $output .= $this->code_header();
     $output .= $this->code_body();
     $output .= $this->code_footer();
@@ -73,11 +72,6 @@ abstract class ModuleBuilderGenerator {
    function file_header()  {
      return "<?php\n";     
    }
-  
-  /**
-   * Return the CVS header line.
-   */
-  abstract function cvs_header();
   
   /**
    * Return the file doxygen header and any custom header code.
@@ -112,11 +106,6 @@ EOT;
 class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
   function __construct($module_data) {
     $this->module_data = $module_data;
-  }
-  
-  function cvs_header() {
-    // String is split in a funny way so CVS doesn't spot it.
-    return '// $' . 'Id$' . "\n";
   }
 
   function code_body() {
@@ -182,11 +171,6 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGenerator {
    * Override as info files have no header.
    */
   function file_header() { }
-  
-  function cvs_header() {
-    // The weird syntax stops this from getting mangled by CVS
-    return '; $' . 'Id$' . "\n";
-  }
   
   /**
    * Override as info files have no header.
