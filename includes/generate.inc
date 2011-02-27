@@ -7,6 +7,276 @@
  *   Note that info file generating code happens in generate_info_VERSION, 
  *   as it's version-specific.
  */
+ 
+/**
+ * Generate info code. New OO version!
+ */
+function module_builder_generate_info_oo($module_data) {
+  $class = module_builder_get_class('info');
+  $generator = new $class($module_data);
+  $code = $generator->build();
+  
+  return $code;
+}
+
+/**
+ * Helper function to get the desired class.
+ *
+ * @param $type
+ *  One of (so far) 'info' or 'code'.
+ * @return
+ *  A class name for the type and, if it exists, version, eg 'ModuleBuilderGeneratorInfo6'.
+ */
+function module_builder_get_class($type) {
+  $type     = ucfirst($type);
+  $version  = _module_builder_drupal_major_version();
+  $class    = 'ModuleBuilderGenerator' . $type . $version;
+  if (!class_exists($class)) {
+    $class  = 'ModuleBuilderGenerator' . $type;
+  }
+  return $class;
+}
+ 
+/**
+ * Base class for code generators.
+ *
+ * TODO: much more of the code generation could be moved to OO code:
+ *  - pass all hook data to one code generator object, representing the .module
+ *  file, which then instantiates further objects for the other files needed.
+ *  This would probably entail a controller object which can hold the list of
+ *  current generators.
+ *  - templates.
+ */ 
+abstract class ModuleBuilderGenerator {
+  function __construct($module_data) {
+    $this->module_data = $module_data;
+  }
+  
+  /**
+   * The main code building function.
+   */
+  function build() {
+    $output = '';
+    $output .= $this->file_header();
+    $output .= $this->cvs_header();
+    $output .= $this->code_header();
+    $output .= $this->code_body();
+    $output .= $this->code_footer();
+    
+    return $output;    
+  }
+  
+
+  /**
+   * Return the PHP file header line.
+   */
+   function file_header()  {
+     return "<?php\n";     
+   }
+  
+  /**
+   * Return the CVS header line.
+   */
+  abstract function cvs_header();
+  
+  /**
+   * Return the file doxygen header and any custom header code.
+   */
+  function code_header() {
+    $filename = $this->filename;
+    $default = <<<EOT
+/**
+ * @file $filename
+ * TODO: Enter file description here.
+ */
+
+EOT;
+    $code = variable_get('module_builder_header', $default);
+    return $code;
+  }
+  
+  /**
+   * Return the main body of the file code.
+   */
+  abstract function code_body();
+  
+  /**
+   * Return a file footer.
+   */
+  function code_footer() {}
+}
+
+/**
+ * Generator class for module code files.
+ */
+class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
+  function __construct($module_data) {
+    $this->module_data = $module_data;
+  }
+  
+  function cvs_header() {
+    // String is split in a funny way so CVS doesn't spot it.
+    return '// $' . 'Id$' . "\n";
+  }
+
+  function code_body() {
+    // Get old style variable names.
+    $module_data = $this->module_data;    
+    $hook_data = $this->hook_data;
+    $code = '';
+    foreach ($hook_data as $hook_name => $hook) {
+      
+      // Display PHP doc.
+      $code .= "\n" . module_builder_code_hook_doxy($hook_name);
+
+      // function declaration: put in the module name, add closing brace, decode html entities
+      $declaration = str_replace('hook', $module_data['module_root_name'], $hook['declaration']) . ' {';
+      $code .= htmlspecialchars_decode($declaration);
+
+
+      // See if function bodies exist; if so, use function bodies from template
+      if (isset($hook['template'])) {
+        // Strip out INFO: comments for advanced users
+        if (!variable_get('module_builder_detail', 0)) {
+          // Used to strip INFO messages out of generated file for advanced users.
+          $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
+          $hook['template'] = preg_replace($pattern, '', $hook['template']);
+        }
+        //dsm($hook);
+
+        $code .= $hook['template'];
+      }
+      else {
+        $code .= "\n\n";
+      }
+      $code .= "}\n\n";
+    } // foreach hook
+
+    // Replace variables
+    $variables = array(
+      '%module' => $module_data['module_root_name'],
+      '%description' => str_replace("'", "\'", $module_data['module_short_description']),
+      '%name' => !empty($module_data['module_readable_name']) ? str_replace("'", "\'", $module_data['module_readable_name']) : $module_data['module_root_name'],
+      '%help' => !empty($module_data['module_help_text']) ? str_replace("'", "\'", $module_data['module_help_text']) : t('TODO: Create admin help text.'),
+      '%readable' => str_replace("'", "\'", $module_data['module_readable_name']),
+    );
+    $code = strtr($code, $variables);
+    
+    return $code;
+  }
+  
+  /**
+   * Return a file footer.
+   */
+  function code_footer() {
+    $footer = variable_get('module_builder_footer', '');
+    return $footer;
+  }
+}
+
+/**
+ * Generator base class for module info file.
+ */
+class ModuleBuilderGeneratorInfo extends ModuleBuilderGenerator {
+  /**
+   * Override as info files have no header.
+   */
+  function file_header() { }
+  
+  function cvs_header() {
+    // The weird syntax stops this from getting mangled by CVS
+    return '; $' . 'Id$' . "\n";
+  }
+  
+  /**
+   * Override as info files have no header.
+   */
+  function code_header($filename = NULL) {
+  }
+  
+  // Override abstract...
+  function code_body() {}
+}
+
+/**
+ * Generator class for module info file for Drupal 5.
+ */
+class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
+  function code_body() {
+    $module_data = $this->module_data;
+    
+    $info .= 'name = ' . $module_data['module_readable_name'] . "\n";
+    $info .= 'description = '. $module_data['module_short_description'] ."\n";
+
+    if (!empty($module_data['module_dependencies'])) {
+      $info .= 'dependencies = '. $module_data['module_dependencies'] ."\n";
+    }
+
+    if (!empty($module_data['module_package'])) {
+      $info .= 'package = '. $module_data['module_package'] ."\n";
+    }
+
+    return $info;    
+  }
+}
+
+/**
+ * Generator class for module info file for Drupal 6.
+ */
+class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
+  function code_body() {
+    $module_data = $this->module_data;
+
+    $info .= 'name = ' . $module_data['module_readable_name'] . "\n";
+    $info .= 'description = '. $module_data['module_short_description'] ."\n";
+
+    if (!empty($module_data['module_dependencies'])) {
+      foreach (explode(' ', $module_data['module_dependencies']) as $dep) {
+        $info .= 'dependencies[] = '. $dep ."\n";
+      }
+    }
+
+    if (!empty($module_data['module_package'])) {
+      $info .= 'package = '. $module_data['module_package'] ."\n";
+    }
+    $info .= "core = 6.x\n";
+
+    return $info;
+  }
+}
+
+/**
+ * Generator class for module info file for Drupal 7.
+ */
+class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
+  function code_body() {
+    $module_data = $this->module_data;
+    //print_r($module_data);
+
+    $info .= 'name = ' . $module_data['module_readable_name'] . "\n";
+    $info .= 'description = '. $module_data['module_short_description'] ."\n";
+
+    if (!empty($module_data['module_dependencies'])) {
+      foreach (explode(' ', $module_data['module_dependencies']) as $dep) {
+        $info .= 'dependencies[] = '. $dep ."\n";
+      }
+    }
+
+    if (!empty($module_data['module_package'])) {
+      $info .= 'package = '. $module_data['module_package'] ."\n";
+    }
+    $info .= "core = 7.x\n";
+
+    if (is_array($module_data['module_files'])) {
+      foreach ($module_data['module_files'] as $file) {
+        $info .= 'files[] = '. $file ."\n";      
+      }
+    }
+
+    return $info;
+  }
+}
+
 
 /**
  * Generate module code.
@@ -47,59 +317,18 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
   // by each needed file of code.
   $module_code = array();
   foreach ($hook_file_data as $filename => $hook_data) {
-    // Begin code generation for this file.
-    $code = '';
-
-    foreach ($hook_data as $hook_name => $hook) {
-
-      // Display PHP doc.
-      $code .= "\n" . module_builder_code_hook_doxy($hook_name);
-
-      // function declaration: put in the module name, add closing brace, decode html entities
-      $declaration = str_replace('hook', $module_data['module_root_name'], $hook['declaration']) . ' {';
-      $code .= htmlspecialchars_decode($declaration);
-
-
-      // See if function bodies exist; if so, use function bodies from template
-      if (isset($hook['template'])) {
-        // Strip out INFO: comments for advanced users
-        if (!variable_get('module_builder_detail', 0)) {
-          // Used to strip INFO messages out of generated file for advanced users.
-          $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
-          $hook['template'] = preg_replace($pattern, '', $hook['template']);
-        }
-        //dsm($hook);
-
-        $code .= $hook['template'];
-      }
-      else {
-        $code .= "\n\n";
-      }
-      $code .= "}\n\n";
-    } // foreach hook
-
-    // Replace variables
-    $variables = array(
-      '%module' => $module_data['module_root_name'],
-      '%description' => str_replace("'", "\'", $module_data['module_short_description']),
-      '%name' => !empty($module_data['module_readable_name']) ? str_replace("'", "\'", $module_data['module_readable_name']) : $module_data['module_root_name'],
-      '%help' => !empty($module_data['module_help_text']) ? str_replace("'", "\'", $module_data['module_help_text']) : t('TODO: Create admin help text.'),
-      '%readable' => str_replace("'", "\'", $module_data['module_readable_name']),
-    );
-    $code = strtr($code, $variables);
-
-    // Replace full-blown Id tag with just starter
-    // (excuse the weird concatenation stuff; CVS hijacks it otherwise :))
-    //$code = preg_replace(MODULE_BUILDER_FULL_ID_PATTERN, MODULE_BUILDER_ID_COMMENT, $code);
-    // what is this for?
-
-    // Prepare final code
-    // Header and footer
-    if (!$bare) {
-      $module_data['header'] = "<?php\n" . module_builder_code_header($filename);
-      $module_data['footer'] = variable_get('module_builder_footer', '');
+    $class = module_builder_get_class('code');
+    $generator = new $class($module_data);
+    $generator->hook_data = $hook_data;
+    $generator->filename = $filename;
+    
+    if ($bare) {
+      $code = $generator->code_body;
     }
-    $code = $module_data['header'] . $code . $module_data['footer'];
+    else {
+      $code = $generator->build();      
+    }
+
     //dsm($code);
     //print $code;
 
@@ -127,20 +356,6 @@ function module_builder_code_hook_doxy($hook_name) {
  */
 
 EOT;
-}
-
-function module_builder_code_header($filename = NULL) {
-  // String is split in a funny way so CVS doesn't spot it.
-  $default = '// $' . 'Id$' . <<<EOT
-
-/**
- * @file $filename
- * TODO: Enter file description here.
- */
-
-EOT;
-  $code = variable_get('module_builder_header', $default);
-  return $code;
 }
 
 /**
