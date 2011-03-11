@@ -52,8 +52,8 @@ function module_builder_module_builder_info() {
   $data['common'] = array(
     // Hooks on behalf of Drupal core.
     'system' => array(
-      'url' => 'http://drupalcode.org/viewvc/drupal/contributions/docs/developer/hooks/%file?view=co&pathrev=%branch',
-      'branch' => 'DRUPAL-6--1',
+      'url' => 'http://drupalcode.org/project/documentation.git/blob_plain/refs/heads/%branch:/developer/hooks/%file',
+      'branch' => '6.x-1.x',
       'group' => '#filenames',
       'hook_files' => array(
         // List of files we should slurp from the url for hook defs.
@@ -65,8 +65,8 @@ function module_builder_module_builder_info() {
     ),
     // We need to do our own stuff now we have a hook!
     'module_builder' => array(
-      'url' => 'http://drupalcode.org/viewvc/drupal/contributions/modules/module_builder/hooks/%file?view=co&pathrev=%branch',
-      'branch' => 'DRUPAL-6--2',
+      'url' => 'http://drupalcode.org/project/module_builder.git/blob_plain/refs/heads/%branch:/hooks/%file',
+      'branch' => '6.x-2.x',
       'group' => 'module builder',      
       'hook_files' => array(
         'module_builder.php' => '%module.module_builder.inc',
@@ -77,8 +77,9 @@ function module_builder_module_builder_info() {
     // file a patch either here or with the module in question.
     // Views
     'views' => array(
-      'url' => 'http://drupalcode.org/viewvc/drupal/contributions/modules/views/docs/%file?view=co&pathrev=%branch',
-      'branch' => 'HEAD',
+      'url' => 'http://drupalcode.org/project/views.git/blob_plain/refs/heads/%branch:/docs/%file',
+      // Probably should follow master as that may go away
+      'branch' => 'master',
       'group' => 'views',      
       'hook_files' => array(
         'docs.php' => '%module.module',
@@ -105,8 +106,8 @@ function module_builder_module_builder_info() {
     ),
     // Ubercart
     'ubercart' => array(
-      'url' => 'http://drupalcode.org/viewvc/drupal/contributions/modules/ubercart/docs/%file?view=co&pathrev=%branch',
-      'branch' => 'DRUPAL-6--2',
+      'url' => 'http://drupalcode.org/project/ubercart.git/blob_plain/refs/heads/%branch:/docs/%file',
+      'branch' => '6.x-2.x',
       'group' => 'ubercart',      
       'hook_files' => array(
         'hooks.php' => '%module.module',
@@ -114,8 +115,8 @@ function module_builder_module_builder_info() {
     ),
     // Signup
     'signup' => array(
-      'url' => 'http://drupalcode.org/viewvc/drupal/contributions/modules/signup/%file?view=co&pathrev=%branch',
-      'branch' => 'DRUPAL-6--1',
+      'url' => 'http://drupalcode.org/project/signup.git/blob_plain/refs/heads/%branch:/%file',
+      'branch' => '6.x-2.x',
       'group' => 'signup',      
       'hook_files' => array(
         'signup.api.php' => '%module.module',
