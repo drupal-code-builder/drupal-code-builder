@@ -59,7 +59,7 @@ function module_builder_drush_command() {
       '--add' => "Append hooks to module file. Implies '--write --build=code'. Warning: will not check hooks already exist.",
       '--name' => 'Readable name of the module.',
       '--desc' => 'Description (for the admin module list).',
-      '--help' => 'Module help text (for the system help).',
+      '--helptext' => 'Module help text (for the system help).',
       '--dep' => 'Dependencies, separated by spaces, eg "forum views".',
       '--package' => 'Module package.',
       '--parent' => "Name of a module folder to place this new module into; use if this module is to be added to an existing package. Use '.' for the current working directory.",
@@ -271,7 +271,7 @@ function module_builder_build_data($commands) {
       'default' => 'TODO: Description of module',
     ),
     'module_help_text' => array(
-      'key' => 'help',
+      'key' => 'helptext',
       'prompt' => dt('help text'),
     ),
     'module_dependencies' => array(
