@@ -336,6 +336,12 @@ function module_builder_build_data($commands) {
   foreach ($module_data['hooks'] as $hook_name) {
     $hooks["hook_$hook_name"] = TRUE;
   }
+  // Special shortcut to get ALL THE HOOKS. BWAHAHA MINE ALL MINE.
+  if (count($hooks) == 1 && isset($hooks['hook_all'])) {
+    // Include generating component file.
+    module_builder_include('process');
+    $hooks = module_builder_get_hook_data_flat();
+  }
   $module_data['hooks'] = $hooks;
 
   //print_r($module_data);
