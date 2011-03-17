@@ -67,6 +67,19 @@ USING THE MODULE ON DRUPAL
 6. Start customizing it to your needs; most of the tedious work is 
    already done for you! ;)
 
+USING THE MODULE ON DRUSH
+----------------
+Full help is available via 'drush help mb'.
+The drush command uses an interactive mode by default to request any
+parameters not initially given. To disable this and use default values for
+anything omitted, specify the --noi option.
+
+It's a good idea to set up your drushrc.php with:
+  $options['data'] = '/path/to/drupal_hooks/';
+
+and if you prefer the non-interactive command line style:
+  $options['noi']  = 1;
+
 TODO/WISHLIST
 -------------
 * Maybe some nicer theming/swooshy boxes on hook descriptions or 
