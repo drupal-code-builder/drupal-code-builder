@@ -348,7 +348,6 @@ function module_builder_page_generate($form, &$form_state) {
     $code = $code_array[$module_data['module_root_name'] . '.module'];
   }
   */
-  module_builder_include('generate_info');  
   $info = isset($form_state['values']['module_info']) ? $form_state['values']['module_info'] : module_builder_generate_info($module_data);
     // damn I miss perl at times like this. fugly syntax.
 

@@ -442,12 +442,7 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
  */  
 function module_builder_build_info($commands, $module_data) {
   module_builder_include('generate');
-  $info_code = module_builder_generate_info_oo($module_data);
-  
-  /*
-  module_builder_include('generate_info');
   $info_code = module_builder_generate_info($module_data);
-  */
 
   module_builder_drush_output_code($module_data['module_root_name'], $module_data['module_root_name'] . '.info', $info_code); 
 }

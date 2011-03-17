@@ -2,16 +2,13 @@
 
 /**
  * @file
- *   Module builder code generating code.
- *
- *   Note that info file generating code happens in generate_info_VERSION, 
- *   as it's version-specific.
+ * Module builder code generating code.
  */
  
 /**
- * Generate info code. New OO version!
+ * Generate info code.
  */
-function module_builder_generate_info_oo($module_data) {
+function module_builder_generate_info($module_data) {
   $class = module_builder_get_class('info');
   $generator = new $class($module_data);
   $code = $generator->build();
