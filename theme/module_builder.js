@@ -28,19 +28,23 @@ function check_hooks(grouping, hooks) {
   }
 }
 
+(function ($) {
+
 /**
  * Clears the default texts on click.
  * Only happens on a fresh form (ie not when the user clicks our back button).
  */
-$(document).ready(function() {
-  $('.fresh .form-text.required').click(function () {
-    $(this).attr('value', '');
-    $(this).unbind('click');
-  });
-  // If the user gets here with a tab and types, lose the click clearing.
-  $('.fresh .form-text.required').keypress(function () {
-    $(this).unbind('click'); 
-  });  
-});
-  
+Drupal.behaviors.moduleBuilderClearDefaults = {
+  attach: function (context, settings) {
+    $('.fresh .form-text.required').click(function () {
+      $(this).attr('value', '');
+      $(this).unbind('click');
+    });
+    // If the user gets here with a tab and types, lose the click clearing.
+    $('.fresh .form-text.required').keypress(function () {
+      $(this).unbind('click');
+    });
+  }
+};
 
+})(jQuery);
