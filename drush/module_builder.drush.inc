@@ -120,6 +120,11 @@ function module_builder_drush_command() {
     'description' => "Debug module builder. Does whatever was needed at the time.",
     //'bootstrap' => DRUSH_BOOTSTRAP_DRUSH, // No bootstrap at all.
   );
+
+  $items['mb-dir'] = array(
+    'callback' => 'module_builder_callback_get_data_dir',
+    'description' => "Print the location of the module builder data directory.",
+  );
   
   return $items;
 }
@@ -669,6 +674,12 @@ function module_builder_callback_doc_hooks() {
   }
 }
 
+/**
+ * Callback to output the location of the data directory.
+ */
+function module_builder_callback_get_data_dir() {
+  drush_print('Module builder data is in ' . _module_builder_get_hooks_directory());
+}
 
 /**
  * WORK IN PROGRESS
