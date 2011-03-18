@@ -143,7 +143,7 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
       '%module' => $module_data['module_root_name'],
       '%description' => str_replace("'", "\'", $module_data['module_short_description']),
       '%name' => !empty($module_data['module_readable_name']) ? str_replace("'", "\'", $module_data['module_readable_name']) : $module_data['module_root_name'],
-      '%help' => !empty($module_data['module_help_text']) ? str_replace("'", "\'", $module_data['module_help_text']) : t('TODO: Create admin help text.'),
+      '%help' => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : t('TODO: Create admin help text.'),
       '%readable' => str_replace("'", "\'", $module_data['module_readable_name']),
     );
     $code = strtr($code, $variables);
