@@ -471,7 +471,16 @@ function module_builder_drush_output_code($module_root_name, $filename, $code) {
     if (substr($module_dir, -1, 1) != '/') {
       $module_dir .= '/';
     }
-    
+
+    // Drush tries to put any module into 'contrib' if the folder exists;
+    // hack this out and put the code in 'custom'.
+    if (substr($module_dir, -8, 7) == 'contrib') {
+      $module_dir_custom = substr_replace($module_dir, 'custom', -8, 7);
+      if (is_dir($module_dir_custom)) {
+        $module_dir = $module_dir_custom;
+      }
+    }
+
     if (drush_get_option('parent')) {
       // The --parent option allows the user to specify a location for the new module folder.
       $parent_dir = drush_get_option('parent');
