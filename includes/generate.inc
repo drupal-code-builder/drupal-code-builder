@@ -328,6 +328,13 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
   if (is_null($hook_file_data)) {
     return NULL;
   }
+
+  // There must always be a MODULE.module file, even if there are no hooks to
+  // go in it.
+  // (Slight niggle: it gets put at the end :/)
+  $hook_file_data += array(
+    $module_data['module_root_name'] . '.module' => array(),
+  );
   
   //print_r($module_data);
   //dsm($hook_file_data);
