@@ -131,6 +131,15 @@ function module_builder_module_builder_info() {
         'ctools.api.php' => '%module.module',
       ),
     ),
+    // Webform
+    'webform' => array(
+      'url' => 'http://drupalcode.org/project/webform.git/blob_plain/refs/heads/%branch:/%file',
+      'branch' => '6.x-3.x',
+      'group' => 'webform',
+      'hook_files' => array(
+        'webform_hooks.php' => '%module.module',
+      ),
+    ),
   );
 
   // For D7, keys should match the filename MODULE.api.php
