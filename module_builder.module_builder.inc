@@ -122,6 +122,15 @@ function module_builder_module_builder_info() {
         'signup.api.php' => '%module.module',
       ),
     ),
+    // Ctools
+    'ctools' => array(
+      'url' => 'http://drupalcode.org/project/ctools.git/blob_plain/refs/heads/%branch:/%file',
+      'branch' => '6.x-1.x',
+      'group' => 'ctools',
+      'hook_files' => array(
+        'ctools.api.php' => '%module.module',
+      ),
+    ),
   );
 
   // For D7, keys should match the filename MODULE.api.php
