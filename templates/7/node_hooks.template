@@ -1,0 +1,123 @@
+
+/**
+ * @file
+ * Defines default templates for node hook functions.
+ *
+ * Some of these are duplicated from the "normal" hooks template, because 
+ * nodes do things a little differently than "normal" nodes. :)
+ */
+
+== START hook_node_info ==
+
+############## WORK: add INFO to these!!!!
+  return array(
+    '%module' => array(
+      'name' => '', 
+        /* INFO:  the human-readable name of the node type. Required. */
+      'module' => '', 
+        /* INFO: a string telling Drupal how a module's functions map to hooks
+        (i.e. if module is defined as example_foo, then example_foo_insert will
+        be called when inserting a node of that type). This string is usually
+        the name of the module in question, but not always. Required. */
+      'description' => '',
+      'help' => '',
+      'has_title' => '', 
+      'title_label' => '', 
+      'has_body' => '',
+      'body_label' => '',
+      'min_word_count' => '',
+      'locked' => '', 
+        /* INFO:  boolean indicating whether the machine-readable name of this
+        content type can (FALSE) or cannot (TRUE) be edited by a site
+        administrator. Optional (defaults to TRUE). */
+    ),
+    // add further types as needed
+  );
+== END ==
+== START hook_access ==
+  global $user;
+
+  if ($op == 'create') {
+    return user_access('create %name');
+  }
+
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own %name') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+== END ==
+
+== START hook_form ==
+  // The site admin can decide if this node type has a title and body, and how
+  // the fields should be labeled. We need to load these settings so we can
+  // build the node form correctly.
+  $type = node_get_types('type', $node);
+
+  if ($type->has_title) {
+    $form['title'] = array(
+      '#type' => 'textfield',
+      '#title' => check_plain($type->title_label),
+      '#required' => TRUE,
+      '#default_value' => $node->title,
+      '#weight' => -5
+    );
+  }
+
+  if ($type->has_body) {
+    // In Drupal 6, we can use node_body_field() to get the body and filter
+    // elements. This replaces the old textarea + filter_form() method of
+    // setting this up. It will also ensure the teaser splitter gets set up
+    // properly.
+    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
+  }
+
+  // TODO: Enter additional form elements
+
+  return $form;
+== END ==
+
+== START hook_validate ==
+  // TODO: Enter form validation code here
+  if (0) { // if bad stuff
+    form_set_error('FORM ELEMENT NAME', t('TODO: Write an error message.'));
+  }
+== END ==
+
+== START hook_insert ==
+  // TODO: Enter database insertion query here, for example:
+  // db_query("INSERT INTO {node_example} (vid, nid, color, quantity) VALUES (%d, %d, '%s', %d)", $node->vid, $node->nid, $node->color, $node->quantity);
+== END ==
+
+== START hook_update ==
+  // if this is a new node or we're adding a new revision,
+  if ($node->revision) {
+    %module_insert($node);
+  }
+  else {
+    // TODO: Enter database update query here, for example:
+    // db_query("UPDATE {node_example} SET color = '%s', quantity = %d WHERE vid = %d", $node->color, $node->quantity, $node->vid);
+  }
+== END ==
+
+== START hook_delete ==
+  // TODO: Enter database deletion query here, for example:
+  // db_query('DELETE FROM {node_example} WHERE nid = %d', $node->nid);
+== END ==
+
+== START hook_load ==
+  // TODO: Obtain and return additional fields added to the node type, for example:
+  // $additions = db_fetch_object(db_query('SELECT color, quantity FROM {node_example} WHERE vid = %d', $node->vid));
+  // return $additions;
+== END ==
+
+== START hook_view ==
+  // TODO: Insert additional code (call to theme functions, etc.) to execute when viewing a node, for example:
+  // $node = node_prepare($node, $teaser);
+  // $node->content['myfield'] = array(
+  //   '#value' => theme('node_example_order_info', $node),
+  //   '#weight' => 1,
+  // );
+
+  return $node;
+== END ==

@@ -1,0 +1,20 @@
+== START define your own content type (node) ==
+hook_node_info
+hook_access
+hook_perm
+hook_form
+hook_validate
+hook_insert
+hook_update
+hook_delete
+hook_load
+hook_view
+== END ==
+
+== START interact with nodes ==
+hook_nodeapi
+== END ==
+
+== START add a block or blocks to your module ==
+hook_block
+== END ==

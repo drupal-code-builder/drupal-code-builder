@@ -392,57 +392,28 @@ EOT;
  * their custom hook templates.
  *
  * @return
- *   An array of the form:
+ *   An array whose keys are destination filenames, with tokens replaced, and
+ *   whose values are arrays of hook data. The hook data keys are:
+ *    - declaration: The function declaration, with the 'hook' part not
+ *        yet replaced.
+ *    - destination: The destination, with tokens still in place.
+ *    - template_files: A list of template file types, in order of preference,
+ *        keyed by filename and with the value TRUE if the hook code exists
+ *        in that template file.
+ *    - template (optional): The template code, if any was found.
+ *   Example:
  *  'destination file' => array(
- *    'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
+ *    'hook_foo' => array('declaration' => DATA, 'template' => DATA)
  */
 function module_builder_get_templates($module_data) {
-  // begin assembling data
-  // build an array $hook_data of all the stuff we know about hooks
-  // of the form:
-  //  'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
-  $hook_data = array();
-
-  // Check for custom functions file, else use default
-  $path = module_builder_get_path('templates');
-
-  if (file_exists("$path/hooks-custom.template")) {
-    $template_file = file_get_contents("$path/hooks-custom.template");
-  }
-  else {
-    $template_file = file_get_contents("$path/hooks.template");
-  }
-
-  // Get array of our hook function body templates from our own / custom template files.
-  // This is not necessarily all hooks that exist -- not all have template entries.
-  // This array is in the same order as they occur in the files and already in the format wanted.
   // Include generating component file.
   module_builder_include('process');
-  $template_data = module_builder_parse_template($template_file);
-
-  // print_r($hook_data); ok!
-
-  // Check for node hooks; these will overwrite core hooks if found.
-  if (isset($module_data['hooks']['hook_node_info'])) {
-    if (file_exists("$path/node_hooks-custom.template")) {
-      $template_file = file_get_contents("$path/node_hooks-custom.template");
-    }
-    else {
-      $template_file = file_get_contents("$path/node_hooks.template");
-    }
-    $custom_hooks = module_builder_parse_template($template_file);
-    foreach ($custom_hooks as $hook_name => $hook_template) {
-      // add or clobber our existing templates
-      $template_data[$hook_name] = $hook_template;
-    }
-  }
-
-  // $template_data is now an array of the form:
-  //  [hook name] => array('template' => DATA)
-  // in a pretty order which we want to hold on to.
   
-  //print_r($template_data);
-  //dsm($template_data);
+  // Build a clean list of the requested hooks, by filtering out the keys
+  // with 0 values that come from UI form.
+  $requested_hooks = array_filter($module_data['hooks']);
+  //print_r($requested_hooks);
+  // TODO: might not need this; easier to test truth than isset.
 
   // Get array of the hook function declarations from the downloaded hook data.
   // This is a complete list of all hooks that exist.
@@ -451,50 +422,154 @@ function module_builder_get_templates($module_data) {
   // We don't care for this order!
   $hook_function_declarations = module_builder_get_hook_declarations();
   // If we get NULL then no hook data exists: return NULL again.
+  // TODO: check this sort of error at an earlier stage!
   if (is_null($hook_function_declarations)) {
     return NULL;
   }
-
-  //print_r($hook_function_declarations);
   
-  // Remove all hooks we don't care about.
-  // First filter out the keys with 0 values that come from UI form.
-  $requested_hooks = array_filter($module_data['hooks']);
+  // Trim this down to just the ones we care about.
   $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hooks);
-  $template_data              = array_intersect_key($template_data, $requested_hooks);
-
-  //print_r($requested_hooks);
-
-  // Start hierarchical building hook data.
-  // Make the destination filenames, and add an item for each destination file.
-  foreach ($hook_function_declarations as $hook_name => $hook) {
-    $destination = str_replace('%module', $module_data['module_root_name'], $hook['destination']);
-    $hook_function_declarations[$hook_name]['destination'] = $destination;
-    $hook_data[$destination] = array();
-  }
-
-  // Now iterate over the template data so we use its order
-  // and grab data from the declarations array
-  // and put it all into the final data array
-  foreach (array_keys($template_data) as $hook_name) {
-    $destination = $hook_function_declarations[$hook_name]['destination'];
-    $hook_data[$destination][$hook_name]['declaration'] = $hook_function_declarations[$hook_name]['declaration'];
-    $hook_data[$destination][$hook_name]['template']    = $template_data[$hook_name]['template'];
-  }
-
-  //dsm($hook_data);
-
-  // Not all hooks have template data
-  foreach ($hook_function_declarations as $hook_name => $hook) {
-    $destination = $hook['destination'];
-    if (!isset($hook_data[$destination][$hook_name]['declaration'])) {
-      $hook_data[$destination][$hook_name]['declaration'] = $hook_function_declarations[$hook_name]['declaration'];
+  //print_r("hook_function_declarations: \n");
+  //drush_print_r($hook_function_declarations);
+  
+  // Filter out the requested hooks that don't have definitions.
+  // We do this now as it's possible for a hook to have no definition because
+  // the user doesn't have it, but have a template because we provide it,
+  // eg views_api.
+  // We do this by hand this time rather than array_intersect_key() so we can
+  // make a list of hooks we're rejecting for (TODO!) eventual warning output.
+  $rejected_hooks = array();
+  foreach (array_keys($requested_hooks) as $hook_name) {
+    if (!isset($hook_function_declarations[$hook_name])) {
+      unset($requested_hooks[$hook_name]);
+      $rejected_hooks[] = $hook_name;
     }
   }
+  // TODO: at this point we should check if we have any actual hooks to
+  // process, and return if not.
+  
+  // Step 1:
+  // Build up a list of the basic template files we want to parse.
+  //  - in each $hook_function_declarations item, place an ordered list of
+  //    all potential template files. We will set these to TRUE in step 2
+  //    if they hold a template for the hook.
+  //  - meanwhile, build up list of template files we will want to check for 
+  //    existence and parse.
+  // Template filenames are of the following form, in the order they should be
+  // checked, ie from most specific to most general:
+  //  - GROUP.hooks.template, eg node.hooks.template
+  //    (Though groups are still TODO: this is scaffold only for now!)
+  //  - FILENAME.template, where the modulename is replaced with 'hooks', hence
+  //    hooks.module.template, hooks.install.template, hooks.views.inc.template.
+  //  - hooks.template - the base template, final fallback
+  // These are found in module_builder/templates/VERSION, and
+  // in addition, a file may be overridden by being present in the user's
+  // data directory. Though just what the 'data directory' means exactly is
+  // not yet properly defined...
+  $template_file_names = array();
+  foreach ($hook_function_declarations as $hook_name => $hook) {
+    // TODO: $groupname_template = 'GROUP.hooks.template';
+    $filename_template  = str_replace('%module', 'hooks', $hook['destination']) . '.template';
+    // Place in each $hook_function_declarations item an ordered list of
+    // potential files from best fit to fallback.
+    // These are keyed by filename and all with value FALSE initially.
+    $hook_function_declarations[$hook_name]['template_files'] = array_fill_keys(array(
+      // TODO: $groupname_template,
+      $filename_template,
+      'hooks.template',
+    ), FALSE);
 
+    // Meanwhile, build up list of files we will want to check for existence and parse.
+    // TODO: $template_file_names[$groupname_template] = TRUE;
+    $template_file_names[$filename_template] = TRUE;
+    $template_file_names['hooks.template'] = TRUE;
+    
+  }
+  
+  // print_r("template file names: \n");
+  // print_r($template_file_names);
 
-  //dsm($hook_data);
+  // print_r("hook_function_declarations are now:: \n");
+  // print_r($hook_function_declarations);
+  
+  // Step 2:
+  // Now we parse the templates we need.
+  // We look in two places: module_builder's own '/templates' folder, and the optional
+  // location given for user data (the latter is in fact TODO...)
+  // User templates override on a per-file basis, so a custom
+  // node.hooks.template will only override that same file in the module data;
+  // if the hook is not requested as part of a group then that file will not be considered.
+  // (Though groups are broken for now...)
+  $version = _module_builder_drupal_major_version();
+  $template_base_path_module = module_builder_get_path('templates') . '/' . $version;
+  //print "base path: $template_base_path_module";
+  // $template_base_paths['module']
+  // $template_base_paths['user']
+  
+  foreach (array_keys($template_file_names) as $filename) {
+    $filepath = "$template_base_path_module/$filename";
+    if (file_exists($filepath)) {
+      $template_file = file_get_contents($filepath);
+      $template_data = module_builder_parse_template($template_file);
+      
+      // Trim the template data to the hooks we care about.
+      $template_data = array_intersect_key($template_data, $requested_hooks);
+      
+      // Flag the template file in the hook list; ie, set to TRUE the template
+      // file in the list which we first created as entirely FALSE.
+      foreach (array_keys($template_data) as $hook_name) {
+        $hook_function_declarations[$hook_name]['template_files'][$filename] = TRUE;
+      }
+    }
+  }
+  
+  //print_r("hook_function_declarations now have template files \n");
+  //print_r($hook_function_declarations);
+  
+  
+  // $template_data is now an array of the form:
+  //  [hook name] => array('template' => DATA)
+  // in a pretty order which we want to hold on to.
 
-  // $hook_data is now a complete representation of all we know about the requested hooks
-  return $hook_data;
+  //print_r('template data is:');
+  //print_r($template_data);
+  
+  // Step 3a:
+  // Build a new array of hook data, so that we take the order from the
+  // template data, but using the same data structure as the
+  // $hook_function_declarations array.
+  // The big question here: once we have other template files, such as those
+  // for groups, or user ones, how do we combine the order from all of them?
+  // Or do we just have an overall order from the template files' order, and
+  // then within that respect each of theirs, so in effect it's like
+  // concatenating all the template files we use?
+  $hook_data_return = array();
+  foreach (array_keys($template_data) as $hook_name) {
+    $destination = $hook_function_declarations[$hook_name]['destination'];
+    // TODO: unclear when to replace destination tokens.
+    $destination = str_replace('%module', $module_data['module_root_name'], $destination);
+
+    // Copy over the data we already had.
+    $hook_data_return[$destination][$hook_name] = $hook_function_declarations[$hook_name];
+    
+    // Copy over the template.
+    // TODO: more here.
+    $hook_data_return[$destination][$hook_name]['template']    = $template_data[$hook_name]['template'];
+  }
+  
+  // Step 3b:
+  // Not all hooks have template data, so fill these in too.
+  foreach ($hook_function_declarations as $hook_name => $hook) {
+    $destination = $hook_function_declarations[$hook_name]['destination'];
+    $destination = str_replace('%module', $module_data['module_root_name'], $destination);
+
+    if (!isset($hook_data_return[$destination][$hook_name])) {
+      $hook_data_return[$destination][$hook_name] = $hook_function_declarations[$hook_name];
+    }
+  }
+  
+  
+  //print_r('step 3:');
+  //print_r($hook_data_return);
+  return $hook_data_return;
 }
