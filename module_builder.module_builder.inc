@@ -160,6 +160,17 @@ function module_builder_module_builder_info() {
         ),     
       ),
     ),
+    'views' => array(
+      'hook_destinations' => array(
+        '%module.views.inc' => array(
+          'hook_views_data',
+          'hook_views_data_alter',
+          'hook_views_plugins',
+          'hook_views_plugins_alter',
+          'hook_views_query_alter',
+        ),
+      ),
+    ),
   );
 
   // Return the data for the current version.
