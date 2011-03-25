@@ -6,10 +6,6 @@
  */
 
 /**
- * In case we have an expanded CVS Id, this matches that, and captures the version number (although we don't use that). This is then replaced with MODULE_BUILDER_ID_COMMENT.
- */
-define('MODULE_BUILDER_FULL_ID_PATTERN', '#\/\/ \$Id(.*?)\$#');
-/**
  * Took this regex from the PHP manual page on Functions
  */
 define('MODULE_BUILDER_FUNCTION_PATTERN', '#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*#');
@@ -21,16 +17,9 @@ define('MODULE_BUILDER_HOOK_GROUPS_TEMPLATE_PATH', '/templates/hook_groups.templ
  * Path from module base to the custom hook groups template. Only used if it exists, otherwise MODULE_BUILDER_HOOK_GROUPS_TEMPLATE_PATH is used.
  */
 define('MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH', '/template/hook_groups-custom.template');
-/**
- * Used to replace a full CVS Id tag with a starter ID.
- */
-// The weird syntax stops this from getting mangled by CVS
-define('MODULE_BUILDER_ID_COMMENT', '// $'.'Id$');
-
 
 /* Default default values for some variables */
-define('MODULE_BUILDER_HEADER_DEFAULT', '// $'.'Id$
-
+define('MODULE_BUILDER_HEADER_DEFAULT', '
 /**
  * @file
  * TODO: Enter file description here.
