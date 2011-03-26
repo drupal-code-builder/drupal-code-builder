@@ -1,20 +1,35 @@
-== START define your own content type (node) ==
-hook_node_info
-hook_access
-hook_perm
-hook_form
-hook_validate
-hook_insert
-hook_update
-hook_delete
-hook_load
-hook_view
-== END ==
-
-== START interact with nodes ==
-hook_nodeapi
-== END ==
-
-== START add a block or blocks to your module ==
-hook_block
-== END ==
+// This file defines hook preset groups for Module builder
+// Its format is JSON but with single-line comments allowed.
+// The first preset is commented as an example.
+{
+  // The machine name of the group.
+  "node":{
+    // The label shown in the UI.
+    "label": "Define your own content type (node)",
+    // A list of hooks.
+    "hooks": [
+      "hook_node_info",
+      "hook_access",
+      "hook_perm",
+      "hook_form",
+      "hook_validate",
+      "hook_insert",
+      "hook_update",
+      "hook_delete",
+      "hook_load",
+      "hook_view"
+    ]
+  },
+  "nodeapi":{
+    "label": "Interact with nodes",
+    "hooks": [
+      "hook_nodeapi"
+    ]
+  },
+  "block":{
+    "label": "Add blocks to your module",
+    "hooks": [
+      "hook_block",
+    ]
+  }
+}

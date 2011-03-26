@@ -117,6 +117,39 @@ function module_builder_get_hook_data_last_updated($directory = NULL) {
 }
 
 /**
+ * Returns the path to a template file.
+ *
+ * TODO: this will eventually return either the user version or the module version.
+ */
+function module_builder_get_template($filename) {
+  $pieces = array('templates', _module_builder_drupal_major_version(), $filename);
+  $path = module_builder_get_path(implode('/', $pieces));
+  
+  $template_file = file_get_contents($path);
+  
+  return $template_file;
+}
+
+/**
+ * Get the definition of hook presets.
+ *
+ * A preset is a collection of hooks with a machine name and a descriptive
+ * label. Presets allow quick selection of hooks that are commonly used
+ * together, eg those used to define a node type, or blocks.
+ *
+ * @return
+ *  An array keyed by preset name, whose values are arrays of the form:
+ *    'label': The label shown to the user.
+ *    'hooks': A flat array of full hook names, eg 'hook_menu'.
+ */
+function module_builder_get_hook_presets() {
+  // TODO: read user file preferentially.
+  $presets_template = module_builder_get_template('hook_groups.template');
+  $hook_presets = json_decode(preg_replace("@//.*@", '', $presets_template), TRUE);
+  return $hook_presets;
+}
+
+/**
  * Builds complete hook data array from downloaded files and stores in a file.
  *
  * @param hook_file_data

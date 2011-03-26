@@ -1,34 +1,23 @@
 
-/**
- * For a given hook grouping, selects/deselects all hooks associated with it.
- *
- * The bulk of this function (except the crappy hard-coded stuff ;)) was
- * courtesy of David Carrington (Thox), with enhancements
- * made by Steven Wittens (Unconed). Thanks a lot, guys!! :D
- */
-function check_hooks(grouping, hooks) {
-  // Loop through the hooks
-  for (i = 0; hook = hooks[i]; i++) {
-    // Find the relevant checkbox
-    hook_groups = Array('authentication', 'core', 'node');
-    for (j = 0; group = hook_groups[j]; j++) {
-      id = 'edit-hooks-' + group + '-' + hook.replace(/_/g, '-');
-      if (document.getElementById(id)) {
-        checkbox = document.getElementById(id);
-        break;
-      }
-    }
-
-    // Set the checkbox status to the status of the clicked one
-    if (typeof checkbox.checkCount == 'undefined') {
-      checkbox.checkCount = 0;
-    }
-    checkbox.checkCount += grouping.checked ? 1 : -1;
-    checkbox.checked = checkbox.checkCount > 0;
-  }
-}
-
 (function ($) {
+
+/**
+ * Enable or disable hooks defined by presets.
+ */
+Drupal.behaviors.moduleBuilderHookPresets = {
+  attach: function (context, settings) {
+    // Attach a click handler to each preset checkbox.
+    $('#edit-hook-presets input').click(function () {
+      group_checkbox = this;
+      // Extract the group name from the id, and form the class that
+      // member hook checkboxes have.
+      group_name = group_checkbox.id.substr(5);
+      $('.preset-' + group_name).each(function(index) {
+        this.checked = group_checkbox.checked;
+      });
+    });
+  }
+};  
 
 /**
  * Clears the default texts on click.

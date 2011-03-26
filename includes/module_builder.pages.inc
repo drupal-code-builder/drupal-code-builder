@@ -159,44 +159,30 @@ function module_builder_page_input($form, &$form_state) {
     '#repopulate' => TRUE,
   );
 
-  // Check for custom hook_groups file, else use default
-  $path = drupal_get_path('module', 'module_builder');
-  if (file_exists($path . MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH)) {
-    $template_file = file_get_contents($path . MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH);
-  }
-  else {
-    $template_file = file_get_contents($path . MODULE_BUILDER_HOOK_GROUPS_TEMPLATE_PATH);
-  }
+  // Get the hook presets list.
+  $hook_presets = module_builder_get_hook_presets();
 
-  $form['hook_groups'] = array(
+  $form['hook_presets'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Hook groupings'),
+    '#title' => t('Hook presets'),
     '#description' => t('Selecting one or more of these features will automatically select appropriate hooks for you.'),
   );
 
+  $path = drupal_get_path('module', 'module_builder');
   drupal_add_js($path . '/theme/module_builder.js');
 
-  // Get list of hook presets from installed template.
-  // Include generating component file.
-  module_builder_include('process');
-  $hook_presets = module_builder_parse_template($template_file);
-  foreach ($hook_presets as $hook_preset_name => $hook_preset) {
-    $hooks = explode("\n", $hook_preset['template']);
-    $hook_array = array();
-    foreach ($hooks as $hook) {
-      $hook = trim($hook);
-      if (!empty($hook)) {
-        $hook_array[] = "'$hook'";
-      }
+  foreach ($hook_presets as $hook_preset_name => $hook_preset_data) {
+    // Build a reverse array whose keys are hooks and values are arrays
+    // of one of more preset names.
+    // This allows us further down the line to put classes on each hook
+    // checkbox for the presets they belong to: this is what the JS then uses.
+    foreach ($hook_preset_data['hooks'] as $hook) {
+      $hook_presets_reverse[$hook][] = "preset-$hook_preset_name";
     }
 
-    $form['hook_groups']['groups-'. $hook_preset_name] = array(
+    $form['hook_presets'][$hook_preset_name] = array(
       '#type' => 'checkbox',
-      '#title' => $hook_preset_name,
-      '#attributes' => array(
-        'onclick' => 'check_hooks(this, ['. implode(', ', $hook_array) .'])',
-      ),
-      //'#description' => $hook_groups[$i]['data'],
+      '#title' => $hook_preset_data['label'],
 
       // TODO: For some reason this gives me some wacky error under PHP 5:
       // Fatal error: Cannot use string offset as an array
@@ -228,7 +214,6 @@ function module_builder_page_input($form, &$form_state) {
         '#description' => $desc,
         '#repopulate' => TRUE,
 
-
         // TODO: For some reason this gives me some wacky error under PHP 5:
         // Fatal error: Cannot use string offset as an array
         //'#default_value' => $edit['hooks'][$hook_group][$hook],
@@ -240,6 +225,14 @@ function module_builder_page_input($form, &$form_state) {
         //'#description' => truncate_utf8($desc, 40, TRUE, TRUE),
 
       );
+      // If this hook belongs to any presets, add the classes to it for the
+      // Javascript to find.
+      if (isset($hook_presets_reverse[$name])) {
+        $form['hooks'][$hook_group][$name]['#attributes'] = array(
+          'class' => $hook_presets_reverse[$name],
+        );
+      }
+      
       // Set some default hooks
       if ($name == 'hook_menu') {
         $form['hooks'][$hook_group][$name]['#default_value'] = 1;

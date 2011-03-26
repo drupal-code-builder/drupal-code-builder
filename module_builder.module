@@ -9,14 +9,6 @@
  * Took this regex from the PHP manual page on Functions
  */
 define('MODULE_BUILDER_FUNCTION_PATTERN', '#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*#');
-/**
- * Path from module base to the normal hook groups template. MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH used if it exists.
- */
-define('MODULE_BUILDER_HOOK_GROUPS_TEMPLATE_PATH', '/templates/hook_groups.template');
-/**
- * Path from module base to the custom hook groups template. Only used if it exists, otherwise MODULE_BUILDER_HOOK_GROUPS_TEMPLATE_PATH is used.
- */
-define('MODULE_BUILDER_CUSTOM_HOOK_GROUPS_TEMPLATE_PATH', '/template/hook_groups-custom.template');
 
 /* Default default values for some variables */
 define('MODULE_BUILDER_HEADER_DEFAULT', '
