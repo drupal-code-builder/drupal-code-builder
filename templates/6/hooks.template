@@ -25,12 +25,20 @@
     'page callback' => 'TODO: Enter callback function',
     'access arguments' => array('TODO: Enter user permissions'),
   );
+  // Menu item for an admin form
+  $items['admin/config/%module'] = array(
+    'title' => 'TODO: Enter menu item title',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('%module_form'),
+    'access arguments' => array('TODO: Enter user permissions'),
+  );
+  
   // more complex menu item
   $items['TODO: Enter path'] = array(
     'title' => 'TODO: Enter menu item title',
     'description' => 'TODO: Enter description',
     'page callback' => 'TODO: Enter callback function',
-    'page arguments' => '', // An array of arguments to pass to the page callback function. Integer values pass the corresponding URL component.
+    'page arguments' => array(), // An array of arguments to pass to the page callback function. Integer values pass the corresponding URL component.
     'access callback' => '', // defaults to user_access()
     'access arguments' => array('TODO: Enter user permissions'),
     'weight' => 0,
