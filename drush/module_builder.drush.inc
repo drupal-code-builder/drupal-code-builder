@@ -375,10 +375,6 @@ function module_builder_default_readable_name($commands, $module_data) {
 function module_builder_build_module($commands, &$module_data, $build_list) {
   //drush_print_r($module_data);
   //exit;
-  /*
-  $input = drush_input('input?...');
-  drush_print("You entered: >$input<");
-  */
    
   // Generate all our code.
   $module_code = module_builder_generate_module($module_data, drush_get_option('add'));
@@ -533,24 +529,6 @@ function module_builder_drush_output_code($module_root_name, $filename, $code) {
     }
     
     file_put_contents($filepath, $code);
-  }
-}
-
-/**
- * Ask the user for input. DOESN'T WORK.
- *
- * @param $msg The question to ask
- * @return The entered string.
- */
-function drush_input($msg, $required = FALSE, $indent = 0) {
-  print str_repeat(' ', $indent) . (string)$msg . ": ";
-
-  while ($line = trim(fgets(STDIN))) {
-    if (!$required or strlen($line) > 0) {
-      return $line;
-    }
-    print 'we never get here wtf?';
-    print str_repeat(' ', $indent) . (string)$msg . ": ";
   }
 }
 
