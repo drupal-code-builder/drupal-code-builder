@@ -7,37 +7,30 @@
  */
 
 /**
- * Run through Drupal's directory creation and checking stuff, 
- * adding a version subfolder for common directories.
+ * Transforms a path into a path within the site files folder, if needed.
  *
- * @param $directory
- *  A directory path. Should be either absolute or relative; the latter will
- *  be taken to mean it's inside the Drupal /files directory.
- * @param $common
- *  Boolean to indicate whether this directory is common across several 
- *  Drupal installations. If set, the actual directory used will be a
- *  subdirectory with a version number: eg path/to/dir/6
+ * Eg, turns 'foo' into 'public://foo'.
+ * Absolute paths are unchanged.
  */
-function module_builder_create_directory(&$directory, $common = FALSE) {
-  if (substr($directory, 0, 1) == '/') {
-    // absolute path
-    //print 'starts with /'; 
-  }
-  else {
+function module_builder_directory_path(&$directory) {
+  if (substr($directory, 0, 1) != '/') {
     // Relative, and so assumed to be in Drupal's files folder: prepend this to
     // the given directory.
     $directory = 'public://' . $directory;
   }
+}
 
-  // If the directory is common, append the version number subdir.
-  if ($common) {
-    // There may or may not be a trailing slash: trim to make sure.
-    $directory = rtrim($directory, '/');
-    $directory = $directory . '/' . _module_builder_drupal_major_version();  
-  }
-
+/**
+ * Check that the directory exists and is writable, creating it if needed.
+ *
+ * @throw
+ *  ModuleBuilderException
+ */
+function module_builder_prepare_directory($directory) {
   $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-  // @todo: check $status for errors
+  if (!$status) {
+    throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
+  }
 }
 
 /**

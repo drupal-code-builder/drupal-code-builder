@@ -92,48 +92,29 @@ function _module_builder_drupal_major_version() {
 
 
 /**
- * Create a directory to store hook files if it does not exist.
+ * Check everything is in place and we're ready and able to build modules.
  *
- * IMPORTANT: this function should only be used on Drupal 5 and 6.
+ * We use exceptions so this can be called from with Drush or the GUI with
+ * problems handled appropriately by the caller.
  *
- * This logic blatantly ripped off from image.module -- thanks James! :)
- // somewhat obsolete.
+ * @throw
+ *  ModuleBuilderException
  */
-function _module_builder_check_settings($directory = NULL) {
-  if ($directory) {
-    // on drush
-    if (!is_dir($directory)) {
-      mkdir($directory); 
-    }
-  }
-  else {
-    // on module
-    // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
-    $files = file_create_path();
-    file_check_directory($files, FILE_CREATE_DIRECTORY);
-    // check hooks directory exists or create it
-    $hooks_path = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
-    file_check_directory($hooks_path, FILE_CREATE_DIRECTORY, 'module_builder_hooks_directory');
-  }
-}
-
-/**
- * Check hook data is available in storage file.
- *
- * This allows us to check things are okay at an early stage.
- *
- * @param $directory
- *  (optional) The directory to look in for processed data.
- * @return
- *  TRUE is file exists, FALSE if not.
- */
-function _module_builder_check_hook_data($directory = NULL) {
-  if (!isset($directory)) {
-    //$directory = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
-    $directory = _module_builder_get_hooks_directory();
+function _module_builder_sanity_check() {  
+  // Check the hooks directory exists; these may also throw exceptions.
+  // This is what makes subsequent reliance on _module_builder_get_hooks_directory() safe.
+  $hooks_directory = _module_builder_get_hooks_directory();
+  module_builder_prepare_directory($hooks_directory);
+  
+  // Check the processed hook data is available.
+  $hooks_processed = "$hooks_directory/hooks_processed.php";
+  if (!file_exists($hooks_processed)) {
+    $e = new ModuleBuilderException("No hook definitions found. You need to download hook definitions before using this module: see the command 'mbdl'.");
+    $e->needs_hooks_download = TRUE;
+    throw $e;
   }
   
-  return file_exists("$directory/hooks_processed.php");
+  return TRUE;
 }
 
 /**
@@ -154,7 +135,10 @@ function module_builder_update_data() {
 }
 
 /**
- * Get a directory to save or read hook data files.
+ * Get the path of the directory to save or read hook data files.
+ *
+ * This does not test for existence of the directory; it merely returns
+ * the path. For checking sanity, see _module_builder_sanity_check().
  *
  * This is either the variable from Drupal, or the --data option.
  * Use of the --data option allows a central store of hook data that needs only
@@ -167,47 +151,49 @@ function module_builder_update_data() {
  *   A directory path either relative to Drupal root or absolute.
  */
 function _module_builder_get_hooks_directory() {
-  $common = FALSE;
-  // Figure out the directory we should be using.
-  if (MODULE_BUILDER_ENV == 'drupal') {
-    // Running in a Drupal UI: directory is either 'hooks' or whatever the 
-    // variable is set to.
-    $directory = variable_get('module_builder_hooks_directory', 'hooks');
-  }
-  else {
-    // TODO: TIDY UP!
+  // There are three possibilities:
+  //  - Pure drush: module builder is a Drush plugin, our settings come from
+  //    drush and we have centralized hook data.
+  //  - Mixed drush: we are on the command line, but module builder is present
+  //    as a regular Drupal module, and its settings are in Drupal variables.
+  //  - Pure Drupal: module builder is a regular module, being used on the web.
+  
+  switch (MODULE_BUILDER_ENV) {
+    case 'drupal':
+      // Running in a Drupal UI: directory is either 'hooks' or whatever the 
+      // variable is set to.
+      $directory = variable_get('module_builder_hooks_directory', 'hooks');
+      break;
     
-    // Running under Drush.
-    // The order is:
-    // - command --data option
-    // - local Drupal variable
-    // - default Drupal location in files/hooks
-    if (drush_get_option('data')) {
-      $directory = drush_get_option('data');
-      $common = TRUE;
-    }
-    if (!$directory) {
+    case 'drush':
+      // First try the drush 'data' option.
+      if (drush_get_option('data')) {
+        $directory = drush_get_option('data');
+        if ($directory) {
+          // In pure Drush, the hooks folder contains subfolder for hooks for
+          // each major version of Drupal.
+          if (substr($directory, -1, 1) != '/') {
+            $directory .= '/';
+          }
+          $directory .= _module_builder_drupal_major_version();  
+          break;
+        }
+      }
+      // Second, check if we're in mixed drush.
       if (function_exists('variable_get')) {
         // We're in a loaded Drupal, but MB might not be installed here.
         $directory = variable_get('module_builder_hooks_directory', 'hooks');
-        // No variable: but could still be running MB, so we want files/hooks
-        if (!$directory) {
-          if (module_exists('module_builder')) {
-            $directory = 'hooks';
-          }
-        }
+        break;
       }
-    }
+      // If we get here then argh. Set to the default and hope...
+      $directory = 'hooks';
   }
   
-  if (!$directory) {
-     // @todo: error! 
-  }
-  
-  // Check and create the directory if necessary: version-specific code.
+  // Run it through version-specific stuff.
+  // This basically prepends 'public://' or 'sites/default/files/'.
   module_builder_include('common_version');
-  module_builder_create_directory($directory, $common);
-    
+  module_builder_directory_path($directory);
+  
   return $directory;
 }
 
@@ -296,4 +282,13 @@ function _module_builder_invoke_hook() {
   
   //print_r($data);
   return $data;
+}
+
+/**
+ * Custom exception class.
+ */
+class ModuleBuilderException extends Exception {
+  // Flag set to TRUE if hook data needs downloading (and the folders are ok).
+  // This allows us to recover gracefully.
+  public $needs_hooks_download;
 }

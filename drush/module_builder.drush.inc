@@ -160,6 +160,29 @@ function module_builder_drush_help($section) {
 function module_builder_callback_build() {  
   $commands = func_get_args();
   
+  // Check settings before we start. This sort of wastes the potential of using
+  // exceptions, but it's polite to warn the user of problems before they've
+  // spent ages typing in all the hook names in interactive mode.
+  try {
+    _module_builder_sanity_check();
+  }
+  catch (ModuleBuilderException $e) {
+    // If the problem is that the hooks need downloading, we can recover from this.
+    if ($e->needs_hooks_download) {
+      if (drush_confirm(dt('No hook definitions found. Would you like to download them now?'))) {
+        // download the hooks so we can move on.
+        if (!module_builder_callback_hook_download()) {
+          drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hook data.');          
+        }  
+      } 
+    }
+    // Otherwise, fail.
+    else {
+      drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+      return;      
+    }
+  }
+  
   // Build the module data.
   $module_data = module_builder_build_data($commands);
   
@@ -207,11 +230,6 @@ function module_builder_callback_build() {
   module_builder_include('generate');
   // Build module code in all cases bar 'info'.
   if ($build != 'info') {
-    // Check hook data file exists.
-    if (!_module_builder_check_hook_data()) {
-      return drush_set_error("DRUSH_NOT_COMPLETED', 'No hook definitions found. You need to download hook definitions before using this module: see the command 'mbdl'.");
-    }
-    
     module_builder_build_module($commands, $module_data, $build_list);        
   }
   // Build info code in cases 'info' and 'all'.
@@ -536,13 +554,22 @@ function module_builder_drush_output_code($module_root_name, $filename, $code) {
  * Callback for downloading hook data.
  */
 function module_builder_callback_hook_download() {
-  $directory = _module_builder_get_hooks_directory();  
+  // Check our data directory first.
+  try {
+    $hooks_directory = _module_builder_get_hooks_directory();
+    module_builder_prepare_directory($hooks_directory);
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+  
   $return = module_builder_update_data();
   if (!$return) {
-    return drush_set_error('Problem downloading hooks.');
+    return drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hooks.');
   }
   else {
-    drush_print("Hook files have been downloaded to $directory and processed.");
+    drush_print("Hook files have been downloaded to $hooks_directory and processed.");
   }
 }
 
@@ -550,6 +577,14 @@ function module_builder_callback_hook_download() {
  * Callback to list known hooks.
  */
 function module_builder_callback_hook_list() {
+  try {
+    _module_builder_sanity_check();
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+  
   // Include generating component file.
   module_builder_include('process');
   
@@ -573,6 +608,14 @@ function module_builder_callback_hook_list() {
  * Callback to list hook implementations found in a given module.
  */
 function module_builder_callback_hook_analyze() {
+  try {
+    _module_builder_sanity_check();
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+  
   $commands = func_get_args();
   
   // The first argument is the module machine name.

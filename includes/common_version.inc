@@ -8,39 +8,62 @@
  */
 
 /**
- * Run through Drupal's directory creation and checking stuff, 
- * adding a version subfolder for common directories.
+ * Transforms a path into a path within the site files folder, if needed.
  *
- * @param $directory
- *  A directory path. Should be either absolute or relative; the latter will
- *  be taken to mean it's inside the Drupal /files directory.
- * @param $common
- *  Boolean to indicate whether this directory is common across several 
- *  Drupal installations. If set, the actual directory used will be a
- *  subdirectory with a version number: eg path/to/dir/6
+ * Eg, turns 'foo' into 'sites/default/foo'.
+ * Absolute paths are unchanged.
  */
-function module_builder_create_directory(&$directory, $common = FALSE) {
-  if (substr($directory, 0, 1) == '/') {
-    // absolute path
-    //print 'starts with /'; 
-  }
-  else {
-    // Relative, and so assumed to be in Drupal's files folder.
+function module_builder_directory_path(&$directory) {
+  if (substr($directory, 0, 1) != '/') {
+    // Relative, and so assumed to be in Drupal's files folder: prepend this to
+    // the given directory.
     // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
     $files = file_create_path();
     file_check_directory($files, FILE_CREATE_DIRECTORY);    
     $directory = file_create_path($directory);    
   }
+}
+
+/**
+ * Check that the directory exists and is writable, creating it if needed.
+ *
+ * @throw
+ *  ModuleBuilderException
+ */
+function module_builder_prepare_directory($directory) {
+  // Because we may have an absolute path whose base folders are not writable
+  // we can't use the standard recursive D6 pattern.
+  $pieces = explode('/', $directory);
   
-  // Note that recursive stuff won't work here!
-  // You really should make sure the dir exists yourself.
-  file_check_directory($directory, FILE_CREATE_DIRECTORY);
-  
-  // If the directory is common, append the version number subdir.
-  if ($common) {
-    // $directory has no trailing / at this point: file_check_directory removes it. 
-    $directory = $directory . '/' . _module_builder_drupal_major_version();  
-    file_check_directory($directory, FILE_CREATE_DIRECTORY);
+  // Work up through the folder's parentage until we find a directory that exists.
+  // (Or in other words, backwards in the array of pieces.)
+  $length = count($pieces);
+  for ($i = 0; $i < $length; $i++) {
+    //print $pieces[$length - $i];
+    $slice = array_slice($pieces, 0, $length - $i);
+    $path_slice = implode('/', $slice);
+    if (file_exists($path_slice)) {
+      $status = file_check_directory($path_slice, FILE_CREATE_DIRECTORY);
+      break;
+    }
+  }
+
+  // If we go right the way along to the base and still can't create a directory...
+  if ($i == $length) {
+    throw new ModuleBuilderException("The directory $path_slice cannot be created or is not writable.");
+  }
+  // print "status: $status for $path_slice - i: $i\n";
+
+  // Now work back down (or in other words, along the array of pieces).
+  for ($j = $length - $i; $j < $length; $j++) {
+    $slice[] = $pieces[$j];
+    $path_slice = implode('/', $slice);
+    //print "$path_slice\n";
+    $status = file_check_directory($path_slice, FILE_CREATE_DIRECTORY);
+  }
+
+  if (!$status) {
+    throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
   }
 }
 
