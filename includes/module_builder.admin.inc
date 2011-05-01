@@ -73,10 +73,21 @@ function module_builder_admin_settings($form, &$form_state) {
  * Admin hook update form.
  */
 function module_builder_admin_update($form, &$form_state) {
+  // Check settings; this will create the folder if needed.
+  try {
+    _module_builder_sanity_check();
+  }
+  catch (ModuleBuilderException $e) {
+    if ($e->needs_hooks_download) {
+      $last_update = FALSE;
+    }
+  }
+
   // Include generating component file.
   module_builder_include('process');
-
-  $last_update = module_builder_get_hook_data_last_updated();
+  if (!isset($last_update)) {
+    $last_update = module_builder_get_hook_data_last_updated();
+  }
 
   $form['last_update'] = array(
     '#markup' => '<p>' . (

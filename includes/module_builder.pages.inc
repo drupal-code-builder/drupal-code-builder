@@ -58,6 +58,25 @@ function module_builder_page($form, &$form_state) {
  * Form builder for page 1.
  */
 function module_builder_page_input($form, &$form_state) {
+  // Check settings; this will create the folder if needed.
+  try {
+    _module_builder_sanity_check();
+  }
+  catch (ModuleBuilderException $e) {
+    if ($e->needs_hooks_download) {
+      drupal_set_message(t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.', 
+        array(
+          '!settings-url' => url('admin/config/development/module_builder'),
+          '%administer' => 'Administer',
+          '%config' => 'Site configuration',
+          '%develop' => 'Development',
+          '%modulebuilder' => "Module builder",
+        )
+      ), 'warning');
+      return $form;
+    }
+  }
+
   /*
   // built some default values.
   // these are either hardcoded or what the user already put into the form on a previous go round.
@@ -79,18 +98,6 @@ function module_builder_page_input($form, &$form_state) {
   module_builder_include('process');
   
   $hook_groups = module_builder_get_hook_data();
-  if (!is_array($hook_groups) || !count($hook_groups)) {
-    form_set_error('hooks', t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.', 
-      array(
-        '!settings-url' => url('admin/config/development/module_builder'),
-        '%administer' => 'Administer',
-        '%config' => 'Site configuration',
-        '%develop' => 'Development',
-        '%modulebuilder' => "Module builder",
-      )
-    ));
-    return $form;
-  }
 
   // Include CSS for formatting
   drupal_add_css(drupal_get_path('module', 'module_builder') . '/theme/module_builder.css');
