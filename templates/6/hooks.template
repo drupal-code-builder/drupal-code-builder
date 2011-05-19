@@ -31,6 +31,7 @@
     'page callback' => 'drupal_get_form',
     'page arguments' => array('%module_form'),
     'access arguments' => array('TODO: Enter user permissions'),
+    'file' => '%module.admin.inc',
   );
   
   // more complex menu item
@@ -46,6 +47,7 @@
     'menu_name' => '', // Menu to place this item in.
     'title callback' => '', // Function to generate the title, defaults to t(). 
     'title arguments' => '', // Arguments to send to t() or your custom callback. 
+    'file' => '%module.pages.inc',
   );
   // OPTIONAL: Fill in additional static menu items
 
