@@ -78,8 +78,7 @@ function module_builder_module_builder_info() {
     // Views
     'views' => array(
       'url' => 'http://drupalcode.org/project/views.git/blob_plain/refs/heads/%branch:/docs/%file',
-      // Probably should follow master as that may go away
-      'branch' => 'master',
+      'branch' => '6.x-2.x',
       'group' => 'views',      
       'hook_files' => array(
         'docs.php' => '%module.module',
