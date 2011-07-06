@@ -182,6 +182,11 @@ function module_builder_process_hook_data($hook_file_data) {
   
   // check file_exists?
   
+  // Sort the files into a better order than just random.
+  // TODO: allow for some control over this, eg frequently used core,
+  // then rarer core, then contrib in the order defined by the MB hook.
+  ksort($hook_file_data);
+
   // Build list of hooks
   $hook_groups = array();
   foreach ($hook_file_data as $file => $file_data) {    
