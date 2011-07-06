@@ -132,9 +132,9 @@ function module_builder_page_input($form, &$form_state) {
   $form['module_short_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description'),
-    '#description' => t('This text will appear in the module listing at <a href="!listing">%administer >> %modules</a>.',
+    '#description' => t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',
       array(
-        '!listing' => url('admin/build/modules'),
+        '!adminmodules' => url('admin/modules'),
         '%administer' => 'Administer',
         '%modules' => 'Modules',
       )),
@@ -145,7 +145,7 @@ function module_builder_page_input($form, &$form_state) {
   $form['module_help_text'] = array(
     '#type' => 'textarea',
     '#title' => t('Help text'),
-    '#description' => t('Help text (HTML) to appear in <a href="!help">%administer >> %help >> module_name</a> page.',
+    '#description' => t('Help text (HTML) to appear within the system help at <a href="!help">%administer >> %help >> module_name</a>',
       array(
         '!help' => url('admin/help'),
         '%administer' => 'Administer',
@@ -156,13 +156,17 @@ function module_builder_page_input($form, &$form_state) {
   $form['module_dependencies'] = array(
     '#type' => 'textfield',
     '#title' => t('Dependencies'),
-    '#description' => t('Space seperated list of other modules that your module requires.'),
+      '#description' => t('Space separated list of other modules that your module requires.'),
     '#repopulate' => TRUE,
   );
   $form['module_package'] = array(
     '#type' => 'textfield',
     '#title' => t('Package'),
-    '#description' => t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'),
+    '#description' => t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'
+      . '<br />'
+      . t('For more information on package names, see the <a href="!url-package">documentation on Drupal.org</a>.', array(
+        '!url-package' => 'http://drupal.org/node/542202#package',
+      ))),
     '#repopulate' => TRUE,
   );
 
