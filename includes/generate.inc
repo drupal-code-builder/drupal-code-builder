@@ -321,6 +321,11 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
  *     'modulename.module' => CODE
  */
 function module_builder_generate_module(&$module_data, $bare = FALSE) {
+  // Force hook_help() if there is help text in the incoming data.
+  if (isset($module_data['module_help_text'])) {
+    $module_data['hooks']['hook_help'] = TRUE;
+  }
+
   // Get a set of hook declarations and function body templates for the hooks we want.
   // $hook_data is of the form:
   //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
