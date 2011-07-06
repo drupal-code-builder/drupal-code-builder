@@ -504,6 +504,7 @@ function module_builder_get_templates($module_data) {
   // $template_base_paths['module']
   // $template_base_paths['user']
   
+  $template_data = array();
   foreach (array_keys($template_file_names) as $filename) {
     $filepath = "$template_base_path_module/$filename";
     if (file_exists($filepath)) {
