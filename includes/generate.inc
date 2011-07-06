@@ -325,9 +325,6 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
   // $hook_data is of the form:
   //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
   $hook_file_data = module_builder_get_templates($module_data);
-  if (is_null($hook_file_data)) {
-    return NULL;
-  }
 
   // There must always be a MODULE.module file, even if there are no hooks to
   // go in it.
@@ -446,7 +443,8 @@ function module_builder_get_templates($module_data) {
     }
   }
   // TODO: at this point we should check if we have any actual hooks to
-  // process, and return if not.
+  // process, and warn if not.
+  // We should probably also do something with rejected hooks list.
   
   // Step 1:
   // Build up a list of the basic template files we want to parse.
