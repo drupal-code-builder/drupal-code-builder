@@ -34,6 +34,17 @@ function module_builder_init() {
   include_once('./' . drupal_get_path('module', 'module_builder') . '/includes/common.inc');
 }
 
+/**
+ * Implementation of hook_help().
+ */
+function module_builder_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#module_builder':
+      return t("Module builder allows you to generate code files for new custom modules.");
+    case 'admin/modules/module_builder':
+      return t('This page allows you to generate the files for a custom module with scaffolding code for hook implementations.');
+  }
+}
 
 /**
  * Implementation of hook_permission().
