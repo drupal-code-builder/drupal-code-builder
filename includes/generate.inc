@@ -19,6 +19,15 @@ function module_builder_generate_info($module_data) {
 /**
  * Helper function to get the desired class.
  *
+ * The hierarchy is:
+ *  - ModuleBuilderGenerator
+ *    - ModuleBuilderGeneratorCode
+ *      - ModuleBuilderGeneratorCode6
+ *    - ModuleBuilderGeneratorInfo
+ *      - ModuleBuilderGeneratorInfo5
+ *      - ModuleBuilderGeneratorInfo6
+ *      - ModuleBuilderGeneratorInfo7
+ *
  * @param $type
  *  One of (so far) 'info' or 'code'.
  * @return
