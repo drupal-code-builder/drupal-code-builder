@@ -114,6 +114,23 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
     $this->module_data = $module_data;
   }
 
+  /**
+   * Make the doxygen header for a given hook.
+   * This does not return with an initial newline so the doc block may be
+   * inserted into existing code.
+   *
+   * @param
+   *   The long hook name, eg 'hook_menu'.
+   */
+  function hook_doxygen($hook_name) {
+    return <<<EOT
+/**
+ * Implements $hook_name().
+ */
+
+EOT;
+  }
+
   function code_body() {
     // Get old style variable names.
     $module_data = $this->module_data;    
@@ -122,7 +139,7 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
     foreach ($hook_data as $hook_name => $hook) {
       
       // Display PHP doc.
-      $code .= "\n" . module_builder_code_hook_doxy($hook_name);
+      $code .= "\n" . $this->hook_doxygen($hook_name);
 
       // function declaration: put in the module name, add closing brace, decode html entities
       $declaration = str_replace('hook', $module_data['module_root_name'], $hook['declaration']) . ' {';
@@ -166,6 +183,29 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
   function code_footer() {
     $footer = variable_get('module_builder_footer', '');
     return $footer;
+  }
+}
+
+/**
+ * Generator class for module code files for Drupal 6.
+ */
+class ModuleBuilderGeneratorCode6 extends ModuleBuilderGeneratorCode {
+  /**
+   * Make the doxygen header for a given hook with the Drupal 6 format.
+   *
+   * This does not return with an initial newline so the doc block may be
+   * inserted into existing code.
+   *
+   * @param
+   *   The long hook name, eg 'hook_menu'.
+   */
+  function hook_doxygen($hook_name) {
+    return <<<EOT
+/**
+ * Implementation of $hook_name().
+ */
+
+EOT;
   }
 }
 
@@ -377,22 +417,6 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
   //print_r($module_data);
 
   return $module_code;
-}
-
-/**
- * Get the doxygen header for a given hook.
- * This does not return with an initial newline so the doc block may be inserted into existing code.
- *
- * @param
- *   The long hook name, eg 'hook_menu'.
- */
-function module_builder_code_hook_doxy($hook_name) {
-  return <<<EOT
-/**
- * Implementation of $hook_name().
- */
-
-EOT;
 }
 
 /**
