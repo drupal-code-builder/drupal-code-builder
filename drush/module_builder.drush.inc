@@ -103,6 +103,9 @@ function module_builder_drush_command() {
     'callback' => 'module_builder_callback_hook_analyze',
     'description' => "List the hooks found in a given module.",
     'aliases' => array('mban'),
+    'options' => array(
+      '--flat' => "Shows a flat list of hooks rather than grouped by file.",
+    ),
   );
 
   $items['mb-dochooks'] = array(
@@ -629,20 +632,40 @@ function module_builder_callback_hook_analyze() {
   }
 
   $module_files = module_builder_get_module_files($module_root_name);
-  //drush_print_r($module_files);
-  
+  $module_hooks = $module_hooks_flat = array();
+
   foreach ($module_files as $file) {
     $functions = module_builder_get_functions($file);
-    
-    $module_hooks[$file] = array_intersect($functions, $hooks);
-  }
-  
-  if (drush_get_option('flat')) {
 
-  }  
-  
-  drush_print_r($module_hooks);
-  drush_print_r(array_merge($module_hooks));
+    $file_hooks = array_intersect($functions, $hooks);
+
+    $filename = basename($file);
+    $module_hooks[$filename] = $file_hooks;
+    foreach ($file_hooks as $hook) {
+      $module_hooks_flat[$hook] = $filename;
+    }
+  }
+
+  if (drush_get_option('flat')) {
+    foreach ($module_hooks_flat as $hook => $filename) {
+      drush_print("$hook implemented in $filename");
+    }
+  }
+  else {
+    foreach ($module_hooks as $filename => $hooks) {
+      if (!count($hooks)) {
+        continue;
+      }
+      drush_print("hooks found in $filename:");
+      foreach ($hooks as $hook) {
+        drush_print("  $hook");
+      }
+    }
+
+  }
+
+  //drush_print_r($module_hooks);
+  //drush_print_r(array_merge($module_hooks));
 }
 
 /** 
