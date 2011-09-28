@@ -52,7 +52,7 @@ function module_builder_drush_command() {
         "'code' generates code files as needed. " .
         "'info' makes just the info file. " .
         "'module', 'install' make just the foo.module or foo.install files. " .
-        "'If custom modules define other files to output, you can request those too, omitting the module root name part and any .inc extension, eg 'module_builder' for 'foo.module_builder.inc. " .
+        "If custom modules define other files to output, you can request those too, omitting the module root name part and any .inc extension, eg 'module_builder' for 'foo.module_builder.inc. " .  "\n" .
         "Default is 'all' if writing new files, 'code' if appending to file or outputting only to terminal.",
       '--write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use --yes to force. Use --quiet to suppress output to the terminal.',
       '--go' => 'Write all module files and enable the new module. Take two commands into the shower? Not me.',
