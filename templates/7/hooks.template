@@ -73,7 +73,7 @@
 == START hook_theme ==
   return array(
     'my_simple_theme_function' => array(
-      'arguments' => array('arg1' => NULL, 'arg2' => 0, 'arg3' => FALSE),
+      'variables' => array('arg1' => NULL, 'arg2' => 0, 'arg3' => FALSE),
     ),
   );
 == END ==
