@@ -37,7 +37,7 @@ function module_builder_drush_command() {
 
   // the key in the $items array is the name of the command.
   $items['mb-build'] = array(
-    'callback' => 'module_builder_callback_build',
+    'callback' => 'drush_module_builder_callback_build',
     'description' => "Generate the code for a new Drupal module, including file headers and hook implementations.",
     'arguments' => array(
       'module name' => 'The machine name of the module.',
@@ -85,7 +85,7 @@ function module_builder_drush_command() {
   );
   
   $items['mb-download'] = array(
-    'callback' => 'module_builder_callback_hook_download',
+    'callback' => 'drush_module_builder_callback_hook_download',
     'description' => "Update module_builder hook data.",
     'options' => array(
       '--data' => "Location to save downloaded files. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
@@ -95,12 +95,12 @@ function module_builder_drush_command() {
   );
   
   $items['mb-list'] = array(
-    'callback' => 'module_builder_callback_hook_list',
+    'callback' => 'drush_module_builder_callback_hook_list',
     'description' => "List the hooks module_builder knows about.",
   );
 
   $items['mb-analyze'] = array(
-    'callback' => 'module_builder_callback_hook_analyze',
+    'callback' => 'drush_module_builder_callback_hook_analyze',
     'description' => "List the hooks found in a given module.",
     'aliases' => array('mban'),
     'options' => array(
@@ -109,23 +109,23 @@ function module_builder_drush_command() {
   );
 
   $items['mb-dochooks'] = array(
-    'callback' => 'module_builder_callback_doc_hooks',
+    'callback' => 'drush_module_builder_callback_doc_hooks',
     'description' => "Adds comment headers to hooks that need them in the given module.",
   );
 
   $items['mb-docparams'] = array(
-    'callback' => 'module_builder_callback_doc_params',
+    'callback' => 'drush_module_builder_callback_doc_params',
     'description' => "Adds params... WIP!",
   );
   
   $items['mb-debug'] = array(
-    'callback' => 'module_builder_callback_debug',
+    'callback' => 'drush_module_builder_callback_debug',
     'description' => "Debug module builder. Does whatever was needed at the time.",
     //'bootstrap' => DRUSH_BOOTSTRAP_DRUSH, // No bootstrap at all.
   );
 
   $items['mb-dir'] = array(
-    'callback' => 'module_builder_callback_get_data_dir',
+    'callback' => 'drush_module_builder_callback_get_data_dir',
     'description' => "Print the location of the module builder data directory.",
   );
   
@@ -160,7 +160,7 @@ function module_builder_drush_help($section) {
  * $drush mb machine_name hookA hookB hookC
  * where 'hookA' is the short name, ie 'menu' not hook_menu'.
  */
-function module_builder_callback_build() {  
+function drush_module_builder_callback_build() {
   $commands = func_get_args();
   
   // Check settings before we start. This sort of wastes the potential of using
@@ -174,7 +174,7 @@ function module_builder_callback_build() {
     if ($e->needs_hooks_download) {
       if (drush_confirm(dt('No hook definitions found. Would you like to download them now?'))) {
         // download the hooks so we can move on.
-        if (!module_builder_callback_hook_download()) {
+        if (!drush_module_builder_callback_hook_download()) {
           drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hook data.');          
         }  
       } 
@@ -244,16 +244,16 @@ function module_builder_callback_build() {
   switch ($build) {
     case 'info':
       // info and stop
-      module_builder_callback_info($commands, $module_data);
+      drush_module_builder_callback_info($commands, $module_data);
       break;
     case 'all':
       // info and fall through
-      module_builder_callback_info($commands, $module_data);
+      drush_module_builder_callback_info($commands, $module_data);
     case 'code':
       // this is just here to look pretty
     default:
       // anything else, eg module, install etc
-      module_builder_callback_module($commands, $module_data, $build_list);    
+      drush_module_builder_callback_module($commands, $module_data, $build_list);    
   }
   */
 
@@ -556,7 +556,7 @@ function module_builder_drush_output_code($module_root_name, $filename, $code) {
 /**
  * Callback for downloading hook data.
  */
-function module_builder_callback_hook_download() {
+function drush_module_builder_callback_hook_download() {
   // Check our data directory first.
   try {
     $hooks_directory = _module_builder_get_hooks_directory();
@@ -579,7 +579,7 @@ function module_builder_callback_hook_download() {
 /** 
  * Callback to list known hooks.
  */
-function module_builder_callback_hook_list() {
+function drush_module_builder_callback_hook_list() {
   try {
     _module_builder_sanity_check();
   }
@@ -610,7 +610,7 @@ function module_builder_callback_hook_list() {
 /**
  * Callback to list hook implementations found in a given module.
  */
-function module_builder_callback_hook_analyze() {
+function drush_module_builder_callback_hook_analyze() {
   try {
     _module_builder_sanity_check();
   }
@@ -671,7 +671,7 @@ function module_builder_callback_hook_analyze() {
 /** 
  * Callback to add doc headers to existing hooks.
  */
-function module_builder_callback_doc_hooks() {
+function drush_module_builder_callback_doc_hooks() {
   $commands = func_get_args();
   
   // The first argument is the module machine name.
@@ -721,7 +721,7 @@ function module_builder_callback_doc_hooks() {
 /**
  * Callback to output the location of the data directory.
  */
-function module_builder_callback_get_data_dir() {
+function drush_module_builder_callback_get_data_dir() {
   drush_print('Module builder data is in ' . _module_builder_get_hooks_directory());
 }
 
@@ -729,7 +729,7 @@ function module_builder_callback_get_data_dir() {
  * WORK IN PROGRESS
  * Add function headers wherever needed with params.
  */
-function module_builder_callback_doc_params() {
+function drush_module_builder_callback_doc_params() {
   $commands = func_get_args();
   
   
@@ -801,7 +801,7 @@ function module_builder_callback_doc_params() {
 /**
  * Just for testing stuff on the commandline while developing the module.
  */
-function module_builder_callback_debug() {
+function drush_module_builder_callback_debug() {
   
   /*
   include(dirname(__FILE__) . '/../includes/process.inc');
