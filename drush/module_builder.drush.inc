@@ -6,16 +6,21 @@
  *
  * IMPORTANT: This file should be identical across versions of Drupal.
  */
- 
+
 /**
- * Initialization.
+ * Implementation of hook_drush_init().
  *
- * @todo: is there a hook to move this to?
- */ 
-// Include common code.
-include_once(dirname(__FILE__) . '/../includes/common.inc');
-// Set our environment.
-define('MODULE_BUILDER_ENV', 'drush');
+ * Include common code and set our environment.
+ */
+function module_builder_drush_init() {
+  $command_info = drush_get_command();
+
+  if ($command_info['commandfile'] == 'module_builder') {
+    include_once(dirname(__FILE__) . '/../includes/common.inc');
+    // Set our environment.
+    define('MODULE_BUILDER_ENV', 'drush');
+  }
+}
 
 /**
  * Implementation of hook_drush_command().
