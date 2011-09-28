@@ -20,13 +20,13 @@
 
 == START hook_menu == 
   // This is the minimum information you can provide for a menu item.
-  $items['TODO: Enter path'] = array(
+  $items['%module'] = array(
     'title' => 'TODO: Enter menu item title',
     'page callback' => 'TODO: Enter callback function',
     'access arguments' => array('TODO: Enter user permissions'),
   );
   // more complex menu item
-  $items['TODO: Enter path'] = array(
+  $items['%module/foo'] = array(
     'title' => 'TODO: Enter menu item title',
     'description' => 'TODO: Enter description',
     'page callback' => 'TODO: Enter callback function',
