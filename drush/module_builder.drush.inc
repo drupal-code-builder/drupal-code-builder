@@ -102,6 +102,9 @@ function module_builder_drush_command() {
   $items['mb-list'] = array(
     'callback' => 'drush_module_builder_callback_hook_list',
     'description' => "List the hooks module_builder knows about.",
+    'arguments' => array(
+      'modules' => '(optional) Names of modules, separated by spaces.',
+    ),
   );
 
   $items['mb-analyze'] = array(
@@ -592,21 +595,32 @@ function drush_module_builder_callback_hook_list() {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
-  
+
+  $commands = func_get_args();
+
   // Include generating component file.
   module_builder_include('process');
-  
+
   $data = module_builder_get_hook_data();
   $time = module_builder_get_hook_data_last_updated();
 
-  foreach ($data as $file => $hooks) {
+  // Put the requested filenames into the keys of an array, and intersect them
+  // with the hook data.
+  $files_requested = array_fill_keys($commands, TRUE);
+  $data_requested = array_intersect_key($data, $files_requested);
+
+  if (!count($data_requested) && count($files_requested)) {
+    drush_print(t("No hooks found for the specified files."));
+  }
+
+  foreach ($data_requested as $file => $hooks) {
     drush_print("Group $file:", 2);
     foreach ($hooks as $key => $hook) {
       drush_print($hook['name'] . ': ' . $hook['description'], 4);
     }
   }
-  
-  drush_print(t("Hook data retrieved from @dir.", array('@dir' => _module_builder_get_hooks_directory())));  
+
+  drush_print(t("Hook data retrieved from @dir.", array('@dir' => _module_builder_get_hooks_directory())));
   drush_print(t("Hook data was processed on @time.", array('@time' => $time)));
 
   //print_r($data);
