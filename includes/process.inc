@@ -213,7 +213,11 @@ function module_builder_process_hook_data($hook_file_data) {
         $destination = $file_data['destination'];
       }
       
-      $hook_groups[$group][$key] = array(
+      // We index numerically and so keep the incoming sort order.
+      // But if there are multiple hook files for one module / group, then
+      // they will go sequentially one after the other.
+      // TODO: should this be improved, eg to group also by filename?
+      $hook_groups[$group][] = array(
         'name' => $hook, 
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
