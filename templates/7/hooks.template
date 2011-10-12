@@ -85,17 +85,4 @@
   );
 == END ==
 
-== START hook_views_handlers ==
-  return array(
-    'info' => array(
-      'path' => drupal_get_path('module', '%module'),
-    ),
-    'handlers' => array(
-      '%module_handler_TYPE_TABLE_FIELDNAME' => array(
-        'parent' => 'views_handler_field_term_node_tid',
-      ),
-    ),
-  );
-== END ==
-
 
