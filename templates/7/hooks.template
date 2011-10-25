@@ -78,6 +78,28 @@
   );
 == END ==
 
+== START hook_block_info ==
+  $blocks['my_block'] = array(
+    'info' => t('Block title'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+== END ==
+
+== START hook_block_view ==
+  $block = array();
+
+  switch ($delta) {
+    case 'my_block':
+      $block['subject'] = t('Block title');
+      $block['content'] = array(
+      );
+      break;
+  }
+  return $block;
+== END ==
+
 == START hook_views_api ==
   return array(
     'api' => '3.0-alpha1',
