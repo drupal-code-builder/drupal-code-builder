@@ -50,24 +50,24 @@ function module_builder_drush_command() {
     ),
     'aliases' => array('mb'),
     'options' => array(
-      '--noi' => "Disables interactive mode.",
-      '--data' => "Location to read hook data. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
-      '--build' => "Which file type to generate: 'all', 'code', 'info', 'FILE'. " .
+      'noi' => "Disables interactive mode.",
+      'data' => "Location to read hook data. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
+      'build' => "Which file type to generate: 'all', 'code', 'info', 'FILE'. " .
         "'all' generates everything: info and any code files needed by the requested hooks. " .
         "'code' generates code files as needed. " .
         "'info' makes just the info file. " .
         "'module', 'install' make just the foo.module or foo.install files. " .
         "If custom modules define other files to output, you can request those too, omitting the module root name part and any .inc extension, eg 'module_builder' for 'foo.module_builder.inc. " .  "\n" .
         "Default is 'all' if writing new files, 'code' if appending to file or outputting only to terminal.",
-      '--write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use --yes to force. Use --quiet to suppress output to the terminal.',
-      '--go' => 'Write all module files and enable the new module. Take two commands into the shower? Not me.',
-      '--add' => "Append hooks to module file. Implies '--write --build=code'. Warning: will not check hooks already exist.",
-      '--name' => 'Readable name of the module.',
-      '--desc' => 'Description (for the admin module list).',
-      '--helptext' => 'Module help text (for the system help).',
-      '--dep' => 'Dependencies, separated by spaces, eg "forum views".',
-      '--package' => 'Module package.',
-      '--parent' => "Name of a module folder to place this new module into; use if this module is to be added to an existing package. Use '.' for the current working directory.",
+      'write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
+      'go' => 'Write all module files and enable the new module. Take two commands into the shower? Not me.',
+      'add' => "Append hooks to module file. Implies 'write build=code'. Warning: will not check hooks already exist.",
+      'name' => 'Readable name of the module.',
+      'desc' => 'Description (for the admin module list).',
+      'helptext' => 'Module help text (for the system help).',
+      'dep' => 'Dependencies, separated by spaces, eg "forum views".',
+      'package' => 'Module package.',
+      'parent' => "Name of a module folder to place this new module into; use if this module is to be added to an existing package. Use '.' for the current working directory.",
     ),
     'examples' => array(
       'drush mb my_module menu cron nodeapi' => 
@@ -93,7 +93,7 @@ function module_builder_drush_command() {
     'callback' => 'drush_module_builder_callback_hook_download',
     'description' => "Update module_builder hook data.",
     'options' => array(
-      '--data' => "Location to save downloaded files. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
+      'data' => "Location to save downloaded files. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
     ),
     'aliases' => array('mbdl'),
     //'bootstrap' => DRUSH_BOOTSTRAP_DRUSH, // No bootstrap at all.    
@@ -112,7 +112,7 @@ function module_builder_drush_command() {
     'description' => "List the hooks found in a given module.",
     'aliases' => array('mban'),
     'options' => array(
-      '--flat' => "Shows a flat list of hooks rather than grouped by file.",
+      'flat' => "Shows a flat list of hooks rather than grouped by file.",
     ),
   );
 
@@ -136,7 +136,20 @@ function module_builder_drush_command() {
     'callback' => 'drush_module_builder_callback_get_data_dir',
     'description' => "Print the location of the module builder data directory.",
   );
-  
+
+  // Retain backwards compatility with Drush 4 and whatever other version
+  // numbers come before 5.
+  if (version_compare(DRUSH_VERSION, '5.0-dev', '<')) {
+    foreach ($items as $command => $item) {
+      if (isset($item['options'])) {
+        $items[$command]['options'] = array();
+        foreach ($item['options'] as $option => $text) {
+          $items[$command]['options']["--$option"] = $text;
+        }
+      }
+    }
+  }
+
   return $items;
 }
 
@@ -494,8 +507,17 @@ function module_builder_drush_output_code($module_root_name, $filename, $code) {
   // Add to file option implies write.
   // Write & go option implies write.
   if (drush_get_option(array('write', 'add', 'go'))) {
-    
-    $module_dir = pm_dl_destination('module');
+    // Drush changes function names for version 5.
+    // I wish its branch names and version numbers made some sort of sense.
+    if (version_compare(DRUSH_VERSION, '5.0-dev', '>=')) {
+      // There is probably a proper way to do this but it's Sunday morning and
+      // I want this to just work and so brute force appeals.
+      require_once DRUSH_BASE_PATH . '/commands/pm/download.pm.inc';
+      $module_dir = _pm_download_destination('module');
+    }
+    else {
+      $module_dir = pm_dl_destination('module');
+    }
     
     // Gee great. Drush HEAD doesn't give us the trailing /.
     if (substr($module_dir, -1, 1) != '/') {
