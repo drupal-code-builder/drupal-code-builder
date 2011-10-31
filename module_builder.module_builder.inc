@@ -159,6 +159,11 @@ function module_builder_module_builder_info() {
         ),     
       ),
     ),
+    // Hooks in theme.api.php. This does nothing yet!
+    'theme' => array(
+      'destination' => 'template.php',
+    ),
+    // Views
     'views' => array(
       'hook_destinations' => array(
         '%module.views.inc' => array(
