@@ -75,6 +75,13 @@
     'my_simple_theme_function' => array(
       'variables' => array('arg1' => NULL, 'arg2' => 0, 'arg3' => FALSE),
     ),
+    'my_form_theme_function' => array(
+      'render element' => 'form',
+    ),
+    'my_theme_template' => array(
+      'variables' => array('arg1' => NULL, 'arg2' => 0, 'arg3' => FALSE),
+      'template' => 'my_theme_template',
+    ),
   );
 == END ==
 
