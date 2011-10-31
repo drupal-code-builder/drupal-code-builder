@@ -233,7 +233,8 @@ function module_builder_process_hook_data($hook_file_data) {
   
   // Write the processed data to a file.
   $directory = _module_builder_get_hooks_directory();    
-  file_put_contents("$directory/hooks_processed.php", serialize($hook_groups));
+  $serialized = serialize($hook_groups);
+  file_put_contents("$directory/hooks_processed.php", $serialized);
   
   return $hook_groups;
 }
@@ -286,7 +287,7 @@ function module_builder_get_doc_files() {
  * @param string $file
  *   Name of hook file
  * @return array
- *   Array of hook data:
+ *   Array of hook data, in three arrays:
  *    [0]: Each hook's user-friendly description
  *    [1]: Each hook's entire function declaration: "function name($params)"
  *    [2]: Name of each hook

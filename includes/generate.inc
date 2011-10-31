@@ -461,6 +461,8 @@ function module_builder_get_templates($module_data) {
   if (is_null($hook_function_declarations)) {
     return NULL;
   }
+  //drush_print_r($hook_function_declarations);
+  // TODO: this should contain the name of the api.php file that provided it!
   
   // Trim this down to just the ones we care about.
   $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hooks);
