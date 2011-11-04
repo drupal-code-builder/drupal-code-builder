@@ -173,6 +173,9 @@ function module_builder_module_builder_info() {
           'hook_views_plugins_alter',
           'hook_views_query_alter',
         ),
+        '%module.views_default.inc' => array(
+          'hook_views_default_views',
+        ),
       ),
     ),
   );
