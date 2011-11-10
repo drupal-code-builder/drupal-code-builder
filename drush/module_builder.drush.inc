@@ -626,10 +626,17 @@ function drush_module_builder_callback_hook_list() {
   $data = module_builder_get_hook_data();
   $time = module_builder_get_hook_data_last_updated();
 
-  // Put the requested filenames into the keys of an array, and intersect them
-  // with the hook data.
-  $files_requested = array_fill_keys($commands, TRUE);
-  $data_requested = array_intersect_key($data, $files_requested);
+  if (count($commands)) {
+    // Put the requested filenames into the keys of an array, and intersect them
+    // with the hook data.
+    $files_requested = array_fill_keys($commands, TRUE);
+    $data_requested = array_intersect_key($data, $files_requested);
+  }
+  else {
+    $data_requested = $data;
+  }
+
+  drush_print_r($data);
 
   if (!count($data_requested) && count($files_requested)) {
     drush_print(t("No hooks found for the specified files."));
