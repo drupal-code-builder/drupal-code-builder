@@ -164,3 +164,11 @@
 
   return $data;
 == END ==
+
+== START hook_migrate_api ==
+  $api = array(
+    'api' => 2,
+  );
+  return $api;
+}
+== END ==
