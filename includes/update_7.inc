@@ -116,9 +116,9 @@ function _module_builder_get_hook_destinations(&$hook_files) {
     }
     // It can also (or instead) set a destination per hook.
     if (isset($module_data['hook_destinations'])) {
+      $hook_files[$filename]['hook_destinations'] = array();
       foreach ($module_data['hook_destinations'] as $destination => $hooks) {
         $destinations[$module] = array_fill_keys($hooks, $destination);
-        $hook_files[$filename]['hook_destinations'] = array();
         $hook_files[$filename]['hook_destinations'] += array_fill_keys($hooks, $destination);
       }
     }
