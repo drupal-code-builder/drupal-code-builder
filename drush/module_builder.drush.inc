@@ -254,11 +254,11 @@ function drush_module_builder_callback_build() {
   module_builder_include('generate');
   // Build module code in all cases bar 'info'.
   if ($build != 'info') {
-    module_builder_build_module($commands, $module_data, $build_list);        
+    module_builder_build_module($module_data, $build_list);
   }
   // Build info code in cases 'info' and 'all'.
   if ($build == 'info' or $build == 'all') {
-    module_builder_build_info($commands, $module_data);
+    module_builder_build_info($module_data);
   }
   
   /*
@@ -405,8 +405,6 @@ function module_builder_default_readable_name($commands, $module_data) {
 /**
  * Generates and outputs module code.
  *
- * @param $commands
- *    The drush array of commands.
  * @param $module_data
  *    An array of module data. Passed by reference so file information can
  *    be added by module_builder_generate_module().
@@ -414,7 +412,7 @@ function module_builder_default_readable_name($commands, $module_data) {
  *    An array of requested code files to output
  *    'code' or 'all' means all of them.
  */  
-function module_builder_build_module($commands, &$module_data, $build_list) {
+function module_builder_build_module(&$module_data, $build_list) {
   //drush_print_r($module_data);
   //exit;
    
@@ -483,7 +481,7 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
 /**
  * Generates and outputs info file code.
  */  
-function module_builder_build_info($commands, $module_data) {
+function module_builder_build_info($module_data) {
   module_builder_include('generate');
   $info_code = module_builder_generate_info($module_data);
 
