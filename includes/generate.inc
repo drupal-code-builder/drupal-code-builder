@@ -162,7 +162,8 @@ EOT;
       else {
         $code .= "\n\n";
       }
-      $code .= "}\n\n";
+      // Gap between successive hooks.
+      $code .= "}\n";
     } // foreach hook
 
     // Replace variables
