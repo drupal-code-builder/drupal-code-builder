@@ -178,6 +178,16 @@ function module_builder_module_builder_info() {
         ),
       ),
     ),
+    'rules' => array(
+      'hook_destinations' => array(
+        '%module.rules.inc' => array(
+          'hook_rules_action_info',
+        ),
+        '%module.rules_default.inc' => array(
+          'hook_default_rules_configuration',
+        ),
+      ),
+    ),
   );
 
   // Return the data for the current version.
