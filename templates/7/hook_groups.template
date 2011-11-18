@@ -35,5 +35,19 @@
       "hook_block_save",
       "hook_block_view"
     ]
+  },
+  "field-type":{
+    "label": "Define a field type",
+    "hooks": [
+      // Essentials:
+      "hook_field_info",
+      "hook_field_schema",
+      "hook_field_validate",
+      "hook_field_is_empty",
+      // Optional hooks: 
+      "hook_field_settings_form",
+      "hook_field_update_field",
+      "hook_field_update_forbid"
+    ]
   }
 }
