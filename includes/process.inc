@@ -24,6 +24,9 @@ function module_builder_get_hook_declarations($dir = NULL) {
       $return[$hook['name']] = array(
         'declaration' => $hook['definition'],
         'destination' => $hook['destination'],
+        'group'       => $group,
+        'file_path'   => $hook['file_path'],
+        'body'        => $hook['body'],
       );
     }
   }
@@ -222,6 +225,9 @@ function module_builder_process_hook_data($hook_file_data) {
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
         'destination' => $destination,
+        'group'       => $group,
+        'file_path'   => $file_data['path'],
+        'body'        => $hook_data_raw['bodies'][$key],
       );
       //dsm($hook_groups);
 
@@ -299,11 +305,13 @@ function _module_builder_process_hook_file($filepath) {
   // The pattern for extracting function data: capture first line of doc,
   // function declaration, and hook name.
   $pattern = '[
-      / \* \* \n    # start phpdoc
-      \ \* \ ( .* ) \n  # first line of phpdoc: capture the text
-  (?: \ \* .* \n )* # lines of phpdoc
-      \ \* /  \n    # end phpdoc
-    ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire declaration and name
+           / \* \* \n   # start phpdoc
+          \ \* \ ( .* ) \n  # first line of phpdoc: capture the text
+      (?: \ \* .* \n )* # lines of phpdoc
+          \ \* /  \n    # end phpdoc
+         ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire declaration and name
+    ( (?: .* \n)*? )    # function body
+         ^ }
   ]mx';  
 
   preg_match_all($pattern, $contents, $matches);
@@ -315,6 +323,7 @@ function _module_builder_process_hook_file($filepath) {
     'descriptions' => $matches[1],
     'definitions'  => $matches[2],
     'names'        => $matches[3], 
+    'bodies'       => $matches[4],
   );
  
   return $data;
