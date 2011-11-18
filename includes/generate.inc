@@ -609,7 +609,9 @@ function module_builder_get_templates($module_data) {
     }
     // We have no template data, so fill in the sample from the api.php file,
     // as this is often informative.
-    $hook_data_return[$destination][$hook_name]['template'] = $hook_function_declarations[$hook_name]['body'];
+    if (empty($hook_data_return[$destination][$hook_name]['template'])) {
+      $hook_data_return[$destination][$hook_name]['template'] = $hook_function_declarations[$hook_name]['body'];
+    }
   }
   
   
