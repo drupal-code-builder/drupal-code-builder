@@ -92,6 +92,9 @@ KNOWN ISSUES
 ------------
 * Can't set default values in PHP 5 for some strange reason
 * Fieldsets in Opera look mondo bizarr-o
+* If using D6 private file system that is not writeable by the account running
+  drush then you must specify a path for the data using the --data option
+  that is writeable by the account using drush.
 
 API
 -------------
