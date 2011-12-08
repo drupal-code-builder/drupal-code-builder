@@ -305,12 +305,12 @@ function _module_builder_process_hook_file($filepath) {
   // The pattern for extracting function data: capture first line of doc,
   // function declaration, and hook name.
   $pattern = '[
-           / \* \* \n   # start phpdoc
-          \ \* \ ( .* ) \n  # first line of phpdoc: capture the text
-      (?: \ \* .* \n )* # lines of phpdoc
-          \ \* /  \n    # end phpdoc
+           / \* \* \n     # start phpdoc
+          \  \* \  ( .* ) \n  # first line of phpdoc: capture the text
+      (?: \  \* .* \n )*  # lines of phpdoc
+          \  \* /  \n     # end phpdoc
          ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire declaration and name
-    ( (?: .* \n)*? )    # function body
+     ( (?: .* \n )*? )    # function body
          ^ }
   ]mx';  
 
