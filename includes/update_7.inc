@@ -110,6 +110,12 @@ function _module_builder_get_hook_destinations(&$hook_files) {
     // @todo, possibly: this feels like slightly shaky ground.
     $filename = "$module.api.php";
     
+    // Skip filenames we haven't already found, so we don't pollute our data
+    // array with hook destination data for files that don't exist here.
+    if (!isset($hook_files[$filename])) {
+      continue;
+    }
+
     // The module data can set a single destination for all its hooks.
     if (isset($module_data['destination'])) {
       $hook_files[$filename]['destination'] = $module_data['destination'];
