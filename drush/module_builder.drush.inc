@@ -763,12 +763,13 @@ function drush_module_builder_callback_doc_hooks() {
   module_builder_include('process');
   module_builder_include('generate');
   
-  $hook_names = module_builder_get_hook_names('short');
+  $hook_names = module_builder_get_hook_names(_module_builder_get_hooks_directory(), TRUE);
 
   $pattern = '[(?<! \* / \n )' . # no PHP doc: single quoted so \n works
     "function \ image_gallery _ ( \w * )  # function declaration: capture hook name
      ]mx";
-    
+
+  $filepath = realpath(drush_get_context('DRUSH_DRUPAL_ROOT'));
   foreach ($module_files as $filename) {
     $code = file_get_contents($filepath . '/' . $filename);
     //print $code;
