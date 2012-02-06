@@ -10,6 +10,9 @@
 /**
  * Get stored hook declarations, keyed by hook name, with destination.
  *
+ * @param $dir
+ *  The directory to look in for processed data.
+ *
  * @return
  *   An array of the form:
  *     [hook_action_info] => 
@@ -37,6 +40,9 @@ function module_builder_get_hook_declarations($dir = NULL) {
 /**
  * Get just hook declarations, keyed by hook name.
  *
+ * @param $dir
+ *  The directory to look in for processed data.
+ *
  * @return
  *   An array of the form:
  *     [hook_action_info] => function hook_action_info()
@@ -56,6 +62,8 @@ function module_builder_get_hook_declarations_plain($dir = NULL) {
 /**
  * Get just hook names.
  *
+ * @param $dir
+ *  The directory to look in for processed data.
  * @param $short
  *   Whether to return hook names as just 'init' or 'hook_init'.
  *   Might as well call like this: module_builder_get_hook_names('short') for clarity.
@@ -78,6 +86,9 @@ function module_builder_get_hook_names($dir = NULL, $short = FALSE) {
 
 /**
  * Helper for API functions that don't care about file grouping.
+ *
+ * @param $dir
+ *  The directory to look in for processed data.
  */
 function module_builder_get_hook_data_flat($dir = NULL) {
   $data = module_builder_get_hook_data($dir);
@@ -92,6 +103,9 @@ function module_builder_get_hook_data_flat($dir = NULL) {
 
 /**
  * Retrieve hook data from storage file.
+ *
+ * @param $directory
+ *  The directory to look in for processed data.
  */
 function module_builder_get_hook_data($directory = NULL) {
   if (!isset($directory)) {
@@ -107,6 +121,9 @@ function module_builder_get_hook_data($directory = NULL) {
 
 /**
  * Get the timestamp of the processed file.
+ *
+ * @param $directory
+ *  The directory to look in for processed data.
  */
 function module_builder_get_hook_data_last_updated($directory = NULL) {
   if (!isset($directory)) {
