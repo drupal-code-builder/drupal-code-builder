@@ -272,7 +272,8 @@ function _module_builder_invoke_hook() {
   // If we are running as Drush command, we're not an installed module.
   if (!module_exists('module_builder')) {
     include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
-    $data = array_merge($module_data, module_builder_module_builder_info());
+    $result = module_builder_module_builder_info();
+    $data = array_merge($module_data, $result);
   }  
   else {
     $data = $module_data;
