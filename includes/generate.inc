@@ -255,6 +255,8 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGenerator {
       }
     }
     $info = implode("\n", $merged_lines);
+    // Add a newline to the final line.
+    $info .= "\n";
     return $info;
   }
 }
