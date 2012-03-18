@@ -387,8 +387,11 @@ function module_builder_build_data($commands) {
     $module_data['module_root_name'] = $module_dir;
   }
 
-  // Extra processing for the hooks array (or not).
+  // Include generating component file.
   module_builder_include('process');
+  $hook_definitions = module_builder_get_hook_data_flat();
+
+  // Extra processing for the hooks array (or not).
   $hook_presets = module_builder_get_hook_presets();
   $hooks = array();
   if (!is_array($module_data['hooks'])) {
@@ -404,14 +407,21 @@ function module_builder_build_data($commands) {
       $hooks += $preset_hooks;
     }
     else {
-      $hooks["hook_$hook_name"] = TRUE;
+      // By default, accept the short definition of hooks, ie 'boot' for 'hook_boot'.
+      if (isset($hook_definitions["hook_$hook_name"])) {
+        $hooks["hook_$hook_name"] = TRUE;
+      }
+      // Also fall back to allowing full names. This is handy if you're copy-pasting
+      // from an existing module and want the same hooks.
+      // In theory there won't be any clashes; only hook_hook_info() is weird.
+      elseif (isset($hook_definitions[$hook_name])) {
+        $hooks[$hook_name] = TRUE;
+      }
     }
   }
   // Special shortcut to get ALL THE HOOKS. BWAHAHA MINE ALL MINE.
   if (count($hooks) == 1 && isset($hooks['hook_all'])) {
-    // Include generating component file.
-    module_builder_include('process');
-    $hooks = module_builder_get_hook_data_flat();
+    $hooks = $hook_definitions;
   }
   $module_data['hooks'] = $hooks;
 
