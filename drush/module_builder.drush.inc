@@ -389,7 +389,8 @@ function module_builder_build_data($commands) {
 
   // Include generating component file.
   module_builder_include('process');
-  $hook_definitions = module_builder_get_hook_data_flat();
+  // Get the flat list of hooks, standardized to lower case.
+  $hook_definitions = array_change_key_case(module_builder_get_hook_data_flat());
 
   // Extra processing for the hooks array (or not).
   $hook_presets = module_builder_get_hook_presets();
@@ -407,6 +408,9 @@ function module_builder_build_data($commands) {
       $hooks += $preset_hooks;
     }
     else {
+      // Standardize to lowercase.
+      $hook_name = strtolower($hook_name);
+
       // By default, accept the short definition of hooks, ie 'boot' for 'hook_boot'.
       if (isset($hook_definitions["hook_$hook_name"])) {
         $hooks["hook_$hook_name"] = TRUE;

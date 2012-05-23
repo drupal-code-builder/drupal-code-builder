@@ -138,8 +138,8 @@ EOT;
     $code = '';
     foreach ($hook_data as $hook_name => $hook) {
       
-      // Display PHP doc.
-      $code .= "\n" . $this->hook_doxygen($hook_name);
+      // Display PHP doc, using the original case of the hook name.
+      $code .= "\n" . $this->hook_doxygen($hook['name']);
 
       // function declaration: put in the module name, add closing brace, decode html entities
       $declaration = preg_replace('/(?<=function )hook/', $module_data['module_root_name'], $hook['declaration']);
@@ -469,9 +469,8 @@ function module_builder_get_templates($module_data) {
   // TODO: this should contain the name of the api.php file that provided it!
   
   // Trim this down to just the ones we care about.
-  // In order to be tolerant about case in the user input we change case in both
-  // arrays -- both because some hooks are defined in mixed case.
-  $hook_function_declarations = array_intersect_key(array_change_key_case($hook_function_declarations), array_change_key_case($requested_hooks));
+  // By this point, both sets of array keys are standardized to lower case.
+  $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hooks);
   //print_r("hook_function_declarations: \n");
   //drush_print_r($hook_function_declarations);
   
