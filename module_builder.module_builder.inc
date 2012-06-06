@@ -159,6 +159,13 @@ function module_builder_module_builder_info() {
         ),     
       ),
     ),
+    'field' => array(
+      'hook_destinations' => array(
+        '%module.install' => array(
+          'hook_field_schema',
+        ),
+      ),
+    ),
     // Hooks in theme.api.php. This does nothing yet!
     'theme' => array(
       'destination' => 'template.php',
