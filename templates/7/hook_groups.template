@@ -49,7 +49,7 @@
       "hook_field_update_field",
       "hook_field_update_forbid"
     ]
-  }
+  },
   "field-widget":{
     "label": "Define a field widget",
     "hooks": [
@@ -57,7 +57,7 @@
       "hook_field_widget_info",
       "hook_field_widget_form",
       // Optional hooks: 
-      "hook_field_widget_settings_form",
+      "hook_field_widget_settings_form"
     ]
   }
 }
