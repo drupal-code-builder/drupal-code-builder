@@ -400,7 +400,7 @@ function module_builder_build_data($commands) {
   }
   // Convert the array from numeric to keyed by full hook name.
   foreach ($module_data['hooks'] as $hook_name) {
-    // Hook presets can be specified with an initial @.
+    // Hook group presets can be specified with an initial @.
     if (substr($hook_name, 0, 1) == '@') {
       $preset_name = substr($hook_name, 1);
       // Convert the preset hooks list to the right format and add it to the array.
