@@ -139,6 +139,15 @@ function module_builder_module_builder_info() {
         'webform_hooks.php' => '%module.module',
       ),
     ),
+    // Payment API
+    'pay' => array(
+      'url' => 'http://drupalcode.org/project/pay.git/blob_plain/refs/heads/%branch:/%file',
+      'branch' => '6.x-1.x',
+      'group' => 'pay',
+      'hook_files' => array(
+        'pay.api.php' => '%module.module',
+      ),
+    ),    
   );
 
   // For D7, keys should match the filename MODULE.api.php
