@@ -175,8 +175,9 @@ function module_builder_get_hook_presets() {
   // TODO: read user file preferentially.
   $presets_template = module_builder_get_template('hook_groups.template');
   $hook_presets = json_decode(preg_replace("@//.*@", '', $presets_template), TRUE);
-  if (json_last_error()) {
+  if (is_null($hook_presets)) {
     // @TODO: do something here to say its gone wrong. Throw Exception?
+    drupal_set_message(t('Problem reading json file.'), 'error');
   }
   return $hook_presets;
 }
