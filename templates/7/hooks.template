@@ -25,7 +25,14 @@
     'page callback' => 'TODO: Enter callback function',
     'access arguments' => array('TODO: Enter user permissions'),
   );
-  // more complex menu item
+  // This is a menu item for a form.
+  $items['%module/admin'] = array(
+    'title' => 'TODO: Enter menu item title',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('%module_form'),
+    'access arguments' => array('TODO: Enter user permissions'),
+  );
+  // More complex menu item.
   $items['%module/foo'] = array(
     'title' => 'TODO: Enter menu item title',
     'description' => 'TODO: Enter description',
@@ -35,11 +42,12 @@
     'access arguments' => array('TODO: Enter user permissions'),
     'weight' => 0,
     'type' => MENU_NORMAL_ITEM, // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM / MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK
+    'file' => '%module.admin.inc',
     'menu_name' => '', // Menu to place this item in.
     'title callback' => '', // Function to generate the title, defaults to t(). 
     'title arguments' => array(), // Arguments to send to t() or your custom callback. 
   );
-  // OPTIONAL: Fill in additional static menu items
+  // OPTIONAL: Fill in additional menu items
 
   return $items;
 == END ==
