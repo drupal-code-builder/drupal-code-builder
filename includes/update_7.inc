@@ -68,10 +68,15 @@ function module_builder_update_documentation() {
   
   foreach ($system_listing as $filename => $file) {
     // Extract the module name from the path.
+    // WARNING: this is not always going to be correct: will fail in the
+    // case of submodules. So Commerce is a big problem here.
+    // We could instead assume we have MODULE.api.php, but some modules
+    // have multiple API files with suffixed names, eg Services.
+    // @todo: make this more robust, somehow!
     $matches = array();
-    preg_match('@(?<=modules/)[^/]+@', $file->uri, $matches);
+    preg_match('@modules/(?:contrib/)([^/]+)@', $file->uri, $matches);
     //print_r($matches);
-    $module = $matches[0];
+    $module = $matches[1];
     
     // Copy the file to the hooks directory. 
     copy($drupal_root . '/' . $file->uri, $directory . '/' . $file->filename);
