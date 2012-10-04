@@ -227,7 +227,15 @@ function module_builder_process_hook_data($hook_file_data) {
         
     $file_name = basename($file, '.php');
     $group = $file_data['group'];
-            
+
+    // Should probably use module_hook_info(), but I don't use undocumented code FFS.
+    // Note that the 'module' key is flaky: see module_builder_update_documentation()
+    $module = $file_data['module'];
+    $hook_info = array();
+    if (module_hook($module, 'hook_info')) {
+      $hook_info = module_invoke($module, 'hook_info');
+    }
+
     // Create an array in the form of:
     // array(
     //   'filename' => array(
@@ -245,7 +253,16 @@ function module_builder_process_hook_data($hook_file_data) {
       else {
         $destination = $file_data['destination'];
       }
-      
+
+      // Also try to get destinations from hook_hook_info().
+      // Argh why don't we have the short name here yet????
+      // @todo: clean up!
+      $short_name = substr($hook, 5);
+      if (isset($hook_info[$short_name])) {
+        print_r($hook_info);
+        $destination = '%module.' . $hook_info[$short_name]['group'] . '.inc';
+      }
+
       // We index numerically and so keep the incoming sort order.
       // But if there are multiple hook files for one module / group, then
       // they will go sequentially one after the other.
