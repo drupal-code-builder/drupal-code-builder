@@ -23,6 +23,8 @@
  *    should be saved by code generation
  *  - hook_destinations: per-hook overrides to destination
  *  - group: the group this file's hooks should be shown in the Drupal UI.
+ *  - module: the module that provided this file. WARNING: this is not entirely
+ *    reliable; see module_builder_update_documentation() for details.
  * Example:
  *  [system.core.php] => array(
  *    [path]        => /Users/you/data/drupal_hooks/7/system.api.php
@@ -30,6 +32,7 @@
  *    [original]    => /Users/joachim/Sites/7-drupal/modules/system/system.api.php
  *    [destination] => %module.module
  *    [group]       => core
+ *    [module]      => node
  */
  
 /**
@@ -86,6 +89,7 @@ function module_builder_update_documentation() {
       'path' => $directory . '/' . $file->filename,
       'destination' => '%module.module', // Default. We override this below.
       'group'       => $module, // @todo specialize this?
+      'module'      => $module,
     );
   }
   
