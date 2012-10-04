@@ -3,7 +3,7 @@
 /**
  * @file
  * Module builder code processing code.
- * 
+ *
  * Turns downloaded data and shipped templates into data about hooks.
  */
 
@@ -28,7 +28,7 @@
  */
 function module_builder_get_hook_declarations($dir = NULL) {
   $data = module_builder_get_hook_data($dir);
-  
+
   foreach ($data as $group => $hooks) {
     foreach ($hooks as $key => $hook) {
       $hook_name_lower_case = strtolower($hook['name']);
@@ -42,7 +42,7 @@ function module_builder_get_hook_declarations($dir = NULL) {
       );
     }
   }
-  
+
   return $return;
 }
 
@@ -58,13 +58,13 @@ function module_builder_get_hook_declarations($dir = NULL) {
  */
 function module_builder_get_hook_declarations_plain($dir = NULL) {
   $data = module_builder_get_hook_data($dir);
-  
+
   foreach ($data as $group => $hooks) {
     foreach ($hooks as $key => $hook) {
       $return[$hook['name']] = $hook['definition'];
     }
   }
-  
+
   return $return;
 }
 
@@ -82,13 +82,13 @@ function module_builder_get_hook_declarations_plain($dir = NULL) {
 function module_builder_get_hook_names($dir = NULL, $short = FALSE) {
   $data = module_builder_get_hook_data_flat($dir);
   $names = array_keys($data);
-  
+
   if ($short) {
     foreach ($names as $key => $hook_name) {
       $names[$key] = str_replace('hook_', '', $hook_name);
     }
   }
-  
+
   return $names;
 }
 
@@ -106,7 +106,7 @@ function module_builder_get_hook_data_flat($dir = NULL) {
     foreach ($hooks as $key => $hook) {
       $return[$hook['name']] = $hook;
     }
-  }  
+  }
   return $return;
 }
 
@@ -121,7 +121,7 @@ function module_builder_get_hook_data($directory = NULL) {
     //$directory = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
     $directory = _module_builder_get_hooks_directory();
   }
-  
+
   $hooks_file = "$directory/hooks_processed.php";
   if (file_exists($hooks_file)) {
     return unserialize(file_get_contents($hooks_file));
@@ -153,9 +153,9 @@ function module_builder_get_hook_data_last_updated($directory = NULL) {
 function module_builder_get_template($filename) {
   $pieces = array('templates', _module_builder_drupal_major_version(), $filename);
   $path = module_builder_get_path(implode('/', $pieces));
-  
+
   $template_file = file_get_contents($path);
-  
+
   return $template_file;
 }
 
@@ -210,11 +210,11 @@ function module_builder_process_hook_data($hook_file_data) {
     return NULL;
   }
   */
-  
+
   //print_r($hook_file_data);
-  
+
   // check file_exists?
-  
+
   // Sort the files into a better order than just random.
   // TODO: allow for some control over this, eg frequently used core,
   // then rarer core, then contrib in the order defined by the MB hook.
@@ -222,9 +222,9 @@ function module_builder_process_hook_data($hook_file_data) {
 
   // Build list of hooks
   $hook_groups = array();
-  foreach ($hook_file_data as $file => $file_data) {    
+  foreach ($hook_file_data as $file => $file_data) {
     $hook_data_raw = _module_builder_process_hook_file($file_data['path']);
-        
+
     $file_name = basename($file, '.php');
     $group = $file_data['group'];
 
@@ -268,7 +268,7 @@ function module_builder_process_hook_data($hook_file_data) {
       // they will go sequentially one after the other.
       // TODO: should this be improved, eg to group also by filename?
       $hook_groups[$group][] = array(
-        'name' => $hook, 
+        'name' => $hook,
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
         'destination' => $destination,
@@ -280,15 +280,15 @@ function module_builder_process_hook_data($hook_file_data) {
 
     } // foreach hook_data
   } // foreach files
-    
+
   //dsm($hook_groups);
   //print_r($hook_groups);
-  
+
   // Write the processed data to a file.
-  $directory = _module_builder_get_hooks_directory();    
+  $directory = _module_builder_get_hooks_directory();
   $serialized = serialize($hook_groups);
   file_put_contents("$directory/hooks_processed.php", $serialized);
-  
+
   return $hook_groups;
 }
 
@@ -300,14 +300,14 @@ function module_builder_process_hook_data($hook_file_data) {
  */
 function module_builder_get_doc_files() {
   $dir = _module_builder_get_hooks_directory();
-  
+
   if (!$dir) {
     drupal_set_message(t('Please configure the hook documentation path in <a href="!settings">module builder settings</a>.', array('!settings' => url('admin/settings/module_builder'))), 'error');
     return NULL;
   }
 
   $files = array();
-    
+
   if (is_dir($dir)) {
     if ($dh = opendir($dir)) {
       while (($file = readdir($dh)) !== FALSE) {
@@ -348,7 +348,7 @@ function module_builder_get_doc_files() {
 function _module_builder_process_hook_file($filepath) {
 
   $contents = file_get_contents("$filepath");
- 
+
   // The pattern for extracting function data: capture first line of doc,
   // function declaration, and hook name.
   $pattern = '[
@@ -359,20 +359,20 @@ function _module_builder_process_hook_file($filepath) {
          ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire declaration and name
      ( (?: .* \n )*? )    # function body
          ^ }
-  ]mx';  
+  ]mx';
 
   preg_match_all($pattern, $contents, $matches);
-  
+
   // We don't care about the full matches.
   //array_shift($matches);
-  
+
   $data = array(
     'descriptions' => $matches[1],
     'definitions'  => $matches[2],
-    'names'        => $matches[3], 
+    'names'        => $matches[3],
     'bodies'       => $matches[4],
   );
- 
+
   return $data;
 }
 
@@ -388,12 +388,12 @@ function _module_builder_process_hook_file($filepath) {
  * @param string $file
  *   The template file to parse
  * @return Array
- *   Return array keyed by hook name, whose values are of the form: 
+ *   Return array keyed by hook name, whose values are of the form:
  *    array('template' => TEMPLATE BODY)
  */
 function module_builder_parse_template($file) {
   $data = array();
-  
+
   // Captures a template name and body from a template file.
   $pattern = '#== START (.*?) ==(.*?)== END ==#ms';
    preg_match_all($pattern, $file, $matches);
