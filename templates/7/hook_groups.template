@@ -59,5 +59,12 @@
       // Optional hooks: 
       "hook_field_widget_settings_form"
     ]
+  },
+  "views":{
+    "label": "Define views data",
+    "hooks": [
+      "hook_views_api",
+      "hook_views_data"
+    ]
   }
 }
