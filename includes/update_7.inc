@@ -77,7 +77,7 @@ function module_builder_update_documentation() {
     // have multiple API files with suffixed names, eg Services.
     // @todo: make this more robust, somehow!
     $matches = array();
-    preg_match('@modules/(?:contrib/)([^/]+)@', $file->uri, $matches);
+    preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
     //print_r($matches);
     $module = $matches[1];
     
