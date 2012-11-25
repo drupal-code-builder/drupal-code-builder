@@ -338,11 +338,15 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
 
     $lines['core'] = "7.x";
 
+    /*
+    // Only files containing classes need to be declared in the .info file;
+    // we don't add any classes yet.
     if (is_array($module_data['module_files'])) {
       foreach ($module_data['module_files'] as $file) {
         $lines['files'][] = $file;
       }
     }
+    */
 
     $info = $this->merge_info_lines($lines);
     return $info;
