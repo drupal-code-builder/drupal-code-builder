@@ -536,6 +536,7 @@ function module_builder_default_readable_name($commands, $module_data) {
  * @param $module_data
  *    An array of module data. Passed by reference so file information can
  *    be added by module_builder_generate_module().
+ *    @see module_builder_generate_module() for properties.
  * @param $build_list
  *    An array of requested code files to output
  *    'code' or 'all' means all of them.
