@@ -370,6 +370,8 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
  *       Unwanted hooks may also be included as keys provided their value is FALSE.
  *     - 'module_dependencies': a string of dependencies, eg 'forum views'.
  *     - 'module_package': the module package.
+ *     - 'module_folder': (optional) The destination folder to write the module
+ *        files to.
  *     - 'module_files': added by this function. A flat array of filenames that have been generated. 
  * @param $bare
  *   If true, omit header and footers and output only hook code.

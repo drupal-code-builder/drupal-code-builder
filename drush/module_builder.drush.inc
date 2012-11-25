@@ -387,6 +387,13 @@ function module_builder_build_data($commands) {
     $module_data['module_root_name'] = $module_dir;
   }
 
+  // Get the folder to write to, if we need it.
+  // Add to file option implies write; write & go option implies write.
+  if (drush_get_option(array('write', 'add', 'go'))) {
+    $module_data['module_folder'] = module_builder_get_module_folder($module_data);
+    drush_print_r('----' . $module_data['module_folder']);
+  }
+
   // Include generating component file.
   module_builder_include('process');
   // Get the flat list of hooks, standardized to lower case.
@@ -431,6 +438,89 @@ function module_builder_build_data($commands) {
 
   //print_r($module_data);
   return $module_data;
+}
+
+/**
+ * Get the module folder to write files to.
+ *
+ * Helper for module_builder_build_data().
+ *
+ * @param $module_data
+ *  The module data array.
+ *
+ * @return
+ *  The full system path for the folder the write the module to.
+ */
+function module_builder_get_module_folder($module_data) {
+  $drupal_root = drush_get_context('DRUSH_DRUPAL_ROOT');
+
+  // First try: if the module exists, we write there: nice and simple.
+  $module_path = drupal_get_path('module', $module_data['module_root_name']);
+  if (!empty($module_path)) {
+    return $drupal_root .'/'. $module_path;
+  }
+
+  // Second try: an input machine name given as '.' means use the current folder
+  // as the module name, thus write to the current folder.
+  if ($module_data['module_root_name'] == '.') {
+    return drush_get_context('DRUSH_OLDCWD');
+  }
+
+  // Third try: 'parent' option was given.
+  if (drush_get_option('parent')) {
+    // The --parent option allows the user to specify a location for the new module folder.
+    $parent_dir = drush_get_option('parent');
+    if (substr($parent_dir, 0 , 1) == '.') {
+      // An initial . means to start from the current directory rather than
+      // the modules folder, which allows submodules to be created where the
+      // user is standing.
+      $module_dir = drush_get_context('DRUSH_OLDCWD') . '/';
+      // Remove both the . and the following /.
+      $parent_dir = substr($parent_dir, 2);
+      if ($parent_dir) {
+        // If there's anything left (since just '.' is a valid option), append it.
+        $module_dir .= $parent_dir . '/';
+      }
+    }
+    else {
+      $module_dir .= $parent_dir . '/';
+    }
+    return $module_dir;
+  }
+
+  // Fourth and final try: build it based on the module folder structure.
+
+  // Drush changes function names for version 5.
+  // I wish its branch names and version numbers made some sort of sense.
+  if (version_compare(DRUSH_VERSION, '5.0-dev', '>=')) {
+    // There is probably a proper way to do this but it's Sunday morning and
+    // I want this to just work and so brute force appeals.
+    require_once DRUSH_BASE_PATH . '/commands/pm/download.pm.inc';
+    $module_dir = _pm_download_destination('module');
+  }
+  else {
+    $module_dir = pm_dl_destination('module');
+  }
+
+  // Gee great. Drush HEAD doesn't give us the trailing /.
+  if (substr($module_dir, -1, 1) != '/') {
+    $module_dir .= '/';
+  }
+
+  // Drush tries to put any module into 'contrib' if the folder exists;
+  // hack this out and put the code in 'custom'.
+  if (substr($module_dir, -8, 7) == 'contrib') {
+    $module_dir_custom = substr_replace($module_dir, 'custom', -8, 7);
+    if (is_dir($module_dir_custom)) {
+      $module_dir = $module_dir_custom;
+    }
+  }
+
+  // $module_dir should now be a full path to the parent of the destination
+  // folder, with a trailing slash.
+  $module_dir .= $module_root_name;
+
+  return $module_dir;
 }
 
 /**
@@ -552,54 +642,8 @@ function module_builder_drush_output_code($module_data, $filename, $code) {
   // Add to file option implies write.
   // Write & go option implies write.
   if (drush_get_option(array('write', 'add', 'go'))) {
-    // Drush changes function names for version 5.
-    // I wish its branch names and version numbers made some sort of sense.
-    if (version_compare(DRUSH_VERSION, '5.0-dev', '>=')) {
-      // There is probably a proper way to do this but it's Sunday morning and
-      // I want this to just work and so brute force appeals.
-      require_once DRUSH_BASE_PATH . '/commands/pm/download.pm.inc';
-      $module_dir = _pm_download_destination('module');
-    }
-    else {
-      $module_dir = pm_dl_destination('module');
-    }
-    
-    // Gee great. Drush HEAD doesn't give us the trailing /.
-    if (substr($module_dir, -1, 1) != '/') {
-      $module_dir .= '/';
-    }
-
-    // Drush tries to put any module into 'contrib' if the folder exists;
-    // hack this out and put the code in 'custom'.
-    if (substr($module_dir, -8, 7) == 'contrib') {
-      $module_dir_custom = substr_replace($module_dir, 'custom', -8, 7);
-      if (is_dir($module_dir_custom)) {
-        $module_dir = $module_dir_custom;
-      }
-    }
-
-    if (drush_get_option('parent')) {
-      // The --parent option allows the user to specify a location for the new module folder.
-      $parent_dir = drush_get_option('parent');
-      if (substr($parent_dir, 0 , 1) == '.') {
-        // An initial . means to start from the current directory rather than 
-        // the modules folder, which allows submodules to be created where the
-        // user is standing.
-        $module_dir = drush_get_context('DRUSH_OLDCWD') . '/';
-        // Remove both the . and the following /.
-        $parent_dir = substr($parent_dir, 2);
-        if ($parent_dir) {
-          // If there's anything left (since just '.' is a valid option), append it.
-          $module_dir .= $parent_dir . '/';
-        }
-      }
-      else {
-        $module_dir .= $parent_dir . '/';
-      }
-    }
-    // $module_dir should now be a full path to the parent of the destination
-    // folder, with a trailing slash.
-    $module_dir .= $module_root_name;
+    // This has been set in module_builder_build_data().
+    $module_dir = $module_data['module_folder'];
     
     if (!is_dir($module_dir)) {
       @drush_op('mkdir', $module_dir, 0777);
