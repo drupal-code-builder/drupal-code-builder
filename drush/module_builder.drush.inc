@@ -476,8 +476,8 @@ function module_builder_build_module(&$module_data, $build_list) {
 
   foreach ($requested_files as $filename) {
     $code = $module_code[$filename];
-    module_builder_drush_output_code($module_data['module_root_name'], $filename, $code);   
-    
+    module_builder_drush_output_code($module_data, $filename, $code);
+
   }
   return;
 }
@@ -523,14 +523,23 @@ function module_builder_build_info($module_data) {
   module_builder_include('generate');
   $info_code = module_builder_generate_info($module_data);
 
-  module_builder_drush_output_code($module_data['module_root_name'], $module_data['module_root_name'] . '.info', $info_code); 
+  module_builder_drush_output_code($module_data, $module_data['module_root_name'] . '.info', $info_code);
 }
 
 /**
  * Output generated text, to terminal or to file.
+ *
+ * @param $module_data
+ *  The module data array.
+ *  @see module_builder_generate_module() for properties.
+ * @param $filename
+ *  The filename to write.
+ * @param code
+ *  The text to write to the file.
  */
-function module_builder_drush_output_code($module_root_name, $filename, $code) {
-    
+function module_builder_drush_output_code($module_data, $filename, $code) {
+  $module_root_name = $module_data['module_root_name'];
+
   // Output to terminal
   if (!drush_get_option('quiet')) {
     drush_print("Proposed $filename:");
