@@ -518,7 +518,7 @@ function module_builder_get_module_folder($module_data) {
 
   // $module_dir should now be a full path to the parent of the destination
   // folder, with a trailing slash.
-  $module_dir .= $module_root_name;
+  $module_dir .= $module_data['module_root_name'];
 
   return $module_dir;
 }
