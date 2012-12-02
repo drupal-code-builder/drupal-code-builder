@@ -36,6 +36,7 @@ function module_builder_get_hook_declarations($dir = NULL) {
         'name'        => $hook['name'],
         'declaration' => $hook['definition'],
         'destination' => $hook['destination'],
+        'dependencies'  => $hook['dependencies'],
         'group'       => $group,
         'file_path'   => $hook['file_path'],
         'body'        => $hook['body'],

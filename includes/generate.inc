@@ -473,7 +473,17 @@ function module_builder_get_templates($module_data) {
   }
   //drush_print_r($hook_function_declarations);
   // TODO: this should contain the name of the api.php file that provided it!
-  
+
+  // Add hook dependencies.
+  foreach (array_keys($requested_hooks) as $hook_name) {
+    if (!empty($hook_function_declarations[$hook_name]['dependencies'])) {
+      drush_print_r($hook_function_declarations[$hook_name]['dependencies']);
+      foreach ($hook_function_declarations[$hook_name]['dependencies'] as $hook_dependency) {
+        $requested_hooks[$hook_dependency] = TRUE;
+      }
+    }
+  }
+
   // Trim this down to just the ones we care about.
   // By this point, both sets of array keys are standardized to lower case.
   $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hooks);
