@@ -196,7 +196,7 @@ function module_builder_get_hook_presets() {
  * @return
  *  An array keyed by originating file of the following form:
  *     [GROUP] => array(  // grouping for UI.
-         [{i}] => array(
+         [hook_foo] => array(
            [name] => hook_foo
            [definition] => function hook_foo($node, $teaser = FALSE, $page = FALSE)
            [description] => Description.
@@ -263,11 +263,12 @@ function module_builder_process_hook_data($hook_file_data) {
         $destination = '%module.' . $hook_info[$short_name]['group'] . '.inc';
       }
 
-      // We index numerically and so keep the incoming sort order.
+      // Because we're working through the raw data array, we keep the incoming
+      // sort order.
       // But if there are multiple hook files for one module / group, then
       // they will go sequentially one after the other.
       // TODO: should this be improved, eg to group also by filename?
-      $hook_groups[$group][] = array(
+      $hook_groups[$group][$hook] = array(
         'name' => $hook,
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
