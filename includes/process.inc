@@ -333,12 +333,11 @@ function module_builder_get_doc_files() {
 }
 
 /**
- * Extracts raw hook data from downloaded hook documentation files.
+ * Extracts raw hook data from a downloaded hook documentation file.
  *
- * @param string $path
- *   Path to hook file
- * @param string $file
- *   Name of hook file
+ * @param string $filepath
+ *   Path to hook file.
+ *
  * @return array
  *   Array of hook data, in three arrays:
  *    [0]: Each hook's user-friendly description
