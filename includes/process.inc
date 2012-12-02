@@ -115,7 +115,11 @@ function module_builder_get_hook_data_flat($dir = NULL) {
  * Retrieve hook data from storage file.
  *
  * @param $directory
- *  The directory to look in for processed data.
+ *  (optional) The directory to look in for processed data. If not given, the
+ *  directory is obtained from settings.
+ *
+ * @return
+ *  The unserialized contents of the processed hook data file.
  */
 function module_builder_get_hook_data($directory = NULL) {
   if (!isset($directory)) {
@@ -194,6 +198,7 @@ function module_builder_get_hook_presets() {
       [group] => GROUP  // eg core
       [hook_destinations] => array(%module.foo => hook_foo, etc)
  *  This is the same format as returned by update.inc.
+ *
  * @return
  *  An array keyed by originating file of the following form:
  *     [GROUP] => array(  // grouping for UI.
@@ -202,6 +207,7 @@ function module_builder_get_hook_presets() {
            [definition] => function hook_foo($node, $teaser = FALSE, $page = FALSE)
            [description] => Description.
            [destination] => Destination module file for hook code from this file.
+           ... further properties
  */
 function module_builder_process_hook_data($hook_file_data) {
   /*
