@@ -193,6 +193,15 @@ function module_builder_module_builder_info() {
           'hook_views_default_views',
         ),
       ),
+      // Data about hook dependencies.
+      'hook_dependencies' => array(
+        // A required hook.
+        'hook_views_api' => array(
+          // An array of hooks that require this, as a regex.
+          // TODO!??? dependencies across different API files not yet supported!
+          'hook_views_.*',
+        ),
+      ),
     ),
     'rules' => array(
       'hook_destinations' => array(

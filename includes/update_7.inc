@@ -137,6 +137,11 @@ function _module_builder_get_hook_destinations(&$hook_files) {
         $hook_files[$filename]['hook_destinations'] += array_fill_keys($hooks, $destination);
       }
     }
+
+    // Add the dependencies array as it comes; it will be processed per hook later.
+    if (isset($module_data['hook_dependencies'])) {
+      $hook_files[$filename]['hook_dependencies'] = $module_data['hook_dependencies'];
+    }
   }
   
   //print_r($hook_files);

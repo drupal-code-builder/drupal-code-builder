@@ -263,6 +263,21 @@ function module_builder_process_hook_data($hook_file_data) {
         $destination = '%module.' . $hook_info[$short_name]['group'] . '.inc';
       }
 
+      // Process hook dependendies for the file.
+      $hook_dependencies = array();
+      if (isset($file_data['hook_dependencies'])) {
+        // Incoming data is of the form:
+        //  'required hook' => array('dependent hooks')
+        // where the latter may be a regexp.
+        foreach ($file_data['hook_dependencies'] as $required_hook => $dependency_data) {
+          foreach ($dependency_data as $match) {
+            if (preg_match("@$match@", $hook)) {
+              $hook_dependencies[] = $required_hook;
+            }
+          }
+        }
+      }
+
       // Because we're working through the raw data array, we keep the incoming
       // sort order.
       // But if there are multiple hook files for one module / group, then
@@ -273,6 +288,7 @@ function module_builder_process_hook_data($hook_file_data) {
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
         'destination' => $destination,
+        'dependencies'  => $hook_dependencies,
         'group'       => $group,
         'file_path'   => $file_data['path'],
         'body'        => $hook_data_raw['bodies'][$key],
