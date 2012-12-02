@@ -27,7 +27,7 @@
  *   An array of data, keyed by module name.
  *   On D6, the subsequent array should specify:
  *    - url: a general url to fetch files from.
- *      Use tokens to insert filenames and branch: %file, %branch 
+ *      Use tokens to insert filenames and branch: %file, %branch
  *    - branch: the current branch of the module, eg DRUPAL-6--1, HEAD.
  *      TODO: find a neat way to grab this with a CVS id token?
  *    - group: the UI group these hooks should go in. This should probably be the
@@ -39,10 +39,10 @@
  *      Usually this will be '%module.module' but for instance,
  *      'install.php' has hooks that should go in '%module.install'.
  *   On D7, the subsequent array should specify one or both of:
- *    - 'destination': the destination file for a hook's implementation, 
- *      eg '%module.module', '%module.views.inc'. This applies to all hooks in 
+ *    - 'destination': the destination file for a hook's implementation,
+ *      eg '%module.module', '%module.views.inc'. This applies to all hooks in
  *      the named file, unless:
- *    - 'hook_destinations': override destination for specific hooks here. This 
+ *    - 'hook_destinations': override destination for specific hooks here. This
  *      is an array whose keys are destination strings, and values are themselves
  *      flat arrays of full hook names. Eg:
  *      '%module.install' => array(hook_install)
@@ -59,27 +59,27 @@ function module_builder_module_builder_info() {
         // List of files we should slurp from the url for hook defs.
         // and the destination file for processed code.
         'core.php' =>    '%module.module',
-        'node.php' =>    '%module.module',      
-        'install.php' => '%module.install',      
+        'node.php' =>    '%module.module',
+        'install.php' => '%module.install',
       ),
     ),
     // We need to do our own stuff now we have a hook!
     'module_builder' => array(
       'url' => 'http://drupalcode.org/project/module_builder.git/blob_plain/refs/heads/%branch:/hooks/%file',
       'branch' => '6.x-2.x',
-      'group' => 'module builder',      
+      'group' => 'module builder',
       'hook_files' => array(
         'module_builder.php' => '%module.module_builder.inc',
       ),
     ),
-    
+
     // Support for some contrib modules (the ones I use ;) -- for more please
     // file a patch either here or with the module in question.
     // Views
     'views' => array(
       'url' => 'http://drupalcode.org/project/views.git/blob_plain/refs/heads/%branch:/docs/%file',
       'branch' => '6.x-2.x',
-      'group' => 'views',      
+      'group' => 'views',
       'hook_files' => array(
         'docs.php' => '%module.module',
         // other files here: view.inc, views.default.inc
@@ -107,7 +107,7 @@ function module_builder_module_builder_info() {
     'ubercart' => array(
       'url' => 'http://drupalcode.org/project/ubercart.git/blob_plain/refs/heads/%branch:/docs/%file',
       'branch' => '6.x-2.x',
-      'group' => 'ubercart',      
+      'group' => 'ubercart',
       'hook_files' => array(
         'hooks.php' => '%module.module',
       ),
@@ -116,7 +116,7 @@ function module_builder_module_builder_info() {
     'signup' => array(
       'url' => 'http://drupalcode.org/project/signup.git/blob_plain/refs/heads/%branch:/%file',
       'branch' => '6.x-2.x',
-      'group' => 'signup',      
+      'group' => 'signup',
       'hook_files' => array(
         'signup.api.php' => '%module.module',
       ),
@@ -147,7 +147,7 @@ function module_builder_module_builder_info() {
       'hook_files' => array(
         'pay.api.php' => '%module.module',
       ),
-    ),    
+    ),
   );
 
   // For D7, keys should match the filename MODULE.api.php
