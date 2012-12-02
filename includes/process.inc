@@ -366,6 +366,7 @@ function module_builder_get_doc_files() {
  * @return array
  *   Array of hook data, in different arrays, where each array is keyed
  *   numerically and all the indexes match up. The arrays are:
+ *    - 'type': Whether this is a hook or a callback.
  *    - 'descriptions': Each hook's user-friendly description, taken from the
  *      first line of the PHPdoc.
  *    - 'documentation': The rest of the PHPdoc.
