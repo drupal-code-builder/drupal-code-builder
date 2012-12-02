@@ -291,6 +291,7 @@ function module_builder_process_hook_data($hook_file_data) {
       // they will go sequentially one after the other.
       // TODO: should this be improved, eg to group also by filename?
       $hook_groups[$group][$hook] = array(
+        'type' => $hook_data_raw['type'][$key],
         'name' => $hook,
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
@@ -382,8 +383,11 @@ function _module_builder_process_hook_file($filepath) {
           \  \* \  ( .* ) \n  # first line of phpdoc: capture the text for the description
     ( (?: \  \* .* \n )* )  # lines of phpdoc: capture the documentation
           \  \* /  \n     # end phpdoc
-         ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire definition and name
-     ( (?: .* \n )*? )    # function body: capture
+         ( function \ ( ( hook | callback ) \w+ ) .* ) \ { # function declaration: capture...
+    #    ^ entire definition and name
+    #                 ^ function name
+    #                   ^ whether this is a hook or a callback
+     ( (?: .* \n )*? )    # function body: capture example code
          ^ }
   ]mx';
 
@@ -397,7 +401,8 @@ function _module_builder_process_hook_file($filepath) {
     'documentation' => $matches[2],
     'definitions'   => $matches[3],
     'names'         => $matches[4],
-    'bodies'        => $matches[5],
+    'type'          => $matches[5],
+    'bodies'        => $matches[6],
   );
 
   return $data;
