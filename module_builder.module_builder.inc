@@ -165,7 +165,14 @@ function module_builder_module_builder_info() {
           'hook_uninstall',
           'hook_enable',
           'hook_disable',
-        ),     
+        ),
+      ),
+    ),
+    'block' => array(
+      'hook_dependencies' => array(
+        'hook_block_info' => array(
+          'hook_block_*',
+        ),
       ),
     ),
     'field' => array(
