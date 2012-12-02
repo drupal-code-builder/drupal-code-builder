@@ -340,24 +340,27 @@ function module_builder_get_doc_files() {
  *   Path to hook file.
  *
  * @return array
- *   Array of hook data, in three arrays:
- *    [0]: Each hook's user-friendly description
- *    [1]: Each hook's entire function declaration: "function name($params)"
- *    [2]: Name of each hook
+ *   Array of hook data, in different arrays, where each array is keyed
+ *   numerically and all the indexes match up. The arrays are:
+ *    - 'descriptions': Each hook's user-friendly description, taken from the
+ *      first line of the PHPdoc.
+ *    - 'documentation': The rest of the PHPdoc.
+ *    - 'definitions: Each hook's entire function declaration: "function name($params)"
+ *    - 'names': The long names of the hooks, i.e. 'hook_foo'.
+ *    - 'bodies': The function bodies of each hook.
  */
 function _module_builder_process_hook_file($filepath) {
-
   $contents = file_get_contents("$filepath");
 
   // The pattern for extracting function data: capture first line of doc,
   // function declaration, and hook name.
   $pattern = '[
            / \* \* \n     # start phpdoc
-          \  \* \  ( .* ) \n  # first line of phpdoc: capture the text
-      (?: \  \* .* \n )*  # lines of phpdoc
+          \  \* \  ( .* ) \n  # first line of phpdoc: capture the text for the description
+    ( (?: \  \* .* \n )* )  # lines of phpdoc: capture the documentation
           \  \* /  \n     # end phpdoc
-         ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire declaration and name
-     ( (?: .* \n )*? )    # function body
+         ( function \ ( hook_\w* ) .* ) \  { # function declaration: capture both entire definition and name
+     ( (?: .* \n )*? )    # function body: capture
          ^ }
   ]mx';
 
@@ -367,10 +370,11 @@ function _module_builder_process_hook_file($filepath) {
   //array_shift($matches);
 
   $data = array(
-    'descriptions' => $matches[1],
-    'definitions'  => $matches[2],
-    'names'        => $matches[3],
-    'bodies'       => $matches[4],
+    'descriptions'  => $matches[1],
+    'documentation' => $matches[2],
+    'definitions'   => $matches[3],
+    'names'         => $matches[4],
+    'bodies'        => $matches[5],
   );
 
   return $data;
