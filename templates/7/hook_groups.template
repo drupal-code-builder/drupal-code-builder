@@ -60,6 +60,16 @@
       "hook_field_widget_settings_form"
     ]
   },
+  "field-formatter":{
+    "label": "Define a field formatter",
+    "hooks": [
+      // Essentials:
+      "hook_field_formatter_info",
+      "hook_field_formatter_view",
+      // Optional hooks:
+      "hook_field_formatter_prepare_view"
+    ]
+  },
   "views":{
     "label": "Define views data",
     "hooks": [
