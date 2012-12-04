@@ -485,7 +485,7 @@ function module_builder_get_module_folder($module_data) {
     else {
       $module_dir .= $parent_dir . '/';
     }
-    return $module_dir;
+    return $module_dir . $module_data['module_root_name'];
   }
 
   // Fourth and final try: build it based on the module folder structure.
