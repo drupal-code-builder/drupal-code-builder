@@ -387,6 +387,12 @@ function module_builder_build_data($commands) {
     $module_data['module_root_name'] = $module_dir;
   }
 
+  // Extra magic, part 2: trim a final '/' from the module machine name, to
+  // allow use of tab autocompletion on the command line.
+  if (substr($module_data['module_root_name'], -1) == '/') {
+    $module_data['module_root_name'] = substr($module_data['module_root_name'], 0, -1);
+  }
+
   // Get the folder to write to, if we need it.
   // Add to file option implies write; write & go option implies write.
   if (drush_get_option(array('write', 'add', 'go'))) {
