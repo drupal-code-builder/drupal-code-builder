@@ -80,6 +80,7 @@ function module_builder_update_documentation() {
     preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
     //print_r($matches);
     $module = $matches[1];
+    //dsm($matches, $module);
     
     // Copy the file to the hooks directory. 
     copy($drupal_root . '/' . $file->uri, $directory . '/' . $file->filename);
