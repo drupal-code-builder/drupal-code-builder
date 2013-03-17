@@ -6,6 +6,35 @@
  */
 
 /**
+ * Generate the files for a component.
+ *
+ * This is the entry point for the generating system.
+ *
+ * @param $module_data
+ *  Damn it, document this once and for all somewhere! IE HERE!
+ * @param $component
+ *  A component. Currently only supports 'module'!
+ *
+ * @return
+ *  A files array, as returned by collectFiles().
+ */
+function module_builder_generate_component($module_data, $component) {
+  $class = module_builder_get_class($component);
+  $generator = new $class($module_data);
+
+  // Recursively get subcomponents.
+  $generator->getSubComponents();
+
+  //drush_print_r($generator->components);
+
+  // Recursively build files.
+  $files = array();
+  $generator->collectFiles($files);
+
+  return $files;
+}
+
+/**
  * Generate info code.
  */
 function module_builder_generate_info($module_data) {
