@@ -57,6 +57,8 @@ function module_builder_generate_component($module_data, $component) {
 
 /**
  * Generate info code.
+ *
+ * TODO: OBSOLETE!
  */
 function module_builder_generate_info($module_data) {
   $class = module_builder_get_class('info');
@@ -104,6 +106,10 @@ function module_builder_get_class($type) {
 
 /**
  * Generate module code.
+ *
+ * TODO: OBSOLETE!
+ *  - replace ALL mentions in code!
+ *  - support the bare option in new system somehow.
  *
  * @param $module_data
  * @param $bare

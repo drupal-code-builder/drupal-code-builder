@@ -533,6 +533,10 @@ function module_builder_default_readable_name($commands, $module_data) {
 /**
  * Generates and outputs module code.
  *
+ * TODO: OBSOLETE!
+ *  - extract useful code
+ *  - reinstate 'bare' option
+ *
  * @param $module_data
  *    An array of module data. Passed by reference so file information can
  *    be added by module_builder_generate_module().
