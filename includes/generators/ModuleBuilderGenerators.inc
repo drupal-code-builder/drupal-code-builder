@@ -11,6 +11,7 @@
 abstract class ModuleBuilderGeneratorComponent {
 
   function __construct($module_data) {
+    // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
     $this->module_data = $module_data;
   }
 
@@ -97,7 +98,7 @@ abstract class ModuleBuilderGeneratorComponent {
 }
 
 /**
- * Abstract Generator base class for files.
+ * Abstract Generator base class for files. TODO: rename? merge into Code?
  */
 abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponent {
 
