@@ -196,23 +196,23 @@ function drush_module_builder_callback_build() {
       if (drush_confirm(dt('No hook definitions found. Would you like to download them now?'))) {
         // download the hooks so we can move on.
         if (!drush_module_builder_callback_hook_download()) {
-          drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hook data.');          
-        }  
-      } 
+          drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hook data.');
+        }
+      }
     }
     // Otherwise, fail.
     else {
       drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
-      return;      
+      return;
     }
   }
-  
+
   // Build the module data.
   $module_data = module_builder_build_data($commands);
-  
+
   // What to build
   $build = drush_get_option('build');
-  
+
   // write options:
   // - all -- everything we can do
   // - code -- code files, not info (module + install _ ..?)
@@ -220,7 +220,7 @@ function drush_module_builder_callback_build() {
   // - module -- only module file
   // - install -- only install file
   // - ??? whatever hooks need
-    
+
   // No build: set nice default.
   if (!$build) {
     // If we are adding, 'code' is implied
@@ -233,18 +233,18 @@ function drush_module_builder_callback_build() {
     }
     // Otherwise, outputting to terminal: only module
     else {
-      $build = 'code';     
+      $build = 'code';
     }
   }
-  
+
   //print_r($build);
-  
-  // Make a list  
+
+  // Make a list
   $build_list = explode(' ', $build);
-  
+
   // Multi build: set a single string to switch on below.
   if (count($build_list) > 1) {
-    $build = 'code';  
+    $build = 'code';
   }
 
   // Set the build list in the module data.
