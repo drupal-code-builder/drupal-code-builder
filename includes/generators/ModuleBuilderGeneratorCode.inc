@@ -9,8 +9,14 @@
  * Generator class for module code files.
  *
  * TODO: rename to ModuleCode? Or can this cover, say, theme files?
+ *
+ * TODO: various cleanups. This was the base class of the mk 1 OO generator
+ * system, and is currently (hello!) being forced into a new, bigger mk
+ * hierarchy!
  */
 class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
+
+  // TODO: declare properties that are special!
 
   function __construct($module_data) {
     $this->module_data = $module_data;
