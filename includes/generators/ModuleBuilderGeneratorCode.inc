@@ -32,22 +32,12 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
       'path' => '', // Means base folder.
       'name' => $this->filename,
       'body' => array(
-        $this->build(),
+        $this->file_header(),
+        $this->code_header(),
+        $this->code_body(),
+        $this->code_footer(),
       ),
     );
-  }
-
-  /**
-   * The main code building function. !?!?! RENAME??? CHANGE!?
-   */
-  function build() {
-    $output = '';
-    $output .= $this->file_header();
-    $output .= $this->code_header();
-    $output .= $this->code_body();
-    $output .= $this->code_footer();
-
-    return $output;
   }
 
   /**
