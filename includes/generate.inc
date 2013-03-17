@@ -4,7 +4,7 @@
  * @file
  * Module builder code generating code.
  */
- 
+
 /**
  * Generate info code.
  */
@@ -12,7 +12,7 @@ function module_builder_generate_info($module_data) {
   $class = module_builder_get_class('info');
   $generator = new $class($module_data);
   $code = $generator->build();
-  
+
   return $code;
 }
 
@@ -47,7 +47,7 @@ function module_builder_get_class($type) {
   }
   return $class;
 }
- 
+
 /**
  * Base class for code generators.
  *
@@ -57,12 +57,12 @@ function module_builder_get_class($type) {
  *  This would probably entail a controller object which can hold the list of
  *  current generators.
  *  - templates.
- */ 
+ */
 abstract class ModuleBuilderGenerator {
   function __construct($module_data) {
     $this->module_data = $module_data;
   }
-  
+
   /**
    * The main code building function.
    */
@@ -72,18 +72,18 @@ abstract class ModuleBuilderGenerator {
     $output .= $this->code_header();
     $output .= $this->code_body();
     $output .= $this->code_footer();
-    
-    return $output;    
+
+    return $output;
   }
-  
+
 
   /**
    * Return the PHP file header line.
    */
    function file_header()  {
-     return "<?php\n";     
+     return "<?php\n";
    }
-  
+
   /**
    * Return the file doxygen header and any custom header code.
    */
@@ -99,12 +99,12 @@ EOT;
     $code = variable_get('module_builder_header', $default);
     return $code;
   }
-  
+
   /**
    * Return the main body of the file code.
    */
   abstract function code_body();
-  
+
   /**
    * Return a file footer.
    */
@@ -138,11 +138,11 @@ EOT;
 
   function code_body() {
     // Get old style variable names.
-    $module_data = $this->module_data;    
+    $module_data = $this->module_data;
     $hook_data = $this->hook_data;
     $code = '';
     foreach ($hook_data as $hook_name => $hook) {
-      
+
       // Display PHP doc, using the original case of the hook name.
       $code .= "\n" . $this->hook_doxygen($hook['name']);
 
@@ -180,10 +180,10 @@ EOT;
       '%readable' => str_replace("'", "\'", $module_data['module_readable_name']),
     );
     $code = strtr($code, $variables);
-    
+
     return $code;
   }
-  
+
   /**
    * Return a file footer.
    */
@@ -221,7 +221,7 @@ EOT;
  *
  * @param $module_data
  *   An associative array of data for the module, passed by reference so data
- *   on generated files can be added. 
+ *   on generated files can be added.
  *   The keys can *mostly* be taken straight from form values. They are as follows:
  *     - 'module_root_name'
  *     - 'module_readable_name'
@@ -234,7 +234,7 @@ EOT;
  *     - 'module_package': the module package.
  *     - 'module_folder': (optional) The destination folder to write the module
  *        files to.
- *     - 'module_files': added by this function. A flat array of filenames that have been generated. 
+ *     - 'module_files': added by this function. A flat array of filenames that have been generated.
  * @param $bare
  *   If true, omit header and footers and output only hook code.
  * @return
@@ -258,7 +258,7 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
   $hook_file_data += array(
     $module_data['module_root_name'] . '.module' => array(),
   );
-  
+
   //print_r($module_data);
   //dsm($hook_file_data);
 
@@ -270,12 +270,12 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
     $generator = new $class($module_data);
     $generator->hook_data = $hook_data;
     $generator->filename = $filename;
-    
+
     if ($bare) {
       $code = $generator->code_body;
     }
     else {
-      $code = $generator->build();      
+      $code = $generator->build();
     }
 
     //dsm($code);
@@ -315,7 +315,7 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
 function module_builder_get_templates($module_data) {
   // Include generating component file.
   module_builder_include('process');
-  
+
   // Build a clean list of the requested hooks, by filtering out the keys
   // with 0 values that come from UI form.
   $requested_hooks = array_filter($module_data['hooks']);
@@ -351,7 +351,7 @@ function module_builder_get_templates($module_data) {
   $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hooks);
   //print_r("hook_function_declarations: \n");
   //drush_print_r($hook_function_declarations);
-  
+
   // Filter out the requested hooks that don't have definitions.
   // We do this now as it's possible for a hook to have no definition because
   // the user doesn't have it, but have a template because we provide it,
@@ -368,13 +368,13 @@ function module_builder_get_templates($module_data) {
   // TODO: at this point we should check if we have any actual hooks to
   // process, and warn if not.
   // We should probably also do something with rejected hooks list.
-  
+
   // Step 1:
   // Build up a list of the basic template files we want to parse.
   //  - in each $hook_function_declarations item, place an ordered list of
   //    all potential template files. We will set these to TRUE in step 2
   //    if they hold a template for the hook.
-  //  - meanwhile, build up list of template files we will want to check for 
+  //  - meanwhile, build up list of template files we will want to check for
   //    existence and parse.
   // Template filenames are of the following form, in the order they should be
   // checked, ie from most specific to most general:
@@ -404,15 +404,15 @@ function module_builder_get_templates($module_data) {
     // TODO: $template_file_names[$groupname_template] = TRUE;
     $template_file_names[$filename_template] = TRUE;
     $template_file_names['hooks.template'] = TRUE;
-    
+
   }
-  
+
   // print_r("template file names: \n");
   // print_r($template_file_names);
 
   // print_r("hook_function_declarations are now:: \n");
   // print_r($hook_function_declarations);
-  
+
   // Step 2:
   // Now we parse the templates we need.
   // We look in two places: module_builder's own '/templates' folder, and the optional
@@ -426,17 +426,17 @@ function module_builder_get_templates($module_data) {
   //print "base path: $template_base_path_module";
   // $template_base_paths['module']
   // $template_base_paths['user']
-  
+
   $template_data = array();
   foreach (array_keys($template_file_names) as $filename) {
     $filepath = "$template_base_path_module/$filename";
     if (file_exists($filepath)) {
       $template_file = file_get_contents($filepath);
       $template_data = module_builder_parse_template($template_file);
-      
+
       // Trim the template data to the hooks we care about.
       $template_data = array_intersect_key($template_data, $requested_hooks);
-      
+
       // Flag the template file in the hook list; ie, set to TRUE the template
       // file in the list which we first created as entirely FALSE.
       foreach (array_keys($template_data) as $hook_name) {
@@ -444,18 +444,18 @@ function module_builder_get_templates($module_data) {
       }
     }
   }
-  
+
   //print_r("hook_function_declarations now have template files \n");
   //print_r($hook_function_declarations);
-  
-  
+
+
   // $template_data is now an array of the form:
   //  [hook name] => array('template' => DATA)
   // in a pretty order which we want to hold on to.
 
   //print_r('template data is:');
   //print_r($template_data);
-  
+
   // Step 3a:
   // Build a new array of hook data, so that we take the order from the
   // template data, but using the same data structure as the
@@ -473,12 +473,12 @@ function module_builder_get_templates($module_data) {
 
     // Copy over the data we already had.
     $hook_data_return[$destination][$hook_name] = $hook_function_declarations[$hook_name];
-    
+
     // Copy over the template.
     // TODO: more here.
     $hook_data_return[$destination][$hook_name]['template']    = $template_data[$hook_name]['template'];
   }
-  
+
   // Step 3b:
   // Not all hooks have template data, so fill these in too.
   foreach ($hook_function_declarations as $hook_name => $hook) {
@@ -494,8 +494,8 @@ function module_builder_get_templates($module_data) {
       $hook_data_return[$destination][$hook_name]['template'] = $hook_function_declarations[$hook_name]['body'];
     }
   }
-  
-  
+
+
   //print_r('step 3:');
   //print_r($hook_data_return);
   return $hook_data_return;
