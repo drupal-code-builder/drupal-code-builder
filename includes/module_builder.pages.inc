@@ -442,13 +442,13 @@ function module_builder_page_generate($form, &$form_state) {
  */
 function module_data_from_form($form_values) {
   // Most things come in as we want them from the form.
-  $data = $form_values;
+  $module_data = $form_values;
 
   // Hooks need flattening.
-  $data['hooks'] = array();
+  $module_data['hooks'] = array();
   foreach ($form_values['hooks'] as $hook_group) {
-    $data['hooks'] += $hook_group;
+    $module_data['hooks'] += $hook_group;
   }
 
-  return $data;
+  return $module_data;
 }
