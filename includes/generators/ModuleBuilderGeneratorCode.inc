@@ -27,6 +27,7 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
    */
   function collectFiles(&$files) {
     // Add our file data to the list.
+    // TODO: check the build request and filter (somehow!?!?).
     $files[$this->filename] = array(
       'path' => '', // Means base folder.
       'name' => $this->filename,

@@ -162,6 +162,11 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
 /**
  * Helper function for module_builder_generate_module
  *
+ * TODO: well in fact, ModuleBuilderGeneratorHooks.
+ *
+ * Move this to that generator class, or might it be used by other components
+ * in future?
+ *
  * Returns an array of hook data and templates for the requested hooks.
  * This is handled live rather than in process.inc to allow the user to alter
  * their custom hook templates.

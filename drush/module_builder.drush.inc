@@ -536,6 +536,7 @@ function module_builder_default_readable_name($commands, $module_data) {
  * TODO: OBSOLETE!
  *  - extract useful code
  *  - reinstate 'bare' option
+ *  - reinstate error
  *
  * @param $module_data
  *    An array of module data. Passed by reference so file information can
