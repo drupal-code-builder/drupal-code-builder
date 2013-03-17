@@ -246,37 +246,31 @@ function drush_module_builder_callback_build() {
   if (count($build_list) > 1) {
     $build = 'code';  
   }
-  
-  //print_r($build_list);  
-  
+
+  // Set the build list in the module data.
+  // TODO: move all the above to a helper function!
+  $module_data['requested_build'] = array_fill_keys($build_list, TRUE);
+
+  //print_r($build_list);
+
   // Build files.
   // Include generating component file.
   module_builder_include('generate');
-  // Build module code in all cases bar 'info'.
-  if ($build != 'info') {
-    module_builder_build_module($module_data, $build_list);
+
+  // For now, just assume it's a module we've been requested. We are nowhere
+  // near ready to have other pathways into this.
+  $files = module_builder_generate_component($module_data, 'module');
+
+  //drush_print_r($files);
+
+  // Finally, output the files!
+  foreach ($files as $file_id => $file_info) {
+    $filename = $file_info['name'];
+    $code = implode("\n", $file_info['body']);
+    // TODO: rework this function to handle the file info array.
+    // OR: todo: rework the above to come out in a better way.
+    module_builder_drush_output_code($module_data, $filename, $code);
   }
-  // Build info code in cases 'info' and 'all'.
-  if ($build == 'info' or $build == 'all') {
-    module_builder_build_info($module_data);
-  }
-  
-  /*
-  switch ($build) {
-    case 'info':
-      // info and stop
-      drush_module_builder_callback_info($commands, $module_data);
-      break;
-    case 'all':
-      // info and fall through
-      drush_module_builder_callback_info($commands, $module_data);
-    case 'code':
-      // this is just here to look pretty
-    default:
-      // anything else, eg module, install etc
-      drush_module_builder_callback_module($commands, $module_data, $build_list);    
-  }
-  */
 
   if (drush_get_option('go')) {
     pm_module_manage(array(array_shift($commands)), TRUE);
