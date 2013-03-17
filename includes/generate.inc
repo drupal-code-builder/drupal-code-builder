@@ -53,19 +53,6 @@ function module_builder_get_class($type) {
 }
 
 /**
- * Base class for code generators.
- *
- * TODO: much more of the code generation could be moved to OO code:
- *  - pass all hook data to one code generator object, representing the .module
- *  file, which then instantiates further objects for the other files needed.
- *  This would probably entail a controller object which can hold the list of
- *  current generators.
- *  - templates.
- */
-
- */
-
-/**
  * Generate module code.
  *
  * @param $module_data

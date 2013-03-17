@@ -7,6 +7,32 @@
 
 /**
  * Abstract base Generator for components.
+ *
+ * Rough conceptual hierarchy:
+  - component generators/file generators (NOT class hierarchy: processing chain!)
+   - module
+     - codeModule ---> hooks & callbacks
+       - codeModuleFile
+     - info
+     - readme
+     - tests
+   - theme
+     - codeTheme ---> theme functions
+     - codeThemeFile
+     - info
+     - readme
+   - profile
+     - codeProfile --> hooks
+     - info
+     - readme
+   - plugin ??
+     - goes beneath module somehow??????
+
+   the initial request causes:
+     - figuring out which generator to start up
+     - component generator figures out:
+       - subcomponents (hooks, info file, plugins, tests)
+       - each subcomponent recurses and eventually gets to a file generator. 
  */
 abstract class ModuleBuilderGeneratorComponent {
 
