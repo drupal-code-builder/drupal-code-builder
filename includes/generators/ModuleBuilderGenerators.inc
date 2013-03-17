@@ -28,7 +28,12 @@ abstract class ModuleBuilderGeneratorComponent {
    */
   function getSubComponents() {
     $this->components = array();
-    foreach ($this->subComponents() as $component_type) {
+
+    // Get the required subcomponents.
+    $subcomponent_info = $this->subComponents();
+
+    // Instantiate each one, and recurse into it.
+    foreach ($subcomponent_info as $component_type) {
       $class = module_builder_get_class($component_type);
       $generator = new $class($this->module_data);
       $this->components[$component_type] = $generator;
