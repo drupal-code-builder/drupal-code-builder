@@ -34,6 +34,10 @@ function module_builder_generate_info($module_data) {
  *  A class name for the type and, if it exists, version, eg 'ModuleBuilderGeneratorInfo6'.
  */
 function module_builder_get_class($type) {
+  // Include our general include files, which contains base and parent classes.
+  // In the absence of autoloading, we need to do this.
+  include_once("generators/ModuleBuilderGenerators.inc");
+
   $type     = ucfirst($type);
   $version  = _module_builder_drupal_major_version();
   $class    = 'ModuleBuilderGenerator' . $type . $version;
@@ -58,58 +62,8 @@ function module_builder_get_class($type) {
  *  current generators.
  *  - templates.
  */
-abstract class ModuleBuilderGenerator {
-  function __construct($module_data) {
-    $this->module_data = $module_data;
-  }
 
-  /**
-   * The main code building function.
-   */
-  function build() {
-    $output = '';
-    $output .= $this->file_header();
-    $output .= $this->code_header();
-    $output .= $this->code_body();
-    $output .= $this->code_footer();
-
-    return $output;
-  }
-
-
-  /**
-   * Return the PHP file header line.
-   */
-   function file_header()  {
-     return "<?php\n";
-   }
-
-  /**
-   * Return the file doxygen header and any custom header code.
-   */
-  function code_header() {
-    $filename = $this->filename;
-    $default = <<<EOT
-/**
- * @file $filename
- * TODO: Enter file description here.
  */
-
-EOT;
-    $code = variable_get('module_builder_header', $default);
-    return $code;
-  }
-
-  /**
-   * Return the main body of the file code.
-   */
-  abstract function code_body();
-
-  /**
-   * Return a file footer.
-   */
-  function code_footer() {}
-}
 
 /**
  * Generate module code.
