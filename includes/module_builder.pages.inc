@@ -64,7 +64,7 @@ function module_builder_page_input($form, &$form_state) {
   }
   catch (ModuleBuilderException $e) {
     if ($e->needs_hooks_download) {
-      drupal_set_message(t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.', 
+      drupal_set_message(t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.',
         array(
           '!settings-url' => url('admin/config/development/module_builder'),
           '%administer' => 'Administer',
@@ -96,7 +96,7 @@ function module_builder_page_input($form, &$form_state) {
   // include the data processing file
   // TODO: only need the data loading.
   module_builder_include('process');
-  
+
   $hook_groups = module_builder_get_hook_data();
 
   // Include CSS for formatting
@@ -243,7 +243,7 @@ function module_builder_page_input($form, &$form_state) {
           'class' => $hook_presets_reverse[$name],
         );
       }
-      
+
       // Set some default hooks
       if ($name == 'hook_menu') {
         $form['hooks'][$hook_group][$name]['#default_value'] = 1;
@@ -331,7 +331,7 @@ function module_builder_page_input_submit($form, &$form_state) {
  */
 function module_builder_page_generate($form, &$form_state) {
   module_builder_include('generate');
-  
+
   // Build module data
   $module_data = module_data_from_form($form_state['values']);
 
