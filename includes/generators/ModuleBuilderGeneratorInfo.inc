@@ -8,7 +8,7 @@
 /**
  * Generator base class for module info file.
  */
-class ModuleBuilderGeneratorInfo extends ModuleBuilderGenerator {
+class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
   /**
    * Override as info files have no header.
    */

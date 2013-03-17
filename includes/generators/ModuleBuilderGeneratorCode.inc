@@ -8,7 +8,7 @@
 /**
  * Generator class for module code files.
  */
-class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
+class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
   function __construct($module_data) {
     $this->module_data = $module_data;
   }
