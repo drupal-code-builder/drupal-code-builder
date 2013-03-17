@@ -111,20 +111,6 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
   }
 
   /**
-   * The main code building function.
-   */
-  function build() {
-    $output = '';
-    $output .= $this->file_header();
-    $output .= $this->code_header();
-    $output .= $this->code_body();
-    $output .= $this->code_footer();
-
-    return $output;
-  }
-
-
-  /**
    * Return the PHP file header line.
    */
    function file_header()  {

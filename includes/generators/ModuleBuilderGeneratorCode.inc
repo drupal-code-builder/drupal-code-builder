@@ -36,6 +36,19 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
   }
 
   /**
+   * The main code building function. !?!?! RENAME??? CHANGE!?
+   */
+  function build() {
+    $output = '';
+    $output .= $this->file_header();
+    $output .= $this->code_header();
+    $output .= $this->code_body();
+    $output .= $this->code_footer();
+
+    return $output;
+  }
+
+  /**
    * Make the doxygen header for a given hook.
    * This does not return with an initial newline so the doc block may be
    * inserted into existing code.
