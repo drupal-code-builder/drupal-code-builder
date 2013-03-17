@@ -40,28 +40,8 @@ abstract class ModuleBuilderGeneratorComponent {
    * Constructor method; sets the module data.
    *
    * @param $module_data
-   *   An associative array of data for the module, [passed by reference so data
-   *   on generated files can be added!?!?!?!]
-   *   The keys can *mostly* be taken straight from form values. They are as follows:
-   *     - 'module_root_name'
-   *     - 'module_readable_name'
-   *     - 'module_short_description'
-   *     - 'module_help_text'
-   *     - 'hooks': An associative array whose keys are full hook names
-   *       (eg 'hook_menu'), where requested hooks have a value of TRUE.
-   *       Unwanted hooks may also be included as keys provided their value is FALSE.
-   *     - 'module_dependencies': a string of dependencies, eg 'forum views'.
-   *     - 'module_package': the module package.
-   *     - 'module_folder': (optional) The destination folder to write the module
-   *        files to.
-   *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array of filenames that have been generated.
-   *    - 'requested_build': An array whose keys are requested things to build.
-   // - all -- everything we can do
-   // - code -- code files, not info (module + install _ ..?)
-   // - info -- only info fole
-   // - module -- only module file
-   // - install -- only install file
-   // - ??? whatever hooks need
+   *   An associative array of data for the module, as received by
+   *   module_builder_generate_component().
    */
   function __construct($module_data) {
     // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
