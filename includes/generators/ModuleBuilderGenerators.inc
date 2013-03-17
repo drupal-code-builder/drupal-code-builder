@@ -67,7 +67,8 @@ abstract class ModuleBuilderGeneratorComponent {
    *  - path: The path to the file, relative to the future module folder.
    *  - name: The file name.
    *  - body: An array of pieces to assemble in order to form the body of the
-   *    file.
+   *    file. These can be single lines, or larger chunks: they will be joined
+   *    up with newline characters.
    */
   function collectFiles(&$files) {
     foreach ($this->components as $generator) {
@@ -87,7 +88,7 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
   }
 
   /**
-   * Return an empty array of subcomponents.
+   * Return an empty array of subcomponent types.
    *
    * Files are always terminal components.
    */

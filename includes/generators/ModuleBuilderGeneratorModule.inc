@@ -35,4 +35,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     );
   }
 
+  // No need to declare collectFiles(): parent class will have something that
+  // does nothing apart from recurse.
+
 }

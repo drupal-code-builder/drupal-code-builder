@@ -7,8 +7,11 @@
 
 /**
  * Generator class for module code files.
+ *
+ * TODO: rename to ModuleCode? Or can this cover, say, theme files?
  */
 class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
+
   function __construct($module_data) {
     $this->module_data = $module_data;
   }
