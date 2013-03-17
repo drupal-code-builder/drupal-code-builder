@@ -43,6 +43,13 @@ abstract class ModuleBuilderGeneratorComponent {
   }
 
   /**
+   * Return an array of subcomponent types.
+   */
+  function subComponents() {
+    return array();
+  }
+
+  /**
    * Collect files, recursing into each subcomponent.
    *
    * It's safe for subclasses to use this too, as it acts on a generator's own
