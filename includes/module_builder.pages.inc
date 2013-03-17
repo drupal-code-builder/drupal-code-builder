@@ -431,7 +431,7 @@ function module_builder_page_generate($form, &$form_state) {
 
 /**
  * Helper function: creates an array of all the data needed to build the module
- * from form values, suitable for passing to module_builder_generate_module().
+ * from form values, suitable for passing to module_builder_generate_component().
  */
 function module_data_from_form($form_values) {
   // Most things come in as we want them from the form.
