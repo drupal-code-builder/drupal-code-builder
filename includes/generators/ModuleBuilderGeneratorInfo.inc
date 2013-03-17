@@ -8,18 +8,32 @@
 /**
  * Generator base class for module info file.
  */
-class ModuleBuilderGeneratorInfo extends ModuleBuilderGenerator {
+class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
+
+  /**
+   * Build the code files.
+   */
+  function collectFiles(&$files) {
+    $files['info'] = array(
+      'path' => '', // Means base folder.
+      'name' => $this->module_data['module_root_name'] . '.info',
+      'body' => array(
+        $this->code_body(),
+      ),
+    );
+  }
+
   /**
    * Override as info files have no header.
    */
   function file_header() { }
-  
+
   /**
    * Override as info files have no header.
    */
   function code_header($filename = NULL) {
   }
-  
+
   // Override abstract...
   function code_body() {}
 
@@ -61,7 +75,7 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGenerator {
 class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
   function code_body() {
     $module_data = $this->module_data;
-    
+
     $lines = array();
     $lines['name'] = $module_data['module_readable_name'];
     $lines['description'] = $module_data['module_short_description'];
@@ -96,12 +110,12 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
         $lines['dependencies'][] = $dependency;
       }
     }
-    
+
     if (!empty($module_data['module_package'])) {
       $lines['package'] = $module_data['module_package'];
     }
     $lines['core'] = "6.x";
-    
+
     $info = $this->merge_info_lines($lines);
     return $info;
   }

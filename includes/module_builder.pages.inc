@@ -64,7 +64,7 @@ function module_builder_page_input($form, &$form_state) {
   }
   catch (ModuleBuilderException $e) {
     if ($e->needs_hooks_download) {
-      drupal_set_message(t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.', 
+      drupal_set_message(t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.',
         array(
           '!settings-url' => url('admin/config/development/module_builder'),
           '%administer' => 'Administer',
@@ -96,7 +96,7 @@ function module_builder_page_input($form, &$form_state) {
   // include the data processing file
   // TODO: only need the data loading.
   module_builder_include('process');
-  
+
   $hook_groups = module_builder_get_hook_data();
 
   // Include CSS for formatting
@@ -243,7 +243,7 @@ function module_builder_page_input($form, &$form_state) {
           'class' => $hook_presets_reverse[$name],
         );
       }
-      
+
       // Set some default hooks
       if ($name == 'hook_menu') {
         $form['hooks'][$hook_group][$name]['#default_value'] = 1;
@@ -331,29 +331,18 @@ function module_builder_page_input_submit($form, &$form_state) {
  */
 function module_builder_page_generate($form, &$form_state) {
   module_builder_include('generate');
-  
+
   // Build module data
   $module_data = module_data_from_form($form_state['values']);
 
-  $code_array = module_builder_generate_module($module_data);
-  //dsm($code_array);
+  // Get the files.
+  $files = module_builder_generate_component($module_data, 'module');
+  //dsm($files);
 
-  /*
-  // the restitution was all for the DL buttons, no?
-  // these should be ajaxy!
-  if ($form_state['values']['module_code']) {
-    $code = $form_state['values']['module_code'];
-  }
-  else {
-    // Bit messy. This returns an array now.
-    // TODO: the other files!
-    $code_array = module_builder_generate_module($module_data);
-
-    $code = $code_array[$module_data['module_root_name'] . '.module'];
-  }
-  */
-  $info = isset($form_state['values']['module_info']) ? $form_state['values']['module_info'] : module_builder_generate_info($module_data);
+  // Info file gets special treatment.
+  $info = isset($form_state['values']['module_info']) ? $form_state['values']['module_info'] : implode("\n", $files['info']['body']);
     // damn I miss perl at times like this. fugly syntax.
+  unset($files['info']);
 
   /*
   $form['back'] = array(
@@ -363,7 +352,11 @@ function module_builder_page_generate($form, &$form_state) {
   );
   */
 
-  foreach ($code_array as $filename => $code) {
+  foreach ($files as $file_id => $file_info) {
+    // TODO: move this processing into the generate stuff.
+    $filename = $file_info['name'];
+    $code = implode("\n", $file_info['body']);
+
     $form['code_instructions_' . $filename] = array(
       '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $filename)),
       '#prefix' => '<div class="module-message">',
@@ -442,13 +435,17 @@ function module_builder_page_generate($form, &$form_state) {
  */
 function module_data_from_form($form_values) {
   // Most things come in as we want them from the form.
-  $data = $form_values;
+  $module_data = $form_values;
 
   // Hooks need flattening.
-  $data['hooks'] = array();
+  $module_data['hooks'] = array();
   foreach ($form_values['hooks'] as $hook_group) {
-    $data['hooks'] += $hook_group;
+    $module_data['hooks'] += $hook_group;
   }
 
-  return $data;
+  // Build list.
+  // The UI always gets the full code.
+  $module_data['requested_build'] = array('code' => TRUE, 'info' => TRUE);
+
+  return $module_data;
 }

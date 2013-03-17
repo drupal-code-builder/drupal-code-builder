@@ -6,7 +6,59 @@
  */
 
 /**
+ * Generate the files for a component.
+ *
+ * This is the entry point for the generating system.
+ *
+ * @param $module_data
+ *   An associative array of data for the module, [passed by reference so data
+ *   on generated files can be added!?!?!?!]
+ *   The keys can *mostly* be taken straight from form values. They are as follows:
+ *     - 'module_root_name'
+ *     - 'module_readable_name'
+ *     - 'module_short_description'
+ *     - 'module_help_text'
+ *     - 'hooks': An associative array whose keys are full hook names
+ *       (eg 'hook_menu'), where requested hooks have a value of TRUE.
+ *       Unwanted hooks may also be included as keys provided their value is FALSE.
+ *     - 'module_dependencies': a string of dependencies, eg 'forum views'.
+ *     - 'module_package': the module package.
+ *     - 'module_folder': (optional) The destination folder to write the module
+ *        files to.
+ *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array of filenames that have been generated.
+ *    - 'requested_build': An array whose keys are requested things to build.
+ // - all -- everything we can do
+ // - code -- code files, not info (module + install _ ..?)
+ // - info -- only info fole
+ // - module -- only module file
+ // - install -- only install file
+ // - ??? whatever hooks need
+ * @param $component
+ *  A component. Currently only supports 'module'!
+ *
+ * @return
+ *  A files array, as returned by collectFiles().
+ */
+function module_builder_generate_component($module_data, $component) {
+  $class = module_builder_get_class($component);
+  $generator = new $class($module_data);
+
+  // Recursively get subcomponents.
+  $generator->getSubComponents();
+
+  //drush_print_r($generator->components);
+
+  // Recursively build files.
+  $files = array();
+  $generator->collectFiles($files);
+
+  return $files;
+}
+
+/**
  * Generate info code.
+ *
+ * TODO: OBSOLETE!
  */
 function module_builder_generate_info($module_data) {
   $class = module_builder_get_class('info');
@@ -27,13 +79,21 @@ function module_builder_generate_info($module_data) {
  *      - ModuleBuilderGeneratorInfo5
  *      - ModuleBuilderGeneratorInfo6
  *      - ModuleBuilderGeneratorInfo7
+ *    - ModuleBuilderGeneratorReadme
  *
  * @param $type
- *  One of (so far) 'info' or 'code'.
+ *  The type of the component. This is the key of arrays returned by
+ *  generators' subComponents() method.
+ *
  * @return
- *  A class name for the type and, if it exists, version, eg 'ModuleBuilderGeneratorInfo6'.
+ *  A class name for the type and, if it exists, version, e.g.
+ *  'ModuleBuilderGeneratorInfo6'.
  */
 function module_builder_get_class($type) {
+  // Include our general include files, which contains base and parent classes.
+  // In the absence of autoloading, we need to do this.
+  include_once("generators/ModuleBuilderGenerators.inc");
+
   $type     = ucfirst($type);
   $version  = _module_builder_drupal_major_version();
   $class    = 'ModuleBuilderGenerator' . $type . $version;
@@ -49,87 +109,13 @@ function module_builder_get_class($type) {
 }
 
 /**
- * Base class for code generators.
- *
- * TODO: much more of the code generation could be moved to OO code:
- *  - pass all hook data to one code generator object, representing the .module
- *  file, which then instantiates further objects for the other files needed.
- *  This would probably entail a controller object which can hold the list of
- *  current generators.
- *  - templates.
- */
-abstract class ModuleBuilderGenerator {
-  function __construct($module_data) {
-    $this->module_data = $module_data;
-  }
-
-  /**
-   * The main code building function.
-   */
-  function build() {
-    $output = '';
-    $output .= $this->file_header();
-    $output .= $this->code_header();
-    $output .= $this->code_body();
-    $output .= $this->code_footer();
-
-    return $output;
-  }
-
-
-  /**
-   * Return the PHP file header line.
-   */
-   function file_header()  {
-     return "<?php\n";
-   }
-
-  /**
-   * Return the file doxygen header and any custom header code.
-   */
-  function code_header() {
-    $filename = $this->filename;
-    $default = <<<EOT
-/**
- * @file $filename
- * TODO: Enter file description here.
- */
-
-EOT;
-    $code = variable_get('module_builder_header', $default);
-    return $code;
-  }
-
-  /**
-   * Return the main body of the file code.
-   */
-  abstract function code_body();
-
-  /**
-   * Return a file footer.
-   */
-  function code_footer() {}
-}
-
-/**
  * Generate module code.
  *
+ * TODO: OBSOLETE!
+ *  - replace ALL mentions in code!
+ *  - support the bare option in new system somehow.
+ *
  * @param $module_data
- *   An associative array of data for the module, passed by reference so data
- *   on generated files can be added.
- *   The keys can *mostly* be taken straight from form values. They are as follows:
- *     - 'module_root_name'
- *     - 'module_readable_name'
- *     - 'module_short_description'
- *     - 'module_help_text'
- *     - 'hooks': An associative array whose keys are full hook names
- *       (eg 'hook_menu'), where requested hooks have a value of TRUE.
- *       Unwanted hooks may also be included as keys provided their value is FALSE.
- *     - 'module_dependencies': a string of dependencies, eg 'forum views'.
- *     - 'module_package': the module package.
- *     - 'module_folder': (optional) The destination folder to write the module
- *        files to.
- *     - 'module_files': added by this function. A flat array of filenames that have been generated.
  * @param $bare
  *   If true, omit header and footers and output only hook code.
  * @return

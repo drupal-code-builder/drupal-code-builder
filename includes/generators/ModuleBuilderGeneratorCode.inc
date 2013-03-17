@@ -7,10 +7,46 @@
 
 /**
  * Generator class for module code files.
+ *
+ * TODO: rename to ModuleCode? Or can this cover, say, theme files?
+ *
+ * TODO: various cleanups. This was the base class of the mk 1 OO generator
+ * system, and is currently (hello!) being forced into a new, bigger mk
+ * hierarchy!
  */
-class ModuleBuilderGeneratorCode extends ModuleBuilderGenerator {
+class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
+
+  // TODO: declare properties that are special!
+
   function __construct($module_data) {
     $this->module_data = $module_data;
+  }
+
+  /**
+   * Build the code files.
+   */
+  function collectFiles(&$files) {
+    // Add our file data to the list.
+    $files[$this->filename] = array(
+      'path' => '', // Means base folder.
+      'name' => $this->filename,
+      'body' => array(
+        $this->build(),
+      ),
+    );
+  }
+
+  /**
+   * The main code building function. !?!?! RENAME??? CHANGE!?
+   */
+  function build() {
+    $output = '';
+    $output .= $this->file_header();
+    $output .= $this->code_header();
+    $output .= $this->code_body();
+    $output .= $this->code_footer();
+
+    return $output;
   }
 
   /**
