@@ -25,6 +25,10 @@ abstract class ModuleBuilderGeneratorComponent {
    *
    * Obviously, it's important that eventually this process terminate with
    * generators that return an empty array for subComponents().
+   *
+   * @return
+   *  None. This should set an array of subcomponent generators on the property
+   *  $this->components.
    */
   function getSubComponents() {
     $this->components = array();
