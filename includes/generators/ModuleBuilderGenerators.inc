@@ -115,7 +115,7 @@ abstract class ModuleBuilderGeneratorComponent {
    *  An array of files. Components should add files to this.
    *  The keys are machine names, probably (!) arbitrary. Values are:
    *  - path: The path to the file, relative to the future module folder.
-   *  - name: The file name.
+   *  - filename: The file name.
    *  - body: An array of pieces to assemble in order to form the body of the
    *    file. These can be single lines, or larger chunks: they will be joined
    *    up with newline characters.

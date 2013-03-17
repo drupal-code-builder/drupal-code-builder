@@ -30,7 +30,7 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
     // TODO: check the build request and filter (somehow!?!?).
     $files[$this->filename] = array(
       'path' => '', // Means base folder.
-      'name' => $this->filename,
+      'filename' => $this->filename,
       'body' => array(
         $this->file_header(),
         $this->code_header(),

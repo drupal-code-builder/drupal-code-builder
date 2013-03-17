@@ -17,7 +17,7 @@ class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
       'path' => '', // Means the base folder.
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
-      'name' => 'README.txt',
+      'filename' => 'README.txt',
       'body' => $this->lines(),
     );
   }

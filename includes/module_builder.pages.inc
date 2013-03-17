@@ -354,7 +354,7 @@ function module_builder_page_generate($form, &$form_state) {
 
   foreach ($files as $file_id => $file_info) {
     // TODO: move this processing into the generate stuff.
-    $filename = $file_info['name'];
+    $filename = $file_info['filename'];
     $code = implode("\n", $file_info['body']);
 
     $form['code_instructions_' . $filename] = array(
