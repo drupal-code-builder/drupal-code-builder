@@ -9,6 +9,20 @@
  * Generator base class for module info file.
  */
 class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
+
+  /**
+   * Build the code files.
+   */
+  function build(&$files) {
+    $files['info'] = array(
+      'path' => '', // Means base folder.
+      'name' => $this->module_data['module_root_name'] . '.info',
+      'body' => array(
+        $this->code_body(),
+      ),
+    );
+  }
+
   /**
    * Override as info files have no header.
    */
