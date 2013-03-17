@@ -18,7 +18,7 @@ class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
       'name' => 'README.txt',
-      'body' => implode("\n", $this->lines()),
+      'body' => $this->lines(),
     );
   }
 
