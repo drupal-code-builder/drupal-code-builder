@@ -17,6 +17,19 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
   }
 
   /**
+   * Build the code files.
+   */
+  function collectFiles(&$files) {
+    $files[$this->filename] = array(
+      'path' => '', // Means base folder.
+      'name' => $this->filename,
+      'body' => array(
+        $this->build(),
+      ),
+    );
+  }
+
+  /**
    * Make the doxygen header for a given hook.
    * This does not return with an initial newline so the doc block may be
    * inserted into existing code.
