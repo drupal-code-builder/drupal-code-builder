@@ -112,7 +112,8 @@ abstract class ModuleBuilderGeneratorComponent {
    * the terminal or writes them; the Drupal UI shows them in form textareas.
    *
    * @param
-   *  An array of files. Components should add files to this.
+   *  An array of file info, passed by reference.. Components should add files
+   *  to this, but may also alter what has already been generated.
    *  The keys are machine names, probably (!) arbitrary. Values are:
    *  - path: The path to the file, relative to the future module folder.
    *  - filename: The file name.
@@ -124,6 +125,30 @@ abstract class ModuleBuilderGeneratorComponent {
     foreach ($this->components as $generator) {
       $generator->collectFiles($files);
     }
+  }
+
+  /**
+   * Assemble file info into filename and code.
+   *
+   * @param $files
+   *  An array of file info, as compiled by collectFiles().
+   *
+   * @return
+   *  An array of files ready for output. Keys are the filepath and filename
+   *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
+   *  values are strings of the contents for each file.
+   */
+  function assembleFiles($files) {
+    $return = array();
+
+    foreach ($files as $file_info) {
+      $filepath = $file_info['path']. $file_info['filename'];
+      $code = implode("\n", $file_info['body']);
+
+      $return[$filepath] = $code;
+    }
+
+    return $return;
   }
 
 }

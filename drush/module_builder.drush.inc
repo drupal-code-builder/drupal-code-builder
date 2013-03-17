@@ -264,11 +264,7 @@ function drush_module_builder_callback_build() {
   //drush_print_r($files);
 
   // Finally, output the files!
-  foreach ($files as $file_id => $file_info) {
-    $filename = $file_info['filename'];
-    $code = implode("\n", $file_info['body']);
-    // TODO: rework this function to handle the file info array.
-    // OR: todo: rework the above to come out in a better way.
+  foreach ($files as $filename => $code) {
     module_builder_drush_output_code($module_data, $filename, $code);
   }
 

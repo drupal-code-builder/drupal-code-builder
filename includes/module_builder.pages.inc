@@ -352,11 +352,7 @@ function module_builder_page_generate($form, &$form_state) {
   );
   */
 
-  foreach ($files as $file_id => $file_info) {
-    // TODO: move this processing into the generate stuff.
-    $filename = $file_info['filename'];
-    $code = implode("\n", $file_info['body']);
-
+  foreach ($files as $filename => $code) {
     $form['code_instructions_' . $filename] = array(
       '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $filename)),
       '#prefix' => '<div class="module-message">',
