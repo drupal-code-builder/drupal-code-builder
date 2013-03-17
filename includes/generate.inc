@@ -37,7 +37,8 @@
  *  A component. Currently only supports 'module'!
  *
  * @return
- *  A files array, as returned by collectFiles().
+ *  A files array whose keys are filepaths (relative to the module folder) and
+ *  values are the code destined for each file.
  */
 function module_builder_generate_component($module_data, $component) {
   $class = module_builder_get_class($component);
@@ -52,7 +53,9 @@ function module_builder_generate_component($module_data, $component) {
   $files = array();
   $generator->collectFiles($files);
 
-  return $files;
+  $files_assembled = $generator->assembleFiles($files);
+
+  return $files_assembled;
 }
 
 /**
