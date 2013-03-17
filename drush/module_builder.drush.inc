@@ -614,16 +614,6 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
 }
 
 /**
- * Generates and outputs info file code.
- */  
-function module_builder_build_info($module_data) {
-  module_builder_include('generate');
-  $info_code = module_builder_generate_info($module_data);
-
-  module_builder_drush_output_code($module_data, $module_data['module_root_name'] . '.info', $info_code);
-}
-
-/**
  * Output generated text, to terminal or to file.
  *
  * @param $module_data
