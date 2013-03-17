@@ -69,9 +69,9 @@ abstract class ModuleBuilderGeneratorComponent {
    *  - body: An array of pieces to assemble in order to form the body of the
    *    file.
    */
-  function build(&$files) {
+  function collectFiles(&$files) {
     foreach ($this->components as $generator) {
-      $generator->build($files);
+      $generator->collectFiles($files);
     }
   }
 

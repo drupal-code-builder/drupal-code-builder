@@ -13,7 +13,7 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
   /**
    * Build the code files.
    */
-  function build(&$files) {
+  function collectFiles(&$files) {
     $files['info'] = array(
       'path' => '', // Means base folder.
       'name' => $this->module_data['module_root_name'] . '.info',

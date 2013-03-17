@@ -10,9 +10,9 @@
 class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
 
   /**
-   * Build the code files.
+   * Collect the code files.
    */
-  function build(&$files) {
+  function collectFiles(&$files) {
     $files['readme'] = array(
       'path' => '', // Means the base folder.
       // The extension is in lowercase for good reasons which I don't remember
