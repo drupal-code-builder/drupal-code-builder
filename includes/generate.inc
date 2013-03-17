@@ -79,11 +79,15 @@ function module_builder_generate_info($module_data) {
  *      - ModuleBuilderGeneratorInfo5
  *      - ModuleBuilderGeneratorInfo6
  *      - ModuleBuilderGeneratorInfo7
+ *    - ModuleBuilderGeneratorReadme
  *
  * @param $type
- *  One of (so far) 'info' or 'code'.
+ *  The type of the component. This is the key of arrays returned by
+ *  generators' subComponents() method.
+ *
  * @return
- *  A class name for the type and, if it exists, version, eg 'ModuleBuilderGeneratorInfo6'.
+ *  A class name for the type and, if it exists, version, e.g.
+ *  'ModuleBuilderGeneratorInfo6'.
  */
 function module_builder_get_class($type) {
   // Include our general include files, which contains base and parent classes.
