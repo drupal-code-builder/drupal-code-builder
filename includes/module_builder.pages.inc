@@ -339,11 +339,6 @@ function module_builder_page_generate($form, &$form_state) {
   $files = module_builder_generate_component($module_data, 'module');
   //dsm($files);
 
-  // Info file gets special treatment.
-  $info = isset($form_state['values']['module_info']) ? $form_state['values']['module_info'] : implode("\n", $files['info']['body']);
-    // damn I miss perl at times like this. fugly syntax.
-  unset($files['info']);
-
   /*
   $form['back'] = array(
     '#type' => 'submit',
@@ -394,19 +389,6 @@ function module_builder_page_generate($form, &$form_state) {
   );
   */
 
-  $form['info_instructions'] = array(
-    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $form_state['values']['module_root_name'] .'.info')),
-    '#prefix' => '<div id="module-message">',
-    '#suffix' => '</div>',
-  );
-  $form['module_info'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Module info'),
-    '#rows' => 20,
-    '#default_value' => $info,
-    '#prefix' => '<div id="module-info">',
-    '#suffix' => '</div>',
-  );
   /*
   $form['download_info'] = array(
     '#type' => 'submit',
