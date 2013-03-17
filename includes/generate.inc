@@ -234,7 +234,7 @@ function module_builder_get_templates($module_data) {
   // Add hook dependencies.
   foreach (array_keys($requested_hooks) as $hook_name) {
     if (!empty($hook_function_declarations[$hook_name]['dependencies'])) {
-      drush_print_r($hook_function_declarations[$hook_name]['dependencies']);
+      //drush_print_r($hook_function_declarations[$hook_name]['dependencies']);
       foreach ($hook_function_declarations[$hook_name]['dependencies'] as $hook_dependency) {
         $requested_hooks[$hook_dependency] = TRUE;
       }
