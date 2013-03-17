@@ -56,19 +56,6 @@ function module_builder_generate_component($module_data, $component) {
 }
 
 /**
- * Generate info code.
- *
- * TODO: OBSOLETE!
- */
-function module_builder_generate_info($module_data) {
-  $class = module_builder_get_class('info');
-  $generator = new $class($module_data);
-  $code = $generator->build();
-
-  return $code;
-}
-
-/**
  * Helper function to get the desired class.
  *
  * The hierarchy is:
