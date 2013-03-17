@@ -28,10 +28,10 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     // TODO: make this react to the drush --build param to know what to output!
     return array(
       // TODO:
-      //'hooks',
+      'hooks'   => 'hooks',
       //'callbacks', ?? separate or with hooks?
-      'info',
-      'readme',
+      'info'    => 'info',
+      'readme'  => 'readme',
     );
   }
 

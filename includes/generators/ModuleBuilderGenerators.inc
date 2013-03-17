@@ -33,10 +33,10 @@ abstract class ModuleBuilderGeneratorComponent {
     $subcomponent_info = $this->subComponents();
 
     // Instantiate each one, and recurse into it.
-    foreach ($subcomponent_info as $component_type) {
+    foreach ($subcomponent_info as $component_name => $component_type) {
       $class = module_builder_get_class($component_type);
       $generator = new $class($this->module_data);
-      $this->components[$component_type] = $generator;
+      $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
       foreach ($this->components as $generator) {
@@ -49,6 +49,15 @@ abstract class ModuleBuilderGeneratorComponent {
 
   /**
    * Return an array of subcomponent types.
+   *
+   * For example, a module component requires hooks, an info file, and a readme
+   * file. Hooks in turn require a varying number of files, determined by the
+   * incoming module data.
+   *
+   * @return
+   *  An array of subcomponents which the current generator requires.
+   *  Each item's key is its unique name; each value is its type (from which
+   *  the generator class is composed).
    */
   function subComponents() {
     return array();
