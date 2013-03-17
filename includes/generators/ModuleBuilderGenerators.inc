@@ -8,6 +8,19 @@
 /**
  * Abstract base Generator for components.
  *
+ * The generator system works by starting with a particular generator for a
+ * given component (e.g., 'module'), and then adding generators this one
+ * requests, recursing this process into each new generator and building a tree
+ * down from the original one.
+ *
+ * Once we have this, we then recurse once more into it, this time building up
+ * an array of file info that we pass by reference (this it can be altered
+ * as well as added to, though generator order is TBFO).
+ *
+ * Finally, we assemble the file info into filenames and code, ready for the
+ * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
+ * appropriate way.
+ *
  * Rough conceptual hierarchy:
   - component generators/file generators (NOT class hierarchy: processing chain!)
    - module
