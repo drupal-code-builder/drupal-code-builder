@@ -101,8 +101,6 @@ abstract class ModuleBuilderGeneratorComponent {
         $generator->getSubComponents();
       }
     }
-
-    drush_print_r($this->components);
   }
 
   /**
