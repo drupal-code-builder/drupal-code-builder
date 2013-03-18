@@ -42,7 +42,7 @@
  */
 function module_builder_generate_component($module_data, $component) {
   $class = module_builder_get_class($component);
-  $generator = new $class($module_data);
+  $generator = new $class($component, $module_data);
 
   // Recursively get subcomponents.
   $generator->getSubComponents();

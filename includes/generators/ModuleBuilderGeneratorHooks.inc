@@ -56,7 +56,7 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
       $name = $this->fileNameAbbreviate($filename);
 
       $class = module_builder_get_class('code');
-      $generator = new $class($module_data);
+      $generator = new $class($name, $module_data);
       // Faffy stuff:
       $generator->hook_data = $hook_data;
       $generator->filename = $filename;

@@ -13,6 +13,9 @@
  * requests, recursing this process into each new generator and building a tree
  * down from the original one.
  *
+ * The tree consists of each generator class having a property which is an array
+ * of its subgenerators, keyed by component name.
+ *
  * Once we have this, we then recurse once more into it, this time building up
  * an array of file info that we pass by reference (this it can be altered
  * as well as added to, though generator order is TBFO).
@@ -52,11 +55,17 @@ abstract class ModuleBuilderGeneratorComponent {
   /**
    * Constructor method; sets the module data.
    *
+   * @param $component_name
+   *   The identifier for the component. This is often the same as the type
+   *   (e.g., 'module', 'hooks') but in the case of types used multiple times
+   *   this will be a unique identifier.
    * @param $module_data
    *   An associative array of data for the module, as received by
    *   module_builder_generate_component().
    */
-  function __construct($module_data) {
+  function __construct($component_name, $module_data) {
+    $this->name = $component_name;
+
     // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
     $this->module_data = $module_data;
   }
@@ -86,7 +95,7 @@ abstract class ModuleBuilderGeneratorComponent {
     // Instantiate each one, and recurse into it.
     foreach ($subcomponent_info as $component_name => $component_type) {
       $class = module_builder_get_class($component_type);
-      $generator = new $class($this->module_data);
+      $generator = new $class($component_name, $this->module_data);
       $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
