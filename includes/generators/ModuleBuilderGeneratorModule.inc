@@ -41,60 +41,44 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     //    -- (Node these will want to merge into the main module file!!!)
     //  - tests
     //    -- files
-    // WIP!!!! make this react to the drush --build param to know what to output!
-
-    $components = array();
-
-    // Sigh... lots of complexity here, especially once we add the UI into the
-    // mix!
+    //
     // $module_data['requested_build'] is an array of stuff. The values that
     // matter here are 'all', 'info', 'code', 'readme'.
     // For anything else, the hooks component takes care of further filtering.
-    $build_list = $module_data['requested_build'];
-    //drush_print_r($build_list);
-    if (isset($build_list['info'])) {
-      $components['info'] = 'info';
-    }
 
-    if (isset($build_list['readme'])) {
-      $components['readme'] = 'readme';
-    }
+    // Start by defining the subcomponents we know how to handle.
+    $components = array(
+      'info' => 'info',
+      'hooks' => 'hooks',
+      'readme' => 'readme',
+    );
 
-    if (isset($build_list['code'])) {
-      $components['hooks'] = 'hooks';
-    }
+    // Fill the build list, as this comes in with values all set to TRUE.
+    $build_list = array_combine(array_keys($module_data['requested_build']), array_keys($module_data['requested_build']));
 
-    // If that's the only thing requested, and we recognized it, we're done.
-    if (count($build_list) == 1 && count($components) == 1) {
-      // RETURN!
+    // Case 1: everything was requested: return everything!
+    if (isset($build_list['all'])) {
       return $components;
     }
 
-    // The special token 'all' means info, hooks, and readme.
-    if (isset($build_list['all'])) {
-      $components['info'] = 'info';
-      $components['hooks'] = 'hooks';
-      $components['readme'] = 'readme';
-      // TODO: this is messy, as things further down need this.
-      // The build list should be cleaned up, so 'all' is removed, or something!?!?
+    // Get the components that were requested.
+    $intersection_components = array_intersect($components, $build_list);
+    // Get the requested components that we don't understand.
+    $unknown_build_list = array_diff($build_list, $components);
+
+    // Case 2: there are no unknown components. Return just what we were asked
+    // for.
+    if (empty($unknown_build_list)) {
+      return $intersection_components;
     }
 
-    // If we get here, we always add hooks, because at this point we can't tell
-    // if there are specific files being requested.
-    $components['hooks'] = 'hooks';
+    // Case 3: there are some requested components we don't know anything about.
+    // We assume that these are abbreviated filenames for the attention of
+    // ModuleBuilderGeneratorHooks; therefore we must ensure 'hooks' is in the
+    // list.
+    $intersection_components['hooks'] = 'hooks';
 
-    // TODO: refactor this.
-    // 1. declare the complete array we want to return: info, hooks, readme.
-    // 2. a. if 'all', just return that.
-    //    b. if an array, and all items intersect our definition, return the
-    //      intersection
-    //    c. if there are things in the request that don't intersect, assume
-    //      they are subcomponents of 'hooks': return the intersection AND
-    //      'hooks'.
-
-    //drush_print_r($components);
-
-    return $components;
+    return $intersection_components;
   }
 
   // No need to declare collectFiles(): parent class will have something that
