@@ -26,10 +26,10 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => array(
-        $this->file_header(),
-        $this->code_header(),
-        $this->code_body(),
-        $this->code_footer(),
+         $this->file_header(),
+         $this->code_header(),
+         $this->code_body(),
+         $this->code_footer(),
       ),
     );
   }
