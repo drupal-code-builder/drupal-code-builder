@@ -18,6 +18,9 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
    * subComponents() because (at this point at least) we need to do fancy things
    * to the generator objects as we created them.
    *
+   * Further filtering of components based on the build request takes place
+   * here.
+   *
    * TODO: handle version stuff here? Or better to have it transparent in the
    * factory function?
    *
@@ -51,9 +54,28 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // Iterate over our data array, because it's in a pretty order.
     // by each needed file of code.
     $components = array();
+
+    // Determine whether we need to filter the code files or not.
+    // If the build request is 'code', 'all', or 'hooks, then we don't filter,
+    // and return everything.
+    $build_list = $module_data['requested_build'];
+    drush_print_r($build_list);
+    if (isset($build_list['all']) || isset($build_list['code']) || isset($build_list['hooks'])) {
+      $filter_generators = FALSE;
+    }
+    else {
+      $filter_generators = TRUE;
+    }
+
     foreach ($hook_file_data as $filename => $hook_data) {
       // For the generator name, make an 'abbreviated' version of the filename.
       $name = $this->fileNameAbbreviate($filename);
+
+      // If we are set to filter, and the abbreviated filename isn't in the
+      // build list, skip it.
+      if ($filter_generators && !isset($build_list[$name])) {
+        continue;
+      }
 
       $class = module_builder_get_class('code');
       $generator = new $class($name, $module_data);

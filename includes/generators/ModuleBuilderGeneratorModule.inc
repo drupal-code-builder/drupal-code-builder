@@ -50,8 +50,9 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
       $components['hooks'] = 'hooks';
     }
 
-    // If that's the only thing requested, we're done.
-    if (count($build_list) == 1) {
+    // If that's the only thing requested, and we recognized it, we're done.
+    if (count($build_list) == 1 && count($components) == 1) {
+      // RETURN!
       return $components;
     }
 
@@ -60,13 +61,24 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
       $components['info'] = 'info';
       $components['hooks'] = 'hooks';
       $components['readme'] = 'readme';
+      // TODO: this is messy, as things further down need this.
+      // The build list should be cleaned up, so 'all' is removed, or something!?!?
     }
 
-    // We always add hooks, FOR NOW, because at this point we can't tell if
-    // there are specific files being requested!
-    // TODO: we need to add hooks if there's 'all' or anything we don;t
-    // recognize that's a filename.
+    // If we get here, we always add hooks, because at this point we can't tell
+    // if there are specific files being requested.
     $components['hooks'] = 'hooks';
+
+    // TODO: refactor this.
+    // 1. declare the complete array we want to return: info, hooks, readme.
+    // 2. a. if 'all', just return that.
+    //    b. if an array, and all items intersect our definition, return the
+    //      intersection
+    //    c. if there are things in the request that don't intersect, assume
+    //      they are subcomponents of 'hooks': return the intersection AND
+    //      'hooks'.
+
+    //drush_print_r($components);
 
     return $components;
   }
