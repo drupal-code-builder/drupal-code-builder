@@ -171,10 +171,6 @@ abstract class ModuleBuilderGeneratorComponent {
  */
 abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponent {
 
-  function __construct($module_data) {
-    $this->module_data = $module_data;
-  }
-
   /**
    * Return an empty array of subcomponent types.
    *

@@ -18,10 +18,6 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
 
   // TODO: declare properties that are special!
 
-  function __construct($module_data) {
-    $this->module_data = $module_data;
-  }
-
   /**
    * Build the code files.
    */
