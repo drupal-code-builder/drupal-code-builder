@@ -52,20 +52,43 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // by each needed file of code.
     $components = array();
     foreach ($hook_file_data as $filename => $hook_data) {
-      // Er... these are all just 'code' type generators. And yet they each need a key!
-      // Looks like we need to change this to be:
-      // name => type
+      // For the generator name, make an 'abbreviated' version of the filename.
+      $name = $this->fileNameAbbreviate($filename);
+
       $class = module_builder_get_class('code');
       $generator = new $class($module_data);
       // Faffy stuff:
       $generator->hook_data = $hook_data;
       $generator->filename = $filename;
 
-      $components[$filename] = $generator;
+      $components[$name] = $generator;
     }
 
     //drush_print_r($components);
     $this->components = $components;
+  }
+
+  /**
+   * Created an abbreviated version of a module code file filename.
+   *
+   * This is with both the initial module name and final .inc removed. E.g.:
+   *  - 'foo.module'    -> 'module'
+   *  - 'foo.install'   -> 'install'
+   *  - 'foo.views.inc' -> 'views'
+   */
+  function fileNameAbbreviate($filename) {
+    // Having to regexp the module name out of a string that we put it into
+    // not that long ago feels a bit stupid.
+    $module_root_name = $this->module_data['module_root_name'];
+    $abbreviated = preg_replace(
+      array(
+        "[^$module_root_name\.]", // module_name. at start
+        '[\.inc$]'), // possibly .inc at end
+      array('', ''),
+      $filename
+    );
+
+    return $abbreviated;
   }
 
 }
