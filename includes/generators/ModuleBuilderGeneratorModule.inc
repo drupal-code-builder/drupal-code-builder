@@ -36,33 +36,39 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     // $module_data['requested_build'] is an array of stuff. The values that
     // matter here are 'all', 'info', 'code', 'readme'.
     // For anything else, the hooks component takes care of further filtering.
-    if (isset($module_data['requested_build']['info'])) {
+    $build_list = $module_data['requested_build'];
+    //drush_print_r($build_list);
+    if (isset($build_list['info'])) {
       $components['info'] = 'info';
     }
 
-    if (isset($module_data['requested_build']['readme'])) {
+    if (isset($build_list['readme'])) {
       $components['readme'] = 'readme';
     }
 
-    if (isset($module_data['requested_build']['all'])) {
+    if (isset($build_list['code'])) {
+      $components['hooks'] = 'hooks';
+    }
+
+    // If that's the only thing requested, we're done.
+    if (count($build_list) == 1) {
+      return $components;
+    }
+
+    // The special token 'all' means info, hooks, and readme.
+    if (isset($build_list['all'])) {
       $components['info'] = 'info';
+      $components['hooks'] = 'hooks';
       $components['readme'] = 'readme';
     }
 
-    // We always add hooks, FOR NOW.
+    // We always add hooks, FOR NOW, because at this point we can't tell if
+    // there are specific files being requested!
     // TODO: we need to add hooks if there's 'all' or anything we don;t
     // recognize that's a filename.
     $components['hooks'] = 'hooks';
 
     return $components;
-
-    return array(
-      // TODO:
-      'hooks'   => 'hooks',
-      //'callbacks', ?? separate or with hooks?
-      'info'    => 'info',
-      'readme'  => 'readme',
-    );
   }
 
   // No need to declare collectFiles(): parent class will have something that
