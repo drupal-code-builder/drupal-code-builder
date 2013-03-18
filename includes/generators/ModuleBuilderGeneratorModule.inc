@@ -2,6 +2,20 @@
 
 /**
  * Component generator: module.
+ *
+ * Hierarchy of generators beneath this:
+ *  - hooks
+ *    - code files
+ *  - info
+ *  - readme
+ *
+ * This generator looks in $module data to determine which of these generators
+ * to add. Generators can be requested by name, with the following extra special
+ * values:
+ *  - 'all': requests all generators.
+ *  - 'code': equivalent to 'hooks' (at least for now).
+ *  - FILE ID: requests a particular code file, by the abbreviated name. This
+ *    is the filename without the initial 'MODULE.' or the '.inc' extension.
  */
 class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
 
