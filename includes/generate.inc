@@ -10,6 +10,8 @@
  *
  * This is the entry point for the generating system.
  *
+ * @param $component
+ *  A component name. Currently only supports 'module'!
  * @param $module_data
  *   An associative array of data for the module, [passed by reference so data
  *   on generated files can be added!?!?!?!]
@@ -33,14 +35,12 @@
  // - module -- only module file
  // - install -- only install file
  // - ??? whatever hooks need
- * @param $component
- *  A component. Currently only supports 'module'!
  *
  * @return
  *  A files array whose keys are filepaths (relative to the module folder) and
  *  values are the code destined for each file.
  */
-function module_builder_generate_component($module_data, $component) {
+function module_builder_generate_component($component, $module_data) {
   $class = module_builder_get_class($component);
   $generator = new $class($component, $module_data);
 

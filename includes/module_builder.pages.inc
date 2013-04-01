@@ -336,7 +336,7 @@ function module_builder_page_generate($form, &$form_state) {
   $module_data = module_data_from_form($form_state['values']);
 
   // Get the files.
-  $files = module_builder_generate_component($module_data, 'module');
+  $files = module_builder_generate_component('module', $module_data);
   //dsm($files);
 
   /*

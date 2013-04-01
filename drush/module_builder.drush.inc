@@ -259,7 +259,7 @@ function drush_module_builder_callback_build() {
 
   // For now, just assume it's a module we've been requested. We are nowhere
   // near ready to have other pathways into this.
-  $files = module_builder_generate_component($module_data, 'module');
+  $files = module_builder_generate_component('module', $module_data);
 
   //drush_print_r($files);
 
