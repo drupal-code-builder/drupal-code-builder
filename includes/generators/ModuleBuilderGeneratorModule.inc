@@ -20,6 +20,47 @@
 class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
 
   /**
+   * Constructor method; sets the module data.
+   *
+   * @param $component_name
+   *   The identifier for the component. This is often the same as the type
+   *   (e.g., 'module', 'hooks') but in the case of types used multiple times
+   *   this will be a unique identifier.
+   * @param $module_data
+   *   An associative array of data for the module, as received by
+   *   module_builder_generate_component().
+   *   An associative array of data for the module, [passed by reference so data
+   *   on generated files can be added!?!?!?!]
+   *   The keys can *mostly* be taken straight from form values. They are as
+   *   follows:
+   *     - 'module_root_name'
+   *     - 'module_readable_name'
+   *     - 'module_short_description'
+   *     - 'module_help_text'
+   *     - 'hooks': An associative array whose keys are full hook names
+   *       (eg 'hook_menu'), where requested hooks have a value of TRUE.
+   *       Unwanted hooks may also be included as keys provided their value is
+   *       FALSE.
+   *     - 'module_dependencies': a string of dependencies, eg 'forum views'.
+   *     - 'module_package': the module package.
+   *     - 'module_folder': (optional) The destination folder to write the
+   *       module files to.
+   *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array
+   *       of filenames that have been generated.
+   *     - 'requested_build': An array whose keys are requested things to build.
+   *        This can be one of:
+   *        - 'all': everything we can do.
+   *        - 'code': PHP code files.
+   *        - 'info': only info file.
+   *        - 'module': only module file.
+   *        - 'install': only install file.
+   *        - ???: any short filename.
+   */
+  function __construct($component_name, $module_data) {
+    parent::__construct($component_name, $module_data);
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.
