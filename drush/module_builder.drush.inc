@@ -89,6 +89,19 @@ function module_builder_drush_command() {
     ),
   );
 
+  $items['mb-theme'] = array(
+    'callback' => 'drush_module_builder_callback_build_theme',
+    'aliases' => array('mbt'),
+    'description' => "TODO.",
+    'arguments' => array(
+      'theme name' => "The machine name of the theme. Use '.' to specify the current folder name.",
+      'themeables' => "Short names of templates or theme functions, separated by spaces.",
+    ),
+    'options' => array(
+      'write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
+    ),
+  );
+
   $items['mb-download'] = array(
     'callback' => 'drush_module_builder_callback_hook_download',
     'description' => "Update module_builder hook data.",
@@ -273,6 +286,31 @@ function drush_module_builder_callback_build() {
 
   if (drush_get_option('go')) {
     pm_module_manage(array(array_shift($commands)), TRUE);
+  }
+}
+
+/**
+ * Command callback for building a theme.
+ */
+function drush_module_builder_callback_build_theme() {
+  $commands = func_get_args();
+
+  //drush_print_r($commands);
+
+  $theme_data = array();
+  $theme_data['theme_name'] = $commands[0]; // TODO: handle '.', trim terminal / etc.
+  array_shift($commands);
+  $theme_data['themeables'] = $commands;
+
+  // Build files.
+  // Include generating component file.
+  module_builder_include('generate');
+  $files = module_builder_generate_component('theme', $theme_data);
+
+  $theme_path = path_to_theme();
+
+  foreach ($files as $filename => $code) {
+    module_builder_drush_output_code($theme_path, $filename, $code);
   }
 }
 
