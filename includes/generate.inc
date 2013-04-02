@@ -143,9 +143,7 @@ function module_builder_generate_module(&$module_data, $bare = FALSE) {
 }
 
 /**
- * Helper function for module_builder_generate_module
- *
- * TODO: well in fact, ModuleBuilderGeneratorHooks.
+ * Helper function for ModuleBuilderGeneratorHooks.
  *
  * Move this to that generator class, or might it be used by other components
  * in future?
