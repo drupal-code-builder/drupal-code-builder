@@ -268,7 +268,7 @@ function drush_module_builder_callback_build() {
 
   // Finally, output the files!
   foreach ($files as $filename => $code) {
-    module_builder_drush_output_code($module_data, $module_dir, $filename, $code);
+    module_builder_drush_output_code($module_dir, $filename, $code);
   }
 
   if (drush_get_option('go')) {
@@ -624,7 +624,7 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
  * @param code
  *  The text to write to the file.
  */
-function module_builder_drush_output_code($module_data, $component_dir, $filename, $code) {
+function module_builder_drush_output_code($component_dir, $filename, $code) {
   // Output to terminal
   if (!drush_get_option('quiet')) {
     drush_print("Proposed $filename:");
