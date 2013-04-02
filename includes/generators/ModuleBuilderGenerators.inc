@@ -53,6 +53,12 @@
 abstract class ModuleBuilderGeneratorComponent {
 
   /**
+   * An array of this component's subcomponents. This is keyed by the name of
+   * the component name. Values are the instantiated component generators.
+   */
+  public $components = array();
+
+  /**
    * Constructor method; sets the module data.
    *
    * @param $component_name
