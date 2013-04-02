@@ -99,9 +99,19 @@ abstract class ModuleBuilderGeneratorComponent {
     $subcomponent_info = $this->subComponents();
 
     // Instantiate each one, and recurse into it.
-    foreach ($subcomponent_info as $component_name => $component_type) {
+    foreach ($subcomponent_info as $component_name => $info) {
+      // The component info can be either an array or just a type string.
+      if (is_array($info)) {
+        $component_type = $info['type'];
+        $component_data = $info['component_data'] + $this->module_data;
+      }
+      else {
+        $component_type = $info;
+        $component_data = $this->module_data;
+      }
+
       $class = module_builder_get_class($component_type);
-      $generator = new $class($component_name, $this->module_data);
+      $generator = new $class($component_name, $component_data);
       $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
@@ -120,8 +130,14 @@ abstract class ModuleBuilderGeneratorComponent {
    *
    * @return
    *  An array of subcomponents which the current generator requires.
-   *  Each item's key is its unique name; each value is its type (from which
-   *  the generator class is composed).
+   *  Each item's key is its unique name; each value is either:
+   *    - the type for the component, suitable for passing to
+   *      module_builder_get_class() to get the generator class.
+   *    - an array of values, containing:
+   *      - 'type': The type for the component, as above.
+   *      - 'component_data': An array of values to be added into the current
+   *        generator's component data and passed to the component to be
+   *        created. The data here takes precedence over existing values.
    */
   function subComponents() {
     return array();
