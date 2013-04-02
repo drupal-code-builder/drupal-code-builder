@@ -263,9 +263,12 @@ function drush_module_builder_callback_build() {
 
   //drush_print_r($files);
 
+  // This has been set in module_builder_build_data().
+  $module_dir = $module_data['module_folder'];
+
   // Finally, output the files!
   foreach ($files as $filename => $code) {
-    module_builder_drush_output_code($module_data, $filename, $code);
+    module_builder_drush_output_code($module_data, $module_dir, $filename, $code);
   }
 
   if (drush_get_option('go')) {
@@ -614,14 +617,14 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
  * @param $module_data
  *  The module data array.
  *  @see module_builder_generate_component() for properties.
+ * @param $component_dir
+ *  The base folder for the component. May or may not exist.
  * @param $filename
- *  The filename to write.
+ *  The filename to write, relative to the $component_dir.
  * @param code
  *  The text to write to the file.
  */
-function module_builder_drush_output_code($module_data, $filename, $code) {
-  $module_root_name = $module_data['module_root_name'];
-
+function module_builder_drush_output_code($module_data, $component_dir, $filename, $code) {
   // Output to terminal
   if (!drush_get_option('quiet')) {
     drush_print("Proposed $filename:");
@@ -634,15 +637,12 @@ function module_builder_drush_output_code($module_data, $filename, $code) {
   // Add to file option implies write.
   // Write & go option implies write.
   if (drush_get_option(array('write', 'add', 'go'))) {
-    // This has been set in module_builder_build_data().
-    $module_dir = $module_data['module_folder'];
-
-    if (!is_dir($module_dir)) {
-      @drush_op('mkdir', $module_dir, 0777);
-      //drush_print("Module directory $module_dir created");
+    if (!is_dir($component_dir)) {
+      @drush_op('mkdir', $component_dir, 0777);
+      //drush_print("Module directory $component_dir created");
     }
 
-    $filepath = $module_dir . '/' . $filename;
+    $filepath = $component_dir . '/' . $filename;
 
     // Add to file option
     // if file doesn't exist, we skip this and silently write it anyway
