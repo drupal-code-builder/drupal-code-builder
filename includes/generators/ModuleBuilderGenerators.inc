@@ -186,7 +186,7 @@ abstract class ModuleBuilderGeneratorComponent {
     $return = array();
 
     foreach ($files as $file_id => $file_info) {
-      $filepath = $file_info['path'] . $file_info['filename'];
+      $filepath = $file_info['path'] . '/' . $file_info['filename'];
       $code = implode("\n", $file_info['body']);
 
       $return[$filepath] = $code;
