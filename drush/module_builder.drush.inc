@@ -693,9 +693,6 @@ function module_builder_requested_filenames($module_root_name, $real, $abbrev) {
 /**
  * Output generated text, to terminal or to file.
  *
- * @param $module_data
- *  The module data array.
- *  @see module_builder_generate_component() for properties.
  * @param $component_dir
  *  The base folder for the component. May or may not exist.
  * @param $filename
