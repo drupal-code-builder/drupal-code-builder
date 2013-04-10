@@ -60,7 +60,7 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // If the build request is 'code', 'all', or 'hooks, then we don't filter,
     // and return everything.
     $build_list = $module_data['requested_build'];
-    drush_print_r($build_list);
+    //drush_print_r($build_list);
     if (isset($build_list['all']) || isset($build_list['code']) || isset($build_list['hooks'])) {
       $filter_generators = FALSE;
     }
