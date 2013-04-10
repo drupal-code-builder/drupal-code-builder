@@ -2,6 +2,9 @@
 /**
  * @file
  * Defines default templates for hook functions.
+ *
+ * For the tokens that may be used, see
+ * ModuleBuilderGeneratorCode::getReplacements().
  */
  
 == START hook_help ==

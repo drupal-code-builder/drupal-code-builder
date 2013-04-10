@@ -87,13 +87,7 @@ EOT;
     } // foreach hook
 
     // Replace variables
-    $variables = array(
-      '%module' => $module_data['module_root_name'],
-      '%description' => str_replace("'", "\'", $module_data['module_short_description']),
-      '%name' => !empty($module_data['module_readable_name']) ? str_replace("'", "\'", $module_data['module_readable_name']) : $module_data['module_root_name'],
-      '%help' => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : t('TODO: Create admin help text.'),
-      '%readable' => str_replace("'", "\'", $module_data['module_readable_name']),
-    );
+    $variables = $this->getReplacements();
     $code = strtr($code, $variables);
 
     return $code;
@@ -106,6 +100,26 @@ EOT;
     $footer = variable_get('module_builder_footer', '');
     return $footer;
   }
+
+  /**
+   * Helper to get replacement strings for tokens in code body.
+   *
+   * @return
+   *  An array of tokens to replacements, suitable for use by strtr().
+   */
+  function getReplacements() {
+    // Get old style variable names.
+    $module_data = $this->module_data;
+
+    return array(
+      '%module'       => $module_data['module_root_name'],
+      '%description'  => str_replace("'", "\'", $module_data['module_short_description']),
+      '%name'         => !empty($module_data['module_readable_name']) ? str_replace("'", "\'", $module_data['module_readable_name']) : $module_data['module_root_name'],
+      '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : t('TODO: Create admin help text.'),
+      '%readable'     => str_replace("'", "\'", $module_data['module_readable_name']),
+    );
+  }
+
 }
 
 /**
