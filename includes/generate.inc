@@ -11,7 +11,7 @@
  * This is the entry point for the generating system.
  *
  * @param $component
- *  A component name. Currently only supports 'module'!
+ *  A component name. Currently supports 'module' and 'theme'.
  * @param $module_data
  *  An associative array of data for the component. Values depend on the
  *  component class.
