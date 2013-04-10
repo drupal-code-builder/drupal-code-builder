@@ -16,10 +16,19 @@ function module_builder_drush_init() {
   $command_info = drush_get_command();
 
   if ($command_info['commandfile'] == 'module_builder') {
-    include_once(dirname(__FILE__) . '/../includes/common.inc');
-    // Set our environment.
-    define('MODULE_BUILDER_ENV', 'drush');
+    module_builder_drush_init_helper();
   }
+}
+
+/**
+ * Include our common files and set our environment.
+ *
+ * Helper for hook_drush_init() and completion callbacks.
+ */
+function module_builder_drush_init_helper() {
+  include_once(dirname(__FILE__) . '/../includes/common.inc');
+  // Set our environment.
+  define('MODULE_BUILDER_ENV', 'drush');
 }
 
 /**
@@ -287,6 +296,38 @@ function drush_module_builder_callback_build() {
   if (drush_get_option('go')) {
     pm_module_manage(array(array_shift($commands)), TRUE);
   }
+}
+
+/**
+ * Command argument complete callback: mb-build.
+ *
+ * Of form COMMANDFILE_COMMAND_complete().
+ *
+ * (Lousy Drush docs: COMMAND is module_builder_callback_build, apparently!)
+ */
+function module_builder_module_builder_callback_build_complete() {
+  module_builder_drush_init_helper();
+
+  // Include generating component file.
+  module_builder_include('process');
+
+  $data = module_builder_get_hook_data_flat();
+  $complete = array();
+  foreach ($data as $hook_name => $hook_data) {
+    $complete[] = $hook_name;
+
+    // Add the short name too.
+    $complete[] = substr($hook_name, 5);
+
+    // TODO: in anticipation of us doing callbacks too, don't just chop off the
+    // front!
+    //if (preg_match('/^hook_/'))
+  }
+
+  //drush_print_r($complete);
+  return array(
+    'values' => $complete,
+  );
 }
 
 /**
