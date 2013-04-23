@@ -31,8 +31,11 @@ function _module_builder_drush_print($message, $indent, $type = 'message') {
  *    The subpath inside the module_builder folder. Eg, 'templates'.
  */
 function module_builder_get_path($subpath) {
-  $mb_path = drupal_get_path('module', 'module_builder');
-  if (!$mb_path) {
+  if (MODULE_BUILDER_ENV == 'drupal') {
+    $mb_path = drupal_get_path('module', 'module_builder');
+  }
+
+  if (!isset($mb_path)) {
     $mb_path = dirname(__FILE__) . '/..';
   }
   
