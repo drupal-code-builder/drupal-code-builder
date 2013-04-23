@@ -304,6 +304,9 @@ function drush_module_builder_callback_build() {
  * Of form COMMANDFILE_COMMAND_complete().
  *
  * (Lousy Drush docs: COMMAND is module_builder_callback_build, apparently!)
+ *
+ * Debug this with, for example:
+ *  $ drush --early=includes/complete.inc --complete-debug drush mb foo ini
  */
 function module_builder_module_builder_callback_build_complete() {
   module_builder_drush_init_helper();
