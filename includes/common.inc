@@ -269,22 +269,22 @@ function _module_builder_invoke_hook() {
       $module_data = array_merge($module_data, $result);
     }
   }
-  
+
   //print_r($module_data);
-  
+
   // If we are running as Drush command, we're not an installed module.
   if (!module_exists('module_builder')) {
     include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
     $result = module_builder_module_builder_info();
     $data = array_merge($module_data, $result);
-  }  
+  }
   else {
     $data = $module_data;
     // Yeah we switch names so the merging above isn't affected by an empty array.
     // Gah PHP. Am probably doin it wrong.
   }
-  
-  //print_r($data);
+
+  //drush_print_r($data);
   return $data;
 }
 
