@@ -11,14 +11,16 @@
  * The generator system works by starting with a particular generator for a
  * given component (e.g., 'module'), and then adding generators this one
  * requests, recursing this process into each new generator and building a tree
- * down from the original one.
+ * down from the original one. Each generator class should implement
+ * subComponents() to return its child components.
  *
  * The tree consists of each generator class having a property which is an array
  * of its subgenerators, keyed by component name.
  *
  * Once we have this, we then recurse once more into it, this time building up
  * an array of file info that we pass by reference (this it can be altered
- * as well as added to, though generator order is TBFO).
+ * as well as added to, though generator order is TBFO). Generator classes that
+ * wish to add files should override collectFiles() to add them.
  *
  * Finally, we assemble the file info into filenames and code, ready for the
  * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
