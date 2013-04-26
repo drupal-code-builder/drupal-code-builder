@@ -192,11 +192,12 @@ function module_builder_get_hook_presets() {
  *
  * @param hook_file_data
  *  An array of data about the files to process, keyed by (safe) filename:
-    [MODULE.FILENAME] => Array // eg system.core.php
-      [path] => full path to the file
-      [destination] => %module.module
-      [group] => GROUP  // eg core
-      [hook_destinations] => array(%module.foo => hook_foo, etc)
+ *   -[MODULE.FILENAME] => Array // eg system.core.php
+ *     - [path] => full path to the file
+ *     - [destination] => %module.module
+ *     - [group] => GROUP  // eg core
+ *     - [hook_destinations] => array(%module.foo => hook_foo, etc)
+ *     - [hook_dependencies] => array()
  *  This is the same format as returned by update.inc.
  *
  * @return
