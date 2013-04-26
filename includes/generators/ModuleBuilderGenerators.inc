@@ -67,15 +67,15 @@ abstract class ModuleBuilderGeneratorComponent {
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
-   * @param $module_data
-   *   An associative array of data for the module, as received by
+   * @param $component_data
+   *   An associative array of data for the component, as received by
    *   module_builder_generate_component().
    */
-  function __construct($component_name, $module_data) {
+  function __construct($component_name, $component_data) {
     $this->name = $component_name;
 
     // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
-    $this->module_data = $module_data;
+    $this->module_data = $component_data;
   }
 
   /**
