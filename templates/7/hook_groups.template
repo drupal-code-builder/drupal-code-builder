@@ -46,6 +46,7 @@
       "hook_field_is_empty",
       // Optional hooks: 
       "hook_field_settings_form",
+      "hook_field_instance_settings_form",
       "hook_field_update_field",
       "hook_field_update_forbid"
     ]
