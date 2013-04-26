@@ -12,7 +12,7 @@
  *
  * @param $component
  *  A component name. Currently supports 'module' and 'theme'.
- * @param $module_data
+ * @param $component_data
  *  An associative array of data for the component. Values depend on the
  *  component class.
  *
