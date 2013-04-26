@@ -10,16 +10,16 @@
  */
 
 /**
- * Safe version of drush_print that can be called without worrying about 
+ * Safe version of drush_print that can be called without worrying about
  * where we are.
  */
 function _module_builder_drush_print($message, $indent, $type = 'message') {
   if (MODULE_BUILDER_ENV == 'drush') {
-    // Running in a Drush CLI.  
-    drush_print($message, $indent);    
+    // Running in a Drush CLI.
+    drush_print($message, $indent);
   }
   else {
-    // Running in Drupal UI. 
+    // Running in Drupal UI.
     // @TODO?
   }
 }
@@ -38,17 +38,17 @@ function module_builder_get_path($subpath) {
   if (!isset($mb_path)) {
     $mb_path = dirname(__FILE__) . '/..';
   }
-  
+
   $path = $mb_path . '/' . $subpath;
-  
+
   //print "path: >>$path<<";
-  
+
   return $path;
 }
 
 /**
- * Include a version-specific file whether we're on drush or drupal. 
- * That is, we first try to include a file called NAME_X.inc where X is a 
+ * Include a version-specific file whether we're on drush or drupal.
+ * That is, we first try to include a file called NAME_X.inc where X is a
  * Drupal major version number before falling back to NAME.inc.
  *
  * Files are included from the 'includes' folder inside module_builder.
@@ -79,7 +79,7 @@ function module_builder_include($name, $extension = 'inc') {
     }
     // Fall back to the regular file.
     $file = sprintf("%s/%s.%s", $path, $name, $extension);
-    require_once($file); 
+    require_once($file);
   }
 }
 
@@ -103,12 +103,12 @@ function _module_builder_drupal_major_version() {
  * @throw
  *  ModuleBuilderException
  */
-function _module_builder_sanity_check() {  
+function _module_builder_sanity_check() {
   // Check the hooks directory exists; these may also throw exceptions.
   // This is what makes subsequent reliance on _module_builder_get_hooks_directory() safe.
   $hooks_directory = _module_builder_get_hooks_directory();
   module_builder_prepare_directory($hooks_directory);
-  
+
   // Check the processed hook data is available.
   $hooks_processed = "$hooks_directory/hooks_processed.php";
   if (!file_exists($hooks_processed)) {
@@ -116,7 +116,7 @@ function _module_builder_sanity_check() {
     $e->needs_hooks_download = TRUE;
     throw $e;
   }
-  
+
   return TRUE;
 }
 
@@ -129,12 +129,12 @@ function module_builder_update_data() {
   // Update the hook documentation.
   module_builder_include('update');
   $hook_files = module_builder_update_documentation();
-  
+
   // Process the hook files.
   module_builder_include('process');
   module_builder_process_hook_data($hook_files);
-    
-  return TRUE; // FTW!  
+
+  return TRUE; // FTW!
 }
 
 /**
@@ -145,11 +145,11 @@ function module_builder_update_data() {
  *
  * This is either the variable from Drupal, or the --data option.
  * Use of the --data option allows a central store of hook data that needs only
- * be downloaded once for all Drupal sites. 
+ * be downloaded once for all Drupal sites.
  * Subdirectories are made for each version.
  *
  * This needs to be safe to use at any bootstrap level.
- * 
+ *
  * @return
  *   A directory path either relative to Drupal root or absolute.
  */
@@ -160,14 +160,14 @@ function _module_builder_get_hooks_directory() {
   //  - Mixed drush: we are on the command line, but module builder is present
   //    as a regular Drupal module, and its settings are in Drupal variables.
   //  - Pure Drupal: module builder is a regular module, being used on the web.
-  
+
   switch (MODULE_BUILDER_ENV) {
     case 'drupal':
-      // Running in a Drupal UI: directory is either 'hooks' or whatever the 
+      // Running in a Drupal UI: directory is either 'hooks' or whatever the
       // variable is set to.
       $directory = variable_get('module_builder_hooks_directory', 'hooks');
       break;
-    
+
     case 'drush':
       // First try the drush 'data' option.
       if (drush_get_option('data')) {
@@ -178,7 +178,7 @@ function _module_builder_get_hooks_directory() {
           if (substr($directory, -1, 1) != '/') {
             $directory .= '/';
           }
-          $directory .= _module_builder_drupal_major_version();  
+          $directory .= _module_builder_drupal_major_version();
           break;
         }
       }
@@ -191,12 +191,12 @@ function _module_builder_get_hooks_directory() {
       // If we get here then argh. Set to the default and hope...
       $directory = 'hooks';
   }
-  
+
   // Run it through version-specific stuff.
   // This basically prepends 'public://' or 'sites/default/files/'.
   module_builder_include('common_version');
   module_builder_directory_path($directory);
-  
+
   return $directory;
 }
 
@@ -208,7 +208,7 @@ function _module_builder_get_hooks_directory() {
  *  The root name of a module, eg 'node', 'taxonomy'.
  *
  * @return
- *  A flat array of filenames.  
+ *  A flat array of filenames.
  */
 function module_builder_get_module_files($module_root_name) {
   $filepath = drupal_get_path('module', $module_root_name);
@@ -223,7 +223,7 @@ function module_builder_get_module_files($module_root_name) {
       $module_files[] = $filepath . '/' . $filename;
     }
   }
-  
+
   return $module_files;
 }
 
@@ -231,18 +231,18 @@ function module_builder_get_module_files($module_root_name) {
  * Helper function to get all function names from a file.
  *
  * @param $file
- *  A complete filename from the Drupal root, eg 'modules/user/user.module'. 
+ *  A complete filename from the Drupal root, eg 'modules/user/user.module'.
  */
 function module_builder_get_functions($file) {
   $code = file_get_contents($file);
   //drush_print($code);
-  
+
   $matches = array();
   $pattern = "/^function (\w+)/m";
-  preg_match_all($pattern, $code, $matches); 
-  
+  preg_match_all($pattern, $code, $matches);
+
   return $matches[1];
-} 
+}
 
 
 /**
@@ -256,9 +256,9 @@ function _module_builder_invoke_hook() {
   module_builder_include('common_version');
   $mb_files = module_builder_system_listing('\.module_builder.inc$', 'modules');
   //print_r($mb_files);
-  
+
   $module_data = array();
-  
+
   foreach ($mb_files as $file) {
     // Our system listing wrapper ensured that there is a uri property on all versions.
     include_once($file->uri);
