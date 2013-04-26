@@ -75,7 +75,7 @@ abstract class ModuleBuilderGeneratorComponent {
     $this->name = $component_name;
 
     // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
-    $this->module_data = $component_data;
+    $this->component_data = $component_data;
   }
 
   /**
@@ -105,11 +105,11 @@ abstract class ModuleBuilderGeneratorComponent {
       // The component info can be either an array or just a type string.
       if (is_array($info)) {
         $component_type = $info['type'];
-        $component_data = $info['component_data'] + $this->module_data;
+        $component_data = $info['component_data'] + $this->component_data;
       }
       else {
         $component_type = $info;
-        $component_data = $this->module_data;
+        $component_data = $this->component_data;
       }
 
       $class = module_builder_get_class($component_type);

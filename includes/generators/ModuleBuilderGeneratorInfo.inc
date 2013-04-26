@@ -16,7 +16,7 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
   function collectFiles(&$files) {
     $files['info'] = array(
       'path' => '', // Means base folder.
-      'filename' => $this->module_data['module_root_name'] . '.info',
+      'filename' => $this->component_data['module_root_name'] . '.info',
       'body' => array(
         $this->code_body(),
       ),
@@ -74,7 +74,7 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
  */
 class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
   function code_body() {
-    $module_data = $this->module_data;
+    $module_data = $this->component_data;
 
     $lines = array();
     $lines['name'] = $module_data['module_readable_name'];
@@ -98,7 +98,7 @@ class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
  */
 class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
   function code_body() {
-    $module_data = $this->module_data;
+    $module_data = $this->component_data;
 
     $lines = array();
     $lines['name'] = $module_data['module_readable_name'];
@@ -126,7 +126,7 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
  */
 class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
   function code_body() {
-    $module_data = $this->module_data;
+    $module_data = $this->component_data;
     //print_r($module_data);
 
     $lines = array();

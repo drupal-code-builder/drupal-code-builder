@@ -30,8 +30,8 @@ class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
    */
   function lines() {
     return array(
-      $this->module_data['module_readable_name'],
-      str_repeat('=', strlen($this->module_data['module_readable_name'])),
+      $this->component_data['module_readable_name'],
+      str_repeat('=', strlen($this->component_data['module_readable_name'])),
       '',
       'TODO: write some documentation.',
     );

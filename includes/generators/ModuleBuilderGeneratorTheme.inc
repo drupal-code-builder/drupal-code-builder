@@ -21,14 +21,14 @@ class ModuleBuilderGeneratorTheme extends ModuleBuilderGeneratorComponent {
    *  An array of subcomponent types.
    */
   function subComponents() {
-    $theme_data = $this->module_data;
+    $theme_data = $this->component_data;
     //drush_print_r($theme_data);
 
     drupal_theme_initialize();
     $theme_registry = theme_get_registry();
 
     $components = array();
-    foreach ($this->module_data['themeables'] as $theme_hook_name) {
+    foreach ($this->component_data['themeables'] as $theme_hook_name) {
       $hook = $theme_hook_name;
       // Iteratively strip everything after the last '--' delimiter, until an
       // implementation is found.

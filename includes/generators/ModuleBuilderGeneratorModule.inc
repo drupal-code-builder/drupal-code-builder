@@ -72,7 +72,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *  An array of subcomponent types.
    */
   function subComponents() {
-    $module_data = $this->module_data;
+    $module_data = $this->component_data;
 
     // A module needs:
     //  - info file
