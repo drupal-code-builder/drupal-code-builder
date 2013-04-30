@@ -51,6 +51,8 @@
      - component generator figures out:
        - subcomponents (hooks, info file, plugins, tests)
        - each subcomponent recurses and eventually gets to a file generator.
+ *
+ * @see module_builder_generate_component()
  */
 abstract class ModuleBuilderGeneratorComponent {
 
@@ -61,7 +63,7 @@ abstract class ModuleBuilderGeneratorComponent {
   public $components = array();
 
   /**
-   * Constructor method; sets the module data.
+   * Constructor method; sets the component data.
    *
    * @param $component_name
    *   The identifier for the component. This is often the same as the type
@@ -158,7 +160,7 @@ abstract class ModuleBuilderGeneratorComponent {
    * the terminal or writes them; the Drupal UI shows them in form textareas.
    *
    * @param
-   *  An array of file info, passed by reference.. Components should add files
+   *  An array of file info, passed by reference. Components should add files
    *  to this, but may also alter what has already been generated.
    *  The keys are machine names, probably (!) arbitrary. Values are:
    *  - path: The path to the file, relative to the future module folder.
