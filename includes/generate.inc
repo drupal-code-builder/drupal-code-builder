@@ -21,6 +21,9 @@
  *  values are the code destined for each file.
  */
 function module_builder_generate_component($component, $component_data) {
+  // Register our autoload handler for generator classes.
+  spl_autoload_register('module_builder_autoload');
+
   $class = module_builder_get_class($component);
   $generator = new $class($component, $component_data);
 
@@ -58,6 +61,8 @@ function module_builder_generate_component($component, $component_data) {
  * @return
  *  A class name for the type and, if it exists, version, e.g.
  *  'ModuleBuilderGeneratorInfo6'.
+ *
+ * @see module_builder_autoload()
  */
 function module_builder_get_class($type) {
   // Include our general include files, which contains base and parent classes.
@@ -67,15 +72,27 @@ function module_builder_get_class($type) {
   $type     = ucfirst($type);
   $version  = _module_builder_drupal_major_version();
   $class    = 'ModuleBuilderGenerator' . $type . $version;
-  // Generator classes are in standardly named files, with all versions in the
-  // same file.
-  include_once("generators/ModuleBuilderGenerator$type.inc");
+
+  // Trigger the autoload for the base name without the version, as all versions
+  // are in the same file.
+  class_exists('ModuleBuilderGenerator' . $type);
 
   // If there is no version-specific class, use the base class.
   if (!class_exists($class)) {
     $class  = 'ModuleBuilderGenerator' . $type;
   }
   return $class;
+}
+
+/**
+ * Autoload handler for generator classes.
+ *
+ * @see module_builder_get_class()
+ */
+function module_builder_autoload($class) {
+  // Generator classes are in standardly named files, with all versions in the
+  // same file.
+  include_once("generators/$class.inc");
 }
 
 /**
