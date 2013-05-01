@@ -26,6 +26,15 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
    *  An array of text strings, in the correct order for concatenation.
    */
   function file_contents() {
+    // If only bare code is requested, only output the body, wthout headers
+    // or footer.
+    $module_data = $this->component_data;
+    if (!empty($module_data['bare_code'])) {
+      return array(
+        $this->code_body(),
+      );
+    }
+
     return array(
       $this->file_header(),
       $this->code_header(),

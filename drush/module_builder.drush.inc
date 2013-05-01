@@ -275,6 +275,11 @@ function drush_module_builder_callback_build() {
 
   //print_r($build_list);
 
+  // The 'bare code' option. This doesn't fully work yet, as 'add' doesn't
+  // fully work yet! TODO!
+  $bare_code = drush_get_option('add');
+  $module_data['bare_code'] = $bare_code;
+
   // Build files.
   // Include generating component file.
   module_builder_include('generate');
