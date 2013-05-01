@@ -25,12 +25,7 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
     $files[$this->name] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
-      'body' => array(
-         $this->file_header(),
-         $this->code_header(),
-         $this->code_body(),
-         $this->code_footer(),
-      ),
+      'body' => $this->file_contents(),
     );
   }
 

@@ -20,6 +20,21 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
   }
 
   /**
+   * Return the contents of the file.
+   *
+   * @return
+   *  An array of text strings, in the correct order for concatenation.
+   */
+  function file_contents() {
+    return array(
+      $this->file_header(),
+      $this->code_header(),
+      $this->code_body(),
+      $this->code_footer(),
+    );
+  }
+
+  /**
    * Return the PHP file header line.
    */
    function file_header()  {
