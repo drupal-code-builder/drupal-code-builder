@@ -716,12 +716,16 @@ function module_builder_drush_output_code($component_dir, $filename, $code) {
   // Add to file option implies write.
   // Write & go option implies write.
   if (drush_get_option(array('write', 'add', 'go'))) {
-    if (!is_dir($component_dir)) {
-      @drush_op('mkdir', $component_dir, 0777);
-      //drush_print("Module directory $component_dir created");
-    }
-
     $filepath = $component_dir . '/' . $filename;
+
+    // Because the filename part can contain subdirectories, check these exist
+    // too.
+    $subdir = dirname($filepath);
+    if (!is_dir($component_dir)) {
+      //@drush_op('mkdir', $component_dir, 0777);
+      //drush_print("Module directory $component_dir created");
+      $result = mkdir($subdir, 0777, TRUE);
+    }
 
     // Add to file option
     // if file doesn't exist, we skip this and silently write it anyway
