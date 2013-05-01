@@ -92,7 +92,9 @@ function module_builder_get_class($type) {
 function module_builder_autoload($class) {
   // Generator classes are in standardly named files, with all versions in the
   // same file.
-  include_once("generators/$class.inc");
+  if (file_exists(dirname(__FILE__) . "/generators/$class.inc")) {
+    include_once("generators/$class.inc");
+  }
 }
 
 /**
