@@ -365,6 +365,8 @@ function drush_module_builder_callback_build_theme() {
 
 /**
  * Helper function to build the array of module_data.
+ *
+ * @see ModuleBuilderGeneratorModule::__construct()
  */
 function module_builder_build_data($commands) {
   // Determine whether we're in interactive mode.
