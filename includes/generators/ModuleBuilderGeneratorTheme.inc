@@ -13,6 +13,24 @@
 class ModuleBuilderGeneratorTheme extends ModuleBuilderGeneratorComponent {
 
   /**
+   * Constructor method; sets the module data.
+   *
+   * @param $component_name
+   *   The identifier for the component.
+   * @param $module_data
+   *   An $component_data array of data for the theme, as received by
+   *   drush_module_builder_callback_build_theme().
+   *   This may contain the following properties:
+   *     - 'theme_name': The machine name of the theme.
+   *     - 'themeables': An array of theme hook names. These may include theme
+   *        suggestions, separated with a '--'. For example, 'node' will output
+   *        node.tpl.php, and 'node--page' will output node--page.tpl.php.
+   */
+  function __construct($component_name, $component_data) {
+    parent::__construct($component_name, $component_data);
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.

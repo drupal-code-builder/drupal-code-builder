@@ -23,9 +23,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    * Constructor method; sets the module data.
    *
    * @param $component_name
-   *   The identifier for the component. This is often the same as the type
-   *   (e.g., 'module', 'hooks') but in the case of types used multiple times
-   *   this will be a unique identifier.
+   *   The identifier for the component.
    * @param $module_data
    *   An associative array of data for the module, as received by
    *   module_builder_generate_component().
@@ -33,16 +31,18 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *   on generated files can be added!?!?!?!]
    *   The keys can *mostly* be taken straight from form values. They are as
    *   follows:
-   *     - 'module_root_name'
-   *     - 'module_readable_name'
-   *     - 'module_short_description'
-   *     - 'module_help_text'
+   *     - 'module_root_name': The machine name for the module.
+   *     - 'module_readable_name': The human readable name for the module.
+   *     - 'module_short_description': The module's description text.
+   *     - 'module_help_text': Help text for the module. If this is given, then
+   *        hook_help() is automatically added to the list of required hooks.
    *     - 'hooks': An associative array whose keys are full hook names
    *       (eg 'hook_menu'), where requested hooks have a value of TRUE.
    *       Unwanted hooks may also be included as keys provided their value is
    *       FALSE.
-   *     - 'module_dependencies': a string of dependencies, eg 'forum views'.
-   *     - 'module_package': the module package.
+   *     - 'module_dependencies': A string of module dependencies, separated by
+   *        spaces, e.g. 'forum views'.
+   *     - 'module_package': The module package.
    *     - 'module_folder': (optional) The destination folder to write the
    *       module files to.
    *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array
