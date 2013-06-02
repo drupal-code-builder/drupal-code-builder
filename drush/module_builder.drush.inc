@@ -347,7 +347,7 @@ function drush_module_builder_callback_build_theme() {
   //drush_print_r($commands);
 
   $theme_data = array();
-  $theme_data['theme_name'] = $commands[0]; // TODO: handle '.', trim terminal / etc.
+  $theme_data['theme_name'] = module_builder_process_component_folder_name($commands[0]);
   array_shift($commands);
   $theme_data['themeables'] = $commands;
 
