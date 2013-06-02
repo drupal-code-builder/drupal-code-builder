@@ -108,6 +108,7 @@ function module_builder_drush_command() {
     ),
     'options' => array(
       'write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
+      'parent' => "Name of a theme folder to place this new theme into; use if this theme is to be added to an existing package. Use '.' for the current working directory.",
     ),
   );
 
