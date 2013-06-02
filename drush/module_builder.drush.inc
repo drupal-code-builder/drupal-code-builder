@@ -462,18 +462,8 @@ function module_builder_build_data($commands) {
     }
   }
 
-  // Extra magic: a machine name given as '.' means use the current folder as
-  // the module name.
-  if ($module_data['module_root_name'] == '.') {
-    $module_dir = basename(drush_get_context('DRUSH_OLDCWD'));
-    $module_data['module_root_name'] = $module_dir;
-  }
-
-  // Extra magic, part 2: trim a final '/' from the module machine name, to
-  // allow use of tab autocompletion on the command line.
-  if (substr($module_data['module_root_name'], -1) == '/') {
-    $module_data['module_root_name'] = substr($module_data['module_root_name'], 0, -1);
-  }
+  // Process the given module name for extra filesystem magic.
+  $module_data['module_root_name'] = module_builder_process_component_folder_name($module_data['module_root_name']);
 
   // Get the folder to write to, if we need it.
   // Add to file option implies write; write & go option implies write.
@@ -609,6 +599,37 @@ function module_builder_get_module_folder($module_data) {
   $module_dir .= $module_data['module_root_name'];
 
   return $module_dir;
+}
+
+/**
+ * Processes filesystem shortcuts for specifying a component name.
+ *
+ * This allows the following shorthands:
+ *  - A single '.' specifies the current folder.
+ *  - A trailing slash is ignored, thus allowing autocompletion of folder names.
+ *
+ * @param $component_name
+ *  The input given for the component name.
+ *
+ * @return
+ *  A correctly-formed Drupal component machine name.
+ */
+function module_builder_process_component_folder_name($component_name) {
+  // Extra magic: a machine name given as '.' means use the current folder as
+  // the module name.
+  if ($component_name == '.') {
+    $module_dir = basename(drush_get_context('DRUSH_OLDCWD'));
+    $component_name = $module_dir;
+  }
+
+  // Extra magic, part 2: trim a final '/' from the module machine name, to
+  // allow use of tab autocompletion on the command line.
+  if (substr($component_name, -1) == '/') {
+    $component_name = substr($component_name, 0, -1);
+  }
+
+  //print $component_name;
+  return $component_name;
 }
 
 /**
