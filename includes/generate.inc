@@ -66,7 +66,6 @@ function module_builder_generate_component($component, $component_data) {
  */
 function module_builder_get_class($type) {
   // Include our general include files, which contains base and parent classes.
-  // In the absence of autoloading, we need to do this.
   include_once("generators/ModuleBuilderGenerators.inc");
 
   $type     = ucfirst($type);
