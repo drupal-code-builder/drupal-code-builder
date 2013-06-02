@@ -24,7 +24,7 @@
  *
  * Finally, we assemble the file info into filenames and code, ready for the
  * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
- * appropriate way.
+ * appropriate way. This is done in the starting generator's assembleFiles().
  *
  * Rough conceptual hierarchy:
   - component generators/file generators (NOT class hierarchy: processing chain!)
@@ -57,8 +57,10 @@
 abstract class ModuleBuilderGeneratorComponent {
 
   /**
-   * An array of this component's subcomponents. This is keyed by the name of
-   * the component name. Values are the instantiated component generators.
+   * An array of this component's subcomponents.
+   *
+   * This is keyed by the name of the component name. Values are the
+   * instantiated component generators.
    */
   public $components = array();
 
@@ -70,8 +72,10 @@ abstract class ModuleBuilderGeneratorComponent {
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
    * @param $component_data
-   *   An associative array of data for the component, as received by
-   *   module_builder_generate_component().
+   *   An associative array of input data for the component, as received by
+   *   module_builder_generate_component(). For example, for modules this will
+   *   be the module name, hooks required, and so on. See each component for
+   *   documentation on what this should contain.
    */
   function __construct($component_name, $component_data) {
     $this->name = $component_name;
@@ -134,7 +138,9 @@ abstract class ModuleBuilderGeneratorComponent {
    *
    * @return
    *  An array of subcomponents which the current generator requires.
-   *  Each item's key is its unique name; each value is either:
+   *  Each item's key is a name for the component. This must be unique, so if
+   *  there are likely to be multiple instances of a component type, this will
+   *  need to be generated based on input data. Each value is either:
    *    - the type for the component, suitable for passing to
    *      module_builder_get_class() to get the generator class.
    *    - an array of values, containing:
