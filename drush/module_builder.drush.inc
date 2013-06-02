@@ -347,7 +347,11 @@ function drush_module_builder_callback_build_theme() {
   //drush_print_r($commands);
 
   $theme_data = array();
-  $theme_data['theme_name'] = module_builder_process_component_folder_name($commands[0]);
+
+  // Get the folder for the theme, and from that its machine name.
+  $theme_data['theme_folder'] = module_builder_get_component_folder('theme', $commands[0]);
+  $theme_data['theme_name'] = basename($theme_data['theme_folder']);
+
   array_shift($commands);
   $theme_data['themeables'] = $commands;
 
@@ -462,15 +466,10 @@ function module_builder_build_data($commands) {
     }
   }
 
-  // Process the given module name for extra filesystem magic.
-  $module_data['module_root_name'] = module_builder_process_component_folder_name($module_data['module_root_name']);
-
-  // Get the folder to write to, if we need it.
-  // Add to file option implies write; write & go option implies write.
-  if (drush_get_option(array('write', 'add', 'go'))) {
-    $module_data['module_folder'] = module_builder_get_module_folder($module_data);
-    drush_print_r('----' . $module_data['module_folder']);
-  }
+  // Get the folder for the module, and from that its machine name.
+  $module_data['module_folder'] = module_builder_get_component_folder('module', $module_data['module_root_name']);
+  $module_data['module_root_name'] = basename($module_data['module_folder']);
+  drush_print_r('---- module folder: ' . $module_data['module_folder']);
 
   // Include generating component file.
   module_builder_include('process');
@@ -519,28 +518,38 @@ function module_builder_build_data($commands) {
 }
 
 /**
- * Get the module folder to write files to.
+ * Get the folder and machine name for a component.
  *
- * Helper for module_builder_build_data().
- *
- * @param $module_data
- *  The module data array.
+ * @param $component_type
+ *  The type of the component. One of 'module' or 'theme'.
+ * @param $component_name
+ *  The input given for the component name. This allows several shorthands:
+ *  - A single '.' specifies the current folder.
+ *  - A trailing slash is ignored, thus allowing autocompletion of folder names.
+ *  The processed component name should be extracted from the return value using
+ *  basename().
  *
  * @return
- *  The full system path for the folder the write the module to.
+ *  The full system path for the component's folder, without a trailing slash.
  */
-function module_builder_get_module_folder($module_data) {
+function module_builder_get_component_folder($component_type, $component_name) {
   $drupal_root = drush_get_context('DRUSH_DRUPAL_ROOT');
 
-  // First try: if the module exists, we write there: nice and simple.
-  $module_path = drupal_get_path('module', $module_data['module_root_name']);
-  if (!empty($module_path)) {
-    return $drupal_root .'/'. $module_path;
+  // Cleanup: trim a final '/' from the module machine name, to
+  // allow use of tab autocompletion on the command line.
+  if (substr($component_name, -1) == '/') {
+    $component_name = substr($component_name, 0, -1);
+  }
+
+  // First try: if the component exists, we write there: nice and simple.
+  $component_path = drupal_get_path($component_type, $component_name);
+  if (!empty($component_path)) {
+    return $drupal_root . '/' . $component_path;
   }
 
   // Second try: an input machine name given as '.' means use the current folder
   // as the module name, thus write to the current folder.
-  if ($module_data['module_root_name'] == '.') {
+  if ($component_name == '.') {
     return drush_get_context('DRUSH_OLDCWD');
   }
 
@@ -561,9 +570,12 @@ function module_builder_get_module_folder($module_data) {
       }
     }
     else {
-      $module_dir .= $parent_dir . '/';
+      // If there's no dot, assume that an existing module is meant.
+      // (Would anyone enter a complete path for this??? If we do need this,
+      // then consider recursing into this for the parent path??)
+      $module_dir .= drupal_get_path($component_type, $parent_dir) . '/';
     }
-    return $module_dir . $module_data['module_root_name'];
+    return $module_dir . $component_name;
   }
 
   // Fourth and final try: build it based on the module folder structure.
@@ -574,10 +586,10 @@ function module_builder_get_module_folder($module_data) {
     // There is probably a proper way to do this but it's Sunday morning and
     // I want this to just work and so brute force appeals.
     require_once DRUSH_BASE_PATH . '/commands/pm/download.pm.inc';
-    $module_dir = _pm_download_destination('module');
+    $module_dir = _pm_download_destination($component_type);
   }
   else {
-    $module_dir = pm_dl_destination('module');
+    $module_dir = pm_dl_destination($component_type);
   }
 
   // Gee great. Drush HEAD doesn't give us the trailing /.
@@ -585,51 +597,22 @@ function module_builder_get_module_folder($module_data) {
     $module_dir .= '/';
   }
 
-  // Drush tries to put any module into 'contrib' if the folder exists;
-  // hack this out and put the code in 'custom'.
-  if (substr($module_dir, -8, 7) == 'contrib') {
-    $module_dir_custom = substr_replace($module_dir, 'custom', -8, 7);
-    if (is_dir($module_dir_custom)) {
-      $module_dir = $module_dir_custom;
+  if ($component_type == 'module') {
+    // Drush tries to put any module into 'contrib' if the folder exists;
+    // hack this out and put the code in 'custom'.
+    if (substr($module_dir, -8, 7) == 'contrib') {
+      $module_dir_custom = substr_replace($module_dir, 'custom', -8, 7);
+      if (is_dir($module_dir_custom)) {
+        $module_dir = $module_dir_custom;
+      }
     }
   }
 
   // $module_dir should now be a full path to the parent of the destination
   // folder, with a trailing slash.
-  $module_dir .= $module_data['module_root_name'];
+  $module_dir .= $component_name;
 
   return $module_dir;
-}
-
-/**
- * Processes filesystem shortcuts for specifying a component name.
- *
- * This allows the following shorthands:
- *  - A single '.' specifies the current folder.
- *  - A trailing slash is ignored, thus allowing autocompletion of folder names.
- *
- * @param $component_name
- *  The input given for the component name.
- *
- * @return
- *  A correctly-formed Drupal component machine name.
- */
-function module_builder_process_component_folder_name($component_name) {
-  // Extra magic: a machine name given as '.' means use the current folder as
-  // the module name.
-  if ($component_name == '.') {
-    $module_dir = basename(drush_get_context('DRUSH_OLDCWD'));
-    $component_name = $module_dir;
-  }
-
-  // Extra magic, part 2: trim a final '/' from the module machine name, to
-  // allow use of tab autocompletion on the command line.
-  if (substr($component_name, -1) == '/') {
-    $component_name = substr($component_name, 0, -1);
-  }
-
-  //print $component_name;
-  return $component_name;
 }
 
 /**
