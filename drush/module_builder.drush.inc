@@ -733,10 +733,11 @@ function module_builder_drush_output_code($component_dir, $filename, $code) {
     // Because the filename part can contain subdirectories, check these exist
     // too.
     $subdir = dirname($filepath);
-    if (!is_dir($component_dir)) {
-      //@drush_op('mkdir', $component_dir, 0777);
-      //drush_print("Module directory $component_dir created");
+    if (!is_dir($subdir)) {
       $result = mkdir($subdir, 0777, TRUE);
+      if ($result && !drush_get_option('quiet')) {
+        drush_print("Module directory $component_dir created");
+      }
     }
 
     // Add to file option
