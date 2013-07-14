@@ -55,15 +55,23 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
    */
   function code_header() {
     $filename = $this->filename;
+    $file_description = $this->file_doc_summary();
     $default = <<<EOT
 /**
  * @file $filename
- * TODO: Enter file description here.
+ * $file_description
  */
 
 EOT;
     $code = variable_get('module_builder_header', $default);
     return $code;
+  }
+
+  /**
+   * Return the summary line for the file docblock.
+   */
+  function file_doc_summary() {
+    return "TODO: Enter file description here.";
   }
 
   /**
