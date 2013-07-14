@@ -57,6 +57,9 @@ function module_builder_drush_command() {
       'module name' => "The machine name of the module. Use '.' to specify the current folder name.",
       'hooks' => "Short names of hooks, separated by spaces. Hook preset groups can be specific with an initial '@', eg '@block'.",
     ),
+    // Commented out, as only the first argument is required.
+    // TODO: figure out how to specify this!
+    //'required-arguments' => TRUE,
     'aliases' => array('mb'),
     'options' => array(
       'noi' => "Disables interactive mode.",
