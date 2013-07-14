@@ -91,6 +91,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     $components = array(
       'hooks' => 'hooks',
       'readme' => 'readme',
+      'tests' => 'tests',
       // Info must go last, as it needs to know what files are being generated.
       'info' => 'info',
     );
@@ -119,6 +120,11 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     // ModuleBuilderGeneratorHooks; therefore we must ensure 'hooks' is in the
     // list.
     $intersection_components['hooks'] = 'hooks';
+
+    // TODO: if the components create files containing classes, we probably
+    // need to add the 'info' component, BUT we need to add to the .info file
+    // rather than rewrite it! This requires (as does template.php) a system for
+    // adding to existing files.
 
     return $intersection_components;
   }
