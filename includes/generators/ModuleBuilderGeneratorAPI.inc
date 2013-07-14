@@ -121,16 +121,29 @@ EOT;
    *
    * @param $hook_short_name
    *  The short name of the hook, i.e., without the 'hook_' prefix.
-   * @param $parameters
+   * @param $parameters_string
    *  A string of the hook's parameters.
    *
    * @return
    *  A string of formatted code for inclusion in the api.php file.
    */
-  function hook_code($hook_short_name, $parameters) {
+  function hook_code($hook_short_name, $parameters_string) {
+    $parameters = explode(', ', $parameters_string);
+    $parameters_doc_lines = array();
+    foreach ($parameters as $parameter) {
+      $parameters_doc_lines[] = " * @param $parameter\n" .
+                                " *   TODO: document this parameter.";
+    }
+    if (!empty($parameters_doc_lines)) {
+      $parameters_doc = " *\n" . implode("\n", $parameters_doc_lines);
+    }
+
     return <<<EOT
 /**
- * TODO: write summary line
+ * TODO: write summary line.
+ *
+ * TODO: longer description.
+$parameters_doc
  */
 function hook_$hook_short_name($parameters) {
   // TODO: write sample code.
