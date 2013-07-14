@@ -67,6 +67,7 @@ function module_builder_drush_command() {
       'build' => "Which module components to generate:
   - 'info' makes the info file.
   - 'readme' makes README file.
+  - 'api' makes an api.php file to document hooks. It will parse existing module files for calls to module_invoke_all() and use those as starter file content.
   - 'tests' makes the tests folder and test case file.
   - 'module', 'install' make the foo.module or foo.install file respectively.
   - 'FILE': If custom modules define other files to output, you can request those too, omitting the module root name part and any .inc extension, eg 'views' for 'foo.views.inc.

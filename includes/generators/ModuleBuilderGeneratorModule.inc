@@ -90,6 +90,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     // Start by defining the subcomponents we know how to handle.
     $components = array(
       'hooks' => 'hooks',
+      'api' => 'api',
       'readme' => 'readme',
       'tests' => 'tests',
       // Info must go last, as it needs to know what files are being generated.
