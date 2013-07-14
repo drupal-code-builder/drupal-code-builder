@@ -64,13 +64,15 @@ function module_builder_drush_command() {
     'options' => array(
       'noi' => "Disables interactive mode.",
       'data' => "Location to read hook data. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
-      'build' => "Which file type to generate: 'all', 'code', 'info', 'FILE'. " .
-        "'all' generates everything: info and any code files needed by the requested hooks. " .
-        "'code' generates code files as needed. " .
-        "'info' makes just the info file. " .
-        "'module', 'install' make just the foo.module or foo.install files. " .
-        "If custom modules define other files to output, you can request those too, omitting the module root name part and any .inc extension, eg 'module_builder' for 'foo.module_builder.inc. " .  "\n" .
-        "Default is 'all' if writing new files, 'code' if appending to file or outputting only to terminal.",
+      'build' => "Which module components to generate:
+  - 'info' makes the info file.
+  - 'readme' makes README file.
+  - 'tests' makes the tests folder and test case file.
+  - 'module', 'install' make the foo.module or foo.install file respectively.
+  - 'FILE': If custom modules define other files to output, you can request those too, omitting the module root name part and any .inc extension, eg 'views' for 'foo.views.inc.
+  - 'code' generates code files as needed: the module and install files, and any files requested by hooks.
+  - 'all' generates everything, including any code files needed by the requested hooks.
+Default is 'all' if writing new files, 'code' if appending to file or outputting only to terminal.",
       'write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
       'go' => 'Write all module files and enable the new module. Take two commands into the shower? Not me.',
       'add' => "Append hooks to module file. Implies 'write build=code'. Warning: will not check hooks already exist.",
