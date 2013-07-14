@@ -174,6 +174,8 @@ abstract class ModuleBuilderGeneratorComponent {
    *  - body: An array of pieces to assemble in order to form the body of the
    *    file. These can be single lines, or larger chunks: they will be joined
    *    up with newline characters.
+   *  - contains_classes: A boolean indicating that this file contains one or
+   *    more classes, and thus should be declared in the component's .info file.
    */
   function collectFiles(&$files) {
     foreach ($this->components as $generator) {

@@ -7,6 +7,10 @@
 
 /**
  * Generator base class for module info file.
+ *
+ * This needs to go last in the order of subcomponents, so that it can see
+ * all the files requested so far, and if required, declare them in the info
+ * file.
  */
 class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
 
@@ -18,7 +22,8 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
       'path' => '', // Means base folder.
       'filename' => $this->component_data['module_root_name'] . '.info',
       'body' => array(
-        $this->code_body(),
+        // We pass $files in to check for files containing classes.
+        $this->code_body($files),
       ),
     );
   }
@@ -125,7 +130,11 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
  * Generator class for module info file for Drupal 7.
  */
 class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
+
   function code_body() {
+    $args = func_get_args();
+    $files = array_shift($args);
+
     $module_data = $this->component_data;
     //print_r($module_data);
 
@@ -146,15 +155,12 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
 
     $lines['core'] = "7.x";
 
-    /*
-    // Only files containing classes need to be declared in the .info file;
-    // we don't add any classes yet.
-    if (is_array($module_data['module_files'])) {
-      foreach ($module_data['module_files'] as $file) {
-        $lines['files'][] = $file;
+    // Files containing classes need to be declared in the .info file.
+    foreach ($files as $file) {
+      if (!empty($file['contains_classes'])) {
+        $lines['files'][] = $file['filename'];
       }
     }
-    */
 
     $info = $this->merge_info_lines($lines);
     return $info;
