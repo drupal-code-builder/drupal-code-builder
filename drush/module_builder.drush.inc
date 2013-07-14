@@ -313,6 +313,7 @@ function drush_module_builder_callback_build() {
  *
  * Debug this with, for example:
  *  $ drush --early=includes/complete.inc --complete-debug drush mb foo ini
+ * and comment out cache in drush_complete_get().
  */
 function module_builder_module_builder_callback_build_complete() {
   module_builder_drush_init_helper();
@@ -378,6 +379,10 @@ function module_builder_build_data($commands) {
   $interactive = !drush_get_option(array('non-interactive', 'noi'));
 
   // Information about the keys we need to build the module data.
+  // For each key, the source of the data is defined thus:
+  //  - 'commands' means data can come from the initial commands. A numeric
+  //    value gives the position; 'all' means all remaining commands after
+  //    ones specified by position are taken.
   $data = array(
     'module_root_name' => array(
       'commands' => 0,
