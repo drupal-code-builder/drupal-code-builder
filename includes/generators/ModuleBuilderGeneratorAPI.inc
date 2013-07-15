@@ -23,10 +23,12 @@ class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
   function collectFiles(&$files) {
     $module_root_name = $this->component_data['module_root_name'];
 
+    $this->filename = "$module_root_name.api.php";
+
     // The key is arbitrary (at least so far!).
     $files['module.api.php'] = array(
       'path' => '', // Means base folder.
-      'filename' => "$module_root_name.api.php",
+      'filename' => $this->filename,
       'body' => $this->file_contents(),
     );
   }

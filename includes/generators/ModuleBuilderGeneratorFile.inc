@@ -52,6 +52,8 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
 
   /**
    * Return the file doxygen header and any custom header code.
+   *
+   * Expects $this->filename to be set.
    */
   function code_header() {
     $filename = $this->filename;
