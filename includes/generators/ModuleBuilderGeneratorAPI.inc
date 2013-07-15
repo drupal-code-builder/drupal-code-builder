@@ -145,7 +145,7 @@ EOT;
  * TODO: longer description.
 $parameters_doc
  */
-function hook_$hook_short_name($parameters) {
+function hook_$hook_short_name($parameters_string) {
   // TODO: write sample code.
 }
 EOT;
