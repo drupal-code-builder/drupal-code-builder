@@ -46,21 +46,26 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
 EOT;
   }
 
+  /**
+   * Return the main body of the file code.
+   */
   function code_body() {
     // Get old style variable names.
     $module_data = $this->component_data;
     $hook_data = $this->hook_data;
-    $code = '';
+
+    // Build up an array of functions' code.
+    $functions = array();
     foreach ($hook_data as $hook_name => $hook) {
 
       // Display PHP doc, using the original case of the hook name.
-      $code .= "\n" . $this->hook_doxygen($hook['name']);
+      $hook_code = '';
+      $hook_code .= $this->hook_doxygen($hook['name']);
 
       // function declaration: put in the module name, add closing brace, decode html entities
       $declaration = preg_replace('/(?<=function )hook/', $module_data['module_root_name'], $hook['declaration']);
       $declaration .= ' {';
-      $code .= htmlspecialchars_decode($declaration);
-
+      $hook_code .= htmlspecialchars_decode($declaration);
 
       // See if function bodies exist; if so, use function bodies from template
       if (isset($hook['template'])) {
@@ -72,20 +77,21 @@ EOT;
         }
         //dsm($hook);
 
-        $code .= $hook['template'];
+        $hook_code .= $hook['template'];
       }
       else {
-        $code .= "\n\n";
+        $hook_code .= "\n\n";
       }
-      // Gap between successive hooks.
-      $code .= "}\n";
+      $hook_code .= "}";
+
+      // Replace variables
+      $variables = $this->getReplacements();
+      $hook_code = strtr($hook_code, $variables);
+
+      $functions[] = $hook_code;
     } // foreach hook
 
-    // Replace variables
-    $variables = $this->getReplacements();
-    $code = strtr($code, $variables);
-
-    return $code;
+    return implode("\n\n", $functions);
   }
 
   /**
