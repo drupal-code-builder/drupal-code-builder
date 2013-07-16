@@ -26,6 +26,9 @@ class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->file_contents(),
+      // We join code files up on a single newline. This means that each
+      // component is responsible for ending its own lines.
+      'join_string' => "\n",
     );
   }
 
@@ -82,7 +85,7 @@ EOT;
       else {
         $hook_code .= "\n\n";
       }
-      $hook_code .= "}";
+      $hook_code .= "}\n";
 
       // Replace variables
       $variables = $this->getReplacements();
@@ -91,7 +94,7 @@ EOT;
       $functions[] = $hook_code;
     } // foreach hook
 
-    return implode("\n\n", $functions);
+    return $functions;
   }
 
   /**

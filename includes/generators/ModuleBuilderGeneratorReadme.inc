@@ -19,6 +19,9 @@ class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
       // right now, but probably to do with Windows being rubbish.
       'filename' => 'README.txt',
       'body' => $this->lines(),
+      // We are returning single lines, so they need to be joined with line
+      // breaks.
+      'join_string' => "\n",
     );
   }
 
@@ -34,6 +37,7 @@ class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
       str_repeat('=', strlen($this->component_data['module_readable_name'])),
       '',
       'TODO: write some documentation.',
+      '',
     );
   }
 

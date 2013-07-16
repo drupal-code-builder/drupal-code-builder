@@ -21,10 +21,12 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
     $files['info'] = array(
       'path' => '', // Means base folder.
       'filename' => $this->component_data['module_root_name'] . '.info',
-      'body' => array(
-        // We pass $files in to check for files containing classes.
-        $this->code_body($files),
-      ),
+      // We pass $files in to check for files containing classes.
+      'body' => $this->code_body($files),
+      // We join the info lines with linebreaks, as they (currently!) do not
+      // come with their own lineends.
+      // TODO: fix this!
+      'join_string' => "\n",
     );
   }
 
@@ -43,7 +45,7 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
   function code_body() {}
 
   /**
-   * Merge an array of info file lines into a single piece of text.
+   * Process a structured array of info files lines to a flat array for merging.
    *
    * @param $lines
    *  An array of lines keyed by label.
@@ -54,9 +56,9 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
    *    dependencies => array(foo, bar)
    *
    * @return
-   *  The merged text suitable for output into a .info file.
+   *  An array of lines for the .info file.
    */
-  function merge_info_lines($lines) {
+  function process_info_lines($lines) {
     foreach ($lines as $label => $data) {
       if (is_array($data)) {
         foreach ($data as $data_piece) {
@@ -67,10 +69,12 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
         $merged_lines[] = "$label = $data";
       }
     }
-    $info = implode("\n", $merged_lines);
-    // Add a newline to the final line.
-    $info .= "\n";
-    return $info;
+
+    // Add final empty line so the file has a closing linebreak.
+    $merged_lines[] = '';
+
+    //drush_print_r($merged_lines);
+    return $merged_lines;
   }
 }
 
@@ -93,7 +97,7 @@ class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
       $lines['package'] = $module_data['module_package'];
     }
 
-    $info = $this->merge_info_lines($lines);
+    $info = $this->process_info_lines($lines);
     return $info;
   }
 }
@@ -121,7 +125,7 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
     }
     $lines['core'] = "6.x";
 
-    $info = $this->merge_info_lines($lines);
+    $info = $this->process_info_lines($lines);
     return $info;
   }
 }
@@ -162,7 +166,7 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
       }
     }
 
-    $info = $this->merge_info_lines($lines);
+    $info = $this->process_info_lines($lines);
     return $info;
   }
 }

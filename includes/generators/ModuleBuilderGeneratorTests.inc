@@ -25,6 +25,7 @@ class ModuleBuilderGeneratorTests extends ModuleBuilderGeneratorFile {
       'path' => '', // Means base folder.
       'filename' => 'tests/' . $test_file_name,
       'body' => $this->file_contents(),
+      'join_string' => "\n",
       'contains_classes' => TRUE,
     );
   }
@@ -82,7 +83,7 @@ class {$module_root_name_title_case}TestCase extends DrupalWebTestCase {
 }
 EOT;
 
-    return $code;
+    return array($code);
   }
 
 }

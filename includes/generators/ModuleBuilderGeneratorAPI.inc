@@ -30,6 +30,7 @@ class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->file_contents(),
+      'join_string' => "\n",
     );
   }
 
@@ -60,13 +61,14 @@ class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
  * @addtogroup hooks
  * @{
  */
+
 EOT;
 
     foreach ($hooks as $hook_short_name => $parameters) {
       $code_pieces[] = $this->hook_code($hook_short_name, $parameters);
     }
 
-    return implode("\n\n", $code_pieces);
+    return $code_pieces;
   }
 
   /**
@@ -104,6 +106,7 @@ $parameters_doc
 function hook_$hook_short_name($parameters_string) {
   // TODO: write sample code.
 }
+
 EOT;
   }
 

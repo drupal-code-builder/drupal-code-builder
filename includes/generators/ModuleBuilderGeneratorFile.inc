@@ -30,17 +30,25 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
     // or footer.
     $module_data = $this->component_data;
     if (!empty($module_data['bare_code'])) {
-      return array(
-        $this->code_body(),
-      );
+      return $this->code_body();
     }
 
-    return array(
-      $this->file_header(),
-      $this->code_header(),
+    // File contents are built up.
+    $file_contents = array_merge(
+      array(
+        $this->file_header(),
+        $this->code_header(),
+      ),
+      // The code body is itself an array.
       $this->code_body(),
-      $this->code_footer(),
+      array(
+        $this->code_footer(),
+      )
     );
+
+    // Filter out any empty elements.
+    $file_contents = array_filter($file_contents);
+    return $file_contents;
   }
 
   /**
@@ -78,6 +86,9 @@ EOT;
 
   /**
    * Return the main body of the file code.
+   *
+   * @return
+   *  An array of chunks of text for the code body.
    */
   abstract function code_body();
 

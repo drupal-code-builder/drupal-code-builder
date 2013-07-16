@@ -193,7 +193,13 @@ abstract class ModuleBuilderGeneratorComponent {
    *  - filename: The file name.
    *  - body: An array of pieces to assemble in order to form the body of the
    *    file. These can be single lines, or larger chunks: they will be joined
-   *    up with newline characters.
+   *    up by assembleFiles(). The array may be keyed numerically, or the keys
+   *    can be meaningful to the generator class: they are immaterial to the
+   *    caller.
+   *  - join_string: The string to join the body pieces with. If the body is an
+   *    array of single lines, you probably want to use "\n". If you have chunks
+   *    it makes more sense for each chunk to contain its own linebreaks
+   *    including the terminal one.
    *  - contains_classes: A boolean indicating that this file contains one or
    *    more classes, and thus should be declared in the component's .info file.
    */
@@ -225,7 +231,7 @@ abstract class ModuleBuilderGeneratorComponent {
         $filepath = $file_info['filename'];
       }
 
-      $code = implode("\n", $file_info['body']);
+      $code = implode($file_info['join_string'], $file_info['body']);
 
       $return[$filepath] = $code;
     }
