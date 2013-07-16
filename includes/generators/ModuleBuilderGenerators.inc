@@ -8,14 +8,34 @@
 /**
  * Abstract base Generator for components.
  *
+ * The generator process works over three phases:
+ *  - a tree of generators is gathered
+ *  - a list of file info is built up, with each generator allowed to contribute
+ *  - the file info is processed and returned for the caller to output
+ *
  * The generator system works by starting with a particular generator for a
  * given component (e.g., 'module'), and then adding generators this one
  * requests, recursing this process into each new generator and building a tree
- * down from the original one. Each generator class should implement
- * subComponents() to return its child components.
+ * down from the original one. This is achieved by each generator class
+ * implementing subComponents() to return its child components. The process ends
+ * when the added generators are themselves one that return no sub-components.
  *
- * The tree consists of each generator class having a property which is an array
- * of its subgenerators, keyed by component name.
+ * So for example, the caller requests a 'module' component. This causes
+ * the entry point to the system, module_builder_generate_component() to
+ * instantiate a module generator, which is then interrogated for its
+ * subcomponents. It returns, say, that it needs:
+ *  - a README file
+ *  - a .info file
+ *  - hooks, which is an abstract component which represents the module's code
+ *    which we are to generate.
+ * The first two components are terminal: they do not have subcomponents of
+ * their own. The hooks component however adds more generators: a code file
+ * generator for each file it needs for the hooks it has been requested to
+ * generate. The code files are then interrogated, and return no subcomponents:
+ * the gathering process is thus complete.
+ *
+ * The end result is a tree which consists of each generator class having a
+ * property which is an array of its subgenerators, keyed by component name.
  *
  * Once we have this, we then recurse once more into it, this time building up
  * an array of file info that we pass by reference (this it can be altered
@@ -154,7 +174,7 @@ abstract class ModuleBuilderGeneratorComponent {
   }
 
   /**
-   * Collect files, recursing into each subcomponent.
+   * Collect data for files, recursing into each subcomponent.
    *
    * It's safe for subclasses to use this too, as it acts on a generator's own
    * array of subcomponents.
