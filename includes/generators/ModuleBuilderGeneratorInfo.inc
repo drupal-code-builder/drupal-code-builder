@@ -82,6 +82,10 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
  * Generator class for module info file for Drupal 5.
  */
 class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
+
+  /**
+   * Create lines of file body for Drupal 5.
+   */
   function code_body() {
     $module_data = $this->component_data;
 
@@ -100,12 +104,17 @@ class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
     $info = $this->process_info_lines($lines);
     return $info;
   }
+
 }
 
 /**
  * Generator class for module info file for Drupal 6.
  */
 class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
+
+  /**
+   * Create lines of file body for Drupal 6.
+   */
   function code_body() {
     $module_data = $this->component_data;
 
@@ -128,6 +137,7 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
     $info = $this->process_info_lines($lines);
     return $info;
   }
+
 }
 
 /**
@@ -135,6 +145,9 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
  */
 class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
 
+  /**
+   * Create lines of file body for Drupal 7.
+   */
   function code_body() {
     $args = func_get_args();
     $files = array_shift($args);
@@ -169,4 +182,5 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
     $info = $this->process_info_lines($lines);
     return $info;
   }
+
 }
