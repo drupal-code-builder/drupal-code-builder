@@ -44,6 +44,13 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
   // Override abstract...
   function code_body() {}
 
+}
+
+/**
+ * Abstract parent class for .ini syntax info files.
+ */
+class ModuleBuilderGeneratorInfoIni extends ModuleBuilderGeneratorInfo {
+
   /**
    * Process a structured array of info files lines to a flat array for merging.
    *
@@ -76,12 +83,13 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
     //drush_print_r($merged_lines);
     return $merged_lines;
   }
+
 }
 
 /**
  * Generator class for module info file for Drupal 5.
  */
-class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
+class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfoIni {
 
   /**
    * Create lines of file body for Drupal 5.
@@ -110,7 +118,7 @@ class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfo {
 /**
  * Generator class for module info file for Drupal 6.
  */
-class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
+class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfoIni {
 
   /**
    * Create lines of file body for Drupal 6.
@@ -143,7 +151,7 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfo {
 /**
  * Generator class for module info file for Drupal 7.
  */
-class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfo {
+class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfoIni {
 
   /**
    * Create lines of file body for Drupal 7.
