@@ -31,6 +31,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *   on generated files can be added!?!?!?!]
    *   The keys can *mostly* be taken straight from form values. They are as
    *   follows:
+   *     - 'base': The type of component: 'module'.
    *     - 'module_root_name': The machine name for the module.
    *     - 'module_readable_name': The human readable name for the module.
    *     - 'module_short_description': The module's description text.

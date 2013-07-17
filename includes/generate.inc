@@ -21,6 +21,9 @@
  *  values are the code destined for each file.
  */
 function module_builder_generate_component($component, $component_data) {
+  // Add the top-level component to the data.
+  $component_data['base'] = $component;
+
   // Register our autoload handler for generator classes.
   spl_autoload_register('module_builder_autoload');
 
