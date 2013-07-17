@@ -199,6 +199,15 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfoIni {
 class ModuleBuilderGeneratorInfo8 extends ModuleBuilderGeneratorInfo {
 
   /**
+   * Build the code files.
+   */
+  function collectFiles(&$files) {
+    parent::collectFiles($files);
+
+    $files['info']['filename'] = $this->component_data['module_root_name'] . '.info.yaml';
+  }
+
+  /**
    * Create lines of file body for Drupal 8.
    */
   function code_body() {
@@ -252,24 +261,12 @@ class ModuleBuilderGeneratorInfo8 extends ModuleBuilderGeneratorInfo {
    *  An array of lines for the .info file.
    */
   function process_info_lines($lines) {
-    // TODO!!! This needs to be rewritten / ripped out and replaced to output YAML!
+    $yaml_parser = new Symfony\Component\Yaml\Yaml;
+    $yaml = $yaml_parser->dump($lines, 2, 2);
+    //drush_print_r($yaml);
 
-    foreach ($lines as $label => $data) {
-      if (is_array($data)) {
-        foreach ($data as $data_piece) {
-          $merged_lines[] = $label . "[] = $data_piece"; // Urgh terrible variable name!
-        }
-      }
-      else {
-        $merged_lines[] = "$label = $data";
-      }
-    }
-
-    // Add final empty line so the file has a closing linebreak.
-    $merged_lines[] = '';
-
-    //drush_print_r($merged_lines);
-    return $merged_lines;
+    // Because the yaml is all built for us, this is just a singleton array.
+    return array($yaml);
   }
 
 }
