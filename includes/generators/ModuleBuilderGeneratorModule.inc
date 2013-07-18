@@ -44,7 +44,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *     - 'module_dependencies': A string of module dependencies, separated by
    *        spaces, e.g. 'forum views'.
    *     - 'module_package': The module package.
-   *     - 'module_folder': (optional) The destination folder to write the
+   *     - 'component_folder': (optional) The destination folder to write the
    *       module files to.
    *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array
    *       of filenames that have been generated.

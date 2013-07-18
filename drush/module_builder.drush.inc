@@ -298,7 +298,7 @@ function drush_module_builder_callback_build() {
   //drush_print_r($files);
 
   // This has been set in module_builder_build_data().
-  $module_dir = $module_data['module_folder'];
+  $module_dir = $module_data['component_folder'];
 
   // Finally, output the files!
   foreach ($files as $filename => $code) {
@@ -479,9 +479,9 @@ function module_builder_build_data($commands) {
   }
 
   // Get the folder for the module, and from that its machine name.
-  $module_data['module_folder'] = module_builder_get_component_folder('module', $module_data['module_root_name']);
-  $module_data['module_root_name'] = basename($module_data['module_folder']);
-  drush_print_r('---- module folder: ' . $module_data['module_folder']);
+  $module_data['component_folder'] = module_builder_get_component_folder('module', $module_data['module_root_name']);
+  $module_data['module_root_name'] = basename($module_data['component_folder']);
+  drush_print_r('---- module folder: ' . $module_data['component_folder']);
 
   // Include generating component file.
   module_builder_include('process');
