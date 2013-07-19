@@ -91,25 +91,41 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     // Start by defining the subcomponents we know how to handle.
     $components = array(
       'hooks' => 'hooks',
-      'api' => 'api',
+      // Component type case must match the filename for case-sensitive
+      // filesystems (i.e. not OS X).
+      'api' => 'API',
       'readme' => 'readme',
       'tests' => 'tests',
       // Info must go last, as it needs to know what files are being generated.
       'info' => 'info',
     );
 
-    // Fill the build list, as this comes in with values all set to TRUE.
-    $build_list = array_combine(array_keys($module_data['requested_build']), array_keys($module_data['requested_build']));
+    // Create a build list.
+    // Take the keys, as all values are set to TRUE, and standardize to lower
+    // case for comparisons.
+    $build_list = array_keys($module_data['requested_build']);
+    array_walk($build_list, function(&$s) {
+      $s = strtolower($s);
+    });
+    $build_list = array_combine($build_list, $build_list);
 
     // Case 1: everything was requested: return everything!
     if (isset($build_list['all'])) {
       return $components;
     }
 
+    // Standardize to lower case for comparisons.
+    $component_list = $components;
+    array_walk($component_list, function(&$s) {
+      $s = strtolower($s);
+    });
+    //drush_print_r($component_list);
+    //drush_print_r($build_list);
+
     // Get the components that were requested.
-    $intersection_components = array_intersect($components, $build_list);
+    $intersection_components = array_intersect($component_list, $build_list);
     // Get the requested components that we don't understand.
-    $unknown_build_list = array_diff($build_list, $components);
+    $unknown_build_list = array_diff($build_list, $component_list);
 
     // Case 2: there are no unknown components. Return just what we were asked
     // for.
