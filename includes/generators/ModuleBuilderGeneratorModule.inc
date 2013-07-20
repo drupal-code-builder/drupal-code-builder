@@ -48,13 +48,15 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *       module files to.
    *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array
    *       of filenames that have been generated.
-   *     - 'requested_build': An array whose keys are requested things to build.
-   *        This can be one of:
+   *     - 'requested_build': An array whose keys are names of subcomponents to
+   *        build. Component names are defined in subComponents(), and include:
    *        - 'all': everything we can do.
    *        - 'code': PHP code files.
    *        - 'info': only info file.
    *        - 'module': only module file.
    *        - 'install': only install file.
+   *        - 'tests': test file.
+   *        - 'api': api.php hook documentation file.
    *        - ???: any short filename.
    */
   function __construct($component_name, $module_data) {
@@ -89,6 +91,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
     // For anything else, the hooks component takes care of further filtering.
 
     // Start by defining the subcomponents we know how to handle.
+    // Keys are names, values are types (to be used to build class names).
     $components = array(
       'hooks' => 'hooks',
       // Component type case must match the filename for case-sensitive
@@ -114,8 +117,9 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
       return $components;
     }
 
-    // Standardize to lower case for comparisons.
-    $component_list = $components;
+    // Make a list of component names to compare with what was requested.
+    $component_list = array_keys($components);
+    // Standardize to lower case for comparison.
     array_walk($component_list, function(&$s) {
       $s = strtolower($s);
     });
