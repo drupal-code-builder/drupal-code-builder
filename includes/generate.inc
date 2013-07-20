@@ -49,8 +49,8 @@ function module_builder_generate_component($component, $component_data) {
  *
  * The hierarchy is:
  *  - ModuleBuilderGenerator
- *    - ModuleBuilderGeneratorCode
- *      - ModuleBuilderGeneratorCode6
+ *    - ModuleBuilderGeneratorModuleCodeFile
+ *      - ModuleBuilderGeneratorModuleCodeFile6
  *    - ModuleBuilderGeneratorInfo
  *      - ModuleBuilderGeneratorInfo5
  *      - ModuleBuilderGeneratorInfo6

@@ -8,13 +8,11 @@
 /**
  * Generator class for module code files.
  *
- * TODO: rename to ModuleCode? Or can this cover, say, theme files?
- *
  * TODO: various cleanups. This was the base class of the mk 1 OO generator
  * system, and is currently (hello!) being forced into a new, bigger mk
  * hierarchy!
  */
-class ModuleBuilderGeneratorCode extends ModuleBuilderGeneratorFile {
+class ModuleBuilderGeneratorModuleCodeFile extends ModuleBuilderGeneratorFile {
 
   // TODO: declare properties that are special!
 
@@ -129,7 +127,7 @@ EOT;
 /**
  * Generator class for module code files for Drupal 6.
  */
-class ModuleBuilderGeneratorCode6 extends ModuleBuilderGeneratorCode {
+class ModuleBuilderGeneratorModuleCodeFile6 extends ModuleBuilderGeneratorModuleCodeFile {
   /**
    * Make the doxygen header for a given hook with the Drupal 6 format.
    *
