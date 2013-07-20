@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Menu callback for main module builder page.
+ * Menu callback for main module builder page.
  *
  */
 
