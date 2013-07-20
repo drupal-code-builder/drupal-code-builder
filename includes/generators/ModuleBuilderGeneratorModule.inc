@@ -8,14 +8,12 @@
  *    - code files
  *  - info
  *  - readme
+ *  - api
+ *  - tests
  *
  * This generator looks in $module data to determine which of these generators
- * to add. Generators can be requested by name, with the following extra special
- * values:
- *  - 'all': requests all generators.
- *  - 'code': equivalent to 'hooks' (at least for now).
- *  - FILE ID: requests a particular code file, by the abbreviated name. This
- *    is the filename without the initial 'MODULE.' or the '.inc' extension.
+ * to add. Generators can be requested by name, with various extra special
+ * values which are documented in this class's __construct().
  */
 class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
 
@@ -52,12 +50,14 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *        build. Component names are defined in subComponents(), and include:
    *        - 'all': everything we can do.
    *        - 'code': PHP code files.
-   *        - 'info': only info file.
-   *        - 'module': only module file.
-   *        - 'install': only install file.
+   *        - 'info': the info file.
+   *        - 'module': the .module file.
+   *        - 'install': the .install file.
    *        - 'tests': test file.
    *        - 'api': api.php hook documentation file.
-   *        - ???: any short filename.
+   *        - FILE ID: requests a particular code file, by the abbreviated name.
+   *          This is the filename without the initial 'MODULE.' or the '.inc'
+   *          extension.
    */
   function __construct($component_name, $component_data) {
     parent::__construct($component_name, $component_data);
