@@ -56,7 +56,7 @@ class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
     $code_pieces = array();
 
     // The docblock grouping.
-    $code_pieces[] = <<<EOT
+    $code_pieces['group'] = <<<EOT
 /**
  * @addtogroup hooks
  * @{
@@ -65,7 +65,7 @@ class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
 EOT;
 
     foreach ($hooks as $hook_short_name => $parameters) {
-      $code_pieces[] = $this->hook_code($hook_short_name, $parameters);
+      $code_pieces[$hook_short_name] = $this->hook_code($hook_short_name, $parameters);
     }
 
     return $code_pieces;

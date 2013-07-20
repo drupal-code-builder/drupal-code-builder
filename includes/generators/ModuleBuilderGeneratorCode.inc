@@ -91,7 +91,7 @@ EOT;
       $variables = $this->getReplacements();
       $hook_code = strtr($hook_code, $variables);
 
-      $functions[] = $hook_code;
+      $functions[$hook_name] = $hook_code;
     } // foreach hook
 
     return $functions;
