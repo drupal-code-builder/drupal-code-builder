@@ -7,7 +7,12 @@
  * already means something else) in that they are not an actual file, or
  * group of files, or section of a file.
  *
+ * A module component requests a hook component, and this component in turn
+ * requests one or more ModuleCodeFile components.
+ *
  * TODO: make this work for theme hooks too?
+ *
+ * @see ModuleBuilderGeneratorModuleCodeFile
  */
 class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
 
