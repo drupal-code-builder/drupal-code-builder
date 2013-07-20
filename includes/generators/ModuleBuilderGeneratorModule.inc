@@ -24,7 +24,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *
    * @param $component_name
    *   The identifier for the component.
-   * @param $module_data
+   * @param $component_data
    *   An associative array of data for the module, as received by
    *   module_builder_generate_component().
    *   An associative array of data for the module, [passed by reference so data
@@ -59,8 +59,8 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *        - 'api': api.php hook documentation file.
    *        - ???: any short filename.
    */
-  function __construct($component_name, $module_data) {
-    parent::__construct($component_name, $module_data);
+  function __construct($component_name, $component_data) {
+    parent::__construct($component_name, $component_data);
   }
 
   /**
