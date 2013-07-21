@@ -297,6 +297,13 @@ function drush_module_builder_callback_build() {
 
   //drush_print_r($files);
 
+  // TODO: check the files have code!
+  /*
+  if (is_null($module_code)) {
+    return drush_set_error('DRUSH_NOT_COMPLETED', 'No module code has been generated: perhaps you have specified invalid hook names or hooks this module does not know about.');
+  }
+  */
+
   // This has been set in module_builder_build_data().
   $module_dir = $module_data['component_folder'];
 
