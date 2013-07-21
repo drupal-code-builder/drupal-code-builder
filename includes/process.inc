@@ -211,7 +211,21 @@ function module_builder_get_hook_presets() {
            [definition] => function hook_foo($node, $teaser = FALSE, $page = FALSE)
            [description] => Description.
            [destination] => Destination module file for hook code from this file.
-           ... further properties
+           ... further properties:
+
+           'type' => $hook_data_raw['type'][$key],
+           'name' => $hook,
+           'definition'  => $hook_data_raw['definitions'][$key],
+           'description' => $hook_data_raw['descriptions'][$key],
+           // TODO: Don't store this, just use it to figure out
+           // callback dependencies!
+           //'documentation' => $hook_data_raw['documentation'][$key],
+           'destination' => $destination,
+           'dependencies'  => $hook_dependencies,
+           'group'       => $group,
+           'file_path'   => $file_data['path'],
+           'body'        => $hook_data_raw['bodies'][$key],
+
  */
 function module_builder_process_hook_data($hook_file_data) {
   /*
@@ -310,6 +324,8 @@ function module_builder_process_hook_data($hook_file_data) {
         'name' => $hook,
         'definition'  => $hook_data_raw['definitions'][$key],
         'description' => $hook_data_raw['descriptions'][$key],
+        // Don't store this!! TODO!! just use it for callback dependencies!!!
+        //'documentation' => $hook_data_raw['documentation'][$key],
         'destination' => $destination,
         'dependencies'  => $hook_dependencies,
         'group'       => $group,
