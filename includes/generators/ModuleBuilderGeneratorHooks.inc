@@ -31,7 +31,7 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
    *
    * TODO: clean up (if possible) so we use subComponents() instead?
    */
-  function getSubComponents() {
+  public function getSubComponents() {
     // Just translate the variable for easier frankencoding for now!
     $module_data = $this->component_data;
 

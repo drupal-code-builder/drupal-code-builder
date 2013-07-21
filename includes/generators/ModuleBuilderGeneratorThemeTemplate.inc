@@ -8,7 +8,7 @@ class ModuleBuilderGeneratorThemeTemplate extends ModuleBuilderGeneratorComponen
   /**
    * Return an array of subcomponent types.
    */
-  function subComponents() {
+  protected function subComponents() {
     // We have no subcomponents. This override is here just for clarity.
     return array();
   }

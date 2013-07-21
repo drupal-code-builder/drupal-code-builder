@@ -15,7 +15,7 @@ abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponen
    *
    * Files are always terminal components.
    */
-  function subComponents() {
+  protected function subComponents() {
     return array();
   }
 

@@ -120,7 +120,7 @@ abstract class ModuleBuilderGeneratorComponent {
    *  None. This should set an array of subcomponent generators on the property
    *  $this->components.
    */
-  function getSubComponents() {
+  public function getSubComponents() {
     $this->components = array();
 
     // Get the required subcomponents.
@@ -169,7 +169,7 @@ abstract class ModuleBuilderGeneratorComponent {
    *        generator's component data and passed to the component to be
    *        created. The data here takes precedence over existing values.
    */
-  function subComponents() {
+  protected function subComponents() {
     return array();
   }
 

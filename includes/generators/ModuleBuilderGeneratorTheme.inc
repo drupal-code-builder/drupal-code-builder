@@ -38,7 +38,7 @@ class ModuleBuilderGeneratorTheme extends ModuleBuilderGeneratorComponent {
    * @return
    *  An array of subcomponent types.
    */
-  function subComponents() {
+  protected function subComponents() {
     $theme_data = $this->component_data;
     //drush_print_r($theme_data);
 

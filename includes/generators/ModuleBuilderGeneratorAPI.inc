@@ -12,7 +12,7 @@ class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
   /**
    * Return an array of subcomponent types.
    */
-  function subComponents() {
+  protected function subComponents() {
     // We have no subcomponents.
     return array();
   }
