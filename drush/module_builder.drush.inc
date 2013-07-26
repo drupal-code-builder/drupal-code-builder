@@ -841,7 +841,8 @@ function drush_module_builder_callback_hook_list() {
     }
   }
 
-  drush_print(t("Hook data retrieved from @dir.", array('@dir' => _module_builder_get_hooks_directory())));
+  $hooks_directory = $mb_factory->environment->hooks_directory;
+  drush_print(t("Hook data retrieved from @dir.", array('@dir' => $hooks_directory)));
   drush_print(t("Hook data was processed on @time.", array('@time' => $time)));
 
   //print_r($data);
