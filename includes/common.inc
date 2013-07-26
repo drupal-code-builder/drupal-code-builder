@@ -10,21 +10,6 @@
  */
 
 /**
- * Safe version of drush_print that can be called without worrying about
- * where we are.
- */
-function _module_builder_drush_print($message, $indent, $type = 'message') {
-  if (MODULE_BUILDER_ENV == 'drush') {
-    // Running in a Drush CLI.
-    drush_print($message, $indent);
-  }
-  else {
-    // Running in Drupal UI.
-    // @TODO?
-  }
-}
-
-/**
  * Get a path to a resource that is safe to use either on Drupal or Drush.
  *
  * @param $subpath

@@ -64,7 +64,8 @@ function module_builder_update_documentation() {
   foreach ($hook_files as $file_name => $data) {
     $file_contents = drupal_http_request($data['url']);
     
-    _module_builder_drush_print("writing $directory/$file_name", 2);
+    // TODO: replace with call to environment output.
+    //_module_builder_drush_print("writing $directory/$file_name", 2);
     file_put_contents("$directory/$file_name", $destination . $file_contents->data);
   }
   
