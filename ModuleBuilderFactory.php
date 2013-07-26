@@ -25,7 +25,8 @@
  *
  * @return
  *  A new ModuleBuilderFactory object if called for the first time, or the same
- *  factory object as last time on subsequent calls.
+ *  factory object as last time on subsequent calls. The environment is
+ *  available in the 'environment' property of the factory.
  */
 function module_builder_get_factory($environment_class = NULL) {
   static $factory;

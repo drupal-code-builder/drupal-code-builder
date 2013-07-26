@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Contains ModuleBuilderEnvironement interface and classes.
+ * Contains Module Builder Environment handlers.
  *
  * An environment handler provides an abstraction layer between Module Builder
- * and its current environment. The environment handler takes care of things
- * such as:
+ * and its current environment, e.g., whether we are running as a Drush plugin,
+ * a Drupal module, or being loaded as a library. The environment handler takes
+ * care of things such as:
  *  - how to output debug data
  *  - how to get the Drupal core version
  *  - how to load an include file with a version suffix
  *  - how to find the hooks data directory.
+ * To use an environment, the class name should be passed as a parameter to
+ * module_builder_get_factory().
  */
 
 /**
@@ -21,8 +24,12 @@ abstract class ModuleBuilderEnvironmentBase {
   /**
    * Whether to skip the sanity tests.
    *
-   * This must be set on the environment before it's passed to the Module
-   * Builder Factory.
+   * This may be set on the environment after its class name is passed to
+   * module_builder_get_factory. Example:
+   * @code
+   * $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+   * $mb_factory->environment->skipSanity = TRUE;
+   * @endcode
    */
   public $skipSanity = FALSE;
 
