@@ -102,27 +102,6 @@ abstract class ModuleBuilderEnvironmentBase {
   }
 
   /**
-   * Check hook data files have been downloaded.
-   *
-   * This should be called by Tasks that require hook data to already be
-   * available.
-   *
-   * Note that verifyEnvironment() will already have been called.
-   *
-   * @throws ModuleBuilderException
-   *  Throws an exception if the hook data is not found.
-   */
-  public function verifyHookData() {
-    // Check the processed hook data is available.
-    $hooks_processed = $this->hooks_directory . "/hooks_processed.php";
-    if (!file_exists($hooks_processed)) {
-      $e = new ModuleBuilderException("No hook definitions found. You need to download hook definitions before using this module.");
-      $e->needs_hooks_download = TRUE;
-      throw $e;
-    }
-  }
-
-  /**
    * Output debug data.
    */
   abstract function debug($data, $message = '');
