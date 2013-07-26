@@ -1,62 +1,103 @@
+Module Builder
+==============
 
-Welcome to module_builder.module! 
-This is a module designed to help expedite the process of creating custom 
-modules. Simply fill out the form, select the hooks you want and the 
-script will automatically generate a skeleton module file for you, 
-along with PHPDoc comments and function definitions.
+Welcome to Module Builder!
 
-FEATURES
---------
-* Automatically parses available hook names from CVS at your command...
-  so help keep those files updated, won't you? ;)
-* Comes with some sample standard hook function declarations to get 
-  you started and a default module header; but if you don't like those,
-  simply rename the .template files to -custom.template instead and 
-  create your own definitions!
-* Saves you the trouble of looking at api.drupal.org 50 times a day to 
-  remember what arguments and what order different hooks use. Score one
-  for laziness! ;)
-* Automatically selects hooks based on your needs.
-* Option allows you to turn off informative comments.
+Module Builder is a system that simplifies the process of creating code, by
+creating files complete with scaffold code that can be filled in.
 
-INSTALL/CONFIG ON DRUPAL
---------------
-1. Move this folder into your modules/ directory like you would any 
+For example, for generating a custom module, simply fill out the form, select
+the hooks you want and the script will automatically generate a skeleton module
+file for you, along with PHPDoc comments and function definitions. This saves
+you the trouble of looking at api.drupal.org 50 times a day to remember what
+arguments and what order different hooks use. Score one for laziness! ;)
+
+What Module Builder can create
+------------------------------
+
+- modules, containing:
+  - hook implementations
+  - test class
+  - api.php file
+  - README file
+- custom themes, containing:
+  - theme template overrides
+
+How Module Builder can be used
+------------------------------
+
+Module builder can be used in a variety of ways:
+
+- as a Drush plugin, providing a Drush command
+- as a Drupal module, providing an admin UI in Drupal
+- as a library, which can be used by other Drupal modules via Libraries API
+
+Module builder and Drupal core versions
+---------------------------------------
+
+Module builder can be used for any version of Drupal (5, 6, 7, 8) when used as
+Drush plugin or a library.
+
+When used as a regular Drupal module however, you need the version that matches
+the core version of your Drupal.
+
+Installing module builder
+-------------------------
+
+### Installation as a Drush plugin ###
+
+1. Place this folder somewhere where Drush can find the command.
+   Inside ~/.drush will do it; see the Drush documentation has details on other
+   possible locations.
+2. From a Drupal installation, do:
+     $ drush mbdl
+   This will download hook data to that Drupal's files/hooks folder.
+   Hooks are downloaded for core and any other modules in this installation of
+   Drupal that have an api.php file to document their hooks.
+3. You can now generate module code. For details, do:
+     $ drush help mb
+
+If you use Drush with multiple Drupal installations, you can store your hook
+data centrally. To do so, specify the --data option when both downloading hooks
+and generating code. You can use Drush's drushrc.php to set this option
+automatically.
+
+The advantage of this is that you only download hooks data once for all your
+sites. If your sites have different contrib modules, you can simply execute the
+download command in each one: the data for different modules accumulates, even
+if a particular module is absent in one site.
+
+### Installation as a Drupal module ###
+
+1. Place this folder into your modules/ directory like you would any
    other module.
-2. Enable it from administer >> modules.
-3. Go to administer >> settings >> module_builder and specify the path
-   to save the hook documentation files.
+2. Enable it from Administration > Modules.
+3. At Administration › Configuration › Development › Module Builder › Settings,
+   specify the path to save the hook documentation files.
 4. (On Drupal 5 and 6 only) The first time you visit the module builder form,
-   the module will retrieve hook documentation from cvs.drupal.org and store it
-   locally. 
-   When you want to update this documentation later on, return to the 
+   the module will retrieve hook documentation from git.drupal.org and store it
+   locally.
+   When you want to update this documentation later on, return to the
    settings page and click the "Update" button.
 5. (Optional) Create custom function declaration template file(s) if you
    don't like the default output.
-6. (Optional) Create your own hook groupings if you don't like the 
+6. (Optional) Create your own hook groupings if you don't like the
    default ones.
 
-INSTALL/CONFIG ON DRUSH
-----------------
-1. Move the module folder to somewhere where Drush can find the command. 
-   Inside ~/.drush will do it. Drush documentation has details on other options.
-2. From a Drupal installation, do:
-     $ drush mbdl
-   This will download hook data to that Drupal's files/hooks folder. 
-   Hooks are downloaded for core and any other module builder-aware modules that
-   are in this install of Drupal.
-3. You can now generate module code. For more help, do:
-     $ drush help mb
+### Installation as a library ###
 
-If you use Drush with multiple Drupal installations, you can store your hook data centrally, and so only download it once for all your sites.
-To do so, specify the --data option when both downloading hooks and generating code. You can use Drush's drushrc.php to set this option automatically.
+If another module instructs to use this as a library, place this folder is
+the sites/all/libraries folder.
 
-USING THE MODULE ON DRUPAL
-----------------
-1. Click the "module_builder" link in the menu (note: you will require
-   'access module builder' privileges to see this link)
+Using Module Builder
+--------------------
+
+### Use on Drupal
+
+1. Go to Administration › Modules › Module Builder.
+   (Note: you will require 'access module builder' privileges to see this link.)
 2. Enter a module name, description, and so on.
-3. Select from one of the available hook groupings to automatically 
+3. Select from one of the available hook groupings to automatically
    select hook choices for you, or expand the fieldsets and choose
    hooks individually.
 4. Click the "Submit" button and watch your module's code generated
@@ -64,12 +105,13 @@ USING THE MODULE ON DRUPAL
 5. Copy and paste the code into a files called <your_module>.module,
    <your_module>.info and <your_module>.install and save them to
    a <your_module> directory under one of the modules directories.
-6. Start customizing it to your needs; most of the tedious work is 
+6. Start customizing it to your needs; most of the tedious work is
    already done for you! ;)
 
-USING THE MODULE ON DRUSH
-----------------
+### Use on Drush
+
 Full help is available via 'drush help mb'.
+
 The drush command uses an interactive mode by default to request any
 parameters not initially given. To disable this and use default values for
 anything omitted, specify the --noi option.
@@ -78,36 +120,43 @@ It's a good idea to set up your drushrc.php with:
   $options['data'] = '/path/to/drupal_hooks/';
 
 and if you prefer the non-interactive command line style:
-  $options['noi']  = 1;
+  $options['noi'] = 1;
 
-TODO/WISHLIST
+Module Builder API
+------------------
+
+Module builder is primarily a framework for generating code files, that happens
+to be packaged with two UIs that access it: the Drush plugin for use on the
+command line, and the Drupal module for use in the web UI.
+
+This framework has a public API which can be used by other modules.
+
+To get started with using the Module Builder API, see:
+  - module_builder_get_factory()
+  - the classes in Environment/Environment.php
+  - the tasks handlers in the Task folder.
+
+Todo/wishlist
 -------------
-* Maybe some nicer theming/swooshy boxes on hook descriptions or 
+
+* Maybe some nicer theming/swooshy boxes on hook descriptions or
   something to make the form look nicer/less cluttered
 * I would like to add the option to import help text from a Drupal.org
-  handbook page, to help encourage authors to write standardized 
+  handbook page, to help encourage authors to write standardized
   documentation in http://www.drupal.org/handbook/modules/
 
-KNOWN ISSUES
+Known issues
 ------------
+
 * Can't set default values in PHP 5 for some strange reason
 * Fieldsets in Opera look mondo bizarr-o
 * If using D6 private file system that is not writeable by the account running
   drush then you must specify a path for the data using the --data option
   that is writeable by the account using drush.
 
-API
--------------
-This module can be considered to be an API and two wrappers: 
-- Drupal's web-based UI (referred to in code comments as Drupal UI or just Drupal)
-- Drush's command line
-Furthermore, while the Drupal part of the module is version-specific (that is, you download the version of the module to match your version of Drupal core as you would any module), the Drush part, works across versions in the same way as Drush itself.
-That is, you can download the current version of module builder, install it as a Drush command, and where you can use Drush you can use module builder. (Note this is still a work in progress...)
-
-
 CONTRIBUTORS
 ------------
-* Owen Barton (grugnog2), Chad Phillips (hunmonk), and Chris Johnson 
+* Owen Barton (grugnog2), Chad Phillips (hunmonk), and Chris Johnson
   (chrisxj) for initial brainstorming stuff @ OSCMS in Vancouver
 * Jeff Robbins for the nice mockup to work from and some great suggestions
 * Karthik/Zen/|gatsby| for helping debug some hairy Forms API issues
