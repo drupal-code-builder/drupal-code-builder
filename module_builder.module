@@ -27,10 +27,8 @@ define('MODULE_BUILDER_HEADER_DEFAULT', '
  * Implementation of hook_init().
  */
 function module_builder_init() {
-  // Set our environment.
-  define('MODULE_BUILDER_ENV', 'drupal');
-
   // Include common code.
+  include_once('./' . drupal_get_path('module', 'module_builder') . '/ModuleBuilderFactory.php');
   include_once('./' . drupal_get_path('module', 'module_builder') . '/includes/common.inc');
 }
 

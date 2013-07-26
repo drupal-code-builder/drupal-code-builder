@@ -73,20 +73,20 @@ function module_builder_admin_settings($form, &$form_state) {
  * Admin hook update form.
  */
 function module_builder_admin_update($form, &$form_state) {
-  // Check settings; this will create the folder if needed.
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+
+  // Get our task, and check hook data is ready.
   try {
-    _module_builder_sanity_check();
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+
+    $last_update = $mb_task_handler_report->lastUpdatedDate();
+    $doc_files = $mb_task_handler_report->listHookFiles();
+    $directory = $mb_factory->environment->hooks_directory;
   }
   catch (ModuleBuilderException $e) {
-    if ($e->needs_hooks_download) {
-      $last_update = FALSE;
-    }
-  }
-
-  // Include generating component file.
-  module_builder_include('process');
-  if (!isset($last_update)) {
-    $last_update = module_builder_get_hook_data_last_updated();
+    drupal_set_message($e->getMessage(), 'warning');
+    return array();
   }
 
   $form['last_update'] = array(
@@ -97,11 +97,9 @@ function module_builder_admin_update($form, &$form_state) {
       ) . '</p>',
   );
 
-  $doc_files = module_builder_get_doc_files();
-  $dir = _module_builder_get_hooks_directory();
   if (count($doc_files)) {
     $form["files"] = array(
-      '#markup' => '<p>' . t('You have the following hook definition files saved in %dir: ', array('%dir' => $dir)) .
+      '#markup' => '<p>' . t('You have the following hook definition files saved in %dir: ', array('%dir' => $directory)) .
          theme('item_list', array('items' => $doc_files)) . '</p>',
     );
   }
@@ -118,5 +116,10 @@ function module_builder_admin_update($form, &$form_state) {
  * Admin hook update form submit handler.
  */
 function module_builder_admin_update_submit($form, $form_state) {
-  module_builder_update_data();
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+
+  // Safe to do this without exception handling: it's already been checked in
+  // the form builder.
+  $mb_task_handler_collect = $mb_factory->getTask('Collect');
+  $mb_task_handler_collect->collectHooks();
 }

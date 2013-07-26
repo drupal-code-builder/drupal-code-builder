@@ -163,6 +163,7 @@ function _module_builder_get_hooks_directory() {
 
   switch (MODULE_BUILDER_ENV) {
     case 'drupal':
+    case 'library':
       // Running in a Drupal UI: directory is either 'hooks' or whatever the
       // variable is set to.
       $directory = variable_get('module_builder_hooks_directory', 'hooks');

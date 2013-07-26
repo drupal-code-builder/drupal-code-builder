@@ -26,6 +26,10 @@ function module_builder_drush_init() {
  * Helper for hook_drush_init() and completion callbacks.
  */
 function module_builder_drush_init_helper() {
+  // Load the file containing our factory class.
+  include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
+
+
   include_once(dirname(__FILE__) . '/../includes/common.inc');
   // Set our environment.
   define('MODULE_BUILDER_ENV', 'drush');
@@ -216,8 +220,12 @@ function drush_module_builder_callback_build() {
   // Check settings before we start. This sort of wastes the potential of using
   // exceptions, but it's polite to warn the user of problems before they've
   // spent ages typing in all the hook names in interactive mode.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Get our task handler. This performs a sanity check on the environment which
+  // throws an exception.
   try {
-    _module_builder_sanity_check();
+    $mb_task_handler_generate = $mb_factory->getTask('Generate');
   }
   catch (ModuleBuilderException $e) {
     // If the problem is that the hooks need downloading, we can recover from this.
@@ -288,14 +296,12 @@ function drush_module_builder_callback_build() {
   $module_data['bare_code'] = $bare_code;
 
   // Build files.
-  // Include generating component file.
-  module_builder_include('generate');
 
   // For now, just assume it's a module we've been requested. We are nowhere
   // near ready to have other pathways into this.
-  $files = module_builder_generate_component('module', $module_data);
+  $files = $mb_task_handler_generate->generateComponent('module', $module_data);
 
-  //drush_print_r($files);
+  drush_print_r($files);
 
   // TODO: check the files have code!
   /*
@@ -329,12 +335,29 @@ function drush_module_builder_callback_build() {
  * and comment out cache in drush_complete_get().
  */
 function module_builder_module_builder_callback_build_complete() {
+  // We're too early in the drush bootstrap for this to be called, apparently.
+  // So do it ourselves.
   module_builder_drush_init_helper();
 
-  // Include generating component file.
-  module_builder_include('process');
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
 
-  $data = module_builder_get_hook_data_flat();
+  // Add our environment handler, and check hook data is ready.
+  try {
+    // Drupal bootstrap isn't ready enough to check environment, because the
+    // file API isn't loaded. This isn't bad, because here it's us, the caller,
+    // that knows we can't pass the check.
+    $mb_factory->environment->skipSanity = TRUE;
+
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+  }
+  catch (ModuleBuilderException $e) {
+    // Just do nothing if we're not ready: the actual command will deal with
+    // error output to the user.
+    return;
+  }
+
+  $data = $mb_task_handler_report->listHookNames();
   $complete = array();
   foreach ($data as $hook_name => $hook_data) {
     $complete[] = $hook_name;
@@ -363,6 +386,21 @@ function drush_module_builder_callback_build_theme() {
 
   $theme_data = array();
 
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Create our environment handler, set it, then get the task.
+  try {
+    // We don't need no hooks. Skip the sanity test.
+    // This is bad, because it's the task method that should know it doesn't
+    // need this level of environment.
+    $mb_factory->environment->skipSanity = TRUE;
+    $mb_task_handler_generate = $mb_factory->getTask('Generate');
+  }
+  catch (ModuleBuilderException $e) {
+    // Doubtful we get here.
+    return;
+  }
+
   // Get the folder for the theme, and from that its machine name.
   $theme_data['theme_folder'] = module_builder_get_component_folder('theme', $commands[0]);
   $theme_data['theme_name'] = basename($theme_data['theme_folder']);
@@ -372,8 +410,11 @@ function drush_module_builder_callback_build_theme() {
 
   // Build files.
   // Include generating component file.
-  module_builder_include('generate');
-  $files = module_builder_generate_component('theme', $theme_data);
+  $files = $mb_task_handler_generate->generateComponent('theme', $theme_data);
+
+  drush_print_r($theme_data);
+  return;
+
 
   $theme_path = path_to_theme();
 
@@ -386,6 +427,9 @@ function drush_module_builder_callback_build_theme() {
  * Helper function to build the array of module_data.
  *
  * @see ModuleBuilderGeneratorModule::__construct()
+ *
+ * @param $commands
+ *  The commands array.
  */
 function module_builder_build_data($commands) {
   // Determine whether we're in interactive mode.
@@ -490,13 +534,28 @@ function module_builder_build_data($commands) {
   $module_data['module_root_name'] = basename($module_data['component_folder']);
   drush_print_r('---- module folder: ' . $module_data['component_folder']);
 
-  // Include generating component file.
-  module_builder_include('process');
+  $mb_factory = module_builder_get_factory();
+  try {
+    $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+
   // Get the flat list of hooks, standardized to lower case.
-  $hook_definitions = array_change_key_case(module_builder_get_hook_data_flat());
+  $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->listHookNames());
 
   // Extra processing for the hooks array (or not).
-  $hook_presets = module_builder_get_hook_presets();
+  try {
+    $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+
+  $hook_presets = $mb_task_handler_report_presets->getHookPresets();
   $hooks = array();
   if (!is_array($module_data['hooks'])) {
     $module_data['hooks'] = preg_split('/\s+/', $module_data['hooks']);
@@ -654,8 +713,8 @@ function module_builder_default_readable_name($commands, $module_data) {
 function module_builder_drush_output_code($component_dir, $filename, $code) {
   // Output to terminal
   if (!drush_get_option('quiet')) {
-    drush_print("Proposed $filename:");
-    drush_print_r($code);
+    //drush_print("Proposed $filename:");
+    //drush_print_r($code);
   }
 
   $write = drush_get_option('write');
@@ -700,22 +759,31 @@ function module_builder_drush_output_code($component_dir, $filename, $code) {
  * Callback for downloading hook data.
  */
 function drush_module_builder_callback_hook_download() {
-  // Check our data directory first.
+  // Get the MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Get our task handler. This performs a sanity check which throws an
+  // exception.
   try {
-    $hooks_directory = _module_builder_get_hooks_directory();
-    module_builder_prepare_directory($hooks_directory);
+    $mb_task_handler_collect = $mb_factory->getTask('Collect');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
 
-  $return = module_builder_update_data();
+  $mb_task_handler_collect->collectHooks();
+
+  // TODO: there is no return value from the hook collection (nor has there
+  // been for a long time!)
+  // Fake this for now!
+  $return = TRUE;
+
   if (!$return) {
     return drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hooks.');
   }
   else {
-    drush_print("Hook files have been downloaded to $hooks_directory and processed.");
+    drush_print("Hook files have been downloaded to {$mb_factory->environment->hooks_directory} and processed.");
   }
 }
 
@@ -723,21 +791,20 @@ function drush_module_builder_callback_hook_download() {
  * Callback to list known hooks.
  */
 function drush_module_builder_callback_hook_list() {
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Get our task handler, which checks hook data is ready.
   try {
-    _module_builder_sanity_check();
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
 
-  $commands = func_get_args();
-
-  // Include generating component file.
-  module_builder_include('process');
-
-  $data = module_builder_get_hook_data();
-  $time = module_builder_get_hook_data_last_updated();
+  $time = $mb_task_handler_report->lastUpdatedDate();
+  $data = $mb_task_handler_report->listHookData();
 
   if (count($commands)) {
     // Put the requested filenames into the keys of an array, and intersect them
@@ -763,8 +830,15 @@ function drush_module_builder_callback_hook_list() {
   }
 
   // List presets.
-  module_builder_include('process');
-  $hook_presets = module_builder_get_hook_presets();
+  try {
+    $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+
+  $hook_presets = $mb_task_handler_report_presets->getHookPresets();
   foreach ($hook_presets as $hook_preset_name => $hook_preset_data) {
     drush_print("Preset $hook_preset_name: " . $hook_preset_data['label'], 2);
     foreach ($hook_preset_data['hooks'] as $hook) {
@@ -794,6 +868,8 @@ function drush_module_builder_callback_hook_analyze() {
 
   // The first argument is the module machine name.
   $module_root_name = array_shift($commands);
+
+  // TODO: use module_builder_get_hook_implementations().
 
   // Include process component file.
   module_builder_include('process');
@@ -974,13 +1050,11 @@ function drush_module_builder_callback_doc_params() {
  * Just for testing stuff on the commandline while developing the module.
  */
 function drush_module_builder_callback_debug() {
-
-  /*
   include(dirname(__FILE__) . '/../includes/process.inc');
-  include(dirname(__FILE__) . '/../includes/update.inc');
+  $data = module_builder_get_hook_data_flat();
+  drush_print_r($data);
 
-  module_builder_update_documentation();
-  */
+
 
 
   return;

@@ -58,9 +58,12 @@ function module_builder_page($form, &$form_state) {
  * Form builder for page 1.
  */
 function module_builder_page_input($form, &$form_state) {
-  // Check settings; this will create the folder if needed.
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+
+  // Get our task handler, which checks hook data is ready.
   try {
-    _module_builder_sanity_check();
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     if ($e->needs_hooks_download) {
@@ -95,9 +98,7 @@ function module_builder_page_input($form, &$form_state) {
   // Get list of hooks from downloaded documentation, organized in fieldsets.
   // include the data processing file
   // TODO: only need the data loading.
-  module_builder_include('process');
-
-  $hook_groups = module_builder_get_hook_data();
+  $hook_groups = $mb_task_handler_report->listHookData();
 
   // Include CSS for formatting
   drupal_add_css(drupal_get_path('module', 'module_builder') . '/theme/module_builder.css');
@@ -171,7 +172,15 @@ function module_builder_page_input($form, &$form_state) {
   );
 
   // Get the hook presets list.
-  $hook_presets = module_builder_get_hook_presets();
+  try {
+    $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+  }
+  catch (ModuleBuilderException $e) {
+    // We've already sanity-checked, so doubtful we come here.
+    return $form;
+  }
+
+  $hook_presets = $mb_task_handler_report_presets->getHookPresets();
 
   $form['hook_presets'] = array(
     '#type' => 'fieldset',
@@ -330,13 +339,16 @@ function module_builder_page_input_submit($form, &$form_state) {
  * Form builder for page 2: generate code.
  */
 function module_builder_page_generate($form, &$form_state) {
-  module_builder_include('generate');
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+
+  // Get our task handler. The form builder will already have checked sanity.
+  $mb_task_handler_generate = $mb_factory->getTask('Generate');
 
   // Build module data
   $module_data = module_data_from_form($form_state['values']);
 
   // Get the files.
-  $files = module_builder_generate_component('module', $module_data);
+  $files = $mb_task_handler_generate->generateComponent('module', $module_data);
   //dsm($files);
 
   /*
