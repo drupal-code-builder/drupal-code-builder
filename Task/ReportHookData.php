@@ -9,9 +9,6 @@ namespace ModuleBuider\Task;
 
 /**
  * Task handler for reporting on hook data.
- *
- * Note that this task expects verifyHookData() to have been called on the
- * environment handler.
  */
 class ReportHookData {
 
