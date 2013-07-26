@@ -10,7 +10,7 @@
 /**
  * Implementation of hook_drush_init().
  *
- * Include common code and set our environment.
+ * Include common code.
  */
 function module_builder_drush_init() {
   $command_info = drush_get_command();
@@ -21,7 +21,7 @@ function module_builder_drush_init() {
 }
 
 /**
- * Include our common files and set our environment.
+ * Include our common files.
  *
  * Helper for hook_drush_init() and completion callbacks.
  */
@@ -29,10 +29,7 @@ function module_builder_drush_init_helper() {
   // Load the file containing our factory class.
   include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
 
-
   include_once(dirname(__FILE__) . '/../includes/common.inc');
-  // Set our environment.
-  define('MODULE_BUILDER_ENV', 'drush');
 }
 
 /**
