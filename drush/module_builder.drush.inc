@@ -852,6 +852,9 @@ function drush_module_builder_callback_hook_list() {
  * Callback to list hook implementations found in a given module.
  */
 function drush_module_builder_callback_hook_analyze() {
+  return;
+  // TODO: update this command to the new API.
+
   try {
     _module_builder_sanity_check();
   }
@@ -915,6 +918,9 @@ function drush_module_builder_callback_hook_analyze() {
  * Callback to add doc headers to existing hooks.
  */
 function drush_module_builder_callback_doc_hooks() {
+  return;
+  // TODO: update this command to the new API.
+
   $commands = func_get_args();
 
   // The first argument is the module machine name.
