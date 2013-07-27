@@ -40,14 +40,17 @@ abstract class ModuleBuilderEnvironmentBase {
    * absolute, but in either case it is in a format that other environment
    * methods can use.
    *
-   * Set by the constructor.
+   * Set by the constructor, and thus may be accessed within a Task handler,
+   * though initially this only represents a user setting, and is not verified
+   * as an existing, writable directory unless the Task's sanity level has
+   * requested it.
    */
   public $hooks_directory;
 
   /**
    * The major Drupal core version.
    *
-   * Set by the constructor.
+   * Set by the constructor, and thus may be accessed within a Task handler.
    */
   public $major_version;
 
