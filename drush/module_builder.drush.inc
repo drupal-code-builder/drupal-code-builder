@@ -966,7 +966,22 @@ function drush_module_builder_callback_doc_hooks() {
  * Callback to output the location of the data directory.
  */
 function drush_module_builder_callback_get_data_dir() {
-  drush_print('Module builder data is in ' . _module_builder_get_hooks_directory());
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+  try {
+    $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+
+  // We don't actually need a task, we just need to get the property from the
+  // environment. However, getting the ReportHookData task runs the sanity check
+  // directory so we can report if it's not writable.
+  $hooks_directory = $mb_factory->environment->hooks_directory;
+
+  drush_print('Module builder data is in ' . $hooks_directory);
 }
 
 /**
