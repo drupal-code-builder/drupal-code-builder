@@ -48,28 +48,6 @@ function module_builder_get_hook_declarations($dir = NULL) {
 }
 
 /**
- * Get just hook declarations, keyed by hook name.
- *
- * @param $dir
- *  The directory to look in for processed data.
- *
- * @return
- *   An array of the form:
- *     [hook_action_info] => function hook_action_info()
- */
-function module_builder_get_hook_declarations_plain($dir = NULL) {
-  $data = module_builder_get_hook_data($dir);
-
-  foreach ($data as $group => $hooks) {
-    foreach ($hooks as $key => $hook) {
-      $return[$hook['name']] = $hook['definition'];
-    }
-  }
-
-  return $return;
-}
-
-/**
  * Get just hook names.
  *
  * @param $dir
