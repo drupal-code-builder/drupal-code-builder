@@ -251,6 +251,7 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // node.hooks.template will only override that same file in the module data;
     // if the hook is not requested as part of a group then that file will not be considered.
     // (Though groups are broken for now...)
+    $version = module_builder_get_factory()->environment->major_version;
     $version = _module_builder_drupal_major_version();
     $template_base_path_module = module_builder_get_path('templates') . '/' . $version;
     //print "base path: $template_base_path_module";

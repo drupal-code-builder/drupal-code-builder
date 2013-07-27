@@ -120,4 +120,45 @@ class ReportHookData {
     return $return;
   }
 
+  /**
+   * Get stored hook declarations, keyed by hook name, with destination.
+   *
+   * (Replaces module_builder_get_hook_declarations().)
+   *
+   * @return
+   *  An array of hook information, keyed by the full name of the hook
+   *  standardized to lower case.
+   *  Each item has the keys:
+   *  - 'name': The full name of the hook in the original case,
+   *    eg 'hook_form_FORM_ID_alter'.
+   *  - 'declaration': The full function declaration.
+   *  - 'destination': The file this hook should be placed in, as a module file
+   *    pattern such as '%module.module'.
+   *  - 'group': Erm write this later.
+   *  - 'file_path': The absolute path of the file this definition was taken
+   *    from.
+   *  - 'body': The hook function body, taken from the API file.
+   */
+  function getHookDeclarations() {
+    // Get the full hook data.
+    $data = $this->listHookData();
+
+    foreach ($data as $group => $hooks) {
+      foreach ($hooks as $key => $hook) {
+        $hook_name_lower_case = strtolower($hook['name']);
+        $return[$hook_name_lower_case] = array(
+          'name'        => $hook['name'],
+          'declaration' => $hook['definition'],
+          'destination' => $hook['destination'],
+          'dependencies'  => $hook['dependencies'],
+          'group'       => $group,
+          'file_path'   => $hook['file_path'],
+          'body'        => $hook['body'],
+        );
+      }
+    }
+
+    return $return;
+  }
+
 }
