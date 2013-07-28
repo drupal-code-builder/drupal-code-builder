@@ -101,26 +101,6 @@ class ReportHookData {
   }
 
   /**
-   * Get a flat list of hook names.
-   *
-   * (Replaces module_builder_get_hook_data_flat().)
-   *
-   * @return
-   *  An array of hook data, with hook names as keys and hook data as items.
-   */
-  function listHookNames() {
-    $data = $this->listHookData();
-
-    $return = array();
-    foreach ($data as $group => $hooks) {
-      foreach ($hooks as $key => $hook) {
-        $return[$hook['name']] = $hook;
-      }
-    }
-    return $return;
-  }
-
-  /**
    * Get stored hook declarations, keyed by hook name, with destination.
    *
    * (Replaces module_builder_get_hook_declarations().)
@@ -129,32 +109,26 @@ class ReportHookData {
    *  An array of hook information, keyed by the full name of the hook
    *  standardized to lower case.
    *  Each item has the keys:
+   *  - 'type': One of 'hook' or 'callback'.
    *  - 'name': The full name of the hook in the original case,
    *    eg 'hook_form_FORM_ID_alter'.
-   *  - 'declaration': The full function declaration.
+   *  - 'definition': The full function declaration.
+   *  - 'description': The first line of the hook docblock.
    *  - 'destination': The file this hook should be placed in, as a module file
    *    pattern such as '%module.module'.
+   *  - 'dependencies': TODO!
    *  - 'group': Erm write this later.
    *  - 'file_path': The absolute path of the file this definition was taken
    *    from.
    *  - 'body': The hook function body, taken from the API file.
    */
   function getHookDeclarations() {
-    // Get the full hook data.
     $data = $this->listHookData();
 
+    $return = array();
     foreach ($data as $group => $hooks) {
       foreach ($hooks as $key => $hook) {
-        $hook_name_lower_case = strtolower($hook['name']);
-        $return[$hook_name_lower_case] = array(
-          'name'        => $hook['name'],
-          'declaration' => $hook['definition'],
-          'destination' => $hook['destination'],
-          'dependencies'  => $hook['dependencies'],
-          'group'       => $group,
-          'file_path'   => $hook['file_path'],
-          'body'        => $hook['body'],
-        );
+        $return[$hook['name']] = $hook;
       }
     }
 

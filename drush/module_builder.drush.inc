@@ -352,7 +352,7 @@ function module_builder_module_builder_callback_build_complete() {
     return;
   }
 
-  $data = $mb_task_handler_report->listHookNames();
+  $data = $mb_task_handler_report->getHookDeclarations();
   $complete = array();
   foreach ($data as $hook_name => $hook_data) {
     $complete[] = $hook_name;
@@ -539,7 +539,7 @@ function module_builder_build_data($commands) {
   }
 
   // Get the flat list of hooks, standardized to lower case.
-  $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->listHookNames());
+  $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
 
   // Extra processing for the hooks array (or not).
   try {

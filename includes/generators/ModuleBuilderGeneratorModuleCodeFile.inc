@@ -64,7 +64,7 @@ EOT;
       $hook_code .= $this->hook_doxygen($hook['name']);
 
       // function declaration: put in the module name, add closing brace, decode html entities
-      $declaration = preg_replace('/(?<=function )hook/', $module_data['module_root_name'], $hook['declaration']);
+      $declaration = preg_replace('/(?<=function )hook/', $module_data['module_root_name'], $hook['definition']);
       $declaration .= ' {';
       $hook_code .= htmlspecialchars_decode($declaration);
 
