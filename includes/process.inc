@@ -146,29 +146,6 @@ function module_builder_get_template($filename) {
 }
 
 /**
- * Get the definition of hook presets.
- *
- * A preset is a collection of hooks with a machine name and a descriptive
- * label. Presets allow quick selection of hooks that are commonly used
- * together, eg those used to define a node type, or blocks.
- *
- * @return
- *  An array keyed by preset name, whose values are arrays of the form:
- *    'label': The label shown to the user.
- *    'hooks': A flat array of full hook names, eg 'hook_menu'.
- */
-function module_builder_get_hook_presets() {
-  // TODO: read user file preferentially.
-  $presets_template = module_builder_get_template('hook_groups.template');
-  $hook_presets = json_decode(preg_replace("@//.*@", '', $presets_template), TRUE);
-  if (is_null($hook_presets)) {
-    // @TODO: do something here to say its gone wrong. Throw Exception?
-    drupal_set_message(t('Problem reading json file.'), 'error');
-  }
-  return $hook_presets;
-}
-
-/**
  * Builds complete hook data array from downloaded files and stores in a file.
  *
  * @param hook_file_data
