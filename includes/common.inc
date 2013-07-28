@@ -106,23 +106,6 @@ function _module_builder_sanity_check() {
 }
 
 /**
- * Update hook files and process them to our data file.
- *
- * This is the master function to call from either UI, drush or drupal.
- */
-function module_builder_update_data() {
-  // Update the hook documentation.
-  module_builder_include('update');
-  $hook_files = module_builder_update_documentation();
-
-  // Process the hook files.
-  module_builder_include('process');
-  module_builder_process_hook_data($hook_files);
-
-  return TRUE; // FTW!
-}
-
-/**
  * Get the path of the directory to save or read hook data files.
  *
  * This does not test for existence of the directory; it merely returns

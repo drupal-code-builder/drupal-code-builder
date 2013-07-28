@@ -44,10 +44,7 @@
  * present in the codebase (rather than needing to be downloaded from CVSview
  * as was the case in previous versions of Drupal).
  *
- * After calling this function, you probably want to pass the returned list
- * of files to module_builder_process_hook_data().
- * Though really, instead of this function you probably want module_builder_update_data().
- * Just saying.
+ * Should be called from Collect::collectHooks().
  *
  * @return
  *  Array of hook files suitable for passing to module_builder_process_hook_data().

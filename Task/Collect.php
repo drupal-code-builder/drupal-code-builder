@@ -32,6 +32,8 @@ class Collect {
 
   /**
    * Collect hook api.php documentation files from sources and process them.
+   *
+   * (Replaces module_builder_update_data().)
    */
   function collectHooks() {
     // Load the legacy procedural include file.
