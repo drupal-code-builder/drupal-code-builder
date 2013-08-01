@@ -161,6 +161,9 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
    * Constructor.
    */
   function __construct() {
+    // Set the major version.
+    $this->setMajorVersion();
+
     // Legacy: set the environement constant.
     // TODO: remove this.
     define('MODULE_BUILDER_ENV', 'drupal');
@@ -174,9 +177,6 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
     module_builder_directory_path($directory);
 
     $this->hooks_directory = $directory;
-
-    // Set the major version.
-    $this->setMajorVersion();
   }
 
   /**
@@ -250,6 +250,9 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
    * Constructor.
    */
   function __construct() {
+    // Set the major version.
+    $this->setMajorVersion();
+
     // Legacy: set the environement constant.
     // TODO: remove this.
     define('MODULE_BUILDER_ENV', 'library');
@@ -263,9 +266,6 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
     module_builder_directory_path($directory);
 
     $this->hooks_directory = $directory;
-
-    // Set the major version.
-    $this->setMajorVersion();
   }
 
   /**
@@ -306,6 +306,9 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
    * Constructor.
    */
   function __construct() {
+    // Set the major version.
+    $this->setMajorVersion();
+
     // Legacy: set the environement constant.
     // TODO: remove this.
     define('MODULE_BUILDER_ENV', 'drush');
@@ -319,9 +322,6 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
     module_builder_directory_path($directory);
 
     $this->hooks_directory = $directory;
-
-    // Set the major version.
-    $this->setMajorVersion();
   }
 
   /**
