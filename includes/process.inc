@@ -8,28 +8,6 @@
  */
 
 /**
- * Retrieve hook data from storage file.
- *
- * @param $directory
- *  (optional) The directory to look in for processed data. If not given, the
- *  directory is obtained from settings.
- *
- * @return
- *  The unserialized contents of the processed hook data file.
- */
-function module_builder_get_hook_data($directory = NULL) {
-  if (!isset($directory)) {
-    //$directory = file_create_path(variable_get('module_builder_hooks_directory', 'hooks'));
-    $directory = _module_builder_get_hooks_directory();
-  }
-
-  $hooks_file = "$directory/hooks_processed.php";
-  if (file_exists($hooks_file)) {
-    return unserialize(file_get_contents($hooks_file));
-  }
-}
-
-/**
  * Get the timestamp of the processed file.
  *
  * @param $directory
