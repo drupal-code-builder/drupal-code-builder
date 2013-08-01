@@ -45,14 +45,6 @@
 
  */
 function module_builder_process_hook_data($hook_file_data) {
-  /*
-  // Get list of hook documentation files
-  $files = module_builder_get_doc_files($directory);
-  if (!isset($files)) {
-    return NULL;
-  }
-  */
-
   //print_r($hook_file_data);
 
   // check file_exists?
@@ -163,46 +155,6 @@ function module_builder_process_hook_data($hook_file_data) {
   file_put_contents("$directory/hooks_processed.php", $serialized);
 
   return $hook_groups;
-}
-
-/**
- * Retrieve list of documentation files containing hook definitions.
- *
- * @return array
- *   Array of files
- */
-function module_builder_get_doc_files() {
-  $dir = _module_builder_get_hooks_directory();
-
-  if (!$dir) {
-    drupal_set_message(t('Please configure the hook documentation path in <a href="!settings">module builder settings</a>.', array('!settings' => url('admin/settings/module_builder'))), 'error');
-    return NULL;
-  }
-
-  $files = array();
-
-  if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-      while (($file = readdir($dh)) !== FALSE) {
-        // Ignore files that don't make sense to include
-        // TODO: replace all the .foo with one of the arcane PHP string checking functions
-        if (!in_array($file, array('.', '..', '.DS_Store', 'CVS', 'hooks_processed.php'))) {
-          $files[] = $file;
-        }
-      }
-      closedir($dh);
-    }
-    else {
-      drupal_set_message(t('There was an error opening the hook documentation path. Please try again.'), 'error');
-      return NULL;
-    }
-  }
-  else {
-    drupal_set_message(t('Hook documentation path is invalid. Please return to the <a href="!settings">module builder settings</a> page to try again.', array('!settings' => url('admin/settings/module_builder'))), 'error');
-    return NULL;
-  }
-
-  return $files;
 }
 
 /**
