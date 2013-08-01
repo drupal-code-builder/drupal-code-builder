@@ -8,26 +8,6 @@
  */
 
 /**
- * Helper for API functions that don't care about file grouping.
- *
- * @param $dir
- *  The directory to look in for processed data.
- *
- * @return
- *  An array of hook data, with hook names as keys and hook data as items.
- */
-function module_builder_get_hook_data_flat($dir = NULL) {
-  $data = module_builder_get_hook_data($dir);
-
-  foreach ($data as $group => $hooks) {
-    foreach ($hooks as $key => $hook) {
-      $return[$hook['name']] = $hook;
-    }
-  }
-  return $return;
-}
-
-/**
  * Retrieve hook data from storage file.
  *
  * @param $directory
