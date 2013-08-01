@@ -39,7 +39,7 @@ class ReportHookPresets {
    */
   function getTemplate($filename) {
     $pieces = array('templates', $this->environment->major_version, $filename);
-    $path = module_builder_get_path(implode('/', $pieces));
+    $path = $this->environment->getPath(implode('/', $pieces));
 
     $template_file = file_get_contents($path);
 
