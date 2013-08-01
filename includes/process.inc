@@ -8,20 +8,6 @@
  */
 
 /**
- * Returns the path to a template file.
- *
- * TODO: this will eventually return either the user version or the module version.
- */
-function module_builder_get_template($filename) {
-  $pieces = array('templates', _module_builder_drupal_major_version(), $filename);
-  $path = module_builder_get_path(implode('/', $pieces));
-
-  $template_file = file_get_contents($path);
-
-  return $template_file;
-}
-
-/**
  * Builds complete hook data array from downloaded files and stores in a file.
  *
  * @param hook_file_data
