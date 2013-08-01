@@ -192,8 +192,18 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
    * Load an optionally versioned module builder include file.
    */
   function loadInclude($name, $extension = 'inc') {
-    // Cheat for now and use the procedural code.
-    module_builder_include($name, $extension);
+    $path = $this->getPath('includes');
+
+    // Try the versioned file first.
+    $file = sprintf("%s/%s_%s.%s", $path, $name, $this->major_version, $extension);
+    //dsm($file);
+    if (file_exists($file)) {
+      require_once($file);
+      return;
+    }
+    // Fall back to the regular file.
+    $file = sprintf("%s/%s.%s", $path, $name, $extension);
+    require_once($file);
   }
 
   /**
