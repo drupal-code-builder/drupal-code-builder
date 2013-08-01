@@ -130,8 +130,10 @@ function module_builder_get_functions($file) {
  * might not be installed (or even present) in Drupal if we are on Drush.
  */
 function _module_builder_invoke_hook() {
+  $mb_factory = module_builder_get_factory();
+  $mb_factory->environment->loadInclude('common_version');
+
   // TODO: just get ours if no bootstrap?
-  module_builder_include('common_version');
   $mb_files = module_builder_system_listing('\.module_builder.inc$', 'modules');
   //print_r($mb_files);
 
