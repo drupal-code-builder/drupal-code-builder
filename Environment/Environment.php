@@ -164,10 +164,6 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
     // Set the major version.
     $this->setMajorVersion();
 
-    // Legacy: set the environement constant.
-    // TODO: remove this.
-    define('MODULE_BUILDER_ENV', 'drupal');
-
     // Set the module folder based on variable.
     $directory = variable_get('module_builder_hooks_directory', 'hooks');
 
@@ -263,10 +259,6 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
     // Set the major version.
     $this->setMajorVersion();
 
-    // Legacy: set the environement constant.
-    // TODO: remove this.
-    define('MODULE_BUILDER_ENV', 'library');
-
     // Set the module folder based on variable.
     $directory = variable_get('module_builder_hooks_directory', 'hooks');
 
@@ -318,10 +310,6 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
   function __construct() {
     // Set the major version.
     $this->setMajorVersion();
-
-    // Legacy: set the environement constant.
-    // TODO: remove this.
-    define('MODULE_BUILDER_ENV', 'drush');
 
     // Get the hooks directory.
     $directory = $this->getHooksDirectory();
