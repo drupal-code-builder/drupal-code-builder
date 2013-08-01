@@ -8,33 +8,6 @@
  */
 
 /**
- * Get just hook names.
- *
- * Obsolete: use listHookNames().
- *
- * @param $dir
- *  The directory to look in for processed data.
- * @param $short
- *   Whether to return hook names as just 'init' or 'hook_init'.
- *   Might as well call like this: module_builder_get_hook_names('short') for clarity.
- * @return
- *   A flat array of strings.
- */
-function module_builder_get_hook_names($dir = NULL, $short = FALSE) {
-  $data = module_builder_get_hook_data_flat($dir);
-  $names = array_keys($data);
-
-  if ($short) {
-    foreach ($names as $key => $hook_name) {
-      $names[$key] = str_replace('hook_', '', $hook_name);
-    }
-  }
-
-  return $names;
-}
-
-
-/**
  * Helper for API functions that don't care about file grouping.
  *
  * @param $dir
