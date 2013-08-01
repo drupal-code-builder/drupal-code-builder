@@ -10,6 +10,8 @@
 /**
  * Get just hook names.
  *
+ * Obsolete: use listHookNames().
+ *
  * @param $dir
  *  The directory to look in for processed data.
  * @param $short

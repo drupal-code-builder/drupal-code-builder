@@ -101,6 +101,32 @@ class ReportHookData {
   }
 
   /**
+   * Get just hook names.
+   *
+   * (Replaces module_builder_get_hook_names().)
+   *
+   * @param $style
+   *   Whether to return hook names as just 'init' or 'hook_init'. One of:
+   *    - 'short': Return short names, i.e., 'init'.
+   *    - 'full': Return full hook names, i.e., 'hook_init'.
+   *
+   * @return
+   *   A flat array of strings.
+   */
+  function listHookNames($style = 'full') {
+    $data = $this->getHookDeclarations();
+    $names = array_keys($data);
+
+    if ($style == 'short') {
+      foreach ($names as $key => $hook_name) {
+        $names[$key] = str_replace('hook_', '', $hook_name);
+      }
+    }
+
+    return $names;
+  }
+
+  /**
    * Get stored hook declarations, keyed by hook name, with destination.
    *
    * (Replaces module_builder_get_hook_declarations().)
