@@ -295,7 +295,7 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
 
     // In Drupal GUI.
     // Try the versioned file first.
-    $file = sprintf("%s/%s_%s.%s", $path, $name, _module_builder_drupal_major_version(), $extension);
+    $file = sprintf("%s/%s_%s.%s", $path, $name, $this->major_version, $extension);
     if (file_exists($file)) {
       require_once($file);
       return;
@@ -356,7 +356,7 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
         if (substr($directory, -1, 1) != '/') {
           $directory .= '/';
         }
-        $directory .= _module_builder_drupal_major_version();
+        $directory .= $this->major_version;
         return $directory;
       }
     }

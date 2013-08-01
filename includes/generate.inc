@@ -72,7 +72,7 @@ function module_builder_get_class($type) {
   include_once("generators/ModuleBuilderGenerators.inc");
 
   $type     = ucfirst($type);
-  $version  = _module_builder_drupal_major_version();
+  $version  = $mb_factory = module_builder_get_factory()->environment->major_version;
   $class    = 'ModuleBuilderGenerator' . $type . $version;
 
   // Trigger the autoload for the base name without the version, as all versions
