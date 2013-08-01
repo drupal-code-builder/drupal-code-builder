@@ -193,7 +193,7 @@ class Collect {
     //print_r($hook_groups);
 
     // Write the processed data to a file.
-    $directory = _module_builder_get_hooks_directory();
+    $directory = $this->environment->hooks_directory;
     $serialized = serialize($hook_groups);
     file_put_contents("$directory/hooks_processed.php", $serialized);
 
