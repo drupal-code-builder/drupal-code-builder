@@ -1002,11 +1002,24 @@ function drush_module_builder_callback_get_data_dir() {
  * Add function headers wherever needed with params.
  */
 function drush_module_builder_callback_doc_params() {
+  // TODO: Currently broken: need to find a way to get into the generating system!
+  return;
+
   $commands = func_get_args();
 
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
 
-  print 'wip!!!';
-  return;
+  // Get our task handler, which checks hook data is ready.
+  try {
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+
+  $hook_names = $mb_task_handler_report->listHookNames('short');
 
   // The first argument is the module machine name.
   $module_root_name = array_shift($commands);
@@ -1023,12 +1036,6 @@ function drush_module_builder_callback_doc_params() {
       $module_files[] = $filename;
     }
   }
-
-  // Include component files.
-  module_builder_include('process');
-  module_builder_include('generate');
-
-  $hook_names = module_builder_get_hook_names('short');
 
   $pattern = '[
       / \* \* \n    # start phpdoc
