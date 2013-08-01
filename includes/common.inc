@@ -10,65 +10,6 @@
  */
 
 /**
- * Get a path to a resource that is safe to use either on Drupal or Drush.
- *
- * @param $subpath
- *    The subpath inside the module_builder folder. Eg, 'templates'.
- */
-function module_builder_get_path($subpath) {
-  if (MODULE_BUILDER_ENV == 'drupal') {
-    $mb_path = drupal_get_path('module', 'module_builder');
-  }
-
-  if (!isset($mb_path)) {
-    $mb_path = dirname(__FILE__) . '/..';
-  }
-
-  $path = $mb_path . '/' . $subpath;
-
-  //print "path: >>$path<<";
-
-  return $path;
-}
-
-/**
- * Include a version-specific file whether we're on drush or drupal.
- * That is, we first try to include a file called NAME_X.inc where X is a
- * Drupal major version number before falling back to NAME.inc.
- *
- * Files are included from the 'includes' folder inside module_builder.
- *
- * On Drush, this is a wrapper for drush_include().
- * On Drupal, this just goes straight for the current version.
- *
- * @param $name
- *  The filename, eg 'update'.
- * @param $extension
- *  The file extension.
- */
-function module_builder_include($name, $extension = 'inc') {
-  $path = module_builder_get_path('includes');
-  if (MODULE_BUILDER_ENV == 'drush') {
-    // In Drush.
-    // the NULL means drush_include will try to find the version.
-    drush_include($path, $name, NULL, $extension);
-  }
-  else {
-    // In Drupal GUI.
-    // Try the versioned file first.
-    $file = sprintf("%s/%s_%s.%s", $path, $name, _module_builder_drupal_major_version(), $extension);
-    //dsm($file);
-    if (file_exists($file)) {
-      require_once($file);
-      return;
-    }
-    // Fall back to the regular file.
-    $file = sprintf("%s/%s.%s", $path, $name, $extension);
-    require_once($file);
-  }
-}
-
-/**
  * Returns the Drupal major version number (5, 6, 7 ...)
  *
  * Helper function for module_builder_include. Cribbed and hacked from drush.
