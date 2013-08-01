@@ -52,7 +52,8 @@
  */
 function module_builder_update_documentation() {
   // Get the hooks directory.
-  $directory = _module_builder_get_hooks_directory();
+  $mb_factory = module_builder_get_factory();
+  $directory = $mb_factory->environment->hooks_directory;
   
   // Get Drupal root folder as a file path.
   // DRUPAL_ROOT is defined both by Drupal and Drush.

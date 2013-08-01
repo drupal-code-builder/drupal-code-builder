@@ -44,11 +44,11 @@
  *  See file documentation for details.
  */
 function module_builder_update_documentation() {
-  $directory = _module_builder_get_hooks_directory();
-  //print_r($directory);
+  $mb_factory = module_builder_get_factory();
+  $directory = $mb_factory->environment->hooks_directory;
 
   // Fetch data about the files we need to download.
-  $hook_files = _module_builder_get_hook_file_urls();
+  $hook_files = _module_builder_get_hook_file_urls($directory);
   //print_r($hook_files);
   
   // For testing only: skip downloading, just process.
@@ -75,6 +75,9 @@ function module_builder_update_documentation() {
 /**
  * Get list of hook file URLS from any modules that declare them.
  *
+ * @param $directory
+ *  The path to the module builder hooks directory.
+ *
  * @return
  *   An array of data about the files to download, keyed by (safe) filename:
     [system.core.php] => Array
@@ -83,7 +86,7 @@ function module_builder_update_documentation() {
       [destination] => %module.module
       [group] => core
  */
-function _module_builder_get_hook_file_urls() {
+function _module_builder_get_hook_file_urls($directory) {
   // Get data by invoking our hook.
   $data = _module_builder_invoke_hook();
     
@@ -97,7 +100,6 @@ function _module_builder_get_hook_file_urls() {
       );
       // Create our own safe filename with module prefix.
       $hook_file_safe_name = "$module.$hook_file";
-      $directory = _module_builder_get_hooks_directory();      
       $urls[$hook_file_safe_name]['path'] = $directory . '/' . $hook_file_safe_name;  
       $urls[$hook_file_safe_name]['url'] = $url;
       $urls[$hook_file_safe_name]['destination'] = $destination;
