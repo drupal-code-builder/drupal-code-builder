@@ -917,8 +917,20 @@ function drush_module_builder_callback_hook_analyze() {
  * Callback to add doc headers to existing hooks.
  */
 function drush_module_builder_callback_doc_hooks() {
+  // TODO: Currently broken: need to find a way to get into the generating system!
   return;
-  // TODO: update this command to the new API.
+
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Get our task handler, which checks hook data is ready.
+  try {
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
 
   $commands = func_get_args();
 
@@ -927,11 +939,7 @@ function drush_module_builder_callback_doc_hooks() {
 
   $module_files = module_builder_get_module_files($module_root_name);
 
-  // Include component files.
-  module_builder_include('process');
-  module_builder_include('generate');
-
-  $hook_names = module_builder_get_hook_names(_module_builder_get_hooks_directory(), TRUE);
+  $hook_names = $mb_task_handler_report->listHookNames('short');
 
   $pattern = '[(?<! \* / \n )' . # no PHP doc: single quoted so \n works
     "function \ image_gallery _ ( \w * )  # function declaration: capture hook name
