@@ -380,6 +380,8 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 
   /**
    * Load an optionally versioned module builder include file.
+   *
+   * On Drush this is just a wrapper around drush_include().
    */
   function loadInclude($name, $extension = 'inc') {
     $path = $this->getPath('includes');

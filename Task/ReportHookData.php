@@ -9,6 +9,8 @@ namespace ModuleBuider\Task;
 
 /**
  * Task handler for reporting on hook data.
+ *
+ * TODO: revisit some of these and clean up names / clean up how many we have.
  */
 class ReportHookData {
 
