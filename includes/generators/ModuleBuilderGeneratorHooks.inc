@@ -147,9 +147,6 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
 
-    // Include generating component file.
-    $mb_factory->environment->loadInclude('process');
-
     // Build a clean list of the requested hooks, by filtering out the keys
     // with 0 values that come from UI form.
     $requested_hooks = array_filter($module_data['hooks']);
@@ -203,6 +200,9 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // TODO: at this point we should check if we have any actual hooks to
     // process, and warn if not.
     // We should probably also do something with rejected hooks list.
+
+    // Include generating component file, for parsing templates.
+    $mb_factory->environment->loadInclude('process');
 
     // Step 1:
     // Build up a list of the basic template files we want to parse.
