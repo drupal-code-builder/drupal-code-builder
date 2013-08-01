@@ -8,23 +8,6 @@
  */
 
 /**
- * Get the timestamp of the processed file.
- *
- * @param $directory
- *  The directory to look in for processed data.
- */
-function module_builder_get_hook_data_last_updated($directory = NULL) {
-  if (!isset($directory)) {
-    $directory = _module_builder_get_hooks_directory();
-  }
-  $hooks_file = "$directory/hooks_processed.php";
-  if (file_exists($hooks_file)) {
-    $timestamp = filemtime($hooks_file);
-    return format_date($timestamp, 'large');
-  }
-}
-
-/**
  * Returns the path to a template file.
  *
  * TODO: this will eventually return either the user version or the module version.
