@@ -852,11 +852,12 @@ function drush_module_builder_callback_hook_list() {
  * Callback to list hook implementations found in a given module.
  */
 function drush_module_builder_callback_hook_analyze() {
-  return;
-  // TODO: update this command to the new API.
+  // Get a MB factory.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
 
+  // Get our task handler, which checks hook data is ready.
   try {
-    _module_builder_sanity_check();
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -869,10 +870,8 @@ function drush_module_builder_callback_hook_analyze() {
   $module_root_name = array_shift($commands);
 
   // TODO: use module_builder_get_hook_implementations().
+  $hooks = $mb_task_handler_report->listHookNames('short');
 
-  // Include process component file.
-  module_builder_include('process');
-  $hooks = module_builder_get_hook_names(_module_builder_get_hooks_directory(), TRUE);
   foreach ($hooks as $key => $hook) {
     $hooks[$key] = $module_root_name . '_' . $hook;
   }
