@@ -327,8 +327,13 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
   /**
    * Get the hooks directory.
    *
-   * TODO: document this!
-   * TODO: generalize this, to slim the constructor?
+   * On Drush, this can come from several places, in the following order of
+   * preference:
+   *  - The Drush --data option. This allows use of a central store of hook data
+   *    that needs only be downloaded once for all Drupal sites. Subdirectories
+   *    are made for each major version.
+   *  - The Module Builder UI's variable. This will only be set if module
+   *    builder has been installed as a Drupal module on the current site.
    */
   private function getHooksDirectory() {
     // Set the module folder based on variable.
