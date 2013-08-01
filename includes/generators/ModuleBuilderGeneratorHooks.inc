@@ -143,8 +143,12 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
    *    'hook_foo' => array('declaration' => DATA, 'template' => DATA)
    */
   function getTemplates($module_data) {
+    $mb_factory = module_builder_get_factory();
+    // Sanity checks already done at this point; no need to catch exception.
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+
     // Include generating component file.
-    module_builder_include('process');
+    $mb_factory->environment->loadInclude('process');
 
     // Build a clean list of the requested hooks, by filtering out the keys
     // with 0 values that come from UI form.
@@ -157,7 +161,8 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // In the form: 'hook_foo' => array('declaration', 'destination')
     // This array is the order they are in the files from d.org: alphabetical apparently.
     // We don't care for this order!
-    $hook_function_declarations = module_builder_get_hook_declarations();
+    $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
+
     // If we get NULL then no hook data exists: return NULL again.
     // TODO: check this sort of error at an earlier stage!
     if (is_null($hook_function_declarations)) {
@@ -251,9 +256,8 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // node.hooks.template will only override that same file in the module data;
     // if the hook is not requested as part of a group then that file will not be considered.
     // (Though groups are broken for now...)
-    $version = module_builder_get_factory()->environment->major_version;
-    $version = _module_builder_drupal_major_version();
-    $template_base_path_module = module_builder_get_path('templates') . '/' . $version;
+    $version = $mb_factory->environment->major_version;
+    $template_base_path_module = $mb_factory->environment->getPath('templates') . '/' . $version;
     //print "base path: $template_base_path_module";
     // $template_base_paths['module']
     // $template_base_paths['user']
