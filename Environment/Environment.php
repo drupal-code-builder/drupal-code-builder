@@ -315,7 +315,7 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    module_builder_include('common_version');
+    $this->loadInclude('common_version');
     module_builder_directory_path($directory);
 
     $this->hooks_directory = $directory;
