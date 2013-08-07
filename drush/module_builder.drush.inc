@@ -858,6 +858,7 @@ function drush_module_builder_callback_hook_analyze() {
   // Get our task handler, which checks hook data is ready.
   try {
     $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_analyze = $mb_factory->getTask('AnalyzeModule');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -876,11 +877,11 @@ function drush_module_builder_callback_hook_analyze() {
     $hooks[$key] = $module_root_name . '_' . $hook;
   }
 
-  $module_files = module_builder_get_module_files($module_root_name);
+  $module_files = $mb_task_handler_analyze->getFiles($module_root_name);
   $module_hooks = $module_hooks_flat = array();
 
   foreach ($module_files as $file) {
-    $functions = module_builder_get_functions($file);
+    $functions = $mb_task_handler_analyze->getFileFunctions($file);
 
     $file_hooks = array_intersect($functions, $hooks);
 
