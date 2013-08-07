@@ -924,9 +924,10 @@ function drush_module_builder_callback_doc_hooks() {
   // Get a MB factory.
   $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
 
-  // Get our task handler, which checks hook data is ready.
+  // Get our task handlers, which checks hook data is ready.
   try {
     $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_analyze = $mb_factory->getTask('AnalyzeModule');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -938,7 +939,7 @@ function drush_module_builder_callback_doc_hooks() {
   // The first argument is the module machine name.
   $module_root_name = array_shift($commands);
 
-  $module_files = module_builder_get_module_files($module_root_name);
+  $module_files = $mb_task_handler_analyze->getFiles($module_root_name);
 
   $hook_names = $mb_task_handler_report->listHookNames('short');
 
