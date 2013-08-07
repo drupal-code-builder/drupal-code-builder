@@ -67,6 +67,13 @@ function module_builder_get_factory($environment_class = NULL) {
 class ModuleBuilderFactory {
 
   /**
+   * The current environment object; subclass of ModuleBuilderEnvironmentBase.
+   *
+   * Set by the constructor. May be freely accessed.
+   */
+  public $environment;
+
+  /**
    * Set the module builder environment and verify it.
    *
    * Technically, as this is a required dependency, it should be part of the
