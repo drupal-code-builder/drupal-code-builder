@@ -27,6 +27,17 @@ class Generate {
    */
   function __construct($environment) {
     $this->environment = $environment;
+
+  /**
+   * Helper to perform setup tasks: include files, register autoloader.
+   */
+  function initGenerators() {
+    // Load the legacy procedural include file, as that has functions we need.
+    // TODO: move these into this class.
+    $this->environment->loadInclude('generate');
+
+    // Register our autoload handler for generator classes.
+    spl_autoload_register('module_builder_autoload');
   }
 
   /**
@@ -49,17 +60,12 @@ class Generate {
    *  values are the code destined for each file.
    */
   function generateComponent($component, $component_data) {
-    // Load the legacy procedural include file, as that has functions we need.
-    // TODO: move these into this class.
-    $this->environment->loadInclude('generate');
+    $this->initGenerators();
 
     // Add the top-level component to the data.
     $component_data['base'] = $component;
 
     //drush_print_r($module_data);
-
-    // Register our autoload handler for generator classes.
-    spl_autoload_register('module_builder_autoload');
 
     $class = module_builder_get_class($component);
     $generator = new $class($component, $component_data);
