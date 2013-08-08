@@ -34,6 +34,8 @@ class Generate {
    *
    * This is the entry point for the generating system.
    *
+   * (Replaces module_builder_generate_component().)
+   *
    * @param $component
    *  A component name. Currently supports 'module' and 'theme'.
    * @param $component_data
@@ -47,14 +49,34 @@ class Generate {
    *  values are the code destined for each file.
    */
   function generateComponent($component, $component_data) {
-    // Load the legacy procedural include file.
+    // Load the legacy procedural include file, as that has functions we need.
     // TODO: move these into this class.
     $this->environment->loadInclude('generate');
 
-    // Just wrap around the procedural code for now.
-    $files = module_builder_generate_component($component, $component_data);
+    // Add the top-level component to the data.
+    $component_data['base'] = $component;
 
-    return $files;
+    //drush_print_r($module_data);
+
+    // Register our autoload handler for generator classes.
+    spl_autoload_register('module_builder_autoload');
+
+    $class = module_builder_get_class($component);
+    $generator = new $class($component, $component_data);
+
+    // Recursively get subcomponents.
+    $generator->getSubComponents();
+
+    //drush_print_r($generator->components);
+
+    // Recursively build files.
+    $files = array();
+    $generator->collectFiles($files);
+    //drush_print_r($files);
+
+    $files_assembled = $generator->assembleFiles($files);
+
+    return $files_assembled;
   }
 
   // Factory. WIP!

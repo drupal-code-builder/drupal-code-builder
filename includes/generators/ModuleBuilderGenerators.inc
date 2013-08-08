@@ -21,7 +21,7 @@
  * when the added generators are themselves one that return no sub-components.
  *
  * So for example, the caller requests a 'module' component. This causes
- * the entry point to the system, module_builder_generate_component() to
+ * the entry point to the system, Generate::generateComponent() to
  * instantiate a module generator, which is then interrogated for its
  * subcomponents. It returns, say, that it needs:
  *  - a README file
@@ -72,7 +72,7 @@
        - subcomponents (hooks, info file, plugins, tests)
        - each subcomponent recurses and eventually gets to a file generator.
  *
- * @see module_builder_generate_component()
+ * @see Generate::generateComponent()
  */
 abstract class ModuleBuilderGeneratorComponent {
 
@@ -93,7 +93,7 @@ abstract class ModuleBuilderGeneratorComponent {
    *   this will be a unique identifier.
    * @param $component_data
    *   An associative array of input data for the component, as received by
-   *   module_builder_generate_component(). For example, for modules this will
+   *   Generate::generateComponent(). For example, for modules this will
    *   be the module name, hooks required, and so on. See each component for
    *   documentation on what this should contain.
    */

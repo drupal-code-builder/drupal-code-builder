@@ -6,45 +6,6 @@
  */
 
 /**
- * Generate the files for a component.
- *
- * This is the entry point for the generating system.
- *
- * @param $component
- *  A component name. Currently supports 'module' and 'theme'.
- * @param $component_data
- *  An associative array of data for the component. Values depend on the
- *  component class.
- *
- * @return
- *  A files array whose keys are filepaths (relative to the module folder) and
- *  values are the code destined for each file.
- */
-function module_builder_generate_component($component, $component_data) {
-  // Add the top-level component to the data.
-  $component_data['base'] = $component;
-
-  // Register our autoload handler for generator classes.
-  spl_autoload_register('module_builder_autoload');
-
-  $class = module_builder_get_class($component);
-  $generator = new $class($component, $component_data);
-
-  // Recursively get subcomponents.
-  $generator->getSubComponents();
-
-  //drush_print_r($generator->components);
-
-  // Recursively build files.
-  $files = array();
-  $generator->collectFiles($files);
-
-  $files_assembled = $generator->assembleFiles($files);
-
-  return $files_assembled;
-}
-
-/**
  * Helper function to get the desired class.
  *
  * The hierarchy is:

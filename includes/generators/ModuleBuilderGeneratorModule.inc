@@ -24,7 +24,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
    *   The identifier for the component.
    * @param $component_data
    *   An associative array of data for the module, as received by
-   *   module_builder_generate_component().
+   *   Generate::generateComponent().
    *   An associative array of data for the module, [passed by reference so data
    *   on generated files can be added!?!?!?!]
    *   The keys can *mostly* be taken straight from form values. They are as
