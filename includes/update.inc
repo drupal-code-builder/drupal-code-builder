@@ -3,15 +3,15 @@
 /**
  * @file
  * Module builder file downloading.
- * 
- * Fetches files from locations specified by hook_module_builder_info 
+ *
+ * Fetches files from locations specified by hook_module_builder_info
  * implementations (including our own).
  *
  * The main function here is module_builder_update_documentation().
  * Other functions (beginning with underscores) are internal to this file.
- * 
+ *
  * The data that gets passed around is an array keyed by filename. Filenames
- * thus be unique; if there is a possibility of filename clash these must 
+ * thus be unique; if there is a possibility of filename clash these must
  * be rendered safe, for example by prefixing the module name.
  * The keys to each item are:
  *  - path: the full path to this file
@@ -60,15 +60,15 @@ function module_builder_update_documentation() {
   // Retrieve each file and store it in the hooks directory, overwriting what's currently there
   foreach ($hook_files as $file_name => $data) {
     $file_contents = drupal_http_request($data['url']);
-    
+
     // TODO: replace with call to environment output.
     //_module_builder_drush_print("writing $directory/$file_name", 2);
     file_put_contents("$directory/$file_name", $destination . $file_contents->data);
   }
-  
+
   // inform that hook documentation has been downloaded.
   drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"!api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get('module_builder_hooks_directory', 'hooks'), '!api' => url('http://api.drupal.org/'))));
-  
+
   return $hook_files;
 }
 
@@ -89,7 +89,7 @@ function module_builder_update_documentation() {
 function _module_builder_get_hook_file_urls($directory) {
   // Get data by invoking our hook.
   $data = _module_builder_invoke_hook();
-    
+
   foreach ($data as $module => $module_data) {
     $branch = $module_data['branch'];
     foreach ($module_data['hook_files'] as $hook_file => $destination) {
@@ -100,7 +100,7 @@ function _module_builder_get_hook_file_urls($directory) {
       );
       // Create our own safe filename with module prefix.
       $hook_file_safe_name = "$module.$hook_file";
-      $urls[$hook_file_safe_name]['path'] = $directory . '/' . $hook_file_safe_name;  
+      $urls[$hook_file_safe_name]['path'] = $directory . '/' . $hook_file_safe_name;
       $urls[$hook_file_safe_name]['url'] = $url;
       $urls[$hook_file_safe_name]['destination'] = $destination;
       if (isset($module_data['hook_destinations'])) {
@@ -117,9 +117,9 @@ function _module_builder_get_hook_file_urls($directory) {
       }
     }
   }
-  
+
   //print_r($urls);
-  
+
   return $urls;
 }
 
