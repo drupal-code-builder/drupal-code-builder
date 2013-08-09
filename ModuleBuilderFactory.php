@@ -126,7 +126,7 @@ class ModuleBuilderFactory {
     $task_handler = new $task_class($this->environment, $task_options);
 
     // Find out what sanity level the task handler needs.
-    $required_sanity = $task_handler->sanity_level;
+    $required_sanity = $task_handler->getSanityLevel();
     //dsm($required_sanity);
 
     // Check the environment for the required sanity level.

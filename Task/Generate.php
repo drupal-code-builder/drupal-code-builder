@@ -17,7 +17,7 @@ class Generate extends Base {
   /**
    * The sanity level this task requires to operate.
    */
-  public $sanity_level = 'hook_data';
+  protected $sanity_level = 'hook_data';
 
   /**
    * Our base component name, i.e. either 'module' or 'theme'.

@@ -18,7 +18,7 @@ class Collect extends Base {
   /**
    * The sanity level this task requires to operate.
    */
-  public $sanity_level = 'hook_directory';
+  protected $sanity_level = 'hook_directory';
 
   /**
    * Collect hook api.php documentation files from sources and process them.
