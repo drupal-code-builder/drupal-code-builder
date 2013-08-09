@@ -82,10 +82,6 @@ class ModuleBuilderFactory {
    *
    * @param ModuleBuilderEnvironment $environment
    *  A new environment object, implementing ModuleBuilderEnvironmentInterface.
-   *
-   * @throws ModuleBuilderException
-   *  Throws an exception if the environment is not ready, for example, if the
-   *  hook data directory can't be found.
    */
   function set_environment($environment) {
     $this->environment = $environment;
