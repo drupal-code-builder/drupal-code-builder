@@ -142,7 +142,9 @@ class Generate extends Base {
     // Generator classes are in standardly named files, with all versions in the
     // same file.
     $file_path = $this->environment->getPath("includes/generators/$class.inc");
-    include_once($file_path);
+    if (file_exists($file_path)) {
+      include_once($file_path);
+    }
   }
 
 }
