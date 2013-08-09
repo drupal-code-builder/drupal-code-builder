@@ -65,6 +65,7 @@ abstract class ModuleBuilderEnvironmentBase {
    *
    * @param $sanity_level
    *  The level up to which to verify sanity. The successive levels are:
+   *    - 'none': No checks required.
    *    - 'hook_directory': The hooks directory exists (or can be created) and
    *      is writable.
    *    - 'hook_data': The hook data files are present in the hooks directory.
@@ -76,6 +77,11 @@ abstract class ModuleBuilderEnvironmentBase {
   public function verifyEnvironment($sanity_level) {
     // Allow the environment to request skipping the sanity checks.
     if ($this->skipSanity) {
+      return;
+    }
+
+    // Sanity level 'none': nothing to do.
+    if ($sanity_level == 'none') {
       return;
     }
 
