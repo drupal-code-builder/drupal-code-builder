@@ -220,7 +220,7 @@ function drush_module_builder_callback_build() {
   // Get our task handler. This performs a sanity check on the environment which
   // throws an exception.
   try {
-    $mb_task_handler_generate = $mb_factory->getTask('Generate');
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
   }
   catch (ModuleBuilderException $e) {
     // If the problem is that the hooks need downloading, we can recover from this.
@@ -389,7 +389,7 @@ function drush_module_builder_callback_build_theme() {
     // This is bad, because it's the task method that should know it doesn't
     // need this level of environment.
     $mb_factory->environment->skipSanity = TRUE;
-    $mb_task_handler_generate = $mb_factory->getTask('Generate');
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'theme');
   }
   catch (ModuleBuilderException $e) {
     // Doubtful we get here.

@@ -342,7 +342,7 @@ function module_builder_page_generate($form, &$form_state) {
   $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
 
   // Get our task handler. The form builder will already have checked sanity.
-  $mb_task_handler_generate = $mb_factory->getTask('Generate');
+  $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
 
   // Build module data
   $module_data = module_data_from_form($form_state['values']);

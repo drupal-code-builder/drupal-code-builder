@@ -20,13 +20,35 @@ class Generate {
   public $sanity_level = 'hook_data';
 
   /**
+   * Our base component name, i.e. either 'module' or 'theme'.
+   */
+  public $base;
+
+  /**
+   * Our base generator.
+   */
+  public $base_generator;
+
+  /**
    * Constructor.
    *
    * @param $environment
    *  The current environment handler.
+   * @param $component_name
+   *  A component name. Currently supports 'module' and 'theme'.
+   *  (We need this early on so we can use it to determine our sanity level.)
    */
-  function __construct($environment) {
+  public function __construct($environment, $component_name) {
     $this->environment = $environment;
+
+    $this->initGenerators();
+
+    // Fake the component data for now, as it's expected by the constructor.
+    $component_data = array();
+
+    $this->base = $component_name;
+    $this->base_generator = $this->getGenerator($component_name, $component_data);
+  }
 
   /**
    * Helper to perform setup tasks: include files, register autoloader.
@@ -85,16 +107,18 @@ class Generate {
     return $files_assembled;
   }
 
-  // Factory. WIP!
-  // But how to other generators get to this???
-  // call $this->factory->getGenerator($component);
+  /**
+   * Generator factory. WIP!
+   *
+   * TODO: switch over to using this everywhere.
+   */
   public function getGenerator($component, $component_data) {
     $class = module_builder_get_class($component);
     $generator = new $class($component, $component_data);
 
     // Each generator needs a link back to the factory to be able to make more
-    // generators!
-    $generator->factory = $this;
+    // generators, and also so it can access the environment.
+    $generator->task = $this;
 
     return $generator;
   }
