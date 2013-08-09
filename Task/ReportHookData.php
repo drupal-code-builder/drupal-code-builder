@@ -12,7 +12,7 @@ namespace ModuleBuider\Task;
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  */
-class ReportHookData {
+class ReportHookData extends Base {
 
   /**
    * The sanity level this task requires to operate.
@@ -20,16 +20,6 @@ class ReportHookData {
    * We only need the hooks folder: we're fine to report that it's empty!
    */
   public $sanity_level = 'hook_directory';
-
-  /**
-   * Constructor.
-   *
-   * @param $environment
-   *  The current environment handler.
-   */
-  function __construct($environment) {
-    $this->environment = $environment;
-  }
 
   /**
    * Get the timestamp of the last hook data upate.

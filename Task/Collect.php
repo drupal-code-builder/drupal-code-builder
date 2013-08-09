@@ -13,22 +13,12 @@ namespace ModuleBuider\Task;
  * This will do different things depending on the core Drupal version:
  * On D5/6, this donwloads!
  */
-class Collect {
+class Collect extends Base {
 
   /**
    * The sanity level this task requires to operate.
    */
   public $sanity_level = 'hook_directory';
-
-  /**
-   * Constructor.
-   *
-   * @param $environment
-   *  The current environment handler.
-   */
-  function __construct($environment) {
-    $this->environment = $environment;
-  }
 
   /**
    * Collect hook api.php documentation files from sources and process them.

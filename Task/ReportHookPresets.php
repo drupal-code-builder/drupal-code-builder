@@ -12,22 +12,12 @@ namespace ModuleBuider\Task;
  *
  * (Replaces parts of process.inc.)
  */
-class ReportHookPresets {
+class ReportHookPresets extends Base {
 
   /**
    * The sanity level this task requires to operate.
    */
   public $sanity_level = 'hook_data';
-
-  /**
-   * Constructor.
-   *
-   * @param $environment
-   *  The current environment handler.
-   */
-  function __construct($environment) {
-    $this->environment = $environment;
-  }
 
   /**
    * Returns the path to a template file.

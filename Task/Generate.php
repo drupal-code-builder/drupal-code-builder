@@ -12,7 +12,7 @@ namespace ModuleBuider\Task;
  *
  * (Replaces generate.inc.)
  */
-class Generate {
+class Generate extends Base {
 
   /**
    * The sanity level this task requires to operate.
@@ -30,7 +30,7 @@ class Generate {
   public $base_generator;
 
   /**
-   * Constructor.
+   * Override the base constructor.
    *
    * @param $environment
    *  The current environment handler.

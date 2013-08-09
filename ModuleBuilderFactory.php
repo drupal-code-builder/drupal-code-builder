@@ -117,6 +117,7 @@ class ModuleBuilderFactory {
    */
   function getTask($task_type, $task_options = NULL) {
     // TODO: this could do with namespacing and autoloading in due course.
+    include_once(dirname(__FILE__) . "/Task/Base.php");
     include_once(dirname(__FILE__) . "/Task/$task_type.php");
 
     $task_class = "ModuleBuider\Task\\$task_type";

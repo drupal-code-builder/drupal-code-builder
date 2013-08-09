@@ -10,7 +10,7 @@ namespace ModuleBuider\Task;
 /**
  * Task handler for analyzing an existing module.
  */
-class AnalyzeModule {
+class AnalyzeModule extends Base {
 
   /**
    * Helper function to get all the code files for a given module
