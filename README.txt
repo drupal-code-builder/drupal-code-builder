@@ -84,6 +84,12 @@ if a particular module is absent in one site.
 6. (Optional) Create your own hook groupings if you don't like the
    default ones.
 
+Note that in this configuration, Drush will register the Module Builder Drush
+plugin, and you can thus also use Drush in this installation of Drupal. However,
+a consequence of this is that if you *also* have Module Builder installed with
+Drush globally, in this installation of Drupal, Drush will load Module Builder
+twice, which will cause problems!
+
 ### Installation as a library ###
 
 If another module instructs to use this as a library, place this folder is
