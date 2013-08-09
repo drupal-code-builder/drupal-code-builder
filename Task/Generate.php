@@ -74,7 +74,7 @@ class Generate extends Base {
     $this->environment->loadInclude('generate');
 
     // Register our autoload handler for generator classes.
-    spl_autoload_register('module_builder_autoload');
+    spl_autoload_register(array($this, 'generatorAutoload'));
   }
 
   /**
@@ -131,6 +131,18 @@ class Generate extends Base {
     $generator->task = $this;
 
     return $generator;
+  }
+
+  /**
+   * Autoload handler for generator classes.
+   *
+   * @see module_builder_get_class()
+   */
+  function generatorAutoload($class) {
+    // Generator classes are in standardly named files, with all versions in the
+    // same file.
+    $file_path = $this->environment->getPath("includes/generators/$class.inc");
+    include_once($file_path);
   }
 
 }

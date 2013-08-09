@@ -26,7 +26,7 @@
  *  A class name for the type and, if it exists, version, e.g.
  *  'ModuleBuilderGeneratorInfo6'.
  *
- * @see module_builder_autoload()
+ * @see Generate::generatorAutoload()
  */
 function module_builder_get_class($type) {
   // Include our general include files, which contains base and parent classes.
@@ -45,17 +45,4 @@ function module_builder_get_class($type) {
     $class  = 'ModuleBuilderGenerator' . $type;
   }
   return $class;
-}
-
-/**
- * Autoload handler for generator classes.
- *
- * @see module_builder_get_class()
- */
-function module_builder_autoload($class) {
-  // Generator classes are in standardly named files, with all versions in the
-  // same file.
-  if (file_exists(dirname(__FILE__) . "/generators/$class.inc")) {
-    include_once("generators/$class.inc");
-  }
 }
