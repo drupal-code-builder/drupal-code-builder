@@ -13,6 +13,11 @@ namespace ModuleBuider\Task;
 class AnalyzeModule extends Base {
 
   /**
+   * The sanity level this task requires to operate.
+   */
+  protected $sanity_level = 'hook_data';
+
+  /**
    * Helper function to get all the code files for a given module
    *
    * TODO: does drush have this?
