@@ -138,8 +138,7 @@ abstract class ModuleBuilderGeneratorComponent {
         $component_data = $this->component_data;
       }
 
-      $class = module_builder_get_class($component_type);
-      $generator = new $class($component_name, $component_data);
+      $generator = $this->task->getGenerator($component_name, $component_data);
       $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
