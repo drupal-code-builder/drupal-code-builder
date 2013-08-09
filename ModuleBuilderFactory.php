@@ -18,10 +18,10 @@
  *
  * @param $environment_class
  *  The name of the environment class to set on the factory. No checks are run
- *  on the environment at this stage (and therefore it may be flagged to skip
- *  checks on return). This parameter may be ommitted if the the caller is
- *  certain that the factory has previously been created and it just calling
- *  this to retrieve it.
+ *  on the environment at this stage (and therefore the environment handler may
+ *  be flagged to skip checks via the returned factory). This parameter may be
+ *  ommitted if the the caller is certain that the factory has previously been
+ *  created and it is just calling this to retrieve it.
  *
  * @return
  *  A new ModuleBuilderFactory object if called for the first time, or the same
