@@ -83,8 +83,8 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
         continue;
       }
 
-      $generator = $this->task->getGenerator('ModuleCodeFile', $component_data);
-
+      $class = module_builder_get_class('ModuleCodeFile');
+      $generator = new $class($name, $module_data);
       // Faffy stuff:
       $generator->hook_data = $hook_data;
       $generator->filename = $filename;
