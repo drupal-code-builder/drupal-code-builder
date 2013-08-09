@@ -104,6 +104,9 @@ class ModuleBuilderFactory {
    *    - 'Collect': Collect and process data on available hooks.
    *    - 'ReportHookData':
    *    - ... others TODO.
+   * @param $task_options
+   *  (optional) A further parameter to pass to the task's constructor. Its
+   *  nature (or necessity) depends on the task.
    *
    * @return
    *  A new task handler object, which implements ModuleBuilderTaskInterface.
@@ -112,14 +115,14 @@ class ModuleBuilderFactory {
    *  Throws an exception if the environment is not in a state that is ready for
    *  the requested task, for example, if no hook data has been downloaded.
    */
-  function getTask($task_type) {
+  function getTask($task_type, $task_options = NULL) {
     // TODO: this could do with namespacing and autoloading in due course.
     include_once(dirname(__FILE__) . "/Task/$task_type.php");
 
     $task_class = "ModuleBuider\Task\\$task_type";
 
     // Set the environment handler on the task handler too.
-    $task_handler = new $task_class($this->environment);
+    $task_handler = new $task_class($this->environment, $task_options);
 
     // Find out what sanity level the task handler needs.
     $required_sanity = $task_handler->sanity_level;
