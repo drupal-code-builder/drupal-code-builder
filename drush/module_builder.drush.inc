@@ -385,10 +385,6 @@ function drush_module_builder_callback_build_theme() {
 
   // Create our environment handler, set it, then get the task.
   try {
-    // We don't need no hooks. Skip the sanity test.
-    // This is bad, because it's the task method that should know it doesn't
-    // need this level of environment.
-    $mb_factory->environment->skipSanity = TRUE;
     $mb_task_handler_generate = $mb_factory->getTask('Generate', 'theme');
   }
   catch (ModuleBuilderException $e) {
