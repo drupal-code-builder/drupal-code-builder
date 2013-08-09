@@ -348,7 +348,7 @@ function module_builder_page_generate($form, &$form_state) {
   $module_data = module_data_from_form($form_state['values']);
 
   // Get the files.
-  $files = $mb_task_handler_generate->generateComponent('module', $module_data);
+  $files = $mb_task_handler_generate->generateComponent($module_data);
   //dsm($files);
 
   /*

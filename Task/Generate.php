@@ -69,8 +69,6 @@ class Generate {
    *
    * (Replaces module_builder_generate_component().)
    *
-   * @param $component
-   *  A component name. Currently supports 'module' and 'theme'.
    * @param $component_data
    *  An associative array of data for the component. Values depend on the
    *  component class. For details, see the constructor of the generator, of the
@@ -81,28 +79,25 @@ class Generate {
    *  A files array whose keys are filepaths (relative to the module folder) and
    *  values are the code destined for each file.
    */
-  function generateComponent($component, $component_data) {
-    $this->initGenerators();
-
+  public function generateComponent($component_data) {
     // Add the top-level component to the data.
-    $component_data['base'] = $component;
+    $component_data['base'] = $this->base;
 
-    //drush_print_r($module_data);
-
-    $class = module_builder_get_class($component);
-    $generator = new $class($component, $component_data);
+    // Set the component data on the base generator, as when we built it in
+    // our __construct() it got a dummy empty array.
+    $this->base_generator->component_data = $component_data;
 
     // Recursively get subcomponents.
-    $generator->getSubComponents();
+    $this->base_generator->getSubComponents();
 
     //drush_print_r($generator->components);
 
     // Recursively build files.
     $files = array();
-    $generator->collectFiles($files);
+    $this->base_generator->collectFiles($files);
     //drush_print_r($files);
 
-    $files_assembled = $generator->assembleFiles($files);
+    $files_assembled = $this->base_generator->assembleFiles($files);
 
     return $files_assembled;
   }

@@ -294,7 +294,7 @@ function drush_module_builder_callback_build() {
 
   // For now, just assume it's a module we've been requested. We are nowhere
   // near ready to have other pathways into this.
-  $files = $mb_task_handler_generate->generateComponent('module', $module_data);
+  $files = $mb_task_handler_generate->generateComponent($module_data);
 
   drush_print_r($files);
 
@@ -405,7 +405,7 @@ function drush_module_builder_callback_build_theme() {
 
   // Build files.
   // Include generating component file.
-  $files = $mb_task_handler_generate->generateComponent('theme', $theme_data);
+  $files = $mb_task_handler_generate->generateComponent($theme_data);
 
   drush_print_r($theme_data);
   return;
