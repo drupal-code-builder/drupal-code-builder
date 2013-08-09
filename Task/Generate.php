@@ -16,8 +16,10 @@ class Generate extends Base {
 
   /**
    * The sanity level this task requires to operate.
+   *
+   * We have no sanity level; it's obtained from our base component generator.
    */
-  protected $sanity_level = 'hook_data';
+  protected $sanity_level = NULL;
 
   /**
    * Our base component name, i.e. either 'module' or 'theme'.
@@ -48,6 +50,19 @@ class Generate extends Base {
 
     $this->base = $component_name;
     $this->base_generator = $this->getGenerator($component_name, $component_data);
+  }
+
+  /**
+   * Get the sanity level this task requires.
+   *
+   * We override this to hand over to the base generator, as different bases
+   * may have different requirements.
+   *
+   * @return
+   *  A sanity level string to pass to the environment's verifyEnvironment().
+   */
+  function getSanityLevel() {
+    return $this->base_generator->sanity_level;
   }
 
   /**

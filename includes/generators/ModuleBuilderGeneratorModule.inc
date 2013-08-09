@@ -18,6 +18,11 @@
 class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
 
   /**
+   * The sanity level this generator requires to operate.
+   */
+  public $sanity_level = 'hook_data';
+
+  /**
    * Constructor method; sets the module data.
    *
    * @param $component_name

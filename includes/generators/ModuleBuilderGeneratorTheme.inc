@@ -13,6 +13,11 @@
 class ModuleBuilderGeneratorTheme extends ModuleBuilderGeneratorComponent {
 
   /**
+   * The sanity level this generator requires to operate.
+   */
+  public $sanity_level = 'none';
+
+  /**
    * Constructor method; sets the module data.
    *
    * @param $component_name
