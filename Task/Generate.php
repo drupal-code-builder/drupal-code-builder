@@ -85,8 +85,8 @@ class Generate extends Base {
    * @param $component_data
    *  An associative array of data for the component. Values depend on the
    *  component class. For details, see the constructor of the generator, of the
-   *  form ModuleBuilderGeneratorCOMPONENT, e.g.
-   *  ModuleBuilderGeneratorModule::__construct().
+   *  form ModuleBuider\Generator\COMPONENT, e.g.
+   *  ModuleBuider\Generator\Module::__construct().
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -154,26 +154,26 @@ class Generate extends Base {
    *
    * @return
    *  A class name for the type and, if it exists, version, e.g.
-   *  'ModuleBuilderGeneratorInfo6'.
+   *  'ModuleBuider\Generator\Info6'.
    *
    * @see Generate::generatorAutoload()
    */
   function getGeneratorClass($type) {
     // Include our general include files, which contains base and parent classes.
-    $file_path = $this->environment->getPath("includes/generators/ModuleBuilderGenerators.inc");
+    $file_path = $this->environment->getPath("Generator/Base.php");
     include_once($file_path);
 
     $type     = ucfirst($type);
     $version  = $this->environment->major_version;
-    $class    = 'ModuleBuilderGenerator' . $type . $version;
+    $class    = 'ModuleBuider\\Generator\\' . $type . $version;
 
     // Trigger the autoload for the base name without the version, as all versions
     // are in the same file.
-    class_exists('ModuleBuilderGenerator' . $type);
+    class_exists('ModuleBuider\\Generator\\' . $type);
 
     // If there is no version-specific class, use the base class.
     if (!class_exists($class)) {
-      $class  = 'ModuleBuilderGenerator' . $type;
+      $class  = 'ModuleBuider\\Generator\\' . $type;
     }
     return $class;
   }
@@ -186,7 +186,8 @@ class Generate extends Base {
   function generatorAutoload($class) {
     // Generator classes are in standardly named files, with all versions in the
     // same file.
-    $file_path = $this->environment->getPath("includes/generators/$class.inc");
+    list($module_builder, $generator, $class) = explode('\\', $class);
+    $file_path = $this->environment->getPath("Generator/$class.php");
     if (file_exists($file_path)) {
       include_once($file_path);
     }

@@ -1,5 +1,7 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Component generator: module.
  *
@@ -15,7 +17,7 @@
  * to add. Generators can be requested by name, with various extra special
  * values which are documented in this class's __construct().
  */
-class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
+class Module extends Base {
 
   /**
    * The sanity level this generator requires to operate.
@@ -144,7 +146,7 @@ class ModuleBuilderGeneratorModule extends ModuleBuilderGeneratorComponent {
 
     // Case 3: there are some requested components we don't know anything about.
     // We assume that these are abbreviated filenames for the attention of
-    // ModuleBuilderGeneratorHooks; therefore we must ensure 'hooks' is in the
+    // ModuleBuider\Generator\Hooks; therefore we must ensure 'hooks' is in the
     // list.
     $intersection_components['hooks'] = 'hooks';
 

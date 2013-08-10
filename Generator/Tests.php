@@ -1,9 +1,11 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Component generator: tests.
  */
-class ModuleBuilderGeneratorTests extends ModuleBuilderGeneratorFile {
+class Tests extends File {
 
   /**
    * Return an array of subcomponent types.

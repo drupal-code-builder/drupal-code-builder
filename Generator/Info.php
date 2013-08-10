@@ -5,6 +5,8 @@
  * Contains generator classes for .info files.
  */
 
+namespace ModuleBuider\Generator;
+
 /**
  * Generator base class for module info file.
  *
@@ -12,7 +14,7 @@
  * all the files requested so far, and if required, declare them in the info
  * file.
  */
-class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
+class Info extends File {
 
   /**
    * Build the code files.
@@ -49,7 +51,7 @@ class ModuleBuilderGeneratorInfo extends ModuleBuilderGeneratorFile {
 /**
  * Abstract parent class for .ini syntax info files.
  */
-class ModuleBuilderGeneratorInfoIni extends ModuleBuilderGeneratorInfo {
+class InfoIni extends Info {
 
   /**
    * Process a structured array of info files lines to a flat array for merging.
@@ -89,7 +91,7 @@ class ModuleBuilderGeneratorInfoIni extends ModuleBuilderGeneratorInfo {
 /**
  * Generator class for module info file for Drupal 5.
  */
-class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfoIni {
+class Info5 extends InfoIni {
 
   /**
    * Create lines of file body for Drupal 5.
@@ -118,7 +120,7 @@ class ModuleBuilderGeneratorInfo5 extends ModuleBuilderGeneratorInfoIni {
 /**
  * Generator class for module info file for Drupal 6.
  */
-class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfoIni {
+class Info6 extends InfoIni {
 
   /**
    * Create lines of file body for Drupal 6.
@@ -151,7 +153,7 @@ class ModuleBuilderGeneratorInfo6 extends ModuleBuilderGeneratorInfoIni {
 /**
  * Generator class for module info file for Drupal 7.
  */
-class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfoIni {
+class Info7 extends InfoIni {
 
   /**
    * Create lines of file body for Drupal 7.
@@ -196,7 +198,7 @@ class ModuleBuilderGeneratorInfo7 extends ModuleBuilderGeneratorInfoIni {
 /**
  * Generator class for module info file for Drupal 8.
  */
-class ModuleBuilderGeneratorInfo8 extends ModuleBuilderGeneratorInfo {
+class Info8 extends Info {
 
   /**
    * Build the code files.

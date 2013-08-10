@@ -1,9 +1,11 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Component generator: theme TPL file.
  */
-class ModuleBuilderGeneratorThemeTemplate extends ModuleBuilderGeneratorComponent {
+class ThemeTemplate extends Base {
 
   /**
    * Return an array of subcomponent types.
