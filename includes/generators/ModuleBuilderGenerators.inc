@@ -77,6 +77,13 @@
 abstract class ModuleBuilderGeneratorComponent {
 
   /**
+   * The unique name of this generator.
+   *
+   * A generator's name is used as the key in the $components array.
+   */
+  public $name;
+
+  /**
    * Reference to the Generate task handler.
    *
    * This should be used to access the environment, and to call getGenerator().
