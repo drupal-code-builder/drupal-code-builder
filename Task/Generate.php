@@ -22,14 +22,14 @@ class Generate extends Base {
   protected $sanity_level = NULL;
 
   /**
-   * Our base component name, i.e. either 'module' or 'theme'.
+   * Our base component type, i.e. either 'module' or 'theme'.
    */
-  public $base;
+  private $base;
 
   /**
    * Our base generator.
    */
-  public $base_generator;
+  private $base_generator;
 
   /**
    * Override the base constructor.
