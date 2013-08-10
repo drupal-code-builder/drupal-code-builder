@@ -85,8 +85,8 @@ class Generate extends Base {
    * @param $component_data
    *  An associative array of data for the component. Values depend on the
    *  component class. For details, see the constructor of the generator, of the
-   *  form ModuleBuilderGeneratorCOMPONENT, e.g.
-   *  ModuleBuilderGeneratorModule::__construct().
+   *  form ModuleBuider\Generator\COMPONENT, e.g.
+   *  ModuleBuider\Generator\Module::__construct().
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -154,7 +154,7 @@ class Generate extends Base {
    *
    * @return
    *  A class name for the type and, if it exists, version, e.g.
-   *  'ModuleBuilderGeneratorInfo6'.
+   *  'ModuleBuider\Generator\Info6'.
    *
    * @see Generate::generatorAutoload()
    */
