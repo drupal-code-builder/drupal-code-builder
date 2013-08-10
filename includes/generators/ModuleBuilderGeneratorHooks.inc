@@ -75,21 +75,21 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
 
     foreach ($hook_file_data as $filename => $hook_data) {
       // For the generator name, make an 'abbreviated' version of the filename.
-      $name = $this->fileNameAbbreviate($filename);
+      $component_name = $this->fileNameAbbreviate($filename);
 
       // If we are set to filter, and the abbreviated filename isn't in the
       // build list, skip it.
-      if ($filter_generators && !isset($build_list[$name])) {
+      if ($filter_generators && !isset($build_list[$component_name])) {
         continue;
       }
 
-      $generator = $this->task->getGenerator('ModuleCodeFile', $name, $component_data);
+      $generator = $this->task->getGenerator('ModuleCodeFile', $component_name, $component_data);
 
       // Faffy stuff:
       $generator->hook_data = $hook_data;
       $generator->filename = $filename;
 
-      $components[$name] = $generator;
+      $components[$component_name] = $generator;
     }
 
     //drush_print_r($components);
