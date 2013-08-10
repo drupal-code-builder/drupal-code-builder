@@ -44,7 +44,6 @@ class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
     // $hook_data is of the form:
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
     $hook_file_data = $this->getTemplates($module_data);
-    // TODO: move module_builder_get_templates() into this class!
 
     // There must always be a MODULE.module file, even if there are no hooks to
     // go in it.
