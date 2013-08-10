@@ -1,5 +1,7 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Generator base class for module hooks.
  *
@@ -12,9 +14,9 @@
  *
  * TODO: make this work for theme hooks too?
  *
- * @see ModuleBuilderGeneratorModuleCodeFile
+ * @see ModuleBuider\Generator\ModuleCodeFile
  */
-class ModuleBuilderGeneratorHooks extends ModuleBuilderGeneratorComponent {
+class Hooks extends Base {
 
   /**
    * Get the subcomponents for this component.

@@ -5,10 +5,12 @@
  * Contains generator classes for module code files.
  */
 
+namespace ModuleBuider\Generator;
+
 /**
  * Abstract Generator base class for files. TODO: rename? merge into Code?
  */
-abstract class ModuleBuilderGeneratorFile extends ModuleBuilderGeneratorComponent {
+abstract class File extends Base {
 
   /**
    * Return an empty array of subcomponent types.

@@ -5,6 +5,8 @@
  * Contains generator classes for module code files.
  */
 
+namespace ModuleBuider\Generator;
+
 /**
  * Generator class for module code files.
  *
@@ -12,7 +14,7 @@
  * system, and is currently (hello!) being forced into a new, bigger mk
  * hierarchy!
  */
-class ModuleBuilderGeneratorModuleCodeFile extends ModuleBuilderGeneratorFile {
+class ModuleCodeFile extends File {
 
   // TODO: declare properties that are special!
 
@@ -127,7 +129,7 @@ EOT;
 /**
  * Generator class for module code files for Drupal 6.
  */
-class ModuleBuilderGeneratorModuleCodeFile6 extends ModuleBuilderGeneratorModuleCodeFile {
+class ModuleCodeFile6 extends ModuleCodeFile {
   /**
    * Make the doxygen header for a given hook with the Drupal 6 format.
    *

@@ -1,5 +1,7 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Component generator: api.php file for documention hooks and callbacks.
  *
@@ -7,7 +9,7 @@
  * looks for calls to module_invoke_all() and generates scaffold hook
  * documentation for hook names that have the module's name as a prefix.
  */
-class ModuleBuilderGeneratorAPI extends ModuleBuilderGeneratorFile {
+class API extends Base {
 
   /**
    * Return an array of subcomponent types.

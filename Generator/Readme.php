@@ -1,13 +1,15 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Generator base class for module README file.
  *
  * (You were going to write a README file, right?)
  *
- * No point in extending ModuleBuilderGeneratorFile; it does way too much.
+ * No point in extending ModuleBuider\Generator\File; it does way too much.
  */
-class ModuleBuilderGeneratorReadme extends ModuleBuilderGeneratorComponent {
+class Readme extends Base {
 
   /**
    * Collect the code files.

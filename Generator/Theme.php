@@ -1,5 +1,7 @@
 <?php
 
+namespace ModuleBuider\Generator;
+
 /**
  * Component generator: theme.
  *
@@ -10,7 +12,7 @@
  *  - info
  *  - readme
  */
-class ModuleBuilderGeneratorTheme extends ModuleBuilderGeneratorComponent {
+class Theme extends Base {
 
   /**
    * The sanity level this generator requires to operate.

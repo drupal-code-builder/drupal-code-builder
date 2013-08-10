@@ -5,6 +5,8 @@
  * Contains general generator classes, abstract parents, etc.
  */
 
+namespace ModuleBuider\Generator;
+
 /**
  * Abstract base Generator for components.
  *
@@ -74,7 +76,7 @@
  *
  * @see Generate::generateComponent()
  */
-abstract class ModuleBuilderGeneratorComponent {
+abstract class Base {
 
   /**
    * The unique name of this generator.
