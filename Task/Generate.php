@@ -68,13 +68,9 @@ class Generate extends Base {
   }
 
   /**
-   * Helper to perform setup tasks: include files, register autoloader.
+   * Helper to perform setup tasks: register autoloader.
    */
   function initGenerators() {
-    // Load the legacy procedural include file, as that has functions we need.
-    // TODO: move these into this class.
-    $this->environment->loadInclude('generate');
-
     // Register our autoload handler for generator classes.
     spl_autoload_register(array($this, 'generatorAutoload'));
   }
