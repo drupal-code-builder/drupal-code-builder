@@ -152,8 +152,7 @@ abstract class ModuleBuilderGeneratorComponent {
         $component_data = $this->component_data;
       }
 
-      $class = module_builder_get_class($component_type);
-      $generator = new $class($component_name, $component_data);
+      $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
       $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
@@ -176,7 +175,7 @@ abstract class ModuleBuilderGeneratorComponent {
    *  there are likely to be multiple instances of a component type, this will
    *  need to be generated based on input data. Each value is either:
    *    - the type for the component, suitable for passing to
-   *      module_builder_get_class() to get the generator class.
+   *      Generate::getGenerator() to get the generator class.
    *    - an array of values, containing:
    *      - 'type': The type for the component, as above.
    *      - 'component_data': An array of values to be added into the current
