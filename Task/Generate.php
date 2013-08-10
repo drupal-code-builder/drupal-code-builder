@@ -36,20 +36,22 @@ class Generate extends Base {
    *
    * @param $environment
    *  The current environment handler.
-   * @param $component_name
-   *  A component name. Currently supports 'module' and 'theme'.
+   * @param $component_type
+   *  A component type. Currently supports 'module' and 'theme'.
    *  (We need this early on so we can use it to determine our sanity level.)
    */
-  public function __construct($environment, $component_name) {
+  public function __construct($environment, $component_type) {
     $this->environment = $environment;
 
     $this->initGenerators();
 
     // Fake the component data for now, as it's expected by the constructor.
     $component_data = array();
+    // The component name is just the same as the type for the base generator.
+    $component_name = $component_type;
 
-    $this->base = $component_name;
-    $this->base_generator = $this->getGenerator($component_name, $component_data);
+    $this->base = $component_type;
+    $this->base_generator = $this->getGenerator($component_type, $component_name, $component_data);
   }
 
   /**
@@ -118,13 +120,28 @@ class Generate extends Base {
   }
 
   /**
-   * Generator factory. WIP!
+   * Generator factory.
    *
-   * TODO: switch over to using this everywhere.
+   * @param $component_type
+   *   The type of the component. This is use to build the class name: see
+   *   getGeneratorClass().
+   * @param $component_name
+   *   The identifier for the component. This is often the same as the type
+   *   (e.g., 'module', 'hooks') but in the case of types used multiple times
+   *   this will be a unique identifier.
+   * @param $component_data
+   *   An associative array of input data for the component, as received by
+   *   Generate::generateComponent(). For example, for modules this will
+   *   be the module name, hooks required, and so on. See each component for
+   *   documentation on what this should contain.
+   *
+   * @return
+   *   A generator object, with the component name and data set on it, as well
+   *   as a reference to this task handler.
    */
-  public function getGenerator($component, $component_data) {
-    $class = module_builder_get_class($component);
-    $generator = new $class($component, $component_data);
+  public function getGenerator($component_type, $component_name, $component_data) {
+    $class = $this->getGeneratorClass($component_type);
+    $generator = new $class($component_name, $component_data);
 
     // Each generator needs a link back to the factory to be able to make more
     // generators, and also so it can access the environment.
