@@ -134,9 +134,41 @@ class Generate extends Base {
   }
 
   /**
+   * Helper function to get the desired Generator class.
+   *
+   * @param $type
+   *  The type of the component. This is used to determine the class.
+   *
+   * @return
+   *  A class name for the type and, if it exists, version, e.g.
+   *  'ModuleBuilderGeneratorInfo6'.
+   *
+   * @see Generate::generatorAutoload()
+   */
+  function getGeneratorClass($type) {
+    // Include our general include files, which contains base and parent classes.
+    $file_path = $this->environment->getPath("includes/generators/ModuleBuilderGenerators.inc");
+    include_once($file_path);
+
+    $type     = ucfirst($type);
+    $version  = $this->environment->major_version;
+    $class    = 'ModuleBuilderGenerator' . $type . $version;
+
+    // Trigger the autoload for the base name without the version, as all versions
+    // are in the same file.
+    class_exists('ModuleBuilderGenerator' . $type);
+
+    // If there is no version-specific class, use the base class.
+    if (!class_exists($class)) {
+      $class  = 'ModuleBuilderGenerator' . $type;
+    }
+    return $class;
+  }
+
+  /**
    * Autoload handler for generator classes.
    *
-   * @see module_builder_get_class()
+   * @see getGeneratorClass()
    */
   function generatorAutoload($class) {
     // Generator classes are in standardly named files, with all versions in the
