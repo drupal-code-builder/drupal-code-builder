@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of ModuleBuider\Generator\Theme.
+ */
+
 namespace ModuleBuider\Generator;
 
 /**

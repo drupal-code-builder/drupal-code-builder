@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of ModuleBuider\Generator\API.
+ */
+
 namespace ModuleBuider\Generator;
 
 /**
