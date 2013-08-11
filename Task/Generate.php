@@ -45,13 +45,11 @@ class Generate extends Base {
 
     $this->initGenerators();
 
-    // Fake the component data for now, as it's expected by the constructor.
-    $component_data = array();
     // The component name is just the same as the type for the base generator.
     $component_name = $component_type;
 
     $this->base = $component_type;
-    $this->base_generator = $this->getGenerator($component_type, $component_name, $component_data);
+    $this->base_generator = $this->getGenerator($component_type, $component_name);
   }
 
   /**
@@ -96,8 +94,7 @@ class Generate extends Base {
     // Add the top-level component to the data.
     $component_data['base'] = $this->base;
 
-    // Set the component data on the base generator, as when we built it in
-    // our __construct() it got a dummy empty array.
+    // Set the component data on the base generator.
     $this->base_generator->component_data = $component_data;
 
     // Recursively get subcomponents.
@@ -125,19 +122,14 @@ class Generate extends Base {
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
-   * @param $component_data
-   *   An associative array of input data for the component, as received by
-   *   Generate::generateComponent(). For example, for modules this will
-   *   be the module name, hooks required, and so on. See each component for
-   *   documentation on what this should contain.
    *
    * @return
    *   A generator object, with the component name and data set on it, as well
    *   as a reference to this task handler.
    */
-  public function getGenerator($component_type, $component_name, $component_data) {
+  public function getGenerator($component_type, $component_name) {
     $class = $this->getGeneratorClass($component_type);
-    $generator = new $class($component_name, $component_data);
+    $generator = new $class($component_name);
 
     // Each generator needs a link back to the factory to be able to make more
     // generators, and also so it can access the environment.

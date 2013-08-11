@@ -84,7 +84,7 @@ class Hooks extends Base {
         continue;
       }
 
-      $generator = $this->task->getGenerator('ModuleCodeFile', $component_name, $component_data);
+      $generator = $this->task->getGenerator('ModuleCodeFile', $component_name);
 
       // Faffy stuff:
       $generator->hook_data = $hook_data;

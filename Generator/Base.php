@@ -159,7 +159,7 @@ abstract class Base {
         $component_data = $this->component_data;
       }
 
-      $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
+      $generator = $this->task->getGenerator($component_type, $component_name);
       $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
