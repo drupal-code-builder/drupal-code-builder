@@ -103,29 +103,6 @@ class Hooks extends Base {
   }
 
   /**
-   * Created an abbreviated version of a module code file filename.
-   *
-   * This is with both the initial module name and final .inc removed. E.g.:
-   *  - 'foo.module'    -> 'module'
-   *  - 'foo.install'   -> 'install'
-   *  - 'foo.views.inc' -> 'views'
-   */
-  function fileNameAbbreviate($filename) {
-    // Having to regexp the module name out of a string that we put it into
-    // not that long ago feels a bit stupid.
-    $module_root_name = $this->base_component->component_data['module_root_name'];
-    $abbreviated = preg_replace(
-      array(
-        "[^$module_root_name\.]", // module_name. at start
-        '[\.inc$]'), // possibly .inc at end
-      array('', ''),
-      $filename
-    );
-
-    return $abbreviated;
-  }
-
-  /**
    * Helper function for getSubComponents().
    *
    * (Move this back out if it needs to be used by other components in future?)
