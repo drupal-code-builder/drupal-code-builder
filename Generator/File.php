@@ -13,6 +13,22 @@ namespace ModuleBuider\Generator;
 abstract class File extends Base {
 
   /**
+   * The unique name of this generator.
+   *
+   * A generator's name is used as the key in the $components array.
+   *
+   * A File generator should use as its name the generic form of its eventual
+   * file name, that is, the filename with the token '%module' in place of the
+   * module name. For example: %module.module, $module.views.inc, etc.
+   */
+  public $name;
+
+  /**
+   * The actual name of the file to write.
+   */
+  protected $filename;
+
+  /**
    * Return an empty array of subcomponent types.
    *
    * Files are always terminal components.

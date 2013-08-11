@@ -80,8 +80,9 @@ class Hooks extends Base {
     }
 
     foreach ($hook_file_data as $filename => $hook_data) {
-      // For the generator name, make an 'abbreviated' version of the filename.
-      $component_name = $this->fileNameAbbreviate($filename);
+      // For the generator name, use the generic form of the filename.
+      // Replacement of the '%module' token is done in ModuleCodeFile.
+      $component_name = $filename;
 
       // If we are set to filter, and the abbreviated filename isn't in the
       // build list, skip it.
@@ -93,7 +94,6 @@ class Hooks extends Base {
 
       // Faffy stuff:
       $generator->hook_data = $hook_data;
-      $generator->filename = $filename;
 
       $components[$component_name] = $generator;
     }
@@ -135,8 +135,8 @@ class Hooks extends Base {
    * their custom hook templates.
    *
    * @return
-   *   An array whose keys are destination filenames, with tokens replaced, and
-   *   whose values are arrays of hook data. The hook data keys are:
+   *   An array whose keys are destination filenames with the token '%module',
+   *   and whose values are arrays of hook data. The hook data keys are:
    *    - declaration: The function declaration, with the 'hook' part not
    *        yet replaced.
    *    - destination: The destination, with tokens still in place.
@@ -309,9 +309,6 @@ class Hooks extends Base {
     $hook_data_return = array();
     foreach (array_keys($template_data) as $hook_name) {
       $destination = $hook_function_declarations[$hook_name]['destination'];
-      // TODO: unclear when to replace destination tokens.
-      $destination = str_replace('%module', $module_data['module_root_name'], $destination);
-
       // Copy over the data we already had.
       $hook_data_return[$destination][$hook_name] = $hook_function_declarations[$hook_name];
 
@@ -324,8 +321,6 @@ class Hooks extends Base {
     // Not all hooks have template data, so fill these in too.
     foreach ($hook_function_declarations as $hook_name => $hook) {
       $destination = $hook_function_declarations[$hook_name]['destination'];
-      $destination = str_replace('%module', $module_data['module_root_name'], $destination);
-
       if (!isset($hook_data_return[$destination][$hook_name])) {
         $hook_data_return[$destination][$hook_name] = $hook_function_declarations[$hook_name];
       }

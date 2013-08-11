@@ -22,6 +22,10 @@ class ModuleCodeFile extends File {
    * Build the code files.
    */
   function collectFiles(&$files) {
+    // Our component name is our future filename, with the token '%module' to
+    // be replaced.
+    $this->filename = str_replace('%module', $this->base_component->component_data['module_root_name'], $this->name);
+
     $files[$this->name] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
