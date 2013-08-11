@@ -112,17 +112,9 @@ abstract class Base {
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
-   * @param $component_data
-   *   An associative array of input data for the component, as received by
-   *   Generate::generateComponent(). For example, for modules this will
-   *   be the module name, hooks required, and so on. See each component for
-   *   documentation on what this should contain.
    */
-  function __construct($component_name, $component_data) {
+  function __construct($component_name) {
     $this->name = $component_name;
-
-    // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
-    $this->component_data = $component_data;
   }
 
   /**
