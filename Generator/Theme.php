@@ -31,6 +31,11 @@ class Theme extends Base {
    *   - 'themeables': An array of theme hook names. These may include theme
    *      suggestions, separated with a '--'. For example, 'node' will output
    *      node.tpl.php, and 'node--page' will output node--page.tpl.php.
+   *
+   * Further properties the generating process will add:
+   *   - 'theme_hook_bases': The base theme hook for each of the requested
+   *      themeables. This is a lookup array keyed by the component names of
+   *      the themeables.
    */
   public $component_data = array();
 
@@ -69,12 +74,10 @@ class Theme extends Base {
       //drush_print_r($hook);
 
       if (isset($theme_registry[$hook]['template'])) {
-        $components[$theme_hook_name] = array(
-          'type' => 'themeTemplate',
-          'component_data' => array(
-            'theme_base' => $hook,
-          ),
-        );
+        $components[$theme_hook_name] = 'themeTemplate';
+
+        // Store data about this theme hook that we've found.
+        $this->component_data['theme_hook_bases'][$theme_hook_name] = $hook;
       }
       else {
         // Fall through, as 'function' is optional in hook_theme().
