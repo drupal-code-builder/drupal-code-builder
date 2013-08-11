@@ -25,50 +25,48 @@ class Module extends Base {
   public $sanity_level = 'hook_data';
 
   /**
-   * Constructor method; sets the module data.
+   * The data for the component.
    *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   An associative array of data for the module, as received by
-   *   Generate::generateComponent().
-   *   An associative array of data for the module, [passed by reference so data
-   *   on generated files can be added!?!?!?!]
-   *   The keys can *mostly* be taken straight from form values. They are as
-   *   follows:
-   *     - 'base': The type of component: 'module'.
-   *     - 'module_root_name': The machine name for the module.
-   *     - 'module_readable_name': The human readable name for the module.
-   *     - 'module_short_description': The module's description text.
-   *     - 'module_help_text': Help text for the module. If this is given, then
-   *        hook_help() is automatically added to the list of required hooks.
-   *     - 'hooks': An associative array whose keys are full hook names
-   *       (eg 'hook_menu'), where requested hooks have a value of TRUE.
-   *       Unwanted hooks may also be included as keys provided their value is
-   *       FALSE.
-   *     - 'module_dependencies': A string of module dependencies, separated by
-   *        spaces, e.g. 'forum views'.
-   *     - 'module_package': The module package.
-   *     - 'component_folder': (optional) The destination folder to write the
-   *       module files to.
-   *     - 'module_files': ??? OBSOLETE!? added by this function. A flat array
-   *       of filenames that have been generated.
-   *     - 'requested_build': An array whose keys are names of subcomponents to
-   *        build. Component names are defined in subComponents(), and include:
-   *        - 'all': everything we can do.
-   *        - 'code': PHP code files.
-   *        - 'info': the info file.
-   *        - 'module': the .module file.
-   *        - 'install': the .install file.
-   *        - 'tests': test file.
-   *        - 'api': api.php hook documentation file.
-   *        - FILE ID: requests a particular code file, by the abbreviated name.
-   *          This is the filename without the initial 'MODULE.' or the '.inc'
-   *          extension.
+   * This is only present on the base component (e.g., 'Module'), so that the
+   * data initially given by the user may be globally modified or added to by
+   * components.
+   *
+   * An associative array of data for the module, [passed by reference so data
+   * on generated files can be added!?!?!?!]
+   * The keys can *mostly* be taken straight from form values. They are as
+   * follows:
+   *   - 'base': The type of component: 'module'.
+   *   - 'module_root_name': The machine name for the module.
+   *   - 'module_readable_name': The human readable name for the module.
+   *   - 'module_short_description': The module's description text.
+   *   - 'module_help_text': Help text for the module. If this is given, then
+   *      hook_help() is automatically added to the list of required hooks.
+   *   - 'hooks': An associative array whose keys are full hook names
+   *     (eg 'hook_menu'), where requested hooks have a value of TRUE.
+   *     Unwanted hooks may also be included as keys provided their value is
+   *     FALSE.
+   *   - 'module_dependencies': A string of module dependencies, separated by
+   *      spaces, e.g. 'forum views'.
+   *   - 'module_package': The module package.
+   *   - 'component_folder': (optional) The destination folder to write the
+   *     module files to.
+   *   - 'module_files': ??? OBSOLETE!? added by this function. A flat array
+   *     of filenames that have been generated.
+   *   - 'requested_build': An array whose keys are names of subcomponents to
+   *      build. Component names are defined in subComponents(), and include:
+   *      - 'all': everything we can do.
+   *      - 'code': PHP code files.
+   *      - 'info': the info file.
+   *      - 'module': the .module file.
+   *      - 'install': the .install file.
+   *      - 'tests': test file.
+   *      - 'api': api.php hook documentation file.
+   *      - FILE ID: requests a particular code file, by the abbreviated name.
+   *        This is the filename without the initial 'MODULE.' or the '.inc'
+   *        extension.
+   *   - 'requested_components':
    */
-  function __construct($component_name, $component_data) {
-    parent::__construct($component_name, $component_data);
-  }
+  public $component_data = array();
 
   /**
    * Declares the subcomponents for this component.
