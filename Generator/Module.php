@@ -70,6 +70,9 @@ class Module extends Base {
    *        This is the filename without the initial 'MODULE.' or the '.inc'
    *        extension.
    *   - 'requested_components':
+   * Properties added by generators:
+   *  - 'hook_file_data': Added by the Hooks generator. Keyed by the component
+   *    names of the ModuleCodeFile type components that Hooks adds.
    */
   public $component_data = array();
 

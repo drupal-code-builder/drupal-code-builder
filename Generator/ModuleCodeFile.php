@@ -59,7 +59,8 @@ EOT;
   function code_body() {
     // Get old style variable names.
     $module_data = $this->base_component->component_data;
-    $hook_data = $this->hook_data;
+    // Get the hook data for our file.
+    $hook_data = $this->base_component->component_data['hook_file_data'][$this->name];
 
     // Build up an array of functions' code.
     $functions = array();

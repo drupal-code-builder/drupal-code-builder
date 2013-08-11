@@ -24,21 +24,22 @@ namespace ModuleBuider\Generator;
 class Hooks extends Base {
 
   /**
-   * Get the subcomponents for this component.
+   * Declares the subcomponents for this component.
    *
-   * We override getSubComponents() rather than just declare types in
-   * subComponents() because (at this point at least) we need to do fancy things
-   * to the generator objects as we created them.
+   * These are not necessarily child classes, just components this needs.
    *
    * Further filtering of components based on the build request takes place
    * here.
    *
-   * TODO: handle version stuff here? Or better to have it transparent in the
-   * factory function?
-   *
-   * TODO: clean up (if possible) so we use subComponents() instead?
+   * @return
+   *  An array of subcomponent names and types.
    */
-  public function getSubComponents() {
+  protected function subComponents() {
+    // We add subcomponents of type ModuleCodeFile, one for each code file.
+    // The code files we add are based on the intersection of those required by
+    // the hooks requested, and those actually requested.
+    $components = array();
+
     // Just translate the variable for easier frankencoding for now!
     $module_data = $this->base_component->component_data;
 
@@ -47,29 +48,21 @@ class Hooks extends Base {
       $module_data['hooks']['hook_help'] = TRUE;
     }
 
-    // Get a set of hook declarations and function body templates for the hooks we want.
-    // $hook_data is of the form:
-    //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
-    $hook_file_data = $this->getTemplates($module_data);
-
     // There must always be a MODULE.module file, even if there are no hooks to
     // go in it.
-    // (Slight niggle: it gets put at the end :/)
-    // TODO: rearrange this!
-    $hook_file_data += array(
-      $module_data['module_root_name'] . '.module' => array(),
-    );
+    $components['%module.module'] = 'ModuleCodeFile';
 
-    //print_r($module_data);
-    //dsm($hook_file_data);
-
-    // Iterate over our data array, because it's in a pretty order.
-    // by each needed file of code.
-    $components = array();
+    // Get a set of hook declarations and function body templates for the hooks
+    // we want. This is of the form:
+    //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
+    $hook_file_data = $this->getTemplates($module_data);
+    // Set this on the global component data.
+    $this->base_component->component_data['hook_file_data'] = $hook_file_data;
 
     // Determine whether we need to filter the code files or not.
     // If the build request is 'code', 'all', or 'hooks, then we don't filter,
     // and return everything.
+    // TODO: move this logic further up the chain?
     $build_list = $module_data['requested_build'];
     //drush_print_r($build_list);
     if (isset($build_list['all']) || isset($build_list['code']) || isset($build_list['hooks'])) {
@@ -90,20 +83,14 @@ class Hooks extends Base {
         continue;
       }
 
-      $generator = $this->task->getGenerator('ModuleCodeFile', $component_name);
-
-      // Faffy stuff:
-      $generator->hook_data = $hook_data;
-
-      $components[$component_name] = $generator;
+      $components[$component_name] = 'ModuleCodeFile';
     }
 
-    //drush_print_r($components);
-    $this->components = $components;
+    return $components;
   }
 
   /**
-   * Helper function for getSubComponents().
+   * Helper function for our subComponents().
    *
    * (Move this back out if it needs to be used by other components in future?)
    *
