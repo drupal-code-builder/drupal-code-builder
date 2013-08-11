@@ -70,7 +70,7 @@ class Generate extends Base {
   /**
    * Helper to perform setup tasks: register autoloader.
    */
-  function initGenerators() {
+  private function initGenerators() {
     // Register our autoload handler for generator classes.
     spl_autoload_register(array($this, 'generatorAutoload'));
   }
@@ -158,7 +158,7 @@ class Generate extends Base {
    *
    * @see Generate::generatorAutoload()
    */
-  function getGeneratorClass($type) {
+  private function getGeneratorClass($type) {
     // Include our general include files, which contains base and parent classes.
     $file_path = $this->environment->getPath("Generator/Base.php");
     include_once($file_path);
