@@ -93,6 +93,11 @@ abstract class Base {
   public $task;
 
   /**
+   * Reference to the base component of this component.
+   */
+  public $base_component;
+
+  /**
    * An array of this component's subcomponents.
    *
    * This is keyed by the name of the component name. Values are the
