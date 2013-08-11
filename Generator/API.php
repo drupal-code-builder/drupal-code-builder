@@ -23,7 +23,7 @@ class API extends File {
    * Build the code files.
    */
   function collectFiles(&$files) {
-    $module_root_name = $this->component_data['module_root_name'];
+    $module_root_name = $this->base_component->component_data['module_root_name'];
 
     $this->filename = "$module_root_name.api.php";
 
@@ -40,7 +40,7 @@ class API extends File {
    * Return the summary line for the file docblock.
    */
   function file_doc_summary() {
-    $module_readable_name = $this->component_data['module_readable_name'];
+    $module_readable_name = $this->base_component->component_data['module_readable_name'];
     return "Hooks provided by the $module_readable_name module.";
   }
 
@@ -50,9 +50,9 @@ class API extends File {
   function code_body() {
     $hooks = $this->get_existing_hooks();
 
-    $module_root_name = $this->component_data['module_root_name'];
-    $module_root_name_title_case = ucfirst($this->component_data['module_root_name']);
-    $module_readable_name = $this->component_data['module_readable_name'];
+    $module_root_name = $this->base_component->component_data['module_root_name'];
+    $module_root_name_title_case = ucfirst($this->base_component->component_data['module_root_name']);
+    $module_readable_name = $this->base_component->component_data['module_readable_name'];
 
     // Build an array of code pieces.
     $code_pieces = array();
@@ -125,7 +125,7 @@ EOT;
    */
   function get_existing_hooks() {
     // Get the module's folder.
-    $module_folder = $this->component_data['module_folder'];
+    $module_folder = $this->base_component->component_data['module_folder'];
 
     // Bail if the folder doesn't exist yet: there is nothing to do.
     if (!file_exists($module_folder)) {
@@ -138,7 +138,7 @@ EOT;
 
     // Only consider hooks which are invented by this module. We assume the
     // module follows the convention of using its name as a prefix.
-    $hook_prefix = $this->component_data['module_root_name'] . '_';
+    $hook_prefix = $this->base_component->component_data['module_root_name'] . '_';
 
     // Recurse all files in the module folder. We might as well just look at all
     // files rather than try to cover all possible file extensions.

@@ -20,22 +20,24 @@ class Theme extends Base {
   public $sanity_level = 'none';
 
   /**
-   * Constructor method; sets the module data.
+   * The data for the component.
    *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $module_data
-   *   An $component_data array of data for the theme, as received by
-   *   drush_module_builder_callback_build_theme().
-   *   This may contain the following properties:
-   *     - 'theme_name': The machine name of the theme.
-   *     - 'themeables': An array of theme hook names. These may include theme
-   *        suggestions, separated with a '--'. For example, 'node' will output
-   *        node.tpl.php, and 'node--page' will output node--page.tpl.php.
+   * This is only present on the base component (e.g., 'Theme'), so that the
+   * data initially given by the user may be globally modified or added to by
+   * components.
+   *
+   * This may contain the following properties:
+   *   - 'theme_name': The machine name of the theme.
+   *   - 'themeables': An array of theme hook names. These may include theme
+   *      suggestions, separated with a '--'. For example, 'node' will output
+   *      node.tpl.php, and 'node--page' will output node--page.tpl.php.
+   *
+   * Further properties the generating process will add:
+   *   - 'theme_hook_bases': The base theme hook for each of the requested
+   *      themeables. This is a lookup array keyed by the component names of
+   *      the themeables.
    */
-  function __construct($component_name, $component_data) {
-    parent::__construct($component_name, $component_data);
-  }
+  public $component_data = array();
 
   /**
    * Declares the subcomponents for this component.
@@ -72,12 +74,10 @@ class Theme extends Base {
       //drush_print_r($hook);
 
       if (isset($theme_registry[$hook]['template'])) {
-        $components[$theme_hook_name] = array(
-          'type' => 'themeTemplate',
-          'component_data' => array(
-            'theme_base' => $hook,
-          ),
-        );
+        $components[$theme_hook_name] = 'themeTemplate';
+
+        // Store data about this theme hook that we've found.
+        $this->component_data['theme_hook_bases'][$theme_hook_name] = $hook;
       }
       else {
         // Fall through, as 'function' is optional in hook_theme().

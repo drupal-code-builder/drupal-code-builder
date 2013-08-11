@@ -22,7 +22,7 @@ class Info extends File {
   function collectFiles(&$files) {
     $files['info'] = array(
       'path' => '', // Means base folder.
-      'filename' => $this->component_data['module_root_name'] . '.info',
+      'filename' => $this->base_component->component_data['module_root_name'] . '.info',
       // We pass $files in to check for files containing classes.
       'body' => $this->code_body($files),
       // We join the info lines with linebreaks, as they (currently!) do not
@@ -97,7 +97,7 @@ class Info5 extends InfoIni {
    * Create lines of file body for Drupal 5.
    */
   function code_body() {
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
 
     $lines = array();
     $lines['name'] = $module_data['module_readable_name'];
@@ -126,7 +126,7 @@ class Info6 extends InfoIni {
    * Create lines of file body for Drupal 6.
    */
   function code_body() {
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
 
     $lines = array();
     $lines['name'] = $module_data['module_readable_name'];
@@ -162,7 +162,7 @@ class Info7 extends InfoIni {
     $args = func_get_args();
     $files = array_shift($args);
 
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
     //print_r($module_data);
 
     $lines = array();
@@ -206,7 +206,7 @@ class Info8 extends Info {
   function collectFiles(&$files) {
     parent::collectFiles($files);
 
-    $files['info']['filename'] = $this->component_data['module_root_name'] . '.info.yaml';
+    $files['info']['filename'] = $this->base_component->component_data['module_root_name'] . '.info.yaml';
   }
 
   /**
@@ -216,7 +216,7 @@ class Info8 extends Info {
     $args = func_get_args();
     $files = array_shift($args);
 
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
     print_r($module_data);
 
     $lines = array();

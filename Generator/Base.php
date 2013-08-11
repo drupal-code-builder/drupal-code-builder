@@ -93,6 +93,13 @@ abstract class Base {
   public $task;
 
   /**
+   * Reference to the base component of this component.
+   *
+   * This should be used to access the component data.
+   */
+  public $base_component;
+
+  /**
    * An array of this component's subcomponents.
    *
    * This is keyed by the name of the component name. Values are the
@@ -101,23 +108,24 @@ abstract class Base {
   public $components = array();
 
   /**
+   * The data for the component.
+   *
+   * This is only present on the base component (e.g., 'Module'), so that the
+   * data initially given by the user may be globally modified or added to by
+   * components.
+   */
+  public $component_data = array();
+
+  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
-   * @param $component_data
-   *   An associative array of input data for the component, as received by
-   *   Generate::generateComponent(). For example, for modules this will
-   *   be the module name, hooks required, and so on. See each component for
-   *   documentation on what this should contain.
    */
-  function __construct($component_name, $component_data) {
+  function __construct($component_name) {
     $this->name = $component_name;
-
-    // TODO: find a way to only have this once instead of EVERY DAMN OBJECT!
-    $this->component_data = $component_data;
   }
 
   /**
@@ -143,18 +151,8 @@ abstract class Base {
     $subcomponent_info = $this->subComponents();
 
     // Instantiate each one, and recurse into it.
-    foreach ($subcomponent_info as $component_name => $info) {
-      // The component info can be either an array or just a type string.
-      if (is_array($info)) {
-        $component_type = $info['type'];
-        $component_data = $info['component_data'] + $this->component_data;
-      }
-      else {
-        $component_type = $info;
-        $component_data = $this->component_data;
-      }
-
-      $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
+    foreach ($subcomponent_info as $component_name => $component_type) {
+      $generator = $this->task->getGenerator($component_type, $component_name);
       $this->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
@@ -175,14 +173,9 @@ abstract class Base {
    *  An array of subcomponents which the current generator requires.
    *  Each item's key is a name for the component. This must be unique, so if
    *  there are likely to be multiple instances of a component type, this will
-   *  need to be generated based on input data. Each value is either:
-   *    - the type for the component, suitable for passing to
-   *      Generate::getGenerator() to get the generator class.
-   *    - an array of values, containing:
-   *      - 'type': The type for the component, as above.
-   *      - 'component_data': An array of values to be added into the current
-   *        generator's component data and passed to the component to be
-   *        created. The data here takes precedence over existing values.
+   *  need to be generated based on input data. Each value is the type for the
+   *  component, suitable for passing to Generate::getGenerator() to get the
+   *  generator class.
    */
   protected function subComponents() {
     return array();
