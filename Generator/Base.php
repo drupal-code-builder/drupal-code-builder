@@ -94,6 +94,8 @@ abstract class Base {
 
   /**
    * Reference to the base component of this component.
+   *
+   * This should be used to access the component data.
    */
   public $base_component;
 
@@ -104,6 +106,15 @@ abstract class Base {
    * instantiated component generators.
    */
   public $components = array();
+
+  /**
+   * The data for the component.
+   *
+   * This is only present on the base component (e.g., 'Module'), so that the
+   * data initially given by the user may be globally modified or added to by
+   * components.
+   */
+  public $component_data = array();
 
   /**
    * Constructor method; sets the component data.
