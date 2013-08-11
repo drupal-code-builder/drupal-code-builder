@@ -35,7 +35,7 @@ class Hooks extends Base {
    */
   public function getSubComponents() {
     // Just translate the variable for easier frankencoding for now!
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
 
     // Force hook_help() if there is help text in the incoming data.
     if (isset($module_data['module_help_text'])) {
@@ -108,7 +108,7 @@ class Hooks extends Base {
   function fileNameAbbreviate($filename) {
     // Having to regexp the module name out of a string that we put it into
     // not that long ago feels a bit stupid.
-    $module_root_name = $this->component_data['module_root_name'];
+    $module_root_name = $this->base_component->component_data['module_root_name'];
     $abbreviated = preg_replace(
       array(
         "[^$module_root_name\.]", // module_name. at start

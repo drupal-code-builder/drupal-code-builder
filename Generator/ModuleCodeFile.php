@@ -54,7 +54,7 @@ EOT;
    */
   function code_body() {
     // Get old style variable names.
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
     $hook_data = $this->hook_data;
 
     // Build up an array of functions' code.
@@ -113,7 +113,7 @@ EOT;
    */
   function getReplacements() {
     // Get old style variable names.
-    $module_data = $this->component_data;
+    $module_data = $this->base_component->component_data;
 
     return array(
       '%module'       => $module_data['module_root_name'],

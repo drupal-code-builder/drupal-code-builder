@@ -35,8 +35,8 @@ class Readme extends Base {
    */
   function lines() {
     return array(
-      $this->component_data['module_readable_name'],
-      str_repeat('=', strlen($this->component_data['module_readable_name'])),
+      $this->base_component->component_data['module_readable_name'],
+      str_repeat('=', strlen($this->base_component->component_data['module_readable_name'])),
       '',
       'TODO: write some documentation.',
       '',

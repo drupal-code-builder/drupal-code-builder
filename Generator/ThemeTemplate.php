@@ -21,7 +21,7 @@ class ThemeTemplate extends Base {
   function collectFiles(&$files) {
     $theme_registry = theme_get_registry();
     // Our theme base was set in our incoming component data.
-    $theme_info = $theme_registry[$this->component_data['theme_base']];
+    $theme_info = $theme_registry[$this->base_component->component_data['theme_base']];
 
     //drush_print_r($this);
     //drush_print_r($theme_info);
