@@ -151,17 +151,7 @@ abstract class Base {
     $subcomponent_info = $this->subComponents();
 
     // Instantiate each one, and recurse into it.
-    foreach ($subcomponent_info as $component_name => $info) {
-      // The component info can be either an array or just a type string.
-      if (is_array($info)) {
-        $component_type = $info['type'];
-        $component_data = $info['component_data'] + $this->component_data;
-      }
-      else {
-        $component_type = $info;
-        $component_data = $this->component_data;
-      }
-
+    foreach ($subcomponent_info as $component_name => $component_type) {
       $generator = $this->task->getGenerator($component_type, $component_name);
       $this->components[$component_name] = $generator;
 
@@ -183,14 +173,9 @@ abstract class Base {
    *  An array of subcomponents which the current generator requires.
    *  Each item's key is a name for the component. This must be unique, so if
    *  there are likely to be multiple instances of a component type, this will
-   *  need to be generated based on input data. Each value is either:
-   *    - the type for the component, suitable for passing to
-   *      Generate::getGenerator() to get the generator class.
-   *    - an array of values, containing:
-   *      - 'type': The type for the component, as above.
-   *      - 'component_data': An array of values to be added into the current
-   *        generator's component data and passed to the component to be
-   *        created. The data here takes precedence over existing values.
+   *  need to be generated based on input data. Each value is the type for the
+   *  component, suitable for passing to Generate::getGenerator() to get the
+   *  generator class.
    */
   protected function subComponents() {
     return array();
