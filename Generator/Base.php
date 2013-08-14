@@ -36,8 +36,8 @@ namespace ModuleBuider\Generator;
  * generate. The code files are then interrogated, and return no subcomponents:
  * the gathering process is thus complete.
  *
- * The end result is a tree which consists of each generator class having a
- * property which is an array of its subgenerators, keyed by component name.
+ * The end result is a flat list of components, keyed by component names. Each
+ * component has the data it needs to operate.
  *
  * Once we have this, we then recurse once more into it, this time building up
  * an array of file info that we pass by reference (this it can be altered
@@ -100,10 +100,14 @@ abstract class Base {
   public $base_component;
 
   /**
-   * An array of this component's subcomponents.
+   * The base component's subcomponents.
    *
    * This is keyed by the name of the component name. Values are the
    * instantiated component generators.
+   *
+   * (This is only present on the base component.)
+   *
+   * TODO: add an abstract BaseComponent class?
    */
   public $components = array();
 
@@ -129,6 +133,27 @@ abstract class Base {
   }
 
   /**
+   * Returns the base component for this component (or itself if it's the base).
+   *
+   * This can be used in circumstances where it's not known whether the current
+   * component is the base or not.
+   *
+   * @return
+   *  The base component.
+   */
+  function getBaseComponent() {
+    if (isset($this->base_component)) {
+      // If the base component is set, return that.
+      // @see Generate::getGenerator().
+      return $this->base_component;
+    }
+    else {
+      // If it's not set, we're the base component, so return ourselves.
+      return $this;
+    }
+  }
+
+  /**
    * Get the subcomponents for this generator.
    *
    * This calls itself recursively on the subcomponents, thus building a nested
@@ -145,20 +170,28 @@ abstract class Base {
    *  $this->components.
    */
   public function getSubComponents() {
-    $this->components = array();
+    // Get the base component to add the generators to it.
+    $base_component = $this->getBaseComponent();
 
     // Get the required subcomponents.
     $subcomponent_info = $this->subComponents();
 
-    // Instantiate each one, and recurse into it.
-    foreach ($subcomponent_info as $component_name => $component_type) {
-      $generator = $this->task->getGenerator($component_type, $component_name);
-      $this->components[$component_name] = $generator;
+    // Instantiate each one (if not already done), and recurse into it.
+    foreach ($subcomponent_info as $component_name => $data) {
+      // Errrrm probably STILL not needed!!
+      if (is_string($data)) {
+        $component_type = $data;
+        $generator = $this->task->getGenerator($component_type, $component_name);
+      }
+      else {
+        $generator = $data;
+      }
+
+      // Add the new component to the master array of components on the base.
+      $base_component->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
-      foreach ($this->components as $generator) {
-        $generator->getSubComponents();
-      }
+      $generator->getSubComponents();
     }
   }
 
