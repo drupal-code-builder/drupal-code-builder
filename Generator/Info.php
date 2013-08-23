@@ -263,7 +263,7 @@ class Info8 extends Info {
    *  An array of lines for the .info file.
    */
   function process_info_lines($lines) {
-    $yaml_parser = new Symfony\Component\Yaml\Yaml;
+    $yaml_parser = new \Symfony\Component\Yaml\Yaml;
     $yaml = $yaml_parser->dump($lines, 2, 2);
     //drush_print_r($yaml);
 
