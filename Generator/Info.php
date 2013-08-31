@@ -206,7 +206,7 @@ class Info8 extends Info {
   function collectFiles(&$files) {
     parent::collectFiles($files);
 
-    $files['info']['filename'] = $this->base_component->component_data['module_root_name'] . '.info.yaml';
+    $files['info']['filename'] = $this->base_component->component_data['module_root_name'] . '.info.yml';
   }
 
   /**
