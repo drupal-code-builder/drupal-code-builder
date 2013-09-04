@@ -57,7 +57,7 @@ abstract class ModuleBuilderEnvironmentBase {
   /**
    * Sanity check our basic environment to a specified level.
    *
-   * This is called by the factory once this object has been set on it.
+   * This is called by the factory when a Task is requested from it.
    *
    * If the property $skipSanity is set on this environment object, the tests
    * are skipped. This should only be used in rare circumstances (such as drush
