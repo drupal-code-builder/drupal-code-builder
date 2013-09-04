@@ -27,9 +27,9 @@ class Generate extends Base {
   private $base;
 
   /**
-   * Our base generator.
+   * Our root generator.
    */
-  private $base_generator;
+  private $root_generator;
 
   /**
    * Override the base constructor.
@@ -49,7 +49,7 @@ class Generate extends Base {
     $component_name = $component_type;
 
     $this->base = $component_type;
-    $this->base_generator = $this->getGenerator($component_type, $component_name);
+    $this->root_generator = $this->getGenerator($component_type, $component_name);
   }
 
   /**
@@ -62,7 +62,7 @@ class Generate extends Base {
    *  A sanity level string to pass to the environment's verifyEnvironment().
    */
   function getSanityLevel() {
-    return $this->base_generator->sanity_level;
+    return $this->root_generator->sanity_level;
   }
 
   /**
@@ -95,19 +95,19 @@ class Generate extends Base {
     $component_data['base'] = $this->base;
 
     // Set the component data on the base generator.
-    $this->base_generator->component_data = $component_data;
+    $this->root_generator->component_data = $component_data;
 
     // Recursively get subcomponents.
-    $this->base_generator->getSubComponents();
+    $this->root_generator->getSubComponents();
 
     //drush_print_r($generator->components);
 
     // Recursively build files.
     $files = array();
-    $this->base_generator->collectFiles($files);
+    $this->root_generator->collectFiles($files);
     //drush_print_r($files);
 
-    $files_assembled = $this->base_generator->assembleFiles($files);
+    $files_assembled = $this->root_generator->assembleFiles($files);
 
     return $files_assembled;
   }
@@ -134,7 +134,7 @@ class Generate extends Base {
     // Each generator needs a link back to the factory to be able to make more
     // generators, and also so it can access the environment.
     $generator->task = $this;
-    $generator->base_component = $this->base_generator;
+    $generator->base_component = $this->root_generator;
 
     return $generator;
   }
