@@ -39,6 +39,10 @@ namespace ModuleBuider\Generator;
  * The end result is a flat list of components, keyed by component names. Each
  * component has the data it needs to operate.
  *
+ * Once we have this, we iterate over it to assemble a tree structure, which
+ * tells us which components contains which other components. For example, the
+ * module code file contains functions and hook implementations.
+ *
  * Once we have this, we then recurse once more into it, this time building up
  * an array of file info that we pass by reference (this it can be altered
  * as well as added to, though generator order is TBFO). Generator classes that
@@ -162,6 +166,14 @@ abstract class Base {
   }
 
   /**
+   * Returns the flat list of components, as assembled by getSubComponents().
+   */
+  function getComponentList() {
+    $base = $this->getBaseComponent();
+    return $base->components;
+  }
+
+  /**
    * Get the subcomponents for this generator.
    *
    * This calls itself recursively on the subcomponents, thus building a nested
@@ -227,6 +239,96 @@ abstract class Base {
    */
   protected function subComponents() {
     return array();
+  }
+
+  /**
+   * Assemble a tree of components, grouped by what they contain.
+   *
+   * For example, a code file contains its functions; a form component
+   * contains the handler functions.
+   *
+   * This iterates over the flat list of components assembled by
+   * getSubComponents(), and re-assembles it as a tree.
+   *
+   * The tree is an array of parentage data, where keys are the names of
+   * components that are parents, and values are flat arrays of component names.
+   * To traverse the tree:
+   *  - access the base component name
+   *  - iterate over its children
+   *  - recursively do the same thing to each child component.
+   *
+   * Not all components in the component list need to place themselves into the
+   * tree, but this means that they will not participate in file assembly.
+   */
+  public function assembleComponentTree() {
+    $tree = array();
+    foreach ($this->components as $name => $component) {
+      $parent_name = $component->containingComponent();
+      if (!empty($parent_name)) {
+        $tree[$parent_name][] = $name;
+      }
+    }
+
+    $this->tree = $tree;
+  }
+
+  /**
+   * Return this component's parent in the component tree.
+   *
+   * @return
+   *  The name of this component's parent in the tree, or NULL if this component
+   *  is either the base, or does not participate in the tree.
+   *
+   * @see assembleComponentTree()
+   */
+  function containingComponent() {
+    return NULL;
+  }
+
+  /**
+   * Work through the component tree, gathering contained components.
+   *
+   * This allows, for example, a module code file component to collect the
+   * functions it contains.
+   *
+   * This function is called recursively. Components that wish to do something
+   * here should override this.
+   */
+  public function assembleContainedComponents() {
+    $base_component = $this->getBaseComponent();
+
+    // If we're not in the tree, we have nothing to say here and bail.
+    if (!isset($base_component->tree[$this->name])) {
+      return;
+    }
+
+    $component_list = $this->getComponentList();
+
+    // Iterate over our children elements.
+    $children = $base_component->tree[$this->name];
+
+    // Call assembleContainedComponentsHelper().
+    $this->assembleContainedComponentsHelper($children);
+
+    foreach ($children as $child_name) {
+      // Get the child component.
+      $child_component = $component_list[$child_name];
+
+      // Recurse into it.
+      $child_component->assembleContainedComponents();
+    }
+  }
+
+  /**
+   * Helper for assembleContainedComponents().
+   *
+   * Allows components to do the work of assembling their contained components
+   * without having to override assembleContainedComponents().
+   *
+   * TODO: AARGH needs better name!
+   */
+  function assembleContainedComponentsHelper($children) {
+    // Base does nothing.
   }
 
   /**
