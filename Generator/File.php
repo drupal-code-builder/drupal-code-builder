@@ -38,6 +38,15 @@ abstract class File extends Base {
   }
 
   /**
+   * Return this component's parent in the component tree.
+   *
+   * Files are usually contained by the root component.
+   */
+  function containingComponent() {
+    return $this->base_component;
+  }
+
+  /**
    * Return the contents of the file.
    *
    * @return
