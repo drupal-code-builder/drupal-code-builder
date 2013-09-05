@@ -105,7 +105,8 @@ EOT;
 
     foreach ($this->functions as $function_name => $function_data) {
       $function_code = '';
-      $function_code .= $function_data['doxygen_first'];
+
+      $function_code .= $this->function_doxygen($function_data['doxygen_first']);
 
       $function_code .= $function_data['declaration'];
       $function_code .= ' {';
@@ -183,6 +184,21 @@ EOT;
   function code_footer() {
     $footer = variable_get('module_builder_footer', '');
     return $footer;
+  }
+
+  /**
+   * Create a doxygen block for a function.
+   *
+   * @param $text
+   *  The first line of text for the doxygen block.
+   */
+  function function_doxygen($text) {
+    return <<<EOT
+/**
+ * $text.
+ */
+
+EOT;
   }
 
   /**

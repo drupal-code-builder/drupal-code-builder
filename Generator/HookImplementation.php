@@ -75,7 +75,7 @@ class HookImplementation extends PHPFunction {
     $declaration = preg_replace('/(?<=function )hook/', '%module', $this->hook_info['definition']);
     return array(
       $this->name => array(
-        'doxygen_first' => $this->hook_doxygen($this->hook_info['name']),
+        'doxygen_first' => $this->hook_doxygen_text($this->hook_info['name']),
         'declaration'   => $declaration,
         // TODO: get the hook template from user-defined stuff.
         // TODO: how does something like hook_menu() add menu items???
@@ -101,21 +101,13 @@ class HookImplementation extends PHPFunction {
   }
 
   /**
-   * Make the doxygen header for a given hook.
-   *
-   * This does not return with an initial newline so the doc block may be
-   * inserted into existing code.
+   * Make the doxygen first line for a given hook.
    *
    * @param
    *   The long hook name, eg 'hook_menu'.
    */
-  function hook_doxygen($hook_name) {
-    return <<<EOT
-/**
- * Implements $hook_name().
- */
-
-EOT;
+  function hook_doxygen_text($hook_name) {
+    return "Implements $hook_name().";
   }
 
 }
@@ -126,18 +118,13 @@ EOT;
 class HookImplementation6 extends HookImplementation {
 
   /**
-   * Make the doxygen header for a given hook with the Drupal 6 format.
+   * Make the doxygen first line for a given hook with the Drupal 6 format.
    *
    * @param
    *   The long hook name, eg 'hook_menu'.
    */
-  function hook_doxygen($hook_name) {
-    return <<<EOT
-/**
- * Implementation of $hook_name().
- */
-
-EOT;
+  function hook_doxygen_text($hook_name) {
+    return "Implementation of $hook_name().";
   }
 
 }
