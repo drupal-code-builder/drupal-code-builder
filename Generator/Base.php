@@ -225,8 +225,13 @@ abstract class Base {
 
       $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
 
-      // If the component is not already present, do nothing further with it.
+      // If the component is already present, merge any additionally requested
+      // data with the existing component and then continue to the next one.
       if (isset($base_component->components[$component_name])) {
+        if (!empty($component_data)) {
+          $base_component->components[$component_name]->mergeComponentData($component_data);
+        }
+
         continue;
       }
 
@@ -248,8 +253,8 @@ abstract class Base {
    * @return
    *  An array of subcomponents which the current generator requires.
    *  Each item's key is a name for the component. The name of a component that
-   *  has already been requested by another generator may be present: this will
-   *  have no effect, and simply means that several components require it.
+   *  has already been requested by another generator may be present: the data
+   *  array if present will be merged with that of the existing component.
    *  Each value is either:
    *    - the type for the component, suitable for passing to
    *      Generate::getGenerator() to get the generator class.
@@ -263,6 +268,13 @@ abstract class Base {
    */
   protected function subComponents() {
     return array();
+  }
+
+  /**
+   * Merge data from additional requests of a component.
+   */
+  protected function mergeComponentData($additional_component_data) {
+    $this->component_data = array_merge_recursive($this->component_data, $additional_component_data);
   }
 
   /**
