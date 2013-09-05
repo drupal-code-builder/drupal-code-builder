@@ -84,7 +84,20 @@ class Hooks extends Base {
 
       // Add a HookImplementation component for each hook.
       foreach ($hook_data as $hook_name => $hook) {
-        $components[$hook_name] = 'HookImplementation';
+        // Figure out if there is a dedicated generator class for this hook.
+        // TODO: is it really worth this faff? How many will we have, apart from
+        // hook_menu? Is coding this a) slow and b) YAGNI?
+        $hook_name_pieces = explode('_', $hook_name);
+        $hook_name_pieces = array_map(function($word) { return ucwords($word); }, $hook_name_pieces);
+        // Make the class name, eg HookMenu.
+        $hook_class_name = implode('', $hook_name_pieces);
+        // Make the fully qualified class name.
+        $hook_class = $this->task->getGeneratorClass($hook_class_name);
+        if (!class_exists($hook_class)) {
+          $hook_class_name = 'HookImplementation';
+        }
+
+        $components[$hook_name] = $hook_class_name;
       }
     }
 
