@@ -103,6 +103,9 @@ class Generate extends Base {
     // Recursively get subcomponents.
     $this->root_generator->getSubComponents();
 
+    // Now assemble them into a tree.
+    $this->root_generator->assembleComponentTree();
+
     //drush_print_r($generator->components);
 
     // Recursively build files.
