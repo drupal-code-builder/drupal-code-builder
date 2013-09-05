@@ -48,10 +48,12 @@ class Routing extends File {
    * Build the code files.
    */
   function collectFiles(&$files) {
-    $files['info'] = array(
+    $files['routing'] = array(
       'path' => '', // Means base folder.
       'filename' => $this->base_component->component_data['module_root_name'] . '.routing.yml',
-      'body' => $this->code_body(),
+      'body' => array(
+        $this->code_body(),
+      ),
       'join_string' => "\n",
     );
   }
