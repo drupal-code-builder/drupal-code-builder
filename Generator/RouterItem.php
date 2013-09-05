@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Definition of ModuleBuider\Generator\RouterItem.
+ */
+
+namespace ModuleBuider\Generator;
+
+/**
+ * Generator for a router item.
+ *
+ * This class covers Drupal 6 and 7, where it is purely an intermediary which
+ * adds a HookMenu component.
+ *
+ * @see RouterItem8
+ */
+class RouterItem extends Base {
+
+  /**
+   * The unique name of this generator.
+   *
+   * A generator's name is used as the key in the $components array.
+   *
+   * A RouterItem generator should use as its name its path.
+   *
+   * TODO: at what point do names start to clash and we need prefixes based on
+   * type???!!
+   */
+  public $name;
+
+  /**
+   * Constructor method; sets the component data.
+   *
+   * @param $component_name
+   *   The identifier for the component.
+   * @param $component_data
+   *   (optional) An array of data for the component. Valid properties are:
+   *      - 'title': The title for the item.
+   *      - TODO: further properties such as access!
+   */
+  function __construct($component_name, $component_data = array()) {
+    parent::__construct($component_name, $component_data);
+  }
+
+  /**
+   * Declares the subcomponents for this component.
+   *
+   * @return
+   *  An array of subcomponent names and types.
+   */
+  protected function subComponents() {
+    return array(
+      // Each RouterItem that gets added will cause a repeat request of these
+      // components.
+      'hook_menu' => array(
+        'component_type' => 'HookMenu',
+        // This is a numeric array of items, so repeated requests of this
+        // component will merge it.
+        'menu_items' => array(
+          array(
+            'path' => $this->name,
+            'title' => $this->component_data['title'],
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
+/**
+ * Generator for router item on Drupal 8.
+ *
+ * This adds a routing item to the routing component, and optionally an item
+ * to hook_menu() (the optional bit is todo!).
+ */
+class RouterItem8 extends RouterItem {
+
+  /**
+   * Declares the subcomponents for this component.
+   *
+   * @return
+   *  An array of subcomponent names and types.
+   */
+  protected function subComponents() {
+    return array(
+      // Each RouterItem that gets added will cause a repeat request of these
+      // components.
+      // TODO: make hook menu optional per router item.
+      'hook_menu' => array(
+        'component_type' => 'HookMenu',
+        'menu_items' => array(
+          array(
+            // TODO: further items.
+            'path' => $this->name,
+            'title' => $this->component_data['title'],
+          ),
+        ),
+      ),
+      'routing' => array(
+        'component_type' => 'Routing',
+        'routing_items' => array(
+          array(
+            // TODO: further items.
+            'path' => $this->name,
+            'title' => $this->component_data['title'],
+          ),
+        ),
+      ),
+    );
+  }
+
+}
