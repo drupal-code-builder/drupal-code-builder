@@ -49,6 +49,7 @@ class Generate extends Base {
     $component_name = $component_type;
 
     $this->base = $component_type;
+    // We don't have any component data to pass in at this point.
     $this->root_generator = $this->getGenerator($component_type, $component_name);
   }
 
@@ -95,6 +96,8 @@ class Generate extends Base {
     $component_data['base'] = $this->base;
 
     // Set the component data on the base generator.
+    // We couldn't do this earlier in __construct() because we didn't have the
+    // data at that point.
     $this->root_generator->component_data = $component_data;
 
     // Recursively get subcomponents.
@@ -122,14 +125,17 @@ class Generate extends Base {
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
+   * @param $component_data
+   *   An array of data for the component. This is passed to the generator's
+   *   __construct().
    *
    * @return
    *   A generator object, with the component name and data set on it, as well
    *   as a reference to this task handler.
    */
-  public function getGenerator($component_type, $component_name) {
+  public function getGenerator($component_type, $component_name, $component_data = array()) {
     $class = $this->getGeneratorClass($component_type);
-    $generator = new $class($component_name);
+    $generator = new $class($component_name, $component_data);
 
     // Each generator needs a link back to the factory to be able to make more
     // generators, and also so it can access the environment.
