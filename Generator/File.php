@@ -47,6 +47,14 @@ abstract class File extends Base {
   }
 
   /**
+   * Build the code files.
+   *
+   * Subclasses should implement this to add their file data to the list.
+   */
+  function collectFiles(&$files) {
+  }
+
+  /**
    * Return the contents of the file.
    *
    * @return
