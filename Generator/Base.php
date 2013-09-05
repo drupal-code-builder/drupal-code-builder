@@ -52,6 +52,21 @@ namespace ModuleBuider\Generator;
  * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
  * appropriate way. This is done in the starting generator's assembleFiles().
  *
+ * There are three distinc hierarchies at work here:
+ *  - A plain PHP class hierarchy, which is just there to allow us to make use
+ *    of method inheritance. So for instance, ModuleCodeFile inherits from File.
+ *    This is just for code re-use.
+ *  - A hierarchy formed by components that request other components in turn.
+ *    This fans out from the initially requested root component, e.g. 'module'.
+ *    This is based on how things fit together conceptually: a module may need
+ *    hooks, and a hook implementation needs a file it can go in. The same
+ *    component may appear at different parts of the request hierarchy.
+ *  - The tree of components that is assembled prior to building code. This is
+ *    purely to do with containment. Thus, a code file contains its functions.
+ *    This comes into play when a component is building its code, and may
+ *    interrogate its child components in this hierarchy to have them add to
+ *    what it provides.
+ *
  * Rough conceptual hierarchy:
   - component generators/file generators (NOT class hierarchy: processing chain!)
    - module
