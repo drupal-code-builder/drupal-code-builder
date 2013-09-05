@@ -127,9 +127,17 @@ abstract class Base {
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
+   * @param $component_data
+   *   (optional) An array of data for the component.
+   *   While each component will have its own array of data, components may also
+   *   need to access the data of the root component. For this, use
+   *   getBaseComponent().
+   *   TODO: check whether components really need to do this, as removing this
+   *   would simplify things!
    */
-  function __construct($component_name) {
+  function __construct($component_name, $component_data = array()) {
     $this->name = $component_name;
+    $this->component_data = $component_data;
   }
 
   /**
