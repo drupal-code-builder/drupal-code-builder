@@ -19,6 +19,17 @@ class ModuleCodeFile extends File {
   // TODO: declare properties that are special!
 
   /**
+   * Return this component's parent in the component tree.
+   */
+  function containingComponent() {
+    // A code file's parent is always the base component.
+    // TODO: should we want files to be grouped into folders, or have submodules,
+    // we'd need components to have more data other than their name
+    // that survives a component getting requested multiple times!
+    return $this->getBaseComponent()->name;
+  }
+
+  /**
    * Build the code files.
    */
   function collectFiles(&$files) {
