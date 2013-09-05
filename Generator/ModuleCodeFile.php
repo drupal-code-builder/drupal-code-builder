@@ -195,7 +195,7 @@ EOT;
   function function_doxygen($text) {
     return <<<EOT
 /**
- * $text.
+ * $text
  */
 
 EOT;
