@@ -133,9 +133,13 @@ abstract class Base {
   /**
    * The data for the component.
    *
-   * This is only present on the base component (e.g., 'Module'), so that the
-   * data initially given by the user may be globally modified or added to by
-   * components.
+   * On the base component (e.g., 'Module'), this is the entirety of the data
+   * requested by the user.
+   *
+   * On other components (e.g., 'Routing'), this contains data from the request
+   * for the component. Properties will depend on the class.
+   *
+   * TODO: split this var into two somehow??!
    */
   public $component_data = array();
 
