@@ -166,7 +166,7 @@ abstract class Base {
   }
 
   /**
-   * Returns the flat list of components, as assembled by getSubComponents().
+   * Returns the flat list of components, as assembled by assembleComponentList().
    */
   function getComponentList() {
     $base = $this->getBaseComponent();
@@ -189,7 +189,7 @@ abstract class Base {
    *  None. This should set an array of subcomponent generators on the property
    *  $this->components.
    */
-  public function getSubComponents() {
+  public function assembleComponentList() {
     // Get the base component to add the generators to it.
     $base_component = $this->getBaseComponent();
 
@@ -219,7 +219,7 @@ abstract class Base {
       $base_component->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
-      $generator->getSubComponents();
+      $generator->assembleComponentList();
     }
   }
 
@@ -257,7 +257,7 @@ abstract class Base {
    * contains the handler functions.
    *
    * This iterates over the flat list of components assembled by
-   * getSubComponents(), and re-assembles it as a tree.
+   * assembleComponentList(), and re-assembles it as a tree.
    *
    * The tree is an array of parentage data, where keys are the names of
    * components that are parents, and values are flat arrays of component names.

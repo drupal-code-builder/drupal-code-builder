@@ -101,7 +101,7 @@ class Generate extends Base {
     $this->root_generator->component_data = $component_data;
 
     // Recursively get subcomponents.
-    $this->root_generator->getSubComponents();
+    $this->root_generator->assembleComponentList();
 
     // Now assemble them into a tree.
     $this->root_generator->assembleComponentTree();
