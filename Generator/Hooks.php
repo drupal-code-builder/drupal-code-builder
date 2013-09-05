@@ -35,9 +35,10 @@ class Hooks extends Base {
    *  An array of subcomponent names and types.
    */
   protected function subComponents() {
-    // We add subcomponents of type ModuleCodeFile, one for each code file.
-    // The code files we add are based on the intersection of those required by
-    // the hooks requested, and those actually requested.
+    // We add components of type HookImplementation: each of these is a single
+    // function. From this point on, these subcomponents are the authority on
+    // which hooks we generate. Each HookImplementation component will add the
+    // file it requires to the component list.
     $components = array();
 
     // Just translate the variable for easier frankencoding for now!
@@ -46,17 +47,15 @@ class Hooks extends Base {
     // Force hook_help() if there is help text in the incoming data.
     if (isset($module_data['module_help_text'])) {
       $module_data['hooks']['hook_help'] = TRUE;
+      $components['hook_help'] = 'HookImplementation';
     }
-
-    // There must always be a MODULE.module file, even if there are no hooks to
-    // go in it.
-    $components['%module.module'] = 'ModuleCodeFile';
 
     // Get a set of hook declarations and function body templates for the hooks
     // we want. This is of the form:
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
     $hook_file_data = $this->getTemplates($module_data);
-    // Set this on the global component data.
+    // Set this on the global component data for use by subcomponents.
+    // TODO: is anyone using this?
     $this->base_component->component_data['hook_file_data'] = $hook_file_data;
 
     // Determine whether we need to filter the code files or not.
@@ -72,18 +71,21 @@ class Hooks extends Base {
       $filter_generators = TRUE;
     }
 
+    // Work over this and add our HookImplentation.
     foreach ($hook_file_data as $filename => $hook_data) {
-      // For the generator name, use the generic form of the filename.
-      // Replacement of the '%module' token is done in ModuleCodeFile.
-      $component_name = $filename;
-
       // If we are set to filter, and the abbreviated filename isn't in the
       // build list, skip it.
-      if ($filter_generators && !isset($build_list[$component_name])) {
+      // TODO: this is kinda messy, and assumes that the abbreviated name is
+      // always obtained by removing '%module.' from the filename!
+      $build_list_key = str_replace('%module.', '', $filename);
+      if ($filter_generators && !isset($build_list[$build_list_key])) {
         continue;
       }
 
-      $components[$component_name] = 'ModuleCodeFile';
+      // Add a HookImplementation component for each hook.
+      foreach ($hook_data as $hook_name => $hook) {
+        $components[$hook_name] = 'HookImplementation';
+      }
     }
 
     return $components;

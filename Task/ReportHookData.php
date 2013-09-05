@@ -81,11 +81,20 @@ class ReportHookData extends Base {
    *  The unserialized contents of the processed hook data file.
    */
   function listHookData() {
+    // We may come here several times, so cache this.
+    // TODO: look into finer-grained caching higher up.
+    static $hook_data;
+
+    if (isset($hook_data)) {
+      return $hook_data;
+    }
+
     $directory = $this->environment->hooks_directory;
 
     $hooks_file = "$directory/hooks_processed.php";
     if (file_exists($hooks_file)) {
-      return unserialize(file_get_contents($hooks_file));
+      $hook_data = unserialize(file_get_contents($hooks_file));
+      return $hook_data;
     }
     // Sanity checks ensure we never get here, but in case they have been
     // skipped, return something that makes sense to the caller.

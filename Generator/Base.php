@@ -36,8 +36,12 @@ namespace ModuleBuider\Generator;
  * generate. The code files are then interrogated, and return no subcomponents:
  * the gathering process is thus complete.
  *
- * The end result is a tree which consists of each generator class having a
- * property which is an array of its subgenerators, keyed by component name.
+ * The end result is a flat list of components, keyed by component names. Each
+ * component has the data it needs to operate.
+ *
+ * Once we have this, we iterate over it to assemble a tree structure, which
+ * tells us which components contains which other components. For example, the
+ * module code file contains functions and hook implementations.
  *
  * Once we have this, we then recurse once more into it, this time building up
  * an array of file info that we pass by reference (this it can be altered
@@ -47,6 +51,21 @@ namespace ModuleBuider\Generator;
  * Finally, we assemble the file info into filenames and code, ready for the
  * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
  * appropriate way. This is done in the starting generator's assembleFiles().
+ *
+ * There are three distinc hierarchies at work here:
+ *  - A plain PHP class hierarchy, which is just there to allow us to make use
+ *    of method inheritance. So for instance, ModuleCodeFile inherits from File.
+ *    This is just for code re-use.
+ *  - A hierarchy formed by components that request other components in turn.
+ *    This fans out from the initially requested root component, e.g. 'module'.
+ *    This is based on how things fit together conceptually: a module may need
+ *    hooks, and a hook implementation needs a file it can go in. The same
+ *    component may appear at different parts of the request hierarchy.
+ *  - The tree of components that is assembled prior to building code. This is
+ *    purely to do with containment. Thus, a code file contains its functions.
+ *    This comes into play when a component is building its code, and may
+ *    interrogate its child components in this hierarchy to have them add to
+ *    what it provides.
  *
  * Rough conceptual hierarchy:
   - component generators/file generators (NOT class hierarchy: processing chain!)
@@ -100,10 +119,14 @@ abstract class Base {
   public $base_component;
 
   /**
-   * An array of this component's subcomponents.
+   * The base component's subcomponents.
    *
    * This is keyed by the name of the component name. Values are the
    * instantiated component generators.
+   *
+   * (This is only present on the base component.)
+   *
+   * TODO: add an abstract BaseComponent class?
    */
   public $components = array();
 
@@ -123,9 +146,46 @@ abstract class Base {
    *   The identifier for the component. This is often the same as the type
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
+   * @param $component_data
+   *   (optional) An array of data for the component.
+   *   While each component will have its own array of data, components may also
+   *   need to access the data of the root component. For this, use
+   *   getBaseComponent().
+   *   TODO: check whether components really need to do this, as removing this
+   *   would simplify things!
    */
-  function __construct($component_name) {
+  function __construct($component_name, $component_data = array()) {
     $this->name = $component_name;
+    $this->component_data = $component_data;
+  }
+
+  /**
+   * Returns the base component for this component (or itself if it's the base).
+   *
+   * This can be used in circumstances where it's not known whether the current
+   * component is the base or not.
+   *
+   * @return
+   *  The base component.
+   */
+  function getBaseComponent() {
+    if (isset($this->base_component)) {
+      // If the base component is set, return that.
+      // @see Generate::getGenerator().
+      return $this->base_component;
+    }
+    else {
+      // If it's not set, we're the base component, so return ourselves.
+      return $this;
+    }
+  }
+
+  /**
+   * Returns the flat list of components, as assembled by assembleComponentList().
+   */
+  function getComponentList() {
+    $base = $this->getBaseComponent();
+    return $base->components;
   }
 
   /**
@@ -144,21 +204,37 @@ abstract class Base {
    *  None. This should set an array of subcomponent generators on the property
    *  $this->components.
    */
-  public function getSubComponents() {
-    $this->components = array();
+  public function assembleComponentList() {
+    // Get the base component to add the generators to it.
+    $base_component = $this->getBaseComponent();
 
     // Get the required subcomponents.
     $subcomponent_info = $this->subComponents();
 
-    // Instantiate each one, and recurse into it.
-    foreach ($subcomponent_info as $component_name => $component_type) {
-      $generator = $this->task->getGenerator($component_type, $component_name);
-      $this->components[$component_name] = $generator;
+    // Instantiate each one (if not already done), and recurse into it.
+    foreach ($subcomponent_info as $component_name => $data) {
+      // The $data may either be a string giving a class name, or an array.
+      if (is_string($data)) {
+        $component_type = $data;
+        $component_data = array();
+      }
+      else {
+        $component_type = $data['component_type'];
+        $component_data = $data;
+      }
+
+      $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
+
+      // If the component is not already present, do nothing further with it.
+      if (isset($base_component->components[$component_name])) {
+        continue;
+      }
+
+      // Add the new component to the master array of components on the base.
+      $base_component->components[$component_name] = $generator;
 
       // Recurse into the subcomponent.
-      foreach ($this->components as $generator) {
-        $generator->getSubComponents();
-      }
+      $generator->assembleComponentList();
     }
   }
 
@@ -171,14 +247,112 @@ abstract class Base {
    *
    * @return
    *  An array of subcomponents which the current generator requires.
-   *  Each item's key is a name for the component. This must be unique, so if
-   *  there are likely to be multiple instances of a component type, this will
-   *  need to be generated based on input data. Each value is the type for the
-   *  component, suitable for passing to Generate::getGenerator() to get the
-   *  generator class.
+   *  Each item's key is a name for the component. The name of a component that
+   *  has already been requested by another generator may be present: this will
+   *  have no effect, and simply means that several components require it.
+   *  Each value is either:
+   *    - the type for the component, suitable for passing to
+   *      Generate::getGenerator() to get the generator class.
+   *    - an array of data for the component. This must include a properties
+   *      'component_type', which gives the type for the component as above.
+   *      Further array properties are determined by the component class's
+   *      __construct().
+   *      (Note that if the component has previously been requested, this array
+   *      is ignored on later components! This is because -- so far! -- no
+   *      components that get requested multiple times require this!)
    */
   protected function subComponents() {
     return array();
+  }
+
+  /**
+   * Assemble a tree of components, grouped by what they contain.
+   *
+   * For example, a code file contains its functions; a form component
+   * contains the handler functions.
+   *
+   * This iterates over the flat list of components assembled by
+   * assembleComponentList(), and re-assembles it as a tree.
+   *
+   * The tree is an array of parentage data, where keys are the names of
+   * components that are parents, and values are flat arrays of component names.
+   * To traverse the tree:
+   *  - access the base component name
+   *  - iterate over its children
+   *  - recursively do the same thing to each child component.
+   *
+   * Not all components in the component list need to place themselves into the
+   * tree, but this means that they will not participate in file assembly.
+   */
+  public function assembleComponentTree() {
+    $tree = array();
+    foreach ($this->components as $name => $component) {
+      $parent_name = $component->containingComponent();
+      if (!empty($parent_name)) {
+        $tree[$parent_name][] = $name;
+      }
+    }
+
+    $this->tree = $tree;
+  }
+
+  /**
+   * Return this component's parent in the component tree.
+   *
+   * @return
+   *  The name of this component's parent in the tree, or NULL if this component
+   *  is either the base, or does not participate in the tree.
+   *
+   * @see assembleComponentTree()
+   */
+  function containingComponent() {
+    return NULL;
+  }
+
+  /**
+   * Work through the component tree, gathering contained components.
+   *
+   * This allows, for example, a module code file component to collect the
+   * functions it contains.
+   *
+   * This function is called recursively. Components that wish to do something
+   * here should override this.
+   */
+  public function assembleContainedComponents() {
+    $base_component = $this->getBaseComponent();
+
+    // If we're not in the tree, we have nothing to say here and bail.
+    if (!isset($base_component->tree[$this->name])) {
+      return;
+    }
+
+    $component_list = $this->getComponentList();
+
+    // Iterate over our children elements.
+    $children = $base_component->tree[$this->name];
+
+    // Call assembleContainedComponentsHelper().
+    $this->assembleContainedComponentsHelper($children);
+
+    foreach ($children as $child_name) {
+      // Get the child component.
+      $child_component = $component_list[$child_name];
+
+      // Recurse into it.
+      $child_component->assembleContainedComponents();
+    }
+  }
+
+  /**
+   * Helper for assembleContainedComponents().
+   *
+   * Allows components to do the work of assembling their contained components
+   * without having to override assembleContainedComponents().
+   *
+   * TODO: AARGH needs better name!
+   */
+  function assembleContainedComponentsHelper($children) {
+    // Base does nothing.
   }
 
   /**
