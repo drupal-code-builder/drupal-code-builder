@@ -704,8 +704,8 @@ function module_builder_default_readable_name($commands, $module_data) {
 function module_builder_drush_output_code($component_dir, $filename, $code) {
   // Output to terminal
   if (!drush_get_option('quiet')) {
-    //drush_print("Proposed $filename:");
-    //drush_print_r($code);
+    drush_print("Proposed $filename:");
+    drush_print_r($code);
   }
 
   $write = drush_get_option('write');
