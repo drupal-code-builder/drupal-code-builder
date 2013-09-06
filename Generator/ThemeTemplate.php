@@ -10,7 +10,7 @@ namespace ModuleBuider\Generator;
 /**
  * Component generator: theme TPL file.
  */
-class ThemeTemplate extends Base {
+class ThemeTemplate extends BaseGenerator {
 
   /**
    * Return an array of subcomponent types.

@@ -17,7 +17,7 @@ namespace ModuleBuider\Generator;
  *  - info
  *  - readme
  */
-class Theme extends Base {
+class Theme extends BaseGenerator {
 
   /**
    * The sanity level this generator requires to operate.

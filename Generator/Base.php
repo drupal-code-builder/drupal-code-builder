@@ -10,6 +10,8 @@ namespace ModuleBuider\Generator;
 /**
  * Abstract base Generator for components.
  *
+ * (This named to distinguish it from the Base Task clas.)
+ *
  * The generator process works over three phases:
  *  - a tree of generators is gathered
  *  - a list of file info is built up, with each generator allowed to contribute
@@ -95,7 +97,7 @@ namespace ModuleBuider\Generator;
  *
  * @see Generate::generateComponent()
  */
-abstract class Base {
+abstract class BaseGenerator {
 
   /**
    * The unique name of this generator.

@@ -10,7 +10,7 @@ namespace ModuleBuider\Generator;
 /**
  * Abstract Generator base class for files. TODO: rename? merge into Code?
  */
-abstract class File extends Base {
+abstract class File extends BaseGenerator {
 
   /**
    * The unique name of this generator.

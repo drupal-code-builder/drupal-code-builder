@@ -22,7 +22,7 @@ namespace ModuleBuider\Generator;
  * to add. Generators can be requested by name, with various extra special
  * values which are documented in this class's __construct().
  */
-class Module extends Base {
+class Module extends BaseGenerator {
 
   /**
    * The sanity level this generator requires to operate.

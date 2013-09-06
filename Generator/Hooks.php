@@ -21,7 +21,7 @@ namespace ModuleBuider\Generator;
  *
  * @see ModuleBuider\Generator\ModuleCodeFile
  */
-class Hooks extends Base {
+class Hooks extends BaseGenerator {
 
   /**
    * Declares the subcomponents for this component.

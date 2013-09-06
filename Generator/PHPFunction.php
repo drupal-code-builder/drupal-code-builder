@@ -12,7 +12,7 @@ namespace ModuleBuider\Generator;
  *
  * (We can't call this 'Function', as that's a reserved word.)
  */
-class PHPFunction extends Base {
+class PHPFunction extends BaseGenerator {
 
   /**
    * The code file this function belongs in.

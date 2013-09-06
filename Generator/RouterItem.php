@@ -15,7 +15,7 @@ namespace ModuleBuider\Generator;
  *
  * @see RouterItem8
  */
-class RouterItem extends Base {
+class RouterItem extends BaseGenerator {
 
   /**
    * The unique name of this generator.
