@@ -164,7 +164,7 @@ class Generate extends Base {
    *
    * @see Generate::generatorAutoload()
    */
-  private function getGeneratorClass($type) {
+  public function getGeneratorClass($type) {
     // Include our general include files, which contains base and parent classes.
     $file_path = $this->environment->getPath("Generator/Base.php");
     include_once($file_path);
