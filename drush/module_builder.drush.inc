@@ -429,6 +429,10 @@ function module_builder_build_data($commands) {
   // Determine whether we're in interactive mode.
   $interactive = !drush_get_option(array('non-interactive', 'noi'));
 
+  // This is a shortcut for developing, if you have --noi forced in your drush
+  // config and need to switch back to interactive for testing.
+  $interactive = drush_get_option(array('interactive'));
+
   // Information about the keys we need to build the module data.
   // For each key, the source of the data is defined thus:
   //  - 'commands' means data can come from the initial commands. A numeric
@@ -439,6 +443,7 @@ function module_builder_build_data($commands) {
       'commands' => 0,
       'prompt' => dt('module machine name'),
       'required' => TRUE,
+      'default' => 'mymodule',
     ),
     'presets' => array(
       'prompt' => dt('required hook preset groups'),
