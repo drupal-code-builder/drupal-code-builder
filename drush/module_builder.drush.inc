@@ -417,7 +417,7 @@ function drush_module_builder_callback_build_theme() {
 /**
  * Helper function to build the array of module_data.
  *
- * @see ModuleBuilderGeneratorModule::__construct()
+ * @see ModuleBuider\Generator\Module::__construct()
  *
  * @param $commands
  *  The commands array.
