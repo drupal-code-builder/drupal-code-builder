@@ -55,6 +55,7 @@ function module_builder_drush_command() {
     'arguments' => array(
       'module name' => "The machine name of the module. Use '.' to specify the current folder name.",
       'hooks' => "Short names of hooks, separated by spaces. Hook preset groups can be specific with an initial '@', eg '@block'.",
+      ':routes' => "Menu paths, separated by spaces. Use the ':routes' marker to separate this from prior commands, eg 'mymodule hook_a hook_b :routes module/path module/otherpath'.",
     ),
     // Commented out, as only the first argument is required.
     // TODO: figure out how to specify this!
@@ -453,12 +454,27 @@ function module_builder_build_data($commands) {
     // It is essential this key follow the root name, so that the the root
     // name gets to the commands array first.
     'hooks' => array(
-      'commands' => 'all',
+      // This means that the data is taken from the commands array, following on
+      // from the marker set in 'filter'.
+      'commands' => 'filter',
+      // There is no filter marker for hook. Hook names just follow immediately
+      // after the module machine name. This is because (so far at least) hooks
+      // are the things you want the most often.
+      // TODO: revisit this once we're mostly working on D8.
+      'filter' => NULL,
       'prompt' => dt('required hooks'),
       'required' => TRUE,
+      // This says that we have to split on whitespace to produce an array.
+      'split' => TRUE,
     ),
     'router_items' => array(
+      // This means that the data is taken from the commands array, following on
+      // from the marker set in 'filter'.
       'commands' => 'filter',
+      // The filter marker is a command that when prefixed with a ':' marks the
+      // start of items for this data item.
+      // Thus: 'drush mb mymodule hook_a hook_b :filter item_c item_d'
+      'filter' => 'routes',
       'prompt' => dt("required router paths, eg 'path/foo'"),
       // Uncomment defaults when developing to save typing.
       //'default' => 'path/foo path/bar',
@@ -466,6 +482,7 @@ function module_builder_build_data($commands) {
       // and the input data should be placed in a nested array in the module
       // data.
       'component' => 'RouterItem',
+      'split' => TRUE,
     ),
     'module_readable_name' => array(
       'key' => 'name',
@@ -517,7 +534,34 @@ function module_builder_build_data($commands) {
       // Otherwise, take the whole thing.
       // This depends on the module root name having been taken out first!
       else {
-        $data_item_value = $commands;
+        // We take items from the filtered commands.
+        // First, we need to know where to start searching in the array.
+        // Special case: if the filter is NULL, it means start at the beginning.
+        if ($definition['filter'] == NULL) {
+          $index = array_shift(array_keys($commands));
+        }
+        else {
+          // Search for our filter marker.
+          $search_index = array_search(':' . $definition['filter'], $commands);
+          if ($search_index !== FALSE) {
+            // If we found the filter marker, start taking values at the next
+            // command.
+            $index = $search_index + 1;
+          }
+        }
+
+        // Only start taking values if we found the filter marker.
+        if (isset($index)) {
+          // Take as many commands as we can, up to a filter marker (which is
+          // prefixed with a ':').
+          $data_item_value = array();
+          // Check the first item in the array...
+          while (isset($commands[$index]) && substr($commands[$index], 0, 1) != ':') {
+            // If it's not a filter marker, pop it off.
+            $data_item_value[] = $commands[$index];
+            $index++;
+          }
+        }
       }
     }
 
@@ -554,14 +598,19 @@ function module_builder_build_data($commands) {
 
     // If at the end of all that we have something, set it in the module data
     // array that we will pass to the generator.
-    if (!is_null($data_item_value)) {
+    if (!empty($data_item_value)) {
       // Figure out where to put the data.
       if (isset($definition['component'])) {
         // If the item definition tells us this is about a component, it goes in
         // the array of requested components.
 
-        // These are always split on whitespace.
-        $requested_components = preg_split('/\s+/', $data_item_value);
+        // Split on whitespace if requested and not already an array.
+        if (isset($definition['split']) && !is_array($data_item_value)) {
+          $requested_components = preg_split('/\s+/', $data_item_value);
+        }
+        else {
+          $requested_components = $data_item_value;
+        }
 
         // Add to the array (which might not be there, so don't use +=).
         foreach ($requested_components as $requested_component_name) {
