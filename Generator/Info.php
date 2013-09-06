@@ -24,7 +24,7 @@ class Info extends File {
       'path' => '', // Means base folder.
       'filename' => $this->base_component->component_data['module_root_name'] . '.info',
       // We pass $files in to check for files containing classes.
-      'body' => $this->code_body($files),
+      'body' => $this->file_body($files),
       // We join the info lines with linebreaks, as they (currently!) do not
       // come with their own lineends.
       // TODO: fix this!
@@ -82,7 +82,7 @@ class Info5 extends InfoIni {
   /**
    * Create lines of file body for Drupal 5.
    */
-  function code_body() {
+  function file_body() {
     $module_data = $this->base_component->component_data;
 
     $lines = array();
@@ -111,7 +111,7 @@ class Info6 extends InfoIni {
   /**
    * Create lines of file body for Drupal 6.
    */
-  function code_body() {
+  function file_body() {
     $module_data = $this->base_component->component_data;
 
     $lines = array();
@@ -144,7 +144,7 @@ class Info7 extends InfoIni {
   /**
    * Create lines of file body for Drupal 7.
    */
-  function code_body() {
+  function file_body() {
     $args = func_get_args();
     $files = array_shift($args);
 
@@ -198,7 +198,7 @@ class Info8 extends Info {
   /**
    * Create lines of file body for Drupal 8.
    */
-  function code_body() {
+  function file_body() {
     $args = func_get_args();
     $files = array_shift($args);
 
