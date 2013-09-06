@@ -20,20 +20,30 @@ class ReportHookPresets extends Base {
   protected $sanity_level = 'hook_data';
 
   /**
-   * Returns the path to a template file.
+   * Returns the contents of a template file.
    *
    * TODO: this will eventually return either the user version or the module version.
+   * TODO: IS THIS IN THE RIGHT FILE???
    *
    * (Replaces module_builder_get_template().)
-   IS THIS IN THE RIGHT FILE???
+   *
+   * @param $filename
+   *  The filename of the template file to read.
+   *
+   * @return
+   *  The contents of the file, or NULL if the file is not found.
    */
   function getTemplate($filename) {
     $pieces = array('templates', $this->environment->major_version, $filename);
     $path = $this->environment->getPath(implode('/', $pieces));
 
-    $template_file = file_get_contents($path);
-
-    return $template_file;
+    if (file_exists($path)) {
+      $template_file = file_get_contents($path);
+      return $template_file;
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**
