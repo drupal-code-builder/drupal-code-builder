@@ -452,6 +452,16 @@ function module_builder_build_data($commands) {
       'prompt' => dt('required hooks'),
       'required' => TRUE,
     ),
+    'router_items' => array(
+      'commands' => 'filter',
+      'prompt' => dt("required router paths, eg 'path/foo'"),
+      // Uncomment defaults when developing to save typing.
+      //'default' => 'path/foo path/bar',
+      // This tells the system that this is a request for generator components,
+      // and the input data should be placed in a nested array in the module
+      // data.
+      'component' => 'RouterItem',
+    ),
     'module_readable_name' => array(
       'key' => 'name',
       'prompt' => dt('human readable name'),
@@ -483,26 +493,31 @@ function module_builder_build_data($commands) {
     $definition += array(
       'required' => FALSE,
     );
+
+    // Initialize the variable for this item so we know at the end whether we
+    // got anything.
+    $data_item_value = NULL;
+
     // First pass: get data from either drush command line options...
     if (isset($definition['key'])) {
-      $module_data[$name] = drush_get_option($definition['key']);
+      $data_item_value = drush_get_option($definition['key']);
     }
     // ... or the commands themselves.
     elseif (isset($definition['commands'])) {
       // A numeric value of 'commands' means take that index from the commands array.
       if (is_numeric($definition['commands']) && isset($commands[$definition['commands']])) {
-        $module_data[$name] = $commands[$definition['commands']];
+        $data_item_value = $commands[$definition['commands']];
         unset($commands[$definition['commands']]);
       }
       // Otherwise, take the whole thing.
       // This depends on the module root name having been taken out first!
       else {
-        $module_data[$name] = $commands;
+        $data_item_value = $commands;
       }
     }
 
     // Second pass: prompt the user for data.
-    if ($interactive && empty($module_data[$name])) {
+    if ($interactive && empty($data_item_value)) {
       // Make a prompt string, letting the user know if the input is optional
       // so they don't waste time typing.
       if ($definition['required']) {
@@ -516,19 +531,40 @@ function module_builder_build_data($commands) {
 
       $value = drush_prompt($prompt, $default, $definition['required']);
       if ($value !== FALSE) {
-        $module_data[$name] = $value;
+        $data_item_value = $value;
       }
     }
 
     // Third pass: set a default value from the definition or a callback.
-    if (empty($module_data[$name])) {
+    if (empty($data_item_value)) {
       if (isset($definition['default'])) {
-        $module_data[$name] = $definition['default'];
+        $data_item_value = $definition['default'];
         continue;
       }
       elseif (isset($definition['default_callback'])) {
         $function = $definition['default_callback'];
-        $module_data[$name] = $function($commands, $module_data);
+        $data_item_value = $function($commands, $module_data);
+      }
+    }
+
+    // If at the end of all that we have something, set it in the module data
+    // array that we will pass to the generator.
+    if (!is_null($data_item_value)) {
+      // Figure out where to put the data.
+      if (isset($definition['component'])) {
+        // If the item definition tells us this is about a component, it goes in
+        // the array of requested components.
+
+        // These are always split on whitespace.
+        $requested_components = preg_split('/\s+/', $data_item_value);
+
+        // Add to the array (which might not be there, so don't use +=).
+        foreach ($requested_components as $requested_component_name) {
+          $module_data['requested_components'][$requested_component_name] = $definition['component'];
+        }
+      }
+      else {
+        $module_data[$name] = $data_item_value;
       }
     }
   }
