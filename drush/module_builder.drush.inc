@@ -271,7 +271,8 @@ function drush_module_builder_callback_build_module() {
 
   //print_r($build);
 
-  // Make a list
+  // Make a list out of the build option string. This may of course have only
+  // one item in it.
   $build_list = explode(' ', $build);
 
   // Multi build: set a single string to switch on below.
@@ -292,8 +293,7 @@ function drush_module_builder_callback_build_module() {
 
   // Build files.
 
-  // For now, just assume it's a module we've been requested. We are nowhere
-  // near ready to have other pathways into this.
+  // Generate the module.
   $files = $mb_task_handler_generate->generateComponent($module_data);
 
   drush_print_r($files);
@@ -421,6 +421,9 @@ function drush_module_builder_callback_build_theme() {
  *
  * @param $commands
  *  The commands array.
+ *
+ * @return
+ *  An array of component data suitable for the Module generator.
  */
 function module_builder_build_data($commands) {
   // Determine whether we're in interactive mode.
@@ -537,7 +540,7 @@ function module_builder_build_data($commands) {
   // Get the flat list of hooks, standardized to lower case.
   $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
 
-  // Extra processing for the hooks array (or not).
+  // Extra processing for the hooks array.
   try {
     $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
   }
