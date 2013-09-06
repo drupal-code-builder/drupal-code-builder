@@ -14,7 +14,7 @@ namespace ModuleBuider\Generator;
  * looks for calls to module_invoke_all() and generates scaffold hook
  * documentation for hook names that have the module's name as a prefix.
  */
-class API extends File {
+class API extends PHPFile {
 
   /**
    * Return an array of subcomponent types.
