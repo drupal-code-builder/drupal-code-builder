@@ -50,7 +50,7 @@ function module_builder_drush_command() {
 
   // the key in the $items array is the name of the command.
   $items['mb-build'] = array(
-    'callback' => 'drush_module_builder_callback_build',
+    'callback' => 'drush_module_builder_callback_build_module',
     'description' => "Generate the code for a new Drupal module, including file headers and hook implementations.",
     'arguments' => array(
       'module name' => "The machine name of the module. Use '.' to specify the current folder name.",
@@ -209,7 +209,7 @@ function module_builder_drush_help($section) {
  * $drush mb machine_name hookA hookB hookC
  * where 'hookA' is the short name, ie 'menu' not hook_menu'.
  */
-function drush_module_builder_callback_build() {
+function drush_module_builder_callback_build_module() {
   $commands = func_get_args();
 
   // Check settings before we start. This sort of wastes the potential of using
