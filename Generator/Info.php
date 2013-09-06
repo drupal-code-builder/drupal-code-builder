@@ -32,20 +32,6 @@ class Info extends File {
     );
   }
 
-  /**
-   * Override as info files have no header.
-   */
-  function file_header() { }
-
-  /**
-   * Override as info files have no header.
-   */
-  function code_header($filename = NULL) {
-  }
-
-  // Override abstract...
-  function code_body() {}
-
 }
 
 /**
