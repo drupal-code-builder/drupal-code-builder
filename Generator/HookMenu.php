@@ -41,7 +41,6 @@ class HookMenu extends HookImplementation {
     $code = "\n";
     $code .= "  \$items = array();\n";
     foreach ($this->component_data['menu_items'] as $menu_item_data) {
-      ddpr($menu_item_data);
       $code .= "  \$items['" . $menu_item_data['path'] . "'] = array(\n";
       $code .= "    'title' => '" . $menu_item_data['title'] . "',\n";
       $code .= "  );\n";
