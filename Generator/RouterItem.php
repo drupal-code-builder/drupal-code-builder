@@ -35,11 +35,23 @@ class RouterItem extends Base {
    * @param $component_name
    *   The identifier for the component.
    * @param $component_data
-   *   (optional) An array of data for the component. Valid properties are:
+   *   (optional) An array of data for the component. Any missing properties
+   *   (or all if this is entirely omitted) are given default values.
+   *   Valid properties are:
    *      - 'title': The title for the item.
    *      - TODO: further properties such as access!
    */
   function __construct($component_name, $component_data = array()) {
+    // Set some default properties.
+    // This allows the user to leave off specifying details like title and
+    // access, and get default strings in place that they can replace in
+    // generated module code.
+    $component_data += array(
+      // Use a default that can be selected with a single double-click, to make
+      // it easy to replace.
+      'title' => 'myPage',
+    );
+
     parent::__construct($component_name, $component_data);
   }
 
