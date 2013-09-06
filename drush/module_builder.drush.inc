@@ -437,11 +437,11 @@ function module_builder_build_data($commands) {
   $data = array(
     'module_root_name' => array(
       'commands' => 0,
-      'prompt' => dt('module name'),
+      'prompt' => dt('module machine name'),
       'required' => TRUE,
     ),
     'presets' => array(
-      'prompt' => dt('required hook presets'),
+      'prompt' => dt('required hook preset groups'),
       // This has neither 'commands' nor 'key' set, as these are pulled from the
       // hook list in non-interactive mode.
     ),
@@ -455,7 +455,6 @@ function module_builder_build_data($commands) {
     'module_readable_name' => array(
       'key' => 'name',
       'prompt' => dt('human readable name'),
-      'required' => TRUE,
       // A callback to generate the default value of this key.
       // The signature is foo($commands, $module_data)
       'default_callback' => 'module_builder_default_readable_name',
@@ -504,7 +503,18 @@ function module_builder_build_data($commands) {
 
     // Second pass: prompt the user for data.
     if ($interactive && empty($module_data[$name])) {
-      $value = drush_prompt(dt('Enter the @type', array('@type' => $definition['prompt'])), NULL, $definition['required']);
+      // Make a prompt string, letting the user know if the input is optional
+      // so they don't waste time typing.
+      if ($definition['required']) {
+        $prompt = dt('Enter the @type', array('@type' => $definition['prompt']));
+      }
+      else {
+        $prompt = dt('Enter the @type (optional)', array('@type' => $definition['prompt']));
+      }
+
+      $default = isset($definition['default']) ? $definition['default'] : NULL;
+
+      $value = drush_prompt($prompt, $default, $definition['required']);
       if ($value !== FALSE) {
         $module_data[$name] = $value;
       }
