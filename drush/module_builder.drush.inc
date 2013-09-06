@@ -588,7 +588,6 @@ function module_builder_build_data($commands) {
     if (empty($data_item_value)) {
       if (isset($definition['default'])) {
         $data_item_value = $definition['default'];
-        continue;
       }
       elseif (isset($definition['default_callback'])) {
         $function = $definition['default_callback'];
