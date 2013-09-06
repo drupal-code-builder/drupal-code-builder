@@ -73,13 +73,25 @@ class Form extends BaseGenerator {
       $form_builder => array(
         'doxygen_first' => 'Form builder.',
         'declaration'   => "function $form_builder" . '($form, &$form_state)',
-        'code'          => '',
+        'code'          => array(
+          "£form['element] = array(",
+          "  '#type' => 'textfield',",
+          "  '#title' => t('Enter a value'),",
+          "  '#required' => TRUE,",
+          ");",
+          "",
+          "return £form;",
+        ),
       ),
       // The validate handler.
       $form_validate => array(
         'doxygen_first' => 'Form validate handler.',
         'declaration'   => "function $form_validate" . '($form, &$form_state)',
-        'code'          => '',
+        'code'          => array(
+          "if (£form_state['values']['element'] != 'hello') {",
+          "  form_set_error('element', t('Why don't you say hello?'));",
+          "}",
+        ),
       ),
       // The submit handler.
       $form_submit => array(
