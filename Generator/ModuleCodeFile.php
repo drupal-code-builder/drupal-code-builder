@@ -111,8 +111,23 @@ EOT;
       $function_code .= $function_data['declaration'];
       $function_code .= ' {';
 
-      // See if function bodies exist; if so, use function bodies from template
-      if (isset($function_data['code'])) {
+      // See if function bodies exist.
+      if (!empty($function_data['code'])) {
+        if (is_array($function_data['code'])) {
+          $function_data['code'] = $this->functionImplodeLines($function_data['code']);
+        }
+
+        // Little bit of sugar: to save endless escaping of $ in front of
+        // variables in code body, you can use £.
+        $function_data['code'] = str_replace('£', '$', $function_data['code']);
+
+        // Argh. WTF. Newline drama. Hook definitions have newlines at start and
+        // end. But when we define code ourselves, it's a pain to have to put
+        // those in.
+        if (empty($function_data['has_wrapping_newlines'])) {
+          $function_data['code'] = "\n" . $function_data['code'] . "\n";
+        }
+
         $function_code .= $function_data['code'];
       }
       else {
@@ -199,6 +214,29 @@ EOT;
  */
 
 EOT;
+  }
+
+  /**
+   * Convert an array of lines of code to function body.
+   *
+   * @param $lines
+   *  An array of lines of code, without trailing newlines.
+   * @param $indent
+   *  (optional) The indent for the function. Defaults to 2.
+   *
+   * @return
+   *  A string of code.
+   */
+  function functionImplodeLines($lines, $indent = 2) {
+    // I could probably do this in a foreach; I just want to show off closures!
+    // It's like in perl but not as intuitive!
+    $padding = str_repeat(' ', $indent);
+    $lines = array_map(function($string) use ($padding) {
+      return "$padding$string";
+    }, $lines);
+
+    // We don't want the final newline, the caller adds it.
+    return implode("\n", $lines);
   }
 
   /**

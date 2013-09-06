@@ -33,8 +33,15 @@ class PHPFunction extends BaseGenerator {
    *    - 'declaration': The function declaration, including the function name
    *      and parameters, up to the closing parenthesis. Should not however
    *      include the opening brace of the function body.
-   *    - 'body' The code of the function, not including the function's
-   *      enclosing braces.
+   *    - 'body' The code of the function. The character '£' is replaced with
+   *      '$' as a convenience to avoid having to keep escaping names of
+   *      variables. This can be in one of the following forms:
+   *      - a string, not including the enclosing function braces. The opening
+   *        and closing newlines may be included: indicate this by setting
+   *        'has_wrapping_newlines' to TRUE.
+   *      - an array of lines of code. These should not have their newlines.
+   *    - 'has_wrapping_newlines': (optional) If the 'body' is a string, this
+   *      indicates whether the string has first and closing newlines.
    */
   public function componentFunctions() {
     return array();

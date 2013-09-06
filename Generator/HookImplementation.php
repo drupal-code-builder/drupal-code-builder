@@ -80,6 +80,7 @@ class HookImplementation extends PHPFunction {
         // TODO: get the hook template from user-defined stuff.
         // TODO: how does something like hook_menu() add menu items???
         'code'          => $this->hook_info['body'],
+        'has_wrapping_newlines'  => TRUE,
       ),
     );
 
