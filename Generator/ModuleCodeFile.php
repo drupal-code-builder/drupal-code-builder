@@ -14,7 +14,7 @@ namespace ModuleBuider\Generator;
  * system, and is currently (hello!) being forced into a new, bigger mk
  * hierarchy!
  */
-class ModuleCodeFile extends File {
+class ModuleCodeFile extends PHPFile {
 
   // TODO: declare properties that are special!
 

@@ -10,7 +10,7 @@ namespace ModuleBuider\Generator;
 /**
  * Component generator: tests.
  */
-class Tests extends File {
+class Tests extends PHPFile {
 
   /**
    * Return an array of subcomponent types.
