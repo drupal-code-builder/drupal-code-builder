@@ -74,7 +74,10 @@ class Module extends BaseGenerator {
    *       - FILE ID: requests a particular code file, by the abbreviated name.
    *         This is the filename without the initial 'MODULE.' or the '.inc'
    *         extension.
-   *    - 'requested_components': TODO WRITE ME
+   *    - 'requested_components': An array of components to build (in addition
+   *      to any that are added automatically). This should in the same form
+   *      as the return from subComponents(), thus keyed by component name,
+   *      with values either a component type or an array of data.
    *  Properties added by generators during the process:
    *    - 'hook_file_data': Added by the Hooks generator. Keyed by the component
    *      names of the ModuleCodeFile type components that Hooks adds.
@@ -96,6 +99,27 @@ class Module extends BaseGenerator {
    *  An array of subcomponent types.
    */
   protected function subComponents() {
+    // Add in defaults. This can't be done in __construct() because root
+    // generators actually don't get their component data till later. WTF!
+    $this->component_data += array(
+      'requested_components' => array(),
+    );
+
+    // The requested build list is a hairy old thing, so figure that out first
+    // and in a helper.
+    $build_list_components = $this->buildListComponents();
+
+    $components = $build_list_components + $this->component_data['requested_components'];
+
+    return $components;
+  }
+
+  /**
+   * Helper to get a component list from the build list.
+   *
+   * The build list is a complex thing that is best left alone!
+   */
+  protected function buildListComponents() {
     $module_data = $this->component_data;
 
     // A module needs:
