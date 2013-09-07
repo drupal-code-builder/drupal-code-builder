@@ -87,7 +87,7 @@ class Form extends BaseGenerator {
       ),
       'validate' => array(
         "if (£form_state['values']['element'] != 'hello') {",
-        "  form_set_error('element', t('Why don't you say hello?'));",
+        "  form_set_error('element', t('Please say hello?'));",
         "}",
       ),
       'submit' => '',

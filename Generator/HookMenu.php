@@ -82,7 +82,7 @@ class HookMenu extends HookImplementation {
       );
 
       $code[] = "£items['$menu_item_data[path]'] = array(";
-      $code[] = "  'title' => '$menu_item_data[title],";
+      $code[] = "  'title' => '$menu_item_data[title]',";
       $code[] = "  'page callback' => '{$menu_item_data['page callback']}',";
       // This is an array, so not quoted.
       $code[] = "  'page arguments' => {$menu_item_data['page arguments']},";
