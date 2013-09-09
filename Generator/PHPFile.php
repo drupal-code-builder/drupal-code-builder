@@ -85,7 +85,7 @@ class PHPFile extends File {
   function code_header() {
     $filename = $this->filename;
     $file_description = $this->file_doc_summary();
-    $default = <<<EOT
+    $code = <<<EOT
 /**
  * @file $filename
  * $file_description
