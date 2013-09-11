@@ -155,7 +155,10 @@ class ReportHookData extends Base {
     $return = array();
     foreach ($data as $group => $hooks) {
       foreach ($hooks as $key => $hook) {
-        $return[$hook['name']] = $hook;
+        // Standardize to lowercase.
+        $hook_name = strtolower($hook['name']);
+
+        $return[$hook_name] = $hook;
       }
     }
 
