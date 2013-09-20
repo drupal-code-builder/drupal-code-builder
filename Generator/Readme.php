@@ -11,10 +11,8 @@ namespace ModuleBuider\Generator;
  * Generator base class for module README file.
  *
  * (You were going to write a README file, right?)
- *
- * No point in extending ModuleBuider\Generator\File; it does way too much.
  */
-class Readme extends BaseGenerator {
+class Readme extends File {
 
   /**
    * Collect the code files.
