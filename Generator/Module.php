@@ -10,13 +10,23 @@ namespace ModuleBuider\Generator;
 /**
  * Component generator: module.
  *
- * Hierarchy of generators beneath this:
- *  - hooks
- *    - code files
- *  - info
- *  - readme
- *  - api
- *  - tests
+ * This is a base generator: that is, it's one that may act as the initial
+ * requested component given to Task\Generate. (In theory, this could also get
+ * requested by something else, for example if we wanted Tests to be able to
+ * request a testing module, but that's for another day.)
+ *
+ * Conceptual hierarchy of generators beneath this in the request tree:
+ *  - Hooks
+ *    - HookImplementation (multiple)
+ *  - RouterItem
+ *    - HookMenu (which is itself a HookImplementation!)
+ *    - Routing (D8 only)
+ *  - PHPFile (multiple)
+ *  - Info
+ *  - Readme
+ *  - API
+ *  - Tests
+ *  - AdminSettingsForm
  *
  * This generator looks in $module data to determine which of these generators
  * to add. Generators can be requested by name, with various extra special
