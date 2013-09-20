@@ -112,11 +112,16 @@ class Generate extends Base {
 
     //drush_print_r($generator->components);
 
-    // Recursively build files.
+    // Build files.
+    // First we recurse into the tree to collect data on the files needed. Each
+    // component gets to add to the files array.
     $files = array();
     $this->root_generator->collectFiles($files);
     //drush_print_r($files);
 
+    // Then we assemble the files into a simple array of full filename and
+    // contents.
+    // TODO: rename this to buildFiles().
     $files_assembled = $this->root_generator->assembleFiles($files);
 
     return $files_assembled;
@@ -159,7 +164,7 @@ class Generate extends Base {
    *  The type of the component. This is used to determine the class.
    *
    * @return
-   *  A class name for the type and, if it exists, version, e.g.
+   *  A fully qualified class name for the type and, if it exists, version, e.g.
    *  'ModuleBuider\Generator\Info6'.
    *
    * @see Generate::generatorAutoload()
