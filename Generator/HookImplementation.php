@@ -41,7 +41,7 @@ class HookImplementation extends PHPFunction {
    * @return
    *  An array of subcomponent names and types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     // TODO! Caching!
     $mb_factory = module_builder_get_factory();
     // Sanity checks already done at this point; no need to catch exception.

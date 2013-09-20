@@ -52,7 +52,7 @@ class Form extends BaseGenerator {
   /**
    * Return an array of subcomponent types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     // Request the file we belong to.
     return array(
       $this->component_data['code_file'] => 'ModuleCodeFile',

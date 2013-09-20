@@ -61,7 +61,7 @@ class RouterItem extends BaseGenerator {
    * @return
    *  An array of subcomponent names and types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     return array(
       // Each RouterItem that gets added will cause a repeat request of these
       // components.
@@ -95,7 +95,7 @@ class RouterItem8 extends RouterItem {
    * @return
    *  An array of subcomponent names and types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     return array(
       // Each RouterItem that gets added will cause a repeat request of these
       // components.

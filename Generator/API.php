@@ -19,7 +19,7 @@ class API extends PHPFile {
   /**
    * Return an array of subcomponent types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     // We have no subcomponents.
     return array();
   }

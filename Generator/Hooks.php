@@ -34,7 +34,7 @@ class Hooks extends BaseGenerator {
    * @return
    *  An array of subcomponent names and types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     // We add components of type HookImplementation: each of these is a single
     // function. From this point on, these subcomponents are the authority on
     // which hooks we generate. Each HookImplementation component will add the
@@ -105,7 +105,7 @@ class Hooks extends BaseGenerator {
   }
 
   /**
-   * Helper function for our subComponents().
+   * Helper function for our requiredComponents().
    *
    * (Move this back out if it needs to be used by other components in future?)
    *

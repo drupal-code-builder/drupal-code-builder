@@ -19,8 +19,8 @@ class AdminSettingsForm extends Form {
   /**
    * Return an array of subcomponent types.
    */
-  protected function subComponents() {
-    $components = parent::subComponents();
+  protected function requiredComponents() {
+    $components = parent::requiredComponents();
 
     // This takes care of adding hook_menu() and so on.
     $components['admin/config/%module'] = array(

@@ -33,7 +33,7 @@ abstract class File extends BaseGenerator {
    *
    * Files are always terminal components.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     return array();
   }
 

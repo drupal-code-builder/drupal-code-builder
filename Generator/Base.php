@@ -21,7 +21,7 @@ namespace ModuleBuider\Generator;
  * given component (e.g., 'module'), and then adding generators this one
  * requests, recursing this process into each new generator and building a tree
  * down from the original one. This is achieved by each generator class
- * implementing subComponents() to return its child components. The process ends
+ * implementing requiredComponents() to return its child components. The process ends
  * when the added generators are themselves one that return no sub-components.
  *
  * So for example, the caller requests a 'module' component. This causes
@@ -195,16 +195,16 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Get the subcomponents for this generator.
+   * Get the list of required components this generator.
    *
-   * This calls itself recursively on the subcomponents, thus building a nested
-   * tree of generators.
+   * This calls itself recursively on the returned components, so that any added
+   * component may in turn add more.
    *
-   * Generator classes should implement subComponents() to return the list
+   * Generator classes should implement requiredComponents() to return the list
    * of component types they require, possibly depending on incoming data.
    *
    * Obviously, it's important that eventually this process terminate with
-   * generators that return an empty array for subComponents().
+   * generators that return an empty array for requiredComponents().
    *
    * @return
    *  None. This should set an array of subcomponent generators on the property
@@ -215,7 +215,7 @@ abstract class BaseGenerator {
     $base_component = $this->getBaseComponent();
 
     // Get the required subcomponents.
-    $subcomponent_info = $this->subComponents();
+    $subcomponent_info = $this->requiredComponents();
 
     // Instantiate each one (if not already done), and recurse into it.
     foreach ($subcomponent_info as $component_name => $data) {
@@ -272,7 +272,7 @@ abstract class BaseGenerator {
    *      is ignored on later components! This is because -- so far! -- no
    *      components that get requested multiple times require this!)
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     return array();
   }
 

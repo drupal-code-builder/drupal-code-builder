@@ -63,7 +63,7 @@ class Module extends BaseGenerator {
    *    - 'module_files': ??? OBSOLETE!? added by this function. A flat array
    *      of filenames that have been generated.
    *    - 'requested_build': An array whose keys are names of subcomponents to
-   *       build. Component names are defined in subComponents(), and include:
+   *       build. Component names are defined in requiredComponents(), and include:
    *       - 'all': everything we can do.
    *       - 'code': PHP code files.
    *       - 'info': the info file.
@@ -76,7 +76,7 @@ class Module extends BaseGenerator {
    *         extension.
    *    - 'requested_components': An array of components to build (in addition
    *      to any that are added automatically). This should in the same form
-   *      as the return from subComponents(), thus keyed by component name,
+   *      as the return from requiredComponents(), thus keyed by component name,
    *      with values either a component type or an array of data.
    *  Properties added by generators during the process:
    *    - 'hook_file_data': Added by the Hooks generator. Keyed by the component
@@ -98,7 +98,7 @@ class Module extends BaseGenerator {
    * @return
    *  An array of subcomponent types.
    */
-  protected function subComponents() {
+  protected function requiredComponents() {
     // Add in defaults. This can't be done in __construct() because root
     // generators actually don't get their component data till later. WTF!
     $this->component_data += array(

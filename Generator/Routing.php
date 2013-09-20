@@ -13,7 +13,7 @@ namespace ModuleBuider\Generator;
  * Note this only is requested for Drupal 8.
  *
  * DEVELOPER NOTES: there is no way to request this via Drush yet.
- * To see this in action, hack Module::subComponents() to return something like:
+ * To see this in action, hack Module::requiredComponents() to return something like:
  $dev_components = array(
    'path/foo' => array(
      'component_type' => 'RouterItem',
