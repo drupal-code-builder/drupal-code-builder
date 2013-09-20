@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains generator classes for module code files.
+ * Contains generator classes for module PHP files.
  */
 
 namespace ModuleBuider\Generator;
@@ -31,28 +31,7 @@ class ModuleCodeFile extends PHPFile {
    */
   function containingComponent() {
     // A code file's parent is always the base component.
-    // TODO: should we want files to be grouped into folders, or have submodules,
-    // we'd need components to have more data other than their name
-    // that survives a component getting requested multiple times!
     return $this->getBaseComponent()->name;
-  }
-
-  /**
-   * Build the code files.
-   */
-  function collectFiles(&$files) {
-    // Our component name is our future filename, with the token '%module' to
-    // be replaced.
-    $this->filename = str_replace('%module', $this->base_component->component_data['module_root_name'], $this->name);
-
-    $files[$this->name] = array(
-      'path' => '', // Means base folder.
-      'filename' => $this->filename,
-      'body' => $this->file_contents(),
-      // We join code files up on a single newline. This means that each
-      // component is responsible for ending its own lines.
-      'join_string' => "\n",
-    );
   }
 
   /**
@@ -74,6 +53,24 @@ class ModuleCodeFile extends PHPFile {
       // Why didn't array_merge() work here? Cookie for the answer!
       $this->functions += $child_functions;
     }
+  }
+
+  /**
+   * Build the code files.
+   */
+  function collectFiles(&$files) {
+    // Our component name is our future filename, with the token '%module' to
+    // be replaced.
+    $this->filename = str_replace('%module', $this->base_component->component_data['module_root_name'], $this->name);
+
+    $files[$this->name] = array(
+      'path' => '', // Means base folder.
+      'filename' => $this->filename,
+      'body' => $this->file_contents(),
+      // We join code files up on a single newline. This means that each
+      // component is responsible for ending its own lines.
+      'join_string' => "\n",
+    );
   }
 
   /**
@@ -111,8 +108,9 @@ EOT;
       $function_code .= $function_data['declaration'];
       $function_code .= ' {';
 
-      // See if function bodies exist.
+      // See if function body exists.
       if (!empty($function_data['code'])) {
+        // We allow the function body to be an array.
         if (is_array($function_data['code'])) {
           $function_data['code'] = $this->functionImplodeLines($function_data['code']);
         }
