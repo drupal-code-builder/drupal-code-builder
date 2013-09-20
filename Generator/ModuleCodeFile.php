@@ -200,21 +200,6 @@ EOT;
   }
 
   /**
-   * Create a doxygen block for a function.
-   *
-   * @param $text
-   *  The first line of text for the doxygen block.
-   */
-  function function_doxygen($text) {
-    return <<<EOT
-/**
- * $text
- */
-
-EOT;
-  }
-
-  /**
    * Convert an array of lines of code to function body.
    *
    * @param $lines
