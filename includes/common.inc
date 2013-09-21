@@ -10,16 +10,6 @@
  */
 
 /**
- * Returns the Drupal major version number (5, 6, 7 ...)
- *
- * Helper function for module_builder_include. Cribbed and hacked from drush.
- */
-function _module_builder_drupal_major_version() {
-  list($major_version) = explode('.', VERSION);
-  return $major_version;
-}
-
-/**
  * Helper function to invoke hook_module_builder_info() in all modules.
  *
  * The tricky part is that we want to include ourselves, but module_builder
