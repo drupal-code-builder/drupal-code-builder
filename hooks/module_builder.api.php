@@ -15,6 +15,9 @@
  * This hook should go in a MODULE.module_builder.inc file in your module folder.
  * Is it only loaded by Module builder when the user goes to download new hook data.
  *
+ * @param $version
+ * The major version of Drupal to return data for.
+ *
  * @return
  *   An array of data, keyed by module name.
  *   The subsequent array should specify:
@@ -32,7 +35,7 @@
  *      Usually this will be '%module.module' but for instance,
  *      'install.php' has hooks that should go in '%module.install'.
  */
-function hook_module_builder_info() {
+function hook_module_builder_info($version) {
   $data = array(
     // Hooks on behalf of Drupal core.
     'system' => array(

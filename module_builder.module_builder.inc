@@ -23,6 +23,9 @@
  * Other modules implementing this shouldn't do this, as Module Builder invokes
  * and builds for the version of the current site.
  *
+ * @param $version
+ * The major version of Drupal to return data for.
+ *
  * @return
  *   An array of data, keyed by module name.
  *   On D6, the subsequent array should specify:
@@ -47,7 +50,7 @@
  *      flat arrays of full hook names. Eg:
  *      '%module.install' => array(hook_install)
  */
-function module_builder_module_builder_info() {
+function module_builder_module_builder_info($version) {
   // Versions 5 and 6.
   $data['common'] = array(
     // Hooks on behalf of Drupal core.
@@ -223,7 +226,6 @@ function module_builder_module_builder_info() {
   );
 
   // Return the data for the current version.
-  $version = _module_builder_drupal_major_version();
   if (isset($data[$version])) {
     return $data[$version];
   }

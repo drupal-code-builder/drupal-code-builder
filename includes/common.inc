@@ -28,6 +28,7 @@ function _module_builder_drupal_major_version() {
 function _module_builder_invoke_hook() {
   $mb_factory = module_builder_get_factory();
   $mb_factory->environment->loadInclude('common_version');
+  $major_version = $mb_factory->environment->major_version;
 
   // TODO: just get ours if no bootstrap?
   $mb_files = module_builder_system_listing('\.module_builder.inc$', 'modules');
@@ -41,7 +42,7 @@ function _module_builder_invoke_hook() {
     // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
     $module = str_replace('.module_builder', '', $file->name);
     // Note that bad data got back from the hook breaks things.
-    if ($result = module_invoke($module, 'module_builder_info')) {
+    if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
       $module_data = array_merge($module_data, $result);
     }
   }
