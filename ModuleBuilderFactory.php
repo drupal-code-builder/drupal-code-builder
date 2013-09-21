@@ -79,7 +79,7 @@ class ModuleBuilderFactory {
    * of it later.
    *
    * @param ModuleBuilderEnvironment $environment
-   *  A new environment object, implementing ModuleBuilderEnvironmentInterface.
+   *  A new environment object.
    */
   function __construct($environment) {
     $this->environment = $environment;
