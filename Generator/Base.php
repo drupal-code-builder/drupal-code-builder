@@ -121,14 +121,16 @@ abstract class BaseGenerator {
   public $base_component;
 
   /**
-   * The base component's subcomponents.
+   * The base component's flat list of components.
    *
    * This is keyed by the name of the component name. Values are the
    * instantiated component generators.
    *
    * (This is only present on the base component.)
    *
-   * TODO: add an abstract BaseComponent class?
+   * TODO: It might be cleaner to add an abstract BaseComponent class, but then
+   * we'd lose the flexibility of base components being usable as by other
+   * components, or anything being requestable as a base.
    */
   public $components = array();
 
@@ -250,7 +252,7 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * Get this component's required components.
    *
    * For example, a module component requires hooks, an info file, and a readme
    * file. Hooks in turn require a varying number of files, determined by the
