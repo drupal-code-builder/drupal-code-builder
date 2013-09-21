@@ -32,8 +32,6 @@ function module_builder_get_factory($environment_class = NULL) {
   static $factory;
 
   if (!isset($factory)) {
-    $factory = new ModuleBuilderFactory();
-
     // Include old procedural include files.
     include_once(dirname(__FILE__) . '/includes/common.inc');
 
@@ -43,7 +41,8 @@ function module_builder_get_factory($environment_class = NULL) {
     // Create the environment handler and set it on the factory.
     // You did pass in the environment class, didn't you?
     $environment = new $environment_class;
-    $factory->set_environment($environment);
+
+    $factory = new ModuleBuilderFactory($environment);
   }
 
   return $factory;
@@ -74,16 +73,15 @@ class ModuleBuilderFactory {
   public $environment;
 
   /**
-   * Set the module builder environment and verify it.
+   * Constructor.
    *
-   * Technically, as this is a required dependency, it should be part of the
-   * constructor. However, we'd then need consumers to do the work of loading
-   * include files.
+   * We set the environment on the factory now, so that getTask() can make use
+   * of it later.
    *
    * @param ModuleBuilderEnvironment $environment
    *  A new environment object, implementing ModuleBuilderEnvironmentInterface.
    */
-  function set_environment($environment) {
+  function __construct($environment) {
     $this->environment = $environment;
   }
 
