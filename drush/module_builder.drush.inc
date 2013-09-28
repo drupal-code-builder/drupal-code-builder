@@ -432,7 +432,9 @@ function module_builder_build_data($commands) {
 
   // This is a shortcut for developing, if you have --noi forced in your drush
   // config and need to switch back to interactive for testing.
-  $interactive = drush_get_option(array('interactive'));
+  if (drush_get_option(array('interactive'))) {
+    $interactive = TRUE;
+  }
 
   // Information about the keys we need to build the module data.
   // For each key, the source of the data is defined thus:
