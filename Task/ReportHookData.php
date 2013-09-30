@@ -16,10 +16,8 @@ class ReportHookData extends Base {
 
   /**
    * The sanity level this task requires to operate.
-   *
-   * We only need the hooks folder: we're fine to report that it's empty!
    */
-  protected $sanity_level = 'hook_directory';
+  protected $sanity_level = 'hook_data';
 
   /**
    * Get the timestamp of the last hook data upate.
