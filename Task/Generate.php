@@ -75,6 +75,18 @@ class Generate extends Base {
   }
 
   /**
+   * Get the root generator.
+   *
+   * This may be used by UIs that want to provide interactive building up of
+   * component parameters.
+   *
+   * @see ModuleBuider\Generator\BaseGenerator::getComponentDataDefaultValue().
+   */
+  public function getRootGenerator() {
+    return $this->root_generator;
+  }
+
+  /**
    * Generate the files for a component.
    *
    * This is the entry point for the generating system.

@@ -168,6 +168,24 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Get the default value for an item in the component's required data.
+   *
+   * This should be implemented by entry components. It is for use by UIs that
+   * want to present default values to the user in a progressive manner. For
+   * example, the Drush interactive mode may present a default value for the
+   * module human name based on the value the user has already entered for the
+   * machine name.
+   *
+   * @param $component_data
+   *  The array of component data assembled so far, passed by reference. The
+   *  default value gets set at $property_name.
+   * @param $property_name
+   *  The name of a property in $component_data.
+   */
+  function getComponentDataDefaultValue($component_data, $property_name) {
+  }
+
+  /**
    * Returns the base component for this component (or itself if it's the base).
    *
    * This can be used in circumstances where it's not known whether the current

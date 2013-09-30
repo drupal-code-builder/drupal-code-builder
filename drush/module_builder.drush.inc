@@ -241,7 +241,7 @@ function drush_module_builder_callback_build_module() {
   }
 
   // Build the module data.
-  $module_data = module_builder_build_data($commands);
+  $module_data = module_builder_build_data($commands, $mb_task_handler_generate);
 
   // What to build
   $build = drush_get_option('build');
@@ -422,11 +422,14 @@ function drush_module_builder_callback_build_theme() {
  *
  * @param $commands
  *  The commands array.
+ * @param $mb_task_handler_generate
+ *  The Generate Task handler. This is needed to get default values from the
+ *  generator component.
  *
  * @return
  *  An array of component data suitable for the Module generator.
  */
-function module_builder_build_data($commands) {
+function module_builder_build_data($commands, $mb_task_handler_generate) {
   // Determine whether we're in interactive mode.
   $interactive = !drush_get_option(array('non-interactive', 'noi'));
 
@@ -446,7 +449,6 @@ function module_builder_build_data($commands) {
       'commands' => 0,
       'prompt' => dt('module machine name'),
       'required' => TRUE,
-      'default' => 'mymodule',
     ),
     'presets' => array(
       'prompt' => dt('required hook preset groups'),
@@ -466,6 +468,7 @@ function module_builder_build_data($commands) {
       'filter' => NULL,
       'prompt' => dt('required hooks'),
       'required' => TRUE,
+      //'component' => 'Hooks',
       // This says that we have to split on whitespace to produce an array.
       'split' => TRUE,
     ),
@@ -478,8 +481,6 @@ function module_builder_build_data($commands) {
       // Thus: 'drush mb mymodule hook_a hook_b :filter item_c item_d'
       'filter' => 'routes',
       'prompt' => dt("required router paths, eg 'path/foo'"),
-      // Uncomment defaults when developing to save typing.
-      //'default' => 'path/foo path/bar',
       // This tells the system that this is a request for generator components,
       // and the input data should be placed in a nested array in the module
       // data.
@@ -489,14 +490,12 @@ function module_builder_build_data($commands) {
     'module_readable_name' => array(
       'key' => 'name',
       'prompt' => dt('human readable name'),
-      // A callback to generate the default value of this key.
-      // The signature is foo($commands, $module_data)
-      'default_callback' => 'module_builder_default_readable_name',
+      // This is required, but we provide a nice default.
+      'required' => TRUE,
     ),
     'module_short_description' => array(
       'key' => 'desc',
       'prompt' => dt('description'),
-      'default' => 'TODO: Description of module',
     ),
     'module_help_text' => array(
       'key' => 'helptext',
@@ -567,6 +566,11 @@ function module_builder_build_data($commands) {
       }
     }
 
+    // Get the default value for this item from the Module component generator
+    // so we can present it to the interactive mode user as a default value.
+    $mb_task_handler_generate->getRootGenerator()->getComponentDataDefaultValue($module_data, $name);
+    $default_value = isset($module_data[$name]) ? $module_data[$name] : NULL;
+
     // Second pass: prompt the user for data.
     if ($interactive && empty($data_item_value)) {
       // Make a prompt string, letting the user know if the input is optional
@@ -578,22 +582,17 @@ function module_builder_build_data($commands) {
         $prompt = dt('Enter the @type (optional)', array('@type' => $definition['prompt']));
       }
 
-      $default = isset($definition['default']) ? $definition['default'] : NULL;
-
-      $value = drush_prompt($prompt, $default, $definition['required']);
+      $value = drush_prompt($prompt, $default_value, $definition['required']);
       if ($value !== FALSE) {
         $data_item_value = $value;
       }
     }
 
-    // Third pass: set a default value from the definition or a callback.
+    // Third pass: use the default value, if we got one earlier from the
+    // component generator.
     if (empty($data_item_value)) {
-      if (isset($definition['default'])) {
-        $data_item_value = $definition['default'];
-      }
-      elseif (isset($definition['default_callback'])) {
-        $function = $definition['default_callback'];
-        $data_item_value = $function($commands, $module_data);
+      if (isset($default_value)) {
+        $data_item_value = $default_value;
       }
     }
 
@@ -786,13 +785,6 @@ function module_builder_get_component_folder($component_type, $component_name) {
   $module_dir .= $component_name;
 
   return $module_dir;
-}
-
-/**
- * Callback for generating default for module readable name.
- */
-function module_builder_default_readable_name($commands, $module_data) {
-  return ucfirst(str_replace('_', ' ', $module_data['module_root_name']));
 }
 
 /**
