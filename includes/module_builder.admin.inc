@@ -3,10 +3,8 @@
 /**
  * @file
  *   Menu callbacks for admin pages.
- *
  */
- 
- 
+
 /**
  * Admin settings page.
  *
@@ -111,7 +109,7 @@ function module_builder_admin_update($form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Update',
   );
-  
+
   return $form;
 }
 
