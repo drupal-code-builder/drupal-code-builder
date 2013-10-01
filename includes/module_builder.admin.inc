@@ -78,16 +78,19 @@ function module_builder_admin_update($form, &$form_state) {
 
   // Get our task, and check hook data is ready.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
-
-    $last_update = $mb_task_handler_report->lastUpdatedDate();
-    $doc_files = $mb_task_handler_report->listHookFiles();
-    $directory = $mb_factory->environment->hooks_directory;
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookDataFolder');
   }
   catch (ModuleBuilderException $e) {
     drupal_set_message($e->getMessage(), 'warning');
-    return array();
+    return $form;
   }
+
+  // The task handler returns sane values for these even if there's no hook
+  // data.
+  $last_update = $mb_task_handler_report->lastUpdatedDate();
+  $doc_files = $mb_task_handler_report->listHookFiles();
+  $directory = $mb_factory->environment->hooks_directory;
+
 
   $form['last_update'] = array(
     '#markup' => '<p>' . (
