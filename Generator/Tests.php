@@ -50,7 +50,7 @@ class Tests extends PHPFile {
    */
   function code_body() {
     $module_root_name = $this->base_component->component_data['module_root_name'];
-    $module_root_name_title_case = ucfirst($this->base_component->component_data['module_root_name']);
+    $module_root_name_title_case = $this->base_component->component_data['module_camel_case_name'];
     $module_readable_name = $this->base_component->component_data['module_readable_name'];
 
     $code = <<<EOT
