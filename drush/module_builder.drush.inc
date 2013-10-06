@@ -669,9 +669,19 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
     // Hook group presets can be specified with an initial @.
     if (substr($hook_name, 0, 1) == '@') {
       $preset_name = substr($hook_name, 1);
-      // Convert the preset hooks list to the right format and add it to the array.
-      $preset_hooks = array_fill_keys($hook_presets[$preset_name]['hooks'], TRUE);
-      $hooks += $preset_hooks;
+      // Check the preset name is valid.
+      if (isset($hook_presets[$preset_name])) {
+        // DX: check the preset is properly defined.
+        if (!is_array($hook_presets[$preset_name]['hooks'])) {
+          throw new ModuleBuilderException("Incorrectly defined hook preset group $preset_name.");
+        }
+
+        // Convert the preset hooks list to the right format and add it to the
+        // array.
+        $preset_hooks = array_fill_keys($hook_presets[$preset_name]['hooks'], TRUE);
+      }
+      // TODO: report a non-fatal error if the requested hook preset doesn't
+      // exist.
     }
     else {
       // Standardize to lowercase.
