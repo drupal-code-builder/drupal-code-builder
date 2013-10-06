@@ -186,6 +186,22 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Get the root component's data.
+   *
+   * This can be used in circumstances where it's not known whether the current
+   * component is the base or not.
+   *
+   * @return
+   *  The base component.
+   */
+  function getRootComponentData() {
+    // Get the root component from the Task, which is the autority on this.
+    $root_component = $this->task->getRootGenerator();
+
+    return $root_component->component_data;
+  }
+
+  /**
    * Returns the flat list of components, as assembled by assembleComponentList().
    */
   function getComponentList() {
