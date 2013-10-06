@@ -511,8 +511,9 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
     ),
   );
 
+  // Work through the data information array, collecting data for each one.
   foreach ($data as $name => $definition) {
-    // Merge in default values.
+    // Merge in default values to the data item definition.
     $definition += array(
       'required' => FALSE,
     );
@@ -571,7 +572,7 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
     $mb_task_handler_generate->getRootGenerator()->getComponentDataDefaultValue($module_data, $name);
     $default_value = isset($module_data[$name]) ? $module_data[$name] : NULL;
 
-    // Second pass: prompt the user for data.
+    // Second pass: if in interactive mode, prompt the user for data.
     if ($interactive && empty($data_item_value)) {
       // Make a prompt string, letting the user know if the input is optional
       // so they don't waste time typing.
