@@ -31,7 +31,7 @@ class ModuleCodeFile extends PHPFile {
    */
   function containingComponent() {
     // A code file's parent is always the base component.
-    return $this->getBaseComponent()->name;
+    return $this->task->getRootGenerator()->name;
   }
 
   /**

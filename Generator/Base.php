@@ -158,7 +158,7 @@ abstract class BaseGenerator {
    *   (optional) An array of data for the component.
    *   While each component will have its own array of data, components may also
    *   need to access the data of the root component. For this, use
-   *   getBaseComponent().
+   *   $task->getRootGenerator() (for now!).
    *   TODO: check whether components really need to do this, as removing this
    *   would simplify things!
    */
@@ -210,7 +210,7 @@ abstract class BaseGenerator {
    * Returns the flat list of components, as assembled by assembleComponentList().
    */
   function getComponentList() {
-    $base = $this->getBaseComponent();
+    $base = $this->task->getRootGenerator();
     return $base->components;
   }
 
@@ -232,7 +232,7 @@ abstract class BaseGenerator {
    */
   public function assembleComponentList() {
     // Get the base component to add the generators to it.
-    $base_component = $this->getBaseComponent();
+    $base_component = $this->task->getRootGenerator();
 
     // Get the required subcomponents.
     $subcomponent_info = $this->requiredComponents();
@@ -357,7 +357,7 @@ abstract class BaseGenerator {
    * here should override this.
    */
   public function assembleContainedComponents() {
-    $base_component = $this->getBaseComponent();
+    $base_component = $this->task->getRootGenerator();
 
     // If we're not in the tree, we have nothing to say here and bail.
     if (!isset($base_component->tree[$this->name])) {
