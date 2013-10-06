@@ -104,13 +104,24 @@ class Generate extends Base {
    *  values are the code destined for each file.
    */
   public function generateComponent($component_data) {
-    // Add the top-level component to the data.
-    $component_data['base'] = $this->base;
+    // The dummy generator that was made by __construct() should now be removed;
+    // it is not fully set up, and its presence would cause a tangled mess in
+    // getGenerator().
+    $this->root_generator = NULL;
 
-    // Set the component data on the base generator.
-    // We couldn't do this earlier in __construct() because we didn't have the
-    // data at that point.
-    $this->root_generator->component_data = $component_data;
+    // Add the top-level component to the data.
+    $component_type = $this->base;
+    $component_data['base'] = $component_type;
+
+    // The component name is just the same as the type for the base generator.
+    $component_name = $component_type;
+
+    // Repeat the steps from __construct() now we have proper component data.
+    // The component name is just the same as the type for the base generator.
+    $root_generator = $this->getGenerator($component_type, $component_name, $component_data);
+
+    // Set the root generator on ourselves now we actually have it.
+    $this->root_generator = $root_generator;
 
     // Recursively get subcomponents.
     $this->root_generator->assembleComponentList();
