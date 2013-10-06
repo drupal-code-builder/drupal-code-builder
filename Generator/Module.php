@@ -137,6 +137,13 @@ class Module extends BaseGenerator {
       // Uncomment them to reduce the amount of typing needed for testing.
       //'hooks' => 'init',
       //'router_items' => 'path/foo path/bar',
+      // The following properties shouldn't be offered as UI options.
+      'module_camel_case_name' => function($component_data) {
+        $pieces = explode('_', $component_data['module_root_name']);
+        $pieces = array_map('ucfirst', $pieces);
+        return implode('', $pieces);
+        return ucfirst(str_replace('_', ' ', $component_data['module_root_name']));
+      },
     );
 
     if (isset($property_name)) {
