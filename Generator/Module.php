@@ -131,8 +131,8 @@ class Module extends BaseGenerator {
       'module_short_description' => 'TODO: Description of module',
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
-      'hooks' => 'init',
-      'router_items' => 'path/foo path/bar',
+      //'hooks' => 'init',
+      //'router_items' => 'path/foo path/bar',
     );
 
     if (isset($property_name)) {
