@@ -136,7 +136,9 @@ class Module extends BaseGenerator {
     );
 
     if (isset($property_name)) {
-      if (isset($default_values[$property_name])) {
+      // Don't clobber existing values; only set a default if there is nothing
+      // already present for that property.
+      if (!isset($component_data[$property_name]) && isset($default_values[$property_name])) {
         // The default value in the array is either an anonymous function, or
         // a plain value.
         if (is_callable($default_values[$property_name])) {
@@ -147,9 +149,8 @@ class Module extends BaseGenerator {
         }
 
         $component_data[$property_name] = $default_value;
-
-        return;
       }
+      return;
     }
     else {
       // If the property name isn't given, we're being asked to merge in all
