@@ -449,6 +449,7 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
       'commands' => 0,
       'prompt' => dt('module machine name'),
       'required' => TRUE,
+      'process_callback' => 'module_builder_drush_component_root_name_process',
     ),
     'presets' => array(
       'prompt' => dt('required hook preset groups'),
@@ -589,6 +590,14 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
       }
     }
 
+    // Now we have the user input, if any, process it if it requires it.
+    if (isset($definition['process_callback'])) {
+      if (!empty($data_item_value)) {
+        $function = $definition['process_callback'];
+        $data_item_value = $function($data_item_value);
+      }
+    }
+
     // Third pass: use the default value, if we got one earlier from the
     // component generator.
     if (empty($data_item_value)) {
@@ -691,16 +700,41 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
 }
 
 /**
- * Get the folder and machine name for a component.
+ * Process the input for component base name for filesystem shorthands.
+ *
+ * This allows for the following in the component name:
+ *  - A single '.' specifies the current folder.
+ *  - A trailing slash is ignored, thus allowing autocompletion of folder names.
+ *
+ * @param $component_root_name
+ *  The given component root name.
+ *
+ * @return
+ *  The processed component root name.
+ */
+function module_builder_drush_component_root_name_process($component_root_name) {
+  // Trim a final '/' from the module machine name, to allow use of tab
+  // autocompletion on the command line.
+  if (substr($component_root_name, -1) == '/') {
+    $component_root_name = substr($component_root_name, 0, -1);
+  }
+
+  // An input machine name given as '.' means use the current folder as the
+  // component name, thus write to the current folder.
+  if ($component_root_name == '.') {
+    $component_root_name = basename(drush_get_context('DRUSH_OLDCWD'));
+  }
+
+  return $component_root_name;
+}
+
+/**
+ * Get the folder where a component should be saved.
  *
  * @param $component_type
  *  The type of the component. One of 'module' or 'theme'.
  * @param $component_name
- *  The input given for the component name. This allows several shorthands:
- *  - A single '.' specifies the current folder.
- *  - A trailing slash is ignored, thus allowing autocompletion of folder names.
- *  The processed component name should be extracted from the return value using
- *  basename().
+ *  The component name.
  *
  * @return
  *  The full system path for the component's folder, without a trailing slash.
@@ -708,22 +742,10 @@ function module_builder_build_data($commands, $mb_task_handler_generate) {
 function module_builder_get_component_folder($component_type, $component_name) {
   $drupal_root = drush_get_context('DRUSH_DRUPAL_ROOT');
 
-  // Cleanup: trim a final '/' from the module machine name, to
-  // allow use of tab autocompletion on the command line.
-  if (substr($component_name, -1) == '/') {
-    $component_name = substr($component_name, 0, -1);
-  }
-
   // First try: if the component exists, we write there: nice and simple.
   $component_path = drupal_get_path($component_type, $component_name);
   if (!empty($component_path)) {
     return $drupal_root . '/' . $component_path;
-  }
-
-  // Second try: an input machine name given as '.' means use the current folder
-  // as the module name, thus write to the current folder.
-  if ($component_name == '.') {
-    return drush_get_context('DRUSH_OLDCWD');
   }
 
   // Third try: 'parent' option was given.
