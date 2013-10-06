@@ -93,6 +93,10 @@ class Module extends BaseGenerator {
    *      names of the ModuleCodeFile type components that Hooks adds.
    */
   function __construct($component_name, $component_data = array()) {
+    // Fill in all defaults. This allows default values to be set here that
+    // are not involved in the UI, such as the module class name.
+    $this->getComponentDataDefaultValue($component_data);
+
     // This method is only here to document the component data.
     parent::__construct($component_name, $component_data);
   }
