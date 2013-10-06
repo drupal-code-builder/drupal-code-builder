@@ -142,7 +142,6 @@ class Module extends BaseGenerator {
         $pieces = explode('_', $component_data['module_root_name']);
         $pieces = array_map('ucfirst', $pieces);
         return implode('', $pieces);
-        return ucfirst(str_replace('_', ' ', $component_data['module_root_name']));
       },
     );
 
