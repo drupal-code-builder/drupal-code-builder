@@ -186,27 +186,6 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Returns the base component for this component (or itself if it's the base).
-   *
-   * This can be used in circumstances where it's not known whether the current
-   * component is the base or not.
-   *
-   * @return
-   *  The base component.
-   */
-  function getBaseComponent() {
-    if (isset($this->base_component)) {
-      // If the base component is set, return that.
-      // @see Generate::getGenerator().
-      return $this->base_component;
-    }
-    else {
-      // If it's not set, we're the base component, so return ourselves.
-      return $this;
-    }
-  }
-
-  /**
    * Returns the flat list of components, as assembled by assembleComponentList().
    */
   function getComponentList() {
