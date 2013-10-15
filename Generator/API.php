@@ -116,7 +116,7 @@ EOT;
 $parameters_doc
  *
  * @return
- *  TODO: Document return value if there is one.
+ *   TODO: Document return value if there is one.
  */
 function hook_$hook_short_name($parameters_string) {
   // TODO: write sample code.
