@@ -28,7 +28,8 @@ class API extends PHPFile {
    * Build the code files.
    */
   function collectFiles(&$files) {
-    $module_root_name = $this->base_component->component_data['module_root_name'];
+    $component_data = $this->getRootComponentData();
+    $module_root_name = $component_data['module_root_name'];
 
     $this->filename = "$module_root_name.api.php";
 
@@ -45,7 +46,8 @@ class API extends PHPFile {
    * Return the summary line for the file docblock.
    */
   function file_doc_summary() {
-    $module_readable_name = $this->base_component->component_data['module_readable_name'];
+    $component_data = $this->getRootComponentData();
+    $module_readable_name = $component_data['module_readable_name'];
     return "Hooks provided by the $module_readable_name module.";
   }
 
@@ -55,9 +57,10 @@ class API extends PHPFile {
   function code_body() {
     $hooks = $this->get_existing_hooks();
 
-    $module_root_name = $this->base_component->component_data['module_root_name'];
-    $module_root_name_title_case = ucfirst($this->base_component->component_data['module_root_name']);
-    $module_readable_name = $this->base_component->component_data['module_readable_name'];
+    $component_data = $this->getRootComponentData();
+    $module_root_name = $component_data['module_root_name'];
+    $module_root_name_title_case = ucfirst($component_data['module_root_name']);
+    $module_readable_name = $component_data['module_readable_name'];
 
     // Build an array of code pieces.
     $code_pieces = array();
