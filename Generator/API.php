@@ -55,9 +55,14 @@ class API extends PHPFile {
    * Return the main body of the file code.
    */
   function code_body() {
-    $hooks = $this->get_existing_hooks();
-
     $component_data = $this->getRootComponentData();
+
+    $mb_factory = module_builder_get_factory();
+    // Sanity checks already done at this point; no need to catch exception.
+    $mb_task_handler_analyze = $mb_factory->getTask('AnalyzeModule');
+
+    $hooks = $mb_task_handler_analyze->getInventedHooks($component_data['module_root_name']);
+
     $module_root_name = $component_data['module_root_name'];
     $module_root_name_title_case = ucfirst($component_data['module_root_name']);
     $module_readable_name = $component_data['module_readable_name'];
@@ -118,75 +123,6 @@ function hook_$hook_short_name($parameters_string) {
 }
 
 EOT;
-  }
-
-  /**
-   * Helper to get hooks from existing code files.
-   *
-   * @return
-   *  An array of hooks and their parameters. The hooks are deduced from the
-   *  calls to module_invoke_all(), and the probably parameters are taken from
-   *  the variables passed to the call. The keys of the array are hook short
-   *  names; the values are the parameters string, with separating commas but
-   *  without the outer parentheses. E.g.:
-   *    'foo_insert' => '$foo, $bar'
-   */
-  function get_existing_hooks() {
-    // Get the module's folder.
-    $module_folder = $this->base_component->component_data['module_folder'];
-
-    // Bail if the folder doesn't exist yet: there is nothing to do.
-    if (!file_exists($module_folder)) {
-      return array();
-    }
-
-    // An array of short hook names that we'll populate from what we extract
-    // from the files.
-    $hooks = array();
-
-    // Only consider hooks which are invented by this module. We assume the
-    // module follows the convention of using its name as a prefix.
-    $hook_prefix = $this->base_component->component_data['module_root_name'] . '_';
-
-    // Recurse all files in the module folder. We might as well just look at all
-    // files rather than try to cover all possible file extensions.
-    $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($module_folder));
-    foreach ($objects as $filename => $object) {
-      $contents = file_get_contents($filename);
-
-      $matches = array();
-      preg_match_all("/module_invoke_all\('($hook_prefix\w+)'(?:,\s*([^)]*))?/", $contents, $matches);
-      // Matches are:
-      //  - 1: the first parameter, which is the hook short name.
-      //  - 2: the remaining parameters, if any.
-
-      // If we get matches, turn then into keyed arrays and merge them into
-      // the cumulative array. This removes duplicates (caused by a hook being
-      // invoked in different files).
-      if (!empty($matches[1])) {
-        //drush_print_r($matches);
-        $file_hooks = array_combine($matches[1], $matches[2]);
-        //drush_print_r($file_hooks);
-
-        foreach ($file_hooks as $hook_short_name => $parameters) {
-          // If this hook is already in our list, we take the longest parameters
-          // string, on the assumption that this may be more complete if some
-          // parameters are options.
-          if (isset($hooks[$hook_short_name])) {
-            // Replace the existing hook if the new parameters are longer.
-            if (strlen($parameters) > strlen($hooks[$hook_short_name])) {
-              $hooks[$hook_short_name] = $parameters;
-            }
-          }
-          else {
-            $hooks[$hook_short_name] = $parameters;
-          }
-        }
-      }
-    }
-    //drush_print_r($hooks);
-
-    return $hooks;
   }
 
 }
