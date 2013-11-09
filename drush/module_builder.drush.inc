@@ -877,6 +877,9 @@ function module_builder_drush_output_code($component_dir, $filename, $code) {
 
 /**
  * Callback for downloading hook data.
+ *
+ * @return
+ *  Boolean indicating TRUE for success, FALSE for failure.
  */
 function drush_module_builder_callback_hook_download() {
   // Get the MB factory.
@@ -888,8 +891,7 @@ function drush_module_builder_callback_hook_download() {
     $mb_task_handler_collect = $mb_factory->getTask('Collect');
   }
   catch (ModuleBuilderException $e) {
-    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
-    return;
+    return drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
   }
 
   $mb_task_handler_collect->collectHooks();
@@ -904,6 +906,7 @@ function drush_module_builder_callback_hook_download() {
   }
   else {
     drush_print("Hook files have been downloaded to {$mb_factory->environment->hooks_directory} and processed.");
+    return TRUE;
   }
 }
 
