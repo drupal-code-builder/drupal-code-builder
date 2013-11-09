@@ -227,10 +227,15 @@ function drush_module_builder_callback_build_module() {
     // If the problem is that the hooks need downloading, we can recover from this.
     if ($e->needs_hooks_download) {
       if (drush_confirm(dt('No hook definitions found. Would you like to download them now?'))) {
-        // download the hooks so we can move on.
-        if (!drush_module_builder_callback_hook_download()) {
+        // Download the hooks so we can move on.
+        $success = drush_module_builder_callback_hook_download();
+        if (!$success) {
           drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hook data.');
+          return;
         }
+
+        // Get the task handler that we were trying to get in the first place.
+        $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
       }
     }
     // Otherwise, fail.
