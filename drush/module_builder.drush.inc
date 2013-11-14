@@ -134,6 +134,9 @@ Default is 'all' if writing new files, 'code' if appending to file or outputting
     'arguments' => array(
       'modules' => '(optional) Names of modules, separated by spaces.',
     ),
+    'options' => array(
+      'raw' => "Outputs the raw debug hook data.",
+    ),
   );
 
   $items['mb-analyze'] = array(
@@ -934,6 +937,11 @@ function drush_module_builder_callback_hook_list() {
   $time = $mb_task_handler_report->lastUpdatedDate();
   $data = $mb_task_handler_report->listHookData();
 
+  if (drush_get_option('raw')) {
+    drush_print_r($data);
+    return;
+  }
+
   if (count($commands)) {
     // Put the requested filenames into the keys of an array, and intersect them
     // with the hook data.
@@ -943,8 +951,6 @@ function drush_module_builder_callback_hook_list() {
   else {
     $data_requested = $data;
   }
-
-  drush_print_r($data);
 
   if (!count($data_requested) && count($files_requested)) {
     drush_print(t("No hooks found for the specified files."));
