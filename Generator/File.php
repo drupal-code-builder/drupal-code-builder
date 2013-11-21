@@ -43,7 +43,7 @@ abstract class File extends BaseGenerator {
    * Files are usually contained by the root component.
    */
   function containingComponent() {
-    return $this->base_component;
+    return $this->base_component->name;
   }
 
   /**
