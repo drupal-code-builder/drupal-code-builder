@@ -88,6 +88,7 @@ class {$module_root_name_title_case}TestCase extends DrupalWebTestCase {
   }
 
 }
+
 EOT;
 
     return array($code);
