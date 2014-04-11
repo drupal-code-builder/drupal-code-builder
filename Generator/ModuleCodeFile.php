@@ -139,6 +139,13 @@ EOT;
       $code[$function_name] = $function_code;
     }
 
+    // If there are no functions, then this is a .module file that's been
+    // requested so the module is correctly formed. It is customary to add a
+    // comment to the file for DX.
+    if (empty($code)) {
+      $code['empty'] = "// Drupal needs this blank file.\n";
+    }
+
     return $code;
 
     // =================================== OLD CODE HERE

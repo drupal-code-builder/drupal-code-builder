@@ -246,6 +246,13 @@ class Module extends BaseGenerator {
     });
     $build_list = array_combine($build_list, $build_list);
 
+    // Preliminary: if 'all' was requested, we must ensure the module file,
+    // even if it has no hooks.
+    // TODO: this is not the case on D8!
+    if (isset($build_list['all'])) {
+      $components['%module.module'] = 'ModuleCodeFile';
+    }
+
     // Case 1: everything was requested: return everything!
     if (isset($build_list['all'])) {
       return $components;
