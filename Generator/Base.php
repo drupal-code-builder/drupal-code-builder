@@ -182,7 +182,7 @@ abstract class BaseGenerator {
    * @param $property_name
    *  The name of a property in $component_data.
    */
-  function getComponentDataDefaultValue($component_data, $property_name) {
+  function getComponentDataDefaultValue(&$component_data, $property_name) {
   }
 
   /**
