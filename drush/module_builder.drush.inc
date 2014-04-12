@@ -859,7 +859,12 @@ function module_builder_drush_output_code($component_dir, $filename, $code) {
     if (!is_dir($subdir)) {
       $result = mkdir($subdir, 0777, TRUE);
       if ($result && !drush_get_option('quiet')) {
-        drush_print("Module directory $component_dir created");
+        if ($subdir == $component_dir) {
+          drush_print("Module directory $component_dir created");
+        }
+        else {
+          drush_print("Module subdirectory $subdir created");
+        }
       }
     }
 
