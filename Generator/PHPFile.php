@@ -15,6 +15,14 @@ namespace ModuleBuider\Generator;
 class PHPFile extends File {
 
   /**
+   * An array of functions for this file.
+   *
+   * @see assembleContainedComponentsHelper()
+   * @see code_body()
+   */
+  protected $functions = array();
+
+  /**
    * Helper for assembleContainedComponents().
    *
    * Module code files assemble their contained components, which are functions.

@@ -19,14 +19,6 @@ class ModuleCodeFile extends PHPFile {
   // TODO: declare properties that are special!
 
   /**
-   * An array of functions for this file.
-   *
-   * @see assembleContainedComponentsHelper()
-   * @see code_body()
-   */
-  protected $functions = array();
-
-  /**
    * Return this component's parent in the component tree.
    */
   function containingComponent() {
