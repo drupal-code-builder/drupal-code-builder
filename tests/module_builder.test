@@ -1,0 +1,293 @@
+<?php
+
+/**
+ * @file
+ * Contains tests for the Module builder module.
+ */
+
+/**
+ * Test case for Module Builder component generation.
+ *
+ * This doesn't need a Drupal database, but relies on a dedicated Module Builder
+ * environment class, ModuleBuilderEnvironmentTests, and a prepared file of
+ * processed hook definitions, in the sample_hook_definitions subfolder. This
+ * contains only the hook definition from system.api.php and node.api.php.
+ */
+class ModuleBuilderTestCase extends DrupalUnitTestCase {
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Module Builder unit tests'),
+      'description' => t('Tests generating Drupal components.'),
+      'group' => t('Module Builder'),
+    );
+  }
+
+  /**
+   * Implements setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Perform the work of module_builder_init().
+    include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
+    include_once(dirname(__FILE__) . '/../includes/common.inc');
+
+    // We rely on our own autoloader, but Drupal's core autoloaders are still
+    // registered, and they will run first and crash -- so we remove them.
+    // This is a workaround for https://www.drupal.org/node/1916328
+    spl_autoload_unregister('drupal_autoload_class');
+    spl_autoload_unregister('drupal_autoload_interface');
+  }
+
+  /**
+   * Test generating module code.
+   */
+  function testModuleGeneration() {
+    // Get the Module Builder factory, specifying our environment.
+    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTests');
+
+    // Get the hooks directory. WHY?
+    $hooks_directory = $mb_factory->environment->hooks_directory;
+
+    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $this->assertTrue(is_object($mb_task_handler_report), "A task handler object was returned.");
+
+    $hook_groups = $mb_task_handler_report->listHookData();
+    $this->assertTrue(is_array($hook_groups) || !empty($hook_groups), "An non-empty array of hook data was returned.");
+
+    // READY TO GO! MAKE SOME MODULES!
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+    $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
+
+    // Assemble module data.
+    $module_name = $this->randomName();
+    $module_data = array(
+      'base' => 'module',
+      'module_root_name' => $module_name,
+      'module_readable_name' => $this->randomString(),
+      'module_short_description' => $this->randomString(),
+      'hooks' => array(
+        // These two hooks will go in the .module file.
+        'hook_menu' => TRUE,
+        'hook_node_info' => TRUE,
+        // This goes in a tokens.inc file, and also has complex parameters.
+        'hook_tokens' => TRUE,
+        // This goes in the .install file.
+        'hook_install' => TRUE,
+      ),
+      'requested_build' => array(
+        'all' => TRUE,
+      ),
+    );
+
+    $files = $mb_task_handler_generate->generateComponent($module_data);
+    //debug(array_keys($files));
+
+    $this->assertTrue(isset($files["$module_name.module"]), "The files list has a .module file.");
+    $this->assertTrue(isset($files["$module_name.install"]), "The files list has a .install file.");
+    $this->assertTrue(isset($files["$module_name.info"]), "The files list has a .info file.");
+
+    // Check the .module file.
+    $module_file = $files["$module_name.module"];
+    //debug($module_file);
+
+    // Code passed to eval() should not have an opening PHP tag, which our
+    // module code does. However, we can close a PHP tag at the start and then
+    // our opening tag is acceptable.
+    // It should be safe to eval as all of the functions will be prefixed with
+    // the module name (unless something has gone horribly wrong, in which case
+    // case the test should fail anyway.)
+    $eval = eval('?>' . $module_file);
+    // eval() returns FALSE if there is a parse error.
+    $this->assertIdentical($eval, NULL, "Module file parses as well-formed PHP.");
+
+    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
+
+    $this->assertHookDocblock($module_file, 'hook_menu', "The module file contains the docblock for hook_menu().");
+    $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_menu().");
+
+    $this->assertHookDocblock($module_file, 'hook_node_info', "The module file contains the docblock for hook_node_info().");
+    $this->assertHookImplementation($module_file, 'hook_node_info', $module_name, "The module file contains a function declaration that implements hook_node_info().");
+
+    $this->assertNoHookDocblock($module_file, 'hook_install', "The module file does not containt the docblock for hook_install().");
+
+    // Check the .install file.
+    $install_file = $files["$module_name.install"];
+
+    $eval = eval('?>' . $install_file);
+    $this->assertIdentical($eval, NULL, "Install file parses as well-formed PHP.");
+
+    $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
+
+    $this->assertHookDocblock($install_file, 'hook_install', "The install file contains the docblock for hook_install().");
+    $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
+
+    $this->assertNoHookDocblock($install_file, 'hook_menu', "The install file does not contain the docblock for hook_menu().");
+    $this->assertNoHookDocblock($install_file, 'hook_node_info', "The install file does not contain the docblock for hook_node_info().");
+
+    // Check the .tokens.inc file.
+    $tokens_file = $files["$module_name.tokens.inc"];
+
+    $this->assertHookDocblock($tokens_file, 'hook_tokens', "The tokens file contains the docblock for hook_tokens().");
+    $this->assertHookImplementation($tokens_file, 'hook_tokens', $module_name, "The tokens file contains a function declaration that implements hook_tokens().");
+
+    // Check the .info file.
+    $info_file = $files["$module_name.info"];
+
+    $this->assertInfoLine($info_file, 'name', $module_data['module_readable_name'], "The info file declares the module name.");
+    $this->assertInfoLine($info_file, 'description', $module_data['module_short_description'], "The info file declares the module description.");
+    $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");
+  }
+
+  /**
+   * Assert a string contains the correct file header.
+   *
+   * @param $string
+   *  The text to check for a docblock.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertFileHeader($string, $message = NULL) {
+    $expected_string =
+      "^<\?php\n" .
+      "\n" .
+      "/\*\*\n" .
+      " \* @file.*\n" .
+      " \* .*\n" .
+      " \*/\n";
+
+    $match = preg_match("[$expected_string]", $string);
+    $this->assertTrue($match, $message);
+  }
+
+  /**
+   * Assert a string contains a PHP docblock for a hook.
+   *
+   * @param $string
+   *  The text to check for a docblock.
+   * @param $hook_name
+   *  The full name of the hook, e.g. 'hook_menu'.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertHookDocblock($string, $hook_name, $message = NULL) {
+    $docblock =
+      "/**\n" .
+      " * Implements {$hook_name}().\n" .
+      " */";
+    $position = strstr($string, $docblock);
+    $this->assertTrue($position !== FALSE, $message);
+  }
+
+  /**
+   * Assert a string does not contain a PHP docblock for a hook.
+   *
+   * @param $string
+   *  The text to check for a docblock.
+   * @param $hook_name
+   *  The full name of the hook, e.g. 'hook_menu'.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertNoHookDocblock($string, $hook_name, $message = NULL) {
+    $docblock =
+      "/**\n" .
+      " * Implements {$hook_name}().\n" .
+      " */";
+    $position = strstr($string, $docblock);
+    $this->assertTrue($position === FALSE, $message);
+  }
+
+  /**
+   * Assert a string contains a function declaration.
+   *
+   * @param $string
+   *  The text to check for a function declaration.
+   * @param $function_name
+   *  The name of the function.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertFunction($string, $function_name, $message = NULL) {
+    $expected_regex = "^function {$function_name}\((.*)\)";
+
+    $matches = array();
+    $match = preg_match("[$expected_regex]m", $string, $matches);
+
+    if (empty($message)) {
+      $message = "The code string contains the function $function_name().";
+    }
+
+    $this->assertTrue($match, $message);
+
+    // Check the function parameters are properly formed.
+    if (!empty($matches[1])) {
+      $parameters = explode(', ', $matches[1]);
+
+      $param_regex = '@
+        ^
+        ( \w+ \  ) ?  # type hint
+        \$ \w+        # parameter name
+        ( \  = \      # default value, one of:
+          (
+            \d+ |             # numerical
+            [[:upper:]]+ |    # constant
+            \' .* \' |        # string
+            array\(\)         # empty array
+          )
+        ) ?
+        @x';
+
+      foreach ($parameters as $parameter) {
+        $match = preg_match($param_regex, $parameter);
+
+        $this->assertTrue($match, "Function parameter is correctly formed.");
+      }
+    }
+  }
+
+  /**
+   * Assert a string contains a hook implementation function declaration.
+   *
+   * @param $code
+   *  The code to check for a function declaration.
+   * @param $hook_name
+   *  The full name of the hook, e.g. 'hook_menu'.
+   * @param $module_name
+   *  The name of the implementing module.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertHookImplementation($code, $hook_name, $module_name, $message = NULL) {
+    $hook_short_name = substr($hook_name, 5);
+    $function_name = $module_name . '_' . $hook_short_name;
+
+    $this->assertFunction($code, $function_name, $message);
+  }
+
+  /**
+   * Assert a string contains a .info file property declaration.
+   *
+   * @param $string
+   *  The text to check.
+   * @param $property
+   *  The property name, e.g. 'core'.
+   * @param $value
+   *  The value to check, e.g., '7.x'.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertInfoLine($string, $property, $value, $message = NULL) {
+    // Quote the value, as strings may contain regex characters.
+    $value = preg_quote($value);
+    $expected_regex = "^{$property} = {$value}$";
+
+    $match = preg_match("[$expected_regex]m", $string);
+    $this->assertTrue($match, $message);
+  }
+
+}

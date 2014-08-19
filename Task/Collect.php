@@ -81,6 +81,17 @@ class Collect extends Base {
 
     // check file_exists?
 
+    /*
+    // Developer trapdoor for generating the sample hook definitions file for
+    // our tests. This limits the number of files to just a few from core.
+    $intersect = array(
+      'system.api.php',
+      'node.api.php',
+    );
+    $hook_file_data = array_intersect_key($hook_file_data, array_fill_keys($intersect, TRUE));
+    // End.
+    */
+
     // Sort the files into a better order than just random.
     // TODO: allow for some control over this, eg frequently used core,
     // then rarer core, then contrib in the order defined by the MB hook.

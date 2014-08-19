@@ -397,3 +397,60 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
   }
 
 }
+
+/**
+ * Environment class for tests.
+ */
+class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBase {
+
+  /**
+   * Constructor.
+   */
+  function __construct() {
+    // Set the major version.
+    $this->setMajorVersion();
+
+    // Set the folder for the hooks. This contains a prepared file for the tests
+    // to use.
+    $directory = dirname(dirname(__FILE__)) . '/tests/sample_hook_definitions/' . $this->major_version;
+
+    $this->hooks_directory = $directory;
+  }
+
+  /**
+   * Get a path to a module builder file or folder.
+   */
+  function getPath($subpath) {
+    $path = dirname(__FILE__) . '/..';
+    $path = $path . '/' . $subpath;
+    return $path;
+  }
+
+  /**
+   * Load an optionally versioned module builder include file.
+   */
+  function loadInclude($name, $extension = 'inc') {
+    $path = $this->getPath('includes');
+
+    // Try the versioned file first.
+    $file = sprintf("%s/%s_%s.%s", $path, $name, $this->major_version, $extension);
+    //dsm($file);
+    if (file_exists($file)) {
+      require_once($file);
+      return;
+    }
+    // Fall back to the regular file.
+    $file = sprintf("%s/%s.%s", $path, $name, $extension);
+    require_once($file);
+  }
+
+  /**
+   * Output debug data.
+   */
+  function debug($data, $message = '') {
+    if (module_exists('devel')) {
+      debug($data, $message);
+    }
+  }
+
+}
