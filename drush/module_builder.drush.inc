@@ -118,6 +118,18 @@ Default is 'all' if writing new files, 'code' if appending to file or outputting
     ),
   );
 
+  $items['mb-component'] = array(
+    'callback' => 'drush_module_builder_callback_build_component',
+    'aliases' => array('mbc'),
+    'description' => "Generate a Drupal component, such as a module or profile.",
+    'arguments' => array(
+      'component type' => "The type of component, e.g., 'module'.",
+    ),
+    'options' => array(
+      'write' => 'Write the component to the current site codebase. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
+    ),
+  );
+
   $items['mb-download'] = array(
     'callback' => 'drush_module_builder_callback_hook_download',
     'description' => "Update module_builder hook data.",
@@ -420,6 +432,212 @@ function drush_module_builder_callback_build_theme() {
 
   foreach ($files as $filename => $code) {
     module_builder_drush_output_code($theme_path, $filename, $code);
+  }
+}
+
+/**
+ * Build a generic requested component.
+ *
+ * @param $component_type
+ *  The type of the component, e.g. 'module'.
+ */
+function drush_module_builder_callback_build_component($component_type = NULL) {
+  $commands = func_get_args();
+  // Shift off the component name.
+  array_shift($commands);
+
+  // Determine whether we're in interactive mode.
+  $interactive = !drush_get_option(array('non-interactive', 'noi'));
+
+  // This is a shortcut for developing, if you have --noi forced in your drush
+  // config and need to switch back to interactive for testing.
+  if (drush_get_option(array('interactive'))) {
+    $interactive = TRUE;
+  }
+
+  //drush_print_r($commands);
+
+  if (empty($component_type)) {
+    if ($interactive) {
+      $component_type = drush_prompt("Enter a component name", 'module', TRUE);
+    }
+    else {
+      throw new Exception("No component name given.");
+    }
+  }
+
+  // TODO!
+  // Temporary code specific to modules.
+  $component_info_drush_extra = array(
+    'hooks' => array(
+      'command_prefix' => 'hooks',
+    ),
+    'module_hook_presets' => array(
+      'command_prefix' => 'presets',
+    ),
+  );
+  // TODO! Move the above.
+
+  // Get the module builder factory, set up for our environment.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Get the Generator task, specifying the component we want so we get a
+  // sanity check based on that and our environment.
+  try {
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', $component_type);
+  }
+  catch (ModuleBuilderException $e) {
+    drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+    return;
+  }
+
+  $root_generator = $mb_task_handler_generate->getRootGenerator();
+
+  // Get the component data info, and add in extra info specific to Drush.
+  $component_data_info = $root_generator->getComponentDataInfo();
+  $component_data_info = array_merge_recursive($component_data_info, $component_info_drush_extra);
+  //drush_print_r($component_data_info);
+
+  // Split any prefixed commands off into a nested array.
+  // E.g. given 'foo bar hooks: biz presets: bax', we want:
+  //  - $commands as just 'foo bar'
+  //  - hooks as 'biz'
+  //  - presets as 'bax'
+  $plain_commands     = array();
+  $prefixed_commands  = array();
+  foreach ($commands as $command) {
+    if (substr($command, -1) == ':') {
+      // This is a preset marker.
+      $prefix_marker = substr($command, 0, -1);
+
+      // Set the array up and move on.
+      $prefixed_commands[$prefix_marker] = array();
+      continue;
+    }
+
+    if (isset($prefix_marker)) {
+      // Continue taking commands for this prefix until we find another prefix
+      // marker or run out of commands.
+      $prefixed_commands[$prefix_marker][] = $command;
+    }
+    else {
+      $plain_commands[] = $command;
+    }
+  }
+  //drush_print_r($prefixed_commands);
+
+  // Build the component data array from the given commands.
+  $component_data = array();
+
+  // Work through the component data info, assembling the component data array
+  // Each property info needs to be prepared, so iterate by reference.
+  foreach ($component_data_info as $property_name => &$property_info) {
+    // Prepare the single property: get options, default value, etc.
+    $root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
+
+    // If the property is required, and there are plain command parameters
+    // remaining, take one of those.
+    if ($property_info['required'] && $plain_commands) {
+      $value = array_shift($plain_commands);
+      //drush_print_r("taking $property_name from commands as $value");
+
+      $component_data[$property_name] = $value;
+
+      // Done.
+      continue;
+    }
+
+    // If the property has a prefix, and the commands included that prefix,
+    // then take the commands for that prefix.
+    if (isset($property_info['command_prefix']) && !empty($prefixed_commands[$property_info['command_prefix']])) {
+      $component_data[$property_name] = $prefixed_commands[$property_info['command_prefix']];
+      //drush_print_r("taking $property_name from prefixed commands");
+
+      continue;
+    }
+
+    // If we're not in interactive mode, there's nothing more to do for this
+    // command other than use the default value. That's already set in the
+    // component data.
+    if (!$interactive) {
+      continue;
+    }
+
+    // Show the user the available options.
+    $numeric_options = FALSE;
+    if (isset($property_info['options'])) {
+      $numeric_options = TRUE;
+      $option_by_index = array();
+      $i = 1;
+      foreach ($property_info['options'] as $option => $label) {
+        $option_by_index[$i] = $option;
+        drush_print("[$i] $option: $label", 2);
+
+        $i++;
+      }
+    }
+
+    $prompt = "Enter the {$property_info['label']}";
+    if ($property_info['format'] == 'array') {
+      $prompt .= ' ' . "(space separated list)";
+    }
+
+    $value = drush_prompt($prompt, $component_data[$property_name], $property_info['required']);
+
+    // Split up the value if it should be an array.
+    if ($property_info['format'] == 'array') {
+      $value = preg_split('/\s+/', $value, -1,  PREG_SPLIT_NO_EMPTY);
+    }
+
+    // Callback to convert a value given as an index in a list of options into
+    // the actual option value.
+    $convert_index_to_value_callback = function($item) use ($option_by_index) {
+      if (is_numeric($item)) {
+        return $option_by_index[$item];
+      }
+      else {
+        return $item;
+      }
+    };
+
+    // Convert a numeric option index value into the actual option value.
+    if ($numeric_options) {
+      // We have either an array of values or a single one.
+      if (is_array($value)) {
+        $value = array_map($convert_index_to_value_callback, $value);
+      }
+      else {
+        $value = $convert_index_to_value_callback($value);
+      }
+    }
+
+    $component_data[$property_name] = $value;
+  }
+
+  // Perform any final processing on the component data.
+  // This prepares data, for example expands options such as hook presets.
+  $root_generator->processComponentData($component_data_info, $component_data);
+
+  // Temporary! TODO!
+  $component_data['requested_build'] = array('all' => TRUE);
+  //drush_print_r($component_data);
+
+  // Generate the component.
+  $files = $mb_task_handler_generate->generateComponent($component_data);
+  //drush_print_r($files);
+
+  // Replace the uninitialized root generator we had with the proper one.
+  $root_generator = $mb_task_handler_generate->getRootGenerator();
+
+  $component_dir = module_builder_get_component_folder($component_type, $root_generator->getComponentSystemName());
+
+  // Finally, output the files!
+  foreach ($files as $filename => $code) {
+    module_builder_drush_output_code($component_dir, $filename, $code);
+  }
+
+  if (drush_get_option('go')) {
+    pm_module_manage(array(array_shift($commands)), TRUE);
   }
 }
 
