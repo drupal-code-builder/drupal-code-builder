@@ -1,0 +1,166 @@
+<?php
+
+/**
+ * @file
+ * Contains the root component class.
+ */
+
+namespace ModuleBuider\Generator;
+
+/**
+ * Abstract Generator for root components.
+ *
+ * Root components are those with which the generating process may begin, such
+ * as Module and Theme.
+ */
+abstract class RootComponent extends BaseGenerator {
+
+  /**
+   * Get the Drupal name for this component, e.g. the module's name.
+   *
+   * @todo: standardize this in the different root generators' component data
+   * so this is not needed.
+   */
+  abstract public function getComponentSystemName();
+
+  /**
+   * Define the component data this component needs to function.
+   *
+   * This returns an array an array of data that defines the component data that
+   * this component should be given to perform its work. This include:
+   *  - data that must be specified by the user
+   *  - data that may be specified by the user, but can be computed or take from
+   *    defaults
+   *  - data that should not be specified by the user, as it is computed from
+   *    other input.
+   *
+   * This array must be processed in the order in which the properties are
+   * given, so that the callables for defaults and options work properly.
+   *
+   * Note this can't be a class property due to use of closures.
+   *
+   * @return
+   *  An array that defines the data this component needs to operate. Each key
+   *  corresponds to a key for a property in the $component_data that should be
+   *  passed to __construct(). Each value is an array, with the following keys:
+   *  - 'label': A human-readable label for the property.
+   *  - 'format': Specifies the expected format for the property. One of
+   *    'string' or 'array'.
+   *  - 'default': The default value for the property. This is either a static
+   *    value, or a callable, in which case it must be called with the array of
+   *    component data assembled so far. Depending on the value of 'required',
+   *    this represents either the value that may be presented as a default to
+   *    the user in a UI for convenience, or the value that will be be set if
+   *    nothing is provided when instatiating the component.
+   *  - 'required': Boolean indicating whether this property must be provided.
+   *  - 'options': A list of options for the property. This is a callable, which
+   *    must be called with the component data assembled so far.
+   */
+  abstract protected function componentDataDefinition();
+
+  /**
+   * Get a list of the properties that are required in the component data.
+   *
+   * UIs may use this to present the options to the user. Each property should
+   * be passed to prepareComponentDataProperty(), to set any option lists and
+   * allow defaults to build up incrementally.
+   *
+   * @return
+   *  An array containing information about the properties this component needs
+   *  in its $component_data array. Keys are the names of properties. Each value
+   *  is an array of information for the property. Of interest to UIs calling
+   *  this are:
+   *  - 'label': A human-readable label for the property.
+   *  - 'format': Specifies the expected format for the property. One of
+   *    'string' or 'array'.
+   *  - 'required': Boolean indicating whether this property must be provided.
+   */
+  public function getComponentDataInfo() {
+    $return = array();
+    foreach ($this->componentDataDefinition() as $property_name => $property_info) {
+      if (empty($property_info['computed'])) {
+        $property_info += array(
+          'required' => FALSE,
+          'format' => 'string',
+        );
+
+        $return[$property_name] = $property_info;
+      }
+    }
+
+    return $return;
+  }
+
+  /**
+   * Prepares a property in the component data with default value and options.
+   *
+   * This should be called for each property in the component data info, in the
+   * order given in that array. This allows UIs to present default values to the
+   * user in a progressive manner. For example, the Drush interactive mode may
+   * present a default value for the module human name based on the value the
+   * user has already entered for the machine name.
+   *
+   * @param $property_name
+   *  The name of the property.
+   * @param &$property_info
+   *  The definition for this property, from getComponentDataInfo().
+   *  If the property has options, this will have its 'options' key set, in the
+   *  the format VALUE => LABEL.
+   * @param &$component_data
+   *  An array of component data that is being assembled. This should contain
+   *  property data that has been obtained from the user so far. This will have
+   *  its $property_name key set with the default value for the property,
+   *  which may be calculated based on the existing user data.
+   */
+  public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
+    $component_data_definition = $this->componentDataDefinition();
+
+    // Set options.
+    // This is always a callable if set.
+    if (isset($component_data_definition[$property_name]['options'])) {
+      $options_callback = $component_data_definition[$property_name]['options'];
+      $options = $options_callback($property_info);
+
+      $property_info['options'] = $options;
+    }
+
+    // The default property is either an anonymous function, or
+    // a plain value.
+    if (is_callable($component_data_definition[$property_name]['default'])) {
+      $default_callback = $component_data_definition[$property_name]['default'];
+      $default_value = $default_callback($component_data);
+    }
+    else {
+      $default_value = $component_data_definition[$property_name]['default'];
+    }
+    $component_data[$property_name] = $default_value;
+  }
+
+  /**
+   * Process component data prior to passing it to the generator.
+   *
+   * This performs additional processing that a property may require, and is a
+   * convenience to UIs to save them from repeating it (or having to know about
+   * it).
+   *
+   * @todo Make this set defaults?
+   *
+   * @param $component_data_info
+   *  The complete component data info.
+   * @param &$component_data
+   *  The component data array.
+   */
+  public function processComponentData($component_data_info, &$component_data) {
+    foreach ($component_data_info as $property_name => $property_info) {
+      // Allow each property to apply its processing callback. Note that this
+      // may set or alter other properties in the component data array.
+      if (isset($property_info['processing']) && !empty($component_data[$property_name])) {
+        dp($component_data[$property_name]);
+        $processing_callback = $property_info['processing'];
+
+        $processing_callback($component_data[$property_name], $component_data, $property_info);
+      }
+    }
+  }
+
+}

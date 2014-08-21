@@ -10,7 +10,7 @@ namespace ModuleBuider\Generator;
 /**
  * Component generator: module.
  *
- * This is a base generator: that is, it's one that may act as the initial
+ * This is a root generator: that is, it's one that may act as the initial
  * requested component given to Task\Generate. (In theory, this could also get
  * requested by something else, for example if we wanted Tests to be able to
  * request a testing module, but that's for another day.)
@@ -32,7 +32,7 @@ namespace ModuleBuider\Generator;
  * to add. Generators can be requested by name, with various extra special
  * values which are documented in this class's __construct().
  */
-class Module extends BaseGenerator {
+class Module extends RootComponent {
 
   /**
    * The sanity level this generator requires to operate.
@@ -97,8 +97,140 @@ class Module extends BaseGenerator {
     // are not involved in the UI, such as the module class name.
     $this->getComponentDataDefaultValue($component_data);
 
-    // This method is only here to document the component data.
     parent::__construct($component_name, $component_data);
+  }
+
+  /**
+   * Define the component data this component needs to function.
+   */
+  protected function componentDataDefinition() {
+    $component_data_definition = array(
+      'module_root_name' => array(
+        'label' => 'Module machine name',
+        'default' => 'mymodule',
+        'required' => TRUE,
+      ),
+      'module_readable_name' => array(
+        'label' => 'Module readable name',
+        'default' => function($component_data) {
+          return ucfirst(str_replace('_', ' ', $component_data['module_root_name']));
+        },
+        'required' => FALSE,
+      ),
+      'module_short_description' => array(
+        'label' => 'Module .info file description',
+        'default' => 'TODO: Description of module',
+        'required' => FALSE,
+      ),
+      'module_package' => array(
+        'label' => 'Module .info file package',
+        'default' => NULL,
+        'required' => FALSE,
+      ),
+      'module_dependencies' => array(
+        'label' => 'Module dependencies (space separated list)',
+        'default' => NULL,
+        'required' => FALSE,
+      ),
+      'module_hook_presets' => array(
+        'label' => 'Hook preset groups',
+        'required' => FALSE,
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          /// ARGH how to make format that is good for both UI and drush?
+          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+          $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+          $hook_presets = $mb_task_handler_report_presets->getHookPresets();
+
+          // Stash the hook presets in the property info so the processing
+          // callback doesn't have to repeat the work.
+          $property_info['_presets'] = $hook_presets;
+
+          $options = array();
+          foreach ($hook_presets as $name => $info) {
+            $options[$name] = $info['label'];
+          }
+          return $options;
+        },
+        // The processing callback alters the component data in place, and may
+        // in fact alter another value.
+        'processing' => function($value, &$component_data, &$property_info) {
+          // Get the presets from where the 'options' callback left them.
+          $hook_presets = $property_info['_presets'];
+
+          foreach ($value as $given_preset_name) {
+            if (!isset($hook_presets[$given_preset_name])) {
+              throw new \ModuleBuilderException("Undefined hook preset group $given_preset_name.");
+            }
+            // DX: check the preset is properly defined.
+            if (!is_array($hook_presets[$given_preset_name]['hooks'])) {
+              throw new \ModuleBuilderException("Incorrectly defined hook preset group $given_preset_name.");
+            }
+
+            // Add the preset hooks list to the hooks array in the component
+            // data.
+            $hooks = $hook_presets[$given_preset_name]['hooks'];
+            $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
+            drush_print_r($component_data['hooks']);
+          }
+        }
+      ),
+      'hooks' => array(
+        'label' => 'Hook implementations',
+        'required' => FALSE,
+        'format' => 'array',
+        'processing' => function($value, &$component_data, &$property_info) {
+          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+          $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+          // Get the flat list of hooks, standardized to lower case.
+          $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
+
+          $hooks = array();
+          foreach ($component_data['hooks'] as $hook_name) {
+            // Standardize to lowercase.
+            $hook_name = strtolower($hook_name);
+
+            // By default, accept the short definition of hooks, ie 'boot' for 'hook_boot'.
+            if (isset($hook_definitions["hook_$hook_name"])) {
+              $hooks["hook_$hook_name"] = TRUE;
+            }
+            // Also fall back to allowing full names. This is handy if you're copy-pasting
+            // from an existing module and want the same hooks.
+            // In theory there won't be any clashes; only hook_hook_info() is weird.
+            elseif (isset($hook_definitions[$hook_name])) {
+              $hooks[$hook_name] = TRUE;
+            }
+          }
+
+          $component_data['hooks'] = $hooks;
+        }
+      ),
+
+      // The following defaults are for ease of developing.
+      // Uncomment them to reduce the amount of typing needed for testing.
+      //'hooks' => 'init',
+      //'router_items' => 'path/foo path/bar',
+      // The following properties shouldn't be offered as UI options.
+      'module_camel_case_name' =>  array(
+        // Indicates that this does not need to be obtained from the user, as it
+        // is computed from other properties.
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          $pieces = explode('_', $component_data['module_root_name']);
+          $pieces = array_map('ucfirst', $pieces);
+          return implode('', $pieces);
+        },
+      ),
+    );
+
+    return $component_data_definition;
+  }
+
+  /**
+   * Get the Drupal name for this component, e.g. the module's name.
+   */
+  public function getComponentSystemName() {
+    return $this->component_data['module_root_name'];
   }
 
   /**
