@@ -26,8 +26,8 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * Define the component data this component needs to function.
    *
-   * This returns an array an array of data that defines the component data that
-   * this component should be given to perform its work. This include:
+   * This returns an array of data that defines the component data that
+   * this component should be given to perform its work. This includes:
    *  - data that must be specified by the user
    *  - data that may be specified by the user, but can be computed or take from
    *    defaults
@@ -55,6 +55,8 @@ abstract class RootComponent extends BaseGenerator {
    *  - 'required': Boolean indicating whether this property must be provided.
    *  - 'options': A list of options for the property. This is a callable, which
    *    must be called with the component data assembled so far.
+   *
+   * @see getComponentDataInfo()
    */
   abstract protected function componentDataDefinition();
 
@@ -65,6 +67,9 @@ abstract class RootComponent extends BaseGenerator {
    * be passed to prepareComponentDataProperty(), to set any option lists and
    * allow defaults to build up incrementally.
    *
+   * After all data has been gathered from the user, the completed data array
+   * should be passed to processComponentData().
+   *
    * @return
    *  An array containing information about the properties this component needs
    *  in its $component_data array. Keys are the names of properties. Each value
@@ -74,6 +79,10 @@ abstract class RootComponent extends BaseGenerator {
    *  - 'format': Specifies the expected format for the property. One of
    *    'string' or 'array'.
    *  - 'required': Boolean indicating whether this property must be provided.
+   *
+   * @see componentDataDefinition()
+   * @see prepareComponentDataProperty()
+   * @see processComponentData()
    */
   public function getComponentDataInfo() {
     $return = array();
@@ -94,11 +103,12 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * Prepares a property in the component data with default value and options.
    *
-   * This should be called for each property in the component data info, in the
-   * order given in that array. This allows UIs to present default values to the
-   * user in a progressive manner. For example, the Drush interactive mode may
-   * present a default value for the module human name based on the value the
-   * user has already entered for the machine name.
+   * This should be called for each property in the component data info that is
+   * obtained from getComponentDataInfo(), in the order given in that array.
+   * This allows UIs to present default values to the user in a progressive
+   * manner. For example, the Drush interactive mode may present a default value
+   * for the module human name based on the value the user has already entered
+   * for the machine name.
    *
    * @param $property_name
    *  The name of the property.
@@ -111,6 +121,8 @@ abstract class RootComponent extends BaseGenerator {
    *  property data that has been obtained from the user so far. This will have
    *  its $property_name key set with the default value for the property,
    *  which may be calculated based on the existing user data.
+   *
+   * @see getComponentDataInfo()
    */
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
     $component_data_definition = $this->componentDataDefinition();
