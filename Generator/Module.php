@@ -132,6 +132,13 @@ class Module extends RootComponent {
         'default' => NULL,
         'required' => FALSE,
       ),
+      // If this is given, then hook_help() is automatically added to the list
+      // of required hooks.
+      'module_help_text' => array(
+        'label' => 'Module help text (adds hook_help())',
+        'default' => NULL,
+        'required' => FALSE,
+      ),
       'module_hook_presets' => array(
         'label' => 'Hook preset groups',
         'required' => FALSE,
