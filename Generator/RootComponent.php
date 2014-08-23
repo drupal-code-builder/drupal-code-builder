@@ -163,15 +163,31 @@ abstract class RootComponent extends BaseGenerator {
    *  The component data array.
    */
   public function processComponentData($component_data_info, &$component_data) {
+    // Allow each property to apply its processing callback. Note that this may
+    // set or alter other properties in the component data array.
     foreach ($component_data_info as $property_name => $property_info) {
-      // Allow each property to apply its processing callback. Note that this
-      // may set or alter other properties in the component data array.
       if (isset($property_info['processing']) && !empty($component_data[$property_name])) {
         $processing_callback = $property_info['processing'];
 
         $processing_callback($component_data[$property_name], $component_data, $property_info);
       }
-    }
+    } // processing callback
+
+    // Expand any properties that represent child components to add.
+    // TODO: This is a fairly rough piece of functionality that needs more
+    // thought.
+    foreach ($component_data_info as $property_name => $property_info) {
+      if (isset($property_info['component']) && !empty($component_data[$property_name])) {
+        // Get the component type.
+        $component_type = $property_info['component'];
+
+        // Assume this is always going to be an array property. Each value in
+        // the array is the name of a component.
+        foreach ($component_data[$property_name] as $requested_component_name) {
+          $component_data['requested_components'][$requested_component_name] = $component_type;
+        }
+      }
+    } // expand components
   }
 
 }
