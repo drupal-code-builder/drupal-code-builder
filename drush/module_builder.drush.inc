@@ -260,6 +260,138 @@ function drush_module_builder_callback_build_module() {
     }
   }
 
+  // Extra drush-specific component data info for the module component.
+  // This defines command prefixes and drush options.
+  // This gets merged with the component data info returned from the Module
+  // generator.
+  $component_info_drush_extra = array(
+    'hooks' => array(
+      'command_prefix' => 'hooks',
+    ),
+    'module_hook_presets' => array(
+      'command_prefix' => 'presets',
+    ),
+    'module_readable_name' => array(
+      'drush_option' => 'name',
+    ),
+    'module_short_description' => array(
+      'drush_option' => 'desc',
+    ),
+    'module_help_text' => array(
+      'drush_option' => 'helptext',
+    ),
+    'module_dependencies' => array(
+      'drush_option' => 'dep',
+    ),
+    'module_package' => array(
+      'drush_option' => 'package',
+    ),
+  );
+
+  $component_data_extra = array();
+
+  // Extra component data for the build list and the bare code options.
+  // What to build.
+  $build = drush_get_option('build');
+
+  // write options:
+  // - all -- everything we can do
+  // - code -- code files, not info (module + install _ ..?)
+  // - info -- only info fole
+  // - module -- only module file
+  // - install -- only install file
+  // - ??? whatever hooks need
+
+  // No build: set nice default.
+  if (!$build) {
+    // If we are adding, 'code' is implied
+    if (drush_get_option('add')) {
+      $build = 'code';
+    }
+    // If we are writing or going, all.
+    elseif (drush_get_option(array('write', 'go'))) {
+      $build = 'all';
+    }
+    // Otherwise, outputting to terminal: only module
+    else {
+      $build = 'code';
+    }
+  }
+
+  //print_r($build);
+
+  // Make a list out of the build option string. This may of course have only
+  // one item in it.
+  $build_list = explode(' ', $build);
+
+  // Multi build: set a single string to switch on below.
+  if (count($build_list) > 1) {
+    $build = 'code';
+  }
+
+  // Set the build list in the module data.
+  // TODO: move all the above to a helper function!
+  $component_data_extra['requested_build'] = array_fill_keys($build_list, TRUE);
+
+  //print_r($build_list);
+
+  // The 'bare code' option. This doesn't fully work yet, as 'add' doesn't
+  // fully work yet! TODO!
+  $bare_code = drush_get_option('add');
+  $component_data_extra['bare_code'] = $bare_code;
+
+  // Insert the 'hooks' prefix into the commands array, after the module name.
+  // This privileges the hooks: they don't need a prefix and all commands up to
+  // another prefix are taken to be hooks.
+  array_splice($commands, 1, 0, 'hooks:');
+
+  // Call the main function to do the work of gathering data from the user and
+  // building the files and optionally writing them.
+  drush_module_builder_build_component($commands, 'module', $component_info_drush_extra, $component_data_extra);
+
+  // Enable the module if requested.
+  if (drush_get_option('go')) {
+    pm_module_manage(array(array_shift($commands)), TRUE);
+  }
+
+  return;
+  // ==================== Old code below.
+
+
+
+
+  // Check settings before we start. This sort of wastes the potential of using
+  // exceptions, but it's polite to warn the user of problems before they've
+  // spent ages typing in all the hook names in interactive mode.
+  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+
+  // Get our task handler. This performs a sanity check on the environment which
+  // throws an exception.
+  try {
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+  }
+  catch (ModuleBuilderException $e) {
+    // If the problem is that the hooks need downloading, we can recover from this.
+    if ($e->needs_hooks_download) {
+      if (drush_confirm(dt('No hook definitions found. Would you like to download them now?'))) {
+        // Download the hooks so we can move on.
+        $success = drush_module_builder_callback_hook_download();
+        if (!$success) {
+          drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hook data.');
+          return;
+        }
+
+        // Get the task handler that we were trying to get in the first place.
+        $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+      }
+    }
+    // Otherwise, fail.
+    else {
+      drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
+      return;
+    }
+  }
+
   // Build the module data.
   $module_data = module_builder_build_data($commands, $mb_task_handler_generate);
 
@@ -466,18 +598,33 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
     }
   }
 
-  // TODO!
-  // Temporary code specific to modules.
-  $component_info_drush_extra = array(
-    'hooks' => array(
-      'command_prefix' => 'hooks',
-    ),
-    'module_hook_presets' => array(
-      'command_prefix' => 'presets',
-    ),
-  );
-  // TODO! Move the above.
+  drush_module_builder_build_component($commands, $component_type);
+}
 
+/**
+ * Workhorse for various Drush command callbacks.
+ *
+ * @param $commands
+ *  The commands array; the original parameters from the Drush command callback.
+ * @param $component_type
+ *  The component type, e.g., 'module'.
+ * @param $component_info_drush_extra = array()
+ *  An array to merge into the component data info array. This may may contains
+ *  additional information specific to drush. Possible keys for each property
+ *  info array are:
+ *    - 'command_prefix': A string that when suffixed with ':' acts as a marker
+ *      for this property in the commands array. All commands after this marker
+ *      taken as data for this property, until another marker is found or until
+ *      the end of the commands array. For example, the following list of
+ *      commands contains hooks and hook presets:
+ *      'hooks: menu init presets: node field-widget'
+ *    - 'drush_option': A string giving the drush option to take this property's
+ *      value from.
+ * @param $component_data = array()
+ *  Initial component data, into which data obtained from the user will be
+ *  added. Command callbacks may wish to gather extra data, or add defaults.
+ */
+function drush_module_builder_build_component($commands, $component_type, $component_info_drush_extra = array(), $component_data = array()) {
   // Get the module builder factory, set up for our environment.
   $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
 
@@ -526,9 +673,16 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
   }
   //drush_print_r($prefixed_commands);
 
-  // Build the component data array from the given commands.
-  $component_data = array();
+  // Determine whether we're in interactive mode.
+  $interactive = !drush_get_option(array('non-interactive', 'noi'));
 
+  // This is a shortcut for developing, if you have --noi forced in your drush
+  // config and need to switch back to interactive for testing.
+  if (drush_get_option(array('interactive'))) {
+    $interactive = TRUE;
+  }
+
+  // Build the component data array from the given commands.
   // Work through the component data info, assembling the component data array
   // Each property info needs to be prepared, so iterate by reference.
   foreach ($component_data_info as $property_name => &$property_info) {
@@ -627,9 +781,6 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
   // Perform any final processing on the component data.
   // This prepares data, for example expands options such as hook presets.
   $root_generator->processComponentData($component_data_info, $component_data);
-
-  // Temporary! TODO!
-  $component_data['requested_build'] = array('all' => TRUE);
   //drush_print_r($component_data);
 
   // Generate the component.
@@ -644,10 +795,6 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
   // Finally, output the files!
   foreach ($files as $filename => $code) {
     module_builder_drush_output_code($component_dir, $filename, $code);
-  }
-
-  if (drush_get_option('go')) {
-    pm_module_manage(array(array_shift($commands)), TRUE);
   }
 }
 
