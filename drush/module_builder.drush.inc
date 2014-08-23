@@ -689,92 +689,92 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     // Prepare the single property: get options, default value, etc.
     $root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
 
+    // Initialize our value as empty. We try various things to set it.
+    $value = NULL;
+
     // If the property is required, and there are plain command parameters
     // remaining, take one of those.
     if ($property_info['required'] && $plain_commands) {
       $value = array_shift($plain_commands);
       //drush_print_r("taking $property_name from commands as $value");
-
-      $component_data[$property_name] = $value;
-
-      // Done.
-      continue;
     }
 
     // If the property has a prefix, and the commands included that prefix,
     // then take the commands for that prefix.
-    if (isset($property_info['command_prefix']) && !empty($prefixed_commands[$property_info['command_prefix']])) {
-      $component_data[$property_name] = $prefixed_commands[$property_info['command_prefix']];
+    if (empty($value) && isset($property_info['command_prefix']) && !empty($prefixed_commands[$property_info['command_prefix']])) {
+      $value = $prefixed_commands[$property_info['command_prefix']];
       //drush_print_r("taking $property_name from prefixed commands");
-
-      continue;
     }
 
     // If the property can be set with a command-line option, check that.
-    if (isset($property_info['drush_option'])) {
+    if (empty($value) && isset($property_info['drush_option'])) {
       $drush_option_value = drush_get_option($property_info['drush_option']);
       if (!empty($drush_option_value)) {
-        $component_data[$property_name] = $drush_option_value;
-
-        continue;
+        $value = $drush_option_value;
       }
     }
 
     // If we're not in interactive mode, there's nothing more to do for this
     // command other than use the default value. That's already set in the
     // component data.
-    if (!$interactive) {
-      continue;
-    }
 
-    // Show the user the available options.
-    $numeric_options = FALSE;
-    if (isset($property_info['options'])) {
-      $numeric_options = TRUE;
-      $option_by_index = array();
-      $i = 1;
-      foreach ($property_info['options'] as $option => $label) {
-        $option_by_index[$i] = $option;
-        drush_print("[$i] $option: $label", 2);
+    if (empty($value) && $interactive) {
+      // Show the user the available options.
+      $numeric_options = FALSE;
+      if (isset($property_info['options'])) {
+        $numeric_options = TRUE;
+        $option_by_index = array();
+        $i = 1;
+        foreach ($property_info['options'] as $option => $label) {
+          $option_by_index[$i] = $option;
+          drush_print("[$i] $option: $label", 2);
 
-        $i++;
+          $i++;
+        }
+      }
+
+      $prompt = "Enter the {$property_info['label']}";
+      if ($property_info['format'] == 'array') {
+        $prompt .= ' ' . "(space separated list)";
+      }
+
+      $value = drush_prompt($prompt, $component_data[$property_name], $property_info['required']);
+
+      // Split up the value if it should be an array.
+      if ($property_info['format'] == 'array') {
+        $value = preg_split('/\s+/', $value, -1,  PREG_SPLIT_NO_EMPTY);
+      }
+
+      // Callback to convert a value given as an index in a list of options into
+      // the actual option value.
+      $convert_index_to_value_callback = function($item) use ($option_by_index) {
+        if (is_numeric($item)) {
+          return $option_by_index[$item];
+        }
+        else {
+          return $item;
+        }
+      };
+
+      // Convert a numeric option index value into the actual option value.
+      if ($numeric_options) {
+        // We have either an array of values or a single one.
+        if (is_array($value)) {
+          $value = array_map($convert_index_to_value_callback, $value);
+        }
+        else {
+          $value = $convert_index_to_value_callback($value);
+        }
       }
     }
 
-    $prompt = "Enter the {$property_info['label']}";
-    if ($property_info['format'] == 'array') {
-      $prompt .= ' ' . "(space separated list)";
+    // Perform any processing specific to drush.
+    if (isset($property_info['drush_value_process'])) {
+      $callback = $property_info['drush_value_process'];
+      $value = $callback($value);
     }
 
-    $value = drush_prompt($prompt, $component_data[$property_name], $property_info['required']);
-
-    // Split up the value if it should be an array.
-    if ($property_info['format'] == 'array') {
-      $value = preg_split('/\s+/', $value, -1,  PREG_SPLIT_NO_EMPTY);
-    }
-
-    // Callback to convert a value given as an index in a list of options into
-    // the actual option value.
-    $convert_index_to_value_callback = function($item) use ($option_by_index) {
-      if (is_numeric($item)) {
-        return $option_by_index[$item];
-      }
-      else {
-        return $item;
-      }
-    };
-
-    // Convert a numeric option index value into the actual option value.
-    if ($numeric_options) {
-      // We have either an array of values or a single one.
-      if (is_array($value)) {
-        $value = array_map($convert_index_to_value_callback, $value);
-      }
-      else {
-        $value = $convert_index_to_value_callback($value);
-      }
-    }
-
+    // Set the value in the component data array.
     $component_data[$property_name] = $value;
   }
 
