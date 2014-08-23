@@ -626,9 +626,14 @@ function drush_module_builder_build_component($commands, $component_type, $compo
         }
       }
 
+      // Make a prompt string, letting the user know if the input is optional
+      // so they don't waste time typing.
       $prompt = "Enter the {$property_info['label']}";
       if ($property_info['format'] == 'array') {
         $prompt .= ' ' . "(space separated list)";
+      }
+      if (empty($property_info['required']) && empty($component_data[$property_name])) {
+        $prompt .= ' ' . "(optional)";
       }
 
       $value = drush_prompt($prompt, $component_data[$property_name], $property_info['required']);
