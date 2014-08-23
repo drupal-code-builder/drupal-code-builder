@@ -212,6 +212,15 @@ class Module extends RootComponent {
           $component_data['hooks'] = $hooks;
         }
       ),
+      'router_items' => array(
+        'label' => "required router paths, eg 'path/foo'",
+        'required' => FALSE,
+        'format' => 'array',
+        // This tells the system that this is a request for generator
+        // components, and the input data should be placed in a nested array in
+        // the module data.
+        'component' => 'RouterItem',
+      ),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
