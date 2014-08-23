@@ -25,10 +25,6 @@ class Profile extends RootComponent {
   public $sanity_level = 'none';
 
   function __construct($component_name, $component_data = array()) {
-    // Fill in all defaults. This allows default values to be set here that
-    // are not involved in the UI, such as the module class name.
-    $this->getComponentDataDefaultValue($component_data);
-
     parent::__construct($component_name, $component_data);
   }
 

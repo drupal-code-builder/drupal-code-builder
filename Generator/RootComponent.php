@@ -151,11 +151,10 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * Process component data prior to passing it to the generator.
    *
-   * This performs additional processing that a property may require, and is a
-   * convenience to UIs to save them from repeating it (or having to know about
-   * it).
-   *
-   * @todo Make this set defaults?
+   * Performs final processing for the component data:
+   *  - sets default values on empty properties
+   *  - performs additional processing that a property may require
+   *  - expand properties that represent child components.
    *
    * @param $component_data_info
    *  The complete component data info.
@@ -163,6 +162,23 @@ abstract class RootComponent extends BaseGenerator {
    *  The component data array.
    */
   public function processComponentData($component_data_info, &$component_data) {
+    // Set defaults for properties that don't have a value yet.
+    // TODO: refactor this with code in prepareComponentDataProperty().
+    foreach ($component_data_info as $property_name => $property_info) {
+      if (!empty($component_data[$property_name])) {
+        continue;
+      }
+
+      if (is_callable($property_info['default'])) {
+        $default_callback = $property_info['default'];
+        $default_value = $default_callback($component_data);
+      }
+      else {
+        $default_value = $property_info['default'];
+      }
+      $component_data[$property_name] = $default_value;
+    }
+
     // Allow each property to apply its processing callback. Note that this may
     // set or alter other properties in the component data array.
     foreach ($component_data_info as $property_name => $property_info) {

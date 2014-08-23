@@ -93,10 +93,6 @@ class Module extends RootComponent {
    *      names of the ModuleCodeFile type components that Hooks adds.
    */
   function __construct($component_name, $component_data = array()) {
-    // Fill in all defaults. This allows default values to be set here that
-    // are not involved in the UI, such as the module class name.
-    $this->getComponentDataDefaultValue($component_data);
-
     parent::__construct($component_name, $component_data);
   }
 
@@ -247,81 +243,6 @@ class Module extends RootComponent {
    */
   public function getComponentSystemName() {
     return $this->component_data['module_root_name'];
-  }
-
-  /**
-   * Set a default value for a property in the component data array.
-   *
-   * This should be implemented by entry components. It is for use by UIs that
-   * want to present default values to the user in a progressive manner. For
-   * example, the Drush interactive mode may present a default value for the
-   * module human name based on the value the user has already entered for the
-   * machine name.
-   *
-   * To get the full benefit of this, it is important to call this function
-   * in the correct order, as given by the array of values in the function.
-   *
-   * @param $component_data
-   *  The array of component data assembled so far, passed by reference. The
-   *  default value will get set at $property_name, if a default is available.
-   * @param $property_name
-   *  (optional) The name of a property in $component_data to get a default
-   *  value for. If omitted, all existing default values will be merged in.
-   */
-  public function getComponentDataDefaultValue(&$component_data, $property_name = NULL) {
-    // The default values that this component provides.
-    // This may use anonymous functions for default values that rely on other
-    // values in the component data, including ones which may not be set when
-    // we come here for earlier values. This may seem like over-engineering,
-    // but it means that we don't need to repeat the list of property names.
-    // Note that values can only depend on values earlier in the array.
-    $default_values = array(
-      'module_root_name' => 'mymodule',
-      'module_readable_name' => function($component_data) {
-        return ucfirst(str_replace('_', ' ', $component_data['module_root_name']));
-      },
-      'module_short_description' => 'TODO: Description of module',
-      // The following defaults are for ease of developing.
-      // Uncomment them to reduce the amount of typing needed for testing.
-      //'hooks' => 'init',
-      //'router_items' => 'path/foo path/bar',
-      // The following properties shouldn't be offered as UI options.
-      'module_camel_case_name' => function($component_data) {
-        $pieces = explode('_', $component_data['module_root_name']);
-        $pieces = array_map('ucfirst', $pieces);
-        return implode('', $pieces);
-      },
-    );
-
-    if (isset($property_name)) {
-      // Don't clobber existing values; only set a default if there is nothing
-      // already present for that property.
-      if (!isset($component_data[$property_name]) && isset($default_values[$property_name])) {
-        // The default value in the array is either an anonymous function, or
-        // a plain value.
-        if (is_callable($default_values[$property_name])) {
-          $default_value = $default_values[$property_name]($component_data);
-        }
-        else {
-          $default_value = $default_values[$property_name];
-        }
-
-        $component_data[$property_name] = $default_value;
-      }
-      return;
-    }
-    else {
-      // If the property name isn't given, we're being asked to merge in all
-      // defaults that we know about. Call ourselves recursively for all the
-      // property names.
-      $property_names = array_keys($default_values);
-      foreach ($property_names as $property_name) {
-        $this->getComponentDataDefaultValue($component_data, $property_name);
-      }
-
-      // This is just for visual symmetry with the other clause.
-      return;
-    }
   }
 
   /**
