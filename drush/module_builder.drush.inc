@@ -289,6 +289,9 @@ function drush_module_builder_callback_build_module() {
     'module_package' => array(
       'drush_option' => 'package',
     ),
+    'router_items' => array(
+      'command_prefix' => 'routes',
+    ),
   );
 
   $component_data_extra = array();
