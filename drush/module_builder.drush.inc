@@ -556,6 +556,16 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
       continue;
     }
 
+    // If the property can be set with a command-line option, check that.
+    if (isset($property_info['drush_option'])) {
+      $drush_option_value = drush_get_option($property_info['drush_option']);
+      if (!empty($drush_option_value)) {
+        $component_data[$property_name] = $drush_option_value;
+
+        continue;
+      }
+    }
+
     // If we're not in interactive mode, there's nothing more to do for this
     // command other than use the default value. That's already set in the
     // component data.
