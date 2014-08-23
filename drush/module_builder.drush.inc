@@ -54,8 +54,11 @@ function module_builder_drush_command() {
     'description' => "Generate the code for a new Drupal module, including file headers and hook implementations.",
     'arguments' => array(
       'module name' => "The machine name of the module. Use '.' to specify the current folder name.",
-      'hooks' => "Short names of hooks, separated by spaces. Hook preset groups can be specific with an initial '@', eg '@block'.",
-      ':routes' => "Menu paths, separated by spaces. Use the ':routes' marker to separate this from prior commands, eg 'mymodule hook_a hook_b :routes module/path module/otherpath'.",
+      'hooks' => "Short names of hooks, separated by spaces.",
+      'presets:' => "Names of preset groups of hooks, e.g., 'block'." . "\n" .
+        "Use the 'presets:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b presets: block'.",
+      'routes:' => "Menu paths, separated by spaces. " . "\n" .
+        "Use the 'routes:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b routes: module/path module/otherpath'.",
     ),
     // Commented out, as only the first argument is required.
     // TODO: figure out how to specify this!
