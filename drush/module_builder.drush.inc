@@ -638,7 +638,10 @@ function drush_module_builder_build_component($commands, $component_type, $compo
         $prompt .= ' ' . "(optional)";
       }
 
-      $value = drush_prompt($prompt, $component_data[$property_name], $property_info['required']);
+      // Turn empty defaults into a value that Drush won't output.
+      $default = empty($component_data[$property_name]) ? NULL : $component_data[$property_name];
+
+      $value = drush_prompt($prompt, $default, $property_info['required']);
 
       // Split up the value if it should be an array.
       if ($property_info['format'] == 'array') {
