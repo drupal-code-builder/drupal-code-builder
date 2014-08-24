@@ -273,6 +273,8 @@ function drush_module_builder_callback_build_module() {
     ),
     'hooks' => array(
       'command_prefix' => 'hooks',
+      // The list is huge, so bypass showing the options.
+      'drush_no_option_list' => TRUE,
     ),
     'module_hook_presets' => array(
       'command_prefix' => 'presets',
@@ -612,9 +614,9 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     // component data.
 
     if (empty($value) && $interactive) {
-      // Show the user the available options.
+      // Show the user the available options, unless told not to.
       $numeric_options = FALSE;
-      if (isset($property_info['options'])) {
+      if (isset($property_info['options']) && empty($property_info['drush_no_option_list'])) {
         $numeric_options = TRUE;
         $option_by_index = array();
         $i = 1;
