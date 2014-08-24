@@ -27,14 +27,6 @@ function module_builder_admin_settings($form, &$form_state) {
     '#default_value' => variable_get('module_builder_write_directory', 'modules'),
   );
 
-  $form['module_builder_header'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Module header'),
-    '#description' => t('This is the code that will be displayed at the top of your module file.'),
-    '#rows' => 15,
-    '#default_value' => variable_get('module_builder_header', MODULE_BUILDER_HEADER_DEFAULT),
-    // TODO: kill MODULE_BUILDER_HEADER_DEFAULT
-  );
   $form['module_builder_footer'] = array(
     '#type' => 'textarea',
     '#title' => t('Module footer'),
