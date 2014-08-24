@@ -176,12 +176,20 @@ class Module extends RootComponent {
             $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
             drush_print_r($component_data['hooks']);
           }
-        }
+        },
       ),
       'hooks' => array(
         'label' => 'Hook implementations',
         'required' => FALSE,
         'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+          $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+
+          $hook_options = $mb_task_handler_report_hooks->listHookNamesOptions();
+
+          return $hook_options;
+        },
         'processing' => function($value, &$component_data, &$property_info) {
           $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
           $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
