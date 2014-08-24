@@ -136,16 +136,19 @@ abstract class RootComponent extends BaseGenerator {
       $property_info['options'] = $options;
     }
 
-    // The default property is either an anonymous function, or
-    // a plain value.
-    if (is_callable($component_data_definition[$property_name]['default'])) {
-      $default_callback = $component_data_definition[$property_name]['default'];
-      $default_value = $default_callback($component_data);
+    // Set a default value, if one is available.
+    if (isset($component_data_definition[$property_name]['default'])) {
+      // The default property is either an anonymous function, or
+      // a plain value.
+      if (is_callable($component_data_definition[$property_name]['default'])) {
+        $default_callback = $component_data_definition[$property_name]['default'];
+        $default_value = $default_callback($component_data);
+      }
+      else {
+        $default_value = $component_data_definition[$property_name]['default'];
+      }
+      $component_data[$property_name] = $default_value;
     }
-    else {
-      $default_value = $component_data_definition[$property_name]['default'];
-    }
-    $component_data[$property_name] = $default_value;
   }
 
   /**
