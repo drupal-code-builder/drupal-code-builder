@@ -110,6 +110,9 @@ abstract class RootComponent extends BaseGenerator {
    * for the module human name based on the value the user has already entered
    * for the machine name.
    *
+   * The default value is placed into the $component_data array; the options are
+   * placed into $property_info['options'].
+   *
    * @param $property_name
    *  The name of the property.
    * @param &$property_info
