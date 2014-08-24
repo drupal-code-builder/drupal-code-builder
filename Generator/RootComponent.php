@@ -125,29 +125,31 @@ abstract class RootComponent extends BaseGenerator {
    * @see getComponentDataInfo()
    */
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    $component_data_definition = $this->componentDataDefinition();
-
     // Set options.
     // This is always a callable if set.
-    if (isset($component_data_definition[$property_name]['options'])) {
-      $options_callback = $component_data_definition[$property_name]['options'];
+    if (isset($property_info['options'])) {
+      $options_callback = $property_info['options'];
       $options = $options_callback($property_info);
 
       $property_info['options'] = $options;
     }
 
     // Set a default value, if one is available.
-    if (isset($component_data_definition[$property_name]['default'])) {
+    if (isset($property_info['default'])) {
       // The default property is either an anonymous function, or
       // a plain value.
-      if (is_callable($component_data_definition[$property_name]['default'])) {
-        $default_callback = $component_data_definition[$property_name]['default'];
+      if (is_callable($property_info['default'])) {
+        $default_callback = $property_info['default'];
         $default_value = $default_callback($component_data);
       }
       else {
-        $default_value = $component_data_definition[$property_name]['default'];
+        $default_value = $property_info['default'];
       }
       $component_data[$property_name] = $default_value;
+    }
+    else {
+      // Always set the property name, even if it's something basically empty.
+      $component_data[$property_name] = $property_info['format'] == 'array' ? array() : NULL;
     }
   }
 
