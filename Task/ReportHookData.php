@@ -78,7 +78,7 @@ class ReportHookData extends ReportHookDataFolder {
   }
 
   /**
-   * Get hooks as a list of options.
+   * Get hooks as a list of nested options.
    *
    * @return
    *   An array of hooks as options suitable for FormAPI, where each key is a
@@ -89,7 +89,7 @@ class ReportHookData extends ReportHookDataFolder {
 
     $return = array();
     foreach ($data as $hook_name => $hook_info) {
-      $return[$hook_name] = $hook_info['description'];
+      $return[$hook_info['group']][$hook_name] = $hook_info['description'];
     }
 
     return $return;

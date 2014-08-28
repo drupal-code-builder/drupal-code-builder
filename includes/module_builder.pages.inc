@@ -61,9 +61,11 @@ function module_builder_page_input($form, &$form_state) {
   // Get a MB factory.
   $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
 
-  // Get our task handler, which checks hook data is ready.
+  // Get our task handler, which checks hook data is ready, and our generate
+  // handler, from which to get the list of properties to collect.
   try {
     $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
   }
   catch (ModuleBuilderException $e) {
     if ($e->needs_hooks_download) {
@@ -79,6 +81,136 @@ function module_builder_page_input($form, &$form_state) {
       return $form;
     }
   }
+
+  $root_generator = $mb_task_handler_generate->getRootGenerator();
+
+  // Get the component data info.
+  $component_data_info = $root_generator->getComponentDataInfo();
+
+  $component_data = array();
+
+  // Work through the component data info, assembling the component data array
+  // Each property info needs to be prepared, so iterate by reference.
+  foreach ($component_data_info as $property_name => &$property_info) {
+    // Prepare the single property: get options, default value, etc.
+    $root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
+    //dsm($component_data, $property_name);
+
+    $element = array(
+      '#title' => $property_info['label'],
+      '#default_value' => $component_data[$property_name],
+      '#required' => $property_info['required'],
+    );
+
+    // The type of the form element depends on the format of the component data
+    // property.
+    if ($property_info['format'] == 'array') {
+      if (isset($property_info['options'])) {
+        $element['#type'] = 'checkboxes';
+        $element['#options'] = $property_info['options'];
+      }
+      else {
+        $element['#type'] = 'textarea';
+        $element['#description'] = t("Enter one item per line.");
+      }
+    }
+    else {
+      $element['#type'] = 'textfield';
+    }
+
+    // Ajax. WIP!
+    //$element['#ajax']['callback'] = 'module_builder_builder_form_ajax';
+
+    $form[$property_name] = $element;
+  }
+
+  // Get the hook names for the presets for our Javascript to work with.
+  $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+  $hook_presets = $mb_task_handler_report_presets->getHookPresets();
+  foreach ($hook_presets as $hook_preset_name => $hook_preset_data) {
+    // Build a reverse array whose keys are hooks and values are arrays
+    // of one of more preset names.
+    // This allows us further down the line to put classes on each hook
+    // checkbox for the presets they belong to: this is what the JS then uses.
+    foreach ($hook_preset_data['hooks'] as $hook) {
+      $hook_presets_reverse[$hook][] = "preset-$hook_preset_name";
+    }
+  }
+  //dsm($hook_presets_reverse);
+
+  // Rework the hooks form element into fieldsets with checkboxes.
+  $hook_groups = $component_data_info['hooks']['options'];
+  $form['hooks'] = array(
+    '#title' => t('Use the following specific hooks'),
+    '#tree' => TRUE,
+  );
+  foreach ($hook_groups as $hook_group => $hooks) {
+    $form['hooks'][$hook_group] = array(
+      '#type' => 'fieldset',
+      '#title' => $hook_group . ' hooks',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      //'#theme'  => 'module_builder_hook_list',
+      '#tree' => TRUE,
+    );
+    foreach ($hooks as $hook_name => $hook_description) {
+      $form['hooks'][$hook_group][$hook_name] = array(
+        '#type' => 'checkbox',
+        '#title' => $hook_name,
+        '#description' => $hook_description,
+        '#repopulate' => TRUE,
+
+        // TODO: For some reason this gives me some wacky error under PHP 5:
+        // Fatal error: Cannot use string offset as an array
+        //'#default_value' => $edit['hooks'][$hook_group][$hook],
+
+        // TODO: I would *like* to do something like the following, so some of the long
+        // descriptions don't totally mangle the page output, but need a way to do like
+        // a "onmouseover" effect to display the full thing. Note that 'title' is not
+        // a valid attribute for divs. :\
+        //'#description' => truncate_utf8($hook_description, 40, TRUE, TRUE),
+
+      );
+      // If this hook belongs to any presets, add the classes to it for the
+      // Javascript to find.
+      if (isset($hook_presets_reverse[$hook_name])) {
+        $form['hooks'][$hook_group][$hook_name]['#attributes'] = array(
+          'class' => $hook_presets_reverse[$hook_name],
+        );
+      }
+
+      // Set some default hooks
+      if ($hook_name == 'hook_menu') {
+        $form['hooks'][$hook_group][$hook_name]['#default_value'] = 1;
+      }
+    }
+    // Sort list alphabetically
+    ksort($form['hooks'][$hook_group]);
+  }
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'module_builder') . '/theme/module_builder.js',
+  );
+
+  // Include CSS for formatting
+  drupal_add_css(drupal_get_path('module', 'module_builder') . '/theme/module_builder.css');
+
+  // Mark form as fresh to enable JS clearing of fields with sample text.
+  // TODO: multiform re-fill may work differently on D7.
+  // Failing that, look into ctools?
+  $form['#attributes'] = array('class' => 'fresh');
+
+  $form['generate_module'] = array(
+    '#type' => 'submit',
+    '#name' => 'generate',
+    '#value' => t('Generate'),
+  );
+  $form['#submit'] = array('module_builder_page_input_submit');
+
+  //dsm($form);
+  return $form;
+
+  // ================================ Old form code below.
 
   /*
   // built some default values.
@@ -432,6 +564,9 @@ function module_data_from_form($form_values) {
   foreach ($form_values['hooks'] as $hook_group) {
     $module_data['hooks'] += $hook_group;
   }
+
+  // Routes need splitting.
+  $module_data['router_items'] = preg_split("@\s*\n\s*@", $module_data['router_items']);
 
   // Build list.
   // The UI always gets the full code.
