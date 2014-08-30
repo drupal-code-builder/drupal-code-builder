@@ -79,7 +79,6 @@ class HookMenu extends HookImplementation {
         // These have to be a code string, not an actual array!
         'page arguments' => "array()",
         'access arguments' => "array('access content')",
-        'type' => 'MENU_SUGGESTED_ITEM',
       );
 
       $code[] = "£items['$menu_item_data[path]'] = array(";
@@ -89,8 +88,10 @@ class HookMenu extends HookImplementation {
       $code[] = "  'page arguments' => {$menu_item_data['page arguments']},";
       // This is an array, so not quoted.
       $code[] = "  'access arguments' => {$menu_item_data['access arguments']},";
-      // The type is a constant, so is not quoted.
-      $code[] = "  'type' => $menu_item_data[type],";
+      if (isset($menu_item_data['type'])) {
+        // The type is a constant, so is not quoted.
+        $code[] = "  'type' => $menu_item_data[type],";
+      }
       $code[] = ");";
     }
 
