@@ -114,6 +114,9 @@ function module_builder_page_input($form, &$form_state) {
         $element['#description'] = t("Enter one item per line.");
       }
     }
+    elseif ($property_info['format'] == 'boolean') {
+      $element['#type'] = 'checkbox';
+    }
     else {
       $element['#type'] = 'textfield';
     }
