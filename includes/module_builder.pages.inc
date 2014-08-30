@@ -537,7 +537,7 @@ function module_builder_page_generate($form, &$form_state) {
     $form['module_code_'  . $filename] = array(
       '#type' => 'textarea',
       '#title' => t($filename .' code'),
-      '#rows' => 20,
+      '#rows' => count(explode("\n", $code)),
       '#default_value' => $code,
       '#prefix' => '<div class="module-code">',
       '#suffix' => '</div>',
