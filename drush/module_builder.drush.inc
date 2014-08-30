@@ -59,6 +59,7 @@ function module_builder_drush_command() {
         "Use the 'presets:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b presets: block'.",
       'routes:' => "Menu paths, separated by spaces. " . "\n" .
         "Use the 'routes:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b routes: module/path module/otherpath'.",
+      'settings_form!' => "Add this argument to add a settings form to the module.",
     ),
     // Commented out, as only the first argument is required.
     // TODO: figure out how to specify this!
