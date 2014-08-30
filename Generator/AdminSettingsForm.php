@@ -44,6 +44,7 @@ class AdminSettingsForm extends Form {
       "  '#required' => TRUE,",
       ");",
       "",
+      "// TODO! You probably don't need validation or submit handlers if using system_settings_form().",
       "return system_settings_form(£form);",
     );
 
