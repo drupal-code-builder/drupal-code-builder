@@ -207,10 +207,18 @@ abstract class RootComponent extends BaseGenerator {
         // Get the component type.
         $component_type = $property_info['component'];
 
-        // Assume this is always going to be an array property. Each value in
-        // the array is the name of a component.
-        foreach ($component_data[$property_name] as $requested_component_name) {
-          $component_data['requested_components'][$requested_component_name] = $component_type;
+        switch ($property_info['format']) {
+          case 'array':
+            // Each value in the array is the name of a component.
+            foreach ($component_data[$property_name] as $requested_component_name) {
+              $component_data['requested_components'][$requested_component_name] = $component_type;
+            }
+            break;
+          case 'boolean':
+            // The component type can only occur once and therefore the name is
+            // the same as the type.
+            $component_data['requested_components'][$component_type] = $component_type;
+            break;
         }
       }
     } // expand components
