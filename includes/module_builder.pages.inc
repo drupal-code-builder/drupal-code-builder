@@ -599,7 +599,7 @@ function module_data_from_form($form, $form_values, $component_data_info) {
   // Hooks need flattening.
   $module_data['hooks'] = array();
   foreach ($form_values['hooks'] as $hook_group) {
-    $module_data['hooks'] += $hook_group;
+    $module_data['hooks'] += array_keys(array_filter($hook_group));
   }
 
   // Build list.
@@ -608,6 +608,11 @@ function module_data_from_form($form, $form_values, $component_data_info) {
 
   // Generic processing.
   foreach ($component_data_info as $property_name => $property_info) {
+    // Skip hooks, they got handled specially.
+    if ($property_name == 'hooks') {
+      continue;
+    }
+
     if ($property_info['format'] == 'array') {
       if (isset($property_info['options'])) {
         // Anything with options needs to have the crud filtered out.
