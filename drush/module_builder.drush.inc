@@ -540,13 +540,17 @@ function drush_module_builder_build_component($commands, $component_type, $compo
   $component_data_info = array_merge_recursive($component_data_info, $component_info_drush_extra);
   //drush_print_r($component_data_info);
 
-  // Split any prefixed commands off into a nested array.
+  // Split the commands array into:
+  //  - plain commands
+  //  - a nested array of prefixed commands
+  //  - an array of boolean flags.
   // E.g. given 'foo bar hooks: biz presets: bax', we want:
   //  - $commands as just 'foo bar'
   //  - hooks as 'biz'
   //  - presets as 'bax'
   $plain_commands     = array();
   $prefixed_commands  = array();
+  $boolean_commands   = array();
   foreach ($commands as $command) {
     if (substr($command, -1) == ':') {
       // This is a preset marker.
@@ -554,6 +558,14 @@ function drush_module_builder_build_component($commands, $component_type, $compo
 
       // Set the array up and move on.
       $prefixed_commands[$prefix_marker] = array();
+      continue;
+    }
+
+    if (substr($command, -1) == '!') {
+      // This is a boolean flag.
+      $boolean_flag = substr($command, 0, -1);
+
+      $boolean_commands[$boolean_flag] = TRUE;
       continue;
     }
 
@@ -609,6 +621,13 @@ function drush_module_builder_build_component($commands, $component_type, $compo
       }
     }
 
+    // Boolean commands.
+    if ($property_info['format'] == 'boolean') {
+      if (isset($boolean_commands[$property_name])) {
+        $value = TRUE;
+      }
+    }
+
     // If we're not in interactive mode, there's nothing more to do for this
     // command other than use the default value. That's already set in the
     // component data.
@@ -631,8 +650,13 @@ function drush_module_builder_build_component($commands, $component_type, $compo
       // Make a prompt string, letting the user know if the input is optional
       // so they don't waste time typing.
       $prompt = "Enter the {$property_info['label']}";
-      if ($property_info['format'] == 'array') {
-        $prompt .= ' ' . "(space separated list)";
+      switch ($property_info['format']) {
+        case 'array':
+          $prompt .= ' ' . "(space separated list)";
+          break;
+        case 'boolean':
+          $prompt .= ' ' . "(y/n)";
+          break;
       }
       if (empty($property_info['required']) && empty($component_data[$property_name])) {
         $prompt .= ' ' . "(optional)";
