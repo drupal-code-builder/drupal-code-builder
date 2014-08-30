@@ -103,7 +103,7 @@ class Module extends RootComponent {
     $component_data_definition = array(
       'module_root_name' => array(
         'label' => 'Module machine name',
-        'default' => 'mymodule',
+        'default' => 'my_module',
         'required' => TRUE,
       ),
       'module_readable_name' => array(
