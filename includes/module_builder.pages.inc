@@ -188,6 +188,30 @@ function module_builder_page_input($form, &$form_state) {
     ksort($form['hooks'][$hook_group]);
   }
 
+  // Add our own (longer) descriptions and defaults.
+  // TODO: consider moving some of these to the Module generator.
+  $form['module_root_name']['#description'] = t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.');
+  $form['module_readable_name']['#description'] = t('Name of your module as it will appear on the module admin page.');
+  $form['module_short_description']['#description'] = t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',
+    array(
+      '!adminmodules' => url('admin/modules'),
+      '%administer' => 'Administer',
+      '%modules' => 'Modules',
+    ));
+  $form['module_short_description']['#default_value'] = t('Does awesome things. Makes tea. Washes up. Favours of a personal nature.');
+  $form['module_help_text']['#description'] = t('Help text (HTML) to appear within the system help at <a href="!help">%administer >> %help >> module_name</a>',
+    array(
+      '!help' => url('admin/help'),
+      '%administer' => 'Administer',
+      '%help' => 'Help',
+    ));
+  $form['module_dependencies']['#description'] = t('Space separated list of other modules that your module requires.');
+  $form['module_package']['#description'] = t('If your module comes with other modules or is meant to be used exclusively with other modules, enter the package name here. Suggested package names: Audio, Bot, CCK, Chat, E-Commerce, Event, Feed parser, Organic groups, Station, Video, Views and Voting.'
+    . '<br />'
+    . 'For more information on package names, see the <a href="!url-package">documentation on Drupal.org</a>.', array(
+      '!url-package' => 'http://drupal.org/node/542202#package',
+    ));
+
   $form['#attached']['js'] = array(
     drupal_get_path('module', 'module_builder') . '/theme/module_builder.js',
   );
