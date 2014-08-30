@@ -67,10 +67,22 @@ class Form extends BaseGenerator {
   }
 
   /**
+   * The name of the form.
+   *
+   * This allows subclasses to change this easily.
+   *
+   * @return
+   *  The machine name of the form, i.e., the name of the form builder function.
+   */
+  protected function getFormName() {
+    return $this->name;
+  }
+
+  /**
    * Called by ModuleCodeFile to collect functions from its child components.
    */
   public function componentFunctions() {
-    $form_builder   = $this->name;
+    $form_builder   = $this->getFormName();
     $form_validate  = $form_builder . '_validate';
     $form_submit    = $form_builder . '_submit';
 

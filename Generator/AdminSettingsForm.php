@@ -52,4 +52,14 @@ class AdminSettingsForm extends Form {
     return $functions;
   }
 
+  /**
+   * The name of the form.
+   *
+   * This allows subclasses to change this easily.
+   */
+  protected function getFormName() {
+    $base_component_name = $this->base_component->getComponentSystemName();
+    return "{$base_component_name}_settings_form";
+  }
+
 }
