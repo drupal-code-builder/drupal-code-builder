@@ -623,7 +623,7 @@ function module_data_from_form($form, $form_values, $component_data_info) {
       }
       else {
         // Textareas need splitting on newlines into arrays.
-        $module_data[$property_name] = preg_split("@\s*\n\s*@", $module_data[$property_name]);
+        $module_data[$property_name] = preg_split("@\s*\n\s*@", $module_data[$property_name], -1, PREG_SPLIT_NO_EMPTY);
       }
     }
   }
