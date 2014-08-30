@@ -23,9 +23,13 @@ class AdminSettingsForm extends Form {
     $components = parent::requiredComponents();
 
     // This takes care of adding hook_menu() and so on.
+    $form_name = $this->getFormName();
     $components['admin/config/%module'] = array(
       'component_type' => 'RouterItem',
-      'title' => 'Administer %module',
+      'title' => 'Administer %readable',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => "array('{$form_name}')",
+      'access arguments' => "array('administer %module')",
     );
 
     return $components;
