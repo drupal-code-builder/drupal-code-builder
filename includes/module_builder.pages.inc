@@ -476,8 +476,21 @@ function module_builder_page_generate($form, &$form_state) {
   // Get our task handler. The form builder will already have checked sanity.
   $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
 
+  // Get the component data info.
+  $root_generator = $mb_task_handler_generate->getRootGenerator();
+  $component_data_info = $root_generator->getComponentDataInfo();
+
+  // No need to call prepareComponentDataProperty() here.
+
   // Build module data
-  $module_data = module_data_from_form($form_state['values']);
+  $module_data = module_data_from_form($form, $form_state['values'], $component_data_info);
+
+  // Presets get expanded with JS.
+  unset($module_data['module_hook_presets']);
+
+  // Perform any final processing on the component data.
+  // This prepares data, for example expands options such as hook presets.
+  $root_generator->processComponentData($component_data_info, $module_data);
 
   // Get the files.
   $files = $mb_task_handler_generate->generateComponent($module_data);
@@ -555,7 +568,7 @@ function module_builder_page_generate($form, &$form_state) {
  * Helper function: creates an array of all the data needed to build the module
  * from form values, suitable for passing to Generate::generateComponent().
  */
-function module_data_from_form($form_values) {
+function module_data_from_form($form, $form_values, $component_data_info) {
   // Most things come in as we want them from the form.
   $module_data = $form_values;
 
@@ -565,12 +578,23 @@ function module_data_from_form($form_values) {
     $module_data['hooks'] += $hook_group;
   }
 
-  // Routes need splitting.
-  $module_data['router_items'] = preg_split("@\s*\n\s*@", $module_data['router_items']);
-
   // Build list.
   // The UI always gets the full code.
   $module_data['requested_build'] = array('code' => TRUE, 'info' => TRUE);
+
+  // Generic processing.
+  foreach ($component_data_info as $property_name => $property_info) {
+    if ($property_info['format'] == 'array') {
+      if (isset($property_info['options'])) {
+        // Anything with options needs to have the crud filtered out.
+        $module_data[$property_name] = array_filter($module_data[$property_name]);
+      }
+      else {
+        // Textareas need splitting on newlines into arrays.
+        $module_data[$property_name] = preg_split("@\s*\n\s*@", $module_data[$property_name]);
+      }
+    }
+  }
 
   return $module_data;
 }
