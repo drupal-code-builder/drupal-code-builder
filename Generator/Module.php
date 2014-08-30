@@ -109,7 +109,7 @@ class Module extends RootComponent {
       'module_readable_name' => array(
         'label' => 'Module readable name',
         'default' => function($component_data) {
-          return ucfirst(str_replace('_', ' ', $component_data['module_root_name']));
+          return ucwords(str_replace('_', ' ', $component_data['module_root_name']));
         },
         'required' => FALSE,
       ),
