@@ -177,14 +177,16 @@ abstract class RootComponent extends BaseGenerator {
         continue;
       }
 
-      if (is_callable($property_info['default'])) {
-        $default_callback = $property_info['default'];
-        $default_value = $default_callback($component_data);
+      if (isset($property_info['default'])) {
+        if (is_callable($property_info['default'])) {
+          $default_callback = $property_info['default'];
+          $default_value = $default_callback($component_data);
+        }
+        else {
+          $default_value = $property_info['default'];
+        }
+        $component_data[$property_name] = $default_value;
       }
-      else {
-        $default_value = $property_info['default'];
-      }
-      $component_data[$property_name] = $default_value;
     }
 
     // Allow each property to apply its processing callback. Note that this may
