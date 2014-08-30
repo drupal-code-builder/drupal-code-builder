@@ -216,6 +216,12 @@ class Module extends RootComponent {
           $component_data['hooks'] = $hooks;
         }
       ),
+      'settings_form' => array(
+        'label' => "Admin settings form",
+        'required' => FALSE,
+        'format' => 'boolean',
+        'component' => 'AdminSettingsForm',
+      ),
       'router_items' => array(
         'label' => "required router paths, eg 'path/foo'",
         'required' => FALSE,
