@@ -76,7 +76,8 @@ class HookMenu extends HookImplementation {
         // This doesn't need its own quotes, we put them in later.
         'title' => 'My Page',
         'page callback' => 'example_page',
-        // This has to be a code string, not an actual array!
+        // These have to be a code string, not an actual array!
+        'page arguments' => "array()",
         'access arguments' => "array('access content')",
         'type' => 'MENU_SUGGESTED_ITEM',
       );
