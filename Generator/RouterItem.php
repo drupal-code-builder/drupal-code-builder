@@ -62,7 +62,27 @@ class RouterItem extends BaseGenerator {
    *  An array of subcomponent names and types.
    */
   protected function requiredComponents() {
-    return array(
+    // Create the item data for the HookMenu component.
+    $menu_item = array(
+      'path' => $this->name,
+    );
+
+    // Copy properties from the RouterItem component data to the hook_menu()
+    // item.
+    $properties_to_copy = array(
+      'title',
+      'page callback',
+      'page arguments',
+      'access callback',
+      'access arguments',
+    );
+    foreach ($properties_to_copy as $property_name) {
+      if (isset($this->component_data[$property_name])) {
+        $menu_item[$property_name] = $this->component_data[$property_name];
+      }
+    }
+
+    $return = array(
       // Each RouterItem that gets added will cause a repeat request of these
       // components.
       'hook_menu' => array(
@@ -70,13 +90,12 @@ class RouterItem extends BaseGenerator {
         // This is a numeric array of items, so repeated requests of this
         // component will merge it.
         'menu_items' => array(
-          array(
-            'path' => $this->name,
-            'title' => $this->component_data['title'],
-          ),
+          $menu_item,
         ),
       ),
     );
+
+    return $return;
   }
 
 }
