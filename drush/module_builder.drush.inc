@@ -1236,7 +1236,6 @@ function drush_module_builder_callback_doc_params() {
  * Just for testing stuff on the commandline while developing the module.
  */
 function drush_module_builder_callback_debug() {
-  include(dirname(__FILE__) . '/../includes/process.inc');
   $data = module_builder_get_hook_data_flat();
   drush_print_r($data);
 

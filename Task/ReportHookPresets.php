@@ -9,8 +9,6 @@ namespace ModuleBuider\Task;
 
 /**
  * Task handler for reporting on hook presets and templates.
- *
- * (Replaces parts of process.inc.)
  */
 class ReportHookPresets extends Base {
 

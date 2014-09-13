@@ -110,8 +110,8 @@ class Hooks extends BaseGenerator {
    * (Move this back out if it needs to be used by other components in future?)
    *
    * Returns an array of hook data and templates for the requested hooks.
-   * This is handled live rather than in process.inc to allow the user to alter
-   * their custom hook templates.
+   * This is handled live rather than in the Collect task to allow the user to
+   * alter their custom hook templates.
    *
    * @return
    *   An array whose keys are destination filenames with the token '%module',
