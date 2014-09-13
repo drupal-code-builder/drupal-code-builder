@@ -19,6 +19,10 @@ namespace ModuleBuider\Task;
  * task. For example, generating a module requires hook data to be ready;
  * whereas processing hook data does not.
  *
+ * Task classes may be specialized for different major versions of Drupal, by
+ * appending the version number to the class name. The unversioned class should
+ * also exist as a parent class.
+ *
  * Task objects are instantiated by ModuleBuilderFactory::getTask().
  */
 class Base {
