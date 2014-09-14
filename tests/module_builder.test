@@ -73,12 +73,12 @@ class ModuleBuilderTestCase extends DrupalUnitTestCase {
       'module_short_description' => $this->randomString(),
       'hooks' => array(
         // These two hooks will go in the .module file.
-        'hook_menu' => TRUE,
-        'hook_node_info' => TRUE,
+        'hook_menu',
+        'hook_node_info',
         // This goes in a tokens.inc file, and also has complex parameters.
-        'hook_tokens' => TRUE,
+        'hook_tokens',
         // This goes in the .install file.
-        'hook_install' => TRUE,
+        'hook_install',
       ),
       'requested_build' => array(
         'all' => TRUE,
