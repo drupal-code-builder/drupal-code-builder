@@ -31,7 +31,7 @@ class Collect8 extends Collect {
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
-    $system_listing = drupal_system_listing('/\.api\.php$/', 'modules', 'filename');
+    $system_listing = $this->drupalSystemListing('/\.api\.php$/', 'modules', 'filename');
     // returns an array of objects, properties: uri, filename, name,
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
@@ -129,6 +129,7 @@ class Collect8 extends Collect {
     $mask = '/\.module_builder.inc$/';
 
     // Based on change record https://www.drupal.org/node/2198695
+    // TODO: use drupalSystemListing().
     $mb_files = array();
     foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
       $mb_files += file_scan_directory($module->getPath(), $mask);
@@ -150,7 +151,7 @@ class Collect8 extends Collect {
     //print_r($module_data);
 
     // If we are running as Drush command, we're not an installed module.
-    if (!Drupal::moduleHandler()->moduleExists('module_builder')) {
+    if (!\Drupal::moduleHandler()->moduleExists('module_builder')) {
       include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
       $result = module_builder_module_builder_info($major_version);
       $data = array_merge($module_data, $result);
@@ -163,6 +164,21 @@ class Collect8 extends Collect {
 
     //drush_print_r($data);
     return $data;
+  }
+
+  /**
+   * Replacement for drupal_system_listing() for module files.
+   *
+   * Based on notes in change record at https://www.drupal.org/node/2198695.
+   *
+   * For spec see https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_system_listing/7
+   */
+  function drupalSystemListing($mask, $directory, $key = 'name') {
+    $files = array();
+    foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
+      $files += file_scan_directory($module->getPath(), $mask, array('key' => $key));
+    }
+    return $files;
   }
 
 }
