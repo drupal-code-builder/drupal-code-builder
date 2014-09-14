@@ -9,9 +9,10 @@
  * Test case for Module Builder component generation.
  *
  * This doesn't need a Drupal database, but relies on a dedicated Module Builder
- * environment class, ModuleBuilderEnvironmentTests, and a prepared file of
- * processed hook definitions, in the sample_hook_definitions subfolder. This
- * contains only the hook definition from system.api.php and node.api.php.
+ * environment class, ModuleBuilderEnvironmentTestsSampleLocation, and a
+ * prepared file of processed hook definitions, in the sample_hook_definitions
+ * subfolder. This contains only the hook definition from system.api.php and
+ * node.api.php.
  */
 class ModuleBuilderTestCase extends DrupalUnitTestCase {
 
@@ -48,7 +49,7 @@ class ModuleBuilderTestCase extends DrupalUnitTestCase {
    */
   function testModuleGeneration() {
     // Get the Module Builder factory, specifying our environment.
-    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTests');
+    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTestsSampleLocation');
 
     // Get the hooks directory. WHY?
     $hooks_directory = $mb_factory->environment->hooks_directory;
