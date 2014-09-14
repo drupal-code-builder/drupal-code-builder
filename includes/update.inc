@@ -2,7 +2,9 @@
 
 /**
  * @file
- * Module builder file downloading.
+ * Module builder file downloading for Drupal 5/6.
+ *
+ * @todo Convert this to CollectVERSION classes.
  *
  * Fetches files from locations specified by hook_module_builder_info
  * implementations (including our own).
