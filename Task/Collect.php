@@ -144,13 +144,8 @@ class Collect extends Base {
       $file_name = basename($file, '.php');
       $group = $file_data['group'];
 
-      // Should probably use module_hook_info(), but I don't use undocumented code FFS.
-      // Note that the 'module' key is flaky: see module_builder_update_documentation()
-      $module = $file_data['module'];
-      $hook_info = array();
-      if (module_hook($module, 'hook_info')) {
-        $hook_info = module_invoke($module, 'hook_info');
-      }
+      // Get info about hooks from Drupal.
+      $hook_info = $this->getHookInfo($file_data);
 
       // Create an array in the form of:
       // array(
@@ -290,6 +285,30 @@ class Collect extends Base {
     );
 
     return $data;
+  }
+
+  /**
+   * Get info about hooks from Drupal.
+   *
+   * This invokes hook_hook_info().
+   *
+   * @param $file_data
+   *  An array of file data for a hook documentation file.
+   *
+   * @return
+   *  The data from the implementation of hook_hook_info() for the module that
+   *  provided the documentation file.
+   */
+  function getHookInfo($file_data) {
+    // Note that the 'module' key is flaky: some modules use a different name
+    // for their api.php file.
+    $module = $file_data['module'];
+    $hook_info = array();
+    if (module_hook($module, 'hook_info')) {
+      $hook_info = module_invoke($module, 'hook_info');
+    }
+
+    return $hook_info;
   }
 
 }
