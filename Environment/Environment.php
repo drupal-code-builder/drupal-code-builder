@@ -55,6 +55,22 @@ abstract class ModuleBuilderEnvironmentBase {
   public $major_version;
 
   /**
+   * Constructor.
+   */
+  function __construct() {
+    // Set the major version.
+    $this->setMajorVersion();
+
+    // Set the hooks directory.
+    $this->setHooksDirectory();
+  }
+
+  /**
+   * Set the hooks directory.
+   */
+  abstract function setHooksDirectory();
+
+  /**
    * Sanity check our basic environment to a specified level.
    *
    * This is called by the factory when a Task is requested from it.
@@ -174,12 +190,9 @@ abstract class ModuleBuilderEnvironmentBase {
 class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
 
   /**
-   * Constructor.
+   * Set the hooks directory.
    */
-  function __construct() {
-    // Set the major version.
-    $this->setMajorVersion();
-
+  function setHooksDirectory() {
     // Set the module folder based on variable.
     $directory = variable_get('module_builder_hooks_directory', 'hooks');
 
@@ -269,12 +282,9 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
 class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrupalUI {
 
   /**
-   * Constructor.
+   * Set the hooks directory.
    */
-  function __construct() {
-    // Set the major version.
-    $this->setMajorVersion();
-
+  function setHooksDirectory() {
     // Set the module folder based on variable.
     $directory = variable_get('module_builder_hooks_directory', 'hooks');
 
@@ -321,12 +331,9 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
 class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 
   /**
-   * Constructor.
+   * Set the hooks directory.
    */
-  function __construct() {
-    // Set the major version.
-    $this->setMajorVersion();
-
+  function setHooksDirectory() {
     // Get the hooks directory.
     $directory = $this->getHooksDirectory();
 
@@ -411,7 +418,7 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 /**
  * Base environment class for tests.
  */
-class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBase {
+abstract class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBase {
 
   /**
    * Get a path to a module builder file or folder.
@@ -457,12 +464,9 @@ class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBase {
 class ModuleBuilderEnvironmentTestsSampleLocation extends ModuleBuilderEnvironmentTests {
 
   /**
-   * Constructor.
+   * Set the hooks directory.
    */
-  function __construct() {
-    // Set the major version.
-    $this->setMajorVersion();
-
+  function setHooksDirectory() {
     // Set the folder for the hooks. This contains a prepared file for the tests
     // to use.
     $directory = dirname(dirname(__FILE__)) . '/tests/sample_hook_definitions/' . $this->major_version;
@@ -478,12 +482,9 @@ class ModuleBuilderEnvironmentTestsSampleLocation extends ModuleBuilderEnvironme
 class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironmentTests {
 
   /**
-   * Constructor.
+   * Set the hooks directory.
    */
-  function __construct() {
-    // Set the major version.
-    $this->setMajorVersion();
-
+  function setHooksDirectory() {
     // Set the folder for the hooks. This contains a prepared file for the tests
     // to use.
     // By some magic this appears to be safe to use with DrupalUnitTestCase.
