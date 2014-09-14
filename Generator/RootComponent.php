@@ -70,6 +70,10 @@ abstract class RootComponent extends BaseGenerator {
    * After all data has been gathered from the user, the completed data array
    * should be passed to processComponentData().
    *
+   * @param $include_computed
+   *  (optional) Boolean indicating whether to include computed properties.
+   *  Default value is FALSE, as UIs don't need to work with these.
+   *
    * @return
    *  An array containing information about the properties this component needs
    *  in its $component_data array. Keys are the names of properties. Each value
@@ -84,7 +88,7 @@ abstract class RootComponent extends BaseGenerator {
    * @see prepareComponentDataProperty()
    * @see processComponentData()
    */
-  public function getComponentDataInfo() {
+  public function getComponentDataInfo($include_computed = FALSE) {
     $return = array();
     foreach ($this->componentDataDefinition() as $property_name => $property_info) {
       if (empty($property_info['computed'])) {
@@ -92,9 +96,14 @@ abstract class RootComponent extends BaseGenerator {
           'required' => FALSE,
           'format' => 'string',
         );
-
-        $return[$property_name] = $property_info;
       }
+      else {
+        if (!$include_computed) {
+          continue;
+        }
+      }
+
+      $return[$property_name] = $property_info;
     }
 
     return $return;
