@@ -150,7 +150,17 @@ abstract class ModuleBuilderEnvironmentBase {
    * Helper for __construct().
    */
   protected function setMajorVersion() {
-    list($major_version) = explode('.', VERSION);
+    // ARGH D8 is different and at this point we can't specialize per-version,
+    // since we're trying to GET the version!
+    if (defined('VERSION')) {
+      $version = $version;
+    }
+    else {
+      $version = \Drupal::VERSION;
+    }
+
+    list($major_version) = explode('.', $version);
+
     $this->major_version = $major_version;
   }
 
