@@ -136,7 +136,7 @@ class Collect extends Base {
         // @todo: clean up!
         $short_name = substr($hook, 5);
         if (isset($hook_info[$short_name])) {
-          print_r($hook_info);
+          //print_r($hook_info);
           $destination = '%module.' . $hook_info[$short_name]['group'] . '.inc';
         }
 
