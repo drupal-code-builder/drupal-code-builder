@@ -26,15 +26,54 @@ class Collect extends Base {
    * (Replaces module_builder_update_data().)
    */
   function collectHooks() {
-    // Load the legacy procedural include file.
-    // TODO: move these into this class.
-    $this->environment->loadInclude('update');
-
     // Update the hook documentation.
-    $hook_files = module_builder_update_documentation();
+    $hook_files = $this->gatherHookDocumentationFiles();
 
     // Process the hook files.
     $this->processHookData($hook_files);
+  }
+
+  /**
+   * Gather hook documentation files.
+   *
+   * @return
+   *  Array of data about hook files suitable for passing to processHookData().
+   *  The array keys are the source filenames, and therefore must be unique. If
+   *  there is a possibility of filename clash these must be rendered safe, for
+   *  example by prefixing the module name.
+   *  Each item has the following properties:
+   *  - path: The full path to this file
+   *  - url: (internal to this handler) URL to download this file from.
+   *  - original: (probably not used; just here for interest) the full path this
+   *    file was copied from.
+   *  - destination: The module code file where the hooks from this hook data
+   *    file should be saved by code generation. This may contain placeholders,
+   *    for instance, '%module.views.inc'.
+   *  - hook_destinations: Per-hook overrides to destination.
+   *  - group: The group this file's hooks belong to. Usually this just the
+   *    name of the source file with the 'api.php' suffix removed.
+   *  - module: The module that provided this file. WARNING: this is not
+   *    entirely reliable!
+   * Example:
+   * @code
+   *  [system.core.php] => array(
+   *    [path]        => /Users/you/data/drupal_hooks/7/system.api.php
+   *    [url]         => (not used on 7)
+   *    [original]    => /Users/joachim/Sites/7-drupal/modules/system/system.api.php
+   *    [destination] => %module.module
+   *    [group]       => core
+   *    [module]      => node
+   * @endcode
+   */
+  function gatherHookDocumentationFiles() {
+    // Needs to be overridden by subclasses.
+
+    // LEGACY CODE for versions that have not yet implemented their subclass of
+    // this: call the procedural function.
+    // Load the legacy procedural include file.
+    // TODO: move these into this class.
+    $this->environment->loadInclude('update');
+    return module_builder_update_documentation();
   }
 
   /**
