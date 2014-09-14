@@ -153,7 +153,7 @@ abstract class ModuleBuilderEnvironmentBase {
     // ARGH D8 is different and at this point we can't specialize per-version,
     // since we're trying to GET the version!
     if (defined('VERSION')) {
-      $version = $version;
+      $version = VERSION;
     }
     else {
       $version = \Drupal::VERSION;
