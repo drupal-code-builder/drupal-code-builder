@@ -292,3 +292,65 @@ class ModuleBuilderTestCase extends DrupalUnitTestCase {
   }
 
 }
+
+/**
+ * Test case for Module Builder hook collection.
+ */
+class ModuleBuilderHookCollectionTestCase extends DrupalUnitTestCase {
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Hook data collection'),
+      'description' => t('Tests collecting and processing hook data.'),
+      'group' => t('Module Builder'),
+    );
+  }
+
+  /**
+   * Implements setUp().
+   */
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testHookCollection() {
+    // Get the Module Builder factory, specifying our environment.
+    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTestsTempLocation');
+
+    $mb_task_handler_collect = $mb_factory->getTask('Collect');
+    $this->assertTrue(is_object($mb_task_handler_collect), "A task handler object was returned.");
+
+    // Get the Task handler to assemble hook data.
+    $mb_task_handler_collect->collectHooks();
+
+    // Now check the result.
+    $hooks_directory = $mb_factory->environment->hooks_directory;
+    $directory_listing = scandir($hooks_directory);
+
+    $this->assertTrue(in_array('node.api.php', $directory_listing), 'The node.api.php documentation file was found.');
+    $this->assertTrue(in_array('hooks_processed.php', $directory_listing), 'The processed hooks file was found.');
+
+    $processed_hook_data = file_get_contents($hooks_directory . '/hooks_processed.php');
+    $processed_hook_data = unserialize($processed_hook_data);
+
+    $this->assertTrue($processed_hook_data, 'The processed hook data is able to be unserialized.');
+
+    $this->assertTrue(isset($processed_hook_data['node']), "The processed hook data contains an entry for 'node'.");
+
+    $this->assertTrue(isset($processed_hook_data['node']['hook_node_load']), "The processed hook data for node module contains an entry for hook_node_load().");
+    $hook_node_load_data = $processed_hook_data['node']['hook_node_load'];
+    
+    $this->assertEqual($hook_node_load_data['type'], 'hook', "The type is correctly set to 'hook'.");
+    $this->assertEqual($hook_node_load_data['name'], 'hook_node_load', "The name is correctly set to the name of the hook.");
+    $this->assertEqual($hook_node_load_data['definition'], 'function hook_node_load($nodes, $types)', "The definition is correctly set.");
+    $this->assertTrue(isset($hook_node_load_data['description']), "The description is set.");
+    $this->assertEqual($hook_node_load_data['destination'], '%module.module', "The destination is correctly set.");
+    $this->assertTrue(isset($hook_node_load_data['dependencies']), "The dependencies is set.");
+    $this->assertEqual($hook_node_load_data['group'], 'node', "The group is correctly set.");
+    $this->assertTrue(isset($hook_node_load_data['body']), "The body is set.");
+  }
+
+}
