@@ -348,7 +348,7 @@ class ModuleBuilderHookCollectionTestCase extends DrupalUnitTestCase {
 
     $this->assertTrue(isset($processed_hook_data['node']['hook_node_load']), "The processed hook data for node module contains an entry for hook_node_load().");
     $hook_node_load_data = $processed_hook_data['node']['hook_node_load'];
-    
+
     $this->assertEqual($hook_node_load_data['type'], 'hook', "The type is correctly set to 'hook'.");
     $this->assertEqual($hook_node_load_data['name'], 'hook_node_load', "The name is correctly set to the name of the hook.");
     $this->assertEqual($hook_node_load_data['definition'], 'function hook_node_load($nodes, $types)', "The definition is correctly set.");
