@@ -34,7 +34,7 @@ class ReportHookPresets extends Base {
    * @throws
    *  Throws \ModuleBuilderException if the file can't be found.
    */
-  function getTemplate($filename) {
+  protected function loadPresetsFile($filename) {
     $pieces = array('templates', $this->environment->major_version, $filename);
     $path = $this->environment->getPath(implode('/', $pieces));
 
@@ -62,7 +62,7 @@ class ReportHookPresets extends Base {
    */
   function getHookPresets() {
     // TODO: read user file preferentially.
-    $presets_template = $this->getTemplate('hook_groups.template');
+    $presets_template = $this->loadPresetsFile('hook_groups.template');
     $hook_presets = json_decode(preg_replace("@//.*@", '', $presets_template), TRUE);
     if (is_null($hook_presets)) {
       // @TODO: do something here to say its gone wrong. Throw Exception?
