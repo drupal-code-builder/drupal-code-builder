@@ -553,7 +553,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
   /**
    * Check that the directory exists and is writable, creating it if needed.
    *
-   * @throw
+   * @throws
    *  ModuleBuilderException
    */
   function prepareDirectory($directory) {
@@ -642,7 +642,7 @@ class ModuleBuilderEnvironmentVersionHelper7 {
   /**
    * Check that the directory exists and is writable, creating it if needed.
    *
-   * @throw
+   * @throws
    *  ModuleBuilderException
    */
   function prepareDirectory($directory) {
@@ -730,7 +730,7 @@ class ModuleBuilderEnvironmentVersionHelper6 {
   /**
    * Check that the directory exists and is writable, creating it if needed.
    *
-   * @throw
+   * @throws
    *  ModuleBuilderException
    */
   function prepareDirectory($directory) {
