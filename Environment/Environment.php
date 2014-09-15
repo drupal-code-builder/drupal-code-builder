@@ -296,7 +296,7 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
    */
   function setHooksDirectory() {
     // Set the module folder based on variable.
-    $directory = variable_get('module_builder_hooks_directory', 'hooks');
+    $directory = $this->getSetting('module_builder_hooks_directory', 'hooks');
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
@@ -387,7 +387,7 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
    */
   function setHooksDirectory() {
     // Set the module folder based on variable.
-    $directory = variable_get('module_builder_hooks_directory', 'hooks');
+    $directory = $this->getSetting('module_builder_hooks_directory', 'hooks');
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.

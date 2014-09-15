@@ -89,7 +89,7 @@ class HookImplementation extends PHPFunction {
     // See if function bodies exist; if so, use function bodies from template
     if (isset($hook['template'])) {
       // Strip out INFO: comments for advanced users
-      if (!variable_get('module_builder_detail', 0)) {
+      if (!module_builder_get_factory()->environment->getSetting('module_builder_detail', 0)) {
         // Used to strip INFO messages out of generated file for advanced users.
         $pattern = '#\s+/\* INFO:(.*?)\*FILLERDONTCLOSECOMMENT/#ms';
         $hook['template'] = preg_replace($pattern, '', $hook['template']);
