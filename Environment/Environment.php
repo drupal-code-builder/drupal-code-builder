@@ -585,13 +585,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
 
     // TODO: just get ours if no bootstrap?
     $mask = '/\.module_builder.inc$/';
-
-    // Based on change record https://www.drupal.org/node/2198695
-    // TODO: use systemListing().
-    $mb_files = array();
-    foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
-      $mb_files += file_scan_directory($module->getPath(), $mask);
-    }
+    $mb_files = $this->systemListing($mask, 'modules');
 
     $module_data = array();
 
