@@ -55,11 +55,23 @@ abstract class ModuleBuilderEnvironmentBase {
   public $major_version;
 
   /**
+   * A helper object for version-specific code.
+   *
+   * This allows code specific to different major version of Drupal to be
+   * orthogonal to the environment, without external systems having to deal
+   * with it.
+   */
+  protected $version_helper;
+
+  /**
    * Constructor.
    */
   function __construct() {
     // Set the major version.
     $this->setMajorVersion();
+
+    // Set up the helper for version-specific code.
+    $this->initVersionHelper();
 
     // Set the hooks directory.
     $this->setHooksDirectory();
@@ -178,6 +190,15 @@ abstract class ModuleBuilderEnvironmentBase {
     list($major_version) = explode('.', $version);
 
     $this->major_version = $major_version;
+  }
+
+  /**
+   * Initialize the version helper object.
+   */
+  protected function initVersionHelper() {
+    $helper_class_name = 'ModuleBuilderEnvironmentVersionHelper' . $this->major_version;
+
+    $this->version_helper = new $helper_class_name;
   }
 
 }
