@@ -768,8 +768,9 @@ class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVer
 
     //print_r($module_data);
 
-    // If we are running as Drush command, we're not an installed module.
-    if (!module_exists('module_builder')) {
+    // If we are running as Drush command, we're not necessarily an installed
+    // module.
+    if (!$this->installedAsModule()) {
       include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
       $result = module_builder_module_builder_info($major_version);
       $data = array_merge($module_data, $result);
@@ -910,8 +911,9 @@ class ModuleBuilderEnvironmentVersionHelper6 extends ModuleBuilderEnvironmentVer
 
     //print_r($module_data);
 
-    // If we are running as Drush command, we're not an installed module.
-    if (!module_exists('module_builder')) {
+    // If we are running as Drush command, we're not necessarily an installed
+    // module.
+    if (!$this->installedAsModule()) {
       include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
       $result = module_builder_module_builder_info($major_version);
       $data = array_merge($module_data, $result);
