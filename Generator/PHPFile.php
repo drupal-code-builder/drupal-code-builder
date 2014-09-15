@@ -134,20 +134,24 @@ EOT;
    * Helper to format text as docblock.
    *
    * @param @lines
-   *  An array of lines. Lines to be normally indented should have no leading
-   *  whitespace.
+   *  An array of lines, or a single line of text. Lines to be normally indented
+   *  should have no leading whitespace.
    *
    * @return
    *  A string of docblock with start and end PHP comment markers.
    */
   function docBlock($lines) {
+    if (!is_array($lines)) {
+      $lines = array($lines);
+    }
+
     $lines = array_merge(
       array("/**"),
       array_map(array($this, 'docblockLine'), $lines),
       array(" */")
     );
 
-    return implode("\n", $lines);
+    return implode("\n", $lines) . "\n";
   }
 
   /**

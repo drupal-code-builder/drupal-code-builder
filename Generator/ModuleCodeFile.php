@@ -95,7 +95,7 @@ EOT;
     foreach ($this->functions as $function_name => $function_data) {
       $function_code = '';
 
-      $function_code .= $this->function_doxygen($function_data['doxygen_first']);
+      $function_code .= $this->docBlock($function_data['doxygen_first']);
 
       $function_code .= $function_data['declaration'];
       $function_code .= ' {';
