@@ -31,7 +31,7 @@ class Collect7 extends Collect {
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
-    $system_listing = drupal_system_listing('/\.api\.php$/', 'modules', 'filename');
+    $system_listing = $mb_factory->environment->systemListing('/\.api\.php$/', 'modules', 'filename');
     // returns an array of objects, properties: uri, filename, name,
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
