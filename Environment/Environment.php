@@ -207,6 +207,16 @@ abstract class ModuleBuilderEnvironmentBase {
     return $this->version_helper->systemListing($mask, $directory, $key, $min_depth);
   }
 
+  /**
+   * Invoke hook_module_builder_info().
+   *
+   * @return
+   *  Data gathered from the hook implementations.
+   */
+  public function invokeInfoHook() {
+    return $this->version_helper->invokeInfoHook();
+  }
+
 }
 
 /**
@@ -524,6 +534,8 @@ class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironment
  */
 class ModuleBuilderEnvironmentVersionHelper8 {
 
+  private $major_version = 8;
+
   /**
    * Transforms a path into a path within the site files folder, if needed.
    *
@@ -557,6 +569,54 @@ class ModuleBuilderEnvironmentVersionHelper8 {
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
     $mask = "/$mask/";
     return drupal_system_listing($mask, $directory, $key, $min_depth);
+  }
+
+  /**
+   * Invoke hook_module_builder_info().
+   */
+  function invokeInfoHook() {
+    $mb_factory = module_builder_get_factory();
+    $major_version = $mb_factory->environment->major_version;
+
+    // TODO: just get ours if no bootstrap?
+    $mask = '/\.module_builder.inc$/';
+
+    // Based on change record https://www.drupal.org/node/2198695
+    // TODO: use drupalSystemListing().
+    $mb_files = array();
+    foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
+      $mb_files += file_scan_directory($module->getPath(), $mask);
+    }
+
+    $module_data = array();
+
+    foreach ($mb_files as $file) {
+      // Our system listing wrapper ensured that there is a uri property on all versions.
+      include_once($file->uri);
+      // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
+      $module = str_replace('.module_builder', '', $file->name);
+      // Note that bad data got back from the hook breaks things.
+      if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
+        $module_data = array_merge($module_data, $result);
+      }
+    }
+
+    //print_r($module_data);
+
+    // If we are running as Drush command, we're not an installed module.
+    if (!\Drupal::moduleHandler()->moduleExists('module_builder')) {
+      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
+      $result = module_builder_module_builder_info($major_version);
+      $data = array_merge($module_data, $result);
+    }
+    else {
+      $data = $module_data;
+      // Yeah we switch names so the merging above isn't affected by an empty array.
+      // Gah PHP. Am probably doin it wrong.
+    }
+
+    //drush_print_r($data);
+    return $data;
   }
 
 }
@@ -599,6 +659,50 @@ class ModuleBuilderEnvironmentVersionHelper7 {
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
     $mask = "/$mask/";
     return drupal_system_listing($mask, $directory, $key, $min_depth);
+  }
+
+
+  /**
+   * Invoke hook_module_builder_info().
+   */
+  function invokeInfoHook() {
+    $mb_factory = module_builder_get_factory();
+    $major_version = $mb_factory->environment->major_version;
+
+    // TODO: just get ours if no bootstrap?
+    $mask = '/\.module_builder.inc$/';
+    $mb_files = drupal_system_listing($mask, 'modules');
+    //print_r($mb_files);
+
+    $module_data = array();
+
+    foreach ($mb_files as $file) {
+      // Our system listing wrapper ensured that there is a uri property on all versions.
+      include_once($file->uri);
+      // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
+      $module = str_replace('.module_builder', '', $file->name);
+      // Note that bad data got back from the hook breaks things.
+      if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
+        $module_data = array_merge($module_data, $result);
+      }
+    }
+
+    //print_r($module_data);
+
+    // If we are running as Drush command, we're not an installed module.
+    if (!module_exists('module_builder')) {
+      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
+      $result = module_builder_module_builder_info($major_version);
+      $data = array_merge($module_data, $result);
+    }
+    else {
+      $data = $module_data;
+      // Yeah we switch names so the merging above isn't affected by an empty array.
+      // Gah PHP. Am probably doin it wrong.
+    }
+
+    //drush_print_r($data);
+    return $data;
   }
 
 }
@@ -687,6 +791,51 @@ class ModuleBuilderEnvironmentVersionHelper6 {
     }
 
     return $files;
+  }
+
+  /**
+   * Invoke hook_module_builder_info().
+   *
+   * @return
+   *  Data gathered from the hook implementations.
+   */
+  public function invokeInfoHook() {
+    $mb_factory = module_builder_get_factory();
+    $major_version = $mb_factory->environment->major_version;
+
+    // TODO: just get ours if no bootstrap?
+    $mb_files = $mb_factory->environment->systemListing('\.module_builder.inc$', 'modules');
+    //print_r($mb_files);
+
+    $module_data = array();
+
+    foreach ($mb_files as $file) {
+      // Our system listing wrapper ensured that there is a uri property on all versions.
+      include_once($file->uri);
+      // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
+      $module = str_replace('.module_builder', '', $file->name);
+      // Note that bad data got back from the hook breaks things.
+      if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
+        $module_data = array_merge($module_data, $result);
+      }
+    }
+
+    //print_r($module_data);
+
+    // If we are running as Drush command, we're not an installed module.
+    if (!module_exists('module_builder')) {
+      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
+      $result = module_builder_module_builder_info($major_version);
+      $data = array_merge($module_data, $result);
+    }
+    else {
+      $data = $module_data;
+      // Yeah we switch names so the merging above isn't affected by an empty array.
+      // Gah PHP. Am probably doin it wrong.
+    }
+
+    //drush_print_r($data);
+    return $data;
   }
 
 }
