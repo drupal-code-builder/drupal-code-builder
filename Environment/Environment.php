@@ -267,6 +267,21 @@ abstract class ModuleBuilderEnvironmentBase {
     return $this->version_helper->invokeInfoHook();
   }
 
+  /**
+   * Get a user preference setting.
+   *
+   * @param $name
+   *   The name of the variable to return.
+   * @param $default
+   *   The default value to use if this variable has never been set.
+   *
+   * @return
+   *   The value of the variable. Unserialization is taken care of as necessary.
+   */
+  public function getSetting($name, $default = NULL) {
+    return $this->version_helper->getSetting($name, $default);
+  }
+
 }
 
 /**
@@ -687,6 +702,16 @@ class ModuleBuilderEnvironmentVersionHelper8 {
     return $data;
   }
 
+  /**
+   * Get a user preference setting.
+   *
+   * On Drupal 8, I have no idea yet, so return the default.
+   */
+  public function getSetting($name, $default = NULL) {
+    // TODO: fix this!
+    return $default;
+  }
+
 }
 
 /**
@@ -743,6 +768,15 @@ class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVer
 
     //drush_print_r($data);
     return $data;
+  }
+
+  /**
+   * Get a user preference setting.
+   *
+   * On Drupal 7 and below, this is a wrapper around variable_get().
+   */
+  public function getSetting($name, $default = NULL) {
+    return variable_get($name, $default);
   }
 
 }
