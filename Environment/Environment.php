@@ -55,11 +55,23 @@ abstract class ModuleBuilderEnvironmentBase {
   public $major_version;
 
   /**
+   * A helper object for version-specific code.
+   *
+   * This allows code specific to different major version of Drupal to be
+   * orthogonal to the environment, without external systems having to deal
+   * with it.
+   */
+  protected $version_helper;
+
+  /**
    * Constructor.
    */
   function __construct() {
     // Set the major version.
     $this->setMajorVersion();
+
+    // Set up the helper for version-specific code.
+    $this->initVersionHelper();
 
     // Set the hooks directory.
     $this->setHooksDirectory();
@@ -102,8 +114,7 @@ abstract class ModuleBuilderEnvironmentBase {
     }
 
     // Sanity level 'hook_directory':
-    $this->loadInclude('common_version');
-    module_builder_prepare_directory($this->hooks_directory);
+    $this->version_helper->prepareDirectory($this->hooks_directory);
 
     // This is as far as we need to go for the hooks_directory level.
     if ($sanity_level == 'hook_directory') {
@@ -180,6 +191,79 @@ abstract class ModuleBuilderEnvironmentBase {
     $this->major_version = $major_version;
   }
 
+  /**
+   * Initialize the version helper object.
+   */
+  protected function initVersionHelper() {
+    $helper_class_name = 'ModuleBuilderEnvironmentVersionHelper' . $this->major_version;
+
+    $this->version_helper = new $helper_class_name;
+  }
+
+  /**
+   * Returns information about system object files (modules, themes, etc.).
+   *
+   * Version-independent wrapper for drupal_system_listing().
+   *
+   * This function is used to find all or some system object files (module files,
+   * theme files, etc.) that exist on the site. It searches in several locations,
+   * depending on what type of object you are looking for. For instance, if you
+   * are looking for modules and call:
+   * @code
+   * drupal_system_listing("/\.module$/", "modules", 'name', 0);
+   * @endcode
+   * this function will search the site-wide modules directory (i.e., /modules/),
+   * your installation profile's directory (i.e.,
+   * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
+   * /sites/all/modules/), and your site-specific directory (i.e.,
+   * /sites/your_site_dir/modules/), in that order, and return information about
+   * all of the files ending in .module in those directories.
+   *
+   * The information is returned in an associative array, which can be keyed on
+   * the file name ($key = 'filename'), the file name without the extension ($key
+   * = 'name'), or the full file stream URI ($key = 'uri'). If you use a key of
+   * 'filename' or 'name', files found later in the search will take precedence
+   * over files found earlier (unless they belong to a module or theme not
+   * compatible with Drupal core); if you choose a key of 'uri', you will get all
+   * files found.
+   *
+   * @param string $mask
+   *   The preg_match() regular expression for the files to find.
+   * @param string $directory
+   *   The subdirectory name in which the files are found. For example,
+   *   'modules' will search in sub-directories of the top-level /modules
+   *   directory, sub-directories of /sites/all/modules/, etc.
+   * @param string $key
+   *   The key to be used for the associative array returned. Possible values are
+   *   'uri', for the file's URI; 'filename', for the basename of the file; and
+   *   'name' for the name of the file without the extension. If you choose 'name'
+   *   or 'filename', only the highest-precedence file will be returned.
+   * @param int $min_depth
+   *   Minimum depth of directories to return files from, relative to each
+   *   directory searched. For instance, a minimum depth of 2 would find modules
+   *   inside /modules/node/tests, but not modules directly in /modules/node.
+   *
+   * @return array
+   *   An associative array of file objects, keyed on the chosen key. Each element
+   *   in the array is an object containing file information, with properties:
+   *   - 'uri': Full URI of the file.
+   *   - 'filename': File name.
+   *   - 'name': Name of file without the extension.
+   */
+  public function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
+    return $this->version_helper->systemListing($mask, $directory, $key, $min_depth);
+  }
+
+  /**
+   * Invoke hook_module_builder_info().
+   *
+   * @return
+   *  Data gathered from the hook implementations.
+   */
+  public function invokeInfoHook() {
+    return $this->version_helper->invokeInfoHook();
+  }
+
 }
 
 /**
@@ -198,8 +282,7 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->loadInclude('common_version');
-    module_builder_directory_path($directory);
+    $this->version_helper->directoryPath($directory);
 
     $this->hooks_directory = $directory;
   }
@@ -290,8 +373,7 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->loadInclude('common_version');
-    module_builder_directory_path($directory);
+    $this->version_helper->directoryPath($directory);
 
     $this->hooks_directory = $directory;
   }
@@ -339,8 +421,7 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->loadInclude('common_version');
-    module_builder_directory_path($directory);
+    $this->version_helper->directoryPath($directory);
 
     $this->hooks_directory = $directory;
   }
@@ -494,3 +575,315 @@ class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironment
   }
 
 }
+
+/**
+ * @defgroup module_builder_environment_version_helpers Environment version helpers
+ * @{
+ * Wrapper objects for Drupal APIs that change between Drupal major versions.
+ *
+ * These allow the environment classes to work orthogonally across different
+ * environments (Drush, Drupal UI) and different core versions.
+ *
+ * Each major version of Drupal core needs a version helper class. This is
+ * instantiated by the environment object's initVersionHelper(). No direct calls
+ * should be made to the helper, rather, the environment base class should
+ * provide a wrapper.
+ *
+ * Version helper classes inherit in a cascade, with older versions inheriting
+ * from newer. This means that if, say, an API function does not change between
+ * Drupal 6 and 7, then its wrapper does not need to be present in the Drupal 6
+ * helper class.
+ */
+
+/**
+ * Environment helper for Drupal 8.
+ */
+class ModuleBuilderEnvironmentVersionHelper8 {
+
+  private $major_version = 8;
+
+  /**
+   * Transforms a path into a path within the site files folder, if needed.
+   *
+   * Eg, turns 'foo' into 'public://foo'.
+   * Absolute paths are unchanged.
+   */
+  function directoryPath(&$directory) {
+    if (substr($directory, 0, 1) != '/') {
+      // Relative, and so assumed to be in Drupal's files folder: prepend this to
+      // the given directory.
+      $directory = 'public://' . $directory;
+    }
+  }
+
+  /**
+   * Check that the directory exists and is writable, creating it if needed.
+   *
+   * @throws
+   *  ModuleBuilderException
+   */
+  function prepareDirectory($directory) {
+    $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    if (!$status) {
+      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
+    }
+  }
+
+  /**
+   * A version-independent wrapper for drupal_system_listing().
+   *
+   * Based on notes in change record at https://www.drupal.org/node/2198695.
+   */
+  function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
+    $files = array();
+    foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
+      $files += file_scan_directory($module->getPath(), $mask, array('key' => $key));
+    }
+    return $files;
+  }
+
+  /**
+   * Invoke hook_module_builder_info().
+   */
+  function invokeInfoHook() {
+    $mb_factory = module_builder_get_factory();
+    $major_version = $mb_factory->environment->major_version;
+
+    // TODO: just get ours if no bootstrap?
+    $mask = '/\.module_builder.inc$/';
+    $mb_files = $this->systemListing($mask, 'modules');
+
+    $module_data = array();
+
+    foreach ($mb_files as $file) {
+      // Our system listing wrapper ensured that there is a uri property on all versions.
+      include_once($file->uri);
+      // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
+      $module = str_replace('.module_builder', '', $file->name);
+      // Note that bad data got back from the hook breaks things.
+      if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
+        $module_data = array_merge($module_data, $result);
+      }
+    }
+
+    //print_r($module_data);
+
+    // If we are running as Drush command, we're not an installed module.
+    if (!\Drupal::moduleHandler()->moduleExists('module_builder')) {
+      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
+      $result = module_builder_module_builder_info($major_version);
+      $data = array_merge($module_data, $result);
+    }
+    else {
+      $data = $module_data;
+      // Yeah we switch names so the merging above isn't affected by an empty array.
+      // Gah PHP. Am probably doin it wrong.
+    }
+
+    //drush_print_r($data);
+    return $data;
+  }
+
+}
+
+/**
+ * Environment helper for Drupal 7.
+ */
+class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVersionHelper8 {
+
+  /**
+   * A version-independent wrapper for drupal_system_listing().
+   */
+  function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
+    return drupal_system_listing($mask, $directory, $key, $min_depth);
+  }
+
+
+  /**
+   * Invoke hook_module_builder_info().
+   */
+  function invokeInfoHook() {
+    $mb_factory = module_builder_get_factory();
+    $major_version = $mb_factory->environment->major_version;
+
+    // TODO: just get ours if no bootstrap?
+    $mask = '/\.module_builder.inc$/';
+    $mb_files = drupal_system_listing($mask, 'modules');
+    //print_r($mb_files);
+
+    $module_data = array();
+
+    foreach ($mb_files as $file) {
+      // Our system listing wrapper ensured that there is a uri property on all versions.
+      include_once($file->uri);
+      // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
+      $module = str_replace('.module_builder', '', $file->name);
+      // Note that bad data got back from the hook breaks things.
+      if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
+        $module_data = array_merge($module_data, $result);
+      }
+    }
+
+    //print_r($module_data);
+
+    // If we are running as Drush command, we're not an installed module.
+    if (!module_exists('module_builder')) {
+      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
+      $result = module_builder_module_builder_info($major_version);
+      $data = array_merge($module_data, $result);
+    }
+    else {
+      $data = $module_data;
+      // Yeah we switch names so the merging above isn't affected by an empty array.
+      // Gah PHP. Am probably doin it wrong.
+    }
+
+    //drush_print_r($data);
+    return $data;
+  }
+
+}
+
+/**
+ * Environment helper for Drupal 6.
+ */
+class ModuleBuilderEnvironmentVersionHelper6 extends ModuleBuilderEnvironmentVersionHelper7 {
+
+  /**
+   * Transforms a path into a path within the site files folder, if needed.
+   *
+   * Eg, turns 'foo' into 'sites/default/foo'.
+   * Absolute paths are unchanged.
+   */
+  function directoryPath(&$directory) {
+    if (substr($directory, 0, 1) != '/') {
+      // Relative, and so assumed to be in Drupal's files folder: prepend this to
+      // the given directory.
+      // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
+      $files = file_create_path();
+      file_check_directory($files, FILE_CREATE_DIRECTORY);
+      $directory = file_create_path($directory);
+    }
+  }
+
+  /**
+   * Check that the directory exists and is writable, creating it if needed.
+   *
+   * @throws
+   *  ModuleBuilderException
+   */
+  function prepareDirectory($directory) {
+    // Because we may have an absolute path whose base folders are not writable
+    // we can't use the standard recursive D6 pattern.
+    $pieces = explode('/', $directory);
+
+    // Work up through the folder's parentage until we find a directory that exists.
+    // (Or in other words, backwards in the array of pieces.)
+    $length = count($pieces);
+    for ($i = 0; $i < $length; $i++) {
+      //print $pieces[$length - $i];
+      $slice = array_slice($pieces, 0, $length - $i);
+      $path_slice = implode('/', $slice);
+      if (file_exists($path_slice)) {
+        $status = file_check_directory($path_slice, FILE_CREATE_DIRECTORY);
+        break;
+      }
+    }
+
+    // If we go right the way along to the base and still can't create a directory...
+    if ($i == $length) {
+      throw new ModuleBuilderException("The directory $path_slice cannot be created or is not writable.");
+    }
+    // print "status: $status for $path_slice - i: $i\n";
+
+    // Now work back down (or in other words, along the array of pieces).
+    for ($j = $length - $i; $j < $length; $j++) {
+      $slice[] = $pieces[$j];
+      $path_slice = implode('/', $slice);
+      //print "$path_slice\n";
+      $status = file_check_directory($path_slice, FILE_CREATE_DIRECTORY);
+    }
+
+    if (!$status) {
+      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
+    }
+  }
+
+  /**
+   * A version-independent wrapper for drupal_system_listing().
+   */
+  function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
+    $files = drupal_system_listing($mask, $directory, $key, $min_depth);
+
+    // This one is actually only for Drupal 6.
+    // The file object is:
+    //    D6         D7         what it actually is
+    //  - filename | uri      | full path and name
+    //  - basename | filename | name with the extension
+    //  - name     | name     | name without the extension
+    // So we copy filename to uri, and then the caller can handle the returned
+    // array as if it were Drupal 7 style.
+    foreach ($files as $file) {
+      $file->uri = $file->filename;
+    }
+
+    return $files;
+  }
+
+  /**
+   * Invoke hook_module_builder_info().
+   *
+   * @return
+   *  Data gathered from the hook implementations.
+   */
+  public function invokeInfoHook() {
+    $mb_factory = module_builder_get_factory();
+    $major_version = $mb_factory->environment->major_version;
+
+    // TODO: just get ours if no bootstrap?
+    $mb_files = $this->systemListing('/\.module_builder.inc$/', 'modules');
+    //print_r($mb_files);
+
+    $module_data = array();
+
+    foreach ($mb_files as $file) {
+      // Our system listing wrapper ensured that there is a uri property on all versions.
+      include_once($file->uri);
+      // Use a property of the (badly-documented!) $file object that is common to both D6 and D7.
+      $module = str_replace('.module_builder', '', $file->name);
+      // Note that bad data got back from the hook breaks things.
+      if ($result = module_invoke($module, 'module_builder_info', $major_version)) {
+        $module_data = array_merge($module_data, $result);
+      }
+    }
+
+    //print_r($module_data);
+
+    // If we are running as Drush command, we're not an installed module.
+    if (!module_exists('module_builder')) {
+      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
+      $result = module_builder_module_builder_info($major_version);
+      $data = array_merge($module_data, $result);
+    }
+    else {
+      $data = $module_data;
+      // Yeah we switch names so the merging above isn't affected by an empty array.
+      // Gah PHP. Am probably doin it wrong.
+    }
+
+    //drush_print_r($data);
+    return $data;
+  }
+
+}
+
+/**
+ * Environment helper for Drupal 5.
+ */
+class ModuleBuilderEnvironmentVersionHelper5 extends ModuleBuilderEnvironmentVersionHelper6 {
+  // D5 helper is the same as D6.
+}
+
+/**
+* @} End of "defgroup module_builder_environment_version_helpers".
+*/
