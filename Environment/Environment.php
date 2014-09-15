@@ -494,3 +494,30 @@ class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironment
   }
 
 }
+
+/**
+ * Environment helper for Drupal 8.
+ */
+class ModuleBuilderEnvironmentVersionHelper8 {
+
+}
+
+/**
+ * Environment helper for Drupal 7.
+ */
+class ModuleBuilderEnvironmentVersionHelper7 {
+
+}
+
+/**
+ * Environment helper for Drupal 6.
+ */
+class ModuleBuilderEnvironmentVersionHelper6 {
+}
+
+/**
+ * Environment helper for Drupal 5.
+ */
+class ModuleBuilderEnvironmentVersionHelper5 extends ModuleBuilderEnvironmentVersionHelper6 {
+  // D5 helper is the same as D6.
+}
