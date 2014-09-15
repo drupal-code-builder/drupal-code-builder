@@ -1,0 +1,81 @@
+// This file defines hook preset groups for Module builder
+// Its format is JSON but with single-line comments allowed.
+// The first preset is commented as an example.
+{
+  // The machine name of the group.
+  "node":{
+    // The label shown in the UI.
+    "label": "Define your own content type (node)",
+    // A list of hooks.
+    "hooks": [
+      "hook_node_info",
+      "hook_access",
+      "hook_perm",
+      "hook_form",
+      "hook_validate",
+      "hook_insert",
+      "hook_update",
+      "hook_delete",
+      "hook_load",
+      "hook_view"
+    ]
+  },
+  "nodeapi":{
+    "label": "Interact with nodes",
+    // more hooks needed here...
+    "hooks": [
+      "hook_node_load"
+    ]
+  },
+  "block":{
+    "label": "Add blocks to your module",
+    "hooks": [
+      "hook_block_info",
+      "hook_block_configure",
+      "hook_block_save",
+      "hook_block_view"
+    ]
+  },
+  "field-type":{
+    "label": "Define a field type",
+    "hooks": [
+      // Essentials:
+      "hook_field_info",
+      "hook_field_schema",
+      "hook_field_validate",
+      "hook_field_is_empty",
+      // Optional hooks: 
+      "hook_field_settings_form",
+      "hook_field_instance_settings_form",
+      "hook_field_update_field",
+      "hook_field_update_forbid"
+    ]
+  },
+  "field-widget":{
+    "label": "Define a field widget",
+    "hooks": [
+      // Essentials:
+      "hook_field_widget_info",
+      "hook_field_widget_form",
+      // Optional hooks: 
+      "hook_field_widget_settings_form"
+    ]
+  },
+  "field-formatter":{
+    "label": "Define a field formatter",
+    "hooks": [
+      // Essentials:
+      "hook_field_formatter_info",
+      "hook_field_formatter_view",
+      // Optional hooks:
+      "hook_field_formatter_prepare_view"
+    ]
+  },
+  "views":{
+    "label": "Define views data",
+    "hooks": [
+      "hook_views_api",
+      "hook_views_data"
+    ]
+  }
+}
