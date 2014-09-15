@@ -692,20 +692,6 @@ class ModuleBuilderEnvironmentVersionHelper8 {
 class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVersionHelper8 {
 
   /**
-   * Transforms a path into a path within the site files folder, if needed.
-   *
-   * Eg, turns 'foo' into 'public://foo'.
-   * Absolute paths are unchanged.
-   */
-  function directoryPath(&$directory) {
-    if (substr($directory, 0, 1) != '/') {
-      // Relative, and so assumed to be in Drupal's files folder: prepend this to
-      // the given directory.
-      $directory = 'public://' . $directory;
-    }
-  }
-
-  /**
    * Check that the directory exists and is writable, creating it if needed.
    *
    * @throws
