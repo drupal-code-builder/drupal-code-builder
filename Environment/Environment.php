@@ -257,6 +257,9 @@ abstract class ModuleBuilderEnvironmentBase {
   /**
    * Invoke hook_module_builder_info().
    *
+   * The tricky part is that we want to include ourselves, but module_builder
+   * might not be installed (or even present) in Drupal if we are on Drush.
+   *
    * @return
    *  Data gathered from the hook implementations.
    */

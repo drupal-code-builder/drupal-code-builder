@@ -10,19 +10,6 @@
  */
 
 /**
- * Helper function to invoke hook_module_builder_info() in all modules.
- *
- * The tricky part is that we want to include ourselves, but module_builder
- * might not be installed (or even present) in Drupal if we are on Drush.
- *
- * @deprecated
- */
-function _module_builder_invoke_hook() {
-  $mb_factory = module_builder_get_factory();
-  return $mb_factory->environment->invokeInfoHook();
-}
-
-/**
  * Custom exception class.
  */
 class ModuleBuilderException extends Exception {

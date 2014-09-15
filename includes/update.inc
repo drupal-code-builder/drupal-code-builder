@@ -90,7 +90,8 @@ function module_builder_update_documentation() {
  */
 function _module_builder_get_hook_file_urls($directory) {
   // Get data by invoking our hook.
-  $data = _module_builder_invoke_hook();
+  $mb_factory = module_builder_get_factory();
+  $data = $mb_factory->environment->invokeInfoHook();
 
   foreach ($data as $module => $module_data) {
     $branch = $module_data['branch'];
