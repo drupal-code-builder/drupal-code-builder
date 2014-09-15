@@ -6,7 +6,7 @@
  */
 
 /**
- * Test case for Module Builder component generation.
+ * Test case for Module Builder module generation.
  *
  * This doesn't need a Drupal database, but relies on a dedicated Module Builder
  * environment class, ModuleBuilderEnvironmentTestsSampleLocation, and a
@@ -14,15 +14,15 @@
  * subfolder. This contains only the hook definition from system.api.php and
  * node.api.php.
  */
-class ModuleBuilderTestCase extends DrupalUnitTestCase {
+class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
 
   /**
    * Implements getInfo().
    */
   public static function getInfo() {
     return array(
-      'name' => t('Module Builder unit tests'),
-      'description' => t('Tests generating Drupal components.'),
+      'name' => t('Module generation'),
+      'description' => t('Unit test for generating a module.'),
       'group' => t('Module Builder'),
     );
   }
