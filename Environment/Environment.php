@@ -689,7 +689,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
 /**
  * Environment helper for Drupal 7.
  */
-class ModuleBuilderEnvironmentVersionHelper7 {
+class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVersionHelper8 {
 
   /**
    * Transforms a path into a path within the site files folder, if needed.
@@ -774,7 +774,7 @@ class ModuleBuilderEnvironmentVersionHelper7 {
 /**
  * Environment helper for Drupal 6.
  */
-class ModuleBuilderEnvironmentVersionHelper6 {
+class ModuleBuilderEnvironmentVersionHelper6 extends ModuleBuilderEnvironmentVersionHelper7 {
 
   /**
    * Transforms a path into a path within the site files folder, if needed.
