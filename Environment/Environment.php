@@ -802,7 +802,7 @@ class ModuleBuilderEnvironmentVersionHelper6 {
     $major_version = $mb_factory->environment->major_version;
 
     // TODO: just get ours if no bootstrap?
-    $mb_files = $mb_factory->environment->systemListing('/\.module_builder.inc$/', 'modules');
+    $mb_files = $this->systemListing('/\.module_builder.inc$/', 'modules');
     //print_r($mb_files);
 
     $module_data = array();
