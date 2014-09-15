@@ -565,10 +565,15 @@ class ModuleBuilderEnvironmentVersionHelper8 {
 
   /**
    * A version-independent wrapper for drupal_system_listing().
+   *
+   * Based on notes in change record at https://www.drupal.org/node/2198695.
    */
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
-    $mask = "/$mask/";
-    return drupal_system_listing($mask, $directory, $key, $min_depth);
+    $files = array();
+    foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
+      $files += file_scan_directory($module->getPath(), $mask, array('key' => $key));
+    }
+    return $files;
   }
 
   /**
@@ -582,7 +587,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
     $mask = '/\.module_builder.inc$/';
 
     // Based on change record https://www.drupal.org/node/2198695
-    // TODO: use drupalSystemListing().
+    // TODO: use systemListing().
     $mb_files = array();
     foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
       $mb_files += file_scan_directory($module->getPath(), $mask);
@@ -657,7 +662,6 @@ class ModuleBuilderEnvironmentVersionHelper7 {
    * A version-independent wrapper for drupal_system_listing().
    */
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
-    $mask = "/$mask/";
     return drupal_system_listing($mask, $directory, $key, $min_depth);
   }
 
@@ -804,7 +808,7 @@ class ModuleBuilderEnvironmentVersionHelper6 {
     $major_version = $mb_factory->environment->major_version;
 
     // TODO: just get ours if no bootstrap?
-    $mb_files = $mb_factory->environment->systemListing('\.module_builder.inc$', 'modules');
+    $mb_files = $mb_factory->environment->systemListing('/\.module_builder.inc$/', 'modules');
     //print_r($mb_files);
 
     $module_data = array();

@@ -31,7 +31,7 @@ class Collect8 extends Collect {
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
-    $system_listing = $this->drupalSystemListing('/\.api\.php$/', 'modules', 'filename');
+    $system_listing = $mb_factory->environment->systemListing('/\.api\.php$/', 'modules', 'filename');
     // returns an array of objects, properties: uri, filename, name,
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
@@ -115,21 +115,6 @@ class Collect8 extends Collect {
     }
 
     //print_r($hook_files);
-  }
-
-  /**
-   * Replacement for drupal_system_listing() for module files.
-   *
-   * Based on notes in change record at https://www.drupal.org/node/2198695.
-   *
-   * For spec see https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_system_listing/7
-   */
-  function drupalSystemListing($mask, $directory, $key = 'name') {
-    $files = array();
-    foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
-      $files += file_scan_directory($module->getPath(), $mask, array('key' => $key));
-    }
-    return $files;
   }
 
   /**
