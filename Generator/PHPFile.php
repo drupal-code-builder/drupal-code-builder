@@ -130,4 +130,33 @@ EOT;
    */
   function code_footer() {}
 
+  /**
+   * Helper to format text as docblock.
+   *
+   * @param @lines
+   *  An array of lines. Lines to be normally indented should have no leading
+   *  whitespace.
+   *
+   * @return
+   *  A string of docblock with start and end PHP comment markers.
+   */
+  function docBlock($lines) {
+    $lines = array_merge(
+      array("/**"),
+      array_map(array($this, 'docblockLine'), $lines),
+      array(" */")
+    );
+
+    return implode("\n", $lines);
+  }
+
+  /**
+   * Callback for array_map().
+   *
+   * Formats a single inner line of docblock.
+   */
+  function docblockLine($line) {
+    return " * $line";
+  }
+
 }
