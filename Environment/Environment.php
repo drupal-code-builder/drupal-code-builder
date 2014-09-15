@@ -201,7 +201,54 @@ abstract class ModuleBuilderEnvironmentBase {
   }
 
   /**
+   * Returns information about system object files (modules, themes, etc.).
+   *
    * Version-independent wrapper for drupal_system_listing().
+   *
+   * This function is used to find all or some system object files (module files,
+   * theme files, etc.) that exist on the site. It searches in several locations,
+   * depending on what type of object you are looking for. For instance, if you
+   * are looking for modules and call:
+   * @code
+   * drupal_system_listing("/\.module$/", "modules", 'name', 0);
+   * @endcode
+   * this function will search the site-wide modules directory (i.e., /modules/),
+   * your installation profile's directory (i.e.,
+   * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
+   * /sites/all/modules/), and your site-specific directory (i.e.,
+   * /sites/your_site_dir/modules/), in that order, and return information about
+   * all of the files ending in .module in those directories.
+   *
+   * The information is returned in an associative array, which can be keyed on
+   * the file name ($key = 'filename'), the file name without the extension ($key
+   * = 'name'), or the full file stream URI ($key = 'uri'). If you use a key of
+   * 'filename' or 'name', files found later in the search will take precedence
+   * over files found earlier (unless they belong to a module or theme not
+   * compatible with Drupal core); if you choose a key of 'uri', you will get all
+   * files found.
+   *
+   * @param string $mask
+   *   The preg_match() regular expression for the files to find.
+   * @param string $directory
+   *   The subdirectory name in which the files are found. For example,
+   *   'modules' will search in sub-directories of the top-level /modules
+   *   directory, sub-directories of /sites/all/modules/, etc.
+   * @param string $key
+   *   The key to be used for the associative array returned. Possible values are
+   *   'uri', for the file's URI; 'filename', for the basename of the file; and
+   *   'name' for the name of the file without the extension. If you choose 'name'
+   *   or 'filename', only the highest-precedence file will be returned.
+   * @param int $min_depth
+   *   Minimum depth of directories to return files from, relative to each
+   *   directory searched. For instance, a minimum depth of 2 would find modules
+   *   inside /modules/node/tests, but not modules directly in /modules/node.
+   *
+   * @return array
+   *   An associative array of file objects, keyed on the chosen key. Each element
+   *   in the array is an object containing file information, with properties:
+   *   - 'uri': Full URI of the file.
+   *   - 'filename': File name.
+   *   - 'name': Name of file without the extension.
    */
   public function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
     return $this->version_helper->systemListing($mask, $directory, $key, $min_depth);
