@@ -219,8 +219,7 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->loadInclude('common_version');
-    module_builder_directory_path($directory);
+    $this->version_helper->directoryPath($directory);
 
     $this->hooks_directory = $directory;
   }
@@ -311,8 +310,7 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->loadInclude('common_version');
-    module_builder_directory_path($directory);
+    $this->version_helper->directoryPath($directory);
 
     $this->hooks_directory = $directory;
   }
@@ -360,8 +358,7 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->loadInclude('common_version');
-    module_builder_directory_path($directory);
+    $this->version_helper->directoryPath($directory);
 
     $this->hooks_directory = $directory;
   }
@@ -521,6 +518,20 @@ class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironment
  */
 class ModuleBuilderEnvironmentVersionHelper8 {
 
+  /**
+   * Transforms a path into a path within the site files folder, if needed.
+   *
+   * Eg, turns 'foo' into 'public://foo'.
+   * Absolute paths are unchanged.
+   */
+  function directoryPath(&$directory) {
+    if (substr($directory, 0, 1) != '/') {
+      // Relative, and so assumed to be in Drupal's files folder: prepend this to
+      // the given directory.
+      $directory = 'public://' . $directory;
+    }
+  }
+
 }
 
 /**
@@ -528,12 +539,44 @@ class ModuleBuilderEnvironmentVersionHelper8 {
  */
 class ModuleBuilderEnvironmentVersionHelper7 {
 
+  /**
+   * Transforms a path into a path within the site files folder, if needed.
+   *
+   * Eg, turns 'foo' into 'public://foo'.
+   * Absolute paths are unchanged.
+   */
+  function directoryPath(&$directory) {
+    if (substr($directory, 0, 1) != '/') {
+      // Relative, and so assumed to be in Drupal's files folder: prepend this to
+      // the given directory.
+      $directory = 'public://' . $directory;
+    }
+  }
+
 }
 
 /**
  * Environment helper for Drupal 6.
  */
 class ModuleBuilderEnvironmentVersionHelper6 {
+
+  /**
+   * Transforms a path into a path within the site files folder, if needed.
+   *
+   * Eg, turns 'foo' into 'sites/default/foo'.
+   * Absolute paths are unchanged.
+   */
+  function directoryPath(&$directory) {
+    if (substr($directory, 0, 1) != '/') {
+      // Relative, and so assumed to be in Drupal's files folder: prepend this to
+      // the given directory.
+      // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
+      $files = file_create_path();
+      file_check_directory($files, FILE_CREATE_DIRECTORY);
+      $directory = file_create_path($directory);
+    }
+  }
+
 }
 
 /**

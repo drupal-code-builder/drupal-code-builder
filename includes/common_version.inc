@@ -8,23 +8,6 @@
  */
 
 /**
- * Transforms a path into a path within the site files folder, if needed.
- *
- * Eg, turns 'foo' into 'sites/default/foo'.
- * Absolute paths are unchanged.
- */
-function module_builder_directory_path(&$directory) {
-  if (substr($directory, 0, 1) != '/') {
-    // Relative, and so assumed to be in Drupal's files folder: prepend this to
-    // the given directory.
-    // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138
-    $files = file_create_path();
-    file_check_directory($files, FILE_CREATE_DIRECTORY);    
-    $directory = file_create_path($directory);    
-  }
-}
-
-/**
  * Check that the directory exists and is writable, creating it if needed.
  *
  * @throw
