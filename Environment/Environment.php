@@ -621,6 +621,13 @@ class ModuleBuilderEnvironmentVersionHelper8 {
   private $major_version = 8;
 
   /**
+   * Determine whether module_builder is installed as a module.
+   */
+  function installedAsModule() {
+    return \Drupal::moduleHandler()->moduleExists('module_builder');
+  }
+
+  /**
    * Transforms a path into a path within the site files folder, if needed.
    *
    * Eg, turns 'foo' into 'public://foo'.
@@ -718,6 +725,13 @@ class ModuleBuilderEnvironmentVersionHelper8 {
  * Environment helper for Drupal 7.
  */
 class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVersionHelper8 {
+
+  /**
+   * Determine whether module_builder is installed as a module.
+   */
+  function installedAsModule() {
+    return module_exists('module_builder');
+  }
 
   /**
    * A version-independent wrapper for drupal_system_listing().
