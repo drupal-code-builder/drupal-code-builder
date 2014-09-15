@@ -17,7 +17,6 @@
  */
 function _module_builder_invoke_hook() {
   $mb_factory = module_builder_get_factory();
-  $mb_factory->environment->loadInclude('common_version');
   $major_version = $mb_factory->environment->major_version;
 
   // TODO: just get ours if no bootstrap?
