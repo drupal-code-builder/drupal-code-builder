@@ -114,8 +114,7 @@ abstract class ModuleBuilderEnvironmentBase {
     }
 
     // Sanity level 'hook_directory':
-    $this->loadInclude('common_version');
-    module_builder_prepare_directory($this->hooks_directory);
+    $this->version_helper->prepareDirectory($this->hooks_directory);
 
     // This is as far as we need to go for the hooks_directory level.
     if ($sanity_level == 'hook_directory') {
@@ -532,6 +531,19 @@ class ModuleBuilderEnvironmentVersionHelper8 {
     }
   }
 
+  /**
+   * Check that the directory exists and is writable, creating it if needed.
+   *
+   * @throw
+   *  ModuleBuilderException
+   */
+  function prepareDirectory($directory) {
+    $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    if (!$status) {
+      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
+    }
+  }
+
 }
 
 /**
@@ -550,6 +562,19 @@ class ModuleBuilderEnvironmentVersionHelper7 {
       // Relative, and so assumed to be in Drupal's files folder: prepend this to
       // the given directory.
       $directory = 'public://' . $directory;
+    }
+  }
+
+  /**
+   * Check that the directory exists and is writable, creating it if needed.
+   *
+   * @throw
+   *  ModuleBuilderException
+   */
+  function prepareDirectory($directory) {
+    $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    if (!$status) {
+      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
     }
   }
 
@@ -574,6 +599,49 @@ class ModuleBuilderEnvironmentVersionHelper6 {
       $files = file_create_path();
       file_check_directory($files, FILE_CREATE_DIRECTORY);
       $directory = file_create_path($directory);
+    }
+  }
+
+  /**
+   * Check that the directory exists and is writable, creating it if needed.
+   *
+   * @throw
+   *  ModuleBuilderException
+   */
+  function prepareDirectory($directory) {
+    // Because we may have an absolute path whose base folders are not writable
+    // we can't use the standard recursive D6 pattern.
+    $pieces = explode('/', $directory);
+
+    // Work up through the folder's parentage until we find a directory that exists.
+    // (Or in other words, backwards in the array of pieces.)
+    $length = count($pieces);
+    for ($i = 0; $i < $length; $i++) {
+      //print $pieces[$length - $i];
+      $slice = array_slice($pieces, 0, $length - $i);
+      $path_slice = implode('/', $slice);
+      if (file_exists($path_slice)) {
+        $status = file_check_directory($path_slice, FILE_CREATE_DIRECTORY);
+        break;
+      }
+    }
+
+    // If we go right the way along to the base and still can't create a directory...
+    if ($i == $length) {
+      throw new ModuleBuilderException("The directory $path_slice cannot be created or is not writable.");
+    }
+    // print "status: $status for $path_slice - i: $i\n";
+
+    // Now work back down (or in other words, along the array of pieces).
+    for ($j = $length - $i; $j < $length; $j++) {
+      $slice[] = $pieces[$j];
+      $path_slice = implode('/', $slice);
+      //print "$path_slice\n";
+      $status = file_check_directory($path_slice, FILE_CREATE_DIRECTORY);
+    }
+
+    if (!$status) {
+      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
     }
   }
 
