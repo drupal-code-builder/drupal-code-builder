@@ -197,7 +197,7 @@ abstract class ModuleBuilderEnvironmentBase {
   protected function initVersionHelper() {
     $helper_class_name = 'ModuleBuilderEnvironmentVersionHelper' . $this->major_version;
 
-    $this->version_helper = new $helper_class_name;
+    $this->version_helper = new $helper_class_name($this);
   }
 
   /**
@@ -619,6 +619,18 @@ class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironment
 class ModuleBuilderEnvironmentVersionHelper8 {
 
   private $major_version = 8;
+
+  private $environment;
+
+  /**
+   * Constructor.
+   *
+   * @param $environment
+   *  The environment object this is a helper for.
+   */
+  function __construct($environment) {
+    $this->environment = $environment;
+  }
 
   /**
    * Determine whether module_builder is installed as a module.
