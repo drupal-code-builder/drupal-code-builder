@@ -683,8 +683,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
    * Invoke hook_module_builder_info().
    */
   function invokeInfoHook() {
-    $mb_factory = module_builder_get_factory();
-    $major_version = $mb_factory->environment->major_version;
+    $major_version = $this->environment->major_version;
 
     // TODO: just get ours if no bootstrap?
     $mask = '/\.module_builder.inc$/';
@@ -757,8 +756,7 @@ class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVer
    * Invoke hook_module_builder_info().
    */
   function invokeInfoHook() {
-    $mb_factory = module_builder_get_factory();
-    $major_version = $mb_factory->environment->major_version;
+    $major_version = $this->environment->major_version;
 
     // TODO: just get ours if no bootstrap?
     $mask = '/\.module_builder.inc$/';
@@ -901,8 +899,7 @@ class ModuleBuilderEnvironmentVersionHelper6 extends ModuleBuilderEnvironmentVer
    *  Data gathered from the hook implementations.
    */
   public function invokeInfoHook() {
-    $mb_factory = module_builder_get_factory();
-    $major_version = $mb_factory->environment->major_version;
+    $major_version = $this->environment->major_version;
 
     // TODO: just get ours if no bootstrap?
     $mb_files = $this->systemListing('/\.module_builder.inc$/', 'modules');
