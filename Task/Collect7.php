@@ -21,7 +21,7 @@ class Collect7 extends Collect {
    * online code repository viewer as is the case in previous versions of
    * Drupal).
    */
-  function gatherHookDocumentationFiles() {
+  protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
     $mb_factory = module_builder_get_factory();
     $directory = $mb_factory->environment->hooks_directory;

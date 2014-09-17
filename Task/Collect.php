@@ -65,7 +65,7 @@ class Collect extends Base {
    *    [module]      => node
    * @endcode
    */
-  function gatherHookDocumentationFiles() {
+  protected function gatherHookDocumentationFiles() {
     // Needs to be overridden by subclasses.
 
     // LEGACY CODE for versions that have not yet implemented their subclass of
@@ -115,7 +115,7 @@ class Collect extends Base {
              'body'        => $hook_data_raw['bodies'][$key],
 
    */
-  function processHookData($hook_file_data) {
+  protected function processHookData($hook_file_data) {
     //print_r($hook_file_data);
 
     // check file_exists?
@@ -252,7 +252,7 @@ class Collect extends Base {
    *    - 'names': The long names of the hooks, i.e. 'hook_foo'.
    *    - 'bodies': The function bodies of each hook.
    */
-  function processHookFile($filepath) {
+  protected function processHookFile($filepath) {
     $contents = file_get_contents("$filepath");
 
     // The pattern for extracting function data: capture first line of doc,
@@ -299,7 +299,7 @@ class Collect extends Base {
    *  The data from the implementation of hook_hook_info() for the module that
    *  provided the documentation file.
    */
-  function getHookInfo($file_data) {
+  protected function getHookInfo($file_data) {
     // Note that the 'module' key is flaky: some modules use a different name
     // for their api.php file.
     $module = $file_data['module'];

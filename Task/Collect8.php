@@ -21,7 +21,7 @@ class Collect8 extends Collect {
    * online code repository viewer as is the case in previous versions of
    * Drupal).
    */
-  function gatherHookDocumentationFiles() {
+  protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
     $mb_factory = module_builder_get_factory();
     $directory = $mb_factory->environment->hooks_directory;
@@ -122,7 +122,7 @@ class Collect8 extends Collect {
    *
    * This invokes hook_hook_info().
    */
-  function getHookInfo($file_data) {
+  protected function getHookInfo($file_data) {
     // Note that the 'module' key is flaky: some modules use a different name
     // for their api.php file.
     $module = $file_data['module'];
