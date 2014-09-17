@@ -13,6 +13,134 @@ namespace ModuleBuider\Task;
 class Collect8 extends Collect {
 
   /**
+   * Collect data about Drupal components from the current site's codebase.
+   */
+  public function collectComponentData() {
+    $this->collectHooks();
+    $this->collectPlugins();
+  }
+
+  /**
+   * Collect data about plugin types.
+   */
+  public function collectPlugins() {
+    // Get the IDs of all services from the container.
+    $service_ids = \Drupal::getContainer()->getServiceIds();
+    //drush_print_r($service_ids);
+
+    // Filter them down to the ones that are plugin managers.
+    // TODO: this omits some that don't conform to this pattern! Deal with
+    // these! See https://www.drupal.org/node/2086181
+    $plugin_manager_service_ids = array_filter($service_ids, function($element) {
+      if (strpos($element, 'plugin.manager.') === 0) {
+        return TRUE;
+      }
+    });
+
+    //drush_print_r($plugin_manager_service_ids);
+
+    // Assemble data from each one.
+    $plugin_type_data = array();
+    foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
+      // Get the class for the service.
+      $plugin_manager = \Drupal::service($plugin_manager_service_id);
+      $plugin_manager_class = get_class($plugin_manager);
+
+      //drush_print_r("$plugin_manager_service_id -> $plugin_manager_class");
+
+      // Get a reflection class for the plugin manager class.
+      $plugin_manager_reflection = new \ReflectionClass($plugin_manager_class);
+
+      // Get the lines of code body for the constructor method.
+      $constructor = $plugin_manager_reflection->getConstructor();
+      $filename = $constructor->getFileName();
+      $start_line = $constructor->getStartLine();
+      $end_line = $constructor->getEndLine();
+      $length = $end_line - $start_line;
+      $source = file($filename);
+      $lines = array_slice($source, $start_line, $length);
+
+      // Find the call to the parent constructor. This should be the first line.
+      // WARNING! This will BREAK if the call has a linebreak in it!
+      // TODO: Consider allowing for that!
+      $parent_constructor_call = NULL;
+      foreach ($lines as $line) {
+        if (preg_match('@\s*parent::__construct@', $line)) {
+          $parent_constructor_call = $line;
+          break;
+        }
+      }
+      if (empty($parent_constructor_call)) {
+        // We can't find the parent constructor call -- this plugin manager is
+        // doing something different.
+        drush_print("Unable to find call to parent constructor in plugin manager class constructor method for service $plugin_manager_service_id, class $plugin_manager.");
+        continue;
+      }
+
+      // The call to the constructor's parent method should be in this form:
+      //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+      // See Drupal\Core\Plugin\DefaultPluginManager for detail on these.
+      // Use PHP's tokenizer to get the string parameters.
+      // We need to add a PHP open tag for that to work.
+      $tokens = token_get_all('<?php ' . $parent_constructor_call);
+
+      // Go through the tokens and get the constant strings: these are the
+      // parameters to the call that we want.
+      $constant_string_parameters = array();
+      foreach ($tokens as $token) {
+        // For some reason, commas are not turned into tokens but appear as raw
+        // strings! WTF?!
+        if (!is_array($token)) {
+          continue;
+        }
+
+        $token_name = token_name($token[0]);
+        if ($token_name == 'T_CONSTANT_ENCAPSED_STRING') {
+          // These come with the quotation marks, so we have to trim those.
+          $constant_string_parameters[] = substr($token[1], 1, -1);
+        }
+      }
+
+      // We identify plugin types by the part of the plugin manager service name
+      // that comes 'plugin.manager.'.
+      $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
+
+      $data = array(
+        'type_id' => $plugin_type_id,
+        'subdir' => $constant_string_parameters[0],
+        // These two are optional parameters for
+        // Drupal\Core\Plugin\DefaultPluginManager::__construct(), and so might
+        // not be present.
+        'plugin_interface' => isset($constant_string_parameters[1]) ?
+          $constant_string_parameters[1] : NULL,
+        'plugin_definition_annotation_name' => isset($constant_string_parameters[2]) ?
+            $constant_string_parameters[2] : 'Drupal\Component\Annotation\Plugin',
+      );
+
+      // Now analyze the anotation.
+      // Get a reflection class for the annotation class.
+      $annotation_reflection = new \ReflectionClass($data['plugin_definition_annotation_name']);
+      $properties_reflection = $annotation_reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+
+      $plugin_properties = array();
+      foreach ($properties_reflection as $property_reflection) {
+        $plugin_properties[] = $property_reflection->name;
+      }
+
+      $data['plugin_properties'] = $plugin_properties;
+
+      $plugin_type_data[$plugin_type_id] = $data;
+    }
+
+    //drush_print_r($plugin_type_data);
+
+    // Write the processed data to a file.
+    $directory = $this->environment->hooks_directory;
+    $serialized = serialize($plugin_type_data);
+    file_put_contents("$directory/plugins_processed.php", $serialized);
+  }
+
+  /**
    * Gather hook documentation files.
    *
    * This retrieves a list of api hook documentation files from the current
