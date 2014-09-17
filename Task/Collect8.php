@@ -102,7 +102,7 @@ class Collect8 extends Collect {
       }
 
       // We identify plugin types by the part of the plugin manager service name
-      // that comes 'plugin.manager.'.
+      // that comes after 'plugin.manager.'.
       $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
 
       $data = array(

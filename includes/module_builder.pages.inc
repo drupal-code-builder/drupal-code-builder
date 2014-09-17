@@ -509,7 +509,7 @@ function module_builder_page_generate($form, &$form_state) {
 
   // No need to call prepareComponentDataProperty() here.
 
-  // Build module data
+  // Build module data.
   $module_data = module_data_from_form($form, $form_state['values'], $component_data_info);
 
   // Presets get expanded with JS.

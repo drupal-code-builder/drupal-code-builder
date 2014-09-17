@@ -55,6 +55,8 @@ abstract class RootComponent extends BaseGenerator {
    *  - 'required': Boolean indicating whether this property must be provided.
    *  - 'options': A list of options for the property. This is a callable, which
    *    must be called with the component data assembled so far.
+   *  - 'processing': A callback to processComponentData() to use to process
+   *    input values into the final format for the component data array.
    *
    * @see getComponentDataInfo()
    */
