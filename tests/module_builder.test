@@ -88,7 +88,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     // Perform final processing on the component data.
     // This prepares data, for example expands options such as hook presets.
     $root_generator = $mb_task_handler_generate->getRootGenerator();
-    $component_data_info = $root_generator->getComponentDataInfo(TRUE);
+    $component_data_info = $root_generator->getComponentDataInfo();
     $mb_task_handler_generate->getRootGenerator()->processComponentData($component_data_info, $module_data);
 
     $files = $mb_task_handler_generate->generateComponent($module_data);
