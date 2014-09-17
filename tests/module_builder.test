@@ -330,7 +330,7 @@ class ModuleBuilderHookCollectionTestCase extends DrupalUnitTestCase {
     $this->assertTrue(is_object($mb_task_handler_collect), "A task handler object was returned.");
 
     // Get the Task handler to assemble hook data.
-    $mb_task_handler_collect->collectHooks();
+    $mb_task_handler_collect->collectComponentData();
 
     // Now check the result.
     $hooks_directory = $mb_factory->environment->hooks_directory;

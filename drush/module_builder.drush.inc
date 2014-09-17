@@ -916,7 +916,7 @@ function drush_module_builder_callback_hook_download() {
     return drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
   }
 
-  $mb_task_handler_collect->collectHooks();
+  $mb_task_handler_collect->collectComponentData();
 
   // TODO: there is no return value from the hook collection (nor has there
   // been for a long time!)

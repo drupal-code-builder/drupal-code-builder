@@ -39,7 +39,7 @@
  * It ensures hook documentation files are available (on Drupal 5 and 6 by
  * downloading them).
  *
- * Should be called from Collect::collectHooks().
+ * Should be called from Collect::collectComponentData().
  *
  * @return
  *  Array of hook files suitable for passing to module_builder_process_hook_data().

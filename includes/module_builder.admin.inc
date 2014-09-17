@@ -114,5 +114,5 @@ function module_builder_admin_update_submit($form, $form_state) {
   // Safe to do this without exception handling: it's already been checked in
   // the form builder.
   $mb_task_handler_collect = $mb_factory->getTask('Collect');
-  $mb_task_handler_collect->collectHooks();
+  $mb_task_handler_collect->collectComponentData();
 }

@@ -21,11 +21,16 @@ class Collect extends Base {
   protected $sanity_level = 'hook_directory';
 
   /**
-   * Collect hook api.php documentation files from sources and process them.
-   *
-   * (Replaces module_builder_update_data().)
+   * Collect data about Drupal components from the current site's codebase.
    */
-  function collectHooks() {
+  public function collectComponentData() {
+    $this->collectHooks();
+  }
+
+  /**
+   * Collect hook api.php documentation files from sources and process them.
+   */
+  protected function collectHooks() {
     // Update the hook documentation.
     $hook_files = $this->gatherHookDocumentationFiles();
 
