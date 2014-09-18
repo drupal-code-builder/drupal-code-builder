@@ -117,6 +117,25 @@ class Collect8 extends Collect {
             $constant_string_parameters[2] : 'Drupal\Component\Annotation\Plugin',
       );
 
+      // Analyze the interface, if there is one.
+      if (empty($data['plugin_interface'])) {
+        $data['plugin_interface_methods'] = array();
+      }
+      else {
+        // Get a reflection class for the interface.
+        $plugin_interface_reflection = new \ReflectionClass($data['plugin_interface']);
+        $methods = $plugin_interface_reflection->getMethods();
+
+        foreach ($methods as $method) {
+          // Methods may be in parent interfaces, so not all in the same file.
+          $filename = $method->getFileName();
+          $source = file($filename);
+          $start_line = $method->getStartLine();
+          // Trim whitespace from the front, as this will be indented.
+          $data['plugin_interface_methods'][$method->getName()] = trim($source[$start_line - 1]);
+        }
+      }
+
       // Now analyze the anotation.
       // Get a reflection class for the annotation class.
       $annotation_reflection = new \ReflectionClass($data['plugin_definition_annotation_name']);
