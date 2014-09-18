@@ -117,12 +117,11 @@ EOT;
    *  The first line of text for the doxygen block.
    */
   function function_doxygen($text) {
-    return <<<EOT
-/**
- * $text
- */
-
-EOT;
+    return array(
+      '/**',
+      " * $text",
+      ' */',
+    );
   }
 
   /**
