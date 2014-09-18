@@ -107,6 +107,7 @@ class Collect8 extends Collect {
 
       $data = array(
         'type_id' => $plugin_type_id,
+        'service_id' => $plugin_manager_service_id,
         'subdir' => $constant_string_parameters[0],
         // These two are optional parameters for
         // Drupal\Core\Plugin\DefaultPluginManager::__construct(), and so might
