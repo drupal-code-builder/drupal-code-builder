@@ -216,6 +216,23 @@ class Module extends RootComponent {
           $component_data['hooks'] = $hooks;
         }
       ),
+      'plugins' => array(
+        'label' => 'Plugins',
+        'required' => FALSE,
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
+          $mb_task_handler_report_plugins = $mb_factory->getTask('ReportPluginData');
+
+          $options = $mb_task_handler_report_plugins->listPluginNamesOptions();
+
+          return $options;
+        },
+        // This tells the system that this is a request for generator
+        // components, and the input data should be placed in a nested array in
+        // the module data.
+        'component' => 'Plugin',
+      ),
       'settings_form' => array(
         'label' => "Admin settings form",
         'required' => FALSE,

@@ -57,6 +57,8 @@ function module_builder_drush_command() {
       'hooks' => "Short names of hooks, separated by spaces.",
       'presets:' => "Names of preset groups of hooks, e.g., 'block'." . "\n" .
         "Use the 'presets:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b presets: block'.",
+      'plugins:' => "Names of plugin types, using the suffix of the plugin manager service ID, e.g., 'block'." . "\n" .
+        "Use the 'plugins:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b plugins: block'.",
       'routes:' => "Menu paths, separated by spaces. " . "\n" .
         "Use the 'routes:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b routes: module/path module/otherpath'.",
       'settings_form!' => "Add this argument to add a settings form to the module.",
@@ -294,6 +296,9 @@ function drush_module_builder_callback_build_module() {
     ),
     'module_package' => array(
       'drush_option' => 'package',
+    ),
+    'plugins' => array(
+      'command_prefix' => 'plugins',
     ),
     'router_items' => array(
       'command_prefix' => 'routes',
