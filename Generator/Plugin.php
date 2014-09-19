@@ -157,14 +157,17 @@ class Plugin extends PHPFile {
   function class_body() {
     $code = array();
 
-    foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_declaration) {
+    foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_name => $interface_method_data) {
       $function_doc = $this->function_doxygen('{@inheritdoc}');
       $code = array_merge($code, $function_doc);
 
       // Trim the semicolon from the end of the interface method.
-      $method_declaration = substr($interface_method_declaration, 0, -1);
+      $method_declaration = substr($interface_method_data['declaration'], 0, -1);
 
       $code[] = "$method_declaration {";
+      // Add a comment with the method's first line of docblock, so the user
+      // has something more informative than '@inheritdoc' to go on!
+      $code[] = '  // ' . $interface_method_data['description'];
       $code[] = '}';
       $code[] = '';
     }
