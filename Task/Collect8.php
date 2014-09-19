@@ -39,6 +39,10 @@ class Collect8 extends Collect {
 
     //drush_print_r($plugin_manager_service_ids);
 
+    // Developer trapdoor: just process the block plugin type, to make terminal
+    // debug output easier to read through.
+    //$plugin_manager_service_ids = array('plugin.manager.block');
+
     // Assemble data from each one.
     $plugin_type_data = array();
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
