@@ -4,16 +4,25 @@
  * @file
  * Contains Module Builder Environment handlers.
  *
- * An environment handler provides an abstraction layer between Module Builder
+ * The environment system provides an abstraction layer between Module Builder
  * and its current environment, e.g., whether we are running as a Drush plugin,
- * a Drupal module, or being loaded as a library. The environment handler takes
- * care of things such as:
+ * a Drupal module, or being loaded as a library, and what major version of
+ * Drupal core we are running on. The environment handler takes care of things
+ * such as:
  *  - how to output debug data
  *  - how to get the Drupal core version
  *  - how to load an include file with a version suffix
  *  - how to find the hooks data directory.
- * To use an environment, the class name should be passed as a parameter to
- * module_builder_get_factory().
+ * To initialize the environment, pass the environment handler class name as a
+ * parameter to module_builder_get_factory():
+ * @code
+ * $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+ * @endcode
+ * The classes for the execution environment (Drush, Drupal, library) are
+ * supported by helper classes for Drupal core version, thus allowing the
+ * execution environment to be orthogonal to the major version. All methods on
+ * the helper core version object should be access via a wrapper on the main
+ * environment class.
  */
 
 /**
