@@ -100,10 +100,12 @@ class Plugin extends PHPFile {
    * rewriting!
    */
   function code_body() {
+    // Splice these together so they're not joined by a blank line.
+    $class_code = $this->class_annotation() . $this->class_body();
+
     return array(
       $this->code_namespace(),
-      $this->class_annotation(),
-      $this->class_body(),
+      $class_code,
     );
   }
 
@@ -184,6 +186,8 @@ class Plugin extends PHPFile {
     array_unshift($code, 'class ' . $this->component_data['class_name'] . ' {');
 
     $code[] = '}';
+    // Newline at end of file. TODO: this should be automatic!
+    $code[] = '';
 
     return implode("\n", $code);
   }
