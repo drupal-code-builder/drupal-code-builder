@@ -160,25 +160,6 @@ abstract class ModuleBuilderEnvironmentBase {
   abstract function getPath($subpath);
 
   /**
-   * Load an optionally versioned module builder include file.
-   *
-   * Include a version-specific file whether we're on drush or drupal.
-   * That is, we first try to include a file called NAME_X.inc where X is a
-   * Drupal major version number before falling back to NAME.inc.
-   *
-   * Files are included from the 'includes' folder inside module_builder.
-   *
-   * On Drush, this is a wrapper for drush_include().
-   * On Drupal, this just goes straight for the current version.
-   *
-   * @param $name
-   *  The filename, eg 'update'.
-   * @param $extension
-   *  The file extension.
-   */
-  abstract function loadInclude($name, $extension = 'inc');
-
-  /**
    * Detect the major Drupal core version and set the property for it.
    *
    * Helper for __construct().
@@ -324,24 +305,6 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
   }
 
   /**
-   * Load an optionally versioned module builder include file.
-   */
-  function loadInclude($name, $extension = 'inc') {
-    $path = $this->getPath('includes');
-
-    // Try the versioned file first.
-    $file = sprintf("%s/%s_%s.%s", $path, $name, $this->major_version, $extension);
-    //dsm($file);
-    if (file_exists($file)) {
-      require_once($file);
-      return;
-    }
-    // Fall back to the regular file.
-    $file = sprintf("%s/%s.%s", $path, $name, $extension);
-    require_once($file);
-  }
-
-  /**
    * Output debug data.
    */
   function debug($data, $message = '') {
@@ -412,24 +375,6 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
     $path = libraries_get_path('module_builder');
     $path = $path . '/' . $subpath;
     return $path;
-  }
-
-  /**
-   * Load an optionally versioned module builder include file.
-   */
-  function loadInclude($name, $extension = 'inc') {
-    $path = $this->getPath('includes');
-
-    // In Drupal GUI.
-    // Try the versioned file first.
-    $file = sprintf("%s/%s_%s.%s", $path, $name, $this->major_version, $extension);
-    if (file_exists($file)) {
-      require_once($file);
-      return;
-    }
-    // Fall back to the regular file.
-    $file = sprintf("%s/%s.%s", $path, $name, $extension);
-    require_once($file);
   }
 
 }
@@ -510,17 +455,6 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
     return $path;
   }
 
-  /**
-   * Load an optionally versioned module builder include file.
-   *
-   * On Drush this is just a wrapper around drush_include().
-   */
-  function loadInclude($name, $extension = 'inc') {
-    $path = $this->getPath('includes');
-    // The NULL means drush_include will try to find the version.
-    drush_include($path, $name, NULL, $extension);
-  }
-
 }
 
 /**
@@ -535,24 +469,6 @@ abstract class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBas
     $path = dirname(__FILE__) . '/..';
     $path = $path . '/' . $subpath;
     return $path;
-  }
-
-  /**
-   * Load an optionally versioned module builder include file.
-   */
-  function loadInclude($name, $extension = 'inc') {
-    $path = $this->getPath('includes');
-
-    // Try the versioned file first.
-    $file = sprintf("%s/%s_%s.%s", $path, $name, $this->major_version, $extension);
-    //dsm($file);
-    if (file_exists($file)) {
-      require_once($file);
-      return;
-    }
-    // Fall back to the regular file.
-    $file = sprintf("%s/%s.%s", $path, $name, $extension);
-    require_once($file);
   }
 
   /**
