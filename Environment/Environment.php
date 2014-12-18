@@ -154,8 +154,6 @@ abstract class ModuleBuilderEnvironmentBase {
   /**
    * Get a path to a resource that is safe to use either on Drupal or Drush.
    *
-   * (This is the OO version of module_builder_get_path().)
-   *
    * @param $subpath
    *  The subpath inside the module_builder folder. Eg, 'templates'.
    */
@@ -173,8 +171,6 @@ abstract class ModuleBuilderEnvironmentBase {
    * On Drush, this is a wrapper for drush_include().
    * On Drupal, this just goes straight for the current version.
    *
-   * (This is the OO version of module_builder_include().)
-   *
    * @param $name
    *  The filename, eg 'update'.
    * @param $extension
@@ -183,6 +179,8 @@ abstract class ModuleBuilderEnvironmentBase {
   abstract function loadInclude($name, $extension = 'inc');
 
   /**
+   * Detect the major Drupal core version and set the property for it.
+   *
    * Helper for __construct().
    */
   protected function setMajorVersion() {
@@ -202,6 +200,8 @@ abstract class ModuleBuilderEnvironmentBase {
 
   /**
    * Initialize the version helper object.
+   *
+   * Helper for __construct().
    */
   protected function initVersionHelper() {
     $helper_class_name = 'ModuleBuilderEnvironmentVersionHelper' . $this->major_version;
