@@ -72,13 +72,6 @@ class Collect extends Base {
    */
   protected function gatherHookDocumentationFiles() {
     // Needs to be overridden by subclasses.
-
-    // LEGACY CODE for versions that have not yet implemented their subclass of
-    // this: call the procedural function.
-    // Load the legacy procedural include file.
-    // TODO: move these into this class.
-    $this->environment->loadInclude('update');
-    return module_builder_update_documentation();
   }
 
   /**
