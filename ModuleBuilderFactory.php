@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the ModuleBuilderFactory class.
+ * Contains the ModuleBuilderFactory class and other support classes.
  *
  * This file should/could be somewhere else for autoloading, but the core issue
  * regarding PSR-4/X is still ongoing (https://drupal.org/node/1971198) and I'd
@@ -32,9 +32,6 @@ function module_builder_get_factory($environment_class = NULL) {
   static $factory;
 
   if (!isset($factory)) {
-    // Include old procedural include files.
-    include_once(dirname(__FILE__) . '/includes/common.inc');
-
     // Include the environment classes file.
     include_once(dirname(__FILE__) . '/Environment/Environment.php');
 
@@ -161,4 +158,13 @@ class ModuleBuilderFactory {
     return $class;
   }
 
+}
+
+/**
+ * Custom exception class.
+ */
+class ModuleBuilderException extends Exception {
+  // Flag set to TRUE if hook data needs downloading (and the folders are ok).
+  // This allows us to recover gracefully.
+  public $needs_hooks_download;
 }

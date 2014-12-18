@@ -26,8 +26,6 @@ function module_builder_drush_init() {
 function module_builder_drush_init_helper() {
   // Load the file containing our factory class.
   include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
-
-  include_once(dirname(__FILE__) . '/../includes/common.inc');
 }
 
 /**

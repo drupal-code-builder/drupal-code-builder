@@ -35,7 +35,6 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
 
     // Perform the work of module_builder_init().
     include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
-    include_once(dirname(__FILE__) . '/../includes/common.inc');
 
     // We rely on our own autoloader, but Drupal's core autoloaders are still
     // registered, and they will run first and crash -- so we remove them.
