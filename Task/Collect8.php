@@ -8,7 +8,9 @@
 namespace ModuleBuider\Task;
 
 /**
- * Task handler for collecting and processing hook definitions.
+ * Task handler for collecting and processing component definitions.
+ *
+ * This collects data on hooks and plugin types.
  */
 class Collect8 extends Collect {
 
