@@ -130,6 +130,42 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $this->assertInfoLine($info_file, 'name', $module_data['module_readable_name'], "The info file declares the module name.");
     $this->assertInfoLine($info_file, 'description', $module_data['module_short_description'], "The info file declares the module description.");
     $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");
+
+    // Create a module, specifying limited build.
+    // It is crucial to create a new module name, as we eval() the generated
+    // code!
+    $module_name = $this->randomName();
+    $module_data = array(
+      'base' => 'module',
+      'module_root_name' => $module_name,
+      'module_readable_name' => $this->randomString(),
+      'module_short_description' => $this->randomString(),
+      'hooks' => array(
+        // These two hooks will go in the .module file.
+        'hook_menu',
+        'hook_node_info',
+        // This goes in a tokens.inc file, and also has complex parameters.
+        'hook_tokens',
+        // This goes in the .install file.
+        'hook_install',
+      ),
+      'requested_build' => array(
+        'install' => TRUE,
+      ),
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertEqual(count($files), 1, "Only one file is returned.");
+
+    // Check the .install file.
+    $install_file = $files["$module_name.install"];
+
+    $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
+
+    $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
+
+    $this->assertHookDocblock($install_file, 'hook_install', "The install file contains the docblock for hook_install().");
+    $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
   }
 
   /**
