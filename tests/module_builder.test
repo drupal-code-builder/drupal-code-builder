@@ -83,15 +83,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
         'all' => TRUE,
       ),
     );
-
-    // Perform final processing on the component data.
-    // This prepares data, for example expands options such as hook presets.
-    $root_generator = $mb_task_handler_generate->getRootGenerator();
-    $component_data_info = $root_generator->getComponentDataInfo();
-    $mb_task_handler_generate->getRootGenerator()->processComponentData($component_data_info, $module_data);
-
-    $files = $mb_task_handler_generate->generateComponent($module_data);
-    //debug(array_keys($files));
+    $files = $this->generateModuleFiles($module_data);
 
     $this->assertTrue(isset($files["$module_name.module"]), "The files list has a .module file.");
     $this->assertTrue(isset($files["$module_name.install"]), "The files list has a .install file.");
@@ -138,6 +130,30 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $this->assertInfoLine($info_file, 'name', $module_data['module_readable_name'], "The info file declares the module name.");
     $this->assertInfoLine($info_file, 'description', $module_data['module_short_description'], "The info file declares the module description.");
     $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");
+  }
+
+  /**
+   * Generate module files from a data array.
+   *
+   * @param $module_data
+   *  An array of module data for the module generator.
+   *
+   * @param
+   *  An array of files.
+   */
+  function generateModuleFiles($module_data) {
+    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTestsSampleLocation');
+    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+    $root_generator = $mb_task_handler_generate->getRootGenerator();
+    $component_data_info = $root_generator->getComponentDataInfo();
+
+    // Perform final processing on the component data.
+    // This prepares data, for example expands options such as hook presets.
+    $mb_task_handler_generate->getRootGenerator()->processComponentData($component_data_info, $module_data);
+
+    $files = $mb_task_handler_generate->generateComponent($module_data);
+
+    return $files;
   }
 
   /**
