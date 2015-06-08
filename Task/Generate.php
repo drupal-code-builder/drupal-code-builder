@@ -91,8 +91,6 @@ class Generate extends Base {
    *
    * This is the entry point for the generating system.
    *
-   * (Replaces module_builder_generate_component().)
-   *
    * @param $component_data
    *  An associative array of data for the component. Values depend on the
    *  component class. For details, see the constructor of the generator, of the
