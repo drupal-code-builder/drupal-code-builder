@@ -101,15 +101,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $module_file = $files["$module_name.module"];
     //debug($module_file);
 
-    // Code passed to eval() should not have an opening PHP tag, which our
-    // module code does. However, we can close a PHP tag at the start and then
-    // our opening tag is acceptable.
-    // It should be safe to eval as all of the functions will be prefixed with
-    // the module name (unless something has gone horribly wrong, in which case
-    // case the test should fail anyway.)
-    $eval = eval('?>' . $module_file);
-    // eval() returns FALSE if there is a parse error.
-    $this->assertIdentical($eval, NULL, "Module file parses as well-formed PHP.");
+    $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
 
     $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
 
@@ -124,8 +116,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     // Check the .install file.
     $install_file = $files["$module_name.install"];
 
-    $eval = eval('?>' . $install_file);
-    $this->assertIdentical($eval, NULL, "Install file parses as well-formed PHP.");
+    $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
 
     $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
 
@@ -147,6 +138,30 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $this->assertInfoLine($info_file, 'name', $module_data['module_readable_name'], "The info file declares the module name.");
     $this->assertInfoLine($info_file, 'description', $module_data['module_short_description'], "The info file declares the module description.");
     $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");
+  }
+
+  /**
+   * Assert a string is correctly-formed PHP.
+   *
+   * @param $string
+   *  The text of PHP to check. This is expected to begin with a '<?php' tag.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertWellFormedPHP($code, $message = NULL) {
+    if (!isset($message)) {
+      $message = "String evaluates as correct PHP.";
+    }
+
+    // Code passed to eval() should not have an opening PHP tag, which our
+    // module code does. However, we can close a PHP tag at the start and then
+    // our opening tag is acceptable.
+    // It should be safe to eval as all of the functions will be prefixed with
+    // the module name (unless something has gone horribly wrong, in which case
+    // case the test should fail anyway.)
+    $eval = eval('?>' . $code);
+    // eval() returns FALSE if there is a parse error.
+    $this->assertIdentical($eval, NULL, $message);
   }
 
   /**
