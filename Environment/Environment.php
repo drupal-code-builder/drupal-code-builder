@@ -545,7 +545,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
 
   private $major_version = 8;
 
-  private $environment;
+  protected $environment;
 
   /**
    * Constructor.
