@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains general generator classes, abstract parents, etc.
+ * Contains ModuleBuider\Generator\BaseGenerator.
  */
 
 namespace ModuleBuider\Generator;
