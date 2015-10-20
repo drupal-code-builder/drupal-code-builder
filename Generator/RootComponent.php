@@ -40,9 +40,12 @@ abstract class RootComponent extends BaseGenerator {
    * Note this can't be a class property due to use of closures.
    *
    * @return
-   *  An array that defines the data this component needs to operate. Each key
-   *  corresponds to a key for a property in the $component_data that should be
-   *  passed to __construct(). Each value is an array, with the following keys:
+   *  An array that defines the data this component needs to operate. The order
+   *  is important, as callbacks may depend on component data that has been
+   *  assembled so far, i.e., on data properties that are earlier in the array.
+   *  Each key corresponds to a key for a property in the $component_data that
+   *  should be passed to this class's __construct(). Each value is an array,
+   *  with the following keys:
    *  - 'label': A human-readable label for the property.
    *  - 'format': Specifies the expected format for the property. One of
    *    'string' or 'array'.
