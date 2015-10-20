@@ -17,16 +17,18 @@ namespace ModuleBuider\Generator;
  *  - a list of file info is built up, with each generator allowed to contribute
  *  - the file info is processed and returned for the caller to output
  *
- * The generator system works by starting with a particular generator for a
+ * @section sec_gather_generators Gathering generators
+ * The generator system starts with a particular generator for a
  * given component (e.g., 'module'), and then adding generators this one
  * requests, recursing this process into each new generator and building a tree
- * down from the original one. This is achieved by each generator class
- * implementing requiredComponents() to return its child components. The process ends
+ * down from the original one. This is done by assembleComponentList(), which is
+ * recursively called on each generator class. Each class implements
+ * requiredComponents() to return a list of child components. The process ends
  * when the added generators are themselves one that return no sub-components.
  *
- * So for example, the caller requests a 'module' component. This causes
- * the entry point to the system, Generate::generateComponent() to
- * instantiate a module generator, which is then interrogated for its
+ * So for example, the caller requests a 'module' component. This causes the
+ * entry point to the system, ModuleBuider\Task\Generate::generateComponent(),
+ * to instantiate a module generator, which is then interrogated for its
  * subcomponents. It returns, say, that it needs:
  *  - a README file
  *  - a .info file
@@ -41,20 +43,27 @@ namespace ModuleBuider\Generator;
  * The end result is a flat list of components, keyed by component names. Each
  * component has the data it needs to operate.
  *
- * Once we have this, we iterate over it to assemble a tree structure, which
- * tells us which components contains which other components. For example, the
- * module code file contains functions and hook implementations.
+ * @section sec_assemble_tree Assemble component tree
+ * The list of components is iterated over in assembleComponentTree() to
+ * assemble a tree structure of the components, where child components are those
+ * that are contained by their parents. For example, the module code file
+ * contains functions and hook implementations.
  *
- * Once we have this, we then recurse once more into it, this time building up
+ * This tree is iterated over again in assembleContainedComponents() to allow
+ * the parent components in the tree to gather data from their child components.
+ *
+ * @section sec_assemble_file_info Collect file info
+ * We then recurse down the tree in collectFiles(), building up
  * an array of file info that we pass by reference (this it can be altered
  * as well as added to, though generator order is TBFO). Generator classes that
  * wish to add files should override collectFiles() to add them.
  *
+ * @section sec_assemble_files Assemble files
  * Finally, we assemble the file info into filenames and code, ready for the
  * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
  * appropriate way. This is done in the starting generator's assembleFiles().
  *
- * There are three distinc hierarchies at work here:
+ * There are three distinct hierarchies at work here:
  *  - A plain PHP class hierarchy, which is just there to allow us to make use
  *    of method inheritance. So for instance, ModuleCodeFile inherits from File.
  *    This is just for code re-use.
