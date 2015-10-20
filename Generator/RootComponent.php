@@ -47,19 +47,27 @@ abstract class RootComponent extends BaseGenerator {
    *  should be passed to this class's __construct(). Each value is an array,
    *  with the following keys:
    *  - 'label': A human-readable label for the property.
-   *  - 'format': Specifies the expected format for the property. One of
-   *    'string' or 'array'.
-   *  - 'default': The default value for the property. This is either a static
-   *    value, or a callable, in which case it must be called with the array of
-   *    component data assembled so far. Depending on the value of 'required',
-   *    this represents either the value that may be presented as a default to
-   *    the user in a UI for convenience, or the value that will be be set if
-   *    nothing is provided when instatiating the component.
-   *  - 'required': Boolean indicating whether this property must be provided.
-   *  - 'options': A list of options for the property. This is a callable, which
-   *    must be called with the component data assembled so far.
-   *  - 'processing': A callback to processComponentData() to use to process
-   *    input values into the final format for the component data array.
+   *  - 'format': (optional) Specifies the expected format for the property.
+   *    One of 'string', 'array', or 'boolean'. Defaults to 'string'.
+   *  - 'default': (optional) The default value for the property. This is either
+   *    a static value, or a callable, in which case it must be called with the
+   *    array of component data assembled so far. Depending on the value of
+   *    'required', this represents either the value that may be presented as a
+   *    default to the user in a UI for convenience, or the value that will be
+   *    set if nothing is provided when instatiating the component.
+   *  - 'required': (optional) Boolean indicating whether this property must be
+   *    provided. Defaults to FALSE.
+   *  - 'options': (optional) A callable which returns a list of options for the
+   *    property. This receives the component data assembled so far.
+   *  - 'processing': (optional) A callback to processComponentData() to use to
+   *    process input values into the final format for the component data array.
+   *  - 'component': (optional) The name of a generator class, relative to the
+   *    namespace. If present, this results in child components of this class
+   *    being added to the component tree. If the property format is 'boolean',
+   *    a single child is added; if 'array', one child is added for each value
+   *    in the array.
+   *  - 'computed': (optional) If TRUE, indicates that this property is computed
+   *    by the component, and should not be obtained from the user.
    *
    * @see getComponentDataInfo()
    */
