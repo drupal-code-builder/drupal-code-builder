@@ -8,7 +8,7 @@
 namespace ModuleBuider\Generator;
 
 /**
- * Generator for hook_theme() implementation.
+ * Generator for hook_menu() implementation.
  */
 class HookMenu extends HookImplementation {
 
