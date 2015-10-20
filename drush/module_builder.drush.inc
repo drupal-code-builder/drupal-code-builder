@@ -600,8 +600,9 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     // Prepare the single property: get options, default value, etc.
     $root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
 
-    // Initialize our value as empty. We try various things to set it.
-    $value = NULL;
+    // Initialize our value from the default that's been set by
+    // prepareComponentDataProperty(). We try various things to set it.
+    $value = $component_data[$property_name];
 
     // If the property is required, and there are plain command parameters
     // remaining, take one of those.
