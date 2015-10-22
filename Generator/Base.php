@@ -235,8 +235,6 @@ abstract class BaseGenerator {
         $component_data = $data;
       }
 
-      $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
-
       // If the component is already present, merge any additionally requested
       // data with the existing component and then continue to the next one.
       if (isset($base_component->components[$component_name])) {
@@ -246,6 +244,8 @@ abstract class BaseGenerator {
 
         continue;
       }
+
+      $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
 
       // Add the new component to the master array of components on the base.
       $base_component->components[$component_name] = $generator;
