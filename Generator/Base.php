@@ -229,6 +229,9 @@ abstract class BaseGenerator {
       if (is_string($data)) {
         $component_type = $data;
         $component_data = array();
+
+        // Set the type in the array for consistency in debugging.
+        $component_data['component_type'] = $component_type;
       }
       else {
         $component_type = $data['component_type'];
