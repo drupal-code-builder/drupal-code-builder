@@ -9,8 +9,6 @@ namespace ModuleBuider\Task;
 
 /**
  * Task handler for generating a component.
- *
- * (Replaces generate.inc.)
  */
 class Generate extends Base {
 
