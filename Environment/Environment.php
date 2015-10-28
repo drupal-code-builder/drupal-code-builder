@@ -334,7 +334,6 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
  *      'version' => 'none',
  *      'files' => array(
  *        'php' => array(
- *          'includes/common.inc',
  *          'ModuleBuilderFactory.php',
  *        ),
  *      ),
@@ -342,7 +341,6 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
  *      'integration files' => array(
  *        'module_builder_ui' => array(
  *          'php' => array(
- *            'includes/common.inc',
  *            'ModuleBuilderFactory.php',
  *          ),
  *        ),
