@@ -135,6 +135,13 @@ class Module extends RootComponent {
         'default' => NULL,
         'required' => FALSE,
       ),
+      // This adds permissions, so needs to be before permissions.
+      'settings_form' => array(
+        'label' => "Admin settings form",
+        'required' => FALSE,
+        'format' => 'boolean',
+        'component' => 'AdminSettingsForm',
+      ),
       'permissions' => array(
         'label' => "Permissions",
         'required' => FALSE,
@@ -238,12 +245,6 @@ class Module extends RootComponent {
         // components, and the input data should be placed in a nested array in
         // the module data.
         'component' => 'Plugin',
-      ),
-      'settings_form' => array(
-        'label' => "Admin settings form",
-        'required' => FALSE,
-        'format' => 'boolean',
-        'component' => 'AdminSettingsForm',
       ),
       'router_items' => array(
         'label' => "required router paths, eg 'path/foo'",
