@@ -237,7 +237,7 @@ abstract class BaseGenerator {
       // level.
       foreach ($current_level as $current_level_component_name => $item) {
         // Each item of the current level gives us some children.
-        $item_subcomponent_info = $item->requiredComponents($base_component->components);
+        $item_subcomponent_info = $item->requiredComponents();
 
         // Instantiate each one (if not already done), and add it to the next
         // level.
