@@ -63,9 +63,8 @@ abstract class RootComponent extends BaseGenerator {
    *    process input values into the final format for the component data array.
    *  - 'component': (optional) The name of a generator class, relative to the
    *    namespace. If present, this results in child components of this class
-   *    being added to the component tree. If the property format is 'boolean',
-   *    a single child is added; if 'array', one child is added for each value
-   *    in the array.
+   *    being added to the component tree. The handling of this is determined
+   *    by the component class's requestedComponentHandling() method.
    *  - 'computed': (optional) If TRUE, indicates that this property is computed
    *    by the component, and should not be obtained from the user.
    *
@@ -238,17 +237,28 @@ abstract class RootComponent extends BaseGenerator {
         // Get the component type.
         $component_type = $property_info['component'];
 
-        switch ($property_info['format']) {
-          case 'array':
+        // Ask the component type class how to handle this.
+        $class = $this->task->getGeneratorClass($component_type);
+        $handling_type = $class::requestedComponentHandling();
+
+        switch ($handling_type) {
+          case 'singleton':
+            // The component type can only occur once and therefore the name is
+            // the same as the type.
+            $component_data['requested_components'][$component_type] = $component_type;
+            break;
+          case 'repeat':
             // Each value in the array is the name of a component.
             foreach ($component_data[$property_name] as $requested_component_name) {
               $component_data['requested_components'][$requested_component_name] = $component_type;
             }
             break;
-          case 'boolean':
-            // The component type can only occur once and therefore the name is
-            // the same as the type.
-            $component_data['requested_components'][$component_type] = $component_type;
+          case 'group':
+            // Request a single component with the list of data.
+            $component_data['requested_components'][$component_type] = array(
+              'request_data' => $component_data[$property_name],
+              'component_type' => $component_type,
+            );
             break;
         }
       }

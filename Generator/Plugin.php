@@ -53,6 +53,13 @@ class Plugin extends PHPFile {
   }
 
   /**
+   * @inheritdoc
+   */
+  public static function requestedComponentHandling() {
+    return 'repeat';
+  }
+
+  /**
    * Build the code files.
    */
   function collectFiles(&$files) {

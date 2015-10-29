@@ -17,6 +17,13 @@ namespace ModuleBuider\Generator;
 class AdminSettingsForm extends Form {
 
   /**
+   * @inheritdoc
+   */
+  public static function requestedComponentHandling() {
+    return 'singleton';
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   protected function requiredComponents() {

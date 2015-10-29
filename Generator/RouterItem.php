@@ -56,6 +56,13 @@ class RouterItem extends BaseGenerator {
   }
 
   /**
+   * @inheritdoc
+   */
+  public static function requestedComponentHandling() {
+    return 'repeat';
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * @return

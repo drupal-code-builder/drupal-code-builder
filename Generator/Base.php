@@ -321,6 +321,25 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Defines how this component should be handled when requested directly.
+   *
+   * @return
+   *  A string which defines how this component should be instantiated when
+   *  it's requested in incoming component data. One of:
+   *  - 'singleton': The component may exist only once, and should be created
+   *    with its name set to the component type.
+   *  - 'repeat': The component may exist in multiple copies, and one should be
+   *    created for each value in the component data.
+   *  - 'group': The component should be instantiated once, with all the values
+   *    set in its data.
+   *
+   * @see RootComponent::processComponentData()
+   */
+  public static function requestedComponentHandling() {
+    return 'repeat';
+  }
+
+  /**
    * Assemble a tree of components, grouped by what they contain.
    *
    * For example, a code file contains its functions; a form component
