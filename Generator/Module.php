@@ -135,6 +135,12 @@ class Module extends RootComponent {
         'default' => NULL,
         'required' => FALSE,
       ),
+      'permissions' => array(
+        'label' => "Permissions",
+        'required' => FALSE,
+        'format' => 'array',
+        'component' => 'Permissions',
+      ),
       'module_hook_presets' => array(
         'label' => 'Hook preset groups',
         'required' => FALSE,

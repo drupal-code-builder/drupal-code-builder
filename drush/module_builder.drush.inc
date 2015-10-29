@@ -59,6 +59,8 @@ function module_builder_drush_command() {
         "Use the 'plugins:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b plugins: block'.",
       'routes:' => "Menu paths, separated by spaces. " . "\n" .
         "Use the 'routes:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b routes: module/path module/otherpath'.",
+      'perms:' => "Permission names, separated by spaces. " . "\n" .
+        "Use the 'perms:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b perms: 'administer my module''. Quote strings that contain spaces.",
       'settings_form!' => "Add this argument to add a settings form to the module.",
     ),
     // Commented out, as only the first argument is required.
@@ -294,6 +296,9 @@ function drush_module_builder_callback_build_module() {
     ),
     'module_package' => array(
       'drush_option' => 'package',
+    ),
+    'permissions' => array(
+      'command_prefix' => 'perms',
     ),
     'plugins' => array(
       'command_prefix' => 'plugins',
