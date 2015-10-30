@@ -15,7 +15,8 @@ namespace ModuleBuider\Generator;
  * group of files, or section of a file.
  *
  * A module component requests a hook component, and this component in turn
- * requests one or more ModuleCodeFile components.
+ * requests one or more HookImplementation components. Those will then in turn
+ * request ModuleCodeFile components for the file they should reside in.
  *
  * TODO: make this work for theme hooks too?
  *
