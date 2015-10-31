@@ -14,9 +14,9 @@
  *  - how to load an include file with a version suffix
  *  - how to find the hooks data directory.
  * To initialize the environment, pass the environment handler class name as a
- * parameter to module_builder_get_factory():
+ * parameter to \ModuleBuilder\Factory::setEnvironment():
  * @code
- * $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+ *  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
  * @endcode
  * The classes for the execution environment (Drush, Drupal, library) are
  * supported by helper classes for Drupal core version, thus allowing the
@@ -33,11 +33,10 @@ abstract class ModuleBuilderEnvironmentBase {
   /**
    * Whether to skip the sanity tests.
    *
-   * This may be set on the environment after its class name is passed to
-   * module_builder_get_factory. Example:
+   * This may be set on the environment after it has been initialized. Example:
    * @code
-   * $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-   * $mb_factory->environment->skipSanity = TRUE;
+   * \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
+   * \ModuleBuilder\Factory::getEnvironment()->skipSanity = TRUE;
    * @endcode
    */
   public $skipSanity = FALSE;

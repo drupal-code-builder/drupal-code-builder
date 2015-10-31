@@ -19,8 +19,7 @@ class Collect6 extends Collect {
    * version control server.
    */
   protected function gatherHookDocumentationFiles() {
-    $mb_factory = module_builder_get_factory();
-    $directory = $mb_factory->environment->hooks_directory;
+    $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
 
     // Fetch data about the files we need to download.
     $hook_files = $this->getHookFileUrls($directory);
@@ -63,8 +62,7 @@ class Collect6 extends Collect {
    */
   function getHookFileUrls($directory) {
     // Get data by invoking our hook.
-    $mb_factory = module_builder_get_factory();
-    $data = $mb_factory->environment->invokeInfoHook();
+    $data = \ModuleBuilder\Factory::getEnvironment()->invokeInfoHook();
 
     foreach ($data as $module => $module_data) {
       $branch = $module_data['branch'];

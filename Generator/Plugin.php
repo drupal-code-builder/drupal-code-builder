@@ -42,8 +42,7 @@ class Plugin extends PHPFile {
     // Set some default properties.
     $component_data += array();
 
-    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-    $mb_task_handler_report_plugins = $mb_factory->getTask('ReportPluginData');
+    $mb_task_handler_report_plugins = \ModuleBuilder\Factory::getTask('ReportPluginData');
     $plugin_data = $mb_task_handler_report_plugins->listPluginData();
     $plugin_data = $plugin_data[$component_name];
 

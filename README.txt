@@ -138,7 +138,7 @@ command line, and the Drupal module for use in the web UI.
 This framework has a public API which can be used by other modules.
 
 To get started with using the Module Builder API, see:
-  - module_builder_get_factory()
+  - \ModuleBuilder\Factory
   - the classes in Environment/Environment.php
   - the tasks handlers in the Task folder.
 

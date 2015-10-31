@@ -47,20 +47,19 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
    * Test generating module code.
    */
   function testModuleGeneration() {
-    // Get the Module Builder factory, specifying our environment.
-    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTestsSampleLocation');
+    \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentTestsSampleLocation');
 
     // Get the hooks directory. WHY?
-    $hooks_directory = $mb_factory->environment->hooks_directory;
+    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
 
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     $this->assertTrue(is_object($mb_task_handler_report), "A task handler object was returned.");
 
     $hook_groups = $mb_task_handler_report->listHookData();
     $this->assertTrue(is_array($hook_groups) || !empty($hook_groups), "An non-empty array of hook data was returned.");
 
     // READY TO GO! MAKE SOME MODULES!
-    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
     $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
 
     // Assemble module data.
@@ -178,8 +177,8 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
    *  An array of files.
    */
   function generateModuleFiles($module_data) {
-    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTestsSampleLocation');
-    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+    \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentTestsSampleLocation');
+    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
     $root_generator = $mb_task_handler_generate->getRootGenerator();
     $component_data_info = $root_generator->getComponentDataInfo();
 
@@ -389,17 +388,16 @@ class ModuleBuilderHookCollectionTestCase extends DrupalUnitTestCase {
   }
 
   function testHookCollection() {
-    // Get the Module Builder factory, specifying our environment.
-    $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentTestsTempLocation');
+    \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentTestsTempLocation');
 
-    $mb_task_handler_collect = $mb_factory->getTask('Collect');
+    $mb_task_handler_collect = \ModuleBuilder\Factory::getTask('Collect');
     $this->assertTrue(is_object($mb_task_handler_collect), "A task handler object was returned.");
 
     // Get the Task handler to assemble hook data.
     $mb_task_handler_collect->collectComponentData();
 
     // Now check the result.
-    $hooks_directory = $mb_factory->environment->hooks_directory;
+    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
     $directory_listing = scandir($hooks_directory);
 
     $this->assertTrue(in_array('node.api.php', $directory_listing), 'The node.api.php documentation file was found.');

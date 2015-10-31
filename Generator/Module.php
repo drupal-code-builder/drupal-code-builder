@@ -154,8 +154,7 @@ class Module extends RootComponent {
         'format' => 'array',
         'options' => function(&$property_info) {
           /// ARGH how to make format that is good for both UI and drush?
-          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-          $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+          $mb_task_handler_report_presets = \ModuleBuilder\Factory::getTask('ReportHookPresets');
           $hook_presets = $mb_task_handler_report_presets->getHookPresets();
 
           // Stash the hook presets in the property info so the processing
@@ -196,16 +195,14 @@ class Module extends RootComponent {
         'required' => FALSE,
         'format' => 'array',
         'options' => function(&$property_info) {
-          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-          $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+          $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
 
           $hook_options = $mb_task_handler_report_hooks->listHookNamesOptions();
 
           return $hook_options;
         },
         'processing' => function($value, &$component_data, &$property_info) {
-          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-          $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+          $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
           // Get the flat list of hooks, standardized to lower case.
           $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
 
@@ -234,8 +231,7 @@ class Module extends RootComponent {
         'required' => FALSE,
         'format' => 'array',
         'options' => function(&$property_info) {
-          $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-          $mb_task_handler_report_plugins = $mb_factory->getTask('ReportPluginData');
+          $mb_task_handler_report_plugins = \ModuleBuilder\Factory::getTask('ReportPluginData');
 
           $options = $mb_task_handler_report_plugins->listPluginNamesOptions();
 

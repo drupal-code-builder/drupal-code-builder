@@ -57,9 +57,8 @@ class API extends PHPFile {
   function code_body() {
     $component_data = $this->getRootComponentData();
 
-    $mb_factory = module_builder_get_factory();
     // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_analyze = $mb_factory->getTask('AnalyzeModule');
+    $mb_task_handler_analyze = \ModuleBuilder\Factory::getTask('AnalyzeModule');
 
     $hooks = $mb_task_handler_analyze->getInventedHooks($component_data['module_root_name']);
 

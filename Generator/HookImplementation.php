@@ -42,10 +42,8 @@ class HookImplementation extends PHPFunction {
    *  An array of subcomponent names and types.
    */
   protected function requiredComponents() {
-    // TODO! Caching!
-    $mb_factory = module_builder_get_factory();
     // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
     //drush_print_r($hook_function_declarations[$this->name]);
 
@@ -89,7 +87,7 @@ class HookImplementation extends PHPFunction {
     // See if function bodies exist; if so, use function bodies from template
     if (isset($hook['template'])) {
       // Strip out INFO: comments for advanced users
-      if (!module_builder_get_factory()->environment->getSetting('module_builder_detail', 0)) {
+      if (!\ModuleBuilder\Factory::getEnvironment()->getSetting('module_builder_detail', 0)) {
         // Used to strip INFO messages out of generated file for advanced users.
         $pattern = '#\s+/\* INFO:(.*?)\*FILLERDONTCLOSECOMMENT/#ms';
         $hook['template'] = preg_replace($pattern, '', $hook['template']);

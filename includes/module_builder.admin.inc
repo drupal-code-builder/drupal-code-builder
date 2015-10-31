@@ -63,12 +63,11 @@ function module_builder_admin_settings($form, &$form_state) {
  * Admin hook update form.
  */
 function module_builder_admin_update($form, &$form_state) {
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrupalUI');
 
   // Get our task, and check hook data is ready.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookDataFolder');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookDataFolder');
   }
   catch (ModuleBuilderException $e) {
     drupal_set_message($e->getMessage(), 'warning');
@@ -79,7 +78,7 @@ function module_builder_admin_update($form, &$form_state) {
   // data.
   $last_update = $mb_task_handler_report->lastUpdatedDate();
   $doc_files = $mb_task_handler_report->listHookFiles();
-  $directory = $mb_factory->environment->hooks_directory;
+  $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
 
 
   $form['last_update'] = array(
@@ -109,10 +108,10 @@ function module_builder_admin_update($form, &$form_state) {
  * Admin hook update form submit handler.
  */
 function module_builder_admin_update_submit($form, $form_state) {
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrupalUI');
 
   // Safe to do this without exception handling: it's already been checked in
   // the form builder.
-  $mb_task_handler_collect = $mb_factory->getTask('Collect');
+  $mb_task_handler_collect = \ModuleBuilder\Factory::getTask('Collect');
   $mb_task_handler_collect->collectComponentData();
 }

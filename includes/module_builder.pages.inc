@@ -58,14 +58,13 @@ function module_builder_page($form, &$form_state) {
  * Form builder for page 1.
  */
 function module_builder_page_input($form, &$form_state) {
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrupalUI');
 
   // Get our task handler, which checks hook data is ready, and our generate
   // handler, from which to get the list of properties to collect.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
-    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
   }
   catch (ModuleBuilderException $e) {
     if ($e->needs_hooks_download) {
@@ -128,7 +127,7 @@ function module_builder_page_input($form, &$form_state) {
   }
 
   // Get the hook names for the presets for our Javascript to work with.
-  $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+  $mb_task_handler_report_presets = \ModuleBuilder\Factory::getTask('ReportHookPresets');
   $hook_presets = $mb_task_handler_report_presets->getHookPresets();
   foreach ($hook_presets as $hook_preset_name => $hook_preset_data) {
     // Build a reverse array whose keys are hooks and values are arrays
@@ -332,7 +331,7 @@ function module_builder_page_input($form, &$form_state) {
 
   // Get the hook presets list.
   try {
-    $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+    $mb_task_handler_report_presets = \ModuleBuilder\Factory::getTask('ReportHookPresets');
   }
   catch (ModuleBuilderException $e) {
     // We've already sanity-checked, so doubtful we come here.
@@ -498,10 +497,10 @@ function module_builder_page_input_submit($form, &$form_state) {
  * Form builder for page 2: generate code.
  */
 function module_builder_page_generate($form, &$form_state) {
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrupalUI');
+  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrupalUI');
 
   // Get our task handler. The form builder will already have checked sanity.
-  $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+  $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
 
   // Get the component data info.
   $root_generator = $mb_task_handler_generate->getRootGenerator();

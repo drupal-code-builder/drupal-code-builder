@@ -19,13 +19,16 @@ function module_builder_drush_init() {
 }
 
 /**
- * Include our common files.
+ * Load the file for the factory class and set the environment on it.
  *
  * Helper for hook_drush_init() and completion callbacks.
  */
 function module_builder_drush_init_helper() {
   // Load the file containing our factory class.
   include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
+
+  // Set up the MB factory.
+  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
 }
 
 /**
@@ -237,12 +240,10 @@ function drush_module_builder_callback_build_module() {
   // Check settings before we start. This sort of wastes the potential of using
   // exceptions, but it's polite to warn the user of problems before they've
   // spent ages typing in all the hook names in interactive mode.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get our task handler. This performs a sanity check on the environment which
   // throws an exception.
   try {
-    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
   }
   catch (ModuleBuilderException $e) {
     // If the problem is that the hooks need downloading, we can recover from this.
@@ -256,7 +257,7 @@ function drush_module_builder_callback_build_module() {
         }
 
         // Get the task handler that we were trying to get in the first place.
-        $mb_task_handler_generate = $mb_factory->getTask('Generate', 'module');
+        $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
       }
     }
     // Otherwise, fail.
@@ -391,17 +392,14 @@ function module_builder_module_builder_callback_build_complete() {
   // So do it ourselves.
   module_builder_drush_init_helper();
 
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Add our environment handler, and check hook data is ready.
   try {
     // Drupal bootstrap isn't ready enough to check environment, because the
     // file API isn't loaded. This isn't bad, because here it's us, the caller,
     // that knows we can't pass the check.
-    $mb_factory->environment->skipSanity = TRUE;
+    \ModuleBuilder\Factory::getEnvironment()->skipSanity = TRUE;
 
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     // Just do nothing if we're not ready: the actual command will deal with
@@ -438,11 +436,9 @@ function drush_module_builder_callback_build_theme() {
 
   $theme_data = array();
 
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Create our environment handler, set it, then get the task.
   try {
-    $mb_task_handler_generate = $mb_factory->getTask('Generate', 'theme');
+    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'theme');
   }
   catch (ModuleBuilderException $e) {
     // Doubtful we get here.
@@ -529,13 +525,10 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
  *  added. Command callbacks may wish to gather extra data, or add defaults.
  */
 function drush_module_builder_build_component($commands, $component_type, $component_info_drush_extra = array(), $component_data = array()) {
-  // Get the module builder factory, set up for our environment.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get the Generator task, specifying the component we want so we get a
   // sanity check based on that and our environment.
   try {
-    $mb_task_handler_generate = $mb_factory->getTask('Generate', $component_type);
+    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', $component_type);
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -913,13 +906,10 @@ function module_builder_drush_output_code($component_dir, $filename, $code) {
  *  Boolean indicating TRUE for success, FALSE for failure.
  */
 function drush_module_builder_callback_hook_download() {
-  // Get the MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get our task handler. This performs a sanity check which throws an
   // exception.
   try {
-    $mb_task_handler_collect = $mb_factory->getTask('Collect');
+    $mb_task_handler_collect = \ModuleBuilder\Factory::getTask('Collect');
   }
   catch (ModuleBuilderException $e) {
     return drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -936,7 +926,8 @@ function drush_module_builder_callback_hook_download() {
     return drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hooks.');
   }
   else {
-    drush_print("Hook files have been downloaded to {$mb_factory->environment->hooks_directory} and processed.");
+    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    drush_print("Hook files have been downloaded to {$hooks_directory} and processed.");
     return TRUE;
   }
 }
@@ -945,12 +936,9 @@ function drush_module_builder_callback_hook_download() {
  * Callback to list known hooks.
  */
 function drush_module_builder_callback_hook_list() {
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get our task handler, which checks hook data is ready.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -988,7 +976,7 @@ function drush_module_builder_callback_hook_list() {
 
   // List presets.
   try {
-    $mb_task_handler_report_presets = $mb_factory->getTask('ReportHookPresets');
+    $mb_task_handler_report_presets = \ModuleBuilder\Factory::getTask('ReportHookPresets');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -1003,7 +991,7 @@ function drush_module_builder_callback_hook_list() {
     }
   }
 
-  $hooks_directory = $mb_factory->environment->hooks_directory;
+  $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
   drush_print(t("Hook data retrieved from @dir.", array('@dir' => $hooks_directory)));
   drush_print(t("Hook data was processed on @time.", array('@time' => $time)));
 
@@ -1014,13 +1002,10 @@ function drush_module_builder_callback_hook_list() {
  * Callback to list hook implementations found in a given module.
  */
 function drush_module_builder_callback_hook_analyze() {
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get our task handler, which checks hook data is ready.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
-    $mb_task_handler_analyze = $mb_factory->getTask('AnalyzeModule');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_analyze = \ModuleBuilder\Factory::getTask('AnalyzeModule');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -1083,13 +1068,10 @@ function drush_module_builder_callback_doc_hooks() {
   // TODO: Currently broken: need to find a way to get into the generating system!
   return;
 
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get our task handlers, which checks hook data is ready.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
-    $mb_task_handler_analyze = $mb_factory->getTask('AnalyzeModule');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_analyze = \ModuleBuilder\Factory::getTask('AnalyzeModule');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -1143,10 +1125,8 @@ function drush_module_builder_callback_doc_hooks() {
  * Callback to output the location of the data directory.
  */
 function drush_module_builder_callback_get_data_dir() {
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
   try {
-    $mb_task_handler_report_hooks = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
@@ -1156,7 +1136,7 @@ function drush_module_builder_callback_get_data_dir() {
   // We don't actually need a task, we just need to get the property from the
   // environment. However, getting the ReportHookData task runs the sanity check
   // directory so we can report if it's not writable.
-  $hooks_directory = $mb_factory->environment->hooks_directory;
+  $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
 
   drush_print('Module builder data is in ' . $hooks_directory);
 }
@@ -1171,12 +1151,9 @@ function drush_module_builder_callback_doc_params() {
 
   $commands = func_get_args();
 
-  // Get a MB factory.
-  $mb_factory = module_builder_get_factory('ModuleBuilderEnvironmentDrush');
-
   // Get our task handler, which checks hook data is ready.
   try {
-    $mb_task_handler_report = $mb_factory->getTask('ReportHookData');
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
   catch (ModuleBuilderException $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());

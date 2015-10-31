@@ -23,15 +23,14 @@ class Collect7 extends Collect {
    */
   protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
-    $mb_factory = module_builder_get_factory();
-    $directory = $mb_factory->environment->hooks_directory;
+    $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
 
     // Get Drupal root folder as a file path.
     // DRUPAL_ROOT is defined both by Drupal and Drush.
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
-    $system_listing = $mb_factory->environment->systemListing('/\.api\.php$/', 'modules', 'filename');
+    $system_listing = \ModuleBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
     // returns an array of objects, properties: uri, filename, name,
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
