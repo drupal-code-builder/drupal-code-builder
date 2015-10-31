@@ -23,7 +23,7 @@ namespace ModuleBuilder {
  *
  * @code
  *  include_once('path/to/ModuleBuilderFactory.php');
- *  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
+ *  \ModuleBuilder\Factory::setEnvironment('Drush');
  *  $task = \ModuleBuilder\Factory::getTask('ReportHookData');
  * @endcode
  */
@@ -41,9 +41,10 @@ class Factory {
    * Set the environment.
    *
    * @param $environment_class
-   *  The name of the environment class to set on the factory. No checks are run
-   *  on the environment at this stage (and therefore the environment handler
-   *  may be flagged to skip checks via the returned factory).
+   *  The name of the environment class to set on the factory, relative to the
+   *  \ModuleBuilder\Environment namespace. No checks are run on the environment
+   *  at this stage (and therefore the environment handler may be flagged to
+   *  skip checks via the returned factory).
    *
    * @return
    *  The environment object.
@@ -53,6 +54,7 @@ class Factory {
     include_once(__DIR__ . '/Environment/Environment.php');
 
     // Create the environment handler and set it on the factory.
+    $environment_class = '\ModuleBuilder\Environment\\' . $environment_class;
     self::$environment = new $environment_class;
 
     return self::$environment;

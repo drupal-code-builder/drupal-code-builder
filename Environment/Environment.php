@@ -16,7 +16,7 @@
  * To initialize the environment, pass the environment handler class name as a
  * parameter to \ModuleBuilder\Factory::setEnvironment():
  * @code
- *  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
+ *  \ModuleBuilder\Factory::setEnvironment('Drush');
  * @endcode
  * The classes for the execution environment (Drush, Drupal, library) are
  * supported by helper classes for Drupal core version, thus allowing the
@@ -25,17 +25,19 @@
  * environment class.
  */
 
+namespace ModuleBuilder\Environment;
+
 /**
  * Base class for environments.
  */
-abstract class ModuleBuilderEnvironmentBase {
+abstract class BaseEnvironment {
 
   /**
    * Whether to skip the sanity tests.
    *
    * This may be set on the environment after it has been initialized. Example:
    * @code
-   * \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
+   * \ModuleBuilder\Factory::setEnvironment('Drush');
    * \ModuleBuilder\Factory::getEnvironment()->skipSanity = TRUE;
    * @endcode
    */
@@ -184,7 +186,7 @@ abstract class ModuleBuilderEnvironmentBase {
    * Helper for __construct().
    */
   protected function initVersionHelper() {
-    $helper_class_name = 'ModuleBuilderEnvironmentVersionHelper' . $this->major_version;
+    $helper_class_name = '\ModuleBuilder\Environment\VersionHelper' . $this->major_version;
 
     $this->version_helper = new $helper_class_name($this);
   }
@@ -278,7 +280,7 @@ abstract class ModuleBuilderEnvironmentBase {
  *
  * TODO: retire this; it's just for transition?
  */
-class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
+class DrupalUI extends BaseEnvironment {
 
   /**
    * Set the hooks directory.
@@ -349,7 +351,7 @@ class ModuleBuilderEnvironmentDrupalUI extends ModuleBuilderEnvironmentBase {
  *  }
  * @endcode
  */
-class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrupalUI {
+class DrupalLibrary extends DrupalUI {
 
   /**
    * Set the hooks directory.
@@ -379,7 +381,7 @@ class ModuleBuilderEnvironmentDrupalLibrary extends ModuleBuilderEnvironmentDrup
 /**
  * Environment class for use as a Drush plugin.
  */
-class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
+class Drush extends BaseEnvironment {
 
   /**
    * Set the hooks directory.
@@ -457,7 +459,7 @@ class ModuleBuilderEnvironmentDrush extends ModuleBuilderEnvironmentBase {
 /**
  * Base environment class for tests.
  */
-abstract class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBase {
+abstract class Tests extends BaseEnvironment {
 
   /**
    * Get a path to a module builder file or folder.
@@ -482,7 +484,7 @@ abstract class ModuleBuilderEnvironmentTests extends ModuleBuilderEnvironmentBas
 /**
  * Environment class for tests using prepared sample hook data.
  */
-class ModuleBuilderEnvironmentTestsSampleLocation extends ModuleBuilderEnvironmentTests {
+class TestsSampleLocation extends Tests {
 
   /**
    * Set the hooks directory.
@@ -500,7 +502,7 @@ class ModuleBuilderEnvironmentTestsSampleLocation extends ModuleBuilderEnvironme
 /**
  * Environment class for tests writing hook data to the Drupal's temp folder.
  */
-class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironmentTests {
+class TestsTempLocation extends Tests {
 
   /**
    * Set the hooks directory.
@@ -538,7 +540,7 @@ class ModuleBuilderEnvironmentTestsTempLocation extends ModuleBuilderEnvironment
 /**
  * Environment helper for Drupal 8.
  */
-class ModuleBuilderEnvironmentVersionHelper8 {
+class VersionHelper8 {
 
   private $major_version = 8;
 
@@ -657,7 +659,7 @@ class ModuleBuilderEnvironmentVersionHelper8 {
 /**
  * Environment helper for Drupal 7.
  */
-class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVersionHelper8 {
+class VersionHelper7 extends VersionHelper8 {
 
   /**
    * Determine whether module_builder is installed as a module.
@@ -731,7 +733,7 @@ class ModuleBuilderEnvironmentVersionHelper7 extends ModuleBuilderEnvironmentVer
 /**
  * Environment helper for Drupal 6.
  */
-class ModuleBuilderEnvironmentVersionHelper6 extends ModuleBuilderEnvironmentVersionHelper7 {
+class VersionHelper6 extends VersionHelper7 {
 
   /**
    * Transforms a path into a path within the site files folder, if needed.
@@ -864,7 +866,7 @@ class ModuleBuilderEnvironmentVersionHelper6 extends ModuleBuilderEnvironmentVer
 /**
  * Environment helper for Drupal 5.
  */
-class ModuleBuilderEnvironmentVersionHelper5 extends ModuleBuilderEnvironmentVersionHelper6 {
+class VersionHelper5 extends VersionHelper6 {
   // D5 helper is the same as D6.
 }
 

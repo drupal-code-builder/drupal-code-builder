@@ -9,7 +9,7 @@
  * Test case for Module Builder module generation.
  *
  * This doesn't need a Drupal database, but relies on a dedicated Module Builder
- * environment class, ModuleBuilderEnvironmentTestsSampleLocation, and a
+ * environment class, \ModuleBuilder\Environment\TestsSampleLocation, and a
  * prepared file of processed hook definitions, in the sample_hook_definitions
  * subfolder. This contains only the hook definition from system.api.php and
  * node.api.php.
@@ -47,7 +47,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
    * Test generating module code.
    */
   function testModuleGeneration() {
-    \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentTestsSampleLocation');
+    \ModuleBuilder\Factory::setEnvironment('TestsSampleLocation');
 
     // Get the hooks directory. WHY?
     $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
@@ -177,7 +177,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
    *  An array of files.
    */
   function generateModuleFiles($module_data) {
-    \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentTestsSampleLocation');
+    \ModuleBuilder\Factory::setEnvironment('TestsSampleLocation');
     $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
     $root_generator = $mb_task_handler_generate->getRootGenerator();
     $component_data_info = $root_generator->getComponentDataInfo();
@@ -388,7 +388,7 @@ class ModuleBuilderHookCollectionTestCase extends DrupalUnitTestCase {
   }
 
   function testHookCollection() {
-    \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentTestsTempLocation');
+    \ModuleBuilder\Factory::setEnvironment('TestsTempLocation');
 
     $mb_task_handler_collect = \ModuleBuilder\Factory::getTask('Collect');
     $this->assertTrue(is_object($mb_task_handler_collect), "A task handler object was returned.");

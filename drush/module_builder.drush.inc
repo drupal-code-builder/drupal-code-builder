@@ -28,7 +28,7 @@ function module_builder_drush_init_helper() {
   include_once(dirname(__FILE__) . '/../ModuleBuilderFactory.php');
 
   // Set up the MB factory.
-  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrush');
+  \ModuleBuilder\Factory::setEnvironment('Drush');
 }
 
 /**

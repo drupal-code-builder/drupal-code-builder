@@ -58,7 +58,7 @@ function module_builder_page($form, &$form_state) {
  * Form builder for page 1.
  */
 function module_builder_page_input($form, &$form_state) {
-  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrupalUI');
+  \ModuleBuilder\Factory::setEnvironment('DrupalUI');
 
   // Get our task handler, which checks hook data is ready, and our generate
   // handler, from which to get the list of properties to collect.
@@ -497,7 +497,7 @@ function module_builder_page_input_submit($form, &$form_state) {
  * Form builder for page 2: generate code.
  */
 function module_builder_page_generate($form, &$form_state) {
-  \ModuleBuilder\Factory::setEnvironment('ModuleBuilderEnvironmentDrupalUI');
+  \ModuleBuilder\Factory::setEnvironment('DrupalUI');
 
   // Get our task handler. The form builder will already have checked sanity.
   $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
