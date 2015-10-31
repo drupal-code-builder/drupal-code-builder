@@ -23,7 +23,7 @@ namespace ModuleBuilder {
  *
  * @code
  *  include_once('path/to/ModuleBuilderFactory.php');
- *  \ModuleBuilder\Factory::setEnvironment('Drush');
+ *  \ModuleBuilder\Factory::setEnvironmentClass('Drush');
  *  $task = \ModuleBuilder\Factory::getTask('ReportHookData');
  * @endcode
  */
@@ -32,24 +32,25 @@ class Factory {
   /**
    * The current environment object; subclass of ModuleBuilderEnvironmentBase.
    *
-   * @see setEnvironment()
+   * @see setEnvironmentClass()
    * @see getEnvironment()
    */
   protected static $environment;
 
   /**
-   * Set the environment.
+   * Set the environment using a class name.
    *
    * @param $environment_class
    *  The name of the environment class to set on the factory, relative to the
-   *  \ModuleBuilder\Environment namespace. No checks are run on the environment
+   *  \ModuleBuilder\Environment namespace (to use a class outside of that
+   *  namespace, use setEnvironment()). No checks are run on the environment
    *  at this stage (and therefore the environment handler may be flagged to
    *  skip checks via the returned factory).
    *
    * @return
    *  The environment object.
    */
-  public static function setEnvironment($environment_class) {
+  public static function setEnvironmentClass($environment_class) {
     // Include the environment classes file.
     include_once(__DIR__ . '/Environment/Environment.php');
 
@@ -58,6 +59,16 @@ class Factory {
     self::$environment = new $environment_class;
 
     return self::$environment;
+  }
+
+  /**
+   * Set the environment object.
+   *
+   * @param $environment
+   *  An environment object to set.
+   */
+  public static function setEnvironment($environment) {
+    self::$environment = new $environment;
   }
 
   /**

@@ -14,9 +14,9 @@
  *  - how to load an include file with a version suffix
  *  - how to find the hooks data directory.
  * To initialize the environment, pass the environment handler class name as a
- * parameter to \ModuleBuilder\Factory::setEnvironment():
+ * parameter to \ModuleBuilder\Factory::setEnvironmentClass():
  * @code
- *  \ModuleBuilder\Factory::setEnvironment('Drush');
+ *  \ModuleBuilder\Factory::setEnvironmentClass('Drush');
  * @endcode
  * The classes for the execution environment (Drush, Drupal, library) are
  * supported by helper classes for Drupal core version, thus allowing the
@@ -37,7 +37,7 @@ abstract class BaseEnvironment {
    *
    * This may be set on the environment after it has been initialized. Example:
    * @code
-   * \ModuleBuilder\Factory::setEnvironment('Drush');
+   * \ModuleBuilder\Factory::setEnvironmentClass('Drush');
    * \ModuleBuilder\Factory::getEnvironment()->skipSanity = TRUE;
    * @endcode
    */
