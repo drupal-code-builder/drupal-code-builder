@@ -397,7 +397,7 @@ function module_builder_module_builder_callback_build_complete() {
     // Drupal bootstrap isn't ready enough to check environment, because the
     // file API isn't loaded. This isn't bad, because here it's us, the caller,
     // that knows we can't pass the check.
-    \ModuleBuilder\Factory::getEnvironment()->skipSanity = TRUE;
+    \ModuleBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
 
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }

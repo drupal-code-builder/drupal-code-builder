@@ -38,10 +38,10 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * This may be set on the environment after it has been initialized. Example:
    * @code
    * \ModuleBuilder\Factory::setEnvironmentClass('Drush');
-   * \ModuleBuilder\Factory::getEnvironment()->skipSanity = TRUE;
+   * \ModuleBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
    * @endcode
    */
-  public $skipSanity = FALSE;
+  protected $skipSanity = FALSE;
 
   /**
    * The path to the hooks directory.
@@ -128,6 +128,13 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     }
 
     // There are no further sanity levels!
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function skipSanityCheck($setting) {
+    $this->skipSanity = $setting;
   }
 
   /**

@@ -35,6 +35,15 @@ interface EnvironmentInterface {
   public function verifyEnvironment($sanity_level);
 
   /**
+   * Set the environment to skip sanity checks until further notice.
+   *
+   * @param bool $setting
+   *  Set to TRUE to set the environment to skip sanity checks; FALSE to restore
+   *  sanity.
+   */
+  public function skipSanityCheck($setting);
+
+  /**
    * Get a path to a resource that is safe to use either on Drupal or Drush.
    *
    * @param $subpath
