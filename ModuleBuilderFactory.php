@@ -40,6 +40,9 @@ class Factory {
   /**
    * Set the environment using a class name.
    *
+   * This is a convenience wrapper around setEnvironment() for when using an
+   * environment class native to Module Builder.
+   *
    * @param $environment_class
    *  The name of the environment class to set on the factory, relative to the
    *  \ModuleBuilder\Environment namespace (to use a class outside of that
