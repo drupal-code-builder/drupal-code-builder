@@ -54,7 +54,8 @@ class Factory {
    *  The environment object.
    */
   public static function setEnvironmentClass($environment_class) {
-    // Include the environment classes file.
+    // Include the environment interface and classes files.
+    include_once(__DIR__ . '/Environment/EnvironmentInterface.php');
     include_once(__DIR__ . '/Environment/Environment.php');
 
     // Create the environment handler and set it on the factory.
