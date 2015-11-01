@@ -44,6 +44,14 @@ interface EnvironmentInterface {
   public function skipSanityCheck($setting);
 
   /**
+   * Get the major version of Drupal core.
+   *
+   * @return int
+   *  The major version number, e.g. 6, 7, 8.
+   */
+  public function getCoreMajorVersion();
+
+  /**
    * Get a path to a resource that is safe to use either on Drupal or Drush.
    *
    * @param $subpath

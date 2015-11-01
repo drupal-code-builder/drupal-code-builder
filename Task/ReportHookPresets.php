@@ -35,7 +35,7 @@ class ReportHookPresets extends Base {
    *  Throws \ModuleBuilderException if the file can't be found.
    */
   protected function loadPresetsFile($filename) {
-    $pieces = array('templates', $this->environment->major_version, $filename);
+    $pieces = array('templates', $this->environment->getCoreMajorVersion(), $filename);
     $path = $this->environment->getPath(implode('/', $pieces));
 
     if (!file_exists($path)) {

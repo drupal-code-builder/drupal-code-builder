@@ -145,7 +145,7 @@ class Factory {
    */
   public static function getTaskClass($task_type) {
     $type     = ucfirst($task_type);
-    $version  = self::$environment->major_version;
+    $version  = self::$environment->getCoreMajorVersion();
 
     // TODO: this could do with namespacing and autoloading in due course.
     include_once(dirname(__FILE__) . "/Task/Base.php");

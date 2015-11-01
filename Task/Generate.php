@@ -203,7 +203,7 @@ class Generate extends Base {
     include_once($file_path);
 
     $type     = ucfirst($type);
-    $version  = $this->environment->major_version;
+    $version  = $this->environment->getCoreMajorVersion();
     $class    = 'ModuleBuider\\Generator\\' . $type . $version;
 
     // Trigger the autoload for the base name without the version, as all versions

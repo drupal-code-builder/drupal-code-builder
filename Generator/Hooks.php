@@ -238,7 +238,7 @@ class Hooks extends BaseGenerator {
     // node.hooks.template will only override that same file in the module data;
     // if the hook is not requested as part of a group then that file will not be considered.
     // (Though groups are broken for now...)
-    $version = \ModuleBuilder\Factory::getEnvironment()->major_version;
+    $version = \ModuleBuilder\Factory::getEnvironment()->getCoreMajorVersion();
     $template_base_path_module = \ModuleBuilder\Factory::getEnvironment()->getPath('templates') . '/' . $version;
     //print "base path: $template_base_path_module";
     // $template_base_paths['module']

@@ -60,9 +60,9 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   /**
    * The major Drupal core version.
    *
-   * Set by the constructor, and thus may be accessed within a Task handler.
+   * @see getCoreMajorVersion()
    */
-  public $major_version;
+  protected $major_version;
 
   /**
    * A helper object for version-specific code.
@@ -135,6 +135,13 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    */
   public function skipSanityCheck($setting) {
     $this->skipSanity = $setting;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getCoreMajorVersion() {
+    return $this->major_version;
   }
 
   /**
@@ -530,7 +537,7 @@ class VersionHelper8 {
    * Invoke hook_module_builder_info().
    */
   function invokeInfoHook() {
-    $major_version = $this->environment->major_version;
+    $major_version = $this->major_version;
 
     // TODO: just get ours if no bootstrap?
     $mask = '/\.module_builder.inc$/';
@@ -584,6 +591,8 @@ class VersionHelper8 {
  */
 class VersionHelper7 extends VersionHelper8 {
 
+  private $major_version = 7;
+
   /**
    * Determine whether module_builder is installed as a module.
    */
@@ -603,7 +612,7 @@ class VersionHelper7 extends VersionHelper8 {
    * Invoke hook_module_builder_info().
    */
   function invokeInfoHook() {
-    $major_version = $this->environment->major_version;
+    $major_version = $this->major_version;
 
     // TODO: just get ours if no bootstrap?
     $mask = '/\.module_builder.inc$/';
@@ -657,6 +666,8 @@ class VersionHelper7 extends VersionHelper8 {
  * Environment helper for Drupal 6.
  */
 class VersionHelper6 extends VersionHelper7 {
+
+  private $major_version = 6;
 
   /**
    * Transforms a path into a path within the site files folder, if needed.
@@ -746,7 +757,7 @@ class VersionHelper6 extends VersionHelper7 {
    *  Data gathered from the hook implementations.
    */
   public function invokeInfoHook() {
-    $major_version = $this->environment->major_version;
+    $major_version = $this->major_version;
 
     // TODO: just get ours if no bootstrap?
     $mb_files = $this->systemListing('/\.module_builder.inc$/', 'modules');
@@ -790,6 +801,9 @@ class VersionHelper6 extends VersionHelper7 {
  * Environment helper for Drupal 5.
  */
 class VersionHelper5 extends VersionHelper6 {
+
+  private $major_version = 5;
+
   // D5 helper is the same as D6.
 }
 
