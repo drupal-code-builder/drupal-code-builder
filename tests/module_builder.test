@@ -50,7 +50,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     \ModuleBuilder\Factory::setEnvironmentClass('TestsSampleLocation');
 
     // Get the hooks directory. WHY?
-    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     $this->assertTrue(is_object($mb_task_handler_report), "A task handler object was returned.");
@@ -397,7 +397,7 @@ class ModuleBuilderHookCollectionTestCase extends DrupalUnitTestCase {
     $mb_task_handler_collect->collectComponentData();
 
     // Now check the result.
-    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
     $directory_listing = scandir($hooks_directory);
 
     $this->assertTrue(in_array('node.api.php', $directory_listing), 'The node.api.php documentation file was found.');

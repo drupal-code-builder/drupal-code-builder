@@ -50,8 +50,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * absolute, but in either case it is in a format that other environment
    * methods can use.
    *
-   * Set by the constructor, and thus may be accessed within a Task handler,
-   * though initially this only represents a user setting, and is not verified
+   * Initially this only represents a user setting, and is not verified
    * as an existing, writable directory unless the Task's sanity level has
    * requested it.
    */
@@ -91,6 +90,13 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * Set the hooks directory.
    */
   abstract protected function setHooksDirectory();
+
+  /**
+   * @inheritdoc
+   */
+  public function getHooksDirectory() {
+    return $this->hooks_directory;
+  }
 
   /**
    * @inheritdoc
@@ -318,7 +324,7 @@ class Drush extends BaseEnvironment {
    */
   function setHooksDirectory() {
     // Get the hooks directory.
-    $directory = $this->getHooksDirectory();
+    $directory = $this->getHooksDirectorySetting();
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
@@ -338,7 +344,7 @@ class Drush extends BaseEnvironment {
    *  - The Module Builder UI's variable. This will only be set if module
    *    builder has been installed as a Drupal module on the current site.
    */
-  private function getHooksDirectory() {
+  private function getHooksDirectorySetting() {
     // Set the module folder based on variable.
     // First try the drush 'data' option.
     if (drush_get_option('data')) {

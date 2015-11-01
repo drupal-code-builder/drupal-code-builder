@@ -78,7 +78,7 @@ function module_builder_admin_update($form, &$form_state) {
   // data.
   $last_update = $mb_task_handler_report->lastUpdatedDate();
   $doc_files = $mb_task_handler_report->listHookFiles();
-  $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+  $directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
 
 
   $form['last_update'] = array(

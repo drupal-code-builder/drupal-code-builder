@@ -23,7 +23,7 @@ class Collect7 extends Collect {
    */
   protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
-    $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    $directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     // Get Drupal root folder as a file path.
     // DRUPAL_ROOT is defined both by Drupal and Drush.

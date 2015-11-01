@@ -38,7 +38,7 @@ class ReportPluginData extends ReportHookDataFolder {
       return $hook_data;
     }
 
-    $directory = $this->environment->hooks_directory;
+    $directory = $this->environment->getHooksDirectory();
 
     $plugins_file = "$directory/plugins_processed.php";
     if (file_exists($plugins_file)) {

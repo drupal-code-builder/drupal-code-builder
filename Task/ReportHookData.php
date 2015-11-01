@@ -39,7 +39,7 @@ class ReportHookData extends ReportHookDataFolder {
       return $hook_data;
     }
 
-    $directory = $this->environment->hooks_directory;
+    $directory = $this->environment->getHooksDirectory();
 
     $hooks_file = "$directory/hooks_processed.php";
     if (file_exists($hooks_file)) {

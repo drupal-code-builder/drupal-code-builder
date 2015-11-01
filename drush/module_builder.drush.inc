@@ -926,7 +926,7 @@ function drush_module_builder_callback_hook_download() {
     return drush_set_error(DRUSH_APPLICATION_ERROR, 'Problem downloading hooks.');
   }
   else {
-    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
     drush_print("Hook files have been downloaded to {$hooks_directory} and processed.");
     return TRUE;
   }
@@ -991,7 +991,7 @@ function drush_module_builder_callback_hook_list() {
     }
   }
 
-  $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+  $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
   drush_print(t("Hook data retrieved from @dir.", array('@dir' => $hooks_directory)));
   drush_print(t("Hook data was processed on @time.", array('@time' => $time)));
 
@@ -1136,7 +1136,7 @@ function drush_module_builder_callback_get_data_dir() {
   // We don't actually need a task, we just need to get the property from the
   // environment. However, getting the ReportHookData task runs the sanity check
   // directory so we can report if it's not writable.
-  $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+  $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
 
   drush_print('Module builder data is in ' . $hooks_directory);
 }

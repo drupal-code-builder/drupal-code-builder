@@ -52,6 +52,22 @@ interface EnvironmentInterface {
   public function getCoreMajorVersion();
 
   /**
+  * Get path to the directory where collected data about hooks is stored.
+  *
+  * Depending on our environment this is either relative to Drupal root or
+  * absolute, but in either case it is in a format that other environment
+  * methods can use.
+  *
+  * Note that initially this only represents a user setting, and is not verified
+  * as an existing, writable directory unless the Task's sanity level has
+  * requested it.
+   *
+   * @return string
+   *  The path to the directory.
+   */
+  public function getHooksDirectory();
+
+  /**
    * Get a path to a resource that is safe to use either on Drupal or Drush.
    *
    * @param $subpath

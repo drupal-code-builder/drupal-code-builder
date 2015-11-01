@@ -229,7 +229,7 @@ class Collect extends Base {
     //print_r($hook_groups);
 
     // Write the processed data to a file.
-    $directory = $this->environment->hooks_directory;
+    $directory = $this->environment->getHooksDirectory();
     $serialized = serialize($hook_groups);
     file_put_contents("$directory/hooks_processed.php", $serialized);
 

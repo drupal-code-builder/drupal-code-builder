@@ -19,7 +19,7 @@ class Collect6 extends Collect {
    * version control server.
    */
   protected function gatherHookDocumentationFiles() {
-    $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    $directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     // Fetch data about the files we need to download.
     $hook_files = $this->getHookFileUrls($directory);

@@ -205,7 +205,7 @@ class Collect8 extends Collect {
     //drush_print_r($plugin_type_data);
 
     // Write the processed data to a file.
-    $directory = $this->environment->hooks_directory;
+    $directory = $this->environment->getHooksDirectory();
     $serialized = serialize($plugin_type_data);
     file_put_contents("$directory/plugins_processed.php", $serialized);
   }
@@ -221,7 +221,7 @@ class Collect8 extends Collect {
    */
   protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
-    $directory = \ModuleBuilder\Factory::getEnvironment()->hooks_directory;
+    $directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     // Get Drupal root folder as a file path.
     // DRUPAL_ROOT is defined both by Drupal and Drush.
