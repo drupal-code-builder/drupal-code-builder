@@ -175,11 +175,11 @@ class Module extends RootComponent {
 
           foreach ($value as $given_preset_name) {
             if (!isset($hook_presets[$given_preset_name])) {
-              throw new \ModuleBuilderException("Undefined hook preset group $given_preset_name.");
+              throw new \ModuleBuilder\Exception("Undefined hook preset group $given_preset_name.");
             }
             // DX: check the preset is properly defined.
             if (!is_array($hook_presets[$given_preset_name]['hooks'])) {
-              throw new \ModuleBuilderException("Incorrectly defined hook preset group $given_preset_name.");
+              throw new \ModuleBuilder\Exception("Incorrectly defined hook preset group $given_preset_name.");
             }
 
             // Add the preset hooks list to the hooks array in the component

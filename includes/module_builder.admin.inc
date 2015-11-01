@@ -69,7 +69,7 @@ function module_builder_admin_update($form, &$form_state) {
   try {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookDataFolder');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drupal_set_message($e->getMessage(), 'warning');
     return $form;
   }

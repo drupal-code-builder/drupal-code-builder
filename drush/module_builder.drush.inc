@@ -245,7 +245,7 @@ function drush_module_builder_callback_build_module() {
   try {
     $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     // If the problem is that the hooks need downloading, we can recover from this.
     if ($e->needs_hooks_download) {
       if (drush_confirm(dt('No hook definitions found. Would you like to download them now?'))) {
@@ -401,7 +401,7 @@ function module_builder_module_builder_callback_build_complete() {
 
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     // Just do nothing if we're not ready: the actual command will deal with
     // error output to the user.
     return;
@@ -440,7 +440,7 @@ function drush_module_builder_callback_build_theme() {
   try {
     $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'theme');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     // Doubtful we get here.
     return;
   }
@@ -530,7 +530,7 @@ function drush_module_builder_build_component($commands, $component_type, $compo
   try {
     $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', $component_type);
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
@@ -911,7 +911,7 @@ function drush_module_builder_callback_hook_download() {
   try {
     $mb_task_handler_collect = \ModuleBuilder\Factory::getTask('Collect');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     return drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
   }
 
@@ -940,7 +940,7 @@ function drush_module_builder_callback_hook_list() {
   try {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
@@ -978,7 +978,7 @@ function drush_module_builder_callback_hook_list() {
   try {
     $mb_task_handler_report_presets = \ModuleBuilder\Factory::getTask('ReportHookPresets');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
@@ -1007,7 +1007,7 @@ function drush_module_builder_callback_hook_analyze() {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     $mb_task_handler_analyze = \ModuleBuilder\Factory::getTask('AnalyzeModule');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
@@ -1073,7 +1073,7 @@ function drush_module_builder_callback_doc_hooks() {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     $mb_task_handler_analyze = \ModuleBuilder\Factory::getTask('AnalyzeModule');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
@@ -1128,7 +1128,7 @@ function drush_module_builder_callback_get_data_dir() {
   try {
     $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }
@@ -1155,7 +1155,7 @@ function drush_module_builder_callback_doc_params() {
   try {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     drush_set_error(DRUSH_APPLICATION_ERROR, $e->getMessage());
     return;
   }

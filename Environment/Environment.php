@@ -123,7 +123,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     // Sanity level 'hook_data':
     $hooks_processed = $this->hooks_directory . "/hooks_processed.php";
     if (!file_exists($hooks_processed)) {
-      $e = new ModuleBuilderException("No hook definitions found. You need to download hook definitions before using this module.");
+      $e = new \ModuleBuilder\Exception("No hook definitions found. You need to download hook definitions before using this module.");
       $e->needs_hooks_download = TRUE;
       throw $e;
     }
@@ -517,12 +517,12 @@ class VersionHelper8 {
    * Check that the directory exists and is writable, creating it if needed.
    *
    * @throws
-   *  ModuleBuilderException
+   *  \ModuleBuilder\Exception
    */
   function prepareDirectory($directory) {
     $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     if (!$status) {
-      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
+      throw new \ModuleBuilder\Exception("The hooks directory cannot be created or is not writable.");
     }
   }
 
@@ -696,7 +696,7 @@ class VersionHelper6 extends VersionHelper7 {
    * Check that the directory exists and is writable, creating it if needed.
    *
    * @throws
-   *  ModuleBuilderException
+   *  \ModuleBuilder\Exception
    */
   function prepareDirectory($directory) {
     // Because we may have an absolute path whose base folders are not writable
@@ -718,7 +718,7 @@ class VersionHelper6 extends VersionHelper7 {
 
     // If we go right the way along to the base and still can't create a directory...
     if ($i == $length) {
-      throw new ModuleBuilderException("The directory $path_slice cannot be created or is not writable.");
+      throw new \ModuleBuilder\Exception("The directory $path_slice cannot be created or is not writable.");
     }
     // print "status: $status for $path_slice - i: $i\n";
 
@@ -731,7 +731,7 @@ class VersionHelper6 extends VersionHelper7 {
     }
 
     if (!$status) {
-      throw new ModuleBuilderException("The hooks directory cannot be created or is not writable.");
+      throw new \ModuleBuilder\Exception("The hooks directory cannot be created or is not writable.");
     }
   }
 

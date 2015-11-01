@@ -66,7 +66,7 @@ function module_builder_page_input($form, &$form_state) {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     if ($e->needs_hooks_download) {
       drupal_set_message(t('No hooks were found. Please check the documentation path specified in the <a href="!settings-url">%administer >> %config >> %develop >> %modulebuilder</a> page.',
         array(
@@ -333,7 +333,7 @@ function module_builder_page_input($form, &$form_state) {
   try {
     $mb_task_handler_report_presets = \ModuleBuilder\Factory::getTask('ReportHookPresets');
   }
-  catch (ModuleBuilderException $e) {
+  catch (\ModuleBuilder\Exception $e) {
     // We've already sanity-checked, so doubtful we come here.
     return $form;
   }

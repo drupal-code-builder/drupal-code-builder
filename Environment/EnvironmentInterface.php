@@ -28,7 +28,7 @@ interface EnvironmentInterface {
    *      is writable.
    *    - 'hook_data': The hook data files are present in the hooks directory.
    *
-   * @throws ModuleBuilderException
+   * @throws \ModuleBuilder\Exception
    *  Throws an exception if the environment is not ready at the specified
    *  level. It's up to the caller to provide meaningful feedback to the user.
    */

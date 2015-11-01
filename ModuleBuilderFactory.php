@@ -5,7 +5,7 @@
  * Contains ModuleBuilder\Factory.
  */
 
-namespace ModuleBuilder {
+namespace ModuleBuilder;
 
 /**
  * Static factory class for creating Module Builder task handlers.
@@ -109,7 +109,7 @@ class Factory {
    * @return
    *  A new task handler object, which implements ModuleBuilderTaskInterface.
    *
-   * @throws ModuleBuilderException
+   * @throws \ModuleBuilder\Exception
    *  Throws an exception if the environment is not in a state that is ready for
    *  the requested task, for example, if no hook data has been downloaded.
    */
@@ -171,18 +171,11 @@ class Factory {
 
 }
 
-}
-
-// TODO: Namespace this.
-namespace {
-
 /**
  * Custom exception class.
  */
-class ModuleBuilderException extends Exception {
+class Exception extends \Exception {
   // Flag set to TRUE if hook data needs downloading (and the folders are ok).
   // This allows us to recover gracefully.
   public $needs_hooks_download;
-}
-
 }
