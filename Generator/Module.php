@@ -273,13 +273,6 @@ class Module extends RootComponent {
   }
 
   /**
-   * Get the Drupal name for this component, e.g. the module's name.
-   */
-  public function getComponentSystemName() {
-    return $this->component_data['root_name'];
-  }
-
-  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.

@@ -16,14 +16,6 @@ namespace ModuleBuider\Generator;
 abstract class RootComponent extends BaseGenerator {
 
   /**
-   * Get the Drupal name for this component, e.g. the module's name.
-   *
-   * @todo: standardize this in the different root generators' component data
-   * so this is not needed.
-   */
-  abstract public function getComponentSystemName();
-
-  /**
    * Define the component data this component needs to function.
    *
    * This returns an array of data that defines the component data that
