@@ -87,7 +87,7 @@ class Info5 extends InfoIni {
 
     $lines = array();
     $lines['name'] = $module_data['readable_name'];
-    $lines['description'] = $module_data['module_short_description'];
+    $lines['description'] = $module_data['short_description'];
 
     if (!empty($module_data['module_dependencies'])) {
       $lines['dependencies'] = $module_data['module_dependencies'];
@@ -116,7 +116,7 @@ class Info6 extends InfoIni {
 
     $lines = array();
     $lines['name'] = $module_data['readable_name'];
-    $lines['description'] = $module_data['module_short_description'];
+    $lines['description'] = $module_data['short_description'];
     if (!empty($module_data['module_dependencies'])) {
       // For lines which form a set with the same key and array markers,
       // simply make an array.
@@ -153,7 +153,7 @@ class Info7 extends InfoIni {
 
     $lines = array();
     $lines['name'] = $module_data['readable_name'];
-    $lines['description'] = $module_data['module_short_description'];
+    $lines['description'] = $module_data['short_description'];
     if (!empty($module_data['module_dependencies'])) {
       // For lines which form a set with the same key and array markers,
       // simply make an array.
@@ -208,7 +208,7 @@ class Info8 extends Info {
     $lines = array();
     $lines['name'] = $module_data['readable_name'];
     $lines['type'] = $module_data['base'];
-    $lines['description'] = $module_data['module_short_description'];
+    $lines['description'] = $module_data['short_description'];
     if (!empty($module_data['module_dependencies'])) {
       // For lines which form a set with the same key and array markers,
       // simply make an array.

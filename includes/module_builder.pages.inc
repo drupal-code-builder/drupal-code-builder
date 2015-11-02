@@ -194,13 +194,13 @@ function module_builder_page_input($form, &$form_state) {
   // TODO: consider moving some of these to the Module generator.
   $form['root_name']['#description'] = t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.');
   $form['readable_name']['#description'] = t('Name of your module as it will appear on the module admin page.');
-  $form['module_short_description']['#description'] = t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',
+  $form['short_description']['#description'] = t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',
     array(
       '!adminmodules' => url('admin/modules'),
       '%administer' => 'Administer',
       '%modules' => 'Modules',
     ));
-  $form['module_short_description']['#default_value'] = t('Does awesome things. Makes tea. Washes up. Favours of a personal nature.');
+  $form['short_description']['#default_value'] = t('Does awesome things. Makes tea. Washes up. Favours of a personal nature.');
   $form['module_help_text']['#description'] = t('Help text (HTML) to appear within the system help at <a href="!help">%administer >> %help >> module_name</a>',
     array(
       '!help' => url('admin/help'),
@@ -288,7 +288,7 @@ function module_builder_page_input($form, &$form_state) {
     '#default_value' => t('My Module'),
     '#repopulate' => TRUE,
   );
-  $form['module_short_description'] = array(
+  $form['short_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description'),
     '#description' => t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',

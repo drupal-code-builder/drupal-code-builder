@@ -68,7 +68,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => $this->randomString(),
-      'module_short_description' => $this->randomString(),
+      'short_description' => $this->randomString(),
       'hooks' => array(
         // These two hooks will go in the .module file.
         'hook_menu',
@@ -127,7 +127,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $info_file = $files["$module_name.info"];
 
     $this->assertInfoLine($info_file, 'name', $module_data['readable_name'], "The info file declares the module name.");
-    $this->assertInfoLine($info_file, 'description', $module_data['module_short_description'], "The info file declares the module description.");
+    $this->assertInfoLine($info_file, 'description', $module_data['short_description'], "The info file declares the module description.");
     $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");
 
     // Create a module, specifying limited build.
@@ -138,7 +138,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => $this->randomString(),
-      'module_short_description' => $this->randomString(),
+      'short_description' => $this->randomString(),
       'hooks' => array(
         // These two hooks will go in the .module file.
         'hook_menu',

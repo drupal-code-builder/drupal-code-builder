@@ -58,7 +58,7 @@ class Module extends RootComponent {
    *    - 'base': The type of component: 'module'.
    *    - 'root_name': The machine name for the module.
    *    - 'readable_name': The human readable name for the module.
-   *    - 'module_short_description': The module's description text.
+   *    - 'short_description': The module's description text.
    *    - 'module_help_text': Help text for the module. If this is given, then
    *       hook_help() is automatically added to the list of required hooks.
    *    - 'hooks': An associative array whose keys are full hook names
@@ -113,7 +113,7 @@ class Module extends RootComponent {
         },
         'required' => FALSE,
       ),
-      'module_short_description' => array(
+      'short_description' => array(
         'label' => 'Module .info file description',
         'default' => 'TODO: Description of module',
         'required' => FALSE,

@@ -286,7 +286,7 @@ function drush_module_builder_callback_build_module() {
     'readable_name' => array(
       'drush_option' => 'name',
     ),
-    'module_short_description' => array(
+    'short_description' => array(
       'drush_option' => 'desc',
     ),
     'module_help_text' => array(
