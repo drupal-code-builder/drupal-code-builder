@@ -57,7 +57,7 @@ class Module extends RootComponent {
    *   follows:
    *    - 'base': The type of component: 'module'.
    *    - 'root_name': The machine name for the module.
-   *    - 'module_readable_name': The human readable name for the module.
+   *    - 'readable_name': The human readable name for the module.
    *    - 'module_short_description': The module's description text.
    *    - 'module_help_text': Help text for the module. If this is given, then
    *       hook_help() is automatically added to the list of required hooks.
@@ -106,7 +106,7 @@ class Module extends RootComponent {
         'default' => 'my_module',
         'required' => TRUE,
       ),
-      'module_readable_name' => array(
+      'readable_name' => array(
         'label' => 'Module readable name',
         'default' => function($component_data) {
           return ucwords(str_replace('_', ' ', $component_data['root_name']));

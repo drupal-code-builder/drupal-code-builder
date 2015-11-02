@@ -47,7 +47,7 @@ class API extends PHPFile {
    */
   function file_doc_summary() {
     $component_data = $this->getRootComponentData();
-    $module_readable_name = $component_data['module_readable_name'];
+    $module_readable_name = $component_data['readable_name'];
     return "Hooks provided by the $module_readable_name module.";
   }
 
@@ -64,7 +64,7 @@ class API extends PHPFile {
 
     $module_root_name = $component_data['root_name'];
     $module_root_name_title_case = ucfirst($component_data['root_name']);
-    $module_readable_name = $component_data['module_readable_name'];
+    $module_readable_name = $component_data['readable_name'];
 
     // Build an array of code pieces.
     $code_pieces = array();

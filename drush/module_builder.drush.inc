@@ -283,7 +283,7 @@ function drush_module_builder_callback_build_module() {
     'module_hook_presets' => array(
       'command_prefix' => 'presets',
     ),
-    'module_readable_name' => array(
+    'readable_name' => array(
       'drush_option' => 'name',
     ),
     'module_short_description' => array(

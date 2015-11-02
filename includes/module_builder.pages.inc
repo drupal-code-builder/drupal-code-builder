@@ -193,7 +193,7 @@ function module_builder_page_input($form, &$form_state) {
   // Add our own (longer) descriptions and defaults.
   // TODO: consider moving some of these to the Module generator.
   $form['root_name']['#description'] = t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.');
-  $form['module_readable_name']['#description'] = t('Name of your module as it will appear on the module admin page.');
+  $form['readable_name']['#description'] = t('Name of your module as it will appear on the module admin page.');
   $form['module_short_description']['#description'] = t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',
     array(
       '!adminmodules' => url('admin/modules'),
@@ -280,7 +280,7 @@ function module_builder_page_input($form, &$form_state) {
     '#default_value' => t('mymodule'), # $form_default_values['root_name'],
     '#repopulate' => TRUE,
   );
-  $form['module_readable_name'] = array(
+  $form['readable_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
     '#description' => t('Name of your module as it will appear on the module admin page.'),

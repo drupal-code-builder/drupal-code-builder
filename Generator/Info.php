@@ -86,7 +86,7 @@ class Info5 extends InfoIni {
     $module_data = $this->base_component->component_data;
 
     $lines = array();
-    $lines['name'] = $module_data['module_readable_name'];
+    $lines['name'] = $module_data['readable_name'];
     $lines['description'] = $module_data['module_short_description'];
 
     if (!empty($module_data['module_dependencies'])) {
@@ -115,7 +115,7 @@ class Info6 extends InfoIni {
     $module_data = $this->base_component->component_data;
 
     $lines = array();
-    $lines['name'] = $module_data['module_readable_name'];
+    $lines['name'] = $module_data['readable_name'];
     $lines['description'] = $module_data['module_short_description'];
     if (!empty($module_data['module_dependencies'])) {
       // For lines which form a set with the same key and array markers,
@@ -152,7 +152,7 @@ class Info7 extends InfoIni {
     //print_r($module_data);
 
     $lines = array();
-    $lines['name'] = $module_data['module_readable_name'];
+    $lines['name'] = $module_data['readable_name'];
     $lines['description'] = $module_data['module_short_description'];
     if (!empty($module_data['module_dependencies'])) {
       // For lines which form a set with the same key and array markers,
@@ -206,7 +206,7 @@ class Info8 extends Info {
     print_r($module_data);
 
     $lines = array();
-    $lines['name'] = $module_data['module_readable_name'];
+    $lines['name'] = $module_data['readable_name'];
     $lines['type'] = $module_data['base'];
     $lines['description'] = $module_data['module_short_description'];
     if (!empty($module_data['module_dependencies'])) {

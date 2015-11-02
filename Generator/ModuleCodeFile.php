@@ -234,9 +234,9 @@ EOT;
     return array(
       '%module'       => $module_data['root_name'],
       '%description'  => str_replace("'", "\'", $module_data['module_short_description']),
-      '%name'         => !empty($module_data['module_readable_name']) ? str_replace("'", "\'", $module_data['module_readable_name']) : $module_data['root_name'],
+      '%name'         => !empty($module_data['readable_name']) ? str_replace("'", "\'", $module_data['readable_name']) : $module_data['root_name'],
       '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : t('TODO: Create admin help text.'),
-      '%readable'     => str_replace("'", "\'", $module_data['module_readable_name']),
+      '%readable'     => str_replace("'", "\'", $module_data['readable_name']),
     );
   }
 
