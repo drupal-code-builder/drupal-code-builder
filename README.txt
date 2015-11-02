@@ -15,13 +15,17 @@ arguments and what order different hooks use. Score one for laziness! ;)
 What Module Builder can create
 ------------------------------
 
-- modules, containing:
-  - hook implementations
-  - test class
-  - api.php file
-  - README file
-- custom themes, containing:
-  - theme template overrides
+Module builder can generate the following for a module:
+- code files, containing hook implementations
+- info file (.info.yml on Drupal 8)
+- README file
+- test case classes
+- plugin classes
+
+Furthermore, complex subcomponents can generate multiple code elements:
+- an admin settings form adds form builder functions and an admin permission
+- router paths add menu/router items
+- permission names add the scaffold for the permission definition
 
 How Module Builder can be used
 ------------------------------
