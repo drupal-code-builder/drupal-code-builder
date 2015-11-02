@@ -50,7 +50,7 @@ class Routing extends File {
   function collectFiles(&$files) {
     $files['routing'] = array(
       'path' => '', // Means base folder.
-      'filename' => $this->base_component->component_data['module_root_name'] . '.routing.yml',
+      'filename' => $this->base_component->component_data['root_name'] . '.routing.yml',
       'body' => array(
         $this->code_body(),
       ),

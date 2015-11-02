@@ -66,7 +66,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $module_name = $this->randomName();
     $module_data = array(
       'base' => 'module',
-      'module_root_name' => $module_name,
+      'root_name' => $module_name,
       'module_readable_name' => $this->randomString(),
       'module_short_description' => $this->randomString(),
       'hooks' => array(
@@ -136,7 +136,7 @@ class ModuleBuilderModuleGenerationTestCase extends DrupalUnitTestCase {
     $module_name = $this->randomName();
     $module_data = array(
       'base' => 'module',
-      'module_root_name' => $module_name,
+      'root_name' => $module_name,
       'module_readable_name' => $this->randomString(),
       'module_short_description' => $this->randomString(),
       'hooks' => array(

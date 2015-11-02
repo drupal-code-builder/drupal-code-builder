@@ -10,7 +10,7 @@ namespace ModuleBuider\Generator;
 /**
  * Abstract Generator base class for files.
  */
-abstract class File extends BaseGenerator {
+class File extends BaseGenerator {
 
   /**
    * The unique name of this generator.
@@ -56,7 +56,7 @@ abstract class File extends BaseGenerator {
     // Example:
     $files[$this->name] = array(
       'path' => '', // Means base folder.
-      'filename' => $this->base_component->component_data['module_root_name'] . '.info',
+      'filename' => $this->base_component->component_data['root_name'] . '.info',
       // We pass $files in to check for files containing classes.
       'body' => $this->code_body($files),
       // We join the info lines with linebreaks, as they (currently!) do not

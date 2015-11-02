@@ -20,7 +20,7 @@ class YMLFile extends File {
   function collectFiles(&$files) {
     // Our component name is our future filename, with the token '%module' to
     // be replaced.
-    $this->filename = str_replace('%module', $this->base_component->component_data['module_root_name'], $this->name);
+    $this->filename = str_replace('%module', $this->base_component->component_data['root_name'], $this->name);
 
     $yaml_parser = new \Symfony\Component\Yaml\Yaml;
     $yaml = $yaml_parser->dump($this->component_data['yaml_data'], 2, 2);

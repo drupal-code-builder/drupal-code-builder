@@ -56,7 +56,7 @@ class Module extends RootComponent {
    *   (optional) An array of data for the module. The properties are as
    *   follows:
    *    - 'base': The type of component: 'module'.
-   *    - 'module_root_name': The machine name for the module.
+   *    - 'root_name': The machine name for the module.
    *    - 'module_readable_name': The human readable name for the module.
    *    - 'module_short_description': The module's description text.
    *    - 'module_help_text': Help text for the module. If this is given, then
@@ -101,7 +101,7 @@ class Module extends RootComponent {
    */
   protected function componentDataDefinition() {
     $component_data_definition = array(
-      'module_root_name' => array(
+      'root_name' => array(
         'label' => 'Module machine name',
         'default' => 'my_module',
         'required' => TRUE,
@@ -109,7 +109,7 @@ class Module extends RootComponent {
       'module_readable_name' => array(
         'label' => 'Module readable name',
         'default' => function($component_data) {
-          return ucwords(str_replace('_', ' ', $component_data['module_root_name']));
+          return ucwords(str_replace('_', ' ', $component_data['root_name']));
         },
         'required' => FALSE,
       ),
@@ -262,7 +262,7 @@ class Module extends RootComponent {
         // is computed from other properties.
         'computed' => TRUE,
         'default' => function($component_data) {
-          $pieces = explode('_', $component_data['module_root_name']);
+          $pieces = explode('_', $component_data['root_name']);
           $pieces = array_map('ucfirst', $pieces);
           return implode('', $pieces);
         },
@@ -276,7 +276,7 @@ class Module extends RootComponent {
    * Get the Drupal name for this component, e.g. the module's name.
    */
   public function getComponentSystemName() {
-    return $this->component_data['module_root_name'];
+    return $this->component_data['root_name'];
   }
 
   /**

@@ -71,7 +71,7 @@ class Plugin extends PHPFile {
 
     $this->component_data['namespace'] = implode('\\', array(
       'Drupal',
-      $this->base_component->component_data['module_root_name'],
+      $this->base_component->component_data['root_name'],
       $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
     ));
 

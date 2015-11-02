@@ -24,7 +24,7 @@ class Tests extends PHPFile {
    * Build the code files.
    */
   function collectFiles(&$files) {
-    $module_root_name = $this->base_component->component_data['module_root_name'];
+    $module_root_name = $this->base_component->component_data['root_name'];
     $test_file_name = "$module_root_name.test";
 
     // The key is arbitrary (at least so far!).
@@ -49,7 +49,7 @@ class Tests extends PHPFile {
    * Return the main body of the file code.
    */
   function code_body() {
-    $module_root_name = $this->base_component->component_data['module_root_name'];
+    $module_root_name = $this->base_component->component_data['root_name'];
     $module_camel_case = $this->base_component->component_data['module_camel_case_name'];
     $module_readable_name = $this->base_component->component_data['module_readable_name'];
 

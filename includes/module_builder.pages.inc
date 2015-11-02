@@ -192,7 +192,7 @@ function module_builder_page_input($form, &$form_state) {
 
   // Add our own (longer) descriptions and defaults.
   // TODO: consider moving some of these to the Module generator.
-  $form['module_root_name']['#description'] = t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.');
+  $form['root_name']['#description'] = t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.');
   $form['module_readable_name']['#description'] = t('Name of your module as it will appear on the module admin page.');
   $form['module_short_description']['#description'] = t('This text will appear in the module admin list at <a href="!adminmodules">%administer >> %modules</a>.',
     array(
@@ -242,7 +242,7 @@ function module_builder_page_input($form, &$form_state) {
   // built some default values.
   // these are either hardcoded or what the user already put into the form on a previous go round.
   $form_default_values = array(
-    'module_root_name' => 'mymodule',
+    'root_name' => 'mymodule',
   );
   if (isset($form_state['storage']['input'])) {
     $form_default_values = array_merge($form_default_values, $form_state['storage']['input']);
@@ -272,12 +272,12 @@ function module_builder_page_input($form, &$form_state) {
   */
 
   // Module properties
-  $form['module_root_name'] = array(
+  $form['root_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Machine-readable name'),
     '#description' => t('This string is used to name the module files and to prefix all of your functions. This must only contain letters, numbers, and underscores, and may not start with a number.'),
     '#required' => TRUE,
-    '#default_value' => t('mymodule'), # $form_default_values['module_root_name'],
+    '#default_value' => t('mymodule'), # $form_default_values['root_name'],
     '#repopulate' => TRUE,
   );
   $form['module_readable_name'] = array(
@@ -548,7 +548,7 @@ function module_builder_page_generate($form, &$form_state) {
 
   /*
   $form['code_instructions'] = array(
-    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $form_state['values']['module_root_name'] .'.module')),
+    '#value' => t('Please copy and paste the following text into a file called !module.', array('!module' => $form_state['values']['root_name'] .'.module')),
     '#prefix' => '<div id="module-message">',
     '#suffix' => '</div>',
   );

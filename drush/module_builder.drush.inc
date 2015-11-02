@@ -272,7 +272,7 @@ function drush_module_builder_callback_build_module() {
   // This gets merged with the component data info returned from the Module
   // generator.
   $component_info_drush_extra = array(
-    'module_root_name' => array(
+    'root_name' => array(
       'drush_value_process' => 'module_builder_drush_component_root_name_process',
     ),
     'hooks' => array(

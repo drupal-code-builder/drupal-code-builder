@@ -22,7 +22,7 @@ class Info extends File {
   function collectFiles(&$files) {
     $files['info'] = array(
       'path' => '', // Means base folder.
-      'filename' => $this->base_component->component_data['module_root_name'] . '.info',
+      'filename' => $this->base_component->component_data['root_name'] . '.info',
       // We pass $files in to check for files containing classes.
       'body' => $this->file_body($files),
       // We join the info lines with linebreaks, as they (currently!) do not
@@ -192,7 +192,7 @@ class Info8 extends Info {
   function collectFiles(&$files) {
     parent::collectFiles($files);
 
-    $files['info']['filename'] = $this->base_component->component_data['module_root_name'] . '.info.yml';
+    $files['info']['filename'] = $this->base_component->component_data['root_name'] . '.info.yml';
   }
 
   /**
