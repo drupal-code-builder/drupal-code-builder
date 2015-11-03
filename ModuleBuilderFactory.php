@@ -98,7 +98,8 @@ class Factory {
    *
    * @param $task_type
    *  The type of task. This should the the name of a class in the
-   *  ModuleBuider\Task namespace. May be one of:
+   *  ModuleBuider\Task namespace, without the Drupal core version suffix.
+   *  May be one of:
    *    - 'Collect': Collect and process data on available hooks.
    *    - 'ReportHookData':
    *    - ... others TODO.
@@ -136,8 +137,12 @@ class Factory {
   /**
    * Helper function to get the desired Task class.
    *
+   * Takes care of including files for base class and non-version-specific
+   * class as well as the class itself.
+   *
    * @param $task_type
-   *  The type of the task. This is used to determine the class.
+   *  The type of the task. This is the class name without the Drupal core
+   *  version suffix.
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
