@@ -30,7 +30,7 @@ class AnalyzeModule extends Base {
    * @return
    *  A flat array of filenames.
    */
-  function getFiles($module_root_name) {
+  public function getFiles($module_root_name) {
     $filepath = drupal_get_path('module', $module_root_name);
 
     //$old_dir = getcwd();
@@ -55,7 +55,7 @@ class AnalyzeModule extends Base {
    * @param $file
    *  A complete filename from the Drupal root, eg 'modules/user/user.module'.
    */
-  function getFileFunctions($file) {
+  public function getFileFunctions($file) {
     $code = file_get_contents($file);
     //drush_print($code);
 
@@ -81,7 +81,7 @@ class AnalyzeModule extends Base {
    *    'foo_insert' => '$foo, $bar'
    *  These may not be complete if invocations omit any optional parameters.
    */
-  function getInventedHooks($module_root_name) {
+  public function getInventedHooks($module_root_name) {
     // Get the module's folder.
     $module_folder = drupal_get_path('module', $module_root_name);
 
