@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the base Task class.
+ * Contains ModuleBuider\Task.
  */
 
 namespace ModuleBuider\Task;
@@ -23,7 +23,7 @@ namespace ModuleBuider\Task;
  * appending the version number to the class name. The unversioned class should
  * also exist as a parent class.
  *
- * Task objects are instantiated by ModuleBuilderFactory::getTask().
+ * Task objects should be instantiated by \ModuleBuilder\Factory::getTask().
  */
 class Base {
 
@@ -42,6 +42,8 @@ class Base {
    *
    * @return
    *  A sanity level string to pass to the environment's verifyEnvironment().
+   *
+   * @see \ModuleBuilder\Environment\EnvironmentInterface::verifyEnvironment()
    */
   function getSanityLevel() {
     return $this->sanity_level;
