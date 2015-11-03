@@ -25,7 +25,7 @@ class Collect8 extends Collect {
   /**
    * Collect data about plugin types.
    */
-  public function collectPlugins() {
+  protected function collectPlugins() {
     // Get the IDs of all services from the container.
     $service_ids = \Drupal::getContainer()->getServiceIds();
     //drush_print_r($service_ids);
