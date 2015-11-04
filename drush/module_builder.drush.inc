@@ -535,10 +535,8 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     return;
   }
 
-  $root_generator = $mb_task_handler_generate->getRootGenerator();
-
   // Get the component data info, and add in extra info specific to Drush.
-  $component_data_info = $root_generator->getComponentDataInfo();
+  $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
   $component_data_info = array_merge_recursive($component_data_info, $component_info_drush_extra);
   //drush_print_r($component_data_info);
 
@@ -596,7 +594,7 @@ function drush_module_builder_build_component($commands, $component_type, $compo
   // Each property info needs to be prepared, so iterate by reference.
   foreach ($component_data_info as $property_name => &$property_info) {
     // Prepare the single property: get options, default value, etc.
-    $root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
+    $mb_task_handler_generate->prepareComponentDataProperty($property_name, $property_info, $component_data);
 
     // Initialize our value from the default that's been set by
     // prepareComponentDataProperty(). We try various things to set it.
@@ -710,7 +708,7 @@ function drush_module_builder_build_component($commands, $component_type, $compo
 
   // Perform any final processing on the component data.
   // This prepares data, for example expands options such as hook presets.
-  $root_generator->processComponentData($component_data_info, $component_data);
+  $mb_task_handler_generate->processComponentData($component_data_info, $component_data);
   //drush_print_r($component_data);
 
   // Generate the component.

@@ -81,10 +81,8 @@ function module_builder_page_input($form, &$form_state) {
     }
   }
 
-  $root_generator = $mb_task_handler_generate->getRootGenerator();
-
   // Get the component data info.
-  $component_data_info = $root_generator->getComponentDataInfo();
+  $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
 
   $component_data = array();
 
@@ -92,7 +90,7 @@ function module_builder_page_input($form, &$form_state) {
   // Each property info needs to be prepared, so iterate by reference.
   foreach ($component_data_info as $property_name => &$property_info) {
     // Prepare the single property: get options, default value, etc.
-    $root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
+    $mb_task_handler_generate->prepareComponentDataProperty($property_name, $property_info, $component_data);
     //dsm($component_data, $property_name);
 
     $element = array(
@@ -503,8 +501,7 @@ function module_builder_page_generate($form, &$form_state) {
   $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
 
   // Get the component data info.
-  $root_generator = $mb_task_handler_generate->getRootGenerator();
-  $component_data_info = $root_generator->getComponentDataInfo();
+  $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
 
   // No need to call prepareComponentDataProperty() here.
 
@@ -516,7 +513,7 @@ function module_builder_page_generate($form, &$form_state) {
 
   // Perform any final processing on the component data.
   // This prepares data, for example expands options such as hook presets.
-  $root_generator->processComponentData($component_data_info, $module_data);
+  $mb_task_handler_generate->processComponentData($component_data_info, $module_data);
 
   // Get the files.
   $files = $mb_task_handler_generate->generateComponent($module_data);

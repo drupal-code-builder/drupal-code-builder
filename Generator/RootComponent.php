@@ -46,7 +46,10 @@ abstract class RootComponent extends BaseGenerator {
    *    array of component data assembled so far. Depending on the value of
    *    'required', this represents either the value that may be presented as a
    *    default to the user in a UI for convenience, or the value that will be
-   *    set if nothing is provided when instatiating the component.
+   *    set if nothing is provided when instatiating the component. Note that
+   *    this is required if a later property makes use of this property in a
+   *    callback, as non-progressive UIs can only rely on hardcoded default
+   *    values.
    *  - 'required': (optional) Boolean indicating whether this property must be
    *    provided. Defaults to FALSE.
    *  - 'options': (optional) A callable which returns a list of options for the
@@ -67,12 +70,8 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * Get a list of the properties that are required in the component data.
    *
-   * UIs may use this to present the options to the user. Each property should
-   * be passed to prepareComponentDataProperty(), to set any option lists and
-   * allow defaults to build up incrementally.
-   *
-   * After all data has been gathered from the user, the completed data array
-   * should be passed to processComponentData().
+   * UIs should use ModuleBuider\Task\Generate\getRootComponentDataInfo() rather
+   * than this method.
    *
    * @param $include_computed
    *  (optional) Boolean indicating whether to include computed properties.
@@ -81,12 +80,7 @@ abstract class RootComponent extends BaseGenerator {
    * @return
    *  An array containing information about the properties this component needs
    *  in its $component_data array. Keys are the names of properties. Each value
-   *  is an array of information for the property. Of interest to UIs calling
-   *  this are:
-   *  - 'label': A human-readable label for the property.
-   *  - 'format': Specifies the expected format for the property. One of
-   *    'string' or 'array'.
-   *  - 'required': Boolean indicating whether this property must be provided.
+   *  is an array of information for the property.
    *
    * @see componentDataDefinition()
    * @see prepareComponentDataProperty()
