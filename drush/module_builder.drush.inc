@@ -717,9 +717,6 @@ function drush_module_builder_build_component($commands, $component_type, $compo
   $files = $mb_task_handler_generate->generateComponent($component_data);
   //drush_print_r($files);
 
-  // Replace the uninitialized root generator we had with the proper one.
-  $root_generator = $mb_task_handler_generate->getRootGenerator();
-
   $component_dir = module_builder_get_component_folder($component_type, $component_data['root_name']);
 
   // Finally, output the files!
