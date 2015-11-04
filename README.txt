@@ -25,7 +25,11 @@ Module builder can generate the following for a module:
 Furthermore, complex subcomponents can generate multiple code elements:
 - an admin settings form adds form builder functions and an admin permission
 - router paths add menu/router items
-- permission names add the scaffold for the permission definition
+- permission names add the scaffold for the permission definition (on D7 and,
+  earlier, hook_permission(), on D8 a permissions.yml file)
+
+Module builder can also build themes and install profiles, though these are
+currently still experimental.
 
 How Module Builder can be used
 ------------------------------
@@ -139,7 +143,28 @@ Module builder is primarily a framework for generating code files, that happens
 to be packaged with two UIs that access it: the Drush plugin for use on the
 command line, and the Drupal module for use in the web UI.
 
-This framework has a public API which can be used by other modules.
+This framework has a public API which can be used by other modules. This
+consists of a number of classes in the \ModuleBuilder\Task namespace, which
+provide public methods.
+
+As well as Tasks, Module Builder consists of Environment classes, which deal
+with the differences between running in different environments (e.g., as a
+Drush plugin on Drupal 8 versus as a Drupal module on Drupal 7), and Generator
+classes, which produce the output code.
+
+The basic operation for Module Builder is as in this example:
+
+    // Load the file for the factory class.
+    // (Not necessary if using MB via Composer.)
+    include_once('ModuleBuilderFactory.php');
+    // Tell MB which environment it's being used in. The Drupal core version is
+    // detected automatically.
+    \ModuleBuilder\Factory::setEnvironmentClass('Drush');
+    // Get the Task handler.
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    // Call a method in the Task handler to perform the operation.
+    $hook_declarations = $mb_task_handler_report->getHookDeclarations();
+
 
 To get started with using the Module Builder API, see:
   - \ModuleBuilder\Factory
