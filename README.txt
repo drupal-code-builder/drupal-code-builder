@@ -165,11 +165,36 @@ The basic operation for Module Builder is as in this example:
     // Call a method in the Task handler to perform the operation.
     $hook_declarations = $mb_task_handler_report->getHookDeclarations();
 
+The code generation system is made up of a set of Generator classes, and is
+operated from the \ModuleBuilder\Task\Generate class. To build code, you need
+to specify:
+  - the root generator to use, such as 'module', 'theme', 'profile'. This is
+    the name of a subclass of ModuleBuider\Generator\RootComponent.
+  - an array of component data. The options for this depend on the component.
 
-To get started with using the Module Builder API, see:
-  - \ModuleBuilder\Factory
-  - the classes in Environment/Environment.php
-  - the tasks handlers in the Task folder.
+ This is done as follows:
+
+  // Get the generator task.
+  $task = \ModuleBuilder\Factory::getTask('Generate', 'module');
+  // Get the info about the component data. This is an array keyed by property
+  // name, with the definition of each property.
+  $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
+  foreach ($component_data_info as $property_name => &$property_info) {
+    // Prepare each property. This sets up the default value and the options.
+    // This is to allow each property to use the data entered so far. For
+    // example, if the user enters 'foo_bar' for the module machine name, the
+    // proposed default for the module readable name will be 'Foo Bar'.
+    $task->prepareComponentDataProperty($property_name, $property_info, $component_data);
+  }
+  // Set your values.
+  $component_data['root_name'] = 'foo_bar';
+  // Perform any final processing on the component data.
+  // This prepares data, for example expands options such as hook presets.
+  $task->processComponentData($component_data_info, $component_data);
+  // Get the files of generated code.
+  // This is an array keyed by filename, where each value is the text of the
+  // file.
+  $files = $task->generateComponent($component_data);
 
 Todo/wishlist
 -------------
