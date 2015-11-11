@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the root component class.
+ * Contains ModuleBuider\Generator\RootComponent.
  */
 
 namespace ModuleBuider\Generator;
