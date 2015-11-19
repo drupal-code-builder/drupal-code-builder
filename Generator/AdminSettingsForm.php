@@ -31,7 +31,7 @@ class AdminSettingsForm extends Form {
 
     // This takes care of adding hook_menu() and so on.
     $form_name = $this->getFormName();
-    $components['admin/config/%module'] = array(
+    $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
       'title' => 'Administer %readable',
       'page callback' => 'drupal_get_form',
