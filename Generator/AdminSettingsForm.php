@@ -17,6 +17,18 @@ namespace ModuleBuider\Generator;
 class AdminSettingsForm extends Form {
 
   /**
+   * Override the parent to set the code file.
+   */
+  function __construct($component_name, $component_data = array()) {
+    // Set some default properties.
+    $component_data += array(
+      'code_file' => '%module.admin.inc',
+    );
+
+    parent::__construct($component_name, $component_data);
+  }
+
+  /**
    * @inheritdoc
    */
   public static function requestedComponentHandling() {
