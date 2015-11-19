@@ -146,7 +146,7 @@ class Collect extends Base {
       $group = $file_data['group'];
 
       // Get info about hooks from Drupal.
-      $hook_info = $this->getHookInfo($file_data);
+      $hook_info = $this->getDrupalHookInfo($file_data);
 
       // Create an array in the form of:
       // array(
@@ -289,7 +289,7 @@ class Collect extends Base {
   }
 
   /**
-   * Get info about hooks from Drupal.
+   * Get info about hooks from Drupal Core.
    *
    * This invokes hook_hook_info().
    *
@@ -300,7 +300,7 @@ class Collect extends Base {
    *  The data from the implementation of hook_hook_info() for the module that
    *  provided the documentation file.
    */
-  protected function getHookInfo($file_data) {
+  protected function getDrupalHookInfo($file_data) {
     // Note that the 'module' key is flaky: some modules use a different name
     // for their api.php file.
     $module = $file_data['module'];

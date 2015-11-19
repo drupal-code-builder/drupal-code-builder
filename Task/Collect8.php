@@ -319,7 +319,7 @@ class Collect8 extends Collect {
    *
    * This invokes hook_hook_info().
    */
-  protected function getHookInfo($file_data) {
+  protected function getDrupalHookInfo($file_data) {
     // Note that the 'module' key is flaky: some modules use a different name
     // for their api.php file.
     $module = $file_data['module'];
