@@ -78,10 +78,12 @@ class RouterItem extends BaseGenerator {
     // item.
     $properties_to_copy = array(
       'title',
+      'description',
       'page callback',
       'page arguments',
       'access callback',
       'access arguments',
+      'file',
     );
     foreach ($properties_to_copy as $property_name) {
       if (isset($this->component_data[$property_name])) {

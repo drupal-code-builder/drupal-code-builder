@@ -83,11 +83,17 @@ class HookMenu extends HookImplementation {
 
       $code[] = "£items['$menu_item_data[path]'] = array(";
       $code[] = "  'title' => '$menu_item_data[title]',";
+      if (isset($menu_item_data['description'])) {
+        $code[] = "  'description' => '$menu_item_data[description]',";
+      }
       $code[] = "  'page callback' => '{$menu_item_data['page callback']}',";
       // This is an array, so not quoted.
       $code[] = "  'page arguments' => {$menu_item_data['page arguments']},";
       // This is an array, so not quoted.
       $code[] = "  'access arguments' => {$menu_item_data['access arguments']},";
+      if (isset($menu_item_data['file'])) {
+        $code[] = "  'file' => '$menu_item_data[file]',";
+      }
       if (isset($menu_item_data['type'])) {
         // The type is a constant, so is not quoted.
         $code[] = "  'type' => $menu_item_data[type],";
