@@ -46,9 +46,11 @@ class AdminSettingsForm extends Form {
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
       'title' => 'Administer %readable',
+      'description' => 'Configure settings for %readable.',
       'page callback' => 'drupal_get_form',
       'page arguments' => "array('{$form_name}')",
       'access arguments' => "array('administer %module')",
+      'file' => '%module.admin.inc',
     );
 
     $components['Permissions'] = array(
