@@ -12,17 +12,33 @@
 
 /**
  * Provide information about hook definition files to Module builder.
+ *
+ * On D6, define where hook definition files may be downloaded from and specify
+ * the destination for their hooks. Only files defined here will be processed.
+ *
+ * On D7, specify the destination files for hooks that do not go in the default
+ * %module.module file. All module.api.php files will be processed; this hook
+ * merely provides extra information.
+ *
  * This hook should go in a MODULE.module_builder.inc file in your module folder.
- * Is it only loaded by Module builder when the user goes to download new hook data.
+ * Is it only loaded by Module builder when the user goes to get new hook data.
+ *
+ * This hook serves a fairly different purpose on D7 compared to prior versions.
+ * The same hook name is kept in case some awkward contrib modules continue to keep their hook definitions on a
+ * remote server. There's a reason, honest!
+ * The keys are different so here we spludge both together so this code
+ * can run on any version with Drush.
+ * Other modules implementing this shouldn't do this, as Module Builder invokes
+ * and builds for the version of the current site.
  *
  * @param $version
  * The major version of Drupal to return data for.
  *
  * @return
  *   An array of data, keyed by module name.
- *   The subsequent array should specify:
+ *   On D6, the subsequent array should specify:
  *    - url: a general url to fetch files from.
- *      Use tokens to insert filenames and branch: %file, %branch 
+ *      Use tokens to insert filenames and branch: %file, %branch
  *    - branch: the current branch of the module, eg DRUPAL-6--1, HEAD.
  *      TODO: find a neat way to grab this with a CVS id token?
  *    - group: the UI group these hooks should go in. This should probably be the
@@ -31,9 +47,16 @@
  *      Eg 'core.php' goes in the group 'core'.
  *    - hook_files: an array of files to fetch. The filename is the key
  *      and the value is the file where the hook code should eventually be stored.
- *      Use the token %module for the module machine name.
  *      Usually this will be '%module.module' but for instance,
  *      'install.php' has hooks that should go in '%module.install'.
+ *   On D7, the subsequent array should specify one or both of:
+ *    - 'destination': the destination file for a hook's implementation,
+ *      eg '%module.module', '%module.views.inc'. This applies to all hooks in
+ *      the named file, unless:
+ *    - 'hook_destinations': override destination for specific hooks here. This
+ *      is an array whose keys are destination strings, and values are themselves
+ *      flat arrays of full hook names. Eg:
+ *      '%module.install' => array(hook_install)
  */
 function hook_module_builder_info($version) {
   $data = array(

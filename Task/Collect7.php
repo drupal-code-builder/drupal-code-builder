@@ -78,8 +78,8 @@ class Collect7 extends Collect {
    * @see module_builder_module_builder_info().
    */
   private function getHookDestinations(&$hook_files) {
-    // Get data by invoking our hook.
-    $data = $this->environment->invokeInfoHook();
+    // Get our data.
+    $data = $this->getHookInfo();
 
     // Incoming data is destination key, array of hooks.
     // (Because it makes typing the data out easier! Computers can just adapt.)
@@ -114,6 +114,84 @@ class Collect7 extends Collect {
     }
 
     //print_r($hook_files);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected function getAdditionalHookInfo() {
+    // For D7, keys should match the filename MODULE.api.php
+    $info = array(
+      // Hooks on behalf of Drupal core.
+      'system' => array(
+        'hook_destinations' => array(
+          '%module.install' => array(
+            'hook_requirements',
+            'hook_schema',
+            'hook_schema_alter',
+            'hook_install',
+            'hook_update_N',
+            'hook_update_last_removed',
+            'hook_uninstall',
+            'hook_enable',
+            'hook_disable',
+          ),
+        ),
+      ),
+      'block' => array(
+        'hook_dependencies' => array(
+          'hook_block_info' => array(
+            'hook_block_*',
+          ),
+        ),
+      ),
+      'field' => array(
+        'hook_destinations' => array(
+          '%module.install' => array(
+            'hook_field_schema',
+          ),
+        ),
+      ),
+      // Hooks in theme.api.php. This does nothing yet!
+      'theme' => array(
+        'destination' => 'template.php',
+      ),
+      // Views
+      'views' => array(
+        'hook_destinations' => array(
+          '%module.views.inc' => array(
+            'hook_views_data',
+            'hook_views_data_alter',
+            'hook_views_plugins',
+            'hook_views_plugins_alter',
+            'hook_views_query_alter',
+          ),
+          '%module.views_default.inc' => array(
+            'hook_views_default_views',
+          ),
+        ),
+        // Data about hook dependencies.
+        'hook_dependencies' => array(
+          // A required hook.
+          'hook_views_api' => array(
+            // An array of hooks that require this, as a regex.
+            // TODO!??? dependencies across different API files not yet supported!
+            'hook_views_.*',
+          ),
+        ),
+      ),
+      'rules' => array(
+        'hook_destinations' => array(
+          '%module.rules.inc' => array(
+            'hook_rules_action_info',
+          ),
+          '%module.rules_default.inc' => array(
+            'hook_default_rules_configuration',
+          ),
+        ),
+      ),
+    );
+    return $info;
   }
 
 }

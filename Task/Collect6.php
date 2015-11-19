@@ -61,8 +61,8 @@ class Collect6 extends Collect {
         [group] => core
    */
   function getHookFileUrls($directory) {
-    // Get data by invoking our hook.
-    $data = \ModuleBuilder\Factory::getEnvironment()->invokeInfoHook();
+    // Get our data.
+    $data = $this->getHookInfo();
 
     foreach ($data as $module => $module_data) {
       $branch = $module_data['branch'];
@@ -95,6 +95,113 @@ class Collect6 extends Collect {
     //print_r($urls);
 
     return $urls;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected function getAdditionalHookInfo() {
+    $info = array(
+      // Hooks on behalf of Drupal core.
+      'system' => array(
+        'url' => 'http://drupalcode.org/project/documentation.git/blob_plain/refs/heads/%branch:/developer/hooks/%file',
+        'branch' => '6.x-1.x',
+        'group' => '#filenames',
+        'hook_files' => array(
+          // List of files we should slurp from the url for hook defs.
+          // and the destination file for processed code.
+          'core.php' =>    '%module.module',
+          'node.php' =>    '%module.module',
+          'install.php' => '%module.install',
+        ),
+      ),
+      // We need to do our own stuff now we have a hook!
+      'module_builder' => array(
+        'url' => 'http://drupalcode.org/project/module_builder.git/blob_plain/refs/heads/%branch:/hooks/%file',
+        'branch' => '6.x-2.x',
+        'group' => 'module builder',
+        'hook_files' => array(
+          'module_builder.php' => '%module.module_builder.inc',
+        ),
+      ),
+
+      // Support for some contrib modules (the ones I use ;) -- for more please
+      // file a patch either here or with the module in question.
+      // Views
+      'views' => array(
+        'url' => 'http://drupalcode.org/project/views.git/blob_plain/refs/heads/%branch:/docs/%file',
+        'branch' => '6.x-2.x',
+        'group' => 'views',
+        'hook_files' => array(
+          'docs.php' => '%module.module',
+          // other files here: view.inc, views.default.inc
+        ),
+        // hooks that go in files other than %module.module
+        'hook_destinations' => array(
+          '%module.views.inc' => array(
+            'hook_views_data',
+            'hook_views_data_alter',
+            'hook_views_admin_links_alter',
+            'hook_views_handlers',
+            'hook_views_plugins',
+            'hook_views_preview_info_alter',
+            'hook_views_query_alter',
+          ),
+          '%module.views_convert.inc' => array(
+            'hook_views_convert',
+          ),
+          '%module.views_default.inc' => array(
+            'hook_views_default_views',
+          ),
+        ),
+      ),
+      // Ubercart
+      'ubercart' => array(
+        'url' => 'http://drupalcode.org/project/ubercart.git/blob_plain/refs/heads/%branch:/docs/%file',
+        'branch' => '6.x-2.x',
+        'group' => 'ubercart',
+        'hook_files' => array(
+          'hooks.php' => '%module.module',
+        ),
+      ),
+      // Signup
+      'signup' => array(
+        'url' => 'http://drupalcode.org/project/signup.git/blob_plain/refs/heads/%branch:/%file',
+        'branch' => '6.x-2.x',
+        'group' => 'signup',
+        'hook_files' => array(
+          'signup.api.php' => '%module.module',
+        ),
+      ),
+      // Ctools
+      'ctools' => array(
+        'url' => 'http://drupalcode.org/project/ctools.git/blob_plain/refs/heads/%branch:/%file',
+        'branch' => '6.x-1.x',
+        'group' => 'ctools',
+        'hook_files' => array(
+          'ctools.api.php' => '%module.module',
+        ),
+      ),
+      // Webform
+      'webform' => array(
+        'url' => 'http://drupalcode.org/project/webform.git/blob_plain/refs/heads/%branch:/%file',
+        'branch' => '6.x-3.x',
+        'group' => 'webform',
+        'hook_files' => array(
+          'webform_hooks.php' => '%module.module',
+        ),
+      ),
+      // Payment API
+      'pay' => array(
+        'url' => 'http://drupalcode.org/project/pay.git/blob_plain/refs/heads/%branch:/%file',
+        'branch' => '6.x-1.x',
+        'group' => 'pay',
+        'hook_files' => array(
+          'pay.api.php' => '%module.module',
+        ),
+      ),
+    );
+    return $info;
   }
 
 }

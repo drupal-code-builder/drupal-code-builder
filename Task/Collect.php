@@ -312,4 +312,33 @@ class Collect extends Base {
     return $hook_info;
   }
 
+  /**
+   * Get hook information declared by Module Builder.
+   *
+   * This invokes our own hook, hook_module_builder_info(), as well as adding
+   * hardcoded info such as module file locations, which can't be deduced from
+   * either api.php files or hook_hook_info().
+   */
+  protected function getHookInfo() {
+    // Get data by invoking our hook.
+    $data = \ModuleBuilder\Factory::getEnvironment()->invokeInfoHook();
+
+    // Add our data.
+    $result = $this->getAdditionalHookInfo();
+    $data = array_merge($data, $result);
+
+    return $data;
+  }
+
+  /**
+   * Declare our own info to add to data from our info hook.
+   *
+   * We're not necessarily running as a Drupal module, so we declare the data
+   * we want to add here.
+   */
+  protected function getAdditionalHookInfo() {
+    // Subclasses should override this.
+    return array();
+  }
+
 }

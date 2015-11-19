@@ -276,8 +276,8 @@ class Collect8 extends Collect {
    * @see module_builder_module_builder_info().
    */
   private function getHookDestinations(&$hook_files) {
-    // Get data by invoking our hook.
-    $data = $this->environment->invokeInfoHook();
+    // Get our data.
+    $data = $this->getHookInfo();
 
     // Incoming data is destination key, array of hooks.
     // (Because it makes typing the data out easier! Computers can just adapt.)
@@ -329,6 +329,13 @@ class Collect8 extends Collect {
     }
 
     return $hook_info;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected function getAdditionalHookInfo() {
+    return array();
   }
 
 }
