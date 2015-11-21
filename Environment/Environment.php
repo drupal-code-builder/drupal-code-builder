@@ -13,11 +13,6 @@
  *  - how to get the Drupal core version
  *  - how to load an include file with a version suffix
  *  - how to find the hooks data directory.
- * To initialize the environment, pass the environment handler class name as a
- * parameter to \ModuleBuilder\Factory::setEnvironmentClass():
- * @code
- *  \ModuleBuilder\Factory::setEnvironmentClass('Drush');
- * @endcode
  * The classes for the execution environment (Drush, Drupal, library) are
  * supported by helper classes for Drupal core version, thus allowing the
  * execution environment to be orthogonal to the major version. All methods on
@@ -35,11 +30,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   /**
    * Whether to skip the sanity tests.
    *
-   * This may be set on the environment after it has been initialized. Example:
-   * @code
-   * \ModuleBuilder\Factory::setEnvironmentClass('Drush');
-   * \ModuleBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
-   * @endcode
+   * @see skipSanityCheck()
    */
   protected $skipSanity = FALSE;
 

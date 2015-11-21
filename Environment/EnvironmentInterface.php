@@ -15,11 +15,10 @@ interface EnvironmentInterface {
   /**
    * Sanity check our basic environment to a specified level.
    *
-   * This is called by the factory when a Task is requested from it.
+   * This is called by ModuleBuilder\Factory when a Task is requested from it.
    *
-   * If the property $skipSanity is set on this environment object, the tests
-   * are skipped. This should only be used in rare circumstances (such as drush
-   * autocomplete).
+   * The tests can be skipped by first calling skipSanityCheck(). This should
+   * only be used in rare circumstances (such as drush autocomplete).
    *
    * @param $sanity_level
    *  The level up to which to verify sanity. The successive levels are:
@@ -36,6 +35,12 @@ interface EnvironmentInterface {
 
   /**
    * Set the environment to skip sanity checks until further notice.
+   *
+   * This may be set on the environment after it has been initialized. Example:
+   * @code
+   * \ModuleBuilder\Factory::setEnvironmentClass('Drush');
+   * \ModuleBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
+   * @endcode
    *
    * @param bool $setting
    *  Set to TRUE to set the environment to skip sanity checks; FALSE to restore
