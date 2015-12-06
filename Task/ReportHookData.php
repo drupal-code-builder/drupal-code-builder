@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\ReportHookData.
+ * Definition of ModuleBuilder\Task\ReportHookData.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 // We have no autoloading for Tasks.
 include_once(dirname(__FILE__) . "/ReportHookDataFolder.php");

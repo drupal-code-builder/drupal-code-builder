@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\HookPermission.
+ * Definition of ModuleBuilder\Generator\HookPermission.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Generator for hook_permission() implementation.

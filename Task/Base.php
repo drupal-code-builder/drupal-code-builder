@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuider\Task.
+ * Contains ModuleBuilder\Task.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 /**
  * Base class for Tasks.

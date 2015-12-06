@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\AdminSettingsForm.
+ * Definition of ModuleBuilder\Generator\AdminSettingsForm.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Component generator: admin form for modules.

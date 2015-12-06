@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\HookImplementation.
+ * Definition of ModuleBuilder\Generator\HookImplementation.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Generator for a single hook implementation.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\Hooks.
+ * Definition of ModuleBuilder\Generator\Hooks.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Generator base class for module hooks.
@@ -20,7 +20,7 @@ namespace ModuleBuider\Generator;
  *
  * TODO: make this work for theme hooks too?
  *
- * @see ModuleBuider\Generator\ModuleCodeFile
+ * @see ModuleBuilder\Generator\ModuleCodeFile
  */
 class Hooks extends BaseGenerator {
 

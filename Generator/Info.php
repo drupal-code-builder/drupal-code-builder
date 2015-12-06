@@ -5,7 +5,7 @@
  * Contains generator classes for .info files.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Generator base class for module info file.

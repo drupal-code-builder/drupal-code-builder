@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\Module.
+ * Definition of ModuleBuilder\Generator\Module.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Component generator: module.
@@ -376,7 +376,7 @@ class Module extends RootComponent {
 
     // Case 3: there are some requested components we don't know anything about.
     // We assume that these are abbreviated filenames for the attention of
-    // ModuleBuider\Generator\Hooks; therefore we must ensure 'hooks' is in the
+    // ModuleBuilder\Generator\Hooks; therefore we must ensure 'hooks' is in the
     // list.
     $intersection_components['hooks'] = 'hooks';
 

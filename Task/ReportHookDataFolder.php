@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\ReportHookDataFolder.
+ * Definition of ModuleBuilder\Task\ReportHookDataFolder.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 /**
  * Task handler for reporting on the folder for hook data.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\Collect.
+ * Definition of ModuleBuilder\Task\Collect.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 /**
  * Task handler for collecting and processing definitions for Drupal components.

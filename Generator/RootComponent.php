@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuider\Generator\RootComponent.
+ * Contains ModuleBuilder\Generator\RootComponent.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Abstract Generator for root components.
@@ -70,7 +70,7 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * Get a list of the properties that are required in the component data.
    *
-   * UIs should use ModuleBuider\Task\Generate\getRootComponentDataInfo() rather
+   * UIs should use ModuleBuilder\Task\Generate\getRootComponentDataInfo() rather
    * than this method.
    *
    * @param $include_computed

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\AnalyzeModule.
+ * Definition of ModuleBuilder\Task\AnalyzeModule.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 /**
  * Task handler for analyzing an existing module.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\HookMenu.
+ * Definition of ModuleBuilder\Generator\HookMenu.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Generator for hook_menu() implementation.

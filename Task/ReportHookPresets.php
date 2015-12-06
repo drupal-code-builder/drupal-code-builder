@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\ReportHookPresets.
+ * Definition of ModuleBuilder\Task\ReportHookPresets.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 /**
  * Task handler for reporting on hook presets and templates.

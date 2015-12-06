@@ -5,7 +5,7 @@
  * Contains generator classes for module PHP files.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Generator class for module code files.

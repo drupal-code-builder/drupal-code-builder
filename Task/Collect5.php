@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\Collect5.
+ * Definition of ModuleBuilder\Task\Collect5.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 // Dirty hack because Task classes don't have autoloading yet.
 include_once(dirname(__FILE__) . "/Collect6.php");

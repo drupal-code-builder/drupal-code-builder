@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Generator\ThemeTemplate.
+ * Definition of ModuleBuilder\Generator\ThemeTemplate.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Component generator: theme TPL file.

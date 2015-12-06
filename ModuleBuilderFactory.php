@@ -98,7 +98,7 @@ class Factory {
    *
    * @param $task_type
    *  The type of task. This should the the name of a class in the
-   *  ModuleBuider\Task namespace, without the Drupal core version suffix.
+   *  ModuleBuilder\Task namespace, without the Drupal core version suffix.
    *  May be one of:
    *    - 'Collect': Collect and process data on available hooks.
    *    - 'ReportHookData':
@@ -146,7 +146,7 @@ class Factory {
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
-   *  'ModuleBuider\Task\Collect7'.
+   *  'ModuleBuilder\Task\Collect7'.
    */
   public static function getTaskClass($task_type) {
     $type     = ucfirst($task_type);
@@ -165,10 +165,10 @@ class Factory {
     if (file_exists($versioned_filepath)) {
       include_once($versioned_filepath);
 
-      $class    = 'ModuleBuider\\Task\\' . $task_type . $version;
+      $class    = 'ModuleBuilder\\Task\\' . $task_type . $version;
     }
     else {
-      $class    = 'ModuleBuider\\Task\\' . $task_type;
+      $class    = 'ModuleBuilder\\Task\\' . $task_type;
     }
 
     return $class;

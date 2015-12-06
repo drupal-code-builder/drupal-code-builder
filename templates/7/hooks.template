@@ -4,7 +4,7 @@
  * Defines default templates for hook functions.
  *
  * For the tokens that may be used, see
- * ModuleBuider\Generator\ModuleCodeFile::getReplacements().
+ * ModuleBuilder\Generator\ModuleCodeFile::getReplacements().
  */
  
 == START hook_help ==

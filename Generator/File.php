@@ -5,7 +5,7 @@
  * Contains generator class for outputting files.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Abstract Generator base class for files.

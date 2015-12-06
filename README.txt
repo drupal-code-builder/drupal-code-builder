@@ -169,7 +169,7 @@ The code generation system is made up of a set of Generator classes, and is
 operated from the \ModuleBuilder\Task\Generate class. To build code, you need
 to specify:
   - the root generator to use, such as 'module', 'theme', 'profile'. This is
-    the name of a subclass of ModuleBuider\Generator\RootComponent.
+    the name of a subclass of ModuleBuilder\Generator\RootComponent.
   - an array of component data. The options for this depend on the component.
 
  This is done as follows:

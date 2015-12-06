@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of ModuleBuider\Task\Generate.
+ * Definition of ModuleBuilder\Task\Generate.
  */
 
-namespace ModuleBuider\Task;
+namespace ModuleBuilder\Task;
 
 /**
  * Task handler for generating a component.
@@ -78,7 +78,7 @@ class Generate extends Base {
    * This may be used by UIs that want to provide interactive building up of
    * component parameters.
    *
-   * @see ModuleBuider\Generator\BaseGenerator::getComponentDataDefaultValue().
+   * @see ModuleBuilder\Generator\BaseGenerator::getComponentDataDefaultValue().
    */
   public function getRootGenerator() {
     return $this->root_generator;
@@ -107,7 +107,7 @@ class Generate extends Base {
    *    'string' or 'array'.
    *  - 'required': Boolean indicating whether this property must be provided.
    * For the full documentation for all properties, see
-   * ModuleBuider\Generator\RootComponent\componentDataDefinition().
+   * ModuleBuilder\Generator\RootComponent\componentDataDefinition().
    */
   public function getRootComponentDataInfo() {
     return $this->root_generator->getComponentDataInfo();
@@ -167,8 +167,8 @@ class Generate extends Base {
    * @param $component_data
    *  An associative array of data for the component. Values depend on the
    *  component class. For details, see the constructor of the generator, of the
-   *  form ModuleBuider\Generator\COMPONENT, e.g.
-   *  ModuleBuider\Generator\Module::__construct().
+   *  form ModuleBuilder\Generator\COMPONENT, e.g.
+   *  ModuleBuilder\Generator\Module::__construct().
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -268,7 +268,7 @@ class Generate extends Base {
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
-   *  'ModuleBuider\Generator\Info6'.
+   *  'ModuleBuilder\Generator\Info6'.
    *
    * @see Generate::generatorAutoload()
    */
@@ -279,15 +279,15 @@ class Generate extends Base {
 
     $type     = ucfirst($type);
     $version  = $this->environment->getCoreMajorVersion();
-    $class    = 'ModuleBuider\\Generator\\' . $type . $version;
+    $class    = 'ModuleBuilder\\Generator\\' . $type . $version;
 
     // Trigger the autoload for the base name without the version, as all versions
     // are in the same file.
-    class_exists('ModuleBuider\\Generator\\' . $type);
+    class_exists('ModuleBuilder\\Generator\\' . $type);
 
     // If there is no version-specific class, use the base class.
     if (!class_exists($class)) {
-      $class  = 'ModuleBuider\\Generator\\' . $type;
+      $class  = 'ModuleBuilder\\Generator\\' . $type;
     }
     return $class;
   }

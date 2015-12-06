@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuider\Generator\BaseGenerator.
+ * Contains ModuleBuilder\Generator\BaseGenerator.
  */
 
-namespace ModuleBuider\Generator;
+namespace ModuleBuilder\Generator;
 
 /**
  * Abstract base Generator for components.
@@ -27,7 +27,7 @@ namespace ModuleBuider\Generator;
  * when the added generators are themselves one that return no sub-components.
  *
  * So for example, the caller requests a 'module' component. This causes the
- * entry point to the system, ModuleBuider\Task\Generate::generateComponent(),
+ * entry point to the system, ModuleBuilder\Task\Generate::generateComponent(),
  * to instantiate a module generator, which is then interrogated for its
  * subcomponents. It returns, say, that it needs:
  *  - a README file
