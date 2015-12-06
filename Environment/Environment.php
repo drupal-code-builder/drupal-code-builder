@@ -553,22 +553,7 @@ class VersionHelper8 {
       }
     }
 
-    //print_r($module_data);
-
-    // If we are running as Drush command, we're not an installed module.
-    if (!\Drupal::moduleHandler()->moduleExists('module_builder')) {
-      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
-      $result = module_builder_module_builder_info($major_version);
-      $data = array_merge($module_data, $result);
-    }
-    else {
-      $data = $module_data;
-      // Yeah we switch names so the merging above isn't affected by an empty array.
-      // Gah PHP. Am probably doin it wrong.
-    }
-
-    //drush_print_r($data);
-    return $data;
+    return $module_data;
   }
 
   /**
@@ -629,23 +614,7 @@ class VersionHelper7 extends VersionHelper8 {
       }
     }
 
-    //print_r($module_data);
-
-    // If we are running as Drush command, we're not necessarily an installed
-    // module.
-    if (!$this->installedAsModule()) {
-      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
-      $result = module_builder_module_builder_info($major_version);
-      $data = array_merge($module_data, $result);
-    }
-    else {
-      $data = $module_data;
-      // Yeah we switch names so the merging above isn't affected by an empty array.
-      // Gah PHP. Am probably doin it wrong.
-    }
-
-    //drush_print_r($data);
-    return $data;
+    return $module_data;
   }
 
   /**
@@ -773,23 +742,7 @@ class VersionHelper6 extends VersionHelper7 {
       }
     }
 
-    //print_r($module_data);
-
-    // If we are running as Drush command, we're not necessarily an installed
-    // module.
-    if (!$this->installedAsModule()) {
-      include_once(dirname(__FILE__) . '/../module_builder.module_builder.inc');
-      $result = module_builder_module_builder_info($major_version);
-      $data = array_merge($module_data, $result);
-    }
-    else {
-      $data = $module_data;
-      // Yeah we switch names so the merging above isn't affected by an empty array.
-      // Gah PHP. Am probably doin it wrong.
-    }
-
-    //drush_print_r($data);
-    return $data;
+    return $module_data;
   }
 
 }
