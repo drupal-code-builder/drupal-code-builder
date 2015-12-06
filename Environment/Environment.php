@@ -68,7 +68,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    */
   function __construct() {
     // Set the major version.
-    $this->setMajorVersion();
+    $this->detectMajorVersion();
 
     // Set up the helper for version-specific code.
     $this->initVersionHelper();
@@ -151,7 +151,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    *
    * Helper for __construct().
    */
-  protected function setMajorVersion() {
+  protected function detectMajorVersion() {
     // ARGH D8 is different and at this point we can't specialize per-version,
     // since we're trying to GET the version!
     if (defined('VERSION')) {
