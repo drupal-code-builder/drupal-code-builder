@@ -73,7 +73,7 @@ class Factory {
    *  An environment object to set.
    */
   public static function setEnvironment(\ModuleBuilder\Environment\EnvironmentInterface $environment) {
-    self::$environment = new $environment;
+    self::$environment = $environment;
   }
 
   /**
