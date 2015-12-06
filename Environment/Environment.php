@@ -484,13 +484,6 @@ class VersionHelper8 {
   }
 
   /**
-   * Determine whether module_builder is installed as a module.
-   */
-  function installedAsModule() {
-    return \Drupal::moduleHandler()->moduleExists('module_builder');
-  }
-
-  /**
    * Transforms a path into a path within the site files folder, if needed.
    *
    * Eg, turns 'foo' into 'public://foo'.
@@ -574,13 +567,6 @@ class VersionHelper8 {
 class VersionHelper7 extends VersionHelper8 {
 
   private $major_version = 7;
-
-  /**
-   * Determine whether module_builder is installed as a module.
-   */
-  function installedAsModule() {
-    return module_exists('module_builder');
-  }
 
   /**
    * A version-independent wrapper for drupal_system_listing().
