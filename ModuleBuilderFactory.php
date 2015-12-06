@@ -60,8 +60,8 @@ class Factory {
 
     // Create the environment handler and set it on the factory.
     $environment_class = '\ModuleBuilder\Environment\\' . $environment_class;
-
-    self::setEnvironment(new $environment_class);
+    $environment = new $environment_class;
+    self::setEnvironment($environment);
 
     return self::$environment;
   }
