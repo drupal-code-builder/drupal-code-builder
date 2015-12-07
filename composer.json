@@ -1,0 +1,10 @@
+{
+  "name": "module_builder/module_builder",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "ModuleBuilder\\": ""
+    }
+  }
+}
