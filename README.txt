@@ -156,7 +156,7 @@ The basic operation for Module Builder is as in this example:
 
     // Load the file for the factory class.
     // (Not necessary if using MB via Composer.)
-    include_once('ModuleBuilderFactory.php');
+    include_once('Factory.php');
     // Tell MB which environment it's being used in. The Drupal core version is
     // detected automatically.
     \ModuleBuilder\Factory::setEnvironmentClass('Drush');

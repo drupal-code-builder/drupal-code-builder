@@ -19,7 +19,7 @@ define('MODULE_BUILDER_FUNCTION_PATTERN', '#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\
  */
 function module_builder_init() {
   // Include common code.
-  include_once('./' . drupal_get_path('module', 'module_builder') . '/ModuleBuilderFactory.php');
+  include_once('./' . drupal_get_path('module', 'module_builder') . '/Factory.php');
 }
 
 /**

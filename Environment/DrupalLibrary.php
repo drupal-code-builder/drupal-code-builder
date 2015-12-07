@@ -26,14 +26,14 @@ namespace ModuleBuilder\Environment;
  *      'version' => 'none',
  *      'files' => array(
  *        'php' => array(
- *          'ModuleBuilderFactory.php',
+ *          'Factory.php',
  *        ),
  *      ),
  *      // Auto-load the files.
  *      'integration files' => array(
  *        'module_builder_ui' => array(
  *          'php' => array(
- *            'ModuleBuilderFactory.php',
+ *            'Factory.php',
  *          ),
  *        ),
  *      ),

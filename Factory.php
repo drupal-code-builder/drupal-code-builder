@@ -35,7 +35,7 @@ if (!class_exists('\ModuleBuilder\Environment\BaseEnvironment')) {
  *  - Execute the required method on the task handler.
  *
  * @code
- *  include_once('path/to/ModuleBuilderFactory.php');
+ *  include_once('path/to/Factory.php');
  *  \ModuleBuilder\Factory::setEnvironmentClass('Drush');
  *  $task = \ModuleBuilder\Factory::getTask('ReportHookData');
  * @endcode
