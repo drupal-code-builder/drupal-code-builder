@@ -7,6 +7,19 @@
 
 namespace ModuleBuilder;
 
+// Include the Composer autoloader for our classes.
+// We use this if we're not being used as a Composer library, for example if
+// installed as a Drupal library in sites/all/libraries, or running as a Drupal
+// module.
+// If we're being used as a Composer library, then we must skip this, as
+// Composer's autoloader uses 'require' rather than 'require_once' and thus PHP
+// would crash due to redeclaration of our classes.
+// We use one of our classes as a litmus test: if it can be found already, then
+// our autoloading has already been registered by a host application's Composer.
+if (!class_exists('\ModuleBuilder\Environment\BaseEnvironment')) {
+  require_once __DIR__ . '/vendor/autoload.php';
+}
+
 /**
  * Static factory class for creating Module Builder task handlers.
  *
@@ -54,10 +67,6 @@ class Factory {
    *  The environment object.
    */
   public static function setEnvironmentClass($environment_class) {
-    // Include the environment interface and classes files.
-    include_once(__DIR__ . '/Environment/EnvironmentInterface.php');
-    include_once(__DIR__ . '/Environment/Environment.php');
-
     // Create the environment handler and set it on the factory.
     $environment_class = '\ModuleBuilder\Environment\\' . $environment_class;
     $environment = new $environment_class;
