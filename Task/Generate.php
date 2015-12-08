@@ -261,17 +261,9 @@ class Generate extends Base {
    *  'ModuleBuilder\Generator\Info6'.
    */
   public function getGeneratorClass($type) {
-    // Include our general include files, which contains base and parent classes.
-    //$file_path = $this->environment->getPath("Generator/Base.php");
-    //include_once($file_path);
-
     $type     = ucfirst($type);
     $version  = $this->environment->getCoreMajorVersion();
     $class    = 'ModuleBuilder\\Generator\\' . $type . $version;
-
-    // Trigger the autoload for the base name without the version, as all versions
-    // are in the same file.
-    class_exists('ModuleBuilder\\Generator\\' . $type);
 
     // If there is no version-specific class, use the base class.
     if (!class_exists($class)) {
