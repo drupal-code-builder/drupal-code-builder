@@ -41,8 +41,6 @@ class Generate extends Base {
   public function __construct($environment, $component_type) {
     $this->environment = $environment;
 
-    $this->initGenerators();
-
     // The component name is just the same as the type for the base generator.
     $component_name = $component_type;
 
@@ -62,14 +60,6 @@ class Generate extends Base {
    */
   public function getSanityLevel() {
     return $this->root_generator->sanity_level;
-  }
-
-  /**
-   * Helper to perform setup tasks: register autoloader.
-   */
-  private function initGenerators() {
-    // Register our autoload handler for generator classes.
-    spl_autoload_register(array($this, 'generatorAutoload'));
   }
 
   /**
@@ -269,13 +259,11 @@ class Generate extends Base {
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
    *  'ModuleBuilder\Generator\Info6'.
-   *
-   * @see Generate::generatorAutoload()
    */
   public function getGeneratorClass($type) {
     // Include our general include files, which contains base and parent classes.
-    $file_path = $this->environment->getPath("Generator/Base.php");
-    include_once($file_path);
+    //$file_path = $this->environment->getPath("Generator/Base.php");
+    //include_once($file_path);
 
     $type     = ucfirst($type);
     $version  = $this->environment->getCoreMajorVersion();
@@ -290,21 +278,6 @@ class Generate extends Base {
       $class  = 'ModuleBuilder\\Generator\\' . $type;
     }
     return $class;
-  }
-
-  /**
-   * Autoload handler for generator classes.
-   *
-   * @see getGeneratorClass()
-   */
-  function generatorAutoload($class) {
-    // Generator classes are in standardly named files, with all versions in the
-    // same file.
-    list($module_builder, $generator, $class) = explode('\\', $class);
-    $file_path = $this->environment->getPath("Generator/$class.php");
-    if (file_exists($file_path)) {
-      include_once($file_path);
-    }
   }
 
 }
