@@ -7,9 +7,6 @@
 
 namespace ModuleBuilder\Task;
 
-// We have no autoloading for Tasks.
-include_once(dirname(__FILE__) . "/ReportHookDataFolder.php");
-
 /**
  * Task handler for reporting on hook data.
  *

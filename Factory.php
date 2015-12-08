@@ -146,9 +146,6 @@ class Factory {
   /**
    * Helper function to get the desired Task class.
    *
-   * Takes care of including files for base class and non-version-specific
-   * class as well as the class itself.
-   *
    * @param $task_type
    *  The type of the task. This is the class name without the Drupal core
    *  version suffix.
@@ -161,23 +158,14 @@ class Factory {
     $type     = ucfirst($task_type);
     $version  = self::$environment->getCoreMajorVersion();
 
-    // TODO: this could do with namespacing and autoloading in due course.
-    include_once(dirname(__FILE__) . "/Task/Base.php");
+    $versioned_class = "ModuleBuilder\\Task\\$task_type$version";
+    $common_class    = "ModuleBuilder\\Task\\$task_type";
 
-    $versioned_filepath = dirname(__FILE__) . "/Task/$task_type$version.php";
-    $common_filepath    = dirname(__FILE__) . "/Task/$task_type.php";
-
-    // Always include the unversioned filepath; it is the parent class for
-    // different versions.
-    include_once($common_filepath);
-
-    if (file_exists($versioned_filepath)) {
-      include_once($versioned_filepath);
-
-      $class    = 'ModuleBuilder\\Task\\' . $task_type . $version;
+    if (class_exists($versioned_class)) {
+      $class    = $versioned_class;
     }
     else {
-      $class    = 'ModuleBuilder\\Task\\' . $task_type;
+      $class    = $common_class;
     }
 
     return $class;
