@@ -49,13 +49,6 @@ class Info8 extends Info {
 
     $lines['core'] = "8.x";
 
-    // Files containing classes need to be declared in the .info file.
-    foreach ($files as $file) {
-      if (!empty($file['contains_classes'])) {
-        $lines['files'][] = $file['filename'];
-      }
-    }
-
     $info = $this->process_info_lines($lines);
     return $info;
   }
