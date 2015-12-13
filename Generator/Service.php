@@ -24,7 +24,8 @@ class Service extends PHPClassFile {
     $service_id = $component_name;
     $service_id_pieces = explode('.', $service_id);
     $class_name_pieces = array_map('ucfirst', $service_id_pieces);
-    // Prefix the qualified class name with 'Drupal'.
+    // Prefix the qualified class name with 'Drupal' and the module name.
+    array_unshift($class_name_pieces, '%Module');
     array_unshift($class_name_pieces, 'Drupal');
     $qualified_class_name = implode('\\', $class_name_pieces);
 
@@ -38,7 +39,7 @@ class Service extends PHPClassFile {
     $yaml_data = [];
 
     $yaml_data['services'] = [
-      $this->name => [
+      "%module.$this->name" => [
         'class' => $this->qualified_class_name,
         'arguments' => [],
       ],
