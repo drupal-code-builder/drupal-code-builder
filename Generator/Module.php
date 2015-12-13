@@ -142,6 +142,12 @@ class Module extends RootComponent {
         'format' => 'boolean',
         'component' => 'AdminSettingsForm',
       ),
+      'services' => array(
+        'label' => "Service",
+        'required' => FALSE,
+        'format' => 'array',
+        'component' => 'Service',
+      ),
       'permissions' => array(
         'label' => "Permissions",
         'required' => FALSE,
