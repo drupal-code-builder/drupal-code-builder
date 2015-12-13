@@ -106,12 +106,10 @@ class Plugin extends PHPFile {
    * rewriting!
    */
   function code_body() {
-    // Splice these together so they're not joined by a blank line.
-    $class_code = $this->class_annotation() . $this->class_body();
-
     return array(
       $this->code_namespace(),
-      $class_code,
+      $this->class_annotation(),
+      $this->class_body(),
     );
   }
 

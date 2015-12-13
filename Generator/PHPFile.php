@@ -137,7 +137,8 @@ EOT;
    *  should have no leading whitespace.
    *
    * @return
-   *  A string of docblock with start and end PHP comment markers.
+   *  A string of docblock with start and end PHP comment markers. There is no
+   *  trailing newline.
    */
   function docBlock($lines) {
     if (!is_array($lines)) {
@@ -150,7 +151,7 @@ EOT;
       array(" */")
     );
 
-    return implode("\n", $lines) . "\n";
+    return implode("\n", $lines);
   }
 
   /**
