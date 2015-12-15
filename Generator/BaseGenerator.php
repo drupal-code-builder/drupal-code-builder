@@ -305,9 +305,6 @@ abstract class BaseGenerator {
    *      'component_type', which gives the type for the component as above.
    *      Further array properties are determined by the component class's
    *      __construct().
-   *      (Note that if the component has previously been requested, this array
-   *      is ignored on later components! This is because -- so far! -- no
-   *      components that get requested multiple times require this!)
    */
   protected function requiredComponents() {
     return array();
