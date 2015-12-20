@@ -203,8 +203,9 @@ abstract class BaseGenerator {
   /**
    * Get the list of required components for this generator.
    *
-   * This iterates down the tree of component requests, so that any added
-   * component may in turn request some of its own.
+   * This iterates down the tree of component requests: starting with the root
+   * component, each component may request further components, and then those
+   * components may request more, and so on.
    *
    * Generator classes should implement requiredComponents() to return the list
    * of component types they require, possibly depending on incoming data.

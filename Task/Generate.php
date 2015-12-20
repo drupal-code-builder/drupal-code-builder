@@ -184,7 +184,7 @@ class Generate extends Base {
     // Set the root generator on ourselves now we actually have it.
     $this->root_generator = $root_generator;
 
-    // Recursively get subcomponents.
+    // Recursively assemble all the components that are needed.
     $this->root_generator->assembleComponentList();
 
     // Now assemble them into a tree.
