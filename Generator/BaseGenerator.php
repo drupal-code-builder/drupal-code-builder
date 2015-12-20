@@ -136,10 +136,6 @@ abstract class BaseGenerator {
    * instantiated component generators.
    *
    * (This is only present on the base component.)
-   *
-   * TODO: It might be cleaner to add an abstract BaseComponent class, but then
-   * we'd lose the flexibility of base components being usable as by other
-   * components, or anything being requestable as a base.
    */
   public $components = array();
 
