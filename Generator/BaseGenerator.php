@@ -281,9 +281,8 @@ abstract class BaseGenerator {
       $current_level = $next_level;
     } while (!empty($next_level));
 
-    // Add the collected components to the master array of components on the
-    // base generator.
-    $base_component->components = $component_list;
+    // Set the collected components on the base generator.
+    $this->components = $component_list;
   }
 
   /**
