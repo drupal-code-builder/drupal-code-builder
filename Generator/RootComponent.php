@@ -251,4 +251,90 @@ abstract class RootComponent extends BaseGenerator {
     } // expand components
   }
 
+  /**
+   * Get the list of required components for this generator.
+   *
+   * This iterates down the tree of component requests: starting with the root
+   * component, each component may request further components, and then those
+   * components may request more, and so on.
+   *
+   * Generator classes should implement requiredComponents() to return the list
+   * of component types they require, possibly depending on incoming data.
+   *
+   * Obviously, it's important that eventually this process terminate with
+   * generators that return an empty array for requiredComponents().
+   *
+   * @return
+   *  None. This should set an array of subcomponent generators on the property
+   *  $this->components.
+   */
+  public function assembleComponentList() {
+    // Get the base component to add the generators to it.
+    $base_component = $this->task->getRootGenerator();
+
+    // The complete list we'll assemble.
+    $component_list = array();
+
+    // Prep the current level with the root component for the first iteration.
+    $current_level = array(
+      $this->name => $this
+    );
+
+    // Do a breadth-first tree traversal, working over the current level to
+    // create the next level, until there are no further items.
+    do {
+      $next_level = array();
+
+      // Work over the current level, assembling a temporary array for the next
+      // level.
+      foreach ($current_level as $current_level_component_name => $item) {
+        // Each item of the current level gives us some children.
+        $item_subcomponent_info = $item->requiredComponents();
+
+        // Instantiate each one (if not already done), and add it to the next
+        // level.
+        foreach ($item_subcomponent_info as $component_name => $data) {
+          // The $data may either be a string giving a class name, or an array.
+          if (is_string($data)) {
+            $component_type = $data;
+            $component_data = array();
+
+            // Set the type in the array for consistency in debugging.
+            $component_data['component_type'] = $component_type;
+          }
+          else {
+            $component_type = $data['component_type'];
+            $component_data = $data;
+          }
+
+          // A requested subcomponent may already exist in our tree, in which
+          // case we merge the received data in with the existing component.
+          if (isset($component_list[$component_name])) {
+            $component_list[$component_name]->mergeComponentData($component_data);
+
+            // Skip this as it's already been instantiated.
+            continue;
+          }
+
+          // Instantiate the generator.
+          $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
+
+          // Add the new component to the complete array of components.
+          $component_list[$component_name] = $generator;
+
+          // Add the new component to the next level.
+          $next_level[$component_name] = $generator;
+        } // each requested subcomponent from a component in the current level.
+      } // each component in the current level
+
+      // Now have all the next level.
+
+      // Set the next level to be current for the next loop.
+      $current_level = $next_level;
+    } while (!empty($next_level));
+
+    // Set the collected components on the base generator.
+    $this->components = $component_list;
+  }
+
 }
