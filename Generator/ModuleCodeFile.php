@@ -19,14 +19,6 @@ class ModuleCodeFile extends PHPFile {
   // TODO: declare properties that are special!
 
   /**
-   * Return this component's parent in the component tree.
-   */
-  function containingComponent() {
-    // A code file's parent is always the base component.
-    return $this->task->getRootGenerator()->name;
-  }
-
-  /**
    * Helper for assembleContainedComponents().
    *
    * Module code files assemble their contained components, which are functions.
