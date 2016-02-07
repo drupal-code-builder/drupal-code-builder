@@ -79,7 +79,8 @@ class Collect8 extends Collect {
       if (empty($parent_constructor_call)) {
         // We can't find the parent constructor call -- this plugin manager is
         // doing something different.
-        drush_print("Unable to find call to parent constructor in plugin manager class constructor method for service $plugin_manager_service_id, class $plugin_manager.");
+        // TODO: show a notice in all environments.
+        //drush_print("Unable to find call to parent constructor in plugin manager class constructor method for service $plugin_manager_service_id, class $plugin_manager.");
         continue;
       }
 
