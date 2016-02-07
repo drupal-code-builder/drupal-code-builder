@@ -16,6 +16,14 @@ namespace ModuleBuilder\Generator;
 abstract class RootComponent extends BaseGenerator {
 
   /**
+   * The base component's flat list of components.
+   *
+   * This is keyed by the name of the component name. Values are the
+   * instantiated component generators.
+   */
+  public $components = array();
+
+  /**
    * Define the component data this component needs to function.
    *
    * This returns an array of data that defines the component data that
@@ -335,6 +343,37 @@ abstract class RootComponent extends BaseGenerator {
 
     // Set the collected components on the base generator.
     $this->components = $component_list;
+  }
+
+  /**
+   * Assemble a tree of components, grouped by what they contain.
+   *
+   * For example, a code file contains its functions; a form component
+   * contains the handler functions.
+   *
+   * This iterates over the flat list of components assembled by
+   * assembleComponentList(), and re-assembles it as a tree.
+   *
+   * The tree is an array of parentage data, where keys are the names of
+   * components that are parents, and values are flat arrays of component names.
+   * To traverse the tree:
+   *  - access the base component name
+   *  - iterate over its children
+   *  - recursively do the same thing to each child component.
+   *
+   * Not all components in the component list need to place themselves into the
+   * tree, but this means that they will not participate in file assembly.
+   */
+  public function assembleComponentTree() {
+    $tree = array();
+    foreach ($this->components as $name => $component) {
+      $parent_name = $component->containingComponent();
+      if (!empty($parent_name)) {
+        $tree[$parent_name][] = $name;
+      }
+    }
+
+    $this->tree = $tree;
   }
 
 }

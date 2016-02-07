@@ -135,7 +135,7 @@ abstract class BaseGenerator {
    * This is keyed by the name of the component name. Values are the
    * instantiated component generators.
    *
-   * (This is only present on the base component.)
+   * (This is only present on the root component.)
    */
   public $components = array();
 
@@ -246,37 +246,6 @@ abstract class BaseGenerator {
    */
   public static function requestedComponentHandling() {
     return 'repeat';
-  }
-
-  /**
-   * Assemble a tree of components, grouped by what they contain.
-   *
-   * For example, a code file contains its functions; a form component
-   * contains the handler functions.
-   *
-   * This iterates over the flat list of components assembled by
-   * assembleComponentList(), and re-assembles it as a tree.
-   *
-   * The tree is an array of parentage data, where keys are the names of
-   * components that are parents, and values are flat arrays of component names.
-   * To traverse the tree:
-   *  - access the base component name
-   *  - iterate over its children
-   *  - recursively do the same thing to each child component.
-   *
-   * Not all components in the component list need to place themselves into the
-   * tree, but this means that they will not participate in file assembly.
-   */
-  public function assembleComponentTree() {
-    $tree = array();
-    foreach ($this->components as $name => $component) {
-      $parent_name = $component->containingComponent();
-      if (!empty($parent_name)) {
-        $tree[$parent_name][] = $name;
-      }
-    }
-
-    $this->tree = $tree;
   }
 
   /**
