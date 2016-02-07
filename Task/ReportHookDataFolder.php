@@ -33,7 +33,7 @@ class ReportHookDataFolder extends Base {
     $hooks_file = "$directory/hooks_processed.php";
     if (file_exists($hooks_file)) {
       $timestamp = filemtime($hooks_file);
-      return format_date($timestamp, 'large');
+      return $timestamp;
     }
   }
 

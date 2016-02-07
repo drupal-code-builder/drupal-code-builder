@@ -992,7 +992,9 @@ function drush_module_builder_callback_hook_list() {
 
   $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
   drush_print(t("Hook data retrieved from @dir.", array('@dir' => $hooks_directory)));
-  drush_print(t("Hook data was processed on @time.", array('@time' => $time)));
+  drush_print(t("Hook data was processed on @time.", array(
+    '@time' => date(DATE_RFC822, $time),
+  )));
 
   //print_r($data);
 }

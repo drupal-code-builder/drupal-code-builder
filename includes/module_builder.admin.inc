@@ -84,7 +84,9 @@ function module_builder_admin_update($form, &$form_state) {
   $form['last_update'] = array(
     '#markup' => '<p>' . (
       $last_update ?
-        t('Your last hook documentation update was %date.', array('%date' => $last_update)) :
+        t('Your last hook documentation update was %date.', array(
+          '%date' => format_date($last_update, 'large'),
+        )) :
         t('The hook documentation has not yet been downloaded.')
       ) . '</p>',
   );
