@@ -52,11 +52,18 @@ class ReportHookDataFolder extends Base {
     if (is_dir($directory)) {
       if ($dh = opendir($directory)) {
         while (($file = readdir($dh)) !== FALSE) {
-          // Ignore files that don't make sense to include
+          // Ignore files that don't make sense to include.
+          // System files and cruft.
           // TODO: replace all the .foo with one of the arcane PHP string checking functions
-          if (!in_array($file, array('.', '..', '.DS_Store', 'CVS', 'hooks_processed.php'))) {
-            $files[] = $file;
+          if (in_array($file, array('.', '..', '.DS_Store', 'CVS', 'hooks_processed.php'))) {
+            continue;
           }
+          // Our own processed files.
+          if (strpos($file, '_processed.php')) {
+            continue;
+          }
+
+          $files[] = $file;
         }
         closedir($dh);
       }
