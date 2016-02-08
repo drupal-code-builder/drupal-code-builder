@@ -124,7 +124,7 @@ class Module extends RootComponent {
         'required' => FALSE,
       ),
       'module_dependencies' => array(
-        'label' => 'Module dependencies (space separated list)',
+        'label' => 'Module dependencies',
         'default' => array(),
         'required' => FALSE,
         'format' => 'array',
