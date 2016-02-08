@@ -125,8 +125,9 @@ class Module extends RootComponent {
       ),
       'module_dependencies' => array(
         'label' => 'Module dependencies (space separated list)',
-        'default' => NULL,
+        'default' => array(),
         'required' => FALSE,
+        'format' => 'array',
       ),
       // If this is given, then hook_help() is automatically added to the list
       // of required hooks.

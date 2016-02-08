@@ -38,7 +38,7 @@ class Info8 extends Info {
     if (!empty($module_data['module_dependencies'])) {
       // For lines which form a set with the same key and array markers,
       // simply make an array.
-      foreach (explode(' ', $module_data['module_dependencies']) as $dependency) {
+      foreach ($module_data['module_dependencies'] as $dependency) {
         $lines['dependencies'][] = $dependency;
       }
     }

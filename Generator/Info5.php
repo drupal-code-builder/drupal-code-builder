@@ -23,7 +23,7 @@ class Info5 extends InfoIni {
     $lines['description'] = $module_data['short_description'];
 
     if (!empty($module_data['module_dependencies'])) {
-      $lines['dependencies'] = $module_data['module_dependencies'];
+      $lines['dependencies'] = implode(' ', $module_data['module_dependencies']);
     }
 
     if (!empty($module_data['module_package'])) {
