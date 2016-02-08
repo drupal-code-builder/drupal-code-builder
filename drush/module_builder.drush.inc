@@ -603,23 +603,26 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     // Initialize our value from the default that's been set by
     // prepareComponentDataProperty(). We try various things to set it.
     $value = $component_data[$property_name];
+    // Keep track of whether the value has come from the user or is still the
+    // default.
+    $user_specified = FALSE;
 
     // If the property is required, and there are plain command parameters
     // remaining, take one of those.
-    if ($property_info['required'] && $plain_commands) {
+    if (!$user_specified && $property_info['required'] && $plain_commands) {
       $value = array_shift($plain_commands);
       //drush_print_r("taking $property_name from commands as $value");
     }
 
     // If the property has a prefix, and the commands included that prefix,
     // then take the commands for that prefix.
-    if (empty($value) && isset($property_info['command_prefix']) && !empty($prefixed_commands[$property_info['command_prefix']])) {
+    if (!$user_specified && isset($property_info['command_prefix']) && !empty($prefixed_commands[$property_info['command_prefix']])) {
       $value = $prefixed_commands[$property_info['command_prefix']];
       //drush_print_r("taking $property_name from prefixed commands");
     }
 
     // If the property can be set with a command-line option, check that.
-    if (empty($value) && isset($property_info['drush_option'])) {
+    if (!$user_specified && isset($property_info['drush_option'])) {
       $drush_option_value = drush_get_option($property_info['drush_option']);
       if (!empty($drush_option_value)) {
         $value = $drush_option_value;
@@ -637,7 +640,7 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     // command other than use the default value. That's already set in the
     // component data.
 
-    if (empty($value) && $interactive) {
+    if (!$user_specified && $interactive) {
       // Show the user the available options, unless told not to.
       $numeric_options = FALSE;
       if (isset($property_info['options']) && empty($property_info['drush_no_option_list'])) {
