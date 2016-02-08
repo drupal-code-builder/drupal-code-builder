@@ -22,8 +22,6 @@ class ReportHookData extends ReportHookDataFolder {
   /**
    * Get the list of hook data.
    *
-   * (Replaces module_builder_get_hook_data().)
-   *
    * @return
    *  The unserialized contents of the processed hook data file.
    */
@@ -50,8 +48,6 @@ class ReportHookData extends ReportHookDataFolder {
 
   /**
    * Get just hook names.
-   *
-   * (Replaces module_builder_get_hook_names().)
    *
    * @param $style
    *   Whether to return hook names as just 'init' or 'hook_init'. One of:
@@ -94,8 +90,6 @@ class ReportHookData extends ReportHookDataFolder {
 
   /**
    * Get stored hook declarations, keyed by hook name, with destination.
-   *
-   * (Replaces module_builder_get_hook_declarations().)
    *
    * @return
    *  An array of hook information, keyed by the full name of the hook

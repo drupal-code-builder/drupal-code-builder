@@ -22,8 +22,6 @@ class AnalyzeModule extends Base {
    *
    * TODO: does drush have this?
    *
-   * (Replaces module_builder_get_module_files().)
-   *
    * @param $module_root_name
    *  The root name of a module, eg 'node', 'taxonomy'.
    *
@@ -49,8 +47,6 @@ class AnalyzeModule extends Base {
 
   /**
    * Helper function to get all function names from a file.
-   *
-   * (Replaces module_builder_get_functions().)
    *
    * @param $file
    *  A complete filename from the Drupal root, eg 'modules/user/user.module'.

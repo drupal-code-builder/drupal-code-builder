@@ -25,12 +25,6 @@ class Collect6 extends Collect {
     $hook_files = $this->getHookFileUrls($directory);
     //print_r($hook_files);
 
-    // For testing only: skip downloading, just process.
-    /*
-    module_builder_process_hook_data($hook_files);
-    return $hook_files;
-    */
-
     // Retrieve each file and store it in the hooks directory, overwriting what's currently there
     foreach ($hook_files as $file_name => $data) {
       $file_contents = drupal_http_request($data['url']);

@@ -80,8 +80,6 @@ class Collect extends Base {
   /**
    * Builds complete hook data array from downloaded files and stores in a file.
    *
-   * (Replaces module_builder_process_hook_data().)
-   *
    * @param hook_file_data
    *  An array of data about the files to process, keyed by (safe) filename:
    *   -[MODULE.FILENAME] => Array // eg system.core.php

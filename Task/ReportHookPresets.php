@@ -23,8 +23,6 @@ class ReportHookPresets extends Base {
    * TODO: this will eventually return either the user version or the module version.
    * TODO: IS THIS IN THE RIGHT FILE???
    *
-   * (Replaces module_builder_get_template().)
-   *
    * @param $filename
    *  The filename of the template file to read.
    *
@@ -52,8 +50,6 @@ class ReportHookPresets extends Base {
    * A preset is a collection of hooks with a machine name and a descriptive
    * label. Presets allow quick selection of hooks that are commonly used
    * together, eg those used to define a node type, or blocks.
-   *
-   * (Replaces module_builder_get_hook_presets().)
    *
    * @return
    *  An array keyed by preset name, whose values are arrays of the form:
