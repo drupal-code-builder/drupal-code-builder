@@ -675,11 +675,6 @@ function drush_module_builder_build_component($commands, $component_type, $compo
 
       $value = drush_prompt($prompt, $default, $property_info['required']);
 
-      // Split up the value if it should be an array.
-      if ($property_info['format'] == 'array') {
-        $value = preg_split('/\s+/', $value, -1,  PREG_SPLIT_NO_EMPTY);
-      }
-
       // Callback to convert a value given as an index in a list of options into
       // the actual option value.
       $convert_index_to_value_callback = function($item) use ($option_by_index) {
@@ -701,6 +696,11 @@ function drush_module_builder_build_component($commands, $component_type, $compo
           $value = $convert_index_to_value_callback($value);
         }
       }
+    }
+
+    // Split up the value if it should be an array.
+    if ($property_info['format'] == 'array' && !is_array($value)) {
+      $value = preg_split('/\s+/', $value, -1,  PREG_SPLIT_NO_EMPTY);
     }
 
     // Perform any processing specific to drush.
