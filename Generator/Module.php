@@ -264,7 +264,7 @@ class Module extends RootComponent {
       //'hooks' => 'init',
       //'router_items' => 'path/foo path/bar',
       // The following properties shouldn't be offered as UI options.
-      'module_camel_case_name' =>  array(
+      'camel_case_name' =>  array(
         // Indicates that this does not need to be obtained from the user, as it
         // is computed from other properties.
         'computed' => TRUE,
