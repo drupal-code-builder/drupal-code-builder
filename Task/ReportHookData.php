@@ -77,7 +77,7 @@ class ReportHookData extends ReportHookDataFolder {
    *   An array of hooks as options suitable for FormAPI, where each key is a
    *   full hook name, and each value is a description.
    */
-  function listHookNamesOptions($style = 'full') {
+  function listHookNamesOptions() {
     $data = $this->getHookDeclarations();
 
     $return = array();
