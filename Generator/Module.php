@@ -344,6 +344,11 @@ class Module extends RootComponent {
       'info' => 'info',
     );
 
+    // Case 0: nothing was requested, so it means everything.
+    if (!isset($module_data['requested_build'])) {
+      return $components;
+    }
+
     // Create a build list.
     // Take the keys, as all values are set to TRUE, and standardize to lower
     // case for comparisons.
