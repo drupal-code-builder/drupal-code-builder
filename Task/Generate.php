@@ -237,7 +237,9 @@ class Generate extends Base {
     $class = $this->getGeneratorClass($component_type);
 
     if (!class_exists($class)) {
-      throw new \ModuleBuilder\Exception("Invalid component type $component_type.");
+      throw new \ModuleBuilder\Exception(strtr("Invalid component type !type.", array(
+        '!type' => htmlspecialchars($component_type, ENT_QUOTES, 'UTF-8'),
+      )));
     }
 
     $generator = new $class($component_name, $component_data);

@@ -37,7 +37,9 @@ class ReportHookPresets extends Base {
     $path = $this->environment->getPath(implode('/', $pieces));
 
     if (!file_exists($path)) {
-      throw new \ModuleBuilder\Exception("Unable to find template at $path.");
+      throw new \ModuleBuilder\Exception(strtr("Unable to find template at !path.", array(
+        '!path' => htmlspecialchars($path, ENT_QUOTES, 'UTF-8'),
+      )));
     }
 
     $template_file = file_get_contents($path);
