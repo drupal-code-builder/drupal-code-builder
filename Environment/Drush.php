@@ -13,9 +13,9 @@ namespace ModuleBuilder\Environment;
 class Drush extends BaseEnvironment {
 
   /**
-   * Set the hooks directory.
+   * @inheritdoc
    */
-  function getHooksDirectorySetting() {
+  protected function getHooksDirectorySetting() {
     // Get the hooks directory.
     $directory = $this->getHooksDirectorySettingHelper();
 
