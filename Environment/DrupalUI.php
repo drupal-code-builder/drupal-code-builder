@@ -17,7 +17,7 @@ class DrupalUI extends BaseEnvironment {
   /**
    * Set the hooks directory.
    */
-  function setHooksDirectory() {
+  function getHooksDirectorySetting() {
     // Set the module folder based on variable.
     $directory = $this->getSetting('module_builder_hooks_directory', 'hooks');
 

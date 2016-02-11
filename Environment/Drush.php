@@ -15,7 +15,7 @@ class Drush extends BaseEnvironment {
   /**
    * Set the hooks directory.
    */
-  function setHooksDirectory() {
+  function getHooksDirectorySetting() {
     // Get the hooks directory.
     $directory = $this->getHooksDirectorySetting();
 

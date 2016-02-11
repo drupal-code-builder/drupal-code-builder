@@ -15,7 +15,7 @@ class TestsTempLocation extends Tests {
   /**
    * Set the hooks directory.
    */
-  function setHooksDirectory() {
+  function getHooksDirectorySetting() {
     // Set the folder for the hooks. This contains a prepared file for the tests
     // to use.
     // By some magic this appears to be safe to use with DrupalUnitTestCase.

@@ -74,13 +74,8 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     $this->initVersionHelper();
 
     // Set the hooks directory.
-    $this->setHooksDirectory();
+    $this->getHooksDirectorySetting();
   }
-
-  /**
-   * Set the hooks directory.
-   */
-  abstract protected function setHooksDirectory();
 
   /**
    * @inheritdoc
@@ -88,6 +83,11 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   public function getHooksDirectory() {
     return $this->hooks_directory;
   }
+
+  /**
+   * Get the hooks directory setting from the environment and set it locally.
+   */
+  abstract protected function getHooksDirectorySetting();
 
   /**
    * @inheritdoc
