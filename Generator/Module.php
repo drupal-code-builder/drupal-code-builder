@@ -212,6 +212,13 @@ class Module extends RootComponent {
 
           return $hook_options;
         },
+        'options_structured' => function(&$property_info) {
+          $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
+
+          $hook_options = $mb_task_handler_report_hooks->listHookNamesOptions();
+
+          return $hook_options;
+        },
         'processing' => function($value, &$component_data, &$property_info) {
           $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
           // Get the flat list of hooks, standardized to lower case.

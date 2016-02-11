@@ -62,6 +62,13 @@ abstract class RootComponent extends BaseGenerator {
    *    provided. Defaults to FALSE.
    *  - 'options': (optional) A callable which returns a list of options for the
    *    property. This receives the component data assembled so far.
+   *  - 'options_structured': (optional) A callable which returns data about the
+   *    possible options for the property. Use this as an alternative to the
+   *    'options' property if you want more information. This returns an array
+   *    keyed by group name (where the group is possibly the module that
+   *    defines the option), whose values are arrays keyed by the options. Each
+   *    value is a further array with these properties:
+   *      - 'description': A longer description of the item.
    *  - 'processing': (optional) A callback to processComponentData() to use to
    *    process input values into the final format for the component data array.
    *  - 'component': (optional) The name of a generator class, relative to the

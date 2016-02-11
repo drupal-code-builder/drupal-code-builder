@@ -89,6 +89,30 @@ class ReportHookData extends ReportHookDataFolder {
   }
 
   /**
+   * Get hooks as a grouped list with data about each item.
+   *
+   * @return
+   *   An array keyed by hook group, whose items are in turn arrays keyed by
+   *   hook name, and whose items in turn are arrays with the following
+   *   properties:
+   *    - 'type' One of 'hook' or 'callback'.
+   *    - 'description' The first line from the hook definition's docblock.
+   */
+  public function listHookOptionsStructured() {
+    $data = $this->getHookDeclarations();
+
+    $return = array();
+    foreach ($data as $hook_name => $hook_info) {
+      $return[$hook_info['group']][$hook_name] = array(
+        'description' => $hook_info['description'],
+        'type' => $hook_info['type'],
+      );
+    }
+
+    return $return;
+  }
+
+  /**
    * Get stored hook declarations, keyed by hook name, with destination.
    *
    * @return
