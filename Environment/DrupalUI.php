@@ -15,20 +15,6 @@ namespace ModuleBuilder\Environment;
 class DrupalUI extends BaseEnvironment {
 
   /**
-   * Set the hooks directory.
-   */
-  function getHooksDirectorySetting() {
-    // Set the module folder based on variable.
-    $directory = $this->getSetting('module_builder_hooks_directory', 'hooks');
-
-    // Run it through version-specific stuff.
-    // This basically prepends 'public://' or 'sites/default/files/'.
-    $this->version_helper->directoryPath($directory);
-
-    $this->hooks_directory = $directory;
-  }
-
-  /**
    * Get a path to a module builder file or folder.
    */
   function getPath($subpath) {
