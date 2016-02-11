@@ -89,7 +89,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    */
   protected function getHooksDirectorySetting() {
     // Set the module folder based on variable.
-    $directory = $this->getSetting('module_builder_hooks_directory', 'hooks');
+    $directory = $this->getSetting('data_directory', 'hooks');
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.

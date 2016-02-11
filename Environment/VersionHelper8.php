@@ -114,12 +114,21 @@ class VersionHelper8 {
 
   /**
    * Get a user preference setting.
-   *
-   * On Drupal 8, I have no idea yet, so return the default.
    */
   public function getSetting($name, $default = NULL) {
-    // TODO: fix this!
-    return $default;
+    $setting_name_lookup = [
+      'data_directory' => 'data_directory',
+      // Others aren't supported on D8 (yet?).
+    ];
+
+    if (isset($setting_name_lookup[$name])) {
+      $config = \Drupal::config('module_builder.settings');
+      $value = $config->get($setting_name_lookup[$name]);
+      return $value;
+    }
+    else {
+      return $default;
+    }
   }
 
 }

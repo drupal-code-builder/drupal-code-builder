@@ -144,7 +144,16 @@ interface EnvironmentInterface {
    * Get a user preference setting.
    *
    * @param $name
-   *   The name of the variable to return.
+   *   The name of the setting to return. Because we can be in a variety of
+   *   environments and versions, we have our own names for our settings, which
+   *   version helper classes may convert to something else. The following
+   *   are recognized, but settings marked 'optional' need not be supported by
+   *   an environment:
+   *    - 'data_directory': The location of our stored documentation and
+   *      processed data files.
+   *    - 'detail_level': (optional) The amount of detail to add to generated
+   *      code. 0 for normal level, 1 for additional detail.
+   *    - 'footer': (optional) Text to add to the end of every module code file.
    * @param $default
    *   The default value to use if this variable has never been set.
    *

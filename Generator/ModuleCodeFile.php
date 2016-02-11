@@ -157,7 +157,7 @@ EOT;
       // See if function bodies exist; if so, use function bodies from template
       if (isset($hook['template'])) {
         // Strip out INFO: comments for advanced users
-        if (!\ModuleBuilder\Factory::getEnvironment()->getSetting('module_builder_detail', 0)) {
+        if (!\ModuleBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
           // Used to strip INFO messages out of generated file for advanced users.
           $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
           $hook['template'] = preg_replace($pattern, '', $hook['template']);
@@ -186,7 +186,7 @@ EOT;
    * Return a file footer.
    */
   function code_footer() {
-    $footer = \ModuleBuilder\Factory::getEnvironment()->getSetting('module_builder_footer', '');
+    $footer = \ModuleBuilder\Factory::getEnvironment()->getSetting('footer', '');
     return $footer;
   }
 
