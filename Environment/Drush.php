@@ -17,7 +17,7 @@ class Drush extends BaseEnvironment {
    */
   function getHooksDirectorySetting() {
     // Get the hooks directory.
-    $directory = $this->getHooksDirectorySetting();
+    $directory = $this->getHooksDirectorySettingHelper();
 
     // Run it through version-specific stuff.
     // This basically prepends 'public://' or 'sites/default/files/'.
@@ -37,7 +37,7 @@ class Drush extends BaseEnvironment {
    *  - The Module Builder UI's variable. This will only be set if module
    *    builder has been installed as a Drupal module on the current site.
    */
-  private function getHooksDirectorySetting() {
+  private function getHooksDirectorySettingHelper() {
     // Set the module folder based on variable.
     // First try the drush 'data' option.
     if (drush_get_option('data')) {
