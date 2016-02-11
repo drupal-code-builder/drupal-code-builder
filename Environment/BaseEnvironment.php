@@ -200,4 +200,15 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     return $this->version_helper->getSetting($name, $default);
   }
 
+  /**
+   * Get a path to one of our files or folders.
+   */
+  function getPath($subpath) {
+    $base_path = dirname(__FILE__) . '/..';
+
+    $path = $base_path . '/' . $subpath;
+
+    return $path;
+  }
+
 }
