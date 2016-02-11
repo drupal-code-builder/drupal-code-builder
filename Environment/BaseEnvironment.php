@@ -45,7 +45,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * as an existing, writable directory unless the Task's sanity level has
    * requested it.
    */
-  public $hooks_directory;
+  protected $hooks_directory;
 
   /**
    * The major Drupal core version.
