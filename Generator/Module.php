@@ -197,7 +197,7 @@ class Module extends RootComponent {
             // data.
             $hooks = $hook_presets[$given_preset_name]['hooks'];
             $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
-            drush_print_r($component_data['hooks']);
+            //drush_print_r($component_data['hooks']);
           }
         },
       ),
