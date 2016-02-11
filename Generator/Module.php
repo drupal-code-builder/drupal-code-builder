@@ -215,7 +215,7 @@ class Module extends RootComponent {
         'options_structured' => function(&$property_info) {
           $mb_task_handler_report_hooks = \ModuleBuilder\Factory::getTask('ReportHookData');
 
-          $hook_options = $mb_task_handler_report_hooks->listHookNamesOptions();
+          $hook_options = $mb_task_handler_report_hooks->listHookOptionsStructured();
 
           return $hook_options;
         },
