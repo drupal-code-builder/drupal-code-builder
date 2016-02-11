@@ -29,7 +29,7 @@ class Info8 extends Info {
     $files = array_shift($args);
 
     $module_data = $this->base_component->component_data;
-    print_r($module_data);
+    //print_r($module_data);
 
     $lines = array();
     $lines['name'] = $module_data['readable_name'];
