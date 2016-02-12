@@ -52,14 +52,9 @@ class Drush extends BaseEnvironment {
         return $directory;
       }
     }
-    // Second, check if we're in mixed drush.
-    if (function_exists('variable_get')) {
-      // We're in a loaded Drupal, but MB might not be installed here.
-      $directory = variable_get('module_builder_hooks_directory', 'hooks');
-      return $directory;
-    }
-    // If we get here then argh. Set to the default and hope...
-    $directory = 'hooks';
+    // Second, use the config setting, in case we're in drush, but the site has
+    // Module Builder running as a module.
+    $directory = $this->getSetting('data_directory', 'hooks');
     return $directory;
   }
 
