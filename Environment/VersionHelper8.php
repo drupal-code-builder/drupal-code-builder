@@ -64,12 +64,12 @@ class VersionHelper8 {
    * Check that the directory exists and is writable, creating it if needed.
    *
    * @throws
-   *  \ModuleBuilder\Exception
+   *  Exception
    */
   function prepareDirectory($directory) {
     $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     if (!$status) {
-      throw new \ModuleBuilder\Exception("The hooks directory cannot be created or is not writable.");
+      throw new Exception();
     }
   }
 

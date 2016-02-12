@@ -113,7 +113,13 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     }
 
     // Sanity level 'data_directory_exists':
-    $this->version_helper->prepareDirectory($this->hooks_directory);
+    try {
+      $this->version_helper->prepareDirectory($this->hooks_directory);
+    }
+    catch (Exception $e) {
+      // Re-throw a sanity exception.
+      throw new \ModuleBuilder\Exception\SanityException('data_directory_exists');
+    }
 
     // This is as far as we need to go for the hooks_directory level.
     if ($sanity_level == 'data_directory_exists') {
@@ -123,9 +129,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     // Sanity level 'component_data_processed':
     $hooks_processed = $this->hooks_directory . "/hooks_processed.php";
     if (!file_exists($hooks_processed)) {
-      $e = new \ModuleBuilder\Exception("No hook definitions found. You need to download hook definitions before using this module.");
-      $e->needs_hooks_download = TRUE;
-      throw $e;
+      throw new \ModuleBuilder\Exception\SanityException('hook_data');
     }
 
     // This is as far as we need to go for the hook_data level.

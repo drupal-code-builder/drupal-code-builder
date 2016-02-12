@@ -37,7 +37,7 @@ class VersionHelper6 extends VersionHelper7 {
    * Check that the directory exists and is writable, creating it if needed.
    *
    * @throws
-   *  \ModuleBuilder\Exception
+   *  Exception
    */
   function prepareDirectory($directory) {
     // Because we may have an absolute path whose base folders are not writable
@@ -59,7 +59,7 @@ class VersionHelper6 extends VersionHelper7 {
 
     // If we go right the way along to the base and still can't create a directory...
     if ($i == $length) {
-      throw new \ModuleBuilder\Exception(strtr("The directory !path cannot be created or is not writable", array(
+      throw new Exception(strtr("The directory !path cannot be created or is not writable", array(
         '!path' => htmlspecialchars($path_slice, ENT_QUOTES, 'UTF-8'),
       )));
     }
@@ -74,7 +74,7 @@ class VersionHelper6 extends VersionHelper7 {
     }
 
     if (!$status) {
-      throw new \ModuleBuilder\Exception("The hooks directory cannot be created or is not writable.");
+      throw new Exception("The hooks directory cannot be created or is not writable.");
     }
   }
 

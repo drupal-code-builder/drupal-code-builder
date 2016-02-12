@@ -119,7 +119,7 @@ class Factory {
    * @return
    *  A new task handler object, which implements ModuleBuilderTaskInterface.
    *
-   * @throws \ModuleBuilder\Exception
+   * @throws \ModuleBuilder\Exception\SanityException
    *  Throws an exception if the environment is not in a state that is ready for
    *  the requested task, for example, if no hook data has been downloaded.
    */

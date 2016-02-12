@@ -69,8 +69,16 @@ function module_builder_admin_update($form, &$form_state) {
   try {
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookDataFolder');
   }
-  catch (\ModuleBuilder\Exception $e) {
-    drupal_set_message($e->getMessage(), 'warning');
+  catch (\ModuleBuilder\Exception\SanityException $e) {
+    $failed_sanity_level = $e->getFailedSanityLevel();
+    switch ($failed_sanity_level) {
+      case 'hook_directory':
+        drupal_set_message(t("The hook data directory could not be created or is not writable."), 'error');
+        break;
+      case 'hook_data':
+        drupal_set_message(t("Hook data is not available. Use the 'Process data' tab to get data about hooks and plugins."), 'error');
+        break;
+    }
     return $form;
   }
 

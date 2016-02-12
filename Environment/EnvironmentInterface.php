@@ -28,7 +28,7 @@ interface EnvironmentInterface {
    *    - 'component_data_processed': The hook data files are present in the
    *      hooks directory.
    *
-   * @throws \ModuleBuilder\Exception
+   * @throws \ModuleBuilder\Exception\SanityException
    *  Throws an exception if the environment is not ready at the specified
    *  level. It's up to the caller to provide meaningful feedback to the user.
    */
