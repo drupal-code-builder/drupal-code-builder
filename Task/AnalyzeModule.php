@@ -15,7 +15,7 @@ class AnalyzeModule extends Base {
   /**
    * The sanity level this task requires to operate.
    */
-  protected $sanity_level = 'hook_data';
+  protected $sanity_level = 'component_data_processed';
 
   /**
    * Helper function to get all the code files for a given module

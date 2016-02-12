@@ -15,7 +15,7 @@ class ReportHookPresets extends Base {
   /**
    * The sanity level this task requires to operate.
    */
-  protected $sanity_level = 'hook_data';
+  protected $sanity_level = 'component_data_processed';
 
   /**
    * Returns the contents of a template file.

@@ -37,7 +37,7 @@ class Module extends RootComponent {
   /**
    * The sanity level this generator requires to operate.
    */
-  public $sanity_level = 'hook_data';
+  public $sanity_level = 'component_data_processed';
 
   /**
    * The data for the component.

@@ -17,7 +17,7 @@ class ReportHookData extends ReportHookDataFolder {
   /**
    * The sanity level this task requires to operate.
    */
-  protected $sanity_level = 'hook_data';
+  protected $sanity_level = 'component_data_processed';
 
   /**
    * Get the list of hook data.

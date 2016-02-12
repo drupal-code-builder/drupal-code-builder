@@ -23,9 +23,10 @@ interface EnvironmentInterface {
    * @param $sanity_level
    *  The level up to which to verify sanity. The successive levels are:
    *    - 'none': No checks required.
-   *    - 'hook_directory': The hooks directory exists (or can be created) and
-   *      is writable.
-   *    - 'hook_data': The hook data files are present in the hooks directory.
+   *    - 'data_directory_exists': The hooks directory exists (or can be
+   *      created) and is writable.
+   *    - 'component_data_processed': The hook data files are present in the
+   *      hooks directory.
    *
    * @throws \ModuleBuilder\Exception
    *  Throws an exception if the environment is not ready at the specified

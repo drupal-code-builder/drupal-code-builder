@@ -21,7 +21,7 @@ class Collect extends Base {
   /**
    * The sanity level this task requires to operate.
    */
-  protected $sanity_level = 'hook_directory';
+  protected $sanity_level = 'data_directory_exists';
 
   /**
    * Collect data about Drupal components from the current site's codebase.

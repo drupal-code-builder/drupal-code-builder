@@ -20,7 +20,7 @@ class ReportHookDataFolder extends Base {
   /**
    * The sanity level this task requires to operate.
    */
-  protected $sanity_level = 'hook_directory';
+  protected $sanity_level = 'data_directory_exists';
 
   /**
    * Get the timestamp of the last hook data upate.
