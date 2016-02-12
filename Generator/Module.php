@@ -125,6 +125,7 @@ class Module extends RootComponent {
       ),
       'module_dependencies' => array(
         'label' => 'Module dependencies',
+        'description' => 'The machine names of the modules this module should have as dependencies.',
         'default' => array(),
         'required' => FALSE,
         'format' => 'array',
@@ -132,7 +133,8 @@ class Module extends RootComponent {
       // If this is given, then hook_help() is automatically added to the list
       // of required hooks.
       'module_help_text' => array(
-        'label' => 'Module help text (adds hook_help())',
+        'label' => 'Module help text',
+        'description' => 'The text to show on the site help page. This automatically adds hook_help().',
         'default' => NULL,
         'required' => FALSE,
       ),
@@ -144,13 +146,15 @@ class Module extends RootComponent {
         'component' => 'AdminSettingsForm',
       ),
       'services' => array(
-        'label' => "Service",
+        'label' => "Services",
+        'description' => 'A list of machine names of services for this module to provide.',
         'required' => FALSE,
         'format' => 'array',
         'component' => 'Service',
       ),
       'permissions' => array(
         'label' => "Permissions",
+        'description' => 'A list of machine names of permissions for this module to provide.',
         'required' => FALSE,
         'format' => 'array',
         'component' => 'Permissions',

@@ -47,6 +47,7 @@ abstract class RootComponent extends BaseGenerator {
    *  should be passed to this class's __construct(). Each value is an array,
    *  with the following keys:
    *  - 'label': A human-readable label for the property.
+   *  - 'description': (optional) A longer description of the property.
    *  - 'format': (optional) Specifies the expected format for the property.
    *    One of 'string', 'array', or 'boolean'. Defaults to 'string'.
    *  - 'default': (optional) The default value for the property. This is either
