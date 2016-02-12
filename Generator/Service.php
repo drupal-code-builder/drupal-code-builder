@@ -62,6 +62,9 @@ class Service extends PHPClassFile {
     // Our component name is our future filename, with the token '%module' to
     // be replaced.
     $this->filename = str_replace('%module', $this->base_component->component_data['root_name'], $this->name);
+    $this->filename = ucfirst($this->filename);
+    // TODO: appending '.php' should be done by the parent class.
+    $this->filename .= '.php';
 
     $files[$this->name] = array(
       'path' => 'src',
