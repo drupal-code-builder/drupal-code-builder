@@ -129,7 +129,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     // Sanity level 'component_data_processed':
     $hooks_processed = $this->hooks_directory . "/hooks_processed.php";
     if (!file_exists($hooks_processed)) {
-      throw new \ModuleBuilder\Exception\SanityException('hook_data');
+      throw new \ModuleBuilder\Exception\SanityException('component_data_processed');
     }
 
     // This is as far as we need to go for the hook_data level.
