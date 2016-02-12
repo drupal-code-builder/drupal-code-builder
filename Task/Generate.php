@@ -229,7 +229,7 @@ class Generate extends Base {
    *   A generator object, with the component name and data set on it, as well
    *   as a reference to this task handler.
    *
-   * @throws \ModuleBuilder\Exception
+   * @throws \ModuleBuilder\Exception\InvalidInputException
    *   Throws an exception if the given component type does not correspond to
    *   a component class.
    */
@@ -237,7 +237,7 @@ class Generate extends Base {
     $class = $this->getGeneratorClass($component_type);
 
     if (!class_exists($class)) {
-      throw new \ModuleBuilder\Exception(strtr("Invalid component type !type.", array(
+      throw new \ModuleBuilder\Exception\InvalidInputException(strtr("Invalid component type !type.", array(
         '!type' => htmlspecialchars($component_type, ENT_QUOTES, 'UTF-8'),
       )));
     }
