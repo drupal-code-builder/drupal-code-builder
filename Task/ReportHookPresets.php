@@ -29,15 +29,15 @@ class ReportHookPresets extends Base {
    * @return
    *  The contents of the file, or NULL if the file is not found.
    *
-   * @throws
-   *  Throws \ModuleBuilder\Exception if the file can't be found.
+   * @throws \Exception
+   *  Throws an exception if the file can't be found.
    */
   protected function loadPresetsFile($filename) {
     $pieces = array('templates', $this->environment->getCoreMajorVersion(), $filename);
     $path = $this->environment->getPath(implode('/', $pieces));
 
     if (!file_exists($path)) {
-      throw new \ModuleBuilder\Exception(strtr("Unable to find template at !path.", array(
+      throw new \Exception(strtr("Unable to find template at !path.", array(
         '!path' => htmlspecialchars($path, ENT_QUOTES, 'UTF-8'),
       )));
     }
