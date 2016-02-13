@@ -34,9 +34,6 @@ class Collect6 extends Collect {
       file_put_contents("$directory/$file_name", $destination . $file_contents->data);
     }
 
-    // inform that hook documentation has been downloaded.
-    drupal_set_message(t("Module Builder has just downloaded hook documentation to your %dir directory from CVS. This documentation contains detailed descriptions and usage examples of each of Drupal's hooks. Please view the files for more information, or view them online at the <a href=\"!api\">Drupal API documentation</a> site.", array('%dir' => 'files/'. variable_get('module_builder_hooks_directory', 'hooks'), '!api' => url('http://api.drupal.org/'))));
-
     return $hook_files;
   }
 
