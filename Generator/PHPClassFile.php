@@ -103,13 +103,25 @@ EOT;
    * Return the main body of the file code.
    */
   function code_body() {
+    $return = array_merge([
+        'namespace ' . $this->namespace,
+        '',
+        $this->docBlock("TODO: class docs."),
+        "class $this->plain_class_name {",
+      ],
+      $this->class_code_body(),
+      [
+        '}',
+      ]);
+    return $return;
+  }
+
+  /**
+   * Return the body of the class's code.
+   */
+  protected function class_code_body() {
     return [
-      'namespace ' . $this->namespace,
       '',
-      $this->docBlock("TODO: class docs."),
-      "class $this->plain_class_name {",
-      '',
-      '}',
     ];
   }
 
