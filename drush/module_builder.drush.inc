@@ -674,6 +674,9 @@ function drush_module_builder_build_component($commands, $component_type, $compo
         }
       }
 
+      // Turn empty defaults into a value that Drush won't output.
+      $default = empty($component_data[$property_name]) ? NULL : $component_data[$property_name];
+
       // Make a prompt string, letting the user know if the input is optional
       // so they don't waste time typing.
       switch ($property_info['format']) {
@@ -683,6 +686,7 @@ function drush_module_builder_build_component($commands, $component_type, $compo
         case 'boolean':
           $prompt = "Do you want a {$property_info['label']}";
           $prompt .= ' ' . "(y/n)";
+          $default = 'n';
           break;
         default:
           $prompt = "Enter the {$property_info['label']}";
@@ -690,9 +694,6 @@ function drush_module_builder_build_component($commands, $component_type, $compo
       if (empty($property_info['required']) && empty($component_data[$property_name])) {
         $prompt .= ' ' . "(optional)";
       }
-
-      // Turn empty defaults into a value that Drush won't output.
-      $default = empty($component_data[$property_name]) ? NULL : $component_data[$property_name];
 
       $value = drush_prompt($prompt, $default, $property_info['required']);
 
