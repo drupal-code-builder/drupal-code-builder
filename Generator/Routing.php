@@ -28,8 +28,15 @@ class Routing extends YMLFile {
    *      - 'path': The path for the item, without the initial '/'.
    */
   function __construct($component_name, $component_data = array()) {
-    foreach ($component_data['routing_items'] as $routing_item) {
-      $component_data['yaml_data'][$routing_item['path']] = array(
+    parent::__construct($component_name, $component_data);
+  }
+
+  /**
+   * Build the code files.
+   */
+  function collectFiles(&$files) {
+    foreach ($this->component_data['routing_items'] as $routing_item) {
+      $this->component_data['yaml_data'][$routing_item['path']] = array(
         'path' => $routing_item['path'],
         'defaults' => array(
           '_title' => $routing_item['title'],
@@ -40,7 +47,7 @@ class Routing extends YMLFile {
       );
     }
 
-    parent::__construct($component_name, $component_data);
+    parent::collectFiles($files);
   }
 
 }
