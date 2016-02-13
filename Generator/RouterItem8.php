@@ -35,7 +35,7 @@ class RouterItem8 extends RouterItem {
           ),
         ),
       ),
-      'routing' => array(
+      '%module.routing.yml' => array(
         'component_type' => 'Routing',
         'routing_items' => array(
           array(
