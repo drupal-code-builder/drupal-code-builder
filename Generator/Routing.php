@@ -12,19 +12,6 @@ namespace ModuleBuilder\Generator;
  *
  * Note this only is requested for Drupal 8.
  *
- * DEVELOPER NOTES: there is no way to request this via Drush yet.
- * To see this in action, hack Module::requiredComponents() to return something like:
- $dev_components = array(
-   'path/foo' => array(
-     'component_type' => 'RouterItem',
-     'title' => 'Foo',
-   ),
-   'path/bar' => array(
-     'component_type' => 'RouterItem',
-     'title' => 'Bar',
-   ),
- );
- *
  * @see RouterItem8
  */
 class Routing extends YMLFile {
