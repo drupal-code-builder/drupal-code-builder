@@ -69,7 +69,7 @@ class VersionHelper8 {
   function prepareDirectory($directory) {
     $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     if (!$status) {
-      throw new Exception();
+      throw new \Exception();
     }
   }
 

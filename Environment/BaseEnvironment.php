@@ -116,7 +116,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     try {
       $this->version_helper->prepareDirectory($this->hooks_directory);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       // Re-throw a sanity exception.
       throw new \ModuleBuilder\Exception\SanityException('data_directory_exists');
     }

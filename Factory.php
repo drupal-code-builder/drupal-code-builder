@@ -93,7 +93,7 @@ class Factory {
    */
   public static function getEnvironment() {
     if (!isset(self::$environment)) {
-      throw new Exception("Environment not set.");
+      throw new \Exception("Environment not set.");
     }
     return self::$environment;
   }
@@ -125,7 +125,7 @@ class Factory {
    */
   public static function getTask($task_type, $task_options = NULL) {
     if (!isset(self::$environment)) {
-      throw new Exception("Environment not set.");
+      throw new \Exception("Environment not set.");
     }
 
     $task_class = self::getTaskClass($task_type);
