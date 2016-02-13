@@ -24,17 +24,6 @@ class RouterItem8 extends RouterItem {
     return array(
       // Each RouterItem that gets added will cause a repeat request of these
       // components.
-      // TODO: make hook menu optional per router item.
-      'hook_menu' => array(
-        'component_type' => 'HookMenu',
-        'menu_items' => array(
-          array(
-            // TODO: further items.
-            'path' => $this->name,
-            'title' => $this->component_data['title'],
-          ),
-        ),
-      ),
       '%module.routing.yml' => array(
         'component_type' => 'Routing',
         'routing_items' => array(
