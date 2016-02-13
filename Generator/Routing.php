@@ -27,7 +27,7 @@ namespace ModuleBuilder\Generator;
  *
  * @see RouterItem8
  */
-class Routing extends File {
+class Routing extends YMLFile {
 
   /**
    * Constructor method; sets the component data.
@@ -41,37 +41,19 @@ class Routing extends File {
    *      - 'path': The path for the item, without the initial '/'.
    */
   function __construct($component_name, $component_data = array()) {
+    foreach ($component_data['routing_items'] as $routing_item) {
+      $component_data['yaml_data'][$routing_item['path']] = array(
+        'path' => $routing_item['path'],
+        'defaults' => array(
+          '_title' => $routing_item['title'],
+        ),
+        'requirements' => array(
+          '_permission' => 'TODO: set permission machine name',
+        ),
+      );
+    }
+
     parent::__construct($component_name, $component_data);
-  }
-
-  /**
-   * Build the code files.
-   */
-  function collectFiles(&$files) {
-    $files['routing'] = array(
-      'path' => '', // Means base folder.
-      'filename' => $this->base_component->component_data['root_name'] . '.routing.yml',
-      'body' => array(
-        $this->code_body(),
-      ),
-      'join_string' => "\n",
-    );
-  }
-
-  /**
-   * Return the main body of the file code.
-   *
-   * @return
-   *  An array of chunks of text for the code body.
-   */
-  function code_body() {
-    // TODO!!!
-
-    /*
-    $yaml_parser = new \Symfony\Component\Yaml\Yaml;
-    $yaml = $yaml_parser->dump($lines, 2, 2);
-    */
-    return 'TODO! this is the routing file!';
   }
 
 }
