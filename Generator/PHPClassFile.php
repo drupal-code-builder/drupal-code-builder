@@ -79,13 +79,6 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Return the PHP file header line.
-   */
-   function file_header()  {
-     return "<?php\n";
-   }
-
-  /**
    * Return the file doxygen header and any custom header code.
    *
    * Expects $this->filename to be set.
