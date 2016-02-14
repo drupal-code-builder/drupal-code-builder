@@ -45,9 +45,6 @@ class PHPClassFile extends PHPFile {
       'path' => $this->path,
       'filename' => $this->plain_class_name . '.php',
       'body' => $this->file_contents(),
-      // We join the info lines with linebreaks, as they (currently!) do not
-      // come with their own lineends.
-      // TODO: fix this!
       'join_string' => "\n",
     );
   }
