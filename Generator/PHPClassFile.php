@@ -79,19 +79,10 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Return the file doxygen header and any custom header code.
-   *
-   * Expects $this->filename to be set.
+   * Return the summary line for the file docblock.
    */
-  function code_header() {
-    $code = <<<EOT
-/**
- * @file
- * Contains $this->qualified_class_name.
- */
-
-EOT;
-    return $code;
+  function file_doc_summary() {
+    return "Contains $this->qualified_class_name.";
   }
 
   /**
