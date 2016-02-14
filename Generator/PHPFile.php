@@ -91,15 +91,13 @@ class PHPFile extends File {
    * Expects $this->filename to be set.
    */
   function code_header() {
-    $filename = $this->filename;
-    $file_description = $this->file_doc_summary();
-    $code = <<<EOT
-/**
- * @file $filename
- * $file_description
- */
-
-EOT;
+    $lines = array(
+      "@file $this->filename",
+      $this->file_doc_summary(),
+    );
+    $code = $this->docBlock($lines);
+    // Blank line after the file docblock.
+    $code .= "\n";
     return $code;
   }
 
