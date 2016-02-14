@@ -12,6 +12,11 @@ namespace ModuleBuilder\Generator;
  */
 class PHPClassFile extends PHPFile {
 
+  /**
+   * Constructor method; sets the component data.
+   *
+   * The component name is taken to be the fully-qualified class name.
+   */
   function __construct($component_name, $component_data = array()) {
     parent::__construct($component_name, $component_data);
 
