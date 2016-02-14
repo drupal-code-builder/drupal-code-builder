@@ -15,6 +15,15 @@ namespace ModuleBuilder\Generator;
 class Service extends PHPClassFile {
 
   /**
+   * Constructor method; sets the component data.
+   *
+   * The component name is taken to be the service ID.
+   */
+  function __construct($component_name, $component_data = array()) {
+    parent::__construct($component_name, $component_data);
+  }
+
+  /**
    * Set properties relating to class name.
    */
   protected function setClassNames($component_name) {
