@@ -40,13 +40,13 @@ class HookMenu extends HookImplementation {
    *          E.g. "array('access content')".
    *        - 'type': The quoted menu constant, e.g. 'MENU_SUGGESTED_ITEM'.
    */
-  function __construct($component_name, $component_data = array()) {
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'menu_items' => array(),
     );
 
-    parent::__construct($component_name, $component_data);
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**

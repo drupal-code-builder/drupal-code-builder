@@ -39,14 +39,14 @@ class Form extends BaseGenerator {
    *        - 'validate': The validate handler.
    *        - 'submit': The submit handler.
    */
-  function __construct($component_name, $component_data = array()) {
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'code_file' => '%module.module',
       'form_code_bodies' => array(),
     );
 
-    parent::__construct($component_name, $component_data);
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**

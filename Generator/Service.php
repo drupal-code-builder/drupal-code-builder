@@ -19,8 +19,8 @@ class Service extends PHPClassFile {
    *
    * The component name is taken to be the service ID.
    */
-  function __construct($component_name, $component_data = array()) {
-    parent::__construct($component_name, $component_data);
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**

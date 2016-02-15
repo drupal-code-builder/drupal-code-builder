@@ -27,8 +27,8 @@ class Routing extends YMLFile {
    *      array with the properties:
    *      - 'path': The path for the item, without the initial '/'.
    */
-  function __construct($component_name, $component_data = array()) {
-    parent::__construct($component_name, $component_data);
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**

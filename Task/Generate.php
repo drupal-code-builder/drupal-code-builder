@@ -242,12 +242,7 @@ class Generate extends Base {
       )));
     }
 
-    $generator = new $class($component_name, $component_data);
-
-    // Each generator needs a link back to the factory to be able to make more
-    // generators, and also so it can access the environment.
-    $generator->task = $this;
-    $generator->base_component = $this->root_generator;
+    $generator = new $class($component_name, $component_data, $this, $this->root_generator);
 
     return $generator;
   }

@@ -19,13 +19,13 @@ class AdminSettingsForm extends Form {
   /**
    * Override the parent to set the code file.
    */
-  function __construct($component_name, $component_data = array()) {
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'code_file' => '%module.admin.inc',
     );
 
-    parent::__construct($component_name, $component_data);
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**

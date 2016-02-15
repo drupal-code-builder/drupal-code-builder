@@ -41,7 +41,7 @@ class RouterItem extends BaseGenerator {
    *      - 'title': The title for the item.
    *      - TODO: further properties such as access!
    */
-  function __construct($component_name, $component_data = array()) {
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set some default properties.
     // This allows the user to leave off specifying details like title and
     // access, and get default strings in place that they can replace in
@@ -52,7 +52,7 @@ class RouterItem extends BaseGenerator {
       'title' => 'myPage',
     );
 
-    parent::__construct($component_name, $component_data);
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**

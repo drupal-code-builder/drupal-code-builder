@@ -160,16 +160,27 @@ abstract class BaseGenerator {
    *   (e.g., 'module', 'hooks') but in the case of types used multiple times
    *   this will be a unique identifier.
    * @param $component_data
-   *   (optional) An array of data for the component.
+   *   An array of data for the component.
    *   While each component will have its own array of data, components may also
    *   need to access the data of the root component. For this, use
    *   $task->getRootGenerator() (for now!).
    *   TODO: check whether components really need to do this, as removing this
    *   would simplify things!
+   * @param $generate_task
+   *   The Generate task object.
+   * @param $root_generator
+   *   The root Generator object.
    */
-  function __construct($component_name, $component_data = array()) {
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
     $this->name = $component_name;
     $this->component_data = $component_data;
+
+    // Each generator needs a link back to the factory to be able to make more
+    // generators, and also so it can access the environment.
+    // TODO: remove these and go via the factory instead, to simplify class
+    // debug output.
+    $this->task = $generate_task;
+    $this->base_component = $root_generator;
   }
 
   /**

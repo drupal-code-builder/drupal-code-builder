@@ -17,8 +17,8 @@ class PHPClassFile extends PHPFile {
    *
    * The component name is taken to be the fully-qualified class name.
    */
-  function __construct($component_name, $component_data = array()) {
-    parent::__construct($component_name, $component_data);
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
 
     $this->setClassNames($this->name);
   }

@@ -92,8 +92,8 @@ class Module extends RootComponent {
    *    - 'hook_file_data': Added by the Hooks generator. Keyed by the component
    *      names of the ModuleCodeFile type components that Hooks adds.
    */
-  function __construct($component_name, $component_data = array()) {
-    parent::__construct($component_name, $component_data);
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
   /**
