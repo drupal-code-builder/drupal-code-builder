@@ -32,10 +32,14 @@ class Service extends PHPClassFile {
     // implode and ucfirst()
     $service_id = $component_name;
     $service_id_pieces = explode('.', $service_id);
-    $class_name_pieces = array_map('ucfirst', $service_id_pieces);
-    // Prefix the qualified class name with 'Drupal' and the module name.
-    array_unshift($class_name_pieces, '%Module');
-    array_unshift($class_name_pieces, 'Drupal');
+    // Create an unqualified class name by turning this into camel case.
+    $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
+    // Form the full class name by adding a namespace Drupal\MODULE.
+    $class_name_pieces = array(
+      'Drupal',
+      $this->base_component->component_data['root_name'],
+      $unqualified_class_name,
+    );
     $qualified_class_name = implode('\\', $class_name_pieces);
 
     parent::setClassNames($qualified_class_name);
@@ -62,27 +66,6 @@ class Service extends PHPClassFile {
     );
 
     return $components;
-  }
-
-  /**
-   * Build the code files.
-   */
-  function collectFiles(&$files) {
-    // Our component name is our future filename, with the token '%module' to
-    // be replaced.
-    $this->filename = str_replace('%module', $this->base_component->component_data['root_name'], $this->name);
-    $this->filename = ucfirst($this->filename);
-    // TODO: appending '.php' should be done by the parent class.
-    $this->filename .= '.php';
-
-    $files[$this->name] = array(
-      'path' => 'src',
-      'filename' => $this->filename,
-      'body' => $this->file_contents(),
-      // We join code files up on a single newline. This means that each
-      // component is responsible for ending its own lines.
-      'join_string' => "\n",
-    );
   }
 
 }
