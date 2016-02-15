@@ -19,27 +19,6 @@ class ModuleCodeFile extends PHPFile {
   // TODO: declare properties that are special!
 
   /**
-   * Helper for assembleContainedComponents().
-   *
-   * Module code files assemble their contained components, which are functions.
-   *
-   * This collects data from our contained components. The functions are
-   * assembled in full in code_body().
-   */
-  function assembleContainedComponentsHelper($children) {
-    $component_list = $this->getComponentList();
-
-    foreach ($children as $child_name) {
-      // Get the child component.
-      $child_component = $component_list[$child_name];
-
-      $child_functions = $child_component->componentFunctions();
-      // Why didn't array_merge() work here? Cookie for the answer!
-      $this->functions += $child_functions;
-    }
-  }
-
-  /**
    * Build the code files.
    */
   function collectFiles(&$files) {
