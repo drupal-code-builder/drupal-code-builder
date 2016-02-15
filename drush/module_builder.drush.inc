@@ -560,6 +560,13 @@ function drush_module_builder_build_component($commands, $component_type, $compo
 
   // Get the component data info, and add in extra info specific to Drush.
   $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
+  // Remove extra property info that's for properties we don't know about (such
+  // as ones that only apply to certain versions of Drupal).
+  foreach ($component_info_drush_extra as $property_name => $property_extra_info) {
+    if (!isset($component_data_info[$property_name])) {
+      unset($component_info_drush_extra[$property_name]);
+    }
+  }
   $component_data_info = array_merge_recursive($component_data_info, $component_info_drush_extra);
   //drush_print_r($component_data_info);
 
