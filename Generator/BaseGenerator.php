@@ -280,19 +280,23 @@ abstract class BaseGenerator {
    *
    * This function is called recursively. Components that wish to do something
    * here should override this.
+   *
+   * @param $tree
+   *  An array of parentage data about components, as given by
+   *  assembleComponentTree().
    */
-  public function assembleContainedComponents() {
+  public function assembleContainedComponents($tree) {
     $base_component = $this->task->getRootGenerator();
 
     // If we're not in the tree, we have nothing to say here and bail.
-    if (!isset($base_component->tree[$this->name])) {
+    if (!isset($tree[$this->name])) {
       return;
     }
 
     $component_list = $this->getComponentList();
 
     // Iterate over our children elements.
-    $children = $base_component->tree[$this->name];
+    $children = $tree[$this->name];
 
     // Call assembleContainedComponentsHelper().
     $this->assembleContainedComponentsHelper($children);
@@ -302,7 +306,7 @@ abstract class BaseGenerator {
       $child_component = $component_list[$child_name];
 
       // Recurse into it.
-      $child_component->assembleContainedComponents();
+      $child_component->assembleContainedComponents($tree);
     }
   }
 

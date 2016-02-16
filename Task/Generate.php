@@ -188,11 +188,11 @@ class Generate extends Base {
     $this->root_generator->assembleComponentList();
 
     // Now assemble them into a tree.
-    $this->root_generator->assembleComponentTree();
+    $tree = $this->root_generator->assembleComponentTree();
 
     // Let each component that is a parent in the tree collect data from its
     // child components.
-    $this->root_generator->assembleContainedComponents();
+    $this->root_generator->assembleContainedComponents($tree);
 
     //drush_print_r($generator->components);
 

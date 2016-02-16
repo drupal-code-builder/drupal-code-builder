@@ -371,6 +371,12 @@ abstract class RootComponent extends BaseGenerator {
    *
    * Not all components in the component list need to place themselves into the
    * tree, but this means that they will not participate in file assembly.
+   *
+   * @return
+   *  A tree of parentage data for components, as an array keyed by the parent
+   *  component name, where each value is an array of the names of the child
+   *  components. So for example, the list of children of component 'foo' is
+   *  given by $tree['foo'].
    */
   public function assembleComponentTree() {
     $tree = array();
@@ -381,7 +387,7 @@ abstract class RootComponent extends BaseGenerator {
       }
     }
 
-    $this->tree = $tree;
+    return $tree;
   }
 
 }
