@@ -190,7 +190,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected function initVersionHelper() {
     $helper_class_name = '\ModuleBuilder\Environment\VersionHelper' . $this->major_version;
 
-    $this->version_helper = new $helper_class_name($this);
+    $this->version_helper = new $helper_class_name();
   }
 
   /**

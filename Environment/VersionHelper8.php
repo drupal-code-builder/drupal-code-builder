@@ -34,18 +34,6 @@ class VersionHelper8 {
 
   protected $major_version = 8;
 
-  protected $environment;
-
-  /**
-   * Constructor.
-   *
-   * @param $environment
-   *  The environment object this is a helper for.
-   */
-  function __construct($environment) {
-    $this->environment = $environment;
-  }
-
   /**
    * Transforms a path into a path within the site files folder, if needed.
    *
