@@ -28,7 +28,7 @@ function module_builder_drush_init_helper() {
   include_once(dirname(__FILE__) . '/../Factory.php');
 
   // Set up the MB factory.
-  \ModuleBuilder\Factory::setEnvironmentClass('Drush');
+  \ModuleBuilder\Factory::setEnvironmentClass('Drush', drush_drupal_version());
 }
 
 /**

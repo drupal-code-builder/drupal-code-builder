@@ -63,7 +63,7 @@ function module_builder_admin_settings($form, &$form_state) {
  * Admin hook update form.
  */
 function module_builder_admin_update($form, &$form_state) {
-  \ModuleBuilder\Factory::setEnvironmentClass('DrupalUI');
+  \ModuleBuilder\Factory::setEnvironmentClass('DrupalUI', VERSION);
 
   // Get our task, and check hook data is ready.
   try {
@@ -118,7 +118,7 @@ function module_builder_admin_update($form, &$form_state) {
  * Admin hook update form submit handler.
  */
 function module_builder_admin_update_submit($form, $form_state) {
-  \ModuleBuilder\Factory::setEnvironmentClass('DrupalUI');
+  \ModuleBuilder\Factory::setEnvironmentClass('DrupalUI', VERSION);
 
   // Safe to do this without exception handling: it's already been checked in
   // the form builder.

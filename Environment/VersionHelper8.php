@@ -15,8 +15,8 @@ namespace ModuleBuilder\Environment;
  * These allow the environment classes to work orthogonally across different
  * environments (Drush, Drupal UI) and different core versions.
  *
- * Each major version of Drupal core needs a version helper class. This is
- * instantiated by the environment object's initVersionHelper(). No direct calls
+ * Each major version of Drupal core needs a version helper class, set up in the
+ * initial call to the factory setEnvironmentClass. No direct calls
  * should be made to the helper, rather, the environment base class should
  * provide a wrapper.
  *

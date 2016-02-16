@@ -36,7 +36,7 @@ if (!class_exists('\ModuleBuilder\Environment\BaseEnvironment')) {
  *
  * @code
  *  include_once('path/to/Factory.php');
- *  \ModuleBuilder\Factory::setEnvironmentClass('Drush');
+ *  \ModuleBuilder\Factory::setEnvironmentClass('Drush', 8);
  *  $task = \ModuleBuilder\Factory::getTask('ReportHookData');
  * @endcode
  */
@@ -62,15 +62,20 @@ class Factory {
    *  namespace, use setEnvironment()). No checks are run on the environment
    *  at this stage (and therefore the environment handler may be flagged to
    *  skip checks via the returned factory).
+   * @param $drupal_core_version
+   *  The version of Drupal core that this is being used in. May be a full
+   *  version number, e.g. 8.0.1 or 7.1, or just the major version, e.g. 8.
    *
    * @return
    *  The environment object.
    */
-  public static function setEnvironmentClass($environment_class) {
+  public static function setEnvironmentClass($environment_class, $drupal_core_version) {
     // Create the environment handler and set it on the factory.
     $environment_class = '\ModuleBuilder\Environment\\' . $environment_class;
     $environment = new $environment_class;
-    self::setEnvironment($environment);
+    $version_helper = self::createVersionHelper($drupal_core_version);
+
+    self::setEnvironment($environment, $version_helper);
 
     return self::$environment;
   }
@@ -80,9 +85,35 @@ class Factory {
    *
    * @param \ModuleBuilder\Environment\EnvironmentInterface $environment
    *  An environment object to set.
+   * @param $version_helper
+   *  A version helper object.
    */
-  public static function setEnvironment(\ModuleBuilder\Environment\EnvironmentInterface $environment) {
+  public static function setEnvironment(\ModuleBuilder\Environment\EnvironmentInterface $environment, $version_helper) {
+    $environment->setVersionHelper($version_helper);
+    $environment->initEnvironment();
+
     self::$environment = $environment;
+  }
+
+  /**
+   * Create an environment version helper object.
+   *
+   * @param $drupal_core_version
+   *  The version of Drupal core that this is being used in. May be a full
+   *  version number, e.g. 8.0.1 or 7.1, or just the major version, e.g. 8.
+   *
+   * @return
+   *  The version helper object.
+   */
+  protected static function createVersionHelper($drupal_core_version) {
+    // Get the major version from the core version number.
+    list($major_version) = explode('.', $drupal_core_version);
+
+    $helper_class_name = '\ModuleBuilder\Environment\VersionHelper' . $major_version;
+
+    $version_helper = new $helper_class_name();
+
+    return $version_helper;
   }
 
   /**

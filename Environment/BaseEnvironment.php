@@ -48,13 +48,6 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected $hooks_directory;
 
   /**
-   * The major Drupal core version.
-   *
-   * @see getCoreMajorVersion()
-   */
-  protected $major_version;
-
-  /**
    * A helper object for version-specific code.
    *
    * This allows code specific to different major version of Drupal to be
@@ -64,15 +57,19 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected $version_helper;
 
   /**
-   * Constructor.
+   * Set the version helper object.
+   *
+   * @param $version_helper
+   *  The version helper object.
    */
-  function __construct() {
-    // Set the major version.
-    $this->detectMajorVersion();
+  public function setVersionHelper($version_helper) {
+    $this->version_helper = $version_helper;
+  }
 
-    // Set up the helper for version-specific code.
-    $this->initVersionHelper();
-
+  /**
+   * Initialize the environment.
+   */
+  public function initEnvironment() {
     // Set the hooks directory.
     $this->getHooksDirectorySetting();
   }
@@ -161,37 +158,6 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * Output debug data.
    */
   abstract function debug($data, $message = '');
-
-  /**
-   * Detect the major Drupal core version and set the property for it.
-   *
-   * Helper for __construct().
-   */
-  protected function detectMajorVersion() {
-    // ARGH D8 is different and at this point we can't specialize per-version,
-    // since we're trying to GET the version!
-    if (defined('VERSION')) {
-      $version = VERSION;
-    }
-    else {
-      $version = \Drupal::VERSION;
-    }
-
-    list($major_version) = explode('.', $version);
-
-    $this->major_version = $major_version;
-  }
-
-  /**
-   * Initialize the version helper object.
-   *
-   * Helper for __construct().
-   */
-  protected function initVersionHelper() {
-    $helper_class_name = '\ModuleBuilder\Environment\VersionHelper' . $this->major_version;
-
-    $this->version_helper = new $helper_class_name();
-  }
 
   /**
    * @inheritdoc

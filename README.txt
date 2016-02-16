@@ -157,9 +157,8 @@ The basic operation for Module Builder is as in this example:
     // Load the file for the factory class.
     // (Not necessary if using MB via Composer.)
     include_once('Factory.php');
-    // Tell MB which environment it's being used in. The Drupal core version is
-    // detected automatically.
-    \ModuleBuilder\Factory::setEnvironmentClass('Drush');
+    // Tell MB which environment it's being used in and the Drupal core version.
+    \ModuleBuilder\Factory::setEnvironmentClass('Drush', 8);
     // Get the Task handler.
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
     // Call a method in the Task handler to perform the operation.

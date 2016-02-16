@@ -39,7 +39,7 @@ interface EnvironmentInterface {
    *
    * This may be set on the environment after it has been initialized. Example:
    * @code
-   * \ModuleBuilder\Factory::setEnvironmentClass('Drush');
+   * \ModuleBuilder\Factory::setEnvironmentClass('Drush', 8);
    * \ModuleBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
    * @endcode
    *
