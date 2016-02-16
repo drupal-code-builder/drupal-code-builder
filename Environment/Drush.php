@@ -48,7 +48,7 @@ class Drush extends BaseEnvironment {
         if (substr($directory, -1, 1) != '/') {
           $directory .= '/';
         }
-        $directory .= $this->major_version;
+        $directory .= $this->getCoreMajorVersion();
         return $directory;
       }
     }

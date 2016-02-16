@@ -154,7 +154,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * @inheritdoc
    */
   public function getCoreMajorVersion() {
-    return $this->major_version;
+    return $this->version_helper->getCoreMajorVersion();
   }
 
   /**

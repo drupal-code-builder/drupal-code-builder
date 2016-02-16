@@ -18,7 +18,7 @@ class TestsSampleLocation extends Tests {
   function getHooksDirectorySetting() {
     // Set the folder for the hooks. This contains a prepared file for the tests
     // to use.
-    $directory = dirname(dirname(__FILE__)) . '/tests/sample_hook_definitions/' . $this->major_version;
+    $directory = dirname(dirname(__FILE__)) . '/tests/sample_hook_definitions/' . $this->getCoreMajorVersion();
 
     $this->hooks_directory = $directory;
   }
