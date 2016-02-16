@@ -163,4 +163,17 @@ interface EnvironmentInterface {
    */
   public function getSetting($name, $default = NULL);
 
+  /**
+   * Get the path to a Drupal extension, e.g. a module or theme.
+   *
+   * @param $type
+   *  The type. One of 'module' or 'theme'.
+   * @param $name
+   *  The name of the extension.
+   *
+   * @return
+   *  The path to the extension, or NULL if it is not present and active.
+   */
+  public function getExtensionPath($type, $name);
+
 }

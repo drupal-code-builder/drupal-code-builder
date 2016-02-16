@@ -193,4 +193,11 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     return $path;
   }
 
+  /**
+   * @inheritdoc
+   */
+  function getExtensionPath($type, $name) {
+    return $this->version_helper->getExtensionPath($type, $name);
+  }
+
 }

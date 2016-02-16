@@ -126,4 +126,11 @@ class VersionHelper8 {
     }
   }
 
+  /**
+   * Get the path to a Drupal extension, e.g. a module or theme
+   */
+  function getExtensionPath($type, $name) {
+    return drupal_get_path($type, $name);
+  }
+
 }
