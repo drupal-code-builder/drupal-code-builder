@@ -35,6 +35,13 @@ class VersionHelper8 {
   protected $major_version = 8;
 
   /**
+   * @inheritdoc
+   */
+  public function getCoreMajorVersion() {
+    return $this->major_version;
+  }
+
+  /**
    * Transforms a path into a path within the site files folder, if needed.
    *
    * Eg, turns 'foo' into 'public://foo'.
