@@ -29,7 +29,7 @@ class AnalyzeModule extends Base {
    *  A flat array of filenames.
    */
   public function getFiles($module_root_name) {
-    $filepath = drupal_get_path('module', $module_root_name);
+    $filepath = $this->environment->getExtensionPath('module', $module_root_name);
 
     //$old_dir = getcwd();
     //chdir($filepath);
@@ -79,7 +79,7 @@ class AnalyzeModule extends Base {
    */
   public function getInventedHooks($module_root_name) {
     // Get the module's folder.
-    $module_folder = drupal_get_path('module', $module_root_name);
+    $module_folder = $this->environment->getExtensionPath('module', $module_root_name);
 
     // Bail if the folder doesn't exist yet: there is nothing to do.
     if (!file_exists($module_folder)) {
