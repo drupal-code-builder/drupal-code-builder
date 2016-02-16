@@ -32,7 +32,7 @@ namespace ModuleBuilder\Environment;
  */
 class VersionHelper8 {
 
-  private $major_version = 8;
+  protected $major_version = 8;
 
   protected $environment;
 

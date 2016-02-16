@@ -14,7 +14,7 @@ namespace ModuleBuilder\Environment;
  */
 class VersionHelper5 extends VersionHelper6 {
 
-  private $major_version = 5;
+  protected $major_version = 5;
 
   // D5 helper is the same as D6.
 }

@@ -14,7 +14,7 @@ namespace ModuleBuilder\Environment;
  */
 class VersionHelper6 extends VersionHelper7 {
 
-  private $major_version = 6;
+  protected $major_version = 6;
 
   /**
    * Transforms a path into a path within the site files folder, if needed.

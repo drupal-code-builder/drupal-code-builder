@@ -14,7 +14,7 @@ namespace ModuleBuilder\Environment;
  */
 class VersionHelper7 extends VersionHelper8 {
 
-  private $major_version = 7;
+  protected $major_version = 7;
 
   /**
    * A version-independent wrapper for drupal_system_listing().
