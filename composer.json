@@ -2,6 +2,9 @@
   "name": "module_builder/module_builder",
   "require": {
   },
+  "require-dev": {
+    "phpunit/phpunit": ">=3.5"
+  },
   "autoload": {
     "psr-4": {
       "ModuleBuilder\\": ""
