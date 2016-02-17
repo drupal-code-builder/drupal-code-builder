@@ -558,6 +558,9 @@ function drush_module_builder_build_component($commands, $component_type, $compo
     return;
   }
 
+  // Set the base type.
+  $component_data['base'] = $component_type;
+
   // Get the component data info, and add in extra info specific to Drush.
   $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
   // Remove extra property info that's for properties we don't know about (such
