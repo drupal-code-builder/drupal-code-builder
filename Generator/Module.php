@@ -391,7 +391,7 @@ class Module extends RootComponent {
     //drush_print_r($build_list);
 
     // Get the components that were requested.
-    $intersection_components = array_intersect($component_list, $build_list);
+    $intersection_components = array_intersect($build_list, $component_list);
     // Get the requested components that we don't understand.
     $unknown_build_list = array_diff($build_list, $component_list);
 
