@@ -16,9 +16,6 @@ class Info7 extends InfoIni {
    * Create lines of file body for Drupal 7.
    */
   function file_body() {
-    $args = func_get_args();
-    $files = array_shift($args);
-
     $module_data = $this->base_component->component_data;
     //print_r($module_data);
 
@@ -39,15 +36,23 @@ class Info7 extends InfoIni {
 
     $lines['core'] = "7.x";
 
-    // Files containing classes need to be declared in the .info file.
-    foreach ($files as $file) {
-      if (!empty($file['contains_classes'])) {
-        $lines['files'][] = $file['filename'];
-      }
-    }
-
     $info = $this->process_info_lines($lines);
     return $info;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function filesAlter(&$files) {
+    // Files containing classes need to be declared in the .info file.
+    $info_extra_lines = array();
+    foreach ($files as $file) {
+      if (!empty($file['contains_classes'])) {
+        $info_extra_lines['files'][] = $file['filename'];
+      }
+    }
+    $lines = $this->process_info_lines($info_extra_lines);
+    $files['info']['body'] = array_merge($files['info']['body'], $this->process_info_lines($info_extra_lines));
   }
 
 }

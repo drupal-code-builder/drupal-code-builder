@@ -203,12 +203,27 @@ class Generate extends Base {
     $this->root_generator->collectFiles($files);
     //drush_print_r($files);
 
+    // Allow all components to alter all the collected files.
+    $this->filesAlter($files);
+
     // Then we assemble the files into a simple array of full filename and
     // contents.
     // TODO: rename this to buildFiles().
     $files_assembled = $this->root_generator->assembleFiles($files);
 
     return $files_assembled;
+  }
+
+  /**
+   * Allow components to alter the files prior to output.
+   *
+   * @param $files
+   *  The array of file info, passed by reference.
+   */
+  protected function filesAlter(&$files) {
+    foreach ($this->root_generator->components as $name => $component) {
+      $component->filesAlter($files);
+    }
   }
 
   /**

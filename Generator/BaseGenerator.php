@@ -359,6 +359,13 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Allow components to alter the files prior to output.
+   */
+  public function filesAlter(&$files) {
+    // Base class does nothing.
+  }
+
+  /**
    * Assemble file info into filename and code.
    *
    * @param $files

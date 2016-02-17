@@ -23,8 +23,7 @@ class Info extends File {
     $files['info'] = array(
       'path' => '', // Means base folder.
       'filename' => $this->base_component->component_data['root_name'] . '.info',
-      // We pass $files in to check for files containing classes.
-      'body' => $this->file_body($files),
+      'body' => $this->file_body(),
       // We join the info lines with linebreaks, as they (currently!) do not
       // come with their own lineends.
       // TODO: fix this!
