@@ -251,7 +251,9 @@ class Generate extends Base {
    * Helper function to get the desired Generator class.
    *
    * @param $type
-   *  The type of the component. This is used to determine the class.
+   *  The type of the component. This is the name of the class, without the
+   *  version suffix. For classes in camel case, the string given here may be
+   *  all in lower case.
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
