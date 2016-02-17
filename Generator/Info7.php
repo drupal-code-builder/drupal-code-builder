@@ -51,6 +51,13 @@ class Info7 extends InfoIni {
         $info_extra_lines['files'][] = $file['filename'];
       }
     }
+
+    // Add a 'configure' line if there's an admin settings form component.
+    if (isset($this->base_component->components['AdminSettingsForm'])) {
+      // TODO: get this path from the generator.
+      $info_extra_lines['configure'] = 'admin/config/TODO-SECTION/%module';
+    }
+
     $lines = $this->process_info_lines($info_extra_lines);
     $files['info']['body'] = array_merge($files['info']['body'], $this->process_info_lines($info_extra_lines));
   }
