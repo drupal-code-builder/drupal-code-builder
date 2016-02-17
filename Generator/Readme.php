@@ -17,7 +17,7 @@ class Readme extends File {
   /**
    * Collect the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     $files['readme'] = array(
       'path' => '', // Means the base folder.
       // The extension is in lowercase for good reasons which I don't remember
@@ -28,6 +28,7 @@ class Readme extends File {
       // breaks.
       'join_string' => "\n",
     );
+    return $files;
   }
 
   /**

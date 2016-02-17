@@ -19,7 +19,7 @@ class Info extends File {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     $files['info'] = array(
       'path' => '', // Means base folder.
       'filename' => $this->base_component->component_data['root_name'] . '.info',
@@ -29,6 +29,7 @@ class Info extends File {
       // TODO: fix this!
       'join_string' => "\n",
     );
+    return $files;
   }
 
 }

@@ -61,7 +61,7 @@ class Plugin extends PHPFile {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     // TODO: can these be set up in the constructor? -- but we don't have access
     // to the base component property yet.
     // Create a class name.
@@ -90,6 +90,7 @@ class Plugin extends PHPFile {
       // component is responsible for ending its own lines.
       'join_string' => "\n",
     );
+    return $files;
   }
 
   /**

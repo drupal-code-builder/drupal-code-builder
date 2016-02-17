@@ -47,24 +47,44 @@ class File extends BaseGenerator {
   }
 
   /**
-   * Build the code files.
+   * Return the data for the file this component provides.
    *
-   * Subclasses should override this to add their file data to the list.
+   * Subclasses should override this.
+   *
+   * @return
+   *  An array keyed by an arbitrary ID for the file, whose value is an array
+   *  of file info. Values in this array are:
+   *  - path: The path to the file, relative to the future module folder.
+   *  - filename: The file name.
+   *  - body: An array of pieces to assemble in order to form the body of the
+   *    file. These can be single lines, or larger chunks: they will be joined
+   *    up by assembleFiles(). The array may be keyed numerically, or the keys
+   *    can be meaningful to the generator class: they are immaterial to the
+   *    caller.
+   *  - join_string: The string to join the body pieces with. If the body is an
+   *    array of single lines, you probably want to use "\n". If you have chunks
+   *    it makes more sense for each chunk to contain its own linebreaks
+   *    including the terminal one.
+   *  - contains_classes: A boolean indicating that this file contains one or
+   *    more classes, and thus should be declared in the component's .info file.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
+    // Subclasses should override this.
+
     /*
     // Example:
     $files[$this->name] = array(
       'path' => '', // Means base folder.
       'filename' => $this->base_component->component_data['root_name'] . '.info',
-      // We pass $files in to check for files containing classes.
-      'body' => $this->code_body($files),
+      'body' => $this->code_body(),
       // We join the info lines with linebreaks, as they (currently!) do not
       // come with their own lineends.
       // TODO: fix this!
       'join_string' => "\n",
     );
     */
+
+    return array();
   }
 
 }

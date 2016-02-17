@@ -40,13 +40,14 @@ class PHPClassFile extends PHPFile {
    *
    * Subclasses should override this to add their file data to the list.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     $files['src/' . $this->qualified_class_name] = array(
       'path' => $this->path,
       'filename' => $this->plain_class_name . '.php',
       'body' => $this->file_contents(),
       'join_string' => "\n",
     );
+    return $files;
   }
 
   /**

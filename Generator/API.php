@@ -27,7 +27,7 @@ class API extends PHPFile {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     $component_data = $this->getRootComponentData();
     $module_root_name = $component_data['root_name'];
 
@@ -40,6 +40,7 @@ class API extends PHPFile {
       'body' => $this->file_contents(),
       'join_string' => "\n",
     );
+    return $files;
   }
 
   /**

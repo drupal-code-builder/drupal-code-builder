@@ -23,7 +23,7 @@ class Tests extends PHPFile {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     $module_root_name = $this->base_component->component_data['root_name'];
     $test_file_name = "$module_root_name.test";
 
@@ -35,6 +35,7 @@ class Tests extends PHPFile {
       'join_string' => "\n",
       'contains_classes' => TRUE,
     );
+    return $files;
   }
 
   /**

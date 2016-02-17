@@ -34,7 +34,7 @@ class Routing extends YMLFile {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     foreach ($this->component_data['routing_items'] as $routing_item) {
       $this->component_data['yaml_data'][$routing_item['path']] = array(
         'path' => $routing_item['path'],
@@ -47,7 +47,7 @@ class Routing extends YMLFile {
       );
     }
 
-    parent::collectFiles($files);
+    return parent::getFileInfo();
   }
 
 }

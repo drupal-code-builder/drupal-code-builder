@@ -23,7 +23,7 @@ class ThemeTemplate extends BaseGenerator {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
+  public function getFileInfo() {
     $theme_registry = theme_get_registry();
     // Our theme base was set in our incoming component data.
     $theme_base = $this->base_component->component_data['theme_hook_bases'][$this->name];
@@ -59,6 +59,7 @@ class ThemeTemplate extends BaseGenerator {
         $tpl_code,
       ),
     );
+    return $files;
   }
 
 }

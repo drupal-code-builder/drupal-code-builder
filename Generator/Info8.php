@@ -15,10 +15,12 @@ class Info8 extends Info {
   /**
    * Build the code files.
    */
-  function collectFiles(&$files) {
-    parent::collectFiles($files);
+  public function getFileInfo() {
+    $files = parent::getFileInfo();
 
     $files['info']['filename'] = $this->base_component->component_data['root_name'] . '.info.yml';
+
+    return $files;
   }
 
   /**

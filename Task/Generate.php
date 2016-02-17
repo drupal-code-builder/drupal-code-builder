@@ -197,11 +197,9 @@ class Generate extends Base {
     //drush_print_r($generator->components);
 
     // Build files.
-    // First we recurse into the tree to collect data on the files needed. Each
-    // component gets to add to the files array.
-    $files = array();
-    $this->root_generator->collectFiles($files);
-    //drush_print_r($files);
+    // Get info on files. All components that wish to provide a file should have
+    // registered themselves as first-level children of the root component.
+    $files = $this->collectFiles($tree);
 
     // Allow all components to alter all the collected files.
     $this->filesAlter($files);
@@ -224,6 +222,33 @@ class Generate extends Base {
     foreach ($this->root_generator->components as $name => $component) {
       $component->filesAlter($files);
     }
+  }
+
+  /**
+   * Collect file data from components.
+   *
+   * @param $tree
+   *  An array of parentage data about components, as given by
+   *  assembleComponentTree().
+   *
+   * @return
+   *  An array of file info, keyed by arbitrary file ID.
+   */
+  protected function collectFiles($tree) {
+    $file_info = array();
+
+    // Components which provide a file should have registered themselves as
+    // children of the root component.
+    $root_component_name = $this->root_generator->name;
+    foreach ($tree[$root_component_name] as $child_component_name) {
+      $child_component = $this->root_generator->components[$child_component_name];
+      $child_component_file_data = $child_component->getFileInfo();
+      if (is_array($child_component_file_data)) {
+        $file_info += $child_component_file_data;
+      }
+    }
+
+    return $file_info;
   }
 
   /**
