@@ -211,8 +211,9 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   function assertInfoLine($string, $property, $value, $message = NULL) {
-    // Quote the value, as strings may contain regex characters.
-    $value = preg_quote($value);
+    // Quote the given strings, as they may contain regex characters.
+    $property = preg_quote($property);
+    $value    = preg_quote($value);
     $expected_regex = "^{$property} = {$value}$";
 
     $match = preg_match("[$expected_regex]m", $string);
