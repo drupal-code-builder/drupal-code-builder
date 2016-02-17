@@ -35,16 +35,16 @@ class ComponentTestsTest extends ModuleBuilderTestBase {
       ),
       'requested_components' => array(
         'tests' => 'tests',
-        //'info' => 'info',
+        'info' => 'info',
       ),
       'requested_build' => array(
         'tests' => TRUE,
-        //'info' => TRUE,
+        'info' => TRUE,
       ),
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertEquals(count($files), 1, "Only one file is returned.");
+    $this->assertEquals(count($files), 2, "Two files are returned.");
 
     // Check the .test file.
     $tests_file = $files["tests/$module_name.test"];
@@ -53,7 +53,13 @@ class ComponentTestsTest extends ModuleBuilderTestBase {
 
     $this->assertFileHeader($tests_file, "The install file contains the correct PHP open tag and file doc header");
 
-    // TODO: check this contains the test case class.
+    // Check the .info file.
+    $info_file = $files["$module_name.info"];
+
+    $this->assertInfoLine($info_file, 'name', $module_data['readable_name'], "The info file declares the module name.");
+    $this->assertInfoLine($info_file, 'description', $module_data['short_description'], "The info file declares the module description.");
+    $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");
+    $this->assertInfoLine($info_file, 'files[]', "tests/$module_name.test", "The info file declares the file containing the test class.");
   }
 
 }
