@@ -288,6 +288,13 @@ class Module extends RootComponent {
         'format' => 'boolean',
         'component' => 'Readme',
       ),
+      'tests' => array(
+        'label' => "Simpletest test case class",
+        'required' => FALSE,
+        'default' => FALSE,
+        'format' => 'boolean',
+        'component' => 'Tests',
+      ),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
@@ -363,7 +370,6 @@ class Module extends RootComponent {
       // Component type case must match the filename for case-sensitive
       // filesystems (i.e. not OS X).
       'hooks' => 'hooks',
-      'tests' => 'tests',
       'info' => 'info',
     );
 
