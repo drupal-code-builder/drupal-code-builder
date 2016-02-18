@@ -66,6 +66,9 @@ function module_builder_drush_command() {
         "Use the 'perms:' marker to separate this from prior commands, eg 'mymodule hook_a hook_b perms: 'administer my module''. Quote strings that contain spaces.",
       'services:' => "IDs of services, separated by spaces. " . "\n",
       'settings_form!' => "Add this argument to add a settings form to the module.",
+      'api!' => "Add this argument to add an api.php file to the module.",
+      'readme!' => "Add this argument to add a README file to the module.",
+      'tests!' => "Add this argument to add a Simpletest test case file to the module.",
     ),
     // Commented out, as only the first argument is required.
     // TODO: figure out how to specify this!
