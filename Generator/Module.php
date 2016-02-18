@@ -273,6 +273,21 @@ class Module extends RootComponent {
         // the module data.
         'component' => 'RouterItem',
       ),
+      'api' => array(
+        'label' => "api.php file",
+        'description' => 'An api.php file documents hooks and callbacks that this module invents.',
+        'required' => FALSE,
+        'default' => FALSE,
+        'format' => 'boolean',
+        'component' => 'API',
+      ),
+      'readme' => array(
+        'label' => "README file",
+        'required' => FALSE,
+        'default' => TRUE,
+        'format' => 'boolean',
+        'component' => 'Readme',
+      ),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
@@ -345,11 +360,9 @@ class Module extends RootComponent {
     // Start by defining the subcomponents we know how to handle.
     // Keys are names, values are types (to be used to build class names).
     $components = array(
-      'hooks' => 'hooks',
       // Component type case must match the filename for case-sensitive
       // filesystems (i.e. not OS X).
-      'api' => 'API',
-      'readme' => 'readme',
+      'hooks' => 'hooks',
       'tests' => 'tests',
       'info' => 'info',
     );

@@ -15,6 +15,13 @@ namespace ModuleBuilder\Generator;
 class Readme extends File {
 
   /**
+   * @inheritdoc
+   */
+  public static function requestedComponentHandling() {
+    return 'singleton';
+  }
+
+  /**
    * Collect the code files.
    */
   public function getFileInfo() {
