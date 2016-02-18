@@ -323,42 +323,6 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Collect data for files, recursing into each subcomponent.
-   *
-   * It's safe for subclasses to use this too, as it acts on a generator's own
-   * array of subcomponents.
-   *
-   * Generators that have some code to output should override this to output it!
-   *
-   * It's up to the caller of this on the root generator to figure out how
-   * to output the files at the end of the process: eg, drush prints them to
-   * the terminal or writes them; the Drupal UI shows them in form textareas.
-   *
-   * @param
-   *  An array of file info, passed by reference. Components should add files
-   *  to this, but may also alter what has already been generated.
-   *  The keys are machine names, probably (!) arbitrary. Values are:
-   *  - path: The path to the file, relative to the future module folder.
-   *  - filename: The file name.
-   *  - body: An array of pieces to assemble in order to form the body of the
-   *    file. These can be single lines, or larger chunks: they will be joined
-   *    up by assembleFiles(). The array may be keyed numerically, or the keys
-   *    can be meaningful to the generator class: they are immaterial to the
-   *    caller.
-   *  - join_string: The string to join the body pieces with. If the body is an
-   *    array of single lines, you probably want to use "\n". If you have chunks
-   *    it makes more sense for each chunk to contain its own linebreaks
-   *    including the terminal one.
-   *  - contains_classes: A boolean indicating that this file contains one or
-   *    more classes, and thus should be declared in the component's .info file.
-   */
-  function collectFiles(&$files) {
-    foreach ($this->components as $generator) {
-      $generator->collectFiles($files);
-    }
-  }
-
-  /**
    * Allow components to alter the files prior to output.
    */
   public function filesAlter(&$files) {
