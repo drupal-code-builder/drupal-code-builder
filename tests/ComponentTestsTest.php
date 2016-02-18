@@ -41,6 +41,7 @@ class ComponentTestsTest extends ModuleBuilderTestBase {
         'tests' => TRUE,
         'info' => TRUE,
       ),
+      'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
 

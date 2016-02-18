@@ -137,6 +137,8 @@ class BasicTest extends ModuleBuilderTestBase {
       'requested_build' => array(
         'install' => TRUE,
       ),
+      // Override the default value for this.
+      'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
 

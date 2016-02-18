@@ -40,6 +40,7 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
       'requested_build' => array(
         'info' => TRUE,
       ),
+      'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
 
