@@ -31,13 +31,13 @@ class Tests extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $module_root_name = $this->base_component->component_data['root_name'];
-    $test_file_name = "$module_root_name.test";
+    $module_root_name = $this->base_component->component_data['camel_case_name'];
+    $test_file_name = $module_root_name . "Test.php";
 
     // The key is arbitrary (at least so far!).
     $files['module.test'] = array(
-      'path' => '', // Means base folder.
-      'filename' => 'tests/' . $test_file_name,
+      'path' => 'src/Tests',
+      'filename' => $test_file_name,
       'body' => $this->file_contents(),
       'join_string' => "\n",
       'contains_classes' => TRUE,
