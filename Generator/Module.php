@@ -265,7 +265,8 @@ class Module extends RootComponent {
         'component' => 'Plugin',
       ),
       'router_items' => array(
-        'label' => "required router paths, eg 'path/foo'",
+        'label' => "Router paths",
+        'description' => "Router paths, eg 'path/foo'",
         'required' => FALSE,
         'format' => 'array',
         // This tells the system that this is a request for generator
