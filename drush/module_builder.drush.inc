@@ -696,7 +696,8 @@ function drush_module_builder_build_component($commands, $component_type, $compo
         case 'boolean':
           $prompt = "Do you want a {$property_info['label']}";
           $prompt .= ' ' . "(y/n)";
-          $default = 'n';
+          // Set the default.
+          $default = empty($default) ? 'n' : 'y';
           break;
         default:
           $prompt = "Enter the {$property_info['label']}";
