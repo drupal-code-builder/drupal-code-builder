@@ -48,7 +48,14 @@ class Info7 extends InfoIni {
     $info_extra_lines = array();
     foreach ($files as $file) {
       if (!empty($file['contains_classes'])) {
-        $info_extra_lines['files'][] = $file['filename'];
+        // TODO: do this glueing earlier on so we don't have to here.
+        if (!empty($file['path'])) {
+          $filepath = $file['path'] . '/' . $file['filename'];
+        }
+        else {
+          $filepath = $file['filename'];
+        }
+        $info_extra_lines['files'][] = $filepath;
       }
     }
 
