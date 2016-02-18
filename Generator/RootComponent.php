@@ -183,7 +183,8 @@ abstract class RootComponent extends BaseGenerator {
    * Process component data prior to passing it to the generator.
    *
    * Performs final processing for the component data:
-   *  - sets default values on empty properties
+   *  - sets default values on empty properties. To prevent a default being set
+   *    and keep the component a property represents absent, set it to FALSE.
    *  - performs additional processing that a property may require
    *  - expand properties that represent child components.
    *
@@ -205,7 +206,15 @@ abstract class RootComponent extends BaseGenerator {
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
+      // Skip a property that has a set value.
       if (!empty($component_data[$property_name])) {
+        continue;
+      }
+
+      // Remove a property whose value is FALSE. This allows a property that has
+      // a default value to be removed completely.
+      if (isset($component_data[$property_name]) && $component_data[$property_name] === FALSE) {
+        unset($component_data[$property_name]);
         continue;
       }
 
