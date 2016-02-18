@@ -362,41 +362,4 @@ abstract class RootComponent extends BaseGenerator {
     $this->components = $component_list;
   }
 
-  /**
-   * Assemble a tree of components, grouped by what they contain.
-   *
-   * For example, a code file contains its functions; a form component
-   * contains the handler functions.
-   *
-   * This iterates over the flat list of components assembled by
-   * assembleComponentList(), and re-assembles it as a tree.
-   *
-   * The tree is an array of parentage data, where keys are the names of
-   * components that are parents, and values are flat arrays of component names.
-   * To traverse the tree:
-   *  - access the base component name
-   *  - iterate over its children
-   *  - recursively do the same thing to each child component.
-   *
-   * Not all components in the component list need to place themselves into the
-   * tree, but this means that they will not participate in file assembly.
-   *
-   * @return
-   *  A tree of parentage data for components, as an array keyed by the parent
-   *  component name, where each value is an array of the names of the child
-   *  components. So for example, the list of children of component 'foo' is
-   *  given by $tree['foo'].
-   */
-  public function assembleComponentTree() {
-    $tree = array();
-    foreach ($this->components as $name => $component) {
-      $parent_name = $component->containingComponent();
-      if (!empty($parent_name)) {
-        $tree[$parent_name][] = $name;
-      }
-    }
-
-    return $tree;
-  }
-
 }
