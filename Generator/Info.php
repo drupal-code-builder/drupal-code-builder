@@ -9,10 +9,6 @@ namespace ModuleBuilder\Generator;
 
 /**
  * Generator base class for module info file.
- *
- * This needs to go last in the order of subcomponents, so that it can see
- * all the files requested so far, and if required, declare them in the info
- * file.
  */
 class Info extends File {
 

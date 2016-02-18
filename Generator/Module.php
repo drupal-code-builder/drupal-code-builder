@@ -351,7 +351,6 @@ class Module extends RootComponent {
       'api' => 'API',
       'readme' => 'readme',
       'tests' => 'tests',
-      // Info must go last, as it needs to know what files are being generated.
       'info' => 'info',
     );
 
