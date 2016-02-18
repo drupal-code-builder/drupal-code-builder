@@ -53,7 +53,8 @@ class Info7 extends InfoIni {
     }
 
     // Add a 'configure' line if there's an admin settings form component.
-    if (isset($this->base_component->components['AdminSettingsForm'])) {
+    $components = $this->getComponentList();
+    if (isset($components['AdminSettingsForm'])) {
       // TODO: get this path from the generator.
       $info_extra_lines['configure'] = 'admin/config/TODO-SECTION/%module';
     }
