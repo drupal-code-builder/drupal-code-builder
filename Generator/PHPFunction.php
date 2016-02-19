@@ -21,7 +21,7 @@ class PHPFunction extends BaseGenerator {
    * placeholders such as '%module'.
    * TODO: add a @see to the function that does placeholder replacement.
    */
-  public $code_file;
+  protected $code_file;
 
   /**
    * Called by ModuleCodeFile to collect functions from its child components.
