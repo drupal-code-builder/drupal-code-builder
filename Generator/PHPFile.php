@@ -25,24 +25,13 @@ class PHPFile extends File {
   protected $functions = array();
 
   /**
-   * Assemble functions.
-   *
-   * PHP code files assemble their contained components, which are functions.
-   *
-   * This collects data from our contained components. The functions are
-   * assembled in full in code_body().
+   * @inheritdoc
    */
-  function buildComponentContents($children) {
-    $component_list = $this->getComponentList();
+  function buildComponentContents($children_contents) {
+    // TEMPORARY, until Generate task handles returned contents.
+    $this->functions = $children_contents;
 
-    foreach ($children as $child_name) {
-      // Get the child component.
-      $child_component = $component_list[$child_name];
-
-      $child_functions = $child_component->componentFunctions();
-      // Why didn't array_merge() work here? Cookie for the answer!
-      $this->functions += $child_functions;
-    }
+    return array();
   }
 
   /**
@@ -76,7 +65,7 @@ class PHPFile extends File {
     );
 
     // Filter out any empty elements.
-    $file_contents = array_filter($file_contents);
+    // DIE$file_contents = array_filter($file_contents);
     return $file_contents;
   }
 
@@ -101,6 +90,33 @@ class PHPFile extends File {
     // Blank line after the file docblock.
     $code .= "\n";
     return $code;
+  }
+
+  /**
+   * Return the main body of the file code.
+   *
+   * @return
+   *  An array of code lines.
+   */
+  function code_body() {
+    $code_body = array();
+
+    // Function data has been set by buildComponentContents().
+    foreach ($this->functions as $component_name => $function_lines) {
+      $code_body = array_merge($code_body, $function_lines);
+      // Blank line after the function.
+      $code_body[] = '';
+    }
+
+    // If there are no functions, then this is a .module file that's been
+    // requested so the module is correctly formed. It is customary to add a
+    // comment to the file for DX.
+    if (empty($code_body)) {
+      $code_body['empty'] = "// Drupal needs this blank file.";
+      $code_body[] = '';
+    }
+
+    return $code_body;
   }
 
   /**
