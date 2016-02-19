@@ -192,9 +192,8 @@ class Generate extends Base {
     // of parent => [children].
     $tree = $this->assembleComponentTree($this->root_generator->components);
 
-    // Let each component that is a parent in the tree collect data from its
-    // child components.
-    $this->root_generator->assembleContainedComponents($tree);
+    // Let each file component in the tree gather data from its own children.
+    $this->collectFileContents($this->root_generator->components, $tree);
 
     //drush_print_r($generator->components);
 
@@ -254,6 +253,30 @@ class Generate extends Base {
     }
 
     return $tree;
+  }
+
+  /**
+   * Allow file components to gather data from their child components.
+   *
+   * @param $components
+   *  The array of components.
+   * @param $tree
+   *  The tree array.
+   */
+  protected function collectFileContents($components, $tree) {
+    // Iterate over all file-providing components, i.e. one level below the root
+    // of the tree.
+    $root_component_name = $this->root_generator->name;
+    foreach ($tree[$root_component_name] as $file_component_name) {
+      // Skip files with no children in the tree.
+      if (empty($tree[$file_component_name])) {
+        continue;
+      }
+
+      // Let the file component run over its children iteratively.
+      // (Not literally ;)
+      $components[$file_component_name]->buildComponentContentsIterative($components, $tree);
+    }
   }
 
   /**

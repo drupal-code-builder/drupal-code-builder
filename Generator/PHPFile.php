@@ -19,20 +19,20 @@ class PHPFile extends File {
   /**
    * An array of functions for this file.
    *
-   * @see assembleContainedComponentsHelper()
+   * @see buildComponentContents()
    * @see code_body()
    */
   protected $functions = array();
 
   /**
-   * Helper for assembleContainedComponents().
+   * Assemble functions.
    *
-   * Module code files assemble their contained components, which are functions.
+   * PHP code files assemble their contained components, which are functions.
    *
    * This collects data from our contained components. The functions are
    * assembled in full in code_body().
    */
-  function assembleContainedComponentsHelper($children) {
+  function buildComponentContents($children) {
     $component_list = $this->getComponentList();
 
     foreach ($children as $child_name) {

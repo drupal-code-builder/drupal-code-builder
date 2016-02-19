@@ -49,8 +49,8 @@ namespace ModuleBuilder\Generator;
  * that are contained by their parents. For example, the module code file
  * contains functions and hook implementations.
  *
- * This tree is iterated over again in assembleContainedComponents() to allow
- * the parent components in the tree to gather data from their child components.
+ * This tree is iterated over again in buildComponentContentsIterative() to allow
+ * file components in the tree to gather data from their child components.
  *
  * @section sec_assemble_file_info Collect file info
  * We then recurse down the tree in collectFiles(), building up
@@ -273,53 +273,52 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Work through the component tree, gathering contained components.
+   * Allow file components to gather data from their child components.
    *
    * This allows, for example, a module code file component to collect the
    * functions it contains.
    *
-   * This function is called recursively. Components that wish to do something
-   * here should override this.
+   * Components wishing to participate in this should override
+   * buildComponentContents().
    *
+   * @param $components
+   *  The array of components.
    * @param $tree
-   *  An array of parentage data about components, as given by
-   *  assembleComponentTree().
+   *  The tree array.
+   *
+   * @return
+   *  An array of lines for this component's content.
    */
-  public function assembleContainedComponents($tree) {
-    $base_component = $this->task->getRootGenerator();
+  function buildComponentContentsIterative($components, $tree) {
+    $children_contents = array();
 
-    // If we're not in the tree, we have nothing to say here and bail.
-    if (!isset($tree[$this->name])) {
-      return;
+    // Allow each of our children to do the same as this to collect its own
+    // children.
+    if (!empty($tree[$this->name])) {
+      foreach ($tree[$this->name] as $child_name) {
+        $child_component = $components[$child_name];
+        $children_contents[$child_name] = $child_component->buildComponentContentsIterative($components, $tree);
+      }
     }
 
-    $component_list = $this->getComponentList();
-
-    // Iterate over our children elements.
-    $children = $tree[$this->name];
-
-    // Call assembleContainedComponentsHelper().
-    $this->assembleContainedComponentsHelper($children);
-
-    foreach ($children as $child_name) {
-      // Get the child component.
-      $child_component = $component_list[$child_name];
-
-      // Recurse into it.
-      $child_component->assembleContainedComponents($tree);
-    }
+    // Produce output for the current component, using data collected from the
+    // children. E.g. a PHP file concatenates and wraps the output of its child
+    // function components.
+    return $this->buildComponentContents($children_contents);
   }
 
   /**
-   * Helper for assembleContainedComponents().
+   * Collects contents for this file.
    *
-   * Allows components to do the work of assembling their contained components
-   * without having to override assembleContainedComponents().
+   * @param $children_contents
+   *  An array of the content that the child components returned.
    *
-   * TODO: AARGH needs better name!
+   * @return
+   *  An array of lines for this component's content.
    */
-  function assembleContainedComponentsHelper($children) {
+  function buildComponentContents($children_contents) {
     // Base does nothing.
+    return array();
   }
 
   /**
