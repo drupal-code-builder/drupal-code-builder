@@ -38,24 +38,6 @@ class ModuleCodeFile extends PHPFile {
   }
 
   /**
-   * Make the doxygen header for a given hook.
-   *
-   * This does not return with an initial newline so the doc block may be
-   * inserted into existing code.
-   *
-   * @param
-   *   The long hook name, eg 'hook_menu'.
-   */
-  function hook_doxygen($hook_name) {
-    return <<<EOT
-/**
- * Implements $hook_name().
- */
-
-EOT;
-  }
-
-  /**
    * Return a file footer.
    */
   function code_footer() {
