@@ -78,6 +78,8 @@ class HookPermission extends HookImplementation {
     // We return an array of lines, so we need newlines at start and finish.
     $return[$this->name]['has_wrapping_newlines'] = FALSE;
 
+    $return[$this->name]['body_indent'] = 2;
+
     return $return;
   }
 
