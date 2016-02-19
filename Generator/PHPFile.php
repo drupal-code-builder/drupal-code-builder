@@ -58,14 +58,13 @@ class PHPFile extends File {
         $this->code_header(),
       ),
       // The code body is itself an array.
-      $this->code_body(),
-      array(
-        $this->code_footer(),
-      )
+      $this->code_body()
     );
 
-    // Filter out any empty elements.
-    // DIE$file_contents = array_filter($file_contents);
+    if (!empty($this->code_footer())) {
+      $file_contents[] = $this->code_footer();
+    }
+
     return $file_contents;
   }
 
