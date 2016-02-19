@@ -44,6 +44,8 @@ class AdminSettingsForm extends Form {
     // Change the body of the form builder.
     $form_name = $this->getFormName();
     $form_builder = $form_name;
+    $form_validate  = $form_name . '_validate';
+    $form_submit    = $form_name . '_submit';
 
     $components[$form_builder]['body'] = array(
       "£form['%module_variable_foo'] = array(",
@@ -53,9 +55,13 @@ class AdminSettingsForm extends Form {
       "  '#required' => TRUE,",
       ");",
       "",
-      "// TODO! You probably don't need validation or submit handlers if using system_settings_form().",
       "return system_settings_form(£form);",
     );
+
+    // Remove the form validation and submit handlers, as Drupal core takes care
+    // of this for system settings.
+    unset($components[$form_validate]);
+    unset($components[$form_submit]);
 
     // This takes care of adding hook_menu() and so on.
     $form_name = $this->getFormName();
