@@ -41,6 +41,22 @@ class AdminSettingsForm extends Form {
   protected function requiredComponents() {
     $components = parent::requiredComponents();
 
+    // Change the body of the form builder.
+    $form_name = $this->getFormName();
+    $form_builder = $form_name;
+
+    $components[$form_builder]['body'] = array(
+      "£form['%module_variable_foo'] = array(",
+      "  '#type' => 'textfield',",
+      "  '#title' => t('Foo'),",
+      "  '#default_value' => variable_get('%module_variable_foo', 42),",
+      "  '#required' => TRUE,",
+      ");",
+      "",
+      "// TODO! You probably don't need validation or submit handlers if using system_settings_form().",
+      "return system_settings_form(£form);",
+    );
+
     // This takes care of adding hook_menu() and so on.
     $form_name = $this->getFormName();
     $components['admin/config/TODO-SECTION/%module'] = array(
