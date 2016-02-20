@@ -47,6 +47,8 @@ class AdminSettingsForm extends Form {
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';
 
+    // Override the form builder's location and code.
+    $components[$form_builder]['code_file'] = '%module.admin.inc';
     $components[$form_builder]['body'] = array(
       "£form['%module_variable_foo'] = array(",
       "  '#type' => 'textfield',",
