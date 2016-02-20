@@ -32,7 +32,9 @@ class PHPClassFile extends PHPFile {
     $pieces = explode('\\', $this->qualified_class_name);
     $this->plain_class_name = array_pop($pieces);
     $this->namespace  = implode('\\', $pieces);
-    $this->path       = implode('/', $pieces);
+    $path_pieces = array_slice($pieces, 2);
+    array_unshift($path_pieces, 'src');
+    $this->path       = implode('/', $path_pieces);
   }
 
   /**
