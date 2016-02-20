@@ -174,7 +174,7 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
       foreach ($parameters as $parameter) {
         $match = preg_match($param_regex, $parameter);
 
-        $this->assertEquals($match, 1, "Function parameter is correctly formed.");
+        $this->assertEquals($match, 1, "Function parameter '$parameter' for $function_name() is correctly formed.");
       }
     }
   }
