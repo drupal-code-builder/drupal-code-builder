@@ -13,7 +13,7 @@ namespace ModuleBuilder\Generator;
 class Permissions extends BaseGenerator {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'group';

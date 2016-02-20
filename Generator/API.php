@@ -17,7 +17,7 @@ namespace ModuleBuilder\Generator;
 class API extends PHPFile {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'singleton';

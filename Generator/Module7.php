@@ -13,7 +13,7 @@ namespace ModuleBuilder\Generator;
 class Module7 extends Module {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function componentDataDefinition() {
     $component_data_definition = parent::componentDataDefinition();

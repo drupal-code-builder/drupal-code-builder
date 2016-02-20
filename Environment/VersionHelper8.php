@@ -35,7 +35,7 @@ class VersionHelper8 {
   protected $major_version = 8;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getCoreMajorVersion() {
     return $this->major_version;

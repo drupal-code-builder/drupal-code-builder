@@ -75,7 +75,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getHooksDirectory() {
     return $this->hooks_directory;
@@ -96,7 +96,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function verifyEnvironment($sanity_level) {
     // Allow the environment to request skipping the sanity checks.
@@ -141,14 +141,14 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function skipSanityCheck($setting) {
     $this->skipSanity = $setting;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getCoreMajorVersion() {
     return $this->version_helper->getCoreMajorVersion();
@@ -160,14 +160,14 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   abstract function debug($data, $message = '');
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
     return $this->version_helper->systemListing($mask, $directory, $key, $min_depth);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function invokeInfoHook() {
     // The tricky part is that we want to include ourselves, but module_builder
@@ -176,7 +176,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getSetting($name, $default = NULL) {
     return $this->version_helper->getSetting($name, $default);
@@ -194,7 +194,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   function getExtensionPath($type, $name) {
     return $this->version_helper->getExtensionPath($type, $name);

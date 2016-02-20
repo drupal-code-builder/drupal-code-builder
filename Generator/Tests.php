@@ -13,7 +13,7 @@ namespace ModuleBuilder\Generator;
 class Tests extends PHPFile {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'singleton';

@@ -29,7 +29,7 @@ class VersionHelperTestsPHPUnit {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getCoreMajorVersion() {
     return $this->major_version;

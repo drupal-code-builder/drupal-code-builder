@@ -117,7 +117,7 @@ class Collect7 extends Collect {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function getAdditionalHookInfo() {
     // For D7, keys should match the filename MODULE.api.php

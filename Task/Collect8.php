@@ -333,7 +333,7 @@ class Collect8 extends Collect {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function getAdditionalHookInfo() {
     return array();

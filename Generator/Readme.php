@@ -15,7 +15,7 @@ namespace ModuleBuilder\Generator;
 class Readme extends File {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'singleton';

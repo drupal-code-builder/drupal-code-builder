@@ -41,7 +41,7 @@ class Info7 extends InfoIni {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function filesAlter(&$files) {
     // Files containing classes need to be declared in the .info file.

@@ -52,7 +52,7 @@ class Plugin extends PHPFile {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'repeat';
@@ -173,7 +173,7 @@ class Plugin extends PHPFile {
 
       $code[] = "$method_declaration {";
       // Add a comment with the method's first line of docblock, so the user
-      // has something more informative than '@inheritdoc' to go on!
+      // has something more informative than '{@inheritdoc}' to go on!
       $code[] = '  // ' . $interface_method_data['description'];
       $code[] = '}';
       $code[] = '';

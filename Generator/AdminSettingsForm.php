@@ -29,7 +29,7 @@ class AdminSettingsForm extends Form {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'singleton';

@@ -89,7 +89,7 @@ class Collect6 extends Collect {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function getAdditionalHookInfo() {
     $info = array(

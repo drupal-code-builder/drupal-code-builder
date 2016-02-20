@@ -25,7 +25,7 @@ class PHPFile extends File {
   protected $functions = array();
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   function buildComponentContents($children_contents) {
     // TEMPORARY, until Generate task handles returned contents.

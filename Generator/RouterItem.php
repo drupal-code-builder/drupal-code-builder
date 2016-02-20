@@ -56,7 +56,7 @@ class RouterItem extends BaseGenerator {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'repeat';

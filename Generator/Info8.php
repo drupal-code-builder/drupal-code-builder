@@ -79,7 +79,7 @@ class Info8 extends Info {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function filesAlter(&$files) {
     $info_extra_lines = array();

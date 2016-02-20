@@ -71,7 +71,7 @@ class PHPFunction extends BaseGenerator {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
     // TEMPORARY. Subclasses of this don't yet use the constructor, but
