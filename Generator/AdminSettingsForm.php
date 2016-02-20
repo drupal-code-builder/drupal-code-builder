@@ -9,10 +9,6 @@ namespace ModuleBuilder\Generator;
 
 /**
  * Component generator: admin form for modules.
- *
- * TODO:
- *  - full menu item definition
- *  - line in .info file giving the config path
  */
 class AdminSettingsForm extends Form {
 
