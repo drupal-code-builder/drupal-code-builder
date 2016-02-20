@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\RouterItem.
+ * Contains ModuleBuilder\Generator\RouterItem.
  */
 
 namespace ModuleBuilder\Generator;

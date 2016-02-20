@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Readme.
+ * Contains ModuleBuilder\Generator\Readme.
  */
 
 namespace ModuleBuilder\Generator;

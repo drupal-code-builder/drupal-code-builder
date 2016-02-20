@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\HookImplementation.
+ * Contains ModuleBuilder\Generator\HookImplementation.
  */
 
 namespace ModuleBuilder\Generator;

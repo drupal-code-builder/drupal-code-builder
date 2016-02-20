@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\HookMenu.
+ * Contains ModuleBuilder\Generator\HookMenu.
  */
 
 namespace ModuleBuilder\Generator;

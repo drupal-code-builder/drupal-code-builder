@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Task\ReportHookPresets.
+ * Contains ModuleBuilder\Task\ReportHookPresets.
  */
 
 namespace ModuleBuilder\Task;

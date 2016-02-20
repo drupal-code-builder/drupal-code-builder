@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Form.
+ * Contains ModuleBuilder\Generator\Form.
  */
 
 namespace ModuleBuilder\Generator;

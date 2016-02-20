@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\API.
+ * Contains ModuleBuilder\Generator\API.
  */
 
 namespace ModuleBuilder\Generator;

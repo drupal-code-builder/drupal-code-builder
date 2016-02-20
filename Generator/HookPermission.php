@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\HookPermission.
+ * Contains ModuleBuilder\Generator\HookPermission.
  */
 
 namespace ModuleBuilder\Generator;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Task\Collect5.
+ * Contains ModuleBuilder\Task\Collect5.
  */
 
 namespace ModuleBuilder\Task;

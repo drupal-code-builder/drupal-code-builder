@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Module6.
+ * Contains ModuleBuilder\Generator\Module6.
  */
 
 namespace ModuleBuilder\Generator;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Task\ReportHookDataFolder.
+ * Contains ModuleBuilder\Task\ReportHookDataFolder.
  */
 
 namespace ModuleBuilder\Task;

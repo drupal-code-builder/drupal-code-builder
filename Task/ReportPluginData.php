@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Task\ReportPluginData.
+ * Contains ModuleBuilder\Task\ReportPluginData.
  */
 
 namespace ModuleBuilder\Task;

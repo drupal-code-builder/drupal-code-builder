@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Routing.
+ * Contains ModuleBuilder\Generator\Routing.
  */
 
 namespace ModuleBuilder\Generator;

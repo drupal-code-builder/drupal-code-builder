@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\YMLFile.
+ * Contains ModuleBuilder\Generator\YMLFile.
  */
 
 namespace ModuleBuilder\Generator;

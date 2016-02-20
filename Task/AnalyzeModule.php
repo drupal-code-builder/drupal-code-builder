@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Task\AnalyzeModule.
+ * Contains ModuleBuilder\Task\AnalyzeModule.
  */
 
 namespace ModuleBuilder\Task;

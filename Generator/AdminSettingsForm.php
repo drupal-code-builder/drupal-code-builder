@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\AdminSettingsForm.
+ * Contains ModuleBuilder\Generator\AdminSettingsForm.
  */
 
 namespace ModuleBuilder\Generator;

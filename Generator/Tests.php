@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Tests.
+ * Contains ModuleBuilder\Generator\Tests.
  */
 
 namespace ModuleBuilder\Generator;

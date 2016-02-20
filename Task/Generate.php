@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Task\Generate.
+ * Contains ModuleBuilder\Task\Generate.
  */
 
 namespace ModuleBuilder\Task;

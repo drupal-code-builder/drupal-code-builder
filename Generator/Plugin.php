@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Plugin.
+ * Contains ModuleBuilder\Generator\Plugin.
  */
 
 namespace ModuleBuilder\Generator;

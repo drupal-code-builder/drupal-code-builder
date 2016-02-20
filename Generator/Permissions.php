@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\Permissions.
+ * Contains ModuleBuilder\Generator\Permissions.
  */
 
 namespace ModuleBuilder\Generator;

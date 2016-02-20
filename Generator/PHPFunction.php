@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\PHPFunction.
+ * Contains ModuleBuilder\Generator\PHPFunction.
  */
 
 namespace ModuleBuilder\Generator;

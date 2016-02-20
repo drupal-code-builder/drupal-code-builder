@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of ModuleBuilder\Generator\ThemeTemplate.
+ * Contains ModuleBuilder\Generator\ThemeTemplate.
  */
 
 namespace ModuleBuilder\Generator;
