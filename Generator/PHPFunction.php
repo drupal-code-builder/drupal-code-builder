@@ -98,7 +98,7 @@ class PHPFunction extends BaseGenerator {
     // END TEMPORARY.
 
     $function_code = array();
-    $function_code[] = $this->docBlock($this->component_data['doxygen_first']);
+    $function_code = array_merge($function_code, $this->docBlock($this->component_data['doxygen_first']));
 
     $declaration = str_replace('£', '$', $this->component_data['declaration']);
 

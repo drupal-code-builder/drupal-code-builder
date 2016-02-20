@@ -55,9 +55,9 @@ class PHPFile extends File {
     $file_contents = array_merge(
       array(
         $this->file_header(),
-        $this->code_header(),
       ),
-      // The code body is itself an array.
+      // The code header and body are themselves arrays.
+      $this->code_header(),
       $this->code_body()
     );
 
@@ -87,7 +87,7 @@ class PHPFile extends File {
     );
     $code = $this->docBlock($lines);
     // Blank line after the file docblock.
-    $code .= "\n";
+    $code[] = '';
     return $code;
   }
 

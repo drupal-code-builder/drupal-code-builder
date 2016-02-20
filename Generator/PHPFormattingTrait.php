@@ -20,8 +20,7 @@ trait PHPFormattingTrait {
    *  should have no leading whitespace.
    *
    * @return
-   *  A string of docblock with start and end PHP comment markers. There is no
-   *  trailing newline.
+   *  An array of lines for the docblock with start and end PHP comment markers.
    */
   function docBlock($lines) {
     if (!is_array($lines)) {
@@ -36,7 +35,7 @@ trait PHPFormattingTrait {
       array(" */")
     );
 
-    return implode("\n", $lines);
+    return $lines;
   }
 
 }

@@ -64,9 +64,9 @@ class PHPClassFile extends PHPFile {
     $file_contents = array_merge(
       array(
         $this->file_header(),
-        $this->code_header(),
       ),
-      // The code body is itself an array.
+      // The code header and body are themselves arrays.
+      $this->code_header(),
       $this->code_body(),
       array(
         $this->code_footer(),
@@ -93,7 +93,9 @@ class PHPClassFile extends PHPFile {
     $return = array_merge([
         'namespace ' . $this->namespace,
         '',
-        $this->docBlock("TODO: class docs."),
+      ],
+      $this->docBlock("TODO: class docs."),
+      [
         "class $this->plain_class_name {",
       ],
       $this->class_code_body(),
