@@ -10,7 +10,8 @@ namespace ModuleBuilder\Generator;
 /**
  * Generator class for forms.
  *
- * Fuzzy component which itself contains other components.
+ * This doesn't participate in the tree, but creates PHPFunction components
+ * which do.
  */
 class Form extends BaseGenerator {
 
@@ -95,13 +96,6 @@ class Form extends BaseGenerator {
     );
 
     return $components;
-  }
-
-  /**
-   * Return this component's parent in the component tree.
-   */
-  function containingComponent() {
-    return $this->component_data['code_file'];
   }
 
   /**
