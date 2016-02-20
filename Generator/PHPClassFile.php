@@ -107,9 +107,24 @@ class PHPClassFile extends PHPFile {
    * Return the body of the class's code.
    */
   protected function class_code_body() {
-    return [
-      '',
-    ];
+    $code_body = array();
+
+    // Blank line before the first method.
+    $code_body[] = '';
+
+    // Function data has been set by buildComponentContents().
+    foreach ($this->functions as $component_name => $function_lines) {
+      // Add extra indent for methods.
+      $function_lines = array_map(function($line) {
+        return '  ' . $line;
+      }, $function_lines);
+
+      $code_body = array_merge($code_body, $function_lines);
+      // Blank line after the function.
+      $code_body[] = '';
+    }
+
+    return $code_body;
   }
 
 }
