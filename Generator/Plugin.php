@@ -165,7 +165,7 @@ class Plugin extends PHPFile {
     $code = array();
 
     foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_name => $interface_method_data) {
-      $function_doc = $this->function_doxygen('{@inheritdoc}');
+      $function_doc = $this->docBlock('{@inheritdoc}');
       $code = array_merge($code, $function_doc);
 
       // Trim the semicolon from the end of the interface method.

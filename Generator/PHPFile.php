@@ -126,20 +126,6 @@ class PHPFile extends File {
   }
 
   /**
-   * Create a doxygen block for a function.
-   *
-   * @param $text
-   *  The first line of text for the doxygen block.
-   */
-  function function_doxygen($text) {
-    return array(
-      '/**',
-      " * $text",
-      ' */',
-    );
-  }
-
-  /**
    * Return a file footer.
    */
   function code_footer() {}
