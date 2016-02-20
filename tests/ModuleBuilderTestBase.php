@@ -160,6 +160,7 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
       $param_regex = '@
         ^
         ( \w+ \  ) ?  # type hint
+        & ?           # pass by reference
         \$ \w+        # parameter name
         ( \  = \      # default value, one of:
           (
