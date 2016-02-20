@@ -33,18 +33,11 @@ class Form extends BaseGenerator {
    *   Valid properties are:
    *      - 'code_file': The code file to place this form in. This may contain
    *        placeholders.
-   *      - 'form_code_bodies': (optional) An array of code bodies. Each should
-   *        be in a format suitable to return from componentFunctions(). Any or
-   *        all of the following keys may be present:
-   *        - 'builder': The form builder.
-   *        - 'validate': The validate handler.
-   *        - 'submit': The submit handler.
    */
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'code_file' => '%module.module',
-      'form_code_bodies' => array(),
     );
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
