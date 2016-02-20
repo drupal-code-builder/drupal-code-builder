@@ -46,7 +46,9 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
 
     $this->assertEquals(count($files), 3, "Two files are returned.");
 
-    // TODO: check module code.
+    // Check the admin.inc file code.
+    $admin_file = $files["$module_name.admin.inc"];
+    $this->assertFunction($admin_file, "{$module_name}_settings_form", "The admin.inc file contains the settings form builder.");
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];
