@@ -84,28 +84,6 @@ class AdminSettingsForm extends Form {
   }
 
   /**
-   * Called by ModuleCodeFile to collect functions from its child components.
-   */
-  public function componentFunctions() {
-    // Override the default code bodies.
-    $this->component_data['form_code_bodies']['builder'] = array(
-      "£form['%module_variable_foo'] = array(",
-      "  '#type' => 'textfield',",
-      "  '#title' => t('Foo'),",
-      "  '#default_value' => variable_get('%module_variable_foo', 42),",
-      "  '#required' => TRUE,",
-      ");",
-      "",
-      "// TODO! You probably don't need validation or submit handlers if using system_settings_form().",
-      "return system_settings_form(£form);",
-    );
-
-    $functions = parent::componentFunctions();
-
-    return $functions;
-  }
-
-  /**
    * The name of the form.
    */
   protected function getFormName() {
