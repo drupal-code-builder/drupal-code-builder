@@ -75,9 +75,6 @@ class PHPClassFile extends PHPFile {
       )
     );
 
-    // Filter out any empty elements.
-    // TODO: ARGH!
-    //$file_contents = array_filter($file_contents);
     return $file_contents;
   }
 
