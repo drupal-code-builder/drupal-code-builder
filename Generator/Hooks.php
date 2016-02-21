@@ -98,7 +98,14 @@ class Hooks extends BaseGenerator {
           $hook_class_name = 'HookImplementation';
         }
 
-        $components[$hook_name] = $hook_class_name;
+        $components[$hook_name] = array(
+          'component_type' => $hook_class_name,
+          'code_file' => $hook['destination'],
+          'hook_name' => $hook_name,
+          'declaration' => $hook['definition'],
+          'body' => $hook['body'],
+          'has_wrapping_newlines' => TRUE,
+        );
       }
     }
 
