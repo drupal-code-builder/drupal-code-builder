@@ -199,7 +199,7 @@ class Module extends RootComponent {
             }
 
             // Add the preset hooks list to the hooks array in the component
-            // data.
+            // data. The 'hooks' property processing will handle them.
             $hooks = $hook_presets[$given_preset_name]['hooks'];
             $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
             //drush_print_r($component_data['hooks']);
@@ -246,7 +246,13 @@ class Module extends RootComponent {
             }
           }
 
-          $component_data['hooks'] = $hooks;
+          // Filter out empty values, in case Drupal UI forms haven't done so.
+          $hooks = array_filter($hooks);
+
+          $component_data['requested_components']['hooks'] = array(
+            'component_type' => 'Hooks',
+            'hooks' => $hooks,
+          );
         }
       ),
       'plugins' => array(
