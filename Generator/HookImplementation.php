@@ -30,6 +30,27 @@ class HookImplementation extends PHPFunction {
   protected $hook_info;
 
   /**
+   * Constructor.
+   *
+   * @param $component_name
+   *  The name of a function component should be its function (or method) name.
+   * @param $component_data
+   *   An array of data for the component. Any missing properties are given
+   *   default values. Valid properties in addition to those from parent classes
+   *   are:
+   *     - 'hook_name': The full name of the hook.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    // Set defaults.
+    $component_data += array(
+      'doxygen_first' => $this->hook_doxygen_text($component_data['hook_name']),
+    );
+
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.
