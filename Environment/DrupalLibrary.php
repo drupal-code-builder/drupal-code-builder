@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\BasicLibrary.
+ * Contains ModuleBuilder\Environment\DrupalLibrary.
  */
 
 namespace ModuleBuilder\Environment;
@@ -10,7 +10,7 @@ namespace ModuleBuilder\Environment;
 /**
  * Environment class for use as a library, without Libraries API.
  */
-class BasicLibrary extends BaseEnvironment {
+class DrupalLibrary extends BaseEnvironment {
 
   /**
    * Output debug data.
