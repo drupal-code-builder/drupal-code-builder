@@ -50,6 +50,10 @@ class RouterItem extends BaseGenerator {
       // Use a default that can be selected with a single double-click, to make
       // it easy to replace.
       'title' => 'myPage',
+      'page callback' => 'example_page',
+      // These have to be a code string, not an actual array!
+      'page arguments' => "array()",
+      'access arguments' => "array('access content')",
     );
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
@@ -69,42 +73,51 @@ class RouterItem extends BaseGenerator {
    *  An array of subcomponent names and types.
    */
   protected function requiredComponents() {
-    // Create the item data for the HookMenu component.
-    $menu_item = array(
-      'path' => $this->name,
-    );
-
-    // Copy properties from the RouterItem component data to the hook_menu()
-    // item.
-    $properties_to_copy = array(
-      'title',
-      'description',
-      'page callback',
-      'page arguments',
-      'access callback',
-      'access arguments',
-      'file',
-    );
-    foreach ($properties_to_copy as $property_name) {
-      if (isset($this->component_data[$property_name])) {
-        $menu_item[$property_name] = $this->component_data[$property_name];
-      }
-    }
-
     $return = array(
       // Each RouterItem that gets added will cause a repeat request of these
       // components.
       'hook_menu' => array(
         'component_type' => 'HookMenu',
-        // This is a numeric array of items, so repeated requests of this
-        // component will merge it.
-        'menu_items' => array(
-          $menu_item,
-        ),
       ),
     );
 
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function containingComponent() {
+    return 'hook_menu';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildComponentContents($children_contents) {
+    // Return code for a single menu item. Our parent in the component tree,
+    // HookMenu, will merge it in its own buildComponentContents().
+    $code = array();
+    $code[] = "£items['{$this->name}'] = array(";
+    $code[] = "  'title' => '{$this->component_data['title']}',";
+    if (isset($this->component_data['description'])) {
+      $code[] = "  'description' => '{$this->component_data['description']}',";
+    }
+    $code[] = "  'page callback' => '{$this->component_data['page callback']}',";
+    // This is an array, so not quoted.
+    $code[] = "  'page arguments' => {$this->component_data['page arguments']},";
+    // This is an array, so not quoted.
+    $code[] = "  'access arguments' => {$this->component_data['access arguments']},";
+    if (isset($this->component_data['file'])) {
+      $code[] = "  'file' => '{$this->component_data['file']}',";
+    }
+    if (isset($this->component_data['type'])) {
+      // The type is a constant, so is not quoted.
+      $code[] = "  'type' => {$this->component_data['type']},";
+    }
+    $code[] = ");";
+
+    return $code;
   }
 
 }

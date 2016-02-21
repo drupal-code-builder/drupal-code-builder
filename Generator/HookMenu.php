@@ -23,94 +23,56 @@ class HookMenu extends HookImplementation {
   public $name = 'hook_menu';
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   *   Valid properties are:
-   *      - 'menu_items': (optional) An array of menu items. Each item may
-   *        contain the following properties, which are destined for the
-   *        identically named hook_menu() item properties unless specified:
-   *        - 'title': A string.
-   *        - 'page callback': A string.
-   *        - 'access arguments': A string which is the quoted array code.
-   *          E.g. "array('access content')".
-   *        - 'type': The quoted menu constant, e.g. 'MENU_SUGGESTED_ITEM'.
+   * {@inheritdoc}
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'menu_items' => array(),
-    );
+  public function buildComponentContents($children_contents) {
+    // If we have no children, i.e. no RouterItem components, then hand over to
+    // the parent, which will output the default hook code.
+    if (empty($children_contents)) {
+      return parent::buildComponentContents($children_contents);
+    }
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    // TEMPORARY. This will be changed to it get passed in by Hooks when it
+    // requests us.
+    // Sanity checks already done at this point; no need to catch exception.
+    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
+    $this->hook_info = $hook_function_declarations[$this->name];
+    $this->component_data['doxygen_first'] = $this->hook_doxygen_text($this->hook_info['name']);
+    $declaration = preg_replace('/(?<=function )hook/', '%module', $this->hook_info['definition']);
+    $this->component_data['declaration'] = $declaration;
+
+    $code = array();
+    $code[] = '£items = array();';
+    foreach ($children_contents as $menu_item_lines) {
+      $code = array_merge($code, $menu_item_lines);
+    }
+    $code[] = '';
+    $code[] = 'return £items;';
+
+    $this->component_data['body_indent'] = 2;
+
+    $this->component_data['body'] = $code;
+
+    // TEMPORARY: set tripswitch for componentFunctions().
+    $this->bypasscomponentFunctions = TRUE;
+
+    return parent::buildComponentContents($children_contents);
   }
 
   /**
    * Called by ModuleCodeFile to collect functions from its child components.
    */
   public function componentFunctions() {
-    // Get the function data from our parent class first.
-    $return = parent::componentFunctions();
-
-    // If we were requested without any menu items to make (ie via the Hooks
-    // component rather than RouterItem), just return template code.
-    if (empty($this->component_data['menu_items'])) {
-      return $return;
+    // TEMPORARY. Needed while HookImplementation::componentFunctions() exists,
+    // because we need PHPFunction::buildComponentContents() to call this and
+    // get an empty array back.
+    if (!empty($this->bypasscomponentFunctions)) {
+      return array();
     }
-
-    // Otherwise, replace the template code with the menu items.
-    $code = array();
-
-    // Opening lines.
-    // DX sugar: use £ for variables in the template code.
-    $code[] = "£items = array();";
-    $code[] = "";
-
-    foreach ($this->component_data['menu_items'] as $menu_item_data) {
-      // Add defaults for each menu item.
-      $menu_item_data += array(
-        // This doesn't need its own quotes, we put them in later.
-        'title' => 'My Page',
-        'page callback' => 'example_page',
-        // These have to be a code string, not an actual array!
-        'page arguments' => "array()",
-        'access arguments' => "array('access content')",
-      );
-
-      $code[] = "£items['$menu_item_data[path]'] = array(";
-      $code[] = "  'title' => '$menu_item_data[title]',";
-      if (isset($menu_item_data['description'])) {
-        $code[] = "  'description' => '$menu_item_data[description]',";
-      }
-      $code[] = "  'page callback' => '{$menu_item_data['page callback']}',";
-      // This is an array, so not quoted.
-      $code[] = "  'page arguments' => {$menu_item_data['page arguments']},";
-      // This is an array, so not quoted.
-      $code[] = "  'access arguments' => {$menu_item_data['access arguments']},";
-      if (isset($menu_item_data['file'])) {
-        $code[] = "  'file' => '$menu_item_data[file]',";
-      }
-      if (isset($menu_item_data['type'])) {
-        // The type is a constant, so is not quoted.
-        $code[] = "  'type' => $menu_item_data[type],";
-      }
-      $code[] = ");";
+    else {
+      return parent::componentFunctions();
     }
-
-    $code[] = "return £items;";
-
-    $return[$this->name]['code'] = $code;
-
-    // We return an array of lines, so we need newlines at start and finish.
-    $return[$this->name]['has_wrapping_newlines'] = FALSE;
-
-    $return[$this->name]['body_indent'] = 2;
-
-    return $return;
   }
 
 }
