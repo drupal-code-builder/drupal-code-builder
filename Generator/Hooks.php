@@ -73,7 +73,7 @@ class Hooks extends BaseGenerator {
     }
 
     // Work over this and add our HookImplentation.
-    foreach ($hook_file_data as $filename => $hook_data) {
+    foreach ($hook_file_data as $filename => $file_hook_list) {
       // If we are set to filter, and the abbreviated filename isn't in the
       // build list, skip it.
       // TODO: this is kinda messy, and assumes that the abbreviated name is
@@ -84,7 +84,7 @@ class Hooks extends BaseGenerator {
       }
 
       // Add a HookImplementation component for each hook.
-      foreach ($hook_data as $hook_name => $hook) {
+      foreach ($file_hook_list as $hook_name => $hook) {
         // Figure out if there is a dedicated generator class for this hook.
         // TODO: is it really worth this faff? How many will we have, apart from
         // hook_menu? Is coding this a) slow and b) YAGNI?
