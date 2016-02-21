@@ -89,13 +89,15 @@ class PHPFunction extends BaseGenerator {
     if (isset($function_data['code'])) {
       $this->component_data['body'] = $function_data['code'];
     }
-    if (!empty($function_data['has_wrapping_newlines'])) {
+    // END TEMPORARY.
+
+    // Trim newlines from start and end of body if requested.
+    if (!empty($this->component_data['has_wrapping_newlines'])) {
       // Argh. WTF. Newline drama. Hook definitions have newlines at start and
       // end. But when we define code ourselves, it's a pain to have to put
       // those in.
       $this->component_data['body'] = trim($this->component_data['body'], "\n");
     }
-    // END TEMPORARY.
 
     $function_code = array();
     $function_code = array_merge($function_code, $this->docBlock($this->component_data['doxygen_first']));
