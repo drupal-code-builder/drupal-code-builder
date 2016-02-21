@@ -377,7 +377,6 @@ class Module extends RootComponent {
     $components = array(
       // Component type case must match the filename for case-sensitive
       // filesystems (i.e. not OS X).
-      'hooks' => 'hooks',
       'info' => 'info',
     );
 
@@ -426,12 +425,6 @@ class Module extends RootComponent {
     if (empty($unknown_build_list)) {
       return $intersection_components;
     }
-
-    // Case 3: there are some requested components we don't know anything about.
-    // We assume that these are abbreviated filenames for the attention of
-    // ModuleBuilder\Generator\Hooks; therefore we must ensure 'hooks' is in the
-    // list.
-    $intersection_components['hooks'] = 'hooks';
 
     // TODO: if the components create files containing classes, we probably
     // need to add the 'info' component, BUT we need to add to the .info file
