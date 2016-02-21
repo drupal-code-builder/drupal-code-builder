@@ -87,22 +87,13 @@ class HookImplementation extends PHPFunction {
   }
 
   /**
-   * Called by ModuleCodeFile to collect functions from its child components.
+   * {@inheritdoc}
    */
-  public function componentFunctions() {
-    // Replace 'hook_' prefix in the function declaration with a placeholder.
-    $declaration = preg_replace('/(?<=function )hook/', '%module', $this->hook_info['definition']);
-    return array(
-      $this->name => array(
-        'doxygen_first' => $this->hook_doxygen_text($this->hook_info['name']),
-        'declaration'   => $declaration,
-        // TODO: get the hook template from user-defined stuff.
-        // TODO: how does something like hook_menu() add menu items???
-        'code'          => $this->hook_info['body'],
-        'has_wrapping_newlines'  => TRUE,
-      ),
-    );
+  public function buildComponentContents($children_contents) {
+    // Replace the 'hook_' part of the function declaration.
+    $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
 
+    // TODO: get the hook template from user-defined stuff.
     /*
     // Old code, adapt here:
     // See if function bodies exist; if so, use function bodies from template
@@ -118,6 +109,8 @@ class HookImplementation extends PHPFunction {
       $function_code .= $hook['template'];
     }
     */
+
+    return parent::buildComponentContents($children_contents);
   }
 
   /**
