@@ -134,6 +134,8 @@ class PHPFunction extends BaseGenerator {
   /**
    * Called by ModuleCodeFile to collect functions from its child components.
    *
+   * @deprecated These should be passed in by the requesting component.
+   *
    * @return
    *  An array keyed by function name (placeholders allowed), whose properties
    *  are:
