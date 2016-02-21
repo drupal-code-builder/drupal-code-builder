@@ -23,6 +23,18 @@ class HookMenu extends HookImplementation {
   public $name = 'hook_menu';
 
   /**
+   * Constructor method; sets the component data.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    // Set some default properties.
+    $component_data += array(
+      'hook_name' => 'hook_menu',
+    );
+
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
