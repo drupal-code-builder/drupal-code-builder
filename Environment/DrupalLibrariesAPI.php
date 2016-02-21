@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\DrupalLibrary.
+ * Contains ModuleBuilder\Environment\DrupalLibrariesAPI.
  */
 
 namespace ModuleBuilder\Environment;
 
 /**
- * Environment class for use as a Drupal Library.
+ * Environment class for use as a Drupal Library with Libraries API.
  *
  * This allows use of Module Builder in the following way:
  *  - place the Module Builder folder in sites/all/libraries
@@ -42,7 +42,7 @@ namespace ModuleBuilder\Environment;
  *  }
  * @endcode
  */
-class DrupalLibrary extends DrupalUI {
+class DrupalLibrariesAPI extends DrupalUI {
 
   /**
    * Get a path to a module builder file or folder.
