@@ -115,18 +115,29 @@ class Hooks extends BaseGenerator {
    * alter their custom hook templates.
    *
    * @return
-   *   An array whose keys are destination filenames with the token '%module',
-   *   and whose values are arrays of hook data. The hook data keys are:
-   *    - declaration: The function declaration, with the 'hook' part not
+   *   An array of hook data grouped by destination file, whose keys are the
+   *   filenames of destination files with the token '%module', and whose values
+   *   further arrays. The nested arrays' keys are long hook names and the
+   *   values are arrays of hook data as follows:
+   *    - 'type': One of 'hook' or 'callback'.
+   *    - 'name': The long hook name (i.e. 'hook_boot' rather than 'boot').
+   *    - 'definition': The function declaration, with the 'hook' part not
    *        yet replaced.
-   *    - destination: The destination, with tokens still in place.
+   *    - 'destination': The destination, with tokens still in place.
+   *    - 'group': The name of the api.php file this was defined in, without the
+   *      'api.php' suffix.
+   *    - 'body': The sample body code of the hook from the definition.
    *    - template_files: A list of template file types, in order of preference,
    *        keyed by filename and with the value TRUE if the hook code exists
    *        in that template file.
    *    - template (optional): The template code, if any was found.
    *   Example:
    *  'destination file' => array(
-   *    'hook_foo' => array('declaration' => DATA, 'template' => DATA)
+   *    'hook_foo' => array(
+   *      'declaration' => DATA,
+   *      'template' => DATA,
+   *      // ...etc
+   *    )
    */
   function getTemplates($module_data) {
     // Sanity checks already done at this point; no need to catch exception.
