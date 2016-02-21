@@ -25,6 +25,22 @@ namespace ModuleBuilder\Generator;
 class Hooks extends BaseGenerator {
 
   /**
+   * Constructor.
+   *
+   * @param $component_name
+   *  The name of a function component should be its function (or method) name.
+   * @param $component_data
+   *  An array of data for the component. Any missing properties are given
+   *  default values. Valid properties in addition to those from parent classes
+   *  are:
+   *    - 'hooks': An array of requested hooks, where the keys are the long hook
+   *      names and the values are TRUE.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.
@@ -44,17 +60,17 @@ class Hooks extends BaseGenerator {
 
     // Just translate the variable for easier frankencoding for now!
     $module_data = $this->base_component->component_data;
+    $requested_hook_list = $this->component_data['hooks'];
 
     // Force hook_help() if there is help text in the incoming data.
     if (isset($module_data['module_help_text'])) {
-      $module_data['hooks']['hook_help'] = TRUE;
-      $components['hook_help'] = 'HookImplementation';
+      $requested_hook_list['hook_help'] = TRUE;
     }
 
     // Get a set of hook declarations and function body templates for the hooks
     // we want. This is of the form:
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
-    $hook_file_data = $this->getTemplates($module_data);
+    $hook_file_data = $this->getTemplates($module_data, $requested_hook_list);
     // Set this on the global component data for use by subcomponents.
     // TODO: is anyone using this?
     $this->base_component->component_data['hook_file_data'] = $hook_file_data;
@@ -146,13 +162,12 @@ class Hooks extends BaseGenerator {
    *      // ...etc
    *    )
    */
-  function getTemplates($module_data) {
+  function getTemplates($module_data, $requested_hook_list) {
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
 
-    // Build a clean list of the requested hooks, by filtering out the keys
-    // with 0 values that come from UI form.
-    $requested_hooks = array_filter($module_data['hooks']);
+    // Frankencoding to old variable names.
+    $requested_hooks = $requested_hook_list;
     //print_r($requested_hooks);
     // TODO: might not need this; easier to test truth than isset.
 
