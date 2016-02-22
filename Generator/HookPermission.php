@@ -70,25 +70,7 @@ class HookPermission extends HookImplementation {
 
     $this->component_data['body'] = $code;
 
-    // TEMPORARY: set tripswitch for componentFunctions().
-    $this->bypasscomponentFunctions = TRUE;
-
     return parent::buildComponentContents($children_contents);
-  }
-
-  /**
-   * Called by ModuleCodeFile to collect functions from its child components.
-   */
-  public function componentFunctions() {
-    // TEMPORARY. Needed while HookImplementation::componentFunctions() exists,
-    // because we need PHPFunction::buildComponentContents() to call this and
-    // get an empty array back.
-    if (!empty($this->bypasscomponentFunctions)) {
-      return array();
-    }
-    else {
-      return parent::componentFunctions();
-    }
   }
 
 }
