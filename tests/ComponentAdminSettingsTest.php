@@ -44,7 +44,7 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertEquals(count($files), 3, "Two files are returned.");
+    $this->assertEquals(count($files), 3, "Three files are returned.");
 
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];
