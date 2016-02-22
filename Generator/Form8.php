@@ -50,7 +50,7 @@ class Form8 extends PHPClassFile {
         'component_type' => 'PHPFunction',
         'code_file' => $this->name,
         'doxygen_first' => 'Form submission handler.',
-        'declaration' => "public function submitForm(array &$form, FormStateInterface $form_state)",
+        'declaration' => 'public function submitForm(array &$form, FormStateInterface $form_state)',
         'body' => '',
         'body_indent' => 2,
       ),
