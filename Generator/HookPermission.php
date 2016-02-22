@@ -58,16 +58,6 @@ class HookPermission extends HookImplementation {
     // trim it.
     $this->component_data['has_wrapping_newlines'] = FALSE;
 
-    // TEMPORARY. This will be changed to it get passed in by Hooks when it
-    // requests us.
-    // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
-    $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
-    $this->hook_info = $hook_function_declarations[$this->name];
-    $this->component_data['doxygen_first'] = $this->hook_doxygen_text($this->hook_info['name']);
-    $declaration = preg_replace('/(?<=function )hook/', '%module', $this->hook_info['definition']);
-    $this->component_data['declaration'] = $declaration;
-
     $code = array();
     $code[] = '£permissions = array();';
     foreach ($children_contents as $menu_item_lines) {
