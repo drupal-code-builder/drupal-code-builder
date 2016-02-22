@@ -60,12 +60,12 @@ class Hooks extends BaseGenerator {
     $this->base_component->component_data['hook_file_data'] = $hook_file_data;
 
     // Determine whether we need to filter the code files or not.
-    // If the build request is 'code', 'all', or 'hooks, then we don't filter,
-    // and return everything.
+    // If the build request is empty, or one of 'code', 'all', or 'hooks, then
+    // we don't filter, and return everything.
     // TODO: move this logic further up the chain?
     $build_list = $module_data['requested_build'];
     //drush_print_r($build_list);
-    if (isset($build_list['all']) || isset($build_list['code']) || isset($build_list['hooks'])) {
+    if (empty($build_list) || isset($build_list['all']) || isset($build_list['code']) || isset($build_list['hooks'])) {
       $filter_generators = FALSE;
     }
     else {
