@@ -37,8 +37,6 @@ class HookPermission extends HookImplementation {
     // Set some default properties.
     $component_data += array(
       'hook_name' => 'hook_permission',
-      // TODO: Remove.
-      'permissions' => array(),
     );
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
