@@ -50,6 +50,11 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
     $admin_file = $files["$module_name.admin.inc"];
     $this->assertFunction($admin_file, "{$module_name}_settings_form", "The admin.inc file contains the settings form builder.");
 
+    // Check the .module file.
+    $module_file = $files["$module_name.module"];
+    $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
+
     // Check the .info file.
     $info_file = $files["$module_name.info"];
 
