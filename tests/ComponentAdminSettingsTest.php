@@ -19,9 +19,9 @@ require_once __DIR__ . '/ModuleBuilderTestBase.php';
 class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
 
   /**
-   * Test Tests component.
+   * Test Admin Settings component.
    */
-  function testModuleGenerationTests() {
+  function testAdminSettingsGenerationTests() {
     $this->setupModuleBuilder(7);
 
     // Create a module.
