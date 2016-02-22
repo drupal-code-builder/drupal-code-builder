@@ -38,7 +38,6 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
         'info' => 'info',
       ),
       'requested_build' => array(
-        'info' => TRUE,
       ),
       'readme' => FALSE,
     );
