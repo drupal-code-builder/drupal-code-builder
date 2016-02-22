@@ -297,8 +297,10 @@ abstract class RootComponent extends BaseGenerator {
     // Get the base component to add the generators to it.
     $base_component = $this->task->getRootGenerator();
 
-    // The complete list we'll assemble.
-    $component_list = array();
+    // The complete list we'll assemble. Start with the root component.
+    $component_list = array(
+      $this->name => $this,
+    );
 
     // Prep the current level with the root component for the first iteration.
     $current_level = array(
