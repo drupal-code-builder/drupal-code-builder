@@ -54,6 +54,10 @@ class HookPermission extends HookImplementation {
       return parent::buildComponentContents($children_contents);
     }
 
+    // Code from child components comes as arrays of code lines, so no need to
+    // trim it.
+    $this->component_data['has_wrapping_newlines'] = FALSE;
+
     // TEMPORARY. This will be changed to it get passed in by Hooks when it
     // requests us.
     // Sanity checks already done at this point; no need to catch exception.
