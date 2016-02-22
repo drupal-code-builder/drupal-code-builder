@@ -181,6 +181,32 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a string contains a function whose body contains specific code.
+   *
+   * @param $string
+   *  The text to check for a function declaration.
+   * @param $function_name
+   *  The name of the function.
+   * @param $function_code
+   *  The string of code to check is in the function.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertFunctionCode($string, $function_name, $function_code, $message = NULL) {
+    // Extract the function's body from the whole string.
+    $matches = [];
+    $function_body_regex = "^function {$function_name}.*?{\n(.*)^}";
+    $match = preg_match("[$function_body_regex]ms", $string, $matches);
+    $function_body = $matches[1];
+
+    // Quote the code, as it may contain regex characters.
+    $function_code = preg_quote($function_code);
+    $match = preg_match("[$function_code]", $function_body);
+
+    $this->assertEquals($match, 1, "Expected function code was found in $function_name().");
+  }
+
+  /**
    * Assert a string contains a hook implementation function declaration.
    *
    * @param $code
