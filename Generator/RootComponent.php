@@ -297,6 +297,9 @@ abstract class RootComponent extends BaseGenerator {
     // Get the base component to add the generators to it.
     $base_component = $this->task->getRootGenerator();
 
+    // Keep track of all requests to prevent duplicates.
+    $requested_info_record = array();
+
     // The complete list we'll assemble. Start with the root component.
     $component_list = array(
       $this->name => $this,
@@ -321,6 +324,13 @@ abstract class RootComponent extends BaseGenerator {
         // Instantiate each one (if not already done), and add it to the next
         // level.
         foreach ($item_subcomponent_info as $component_name => $data) {
+          // Prevent re-requesting an identical previous request.
+          // TODO: use requestedComponentHandling() here?
+          if (isset($requested_info_record[$component_name]) && $requested_info_record[$component_name] == $data) {
+            continue;
+          }
+          $requested_info_record[$component_name] = $data;
+
           // The $data may either be a string giving a class name, or an array.
           if (is_string($data)) {
             $component_type = $data;
