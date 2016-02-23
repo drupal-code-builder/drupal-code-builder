@@ -48,12 +48,12 @@ class Permissions extends BaseGenerator {
    */
   protected function requiredComponents() {
     $components = array(
-      // TEMPORARY: This will change to request Hooks, with component data for
-      // the requested hook.
-      'hook_permission' => array(
-        'component_type' => 'HookPermission',
+      'hooks' => array(
+        'component_type' => 'Hooks',
+        'hooks' => array(
+          'hook_permission' => TRUE,
+        ),
       ),
-      'hooks' => 'Hooks',
     );
 
     return $components;

@@ -23,6 +23,18 @@ class HookMenu extends HookImplementation {
   public $name = 'hook_menu';
 
   /**
+   * Constructor method; sets the component data.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    // Set some default properties.
+    $component_data += array(
+      'hook_name' => 'hook_menu',
+    );
+
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
@@ -32,15 +44,9 @@ class HookMenu extends HookImplementation {
       return parent::buildComponentContents($children_contents);
     }
 
-    // TEMPORARY. This will be changed to it get passed in by Hooks when it
-    // requests us.
-    // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
-    $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
-    $this->hook_info = $hook_function_declarations[$this->name];
-    $this->component_data['doxygen_first'] = $this->hook_doxygen_text($this->hook_info['name']);
-    $declaration = preg_replace('/(?<=function )hook/', '%module', $this->hook_info['definition']);
-    $this->component_data['declaration'] = $declaration;
+    // Code from child components comes as arrays of code lines, so no need to
+    // trim it.
+    $this->component_data['has_wrapping_newlines'] = FALSE;
 
     $code = array();
     $code[] = '£items = array();';
@@ -54,25 +60,7 @@ class HookMenu extends HookImplementation {
 
     $this->component_data['body'] = $code;
 
-    // TEMPORARY: set tripswitch for componentFunctions().
-    $this->bypasscomponentFunctions = TRUE;
-
     return parent::buildComponentContents($children_contents);
-  }
-
-  /**
-   * Called by ModuleCodeFile to collect functions from its child components.
-   */
-  public function componentFunctions() {
-    // TEMPORARY. Needed while HookImplementation::componentFunctions() exists,
-    // because we need PHPFunction::buildComponentContents() to call this and
-    // get an empty array back.
-    if (!empty($this->bypasscomponentFunctions)) {
-      return array();
-    }
-    else {
-      return parent::componentFunctions();
-    }
   }
 
 }

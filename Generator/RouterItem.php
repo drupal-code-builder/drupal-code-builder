@@ -74,10 +74,11 @@ class RouterItem extends BaseGenerator {
    */
   protected function requiredComponents() {
     $return = array(
-      // Each RouterItem that gets added will cause a repeat request of these
-      // components.
-      'hook_menu' => array(
-        'component_type' => 'HookMenu',
+      'hooks' => array(
+        'component_type' => 'Hooks',
+        'hooks' => array(
+          'hook_menu' => TRUE,
+        ),
       ),
     );
 

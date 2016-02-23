@@ -199,7 +199,7 @@ class Module extends RootComponent {
             }
 
             // Add the preset hooks list to the hooks array in the component
-            // data.
+            // data. The 'hooks' property processing will handle them.
             $hooks = $hook_presets[$given_preset_name]['hooks'];
             $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
             //drush_print_r($component_data['hooks']);
@@ -246,7 +246,13 @@ class Module extends RootComponent {
             }
           }
 
-          $component_data['hooks'] = $hooks;
+          // Filter out empty values, in case Drupal UI forms haven't done so.
+          $hooks = array_filter($hooks);
+
+          $component_data['requested_components']['hooks'] = array(
+            'component_type' => 'Hooks',
+            'hooks' => $hooks,
+          );
         }
       ),
       'plugins' => array(
@@ -371,7 +377,6 @@ class Module extends RootComponent {
     $components = array(
       // Component type case must match the filename for case-sensitive
       // filesystems (i.e. not OS X).
-      'hooks' => 'hooks',
       'info' => 'info',
     );
 
@@ -421,12 +426,6 @@ class Module extends RootComponent {
       return $intersection_components;
     }
 
-    // Case 3: there are some requested components we don't know anything about.
-    // We assume that these are abbreviated filenames for the attention of
-    // ModuleBuilder\Generator\Hooks; therefore we must ensure 'hooks' is in the
-    // list.
-    $intersection_components['hooks'] = 'hooks';
-
     // TODO: if the components create files containing classes, we probably
     // need to add the 'info' component, BUT we need to add to the .info file
     // rather than rewrite it! This requires (as does template.php) a system for
@@ -434,8 +433,5 @@ class Module extends RootComponent {
 
     return $intersection_components;
   }
-
-  // No need to declare collectFiles(): parent class will have something that
-  // does nothing apart from recurse.
 
 }

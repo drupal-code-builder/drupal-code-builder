@@ -55,8 +55,7 @@ class PHPClassFile extends PHPFile {
   /**
    * Return the contents of the file.
    *
-   * Helper for subclasses' implementations of collectFiles(). Serves to
-   * concatenate standard pieces of the file.
+   * Helper for subclasses. Serves to concatenate standard pieces of the file.
    *
    * @return
    *  An array of text strings, in the correct order for concatenation.

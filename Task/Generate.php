@@ -186,11 +186,13 @@ class Generate extends Base {
 
     // Recursively assemble all the components that are needed.
     $this->root_generator->assembleComponentList();
+    \ModuleBuilder\Factory::getEnvironment()->log(array_keys($this->root_generator->components), "Complete component list names");
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
     // of parent => [children].
     $tree = $this->assembleComponentTree($this->root_generator->components);
+    \ModuleBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
     // Let each file component in the tree gather data from its own children.
     $this->collectFileContents($this->root_generator->components, $tree);
