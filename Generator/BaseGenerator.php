@@ -314,7 +314,9 @@ abstract class BaseGenerator {
    *  An array of the content that the child components returned.
    *
    * @return
-   *  An array of lines for this component's content.
+   *  An array of data for this component's content. The nature of this depends
+   *  on the intended parent: for example PHPFile expects an array of code lines
+   *  whereas YMLFile expects an array of data to be rendered into Yaml.
    */
   function buildComponentContents($children_contents) {
     // Base does nothing.

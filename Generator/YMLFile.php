@@ -15,6 +15,25 @@ namespace ModuleBuilder\Generator;
 class YMLFile extends File {
 
   /**
+   * {@inheritdoc}
+   */
+  function buildComponentContents($children_contents) {
+    $yaml_data = array();
+    foreach ($children_contents as $component_name => $component_yaml_data) {
+      $yaml_data += $component_yaml_data;
+    }
+
+    // TEMPORARY, until Generate task handles returned contents.
+    if (!empty($yaml_data)) {
+      // Only zap this if children provide something, as other components still
+      // set this property by request.
+      $this->component_data['yaml_data'] = $yaml_data;
+    }
+
+    return array();
+  }
+
+  /**
    * Build the code files.
    */
   public function getFileInfo() {

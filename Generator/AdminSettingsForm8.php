@@ -49,11 +49,8 @@ class AdminSettingsForm8 extends Form8 {
       'description' => 'Configure settings for %readable.',
     );
 
-    $components['Permissions'] = array(
+    $components['administer %module'] = array(
       'component_type' => 'Permissions',
-      'request_data' => array(
-        'administer %module',
-      ),
     );
 
     return $components;
