@@ -434,7 +434,4 @@ class Module extends RootComponent {
     return $intersection_components;
   }
 
-  // No need to declare collectFiles(): parent class will have something that
-  // does nothing apart from recurse.
-
 }

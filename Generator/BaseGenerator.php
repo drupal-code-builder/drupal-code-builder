@@ -56,7 +56,7 @@ namespace ModuleBuilder\Generator;
  * We then recurse down the tree in collectFiles(), building up
  * an array of file info that we pass by reference (this it can be altered
  * as well as added to, though generator order is TBFO). Generator classes that
- * wish to add files should override collectFiles() to add them.
+ * wish to output a file should implement getFileInfo().
  *
  * @section sec_assemble_files Assemble files
  * Finally, we assemble the file info into filenames and code, ready for the
