@@ -9,10 +9,6 @@ namespace ModuleBuilder\Generator;
 
 /**
  * Generator class for module code files.
- *
- * TODO: various cleanups. This was the base class of the mk 1 OO generator
- * system, and is currently (hello!) being forced into a new, bigger mk
- * hierarchy!
  */
 class ModuleCodeFile extends PHPFile {
 
