@@ -310,10 +310,15 @@ abstract class RootComponent extends BaseGenerator {
       $this->name => $this
     );
 
+    $level_index = 0;
+
     // Do a breadth-first tree traversal, working over the current level to
     // create the next level, until there are no further items.
     do {
       $next_level = array();
+
+      // Log the current level.
+      \ModuleBuilder\Factory::getEnvironment()->log(array_keys($current_level), "starting level $level_index");
 
       // Work over the current level, assembling a temporary array for the next
       // level.
@@ -370,6 +375,8 @@ abstract class RootComponent extends BaseGenerator {
 
       // Set the next level to be current for the next loop.
       $current_level = $next_level;
+      $level_index++;
+
     } while (!empty($next_level));
 
     // Set the collected components on the base generator.
