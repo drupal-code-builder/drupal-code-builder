@@ -35,6 +35,14 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected $skipSanity = FALSE;
 
   /**
+   * Whether to output log data.
+   *
+   *  - 0 outputs nothing.
+   *  - 1 outputs logging data using debug().
+   */
+  protected $loggingLevel = 0;
+
+  /**
    * The path to the hooks directory.
    *
    * Depending on our environment this is either relative to Drupal root or
@@ -158,6 +166,25 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * Output debug data.
    */
   abstract function debug($data, $message = '');
+
+  /**
+   * Output verbose log data.
+   */
+  public function log($data, $message = '') {
+    if ($this->loggingLevel) {
+      $this->debug($data, $message);
+    }
+  }
+
+  /**
+   * Set the logging level.
+   *
+   * @param $loggingLevel
+   *  Either TRUE, to output log data, or FALSE to not output it.
+   */
+  public function setLoggingLevel($loggingLevel) {
+    $this->loggingLevel = $loggingLevel;
+  }
 
   /**
    * {@inheritdoc}
