@@ -42,9 +42,11 @@ class RouterItem8 extends RouterItem {
    */
   public function buildComponentContents($children_contents) {
     $path = $this->name;
+    $route_name = str_replace('/', '.', $path);
 
-    $routing_data[$path] = array(
-      'path' => $path,
+    $routing_data[$route_name] = array(
+      // Prepend a slash to the path for D8.
+      'path' => '/' . $path,
       'defaults' => array(
         '_title' => $this->component_data['title'],
       ),
