@@ -25,9 +25,10 @@ abstract class Tests extends BaseEnvironment {
    * Output debug data.
    */
   function debug($data, $message = '') {
-    if (module_exists('devel')) {
-      debug($data, $message);
+    if (!empty($message)) {
+      print_r($message . ':');
     }
+    print_r($data);
   }
 
 }
