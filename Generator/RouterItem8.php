@@ -26,15 +26,34 @@ class RouterItem8 extends RouterItem {
       // components.
       '%module.routing.yml' => array(
         'component_type' => 'Routing',
-        'routing_items' => array(
-          array(
-            // TODO: further items.
-            'path' => $this->name,
-            'title' => $this->component_data['title'],
-          ),
-        ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function containingComponent() {
+    return '%module.routing.yml';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildComponentContents($children_contents) {
+    $path = $this->name;
+
+    $routing_data[$path] = array(
+      'path' => $path,
+      'defaults' => array(
+        '_title' => $this->component_data['title'],
+      ),
+      'requirements' => array(
+        '_permission' => 'TODO: set permission machine name',
+      ),
+    );
+
+    return $routing_data;
   }
 
 }
