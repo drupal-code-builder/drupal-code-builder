@@ -334,22 +334,24 @@ abstract class RootComponent extends BaseGenerator {
             $component_data = $data;
           }
 
-          // A requested subcomponent may already exist in our tree, in which
-          // case we merge the received data in with the existing component.
+          // A requested subcomponent may already exist in our tree.
           if (isset($component_list[$component_name])) {
-            $component_list[$component_name]->mergeComponentData($component_data);
+            // If it already exists, we merge the received data in with the
+            // existing component.
+            $generator = $component_list[$component_name];
+            $generator->mergeComponentData($component_data);
+          }
+          else {
+            // Instantiate the generator.
+            $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
 
-            // Skip this as it's already been instantiated.
-            continue;
+            // Add the new component to the complete array of components.
+            $component_list[$component_name] = $generator;
           }
 
-          // Instantiate the generator.
-          $generator = $this->task->getGenerator($component_type, $component_name, $component_data);
-
-          // Add the new component to the complete array of components.
-          $component_list[$component_name] = $generator;
-
-          // Add the new component to the next level.
+          // Add the new component to the next level, whether it's new to us or
+          // not: if it's a repeat, we still need to ask it again for requests
+          // based on the new data it's just been given.
           $next_level[$component_name] = $generator;
         } // each requested subcomponent from a component in the current level.
       } // each component in the current level
