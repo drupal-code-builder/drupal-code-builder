@@ -158,7 +158,7 @@ class Module extends RootComponent {
         'description' => 'A list of machine names of permissions for this module to provide.',
         'required' => FALSE,
         'format' => 'array',
-        'component' => 'Permissions',
+        'component' => 'Permission',
       ),
       'module_hook_presets' => array(
         'label' => 'Hook preset groups',

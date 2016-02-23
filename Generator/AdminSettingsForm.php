@@ -73,8 +73,8 @@ class AdminSettingsForm extends Form {
       'file' => '%module.admin.inc',
     );
 
-    $components['Permissions'] = array(
-      'component_type' => 'Permissions',
+    $components['Permission'] = array(
+      'component_type' => 'Permission',
       'permission' => 'administer %module',
     );
 

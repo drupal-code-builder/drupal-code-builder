@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\Permissions8.
+ * Contains ModuleBuilder\Generator\Permission8.
  */
 
 namespace ModuleBuilder\Generator;
@@ -10,7 +10,7 @@ namespace ModuleBuilder\Generator;
 /**
  * Generator for module permissions on Drupal 8.
  */
-class Permissions8 extends Permissions {
+class Permission8 extends Permission {
 
   /**
    * Return an array of subcomponent types.

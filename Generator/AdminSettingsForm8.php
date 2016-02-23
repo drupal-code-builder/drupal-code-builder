@@ -50,7 +50,7 @@ class AdminSettingsForm8 extends Form8 {
     );
 
     $components['administer %module'] = array(
-      'component_type' => 'Permissions',
+      'component_type' => 'Permission',
     );
 
     return $components;

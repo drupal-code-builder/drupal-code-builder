@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\Permissions.
+ * Contains ModuleBuilder\Generator\Permission.
  */
 
 namespace ModuleBuilder\Generator;
@@ -12,7 +12,7 @@ namespace ModuleBuilder\Generator;
  *
  * TODO: Change name to singular when D8 version is also changed.
  */
-class Permissions extends BaseGenerator {
+class Permission extends BaseGenerator {
 
   /**
    * Constructor method; sets the component data.
