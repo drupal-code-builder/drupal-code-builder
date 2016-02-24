@@ -61,7 +61,7 @@ namespace ModuleBuilder\Generator;
  * @section sec_assemble_files Assemble files
  * Finally, we assemble the file info into filenames and code, ready for the
  * initiator of the whole process (e.g., Drush, Drupal UI) to output them in an
- * appropriate way. This is done in the starting generator's assembleFiles().
+ * appropriate way. This is done in Generate::assembleFiles().
  *
  * There are three distinct hierarchies at work here:
  *  - A plain PHP class hierarchy, which is just there to allow us to make use
@@ -328,39 +328,6 @@ abstract class BaseGenerator {
    */
   public function filesAlter(&$files) {
     // Base class does nothing.
-  }
-
-  /**
-   * Assemble file info into filename and code.
-   *
-   * @param $files
-   *  An array of file info, as compiled by collectFiles().
-   *
-   * @return
-   *  An array of files ready for output. Keys are the filepath and filename
-   *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
-   *  values are strings of the contents for each file.
-   */
-  function assembleFiles($files) {
-    $return = array();
-
-    foreach ($files as $file_id => $file_info) {
-      if (!empty($file_info['path'])) {
-        $filepath = $file_info['path'] . '/' . $file_info['filename'];
-      }
-      else {
-        $filepath = $file_info['filename'];
-      }
-
-      $code = implode($file_info['join_string'], $file_info['body']);
-
-      $variables = $this->getReplacements();
-      $code = strtr($code, $variables);
-
-      $return[$filepath] = $code;
-    }
-
-    return $return;
   }
 
   /**

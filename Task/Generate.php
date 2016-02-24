@@ -209,8 +209,7 @@ class Generate extends Base {
 
     // Then we assemble the files into a simple array of full filename and
     // contents.
-    // TODO: rename this to buildFiles().
-    $files_assembled = $this->root_generator->assembleFiles($files);
+    $files_assembled = $this->assembleFiles($files);
 
     return $files_assembled;
   }
@@ -318,6 +317,39 @@ class Generate extends Base {
     }
 
     return $file_info;
+  }
+
+  /**
+   * Assemble file info into filename and code.
+   *
+   * @param $files
+   *  An array of file info, as compiled by collectFiles().
+   *
+   * @return
+   *  An array of files ready for output. Keys are the filepath and filename
+   *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
+   *  values are strings of the contents for each file.
+   */
+  function assembleFiles($files) {
+    $return = array();
+
+    foreach ($files as $file_id => $file_info) {
+      if (!empty($file_info['path'])) {
+        $filepath = $file_info['path'] . '/' . $file_info['filename'];
+      }
+      else {
+        $filepath = $file_info['filename'];
+      }
+
+      $code = implode($file_info['join_string'], $file_info['body']);
+
+      $variables = $this->root_generator->getReplacements();
+      $code = strtr($code, $variables);
+
+      $return[$filepath] = $code;
+    }
+
+    return $return;
   }
 
   /**
