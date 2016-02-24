@@ -43,7 +43,7 @@ class Info7 extends InfoIni {
   /**
    * {@inheritdoc}
    */
-  public function filesAlter(&$files) {
+  public function filesAlter(&$files, $component_list) {
     // Files containing classes need to be declared in the .info file.
     $info_extra_lines = array();
     foreach ($files as $file) {
@@ -60,8 +60,7 @@ class Info7 extends InfoIni {
     }
 
     // Add a 'configure' line if there's an admin settings form component.
-    $components = $this->getComponentList();
-    if (isset($components['AdminSettingsForm'])) {
+    if (isset($component_list['AdminSettingsForm'])) {
       // TODO: get this path from the generator.
       $info_extra_lines['configure'] = 'admin/config/TODO-SECTION/%module';
     }

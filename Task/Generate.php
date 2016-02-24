@@ -30,6 +30,11 @@ class Generate extends Base {
   private $root_generator;
 
   /**
+   * Component list.
+   */
+  protected $component_list;
+
+  /**
    * Override the base constructor.
    *
    * @param $environment
@@ -185,27 +190,27 @@ class Generate extends Base {
     $this->root_generator = $root_generator;
 
     // Recursively assemble all the components that are needed.
-    $this->root_generator->assembleComponentList();
-    \ModuleBuilder\Factory::getEnvironment()->log(array_keys($this->root_generator->components), "Complete component list names");
+    $this->component_list = $this->root_generator->assembleComponentList();
+    \ModuleBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
     // of parent => [children].
-    $tree = $this->assembleComponentTree($this->root_generator->components);
+    $tree = $this->assembleComponentTree($this->component_list);
     \ModuleBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
     // Let each file component in the tree gather data from its own children.
-    $this->collectFileContents($this->root_generator->components, $tree);
+    $this->collectFileContents($this->component_list, $tree);
 
     //drush_print_r($generator->components);
 
     // Build files.
     // Get info on files. All components that wish to provide a file should have
     // registered themselves as first-level children of the root component.
-    $files = $this->collectFiles($tree);
+    $files = $this->collectFiles($this->component_list, $tree);
 
     // Allow all components to alter all the collected files.
-    $this->filesAlter($files);
+    $this->filesAlter($files, $this->component_list);
 
     // Then we assemble the files into a simple array of full filename and
     // contents.
@@ -285,16 +290,20 @@ class Generate extends Base {
    *
    * @param $files
    *  The array of file info, passed by reference.
+   * @param $component_list
+   *  The component list.
    */
-  protected function filesAlter(&$files) {
-    foreach ($this->root_generator->components as $name => $component) {
-      $component->filesAlter($files);
+  protected function filesAlter(&$files, $component_list) {
+    foreach ($component_list as $name => $component) {
+      $component->filesAlter($files, $component_list);
     }
   }
 
   /**
    * Collect file data from components.
    *
+   * @param $component_list
+   *  The component list.
    * @param $tree
    *  An array of parentage data about components, as given by
    *  assembleComponentTree().
@@ -302,14 +311,14 @@ class Generate extends Base {
    * @return
    *  An array of file info, keyed by arbitrary file ID.
    */
-  protected function collectFiles($tree) {
+  protected function collectFiles($component_list, $tree) {
     $file_info = array();
 
     // Components which provide a file should have registered themselves as
     // children of the root component.
     $root_component_name = $this->root_generator->name;
     foreach ($tree[$root_component_name] as $child_component_name) {
-      $child_component = $this->root_generator->components[$child_component_name];
+      $child_component = $component_list[$child_component_name];
       $child_component_file_data = $child_component->getFileInfo();
       if (is_array($child_component_file_data)) {
         $file_info += $child_component_file_data;

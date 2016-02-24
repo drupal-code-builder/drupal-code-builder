@@ -290,8 +290,7 @@ abstract class RootComponent extends BaseGenerator {
    * generators that return an empty array for requiredComponents().
    *
    * @return
-   *  None. This should set an array of subcomponent generators on the property
-   *  $this->components.
+   *  The list of components.
    */
   public function assembleComponentList() {
     // Get the base component to add the generators to it.
@@ -381,6 +380,8 @@ abstract class RootComponent extends BaseGenerator {
 
     // Set the collected components on the base generator.
     $this->components = $component_list;
+
+    return $component_list;
   }
 
   /**

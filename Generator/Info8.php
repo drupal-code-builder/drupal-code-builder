@@ -81,12 +81,11 @@ class Info8 extends Info {
   /**
    * {@inheritdoc}
    */
-  public function filesAlter(&$files) {
+  public function filesAlter(&$files, $component_list) {
     $info_extra_lines = array();
 
     // Add a 'configure' line if there's an admin settings form component.
-    $components = $this->getComponentList();
-    if (isset($components['AdminSettingsForm'])) {
+    if (isset($component_list['AdminSettingsForm'])) {
       // TODO: get this path from the generator.
       $info_extra_lines['configure'] = 'admin/config/TODO-SECTION/%module';
     }
