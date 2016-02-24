@@ -330,24 +330,4 @@ abstract class BaseGenerator {
     // Base class does nothing.
   }
 
-  /**
-   * Helper to get replacement strings for tokens in code body.
-   *
-   * @return
-   *  An array of tokens to replacements, suitable for use by strtr().
-   */
-  function getReplacements() {
-    // Get old style variable names.
-    $module_data = $this->getRootComponentData();
-
-    return array(
-      '%module'       => $module_data['root_name'],
-      '%Module'       => ucfirst($module_data['root_name']),
-      '%description'  => str_replace("'", "\'", $module_data['short_description']),
-      '%name'         => !empty($module_data['readable_name']) ? str_replace("'", "\'", $module_data['readable_name']) : $module_data['root_name'],
-      '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : 'TODO: Create admin help text.',
-      '%readable'     => str_replace("'", "\'", $module_data['readable_name']),
-    );
-  }
-
 }

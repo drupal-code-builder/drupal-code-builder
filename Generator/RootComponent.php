@@ -383,4 +383,15 @@ abstract class RootComponent extends BaseGenerator {
     $this->components = $component_list;
   }
 
+  /**
+   * Provides replacement strings for tokens in code body.
+   *
+   * @return
+   *  An array of tokens to replacements, suitable for use by strtr().
+   */
+  function getReplacements() {
+    // Root components should override this.
+    return array();
+  }
+
 }
