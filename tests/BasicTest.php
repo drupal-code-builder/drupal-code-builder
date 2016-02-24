@@ -73,6 +73,8 @@ class BasicTest extends ModuleBuilderTestBase {
     $module_file = $files["$module_name.module"];
     //debug($module_file);
 
+    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
+
     $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
 
     $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
@@ -88,6 +90,8 @@ class BasicTest extends ModuleBuilderTestBase {
     // Check the .install file.
     $install_file = $files["$module_name.install"];
 
+    $this->assertNoTrailingWhitespace($install_file, "The install file contains no trailing whitespace.");
+
     $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
 
     $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
@@ -101,12 +105,14 @@ class BasicTest extends ModuleBuilderTestBase {
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
+    $this->assertNoTrailingWhitespace($tokens_file, "The tokens file contains no trailing whitespace.");
     $this->assertHookDocblock($tokens_file, 'hook_tokens', "The tokens file contains the docblock for hook_tokens().");
     $this->assertHookImplementation($tokens_file, 'hook_tokens', $module_name, "The tokens file contains a function declaration that implements hook_tokens().");
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];
 
+    $this->assertNoTrailingWhitespace($info_file, "The info file contains no trailing whitespace.");
     $this->assertInfoLine($info_file, 'name', $module_data['readable_name'], "The info file declares the module name.");
     $this->assertInfoLine($info_file, 'description', $module_data['short_description'], "The info file declares the module description.");
     $this->assertInfoLine($info_file, 'core', "7.x", "The info file declares the core version.");

@@ -49,6 +49,20 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a string has no whitespace at line ends.
+   *
+   * @param $string
+   *  The code string.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  protected function assertNoTrailingWhitespace($code, $message = NULL) {
+    $matches = array();
+    $match = preg_match_all("[( +)$]m", $code, $matches);
+    $this->assertEquals($match, 0, $message);
+  }
+
+  /**
    * Assert a string is correctly-formed PHP.
    *
    * @param $string
@@ -247,4 +261,12 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
     $this->assertEquals($match, 1, $message);
   }
 
+}
+
+
+function ddpr($data, $message = '') {
+  if (!empty($message)) {
+    print_r("\n" . $message . ':');
+  }
+  print_r($data);
 }

@@ -50,6 +50,8 @@ class ComponentTestsTest extends ModuleBuilderTestBase {
     // Check the .test file.
     $tests_file = $files["tests/$module_name.test"];
 
+    $this->assertNoTrailingWhitespace($tests_file, "The tests file contains no trailing whitespace.");
+
     // Can't use assertWellFormedPHP() as the parent class does not exist here.
 
     $this->assertFileHeader($tests_file, "The install file contains the correct PHP open tag and file doc header");

@@ -47,10 +47,12 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
 
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];
+    $this->assertNoTrailingWhitespace($admin_file, "The admin.inc file contains no trailing whitespace.");
     $this->assertFunction($admin_file, "{$module_name}_settings_form", "The admin.inc file contains the settings form builder.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
+    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
     $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
     $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_permission().");
