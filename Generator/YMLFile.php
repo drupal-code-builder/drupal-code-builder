@@ -66,10 +66,6 @@ class YMLFile extends File {
     $yaml = $yaml_parser->dump($yaml_data_array, 6, 2);
     //drush_print_r($yaml);
 
-    // Replace variables
-    $variables = $this->getReplacements();
-    $yaml = strtr($yaml, $variables);
-
     // Because the yaml is all built for us, this is just a singleton array.
     $body = array($yaml);
 
