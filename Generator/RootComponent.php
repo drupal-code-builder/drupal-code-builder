@@ -16,14 +16,6 @@ namespace ModuleBuilder\Generator;
 abstract class RootComponent extends BaseGenerator {
 
   /**
-   * The base component's flat list of components.
-   *
-   * This is keyed by the name of the component name. Values are the
-   * instantiated component generators.
-   */
-  public $components = array();
-
-  /**
    * Define the component data this component needs to function.
    *
    * This returns an array of data that defines the component data that
@@ -377,9 +369,6 @@ abstract class RootComponent extends BaseGenerator {
       $level_index++;
 
     } while (!empty($next_level));
-
-    // Set the collected components on the base generator.
-    $this->components = $component_list;
 
     return $component_list;
   }

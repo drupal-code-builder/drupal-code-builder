@@ -200,14 +200,6 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Returns the flat list of components, as assembled by assembleComponentList().
-   */
-  function getComponentList() {
-    $base = $this->task->getRootGenerator();
-    return $base->components;
-  }
-
-  /**
    * Get this component's required components.
    *
    * For example, a module component requires hooks, an info file, and a readme

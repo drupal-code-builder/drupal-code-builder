@@ -30,7 +30,10 @@ class Generate extends Base {
   private $root_generator;
 
   /**
-   * Component list.
+   * The list of components.
+   *
+   * This is keyed by the name of the component name. Values are the
+   * instantiated component generators.
    */
   protected $component_list;
 
