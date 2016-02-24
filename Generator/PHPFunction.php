@@ -104,7 +104,7 @@ class PHPFunction extends BaseGenerator {
       if (!empty($this->component_data['body_indent'])) {
         $padding = str_repeat(' ', $this->component_data['body_indent']);
         $body = array_map(function($string) use ($padding) {
-          return "$padding$string";
+          return empty($string) ? $string : "$padding$string";
         }, $body);
       }
 

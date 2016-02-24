@@ -116,7 +116,7 @@ class PHPClassFile extends PHPFile {
     foreach ($this->functions as $component_name => $function_lines) {
       // Add extra indent for methods.
       $function_lines = array_map(function($line) {
-        return '  ' . $line;
+        return empty($line) ? $line : '  ' . $line;
       }, $function_lines);
 
       $code_body = array_merge($code_body, $function_lines);
