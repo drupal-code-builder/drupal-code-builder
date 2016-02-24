@@ -81,7 +81,7 @@ class PHPFile extends File {
    */
   function code_header() {
     $lines = array(
-      "@file $this->filename",
+      "@file",
       $this->file_doc_summary(),
     );
     $code = $this->docBlock($lines);
