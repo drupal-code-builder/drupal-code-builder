@@ -6,7 +6,7 @@
  */
 
 // Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/ModuleBuilderTestBase.php';
+require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
 
 /**
  * Tests the AdminSettingsForm generator class.
@@ -16,13 +16,13 @@ require_once __DIR__ . '/ModuleBuilderTestBase.php';
  *   vendor/phpunit/phpunit/phpunit  tests/ComponentAdminSettingsTest.php
  * @endcode
  */
-class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
+class ComponentAdminSettingsTest extends DrupalCodeBuilderTestBase {
 
   /**
    * Test Admin Settings component.
    */
   function testAdminSettingsGenerationTests() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
     // Create a module.
     $module_name = 'testmodule';
@@ -70,7 +70,7 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
    * Test Admin Settings component with other hooks.
    */
   function testAdminSettingsOtherHooksTest() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
     // Create a module.
     $module_name = 'testmodule';
@@ -103,7 +103,7 @@ class ComponentAdminSettingsTest extends ModuleBuilderTestBase {
    * Test Admin Settings component with other permissions.
    */
   function testAdminSettingsOtherPermsTest() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
     // Create a module.
     $module_name = 'testmodule';

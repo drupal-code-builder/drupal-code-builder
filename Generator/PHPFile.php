@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\PHPFile.
+ * Contains DrupalCodeBuilder\Generator\PHPFile.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for general PHP code files.

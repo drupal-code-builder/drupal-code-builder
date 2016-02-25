@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\Tests6.
+ * Contains DrupalCodeBuilder\Generator\Tests6.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Component generator: tests.

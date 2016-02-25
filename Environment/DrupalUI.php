@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\DrupalUI.
+ * Contains DrupalCodeBuilder\Environment\DrupalUI.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment class for Drupal UI.

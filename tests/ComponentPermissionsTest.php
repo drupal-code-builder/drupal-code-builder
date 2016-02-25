@@ -6,7 +6,7 @@
  */
 
 // Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/ModuleBuilderTestBase.php';
+require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
 
 /**
  * Tests the Permissions generator class.
@@ -16,13 +16,13 @@ require_once __DIR__ . '/ModuleBuilderTestBase.php';
  *   vendor/phpunit/phpunit/phpunit  tests/ComponentPermissionsTest.php
  * @endcode
  */
-class ComponentPermissionsTest extends ModuleBuilderTestBase {
+class ComponentPermissionsTest extends DrupalCodeBuilderTestBase {
 
   /**
    * Test Permissions component.
    */
   function testPermissionsGenerationTests() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
     $permission_name = 'my permission name';
 

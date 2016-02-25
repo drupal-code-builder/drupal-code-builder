@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\API.
+ * Contains DrupalCodeBuilder\Generator\API.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Component generator: api.php file for documention hooks and callbacks.
@@ -66,7 +66,7 @@ class API extends PHPFile {
     $component_data = $this->getRootComponentData();
 
     // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_analyze = \ModuleBuilder\Factory::getTask('AnalyzeModule');
+    $mb_task_handler_analyze = \DrupalCodeBuilder\Factory::getTask('AnalyzeModule');
 
     $hooks = $mb_task_handler_analyze->getInventedHooks($component_data['root_name']);
 

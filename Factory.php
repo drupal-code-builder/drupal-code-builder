@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Factory.
+ * Contains DrupalCodeBuilder\Factory.
  */
 
-namespace ModuleBuilder;
+namespace DrupalCodeBuilder;
 
 // Include the Composer autoloader for our classes.
 // We use this if we're not being used as a Composer library, for example if
@@ -16,7 +16,7 @@ namespace ModuleBuilder;
 // would crash due to redeclaration of our classes.
 // We use one of our classes as a litmus test: if it can be found already, then
 // our autoloading has already been registered by a host application's Composer.
-if (!class_exists('\ModuleBuilder\Environment\BaseEnvironment')) {
+if (!class_exists('\DrupalCodeBuilder\Environment\BaseEnvironment')) {
   require_once __DIR__ . '/vendor/autoload.php';
 }
 
@@ -36,14 +36,14 @@ if (!class_exists('\ModuleBuilder\Environment\BaseEnvironment')) {
  *
  * @code
  *  include_once('path/to/Factory.php');
- *  \ModuleBuilder\Factory::setEnvironmentClass('Drush', 8);
- *  $task = \ModuleBuilder\Factory::getTask('ReportHookData');
+ *  \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
+ *  $task = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
  * @endcode
  */
 class Factory {
 
   /**
-   * The current environment object; subclass of ModuleBuilderEnvironmentBase.
+   * The current environment object; subclass of DrupalCodeBuilderEnvironmentBase.
    *
    * @see setEnvironmentClass()
    * @see getEnvironment()
@@ -58,7 +58,7 @@ class Factory {
    *
    * @param $environment_class
    *  The name of the environment class to set on the factory, relative to the
-   *  \ModuleBuilder\Environment namespace (to use a class outside of that
+   *  \DrupalCodeBuilder\Environment namespace (to use a class outside of that
    *  namespace, use setEnvironment()). No checks are run on the environment
    *  at this stage (and therefore the environment handler may be flagged to
    *  skip checks via the returned factory).
@@ -71,7 +71,7 @@ class Factory {
    */
   public static function setEnvironmentClass($environment_class, $drupal_core_version) {
     // Create the environment handler and set it on the factory.
-    $environment_class = '\ModuleBuilder\Environment\\' . $environment_class;
+    $environment_class = '\DrupalCodeBuilder\Environment\\' . $environment_class;
     $environment = new $environment_class;
     $version_helper = self::createVersionHelper($drupal_core_version);
 
@@ -83,12 +83,12 @@ class Factory {
   /**
    * Set the environment object.
    *
-   * @param \ModuleBuilder\Environment\EnvironmentInterface $environment
+   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
    *  An environment object to set.
    * @param $version_helper
    *  A version helper object.
    */
-  public static function setEnvironment(\ModuleBuilder\Environment\EnvironmentInterface $environment, $version_helper) {
+  public static function setEnvironment(\DrupalCodeBuilder\Environment\EnvironmentInterface $environment, $version_helper) {
     $environment->setVersionHelper($version_helper);
     $environment->initEnvironment();
 
@@ -109,7 +109,7 @@ class Factory {
     // Get the major version from the core version number.
     list($major_version) = explode('.', $drupal_core_version);
 
-    $helper_class_name = '\ModuleBuilder\Environment\VersionHelper' . $major_version;
+    $helper_class_name = '\DrupalCodeBuilder\Environment\VersionHelper' . $major_version;
 
     $version_helper = new $helper_class_name();
 
@@ -138,7 +138,7 @@ class Factory {
    *
    * @param $task_type
    *  The type of task. This should the the name of a class in the
-   *  ModuleBuilder\Task namespace, without the Drupal core version suffix.
+   *  DrupalCodeBuilder\Task namespace, without the Drupal core version suffix.
    *  May be one of:
    *    - 'Collect': Collect and process data on available hooks.
    *    - 'ReportHookData':
@@ -148,9 +148,9 @@ class Factory {
    *  nature (or necessity) depends on the task.
    *
    * @return
-   *  A new task handler object, which implements ModuleBuilderTaskInterface.
+   *  A new task handler object, which implements DrupalCodeBuilderTaskInterface.
    *
-   * @throws \ModuleBuilder\Exception\SanityException
+   * @throws \DrupalCodeBuilder\Exception\SanityException
    *  Throws an exception if the environment is not in a state that is ready for
    *  the requested task, for example, if no hook data has been downloaded.
    */
@@ -183,14 +183,14 @@ class Factory {
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
-   *  'ModuleBuilder\Task\Collect7'.
+   *  'DrupalCodeBuilder\Task\Collect7'.
    */
   public static function getTaskClass($task_type) {
     $type     = ucfirst($task_type);
     $version  = self::$environment->getCoreMajorVersion();
 
-    $versioned_class = "ModuleBuilder\\Task\\$task_type$version";
-    $common_class    = "ModuleBuilder\\Task\\$task_type";
+    $versioned_class = "DrupalCodeBuilder\\Task\\$task_type$version";
+    $common_class    = "DrupalCodeBuilder\\Task\\$task_type";
 
     if (class_exists($versioned_class)) {
       $class    = $versioned_class;

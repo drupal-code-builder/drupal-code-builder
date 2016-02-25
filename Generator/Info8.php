@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\Info8.
+ * Contains DrupalCodeBuilder\Generator\Info8.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator class for module info file for Drupal 8.

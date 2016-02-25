@@ -144,7 +144,7 @@ to be packaged with two UIs that access it: the Drush plugin for use on the
 command line, and the Drupal module for use in the web UI.
 
 This framework has a public API which can be used by other modules. This
-consists of a number of classes in the \ModuleBuilder\Task namespace, which
+consists of a number of classes in the \DrupalCodeBuilder\Task namespace, which
 provide public methods.
 
 As well as Tasks, Module Builder consists of Environment classes, which deal
@@ -158,23 +158,23 @@ The basic operation for Module Builder is as in this example:
     // (Not necessary if using MB via Composer.)
     include_once('Factory.php');
     // Tell MB which environment it's being used in and the Drupal core version.
-    \ModuleBuilder\Factory::setEnvironmentClass('Drush', 8);
+    \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
     // Get the Task handler.
-    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
     // Call a method in the Task handler to perform the operation.
     $hook_declarations = $mb_task_handler_report->getHookDeclarations();
 
 The code generation system is made up of a set of Generator classes, and is
-operated from the \ModuleBuilder\Task\Generate class. To build code, you need
+operated from the \DrupalCodeBuilder\Task\Generate class. To build code, you need
 to specify:
   - the root generator to use, such as 'module', 'theme', 'profile'. This is
-    the name of a subclass of ModuleBuilder\Generator\RootComponent.
+    the name of a subclass of DrupalCodeBuilder\Generator\RootComponent.
   - an array of component data. The options for this depend on the component.
 
  This is done as follows:
 
   // Get the generator task.
-  $task = \ModuleBuilder\Factory::getTask('Generate', 'module');
+  $task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
   // Get the info about the component data. This is an array keyed by property
   // name, with the definition of each property.
   $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();

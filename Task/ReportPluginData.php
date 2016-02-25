@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\ReportPluginData.
+ * Contains DrupalCodeBuilder\Task\ReportPluginData.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for reporting on hook data.

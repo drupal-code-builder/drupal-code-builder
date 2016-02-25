@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\VersionHelper6.
+ * Contains DrupalCodeBuilder\Environment\VersionHelper6.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment helper for Drupal 6.
  *
- * @ingroup module_builder_environment_version_helpers
+ * @ingroup drupal_code_builder_environment_version_helpers
  */
 class VersionHelper6 extends VersionHelper7 {
 

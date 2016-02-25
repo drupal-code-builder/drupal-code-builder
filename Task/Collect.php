@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\Collect.
+ * Contains DrupalCodeBuilder\Task\Collect.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for collecting and processing definitions for Drupal components.
@@ -319,7 +319,7 @@ class Collect extends Base {
    */
   protected function getHookInfo() {
     // Get data by invoking our hook.
-    $data = \ModuleBuilder\Factory::getEnvironment()->invokeInfoHook();
+    $data = \DrupalCodeBuilder\Factory::getEnvironment()->invokeInfoHook();
 
     // Add our data.
     $result = $this->getAdditionalHookInfo();

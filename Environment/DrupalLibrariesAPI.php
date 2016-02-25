@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\DrupalLibrariesAPI.
+ * Contains DrupalCodeBuilder\Environment\DrupalLibrariesAPI.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment class for use as a Drupal Library with Libraries API.
@@ -17,9 +17,9 @@ namespace ModuleBuilder\Environment;
  * Sample code to include MB as a library:
  * @code
  *  function YOURMODULE_libraries_info() {
- *    $libraries['module_builder'] = array(
+ *    $libraries['drupal_code_builder'] = array(
  *      // Only used in administrative UI of Libraries API.
- *      'name' => 'Module Builder Core',
+ *      'name' => 'Drupal Code Builder',
  *      'vendor url' => 'http://example.com',
  *      'download url' => 'http://example.com/download',
  *      // We have to declare a version.
@@ -31,7 +31,7 @@ namespace ModuleBuilder\Environment;
  *      ),
  *      // Auto-load the files.
  *      'integration files' => array(
- *        'module_builder_ui' => array(
+ *        'module_builder' => array(
  *          'php' => array(
  *            'Factory.php',
  *          ),
@@ -48,7 +48,7 @@ class DrupalLibrariesAPI extends DrupalUI {
    * Get a path to a module builder file or folder.
    */
   function getPath($subpath) {
-    $path = libraries_get_path('module_builder');
+    $path = libraries_get_path('drupal_code_builder');
     $path = $path . '/' . $subpath;
     return $path;
   }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\Collect6.
+ * Contains DrupalCodeBuilder\Task\Collect6.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for collecting and processing hook definitions.
@@ -19,7 +19,7 @@ class Collect6 extends Collect {
    * version control server.
    */
   protected function gatherHookDocumentationFiles() {
-    $directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
+    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     // Fetch data about the files we need to download.
     $hook_files = $this->getHookFileUrls($directory);

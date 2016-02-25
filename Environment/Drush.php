@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\Drush.
+ * Contains DrupalCodeBuilder\Environment\Drush.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment class for use as a Drush plugin.

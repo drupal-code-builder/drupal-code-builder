@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task.
+ * Contains DrupalCodeBuilder\Task.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Base class for Tasks.
@@ -26,7 +26,7 @@ namespace ModuleBuilder\Task;
  * appending the version number to the class name. The unversioned class should
  * also exist as a parent class.
  *
- * Task objects should be instantiated by \ModuleBuilder\Factory::getTask().
+ * Task objects should be instantiated by \DrupalCodeBuilder\Factory::getTask().
  */
 class Base {
 
@@ -46,7 +46,7 @@ class Base {
    * @return
    *  A sanity level string to pass to the environment's verifyEnvironment().
    *
-   * @see \ModuleBuilder\Environment\EnvironmentInterface::verifyEnvironment()
+   * @see \DrupalCodeBuilder\Environment\EnvironmentInterface::verifyEnvironment()
    */
   function getSanityLevel() {
     return $this->sanity_level;

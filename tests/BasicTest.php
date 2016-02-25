@@ -6,7 +6,7 @@
  */
 
 // Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/ModuleBuilderTestBase.php';
+require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
 
 /**
  * Basic test class.
@@ -16,17 +16,17 @@ require_once __DIR__ . '/ModuleBuilderTestBase.php';
  *   vendor/phpunit/phpunit/phpunit  tests/BasicTest.php
  * @endcode
  */
-class BasicTest extends ModuleBuilderTestBase {
+class BasicTest extends DrupalCodeBuilderTestBase {
 
   /**
    * Test the hook data is reported correctly.
    */
   public function testReportHookData() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
-    $hooks_directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
+    $hooks_directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
-    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
     $this->assertTrue(is_object($mb_task_handler_report), "A task handler object was returned.");
 
     $hook_groups = $mb_task_handler_report->listHookData();
@@ -37,9 +37,9 @@ class BasicTest extends ModuleBuilderTestBase {
    * Test generating a module with hooks in various files.
    */
   public function testModuleGenerationHooks() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
-    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
+    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
 
     // Assemble module data.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\Generate.
+ * Contains DrupalCodeBuilder\Task\Generate.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for generating a component.
@@ -76,7 +76,7 @@ class Generate extends Base {
    * This may be used by UIs that want to provide interactive building up of
    * component parameters.
    *
-   * @see ModuleBuilder\Generator\BaseGenerator::getComponentDataDefaultValue().
+   * @see DrupalCodeBuilder\Generator\BaseGenerator::getComponentDataDefaultValue().
    */
   public function getRootGenerator() {
     return $this->root_generator;
@@ -105,7 +105,7 @@ class Generate extends Base {
    *    'string' or 'array'.
    *  - 'required': Boolean indicating whether this property must be provided.
    * For the full documentation for all properties, see
-   * ModuleBuilder\Generator\RootComponent\componentDataDefinition().
+   * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
   public function getRootComponentDataInfo() {
     return $this->root_generator->getComponentDataInfo();
@@ -165,8 +165,8 @@ class Generate extends Base {
    * @param $component_data
    *  An associative array of data for the component. Values depend on the
    *  component class. For details, see the constructor of the generator, of the
-   *  form ModuleBuilder\Generator\COMPONENT, e.g.
-   *  ModuleBuilder\Generator\Module::__construct().
+   *  form DrupalCodeBuilder\Generator\COMPONENT, e.g.
+   *  DrupalCodeBuilder\Generator\Module::__construct().
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -194,13 +194,13 @@ class Generate extends Base {
 
     // Recursively assemble all the components that are needed.
     $this->component_list = $this->root_generator->assembleComponentList();
-    \ModuleBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
+    \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
     // of parent => [children].
     $tree = $this->assembleComponentTree($this->component_list);
-    \ModuleBuilder\Factory::getEnvironment()->log($tree, "Component tree");
+    \DrupalCodeBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
     // Let each file component in the tree gather data from its own children.
     $this->collectFileContents($this->component_list, $tree);
@@ -384,7 +384,7 @@ class Generate extends Base {
    *   A generator object, with the component name and data set on it, as well
    *   as a reference to this task handler.
    *
-   * @throws \ModuleBuilder\Exception\InvalidInputException
+   * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given component type does not correspond to
    *   a component class.
    */
@@ -392,7 +392,7 @@ class Generate extends Base {
     $class = $this->getGeneratorClass($component_type);
 
     if (!class_exists($class)) {
-      throw new \ModuleBuilder\Exception\InvalidInputException(strtr("Invalid component type !type.", array(
+      throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Invalid component type !type.", array(
         '!type' => htmlspecialchars($component_type, ENT_QUOTES, 'UTF-8'),
       )));
     }
@@ -412,16 +412,16 @@ class Generate extends Base {
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
-   *  'ModuleBuilder\Generator\Info6'.
+   *  'DrupalCodeBuilder\Generator\Info6'.
    */
   public function getGeneratorClass($type) {
     $type     = ucfirst($type);
     $version  = $this->environment->getCoreMajorVersion();
-    $class    = 'ModuleBuilder\\Generator\\' . $type . $version;
+    $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
 
     // If there is no version-specific class, use the base class.
     if (!class_exists($class)) {
-      $class  = 'ModuleBuilder\\Generator\\' . $type;
+      $class  = 'DrupalCodeBuilder\\Generator\\' . $type;
     }
     return $class;
   }

@@ -1,5 +1,5 @@
 {
-  "name": "module_builder/module_builder",
+  "name": "drupal_code_builder/drupal_code_builder",
   "require": {
   },
   "require-dev": {
@@ -7,7 +7,7 @@
   },
   "autoload": {
     "psr-4": {
-      "ModuleBuilder\\": ""
+      "DrupalCodeBuilder\\": ""
     }
   }
 }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\HookImplementation.
+ * Contains DrupalCodeBuilder\Generator\HookImplementation.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for a single hook implementation.
@@ -64,7 +64,7 @@ class HookImplementation extends PHPFunction {
    */
   protected function requiredComponents() {
     // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
     $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
     //drush_print_r($hook_function_declarations[$this->name]);
 
@@ -99,7 +99,7 @@ class HookImplementation extends PHPFunction {
     // See if function bodies exist; if so, use function bodies from template
     if (isset($hook['template'])) {
       // Strip out INFO: comments for advanced users
-      if (!\ModuleBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
+      if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
         // Used to strip INFO messages out of generated file for advanced users.
         $pattern = '#\s+/\* INFO:(.*?)\*FILLERDONTCLOSECOMMENT/#ms';
         $hook['template'] = preg_replace($pattern, '', $hook['template']);

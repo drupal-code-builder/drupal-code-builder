@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\Permission8.
+ * Contains DrupalCodeBuilder\Generator\Permission8.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for module permissions on Drupal 8.

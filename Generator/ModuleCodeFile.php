@@ -5,7 +5,7 @@
  * Contains generator classes for module PHP files.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator class for module code files.
@@ -37,7 +37,7 @@ class ModuleCodeFile extends PHPFile {
    * Return a file footer.
    */
   function code_footer() {
-    $footer = \ModuleBuilder\Factory::getEnvironment()->getSetting('footer', '');
+    $footer = \DrupalCodeBuilder\Factory::getEnvironment()->getSetting('footer', '');
     return $footer;
   }
 

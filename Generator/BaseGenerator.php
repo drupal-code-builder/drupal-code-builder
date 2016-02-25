@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\BaseGenerator.
+ * Contains DrupalCodeBuilder\Generator\BaseGenerator.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Abstract base Generator for components.
@@ -27,7 +27,7 @@ namespace ModuleBuilder\Generator;
  * when the added generators are themselves one that return no sub-components.
  *
  * So for example, the caller requests a 'module' component. This causes the
- * entry point to the system, ModuleBuilder\Task\Generate::generateComponent(),
+ * entry point to the system, DrupalCodeBuilder\Task\Generate::generateComponent(),
  * to instantiate a module generator, which is then interrogated for its
  * subcomponents. It returns, say, that it needs:
  *  - a README file

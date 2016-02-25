@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\ThemeTemplate.
+ * Contains DrupalCodeBuilder\Generator\ThemeTemplate.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Component generator: theme TPL file.

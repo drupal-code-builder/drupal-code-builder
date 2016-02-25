@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\RootComponent.
+ * Contains DrupalCodeBuilder\Generator\RootComponent.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Abstract Generator for root components.
@@ -78,7 +78,7 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * Get a list of the properties that are required in the component data.
    *
-   * UIs should use ModuleBuilder\Task\Generate\getRootComponentDataInfo() rather
+   * UIs should use DrupalCodeBuilder\Task\Generate\getRootComponentDataInfo() rather
    * than this method.
    *
    * @param $include_computed
@@ -309,7 +309,7 @@ abstract class RootComponent extends BaseGenerator {
       $next_level = array();
 
       // Log the current level.
-      \ModuleBuilder\Factory::getEnvironment()->log(array_keys($current_level), "starting level $level_index");
+      \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($current_level), "starting level $level_index");
 
       // Work over the current level, assembling a temporary array for the next
       // level.

@@ -5,7 +5,7 @@
  * Contains generator classes for .info files.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator base class for module info file.

@@ -5,7 +5,7 @@
  * Contains generator class for outputting files.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Abstract Generator base class for files.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\PHPFormattingTrait.
+ * Contains DrupalCodeBuilder\Generator\PHPFormattingTrait.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Trait for PHP formatting.

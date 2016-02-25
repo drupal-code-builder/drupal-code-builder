@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\HookPermission.
+ * Contains DrupalCodeBuilder\Generator\HookPermission.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for hook_permission() implementation.

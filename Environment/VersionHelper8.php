@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains ModuleBuilder\BaseEnvironment\VersionHelper8.
+ * Contains DrupalCodeBuilder\BaseEnvironment\VersionHelper8.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
- * @defgroup module_builder_environment_version_helpers Environment version helpers
+ * @defgroup drupal_code_builder_environment_version_helpers Environment version helpers
  * @{
  * Wrapper objects for Drupal APIs that change between Drupal major versions.
  *
@@ -24,7 +24,7 @@ namespace ModuleBuilder\Environment;
  * from newer. This means that if, say, an API function does not change between
  * Drupal 6 and 7, then its wrapper does not need to be present in the Drupal 6
  * helper class.
- * @} End of "defgroup module_builder_environment_version_helpers".
+ * @} End of "defgroup drupal_code_builder_environment_version_helpers".
  */
 
 /**

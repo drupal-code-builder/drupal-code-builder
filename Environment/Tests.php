@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\Tests.
+ * Contains DrupalCodeBuilder\Environment\Tests.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Base environment class for tests.

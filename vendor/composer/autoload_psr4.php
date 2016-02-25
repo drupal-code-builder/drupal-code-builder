@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ModuleBuilder\\' => array($baseDir . '/'),
+    'DrupalCodeBuilder\\' => array($baseDir . '/'),
 );

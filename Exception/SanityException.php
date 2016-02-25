@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Exception\SanityException.
+ * Contains DrupalCodeBuilder\Exception\SanityException.
  */
 
-namespace ModuleBuilder\Exception;
+namespace DrupalCodeBuilder\Exception;
 
 /**
  * Thrown when the sanity level is not met by the environment.

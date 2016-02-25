@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\Collect8.
+ * Contains DrupalCodeBuilder\Task\Collect8.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for collecting and processing component definitions.
@@ -222,14 +222,14 @@ class Collect8 extends Collect {
    */
   protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
-    $directory = \ModuleBuilder\Factory::getEnvironment()->getHooksDirectory();
+    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     // Get Drupal root folder as a file path.
     // DRUPAL_ROOT is defined both by Drupal and Drush.
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
-    $system_listing = \ModuleBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
+    $system_listing = \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
     // returns an array of objects, properties: uri, filename, name,
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!

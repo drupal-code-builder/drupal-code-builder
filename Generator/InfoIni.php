@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\InfoIni.
+ * Contains DrupalCodeBuilder\Generator\InfoIni.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Abstract parent class for .ini syntax info files.

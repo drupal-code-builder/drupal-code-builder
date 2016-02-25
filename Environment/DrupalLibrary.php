@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\DrupalLibrary.
+ * Contains DrupalCodeBuilder\Environment\DrupalLibrary.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment class for use as a library, without Libraries API.

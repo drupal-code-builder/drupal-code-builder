@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\ReportHookPresets.
+ * Contains DrupalCodeBuilder\Task\ReportHookPresets.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for reporting on hook presets and templates.

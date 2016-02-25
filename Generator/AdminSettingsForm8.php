@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\AdminSettingsForm8.
+ * Contains DrupalCodeBuilder\Generator\AdminSettingsForm8.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Component generator: admin form for modules.

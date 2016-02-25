@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\BaseEnvironment.
+ * Contains DrupalCodeBuilder\Environment\BaseEnvironment.
  *
  * The environment system provides an abstraction layer between Module Builder
  * and its current environment, e.g., whether we are running as a Drush plugin,
@@ -20,7 +20,7 @@
  * environment class.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Base class for environments.
@@ -125,7 +125,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
       }
       catch (\Exception $e) {
         // Re-throw a sanity exception.
-        throw new \ModuleBuilder\Exception\SanityException('data_directory_exists');
+        throw new \DrupalCodeBuilder\Exception\SanityException('data_directory_exists');
       }
     }
 
@@ -137,7 +137,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     // Sanity level 'component_data_processed':
     $hooks_processed = $this->hooks_directory . "/hooks_processed.php";
     if (!file_exists($hooks_processed)) {
-      throw new \ModuleBuilder\Exception\SanityException('component_data_processed');
+      throw new \DrupalCodeBuilder\Exception\SanityException('component_data_processed');
     }
 
     // This is as far as we need to go for the hook_data level.

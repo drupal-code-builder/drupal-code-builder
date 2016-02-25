@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\HookImplementation6.
+ * Contains DrupalCodeBuilder\Generator\HookImplementation6.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator class for hook implementations for Drupal 6.

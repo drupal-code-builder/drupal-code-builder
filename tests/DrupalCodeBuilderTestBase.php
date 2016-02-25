@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ModuleBuilderTestBase.
+ * Contains DrupalCodeBuilderTestBase.
  */
 
 /**
@@ -10,7 +10,7 @@
  *
  * Contains helper methods and assertions.
  */
-abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
+abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
 
   /**
    * Perform the factory setup, spoofing in the given core major version.
@@ -18,11 +18,11 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
    * @param $version
    *  A core major version number,
    */
-  protected function setupModuleBuilder($version) {
-    $environment = new \ModuleBuilder\Environment\TestsSampleLocation;
-    $version_helper = new \ModuleBuilder\Environment\VersionHelperTestsPHPUnit;
+  protected function setupDrupalCodeBuilder($version) {
+    $environment = new \DrupalCodeBuilder\Environment\TestsSampleLocation;
+    $version_helper = new \DrupalCodeBuilder\Environment\VersionHelperTestsPHPUnit;
     $version_helper->setFakeCoreMajorVersion(7);
-    \ModuleBuilder\Factory::setEnvironment($environment, $version_helper);
+    \DrupalCodeBuilder\Factory::setEnvironment($environment, $version_helper);
   }
 
   /**
@@ -35,7 +35,7 @@ abstract class ModuleBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  An array of files.
    */
   protected function generateModuleFiles($module_data) {
-    $mb_task_handler_generate = \ModuleBuilder\Factory::getTask('Generate', 'module');
+    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $root_generator = $mb_task_handler_generate->getRootGenerator();
     $component_data_info = $root_generator->getComponentDataInfo();
 

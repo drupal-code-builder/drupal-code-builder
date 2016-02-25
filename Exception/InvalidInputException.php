@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Exception\InvalidInputException.
+ * Contains DrupalCodeBuilder\Exception\InvalidInputException.
  */
 
-namespace ModuleBuilder\Exception;
+namespace DrupalCodeBuilder\Exception;
 
 /**
  * Thrown when input values are invalid.

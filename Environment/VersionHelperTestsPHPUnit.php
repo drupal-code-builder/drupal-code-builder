@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\BaseEnvironment\VersionHelperTests.
+ * Contains DrupalCodeBuilder\BaseEnvironment\VersionHelperTests.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment helper for testing with PHPUnit.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \ModuleBuilder\Environment\EnvironmentInterface.
+ * Contains \DrupalCodeBuilder\Environment\EnvironmentInterface.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Interface for environments.
@@ -15,7 +15,7 @@ interface EnvironmentInterface {
   /**
    * Sanity check our basic environment to a specified level.
    *
-   * This is called by ModuleBuilder\Factory when a Task is requested from it.
+   * This is called by DrupalCodeBuilder\Factory when a Task is requested from it.
    *
    * The tests can be skipped by first calling skipSanityCheck(). This should
    * only be used in rare circumstances (such as drush autocomplete).
@@ -28,7 +28,7 @@ interface EnvironmentInterface {
    *    - 'component_data_processed': The hook data files are present in the
    *      hooks directory.
    *
-   * @throws \ModuleBuilder\Exception\SanityException
+   * @throws \DrupalCodeBuilder\Exception\SanityException
    *  Throws an exception if the environment is not ready at the specified
    *  level. It's up to the caller to provide meaningful feedback to the user.
    */
@@ -39,8 +39,8 @@ interface EnvironmentInterface {
    *
    * This may be set on the environment after it has been initialized. Example:
    * @code
-   * \ModuleBuilder\Factory::setEnvironmentClass('Drush', 8);
-   * \ModuleBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
+   * \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
+   * \DrupalCodeBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
    * @endcode
    *
    * @param bool $setting

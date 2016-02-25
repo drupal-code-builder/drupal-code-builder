@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\Collect5.
+ * Contains DrupalCodeBuilder\Task\Collect5.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for collecting and processing hook definitions.

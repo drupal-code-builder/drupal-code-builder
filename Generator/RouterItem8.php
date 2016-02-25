@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\RouterItem8.
+ * Contains DrupalCodeBuilder\Generator\RouterItem8.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for router item on Drupal 8.

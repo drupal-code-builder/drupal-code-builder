@@ -6,7 +6,7 @@
  */
 
 // Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/ModuleBuilderTestBase.php';
+require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
 
 /**
  * Basic test class.
@@ -16,13 +16,13 @@ require_once __DIR__ . '/ModuleBuilderTestBase.php';
  *   vendor/phpunit/phpunit/phpunit  tests/ComponentTestsTest.php
  * @endcode
  */
-class ComponentTestsTest extends ModuleBuilderTestBase {
+class ComponentTestsTest extends DrupalCodeBuilderTestBase {
 
   /**
    * Test Tests component.
    */
   function testModuleGenerationTests() {
-    $this->setupModuleBuilder(7);
+    $this->setupDrupalCodeBuilder(7);
 
     // Create a module.
     $module_name = 'testmodule';

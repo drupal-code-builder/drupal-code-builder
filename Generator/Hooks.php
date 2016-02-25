@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\Hooks.
+ * Contains DrupalCodeBuilder\Generator\Hooks.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator base class for module hooks.
@@ -20,7 +20,7 @@ namespace ModuleBuilder\Generator;
  *
  * TODO: make this work for theme hooks too?
  *
- * @see ModuleBuilder\Generator\ModuleCodeFile
+ * @see DrupalCodeBuilder\Generator\ModuleCodeFile
  */
 class Hooks extends BaseGenerator {
 
@@ -161,7 +161,7 @@ class Hooks extends BaseGenerator {
    */
   function getTemplates($module_data, $requested_hook_list) {
     // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_report = \ModuleBuilder\Factory::getTask('ReportHookData');
+    $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
 
     // Frankencoding to old variable names.
     $requested_hooks = $requested_hook_list;
@@ -230,7 +230,7 @@ class Hooks extends BaseGenerator {
     //  - FILENAME.template, where the modulename is replaced with 'hooks', hence
     //    hooks.module.template, hooks.install.template, hooks.views.inc.template.
     //  - hooks.template - the base template, final fallback
-    // These are found in module_builder/templates/VERSION, and
+    // These are found in drupal_code_builder/templates/VERSION, and
     // in addition, a file may be overridden by being present in the user's
     // data directory. Though just what the 'data directory' means exactly is
     // not yet properly defined...
@@ -262,14 +262,14 @@ class Hooks extends BaseGenerator {
 
     // Step 2:
     // Now we parse the templates we need.
-    // We look in two places: module_builder's own '/templates' folder, and the optional
+    // We look in two places: drupal_code_builder's own '/templates' folder, and the optional
     // location given for user data (the latter is in fact TODO...)
     // User templates override on a per-file basis, so a custom
     // node.hooks.template will only override that same file in the module data;
     // if the hook is not requested as part of a group then that file will not be considered.
     // (Though groups are broken for now...)
-    $version = \ModuleBuilder\Factory::getEnvironment()->getCoreMajorVersion();
-    $template_base_path_module = \ModuleBuilder\Factory::getEnvironment()->getPath('templates') . '/' . $version;
+    $version = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
+    $template_base_path_module = \DrupalCodeBuilder\Factory::getEnvironment()->getPath('templates') . '/' . $version;
     //print "base path: $template_base_path_module";
     // $template_base_paths['module']
     // $template_base_paths['user']
@@ -344,7 +344,7 @@ class Hooks extends BaseGenerator {
   }
 
   /**
-   * Parse a module_builder template file.
+   * Parse a drupal_code_builder template file.
    *
    * Template files are composed of several sections in the form of:
    *

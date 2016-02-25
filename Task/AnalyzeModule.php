@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Task\AnalyzeModule.
+ * Contains DrupalCodeBuilder\Task\AnalyzeModule.
  */
 
-namespace ModuleBuilder\Task;
+namespace DrupalCodeBuilder\Task;
 
 /**
  * Task handler for analyzing an existing module.

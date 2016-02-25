@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Environment\TestsSampleLocation.
+ * Contains DrupalCodeBuilder\Environment\TestsSampleLocation.
  */
 
-namespace ModuleBuilder\Environment;
+namespace DrupalCodeBuilder\Environment;
 
 /**
  * Environment class for tests using prepared sample hook data.

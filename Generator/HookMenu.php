@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains ModuleBuilder\Generator\HookMenu.
+ * Contains DrupalCodeBuilder\Generator\HookMenu.
  */
 
-namespace ModuleBuilder\Generator;
+namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for hook_menu() implementation.
