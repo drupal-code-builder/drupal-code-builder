@@ -120,13 +120,13 @@ Default is 'all' if writing new files, 'code' if appending to file or outputting
   $items['mb-theme'] = array(
     'callback' => 'drush_module_builder_callback_build_theme',
     'aliases' => array('mbt'),
-    'description' => "TODO.",
+    'description' => "Generate template files for a Drupal theme. EXPERIMENTAL.",
     'arguments' => array(
       'theme name' => "The machine name of the theme. Use '.' to specify the current folder name.",
       'themeables' => "Short names of templates or theme functions, separated by spaces.",
     ),
     'options' => array(
-      'write' => 'Write files to sites/all/modules. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
+      'write' => 'Write files to sites/all/themes. Will prompt to overwrite existing files; use yes to force. Use quiet to suppress output to the terminal.',
       'parent' => "Name of a theme folder to place this new theme into; use if this theme is to be added to an existing package. Use '.' for the current working directory.",
     ),
   );
