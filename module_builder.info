@@ -1,8 +1,0 @@
-name = Module Builder
-description = Builds scaffolding for custom modules.
-package = Development
-core = 7.x
-
-files[] = module_builder.module
-files[] = includes/module_builder.admin.inc
-files[] = tests/module_builder.test
