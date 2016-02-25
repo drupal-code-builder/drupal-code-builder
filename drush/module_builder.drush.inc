@@ -25,6 +25,7 @@ function module_builder_drush_init() {
  */
 function module_builder_drush_init_helper() {
   // Load the file containing our factory class.
+  // TODO: remove this once we're using Composer to load Module Builder.
   include_once(dirname(__FILE__) . '/../Factory.php');
 
   // Set up the MB factory.
@@ -33,23 +34,10 @@ function module_builder_drush_init_helper() {
 
 /**
  * Implementation of hook_drush_command().
- *
- * In this hook, you specify which commands your
- * drush module makes available, what it does and
- * description.
- *
- * Notice how this structure closely resembles how
- * you define menu hooks.
- *
- * @See drush_parse_command() for a list of recognized keys.
- *
- * @return
- *   An associative array describing your command(s).
  */
 function module_builder_drush_command() {
   $items = array();
 
-  // the key in the $items array is the name of the command.
   $items['mb-build'] = array(
     'callback' => 'drush_module_builder_callback_build_module',
     'description' => "Generate the code for a new Drupal module, including file headers and hook implementations.",
@@ -150,7 +138,6 @@ Default is 'all' if writing new files, 'code' if appending to file or outputting
       'data' => "Location to save downloaded files. May be absolute, or relative to Drupal files dir. Defaults to 'files/hooks'.",
     ),
     'aliases' => array('mbdl'),
-    //'bootstrap' => DRUSH_BOOTSTRAP_DRUSH, // No bootstrap at all.
   );
 
   $items['mb-list'] = array(
@@ -212,15 +199,6 @@ Default is 'all' if writing new files, 'code' if appending to file or outputting
 
 /**
  * Implementation of hook_drush_help().
- *
- * This function is called whenever a drush user calls
- * 'drush help <name-of-your-command>'
- *
- * @param
- *   A string with the help section (prepend with 'drush:')
- *
- * @return
- *   A string with the help text for your command.
  */
 function module_builder_drush_help($section) {
   switch ($section) {
@@ -254,8 +232,14 @@ function module_builder_handle_sanity_exception($e) {
  * Module builder drush command callback.
  *
  * Form:
- * $drush mb machine_name hookA hookB hookC
- * where 'hookA' is the short name, ie 'menu' not hook_menu'.
+ *  $drush mb machine_name hookA hookB hookC
+ *    perms: permission_name
+ *    routes: path/to/thing another/path
+ *    readme! settings-form! tests!
+ * Hook names may be short or long, e.g. both 'help' and 'hook_help' are
+ * allowed. Parameters ending in a ':' are markers, which introduce a new type
+ * of parameter, such as routes and plugins. Parameters ending in '!' are
+ * booleans which add a single component such as a README file.
  */
 function drush_module_builder_callback_build_module() {
   $commands = func_get_args();
@@ -404,10 +388,6 @@ function drush_module_builder_callback_build_module() {
 
 /**
  * Command argument complete callback: mb-build.
- *
- * Of form COMMANDFILE_COMMAND_complete().
- *
- * (Lousy Drush docs: COMMAND is module_builder_callback_build, apparently!)
  *
  * Debug this with, for example:
  *  $ drush --early=includes/complete.inc --complete-debug drush mb foo ini
