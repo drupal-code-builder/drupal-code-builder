@@ -508,7 +508,12 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
 }
 
 /**
- * Workhorse for various Drush command callbacks.
+ * Builds a Drupal component.
+ *
+ * This is a common helper for Drush command callbacks, that each deal with a
+ * single type of component, e.g. modules or themes.
+ *
+ * This hands over to module_builder_drush_output_code() to output the code.
  *
  * @param $commands
  *  The commands array; the original parameters from the Drush command callback.
