@@ -197,8 +197,6 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * {@inheritdoc}
    */
   public function invokeInfoHook() {
-    // The tricky part is that we want to include ourselves, but module_builder
-    // might not be installed (or even present) in Drupal if we are on Drush.
     return $this->version_helper->invokeInfoHook();
   }
 
