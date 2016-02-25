@@ -526,6 +526,11 @@ function drush_module_builder_callback_build_component($component_type = NULL) {
  *      'hooks: menu init presets: node field-widget'
  *    - 'drush_option': A string giving the drush option to take this property's
  *      value from.
+ *    - 'drush_no_option_list': Suppress the output of an option list for this
+ *      property. Useful for a property whose list of options is very large.
+ *    - 'drush_value_process': A callable to apply processing to the property's
+ *      value before passing it to the generator. This receives the value as its
+ *      parameter.
  * @param $component_data = array()
  *  Initial component data, into which data obtained from the user will be
  *  added. Command callbacks may wish to gather extra data, or add defaults.
