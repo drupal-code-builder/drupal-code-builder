@@ -71,9 +71,6 @@ class Hooks extends BaseGenerator {
     // we want. This is of the form:
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
     $hook_file_data = $this->getTemplates($module_data, $requested_hook_list);
-    // Set this on the global component data for use by subcomponents.
-    // TODO: is anyone using this?
-    $this->base_component->component_data['hook_file_data'] = $hook_file_data;
 
     // Determine whether we need to filter the code files or not.
     // If the build request is empty, or one of 'code', 'all', or 'hooks, then

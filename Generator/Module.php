@@ -88,9 +88,6 @@ class Module extends RootComponent {
    *      to any that are added automatically). This should in the same form
    *      as the return from requiredComponents(), thus keyed by component name,
    *      with values either a component type or an array of data.
-   *  Properties added by generators during the process:
-   *    - 'hook_file_data': Added by the Hooks generator. Keyed by the component
-   *      names of the ModuleCodeFile type components that Hooks adds.
    */
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
