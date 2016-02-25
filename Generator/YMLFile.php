@@ -37,9 +37,9 @@ class YMLFile extends File {
    * Build the code files.
    */
   public function getFileInfo() {
-    // Our component name is our future filename, with the token '%module' to
-    // be replaced.
-    $this->filename = str_replace('%module', $this->base_component->component_data['root_name'], $this->name);
+    // Our component name is our future filename. Tokens such as '%module' are
+    // replaced by assembleFiles().
+    $this->filename = $this->name;
 
     $files[$this->filename] = array(
       'path' => '', // Means base folder.

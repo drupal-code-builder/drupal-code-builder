@@ -18,7 +18,7 @@ class Info8 extends Info {
   public function getFileInfo() {
     $files = parent::getFileInfo();
 
-    $files['info']['filename'] = $this->base_component->component_data['root_name'] . '.info.yml';
+    $files['info']['filename'] = '%module.info.yml';
 
     return $files;
   }

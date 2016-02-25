@@ -355,8 +355,10 @@ class Generate extends Base {
 
       $code = implode($file_info['join_string'], $file_info['body']);
 
+      // Replace tokens in file contents and file path.
       $variables = $this->root_generator->getReplacements();
       $code = strtr($code, $variables);
+      $filepath = strtr($filepath, $variables);
 
       $return[$filepath] = $code;
     }
