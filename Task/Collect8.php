@@ -273,8 +273,6 @@ class Collect8 extends Collect {
    *
    * This allows entire files or individual hooks to have a file other than
    * the default %module.module as their destination.
-   *
-   * @see module_builder_module_builder_info().
    */
   private function getHookDestinations(&$hook_files) {
     // Get our data.
