@@ -202,4 +202,14 @@ class Factory {
     return $class;
   }
 
+  /**
+   * Returns the base directory Drupal Code Builder is installed in.
+   *
+   * @return
+   *  The base directory path.
+   */
+  public static function getLibraryBaseDirectory() {
+    return __DIR__;
+  }
+
 }
