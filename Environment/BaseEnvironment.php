@@ -4,11 +4,11 @@
  * @file
  * Contains DrupalCodeBuilder\Environment\BaseEnvironment.
  *
- * The environment system provides an abstraction layer between Module Builder
- * and its current environment, e.g., whether we are running as a Drush plugin,
- * a Drupal module, or being loaded as a library, and what major version of
- * Drupal core we are running on. The environment handler takes care of things
- * such as:
+ * The environment system provides an abstraction layer between Drupal Code
+ * Builder and its current environment, e.g., whether we are running as a Drush
+ * plugin, a Drupal module, or being loaded as a library, and what major version
+ * of Drupal core we are running on. The environment handler takes care of
+ * things such as:
  *  - how to output debug data
  *  - how to get the Drupal core version
  *  - how to load an include file with a version suffix

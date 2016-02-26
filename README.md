@@ -6,7 +6,7 @@ This is a library, and has no UI of its own. It can be used in several ways:
 
 Drupal Code Builder can be used for any current version of Drupal (7, 8). Older versions are unsupported, but it should produce code for 5 and 6 also.
 
-## What Module Builder can do
+## What Drupal Code Builder can do
 
 Module builder can generate the following for a module:
 - code files, containing hook implementations

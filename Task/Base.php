@@ -14,8 +14,8 @@ namespace DrupalCodeBuilder\Task;
  * getting hook data by finding and processing api.php files is the domain of
  * the Collect task.
  *
- * Public methods on Task classes are part of Module Builder's public API, and
- * may be considered stable.
+ * Public methods on Task classes are part of Drupal Code Builder's public API,
+ * and may be considered stable.
  *
  * Each task may also define the sanity level it requires. This allows the
  * Environment object to state whether the current environment is ready for the

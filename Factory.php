@@ -21,19 +21,21 @@ if (!class_exists('\DrupalCodeBuilder\Environment\BaseEnvironment')) {
 }
 
 /**
- * Static factory class for creating Module Builder task handlers.
+ * Static factory class for creating Drupal Code Builder task handlers.
  *
  * A Task Handler is an object which provides a public API which can be used by
  * different UIs for performing various module builder tasks.
  *
  * The process for using this factory is:
- *  - Set the environment that represents where you are using Module Builder.
+ *  - Set the environment that represents where you are using Drupal Code
+ *    Builder, such as Drush or Drupal.
  *  - Get the task handler. This checks the environment to see whether it is
- *    suitably set up for the requested task (eg, whether the hooks directory
+ *    suitably set up for the requested task (e.g., whether the hooks directory
  *    exists, whether hook data has been compiled). This throws an exception if
  *    the environment is not in a state the task requires.
  *  - Execute the required method on the task handler.
  *
+ * For example:
  * @code
  *  include_once('path/to/Factory.php');
  *  \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
@@ -54,7 +56,7 @@ class Factory {
    * Set the environment using a class name.
    *
    * This is a convenience wrapper around setEnvironment() for when using an
-   * environment class native to Module Builder.
+   * environment class native to Drupal Code Builder.
    *
    * @param $environment_class
    *  The name of the environment class to set on the factory, relative to the

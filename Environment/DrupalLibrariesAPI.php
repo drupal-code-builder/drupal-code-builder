@@ -10,8 +10,8 @@ namespace DrupalCodeBuilder\Environment;
 /**
  * Environment class for use as a Drupal Library with Libraries API.
  *
- * This allows use of Module Builder in the following way:
- *  - place the Module Builder folder in sites/all/libraries
+ * This allows use of Drupal Code Builder in the following way:
+ *  - place the Drupal Code Builder folder in sites/all/libraries
  *  - create a normal Drupal module, with a dependency on Libraries API.
  *
  * Sample code to include MB as a library:
