@@ -37,8 +37,11 @@ class Collect extends Base {
     // Update the hook documentation.
     $hook_files = $this->gatherHookDocumentationFiles();
 
-    // Process the hook files.
-    $this->processHookData($hook_files);
+    // Process the hook files into a single array for storage.
+    $processed_hook_data = $this->processHookData($hook_files);
+
+    // Save the hook data.
+    $this->writeProcessedData($processed_hook_data, 'hooks');
   }
 
   /**
@@ -226,11 +229,6 @@ class Collect extends Base {
     //dsm($hook_groups);
     //print_r($hook_groups);
 
-    // Write the processed data to a file.
-    $directory = $this->environment->getHooksDirectory();
-    $serialized = serialize($hook_groups);
-    file_put_contents("$directory/hooks_processed.php", $serialized);
-
     return $hook_groups;
   }
 
@@ -337,6 +335,22 @@ class Collect extends Base {
   protected function getAdditionalHookInfo() {
     // Subclasses should override this.
     return array();
+  }
+
+  /**
+   * Write data to a file as serialized PHP.
+   *
+   * @param $data
+   *  An array of data to write.
+   * @param $type
+   *  A machine string used to form the filename. E.g. 'hooks'. This is
+   *  prepended to the filename.
+   */
+  protected function writeProcessedData($data, $type) {
+    // Write the processed data to a file.
+    $directory = $this->environment->getHooksDirectory();
+    $serialized = serialize($data);
+    file_put_contents("{$directory}/{$type}_processed.php", $serialized);
   }
 
 }

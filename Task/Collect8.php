@@ -23,9 +23,25 @@ class Collect8 extends Collect {
   }
 
   /**
-   * Collect data about plugin types.
+   * Collect data about plugin types and process it.
    */
   protected function collectPlugins() {
+    $plugin_manager_service_ids = $this->getPluginManagerServices();
+
+    $plugin_type_data = $this->gatherPluginTypeInfo($plugin_manager_service_ids);
+
+    // Save the data.
+    $this->writeProcessedData($plugin_type_data, 'plugins');
+  }
+
+  /**
+   * Detects services which are plugin managers.
+   *
+   * @return
+   *  An array of service IDs of all the services which we detected to be plugin
+   *  managers.
+   */
+  protected function getPluginManagerServices() {
     // Get the IDs of all services from the container.
     $service_ids = \Drupal::getContainer()->getServiceIds();
     //drush_print_r($service_ids);
@@ -45,7 +61,21 @@ class Collect8 extends Collect {
     // debug output easier to read through.
     //$plugin_manager_service_ids = array('plugin.manager.block');
 
-    // Assemble data from each one.
+    return $plugin_manager_service_ids;
+  }
+
+  /**
+   * Detects information about plugin types from the plugin manager services
+   *
+   * @param $plugin_manager_service_ids
+   *  An array of service IDs.
+   *
+   * @return
+   *  The assembled plugin type data.
+   *  TODO: document this.
+   */
+  protected function gatherPluginTypeInfo($plugin_manager_service_ids) {
+    // Assemble data from each plugin manager.
     $plugin_type_data = array();
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
       // Get the class for the service.
@@ -205,10 +235,7 @@ class Collect8 extends Collect {
 
     //drush_print_r($plugin_type_data);
 
-    // Write the processed data to a file.
-    $directory = $this->environment->getHooksDirectory();
-    $serialized = serialize($plugin_type_data);
-    file_put_contents("$directory/plugins_processed.php", $serialized);
+    return $plugin_type_data;
   }
 
   /**
