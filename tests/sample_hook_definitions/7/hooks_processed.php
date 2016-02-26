@@ -1,328 +1,115 @@
-a:2:{s:4:"node";a:32:{s:16:"hook_node_grants";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_node_grants";s:10:"definition";s:40:"function hook_node_grants($account, $op)";s:11:"description";s:60:"Inform the node access system what permissions the user has.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:166:"
-  if (user_access('access private content', $account)) {
-    $grants['example'] = array(1);
-  }
-  $grants['example_owner'] = array($account->uid);
-  return $grants;
-";}s:24:"hook_node_access_records";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:24:"hook_node_access_records";s:10:"definition";s:40:"function hook_node_access_records($node)";s:11:"description";s:57:"Set permissions for a node to be written to the database.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:1017:"
-  // We only care about the node if it has been marked private. If not, it is
-  // treated just like any other node and we completely ignore it.
-  if ($node->private) {
-    $grants = array();
-    // Only published nodes should be viewable to all users. If we allow access
-    // blindly here, then all users could view an unpublished node.
-    if ($node->status) {
-      $grants[] = array(
-        'realm' => 'example',
-        'gid' => 1,
-        'grant_view' => 1,
-        'grant_update' => 0,
-        'grant_delete' => 0,
-        'priority' => 0,
-      );
-    }
-    // For the example_author array, the GID is equivalent to a UID, which
-    // means there are many groups of just 1 user.
-    // Note that an author can always view his or her nodes, even if they
-    // have status unpublished.
-    $grants[] = array(
-      'realm' => 'example_author',
-      'gid' => $node->uid,
-      'grant_view' => 1,
-      'grant_update' => 1,
-      'grant_delete' => 1,
-      'priority' => 0,
-    );
-
-    return $grants;
-  }
-";}s:30:"hook_node_access_records_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:30:"hook_node_access_records_alter";s:10:"definition";s:56:"function hook_node_access_records_alter(&$grants, $node)";s:11:"description";s:66:"Alter permissions for a node before it is written to the database.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:526:"
-  // Our module allows editors to mark specific articles with the 'is_preview'
-  // field. If the node being saved has a TRUE value for that field, then only
-  // our grants are retained, and other grants are removed. Doing so ensures
-  // that our rules are enforced no matter what priority other grants are given.
-  if ($node->is_preview) {
-    // Our module grants are set in $grants['example'].
-    $temp = $grants['example'];
-    // Now remove all module grants but our own.
-    $grants = array('example' => $temp);
-  }
-";}s:22:"hook_node_grants_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:22:"hook_node_grants_alter";s:10:"definition";s:56:"function hook_node_grants_alter(&$grants, $account, $op)";s:11:"description";s:67:"Alter user access rules when trying to view, edit or delete a node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:614:"
-  // Our sample module never allows certain roles to edit or delete
-  // content. Since some other node access modules might allow this
-  // permission, we expressly remove it by returning an empty $grants
-  // array for roles specified in our variable setting.
-
-  // Get our list of banned roles.
-  $restricted = variable_get('example_restricted_roles', array());
-
-  if ($op != 'view' && !empty($restricted)) {
-    // Now check the roles for this account against the restrictions.
-    foreach ($restricted as $role_id) {
-      if (isset($account->roles[$role_id])) {
-        $grants = array();
-      }
-    }
-  }
-";}s:20:"hook_node_operations";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:20:"hook_node_operations";s:10:"definition";s:31:"function hook_node_operations()";s:11:"description";s:25:"Add mass node operations.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:1484:"
-  $operations = array(
-    'publish' => array(
-      'label' => t('Publish selected content'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED)),
-    ),
-    'unpublish' => array(
-      'label' => t('Unpublish selected content'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_NOT_PUBLISHED)),
-    ),
-    'promote' => array(
-      'label' => t('Promote selected content to front page'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'promote' => NODE_PROMOTED)),
-    ),
-    'demote' => array(
-      'label' => t('Demote selected content from front page'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('promote' => NODE_NOT_PROMOTED)),
-    ),
-    'sticky' => array(
-      'label' => t('Make selected content sticky'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'sticky' => NODE_STICKY)),
-    ),
-    'unsticky' => array(
-      'label' => t('Make selected content not sticky'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('sticky' => NODE_NOT_STICKY)),
-    ),
-    'delete' => array(
-      'label' => t('Delete selected content'),
-      'callback' => NULL,
-    ),
+a:2:{s:5:"block";a:8:{s:15:"hook_block_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:15:"hook_block_info";s:10:"definition";s:26:"function hook_block_info()";s:11:"description";s:41:"Define all blocks provided by the module.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:276:"
+  // This example comes from node.module.
+  $blocks['syndicate'] = array(
+    'info' => t('Syndicate'),
+    'cache' => DRUPAL_NO_CACHE
   );
-  return $operations;
-";}s:16:"hook_node_delete";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_node_delete";s:10:"definition";s:32:"function hook_node_delete($node)";s:11:"description";s:25:"Respond to node deletion.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:76:"
-  db_delete('mytable')
-    ->condition('nid', $node->nid)
-    ->execute();
-";}s:25:"hook_node_revision_delete";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:25:"hook_node_revision_delete";s:10:"definition";s:41:"function hook_node_revision_delete($node)";s:11:"description";s:39:"Respond to deletion of a node revision.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:76:"
-  db_delete('mytable')
-    ->condition('vid', $node->vid)
-    ->execute();
-";}s:16:"hook_node_insert";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_node_insert";s:10:"definition";s:32:"function hook_node_insert($node)";s:11:"description";s:34:"Respond to creation of a new node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:126:"
-  db_insert('mytable')
-    ->fields(array(
-      'nid' => $node->nid,
-      'extra' => $node->extra,
-    ))
-    ->execute();
-";}s:14:"hook_node_load";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:14:"hook_node_load";s:10:"definition";s:39:"function hook_node_load($nodes, $types)";s:11:"description";s:54:"Act on arbitrary nodes being loaded from the database.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:442:"
-  // Decide whether any of $types are relevant to our purposes.
-  if (count(array_intersect($types_we_want_to_process, $types))) {
-    // Gather our extra data for each of these nodes.
-    $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
-    // Add our extra data to the node objects.
-    foreach ($result as $record) {
-      $nodes[$record->nid]->foo = $record->foo;
-    }
-  }
-";}s:16:"hook_node_access";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_node_access";s:10:"definition";s:47:"function hook_node_access($node, $op, $account)";s:11:"description";s:25:"Control access to a node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:826:"
-  $type = is_string($node) ? $node : $node->type;
 
-  if (in_array($type, node_permissions_get_configured_types())) {
-    if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
-      return NODE_ACCESS_ALLOW;
-    }
-
-    if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
-        return NODE_ACCESS_ALLOW;
-      }
-    }
-
-    if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
-        return NODE_ACCESS_ALLOW;
-      }
-    }
-  }
-
-  // Returning nothing from this function would have the same effect.
-  return NODE_ACCESS_IGNORE;
-";}s:17:"hook_node_prepare";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:17:"hook_node_prepare";s:10:"definition";s:33:"function hook_node_prepare($node)";s:11:"description";s:60:"Act on a node object about to be shown on the add/edit form.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:114:"
-  if (!isset($node->comment)) {
-    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
-  }
-";}s:23:"hook_node_search_result";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:23:"hook_node_search_result";s:10:"definition";s:39:"function hook_node_search_result($node)";s:11:"description";s:49:"Act on a node being displayed as a search result.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:226:"
-  $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
-  return array('comment' => format_plural($comments, '1 comment', '@count comments'));
-";}s:17:"hook_node_presave";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:17:"hook_node_presave";s:10:"definition";s:33:"function hook_node_presave($node)";s:11:"description";s:40:"Act on a node being inserted or updated.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:152:"
-  if ($node->nid && $node->moderate) {
-    // Reset votes when node is updated:
-    $node->score = 0;
-    $node->users = '';
-    $node->votes = 0;
-  }
-";}s:16:"hook_node_update";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_node_update";s:10:"definition";s:32:"function hook_node_update($node)";s:11:"description";s:29:"Respond to updates to a node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:121:"
-  db_update('mytable')
-    ->fields(array('extra' => $node->extra))
-    ->condition('nid', $node->nid)
-    ->execute();
-";}s:22:"hook_node_update_index";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:22:"hook_node_update_index";s:10:"definition";s:38:"function hook_node_update_index($node)";s:11:"description";s:42:"Act on a node being indexed for searching.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:370:"
-  $text = '';
-  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
-  foreach ($comments as $comment) {
-    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', TRUE);
-  }
-  return $text;
-";}s:18:"hook_node_validate";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:18:"hook_node_validate";s:10:"definition";s:55:"function hook_node_validate($node, $form, &$form_state)";s:11:"description";s:60:"Perform node validation before a node is created or updated.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:173:"
-  if (isset($node->end) && isset($node->start)) {
-    if ($node->start > $node->end) {
-      form_set_error('time', t('An event may not end before it starts.'));
-    }
-  }
-";}s:16:"hook_node_submit";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_node_submit";s:10:"definition";s:53:"function hook_node_submit($node, $form, &$form_state)";s:11:"description";s:65:"Act on a node after validated form values have been copied to it.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:310:"
-  // Decompose the selected menu parent option into 'menu_name' and 'plid', if
-  // the form used the default parent selection widget.
-  if (!empty($form_state['values']['menu']['parent'])) {
-    list($node->menu['menu_name'], $node->menu['plid']) = explode(':', $form_state['values']['menu']['parent']);
-  }
-";}s:14:"hook_node_view";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:14:"hook_node_view";s:10:"definition";s:53:"function hook_node_view($node, $view_mode, $langcode)";s:11:"description";s:55:"Act on a node that is being assembled before rendering.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:160:"
-  $node->content['my_additional_field'] = array(
-    '#markup' => $additional_field,
-    '#weight' => 10,
-    '#theme' => 'mymodule_my_additional_field',
+  $blocks['recent'] = array(
+    'info' => t('Recent content'),
+    // DRUPAL_CACHE_PER_ROLE will be assumed.
   );
-";}s:20:"hook_node_view_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:20:"hook_node_view_alter";s:10:"definition";s:38:"function hook_node_view_alter(&$build)";s:11:"description";s:33:"Alter the results of node_view().";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:297:"
-  if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
-    // Change its weight.
-    $build['an_additional_field']['#weight'] = -10;
-  }
 
-  // Add a #post_render callback to act on the rendered HTML of the node.
-  $build['#post_render'][] = 'my_module_node_post_render';
-";}s:14:"hook_node_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:14:"hook_node_info";s:10:"definition";s:25:"function hook_node_info()";s:11:"description";s:34:"Define module-provided node types.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:194:"
-  return array(
-    'blog' => array(
-      'name' => t('Blog entry'),
-      'base' => 'blog',
-      'description' => t('Use for multi-user blogs. Every user gets a personal blog.'),
-    )
-  );
-";}s:12:"hook_ranking";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:12:"hook_ranking";s:10:"definition";s:23:"function hook_ranking()";s:11:"description";s:72:"Provide additional methods of scoring for core search results for nodes.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:754:"
-  // If voting is disabled, we can avoid returning the array, no hard feelings.
-  if (variable_get('vote_node_enabled', TRUE)) {
-    return array(
-      'vote_average' => array(
-        'title' => t('Average vote'),
-        // Note that we use i.sid, the search index's search item id, rather than
-        // n.nid.
-        'join' => 'LEFT JOIN {vote_node_data} vote_node_data ON vote_node_data.nid = i.sid',
-        // The highest possible score should be 1, and the lowest possible score,
-        // always 0, should be 0.
-        'score' => 'vote_node_data.average / CAST(%f AS DECIMAL)',
-        // Pass in the highest possible voting score as a decimal argument.
-        'arguments' => array(variable_get('vote_score_max', 5)),
-      ),
+  return $blocks;
+";}s:21:"hook_block_info_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:21:"hook_block_info_alter";s:10:"definition";s:62:"function hook_block_info_alter(&$blocks, $theme, $code_blocks)";s:11:"description";s:54:"Change block definition before saving to the database.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:73:"
+  // Disable the login block.
+  $blocks['user']['login']['status'] = 0;
+";}s:20:"hook_block_configure";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:20:"hook_block_configure";s:10:"definition";s:42:"function hook_block_configure($delta = '')";s:11:"description";s:40:"Define a configuration form for a block.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:448:"
+  // This example comes from node.module.
+  $form = array();
+  if ($delta == 'recent') {
+    $form['node_recent_block_count'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of recent content items to display'),
+      '#default_value' => variable_get('node_recent_block_count', 10),
+      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
     );
   }
-";}s:21:"hook_node_type_insert";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:21:"hook_node_type_insert";s:10:"definition";s:37:"function hook_node_type_insert($info)";s:11:"description";s:30:"Respond to node type creation.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:124:"
-  drupal_set_message(t('You have just created a content type with a machine name %type.', array('%type' => $info->type)));
-";}s:21:"hook_node_type_update";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:21:"hook_node_type_update";s:10:"definition";s:37:"function hook_node_type_update($info)";s:11:"description";s:29:"Respond to node type updates.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:252:"
-  if (!empty($info->old_type) && $info->old_type != $info->type) {
-    $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_OPEN);
-    variable_del('comment_' . $info->old_type);
-    variable_set('comment_' . $info->type, $setting);
-  }
-";}s:21:"hook_node_type_delete";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:21:"hook_node_type_delete";s:10:"definition";s:37:"function hook_node_type_delete($info)";s:11:"description";s:30:"Respond to node type deletion.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:43:"
-  variable_del('comment_' . $info->type);
-";}s:11:"hook_delete";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:11:"hook_delete";s:10:"definition";s:27:"function hook_delete($node)";s:11:"description";s:25:"Respond to node deletion.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:76:"
-  db_delete('mytable')
-    ->condition('nid', $node->nid)
-    ->execute();
-";}s:12:"hook_prepare";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:12:"hook_prepare";s:10:"definition";s:28:"function hook_prepare($node)";s:11:"description";s:60:"Act on a node object about to be shown on the add/edit form.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:377:"
-  $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE));
-  if ($file) {
-    if (!image_get_info($file->uri)) {
-      form_set_error($field_name, t('Uploaded file is not a valid image'));
-      return;
-    }
-  }
-  else {
-    return;
-  }
-  $node->images['_original'] = $file->uri;
-  _image_build_derivatives($node, TRUE);
-  $node->new_file = TRUE;
-";}s:9:"hook_form";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:9:"hook_form";s:10:"definition";s:39:"function hook_form($node, &$form_state)";s:11:"description";s:28:"Display a node editing form.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:713:"
-  $type = node_type_get_type($node);
-
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#default_value' => !empty($node->title) ? $node->title : '',
-    '#required' => TRUE, '#weight' => -5
-  );
-
-  $form['field1'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Custom field'),
-    '#default_value' => $node->field1,
-    '#maxlength' => 127,
-  );
-  $form['selectbox'] = array(
-    '#type' => 'select',
-    '#title' => t('Select box'),
-    '#default_value' => $node->selectbox,
-    '#options' => array(
-      1 => 'Option A',
-      2 => 'Option B',
-      3 => 'Option C',
-    ),
-    '#description' => t('Choose an option.'),
-  );
-
   return $form;
-";}s:11:"hook_insert";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:11:"hook_insert";s:10:"definition";s:27:"function hook_insert($node)";s:11:"description";s:34:"Respond to creation of a new node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:126:"
-  db_insert('mytable')
-    ->fields(array(
-      'nid' => $node->nid,
-      'extra' => $node->extra,
-    ))
-    ->execute();
-";}s:9:"hook_load";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:9:"hook_load";s:10:"definition";s:26:"function hook_load($nodes)";s:11:"description";s:44:"Act on nodes being loaded from the database.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:199:"
-  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN (:nids)', array(':nids' => array_keys($nodes)));
-  foreach ($result as $record) {
-    $nodes[$record->nid]->foo = $record->foo;
+";}s:15:"hook_block_save";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:15:"hook_block_save";s:10:"definition";s:54:"function hook_block_save($delta = '', $edit = array())";s:11:"description";s:59:"Save the configuration options from hook_block_configure().";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:154:"
+  // This example comes from node.module.
+  if ($delta == 'recent') {
+    variable_set('node_recent_block_count', $edit['node_recent_block_count']);
   }
-";}s:11:"hook_update";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:11:"hook_update";s:10:"definition";s:27:"function hook_update($node)";s:11:"description";s:29:"Respond to updates to a node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:121:"
-  db_update('mytable')
-    ->fields(array('extra' => $node->extra))
-    ->condition('nid', $node->nid)
-    ->execute();
-";}s:13:"hook_validate";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:13:"hook_validate";s:10:"definition";s:50:"function hook_validate($node, $form, &$form_state)";s:11:"description";s:60:"Perform node validation before a node is created or updated.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:173:"
-  if (isset($node->end) && isset($node->start)) {
-    if ($node->start > $node->end) {
-      form_set_error('time', t('An event may not end before it starts.'));
+";}s:15:"hook_block_view";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:15:"hook_block_view";s:10:"definition";s:37:"function hook_block_view($delta = '')";s:11:"description";s:48:"Return a rendered or renderable view of a block.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:757:"
+  // This example is adapted from node.module.
+  $block = array();
+
+  switch ($delta) {
+    case 'syndicate':
+      $block['subject'] = t('Syndicate');
+      $block['content'] = array(
+        '#theme' => 'feed_icon',
+        '#url' => 'rss.xml',
+        '#title' => t('Syndicate'),
+      );
+      break;
+
+    case 'recent':
+      if (user_access('access content')) {
+        $block['subject'] = t('Recent content');
+        if ($nodes = node_get_recent(variable_get('node_recent_block_count', 10))) {
+          $block['content'] = array(
+            '#theme' => 'node_recent_block',
+            '#nodes' => $nodes,
+          );
+        } else {
+          $block['content'] = t('No content available.');
+        }
+      }
+      break;
+  }
+  return $block;
+";}s:21:"hook_block_view_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:21:"hook_block_view_alter";s:10:"definition";s:46:"function hook_block_view_alter(&$data, $block)";s:11:"description";s:46:"Perform alterations to the content of a block.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:469:"
+  // Remove the contextual links on all blocks that provide them.
+  if (is_array($data['content']) && isset($data['content']['#contextual_links'])) {
+    unset($data['content']['#contextual_links']);
+  }
+  // Add a theme wrapper function defined by the current module to all blocks
+  // provided by the "somemodule" module.
+  if (is_array($data['content']) && $block->module == 'somemodule') {
+    $data['content']['#theme_wrappers'][] = 'mymodule_special_block';
+  }
+";}s:34:"hook_block_view_MODULE_DELTA_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:34:"hook_block_view_MODULE_DELTA_alter";s:10:"definition";s:59:"function hook_block_view_MODULE_DELTA_alter(&$data, $block)";s:11:"description";s:40:"Perform alterations to a specific block.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:377:"
+  // This code will only run for a specific block. For example, if MODULE_DELTA
+  // in the function definition above is set to "mymodule_somedelta", the code
+  // will only run on the "somedelta" block provided by the "mymodule" module.
+
+  // Change the title of the "somedelta" block provided by the "mymodule"
+  // module.
+  $data['subject'] = t('New title of the block');
+";}s:21:"hook_block_list_alter";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:21:"hook_block_list_alter";s:10:"definition";s:40:"function hook_block_list_alter(&$blocks)";s:11:"description";s:33:"Act on blocks prior to rendering.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:15:"hook_block_info";}s:5:"group";s:5:"block";s:9:"file_path";s:47:"/Users/joachim/bin/drupal_hooks/7/block.api.php";s:4:"body";s:1102:"
+  global $language, $theme_key;
+
+  // This example shows how to achieve language specific visibility setting for
+  // blocks.
+
+  $result = db_query('SELECT module, delta, language FROM {my_table}');
+  $block_languages = array();
+  foreach ($result as $record) {
+    $block_languages[$record->module][$record->delta][$record->language] = TRUE;
+  }
+
+  foreach ($blocks as $key => $block) {
+    // Any module using this alter should inspect the data before changing it,
+    // to ensure it is what they expect.
+    if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
+      // This block was added by a contrib module, leave it in the list.
+      continue;
+    }
+
+    if (!isset($block_languages[$block->module][$block->delta])) {
+      // No language setting for this block, leave it in the list.
+      continue;
+    }
+
+    if (!isset($block_languages[$block->module][$block->delta][$language->language])) {
+      // This block should not be displayed with the active language, remove
+      // from the list.
+      unset($blocks[$key]);
     }
   }
-";}s:9:"hook_view";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:9:"hook_view";s:10:"definition";s:37:"function hook_view($node, $view_mode)";s:11:"description";s:15:"Display a node.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:4:"node";s:9:"file_path";s:46:"/Users/joachim/bin/drupal_hooks/7/node.api.php";s:4:"body";s:419:"
-  if ($view_mode == 'full' && node_is_page($node)) {
-    $breadcrumb = array();
-    $breadcrumb[] = l(t('Home'), NULL);
-    $breadcrumb[] = l(t('Example'), 'example');
-    $breadcrumb[] = l($node->field1, 'example/' . $node->field1);
-    drupal_set_breadcrumb($breadcrumb);
-  }
-
-  $node->content['myfield'] = array(
-    '#markup' => theme('mymodule_myfield', $node->myfield),
-    '#weight' => 1,
-  );
-
-  return $node;
-";}}s:6:"system";a:122:{s:14:"hook_hook_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:14:"hook_hook_info";s:10:"definition";s:25:"function hook_hook_info()";s:11:"description";s:55:"Defines one or more hooks that are exposed by a module.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:138:"
+";}}s:6:"system";a:124:{s:14:"hook_hook_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:14:"hook_hook_info";s:10:"definition";s:25:"function hook_hook_info()";s:11:"description";s:55:"Defines one or more hooks that are exposed by a module.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:138:"
   $hooks['token_info'] = array(
     'group' => 'tokens',
   );
@@ -335,7 +122,7 @@ a:2:{s:4:"node";a:32:{s:16:"hook_node_grants";a:9:{s:4:"type";s:4:"hook";s:4:"na
   // sure the core token hooks are not found.
   $hooks['token_info']['group'] = 'mytokens';
   $hooks['tokens']['group'] = 'mytokens';
-";}s:16:"hook_entity_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_entity_info";s:10:"definition";s:27:"function hook_entity_info()";s:11:"description";s:72:"Inform the base system and the Field API about one or more entity types.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:3:{i:0;s:24:"callback_entity_info_uri";i:1;s:26:"callback_entity_info_label";i:2;s:29:"callback_entity_info_language";}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:1973:"
+";}s:16:"hook_entity_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:16:"hook_entity_info";s:10:"definition";s:27:"function hook_entity_info()";s:11:"description";s:72:"Inform the base system and the Field API about one or more entity types.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:3:{i:0;s:24:"callback_entity_info_uri";i:1;s:26:"callback_entity_info_label";i:2;s:29:"callback_entity_info_language";}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:1992:"
   $return = array(
     'node' => array(
       'label' => t('Node'),
@@ -383,7 +170,7 @@ a:2:{s:4:"node";a:32:{s:16:"hook_node_grants";a:9:{s:4:"type";s:4:"hook";s:4:"na
         'custom settings' => FALSE,
       ),
       'search_result' => array(
-        'label' => t('Search result'),
+        'label' => t('Search result highlighting input'),
         'custom settings' => FALSE,
       ),
     );
@@ -505,7 +292,7 @@ a:2:{s:4:"node";a:32:{s:16:"hook_node_grants";a:9:{s:4:"type";s:4:"hook";s:4:"na
   foreach ($result as $feed) {
     $queue->createItem($feed);
   }
-";}s:20:"hook_cron_queue_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:20:"hook_cron_queue_info";s:10:"definition";s:31:"function hook_cron_queue_info()";s:11:"description";s:62:"Declare queues holding items that need to be run periodically.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:128:"
+";}s:20:"hook_cron_queue_info";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:20:"hook_cron_queue_info";s:10:"definition";s:31:"function hook_cron_queue_info()";s:11:"description";s:62:"Declare queues holding items that need to be run periodically.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:1:{i:0;s:21:"callback_queue_worker";}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:128:"
   $queues['aggregator_feeds'] = array(
     'worker callback' => 'aggregator_refresh',
     'time' => 60,
@@ -834,6 +621,16 @@ a:2:{s:4:"node";a:32:{s:16:"hook_node_grants";a:9:{s:4:"type";s:4:"hook";s:4:"na
       'description' => t('Perform administration tasks for my module.'),
     ),
   );
+";}s:9:"hook_help";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:9:"hook_help";s:10:"definition";s:31:"function hook_help($path, $arg)";s:11:"description";s:25:"Provide online user help.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:1141:"
+  switch ($path) {
+    // Main module help for the block module
+    case 'admin/help#block':
+      return '<p>' . t('Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "Sidebar first", "Sidebar second", "Featured", "Content", "Header", "Footer", etc., and a block may appear in any one of these areas. The <a href="@blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.', array('@blocks' => url('admin/structure/block'))) . '</p>';
+
+    // Help for another path in the block module
+    case 'admin/structure/block':
+      return '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
+  }
 ";}s:10:"hook_theme";a:9:{s:4:"type";s:4:"hook";s:4:"name";s:10:"hook_theme";s:10:"definition";s:52:"function hook_theme($existing, $type, $theme, $path)";s:11:"description";s:53:"Register a module (or theme's) theme implementations.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:831:"
   return array(
     'forum_display' => array(
@@ -1770,6 +1567,10 @@ a:2:{s:4:"node";a:32:{s:16:"hook_node_grants";a:9:{s:4:"type";s:4:"hook";s:4:"na
     // Make sure the SSH option is listed first.
     $filetransfer_info['ssh']['weight'] = -10;
   }
+";}s:21:"callback_queue_worker";a:9:{s:4:"type";s:8:"callback";s:4:"name";s:21:"callback_queue_worker";s:10:"definition";s:48:"function callback_queue_worker($queue_item_data)";s:11:"description";s:28:"Work on a single queue item.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:94:"
+  $node = node_load($queue_item_data);
+  $node->title = 'Updated title';
+  node_save($node);
 ";}s:24:"callback_entity_info_uri";a:9:{s:4:"type";s:8:"callback";s:4:"name";s:24:"callback_entity_info_uri";s:10:"definition";s:42:"function callback_entity_info_uri($entity)";s:11:"description";s:29:"Return the URI for an entity.";s:11:"destination";s:14:"%module.module";s:12:"dependencies";a:0:{}s:5:"group";s:6:"system";s:9:"file_path";s:48:"/Users/joachim/bin/drupal_hooks/7/system.api.php";s:4:"body";s:60:"
   return array(
     'path' => 'node/' . $entity->nid,

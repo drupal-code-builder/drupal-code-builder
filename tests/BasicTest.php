@@ -52,7 +52,7 @@ class BasicTest extends DrupalCodeBuilderTestBase {
       'hooks' => array(
         // These two hooks will go in the .module file.
         'hook_menu',
-        'hook_node_info',
+        'hook_block_info',
         // This goes in a tokens.inc file, and also has complex parameters.
         'hook_tokens',
         // This goes in the .install file.
@@ -82,8 +82,8 @@ class BasicTest extends DrupalCodeBuilderTestBase {
     $this->assertHookDocblock($module_file, 'hook_menu', "The module file contains the docblock for hook_menu().");
     $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_menu().");
 
-    $this->assertHookDocblock($module_file, 'hook_node_info', "The module file contains the docblock for hook_node_info().");
-    $this->assertHookImplementation($module_file, 'hook_node_info', $module_name, "The module file contains a function declaration that implements hook_node_info().");
+    $this->assertHookDocblock($module_file, 'hook_block_info', "The module file contains the docblock for hook_block_info().");
+    $this->assertHookImplementation($module_file, 'hook_block_info', $module_name, "The module file contains a function declaration that implements hook_block_info().");
 
     $this->assertNoHookDocblock($module_file, 'hook_install', "The module file does not contain the docblock for hook_install().");
 
@@ -100,7 +100,7 @@ class BasicTest extends DrupalCodeBuilderTestBase {
     $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
 
     $this->assertNoHookDocblock($install_file, 'hook_menu', "The install file does not contain the docblock for hook_menu().");
-    $this->assertNoHookDocblock($install_file, 'hook_node_info', "The install file does not contain the docblock for hook_node_info().");
+    $this->assertNoHookDocblock($install_file, 'hook_block_info', "The install file does not contain the docblock for hook_block_info().");
 
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
@@ -134,7 +134,7 @@ class BasicTest extends DrupalCodeBuilderTestBase {
       'hooks' => array(
         // These two hooks will go in the .module file.
         'hook_menu',
-        'hook_node_info',
+        'hook_block_info',
         // This goes in a tokens.inc file, and also has complex parameters.
         'hook_tokens',
         // This goes in the .install file.
