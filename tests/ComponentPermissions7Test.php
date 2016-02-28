@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ComponentPermissionsTest.
+ * Contains ComponentPermissions7Test.
  */
 
 // Can't be bothered to figure out autoloading for tests.
@@ -13,10 +13,10 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/ComponentPermissionsTest.php
+ *   vendor/phpunit/phpunit/phpunit  tests/ComponentPermissions7Test.php
  * @endcode
  */
-class ComponentPermissionsTest extends DrupalCodeBuilderTestBase {
+class ComponentPermissions7Test extends DrupalCodeBuilderTestBase {
 
   /**
    * Test Permissions component.

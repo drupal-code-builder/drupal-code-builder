@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains BasicTest.
+ * Contains Basic7Test.
  */
 
 // Can't be bothered to figure out autoloading for tests.
@@ -13,10 +13,10 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/BasicTest.php
+ *   vendor/phpunit/phpunit/phpunit  tests/Basic7Test.php
  * @endcode
  */
-class BasicTest extends DrupalCodeBuilderTestBase {
+class Basic7Test extends DrupalCodeBuilderTestBase {
 
   /**
    * Test the hook data is reported correctly.

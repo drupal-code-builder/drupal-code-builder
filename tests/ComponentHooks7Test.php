@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ComponentHooksTest.
+ * Contains ComponentHooks7Test.
  */
 
 // Can't be bothered to figure out autoloading for tests.
@@ -13,10 +13,10 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/ComponentHooksTest.php
+ *   vendor/phpunit/phpunit/phpunit  tests/ComponentHooks7Test.php
  * @endcode
  */
-class ComponentHooksTest extends DrupalCodeBuilderTestBase {
+class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
 
   /**
    * Test generating a module with hooks in various files.

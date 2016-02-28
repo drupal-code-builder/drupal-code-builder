@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains ComponentAdminSettingsTest.
+ * Contains ComponentAdminSettings7Test.
  */
 
 // Can't be bothered to figure out autoloading for tests.
@@ -13,10 +13,10 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/ComponentAdminSettingsTest.php
+ *   vendor/phpunit/phpunit/phpunit  tests/ComponentAdminSettings7Test.php
  * @endcode
  */
-class ComponentAdminSettingsTest extends DrupalCodeBuilderTestBase {
+class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
 
   /**
    * Test Admin Settings component.
