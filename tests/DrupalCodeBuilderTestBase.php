@@ -122,8 +122,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
       "/**\n" .
       " * Implements {$hook_name}().\n" .
       " */";
-    $position = strstr($string, $docblock);
-    $this->assertTrue($position !== FALSE, $message);
+    $this->assertContains($docblock, $string, $message);
   }
 
   /**
@@ -141,8 +140,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
       "/**\n" .
       " * Implements {$hook_name}().\n" .
       " */";
-    $position = strstr($string, $docblock);
-    $this->assertTrue($position === FALSE, $message);
+    $this->assertNotContains($docblock, $string, $message);
   }
 
   /**
