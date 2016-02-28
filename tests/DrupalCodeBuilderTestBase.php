@@ -21,7 +21,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
   protected function setupDrupalCodeBuilder($version) {
     $environment = new \DrupalCodeBuilder\Environment\TestsSampleLocation;
     $version_helper = new \DrupalCodeBuilder\Environment\VersionHelperTestsPHPUnit;
-    $version_helper->setFakeCoreMajorVersion(7);
+    $version_helper->setFakeCoreMajorVersion($version);
     \DrupalCodeBuilder\Factory::setEnvironment($environment, $version_helper);
   }
 
