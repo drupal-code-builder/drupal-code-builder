@@ -44,7 +44,7 @@ class ComponentPermissions7Test extends DrupalCodeBuilderTestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertEquals(count($files), 1, "One file returned.");
+    $this->assertCount(1, $files, "One file returned.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

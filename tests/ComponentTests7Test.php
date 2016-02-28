@@ -45,7 +45,7 @@ class ComponentTests7Test extends DrupalCodeBuilderTestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertEquals(count($files), 2, "Two files are returned.");
+    $this->assertCount(2, $files, "Two files are returned.");
 
     // Check the .test file.
     $tests_file = $files["tests/$module_name.test"];

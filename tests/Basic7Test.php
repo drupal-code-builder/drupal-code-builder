@@ -63,7 +63,7 @@ class Basic7Test extends DrupalCodeBuilderTestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertEquals(count($files), 1, "Only one file is returned.");
+    $this->assertCount(1, $files, "Only one file is returned.");
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];

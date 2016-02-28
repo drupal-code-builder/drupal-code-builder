@@ -43,7 +43,7 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertEquals(count($files), 3, "Three files are returned.");
+    $this->assertCount(3, $files, "Three files are returned.");
 
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];
