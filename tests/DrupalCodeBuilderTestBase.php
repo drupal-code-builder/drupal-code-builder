@@ -276,6 +276,27 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
     $this->assertRegExp($expected_regex, $string, $message);
   }
 
+  /**
+   * Assert a string contains a YAML property.
+   *
+   * @param $string
+   *  The text to check.
+   * @param $property
+   *  The property name, e.g. 'core'.
+   * @param $value
+   *  The value to check, e.g., '7.x'.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertYamlProperty($string, $property, $value, $message = NULL) {
+    // Quote the given strings, as they may contain regex characters.
+    $property = preg_quote($property);
+    $value    = preg_quote($value);
+    $expected_regex = "@^\s*{$property}: '?{$value}'?$@m";
+
+    $this->assertRegExp($expected_regex, $string, $message);
+  }
+
 }
 
 
