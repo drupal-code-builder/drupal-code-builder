@@ -72,19 +72,6 @@ class Hooks extends BaseGenerator {
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
     $hook_file_data = $this->getTemplates($module_data, $requested_hook_list);
 
-    // Determine whether we need to filter the code files or not.
-    // If the build request is empty, or one of 'code', 'all', or 'hooks, then
-    // we don't filter, and return everything.
-    // TODO: move this logic further up the chain?
-    $build_list = $module_data['requested_build'];
-    //drush_print_r($build_list);
-    if (empty($build_list) || isset($build_list['all']) || isset($build_list['code']) || isset($build_list['hooks'])) {
-      $filter_generators = FALSE;
-    }
-    else {
-      $filter_generators = TRUE;
-    }
-
     // Work over this and add our HookImplentation.
     foreach ($hook_file_data as $filename => $file_hook_list) {
       // If we are set to filter, and the abbreviated filename isn't in the
@@ -92,9 +79,6 @@ class Hooks extends BaseGenerator {
       // TODO: this is kinda messy, and assumes that the abbreviated name is
       // always obtained by removing '%module.' from the filename!
       $build_list_key = str_replace('%module.', '', $filename);
-      if ($filter_generators && !isset($build_list[$build_list_key])) {
-        continue;
-      }
 
       // Add a HookImplementation component for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
