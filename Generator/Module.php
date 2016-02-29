@@ -432,6 +432,50 @@ class Module extends RootComponent {
   }
 
   /**
+   * Filter the file info array to just the requested build list.
+   *
+   * WARNING: the keys in the $files array will be changing soon!
+   *
+   * @param &$files
+   *  The array of built file info.
+   * @param $build_list
+   *  The build list parameter from the original Generate component data.
+   * @param $component_data
+   *  The original component data.
+   */
+  public function applyBuildListFilter(&$files, $build_list, $component_data) {
+    // Case 1: everything was requested: don't filter!
+    if (isset($build_list['all'])) {
+      return;
+    }
+
+    // Case 2: 'code' means all PHP files.
+    if (isset($build_list['code'])) {
+      // TODO: make this smarter.
+      // Remove the .info file.
+      unset($files['info']);
+      // Remove the readme.
+      unset($files['readme']);
+      // Remove the API.php file.
+      unset($files['api']);
+      return;
+    }
+
+    // Case 3: Anything else in the build list is specific filenames, with the
+    // module name and the extensions trimmed.
+    foreach ($files as $file_key => $file_info) {
+      $stripped_file_key = str_replace('%module.', '', $file_key);
+      // ARGH TODO REMOVE EXTENSIOn.
+      $stripped_file_key = str_replace('.inc', '', $stripped_file_key);
+      $stripped_file_key = str_replace('.php', '', $stripped_file_key);
+      if (!isset($build_list[$stripped_file_key])) {
+        unset($files[$file_key]);
+      }
+    }
+  }
+
+
+  /**
    * Provides replacement strings for tokens in code body.
    *
    * @return
