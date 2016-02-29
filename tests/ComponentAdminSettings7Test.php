@@ -33,8 +33,8 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
       'short_description' => 'Test Module description',
       'hooks' => array(
       ),
+      'settings_form' => TRUE,
       'requested_components' => array(
-        'AdminSettingsForm' => 'AdminSettingsForm',
         'info' => 'info',
       ),
       'requested_build' => array(
@@ -82,8 +82,8 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
       'hooks' => array(
         'init'
       ),
+      'settings_form' => TRUE,
       'requested_components' => array(
-        'AdminSettingsForm' => 'AdminSettingsForm',
         'info' => 'info',
       ),
       'requested_build' => array(
@@ -117,8 +117,8 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
       'permissions' => array(
         'access testmodule',
       ),
+      'settings_form' => TRUE,
       'requested_components' => array(
-        'AdminSettingsForm' => 'AdminSettingsForm',
         'info' => 'info',
       ),
       'requested_build' => array(
