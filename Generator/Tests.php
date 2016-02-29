@@ -35,7 +35,7 @@ class Tests extends PHPFile {
     $test_file_name = $module_root_name . "Test.php";
 
     // The key is arbitrary (at least so far!).
-    $files['module.test'] = array(
+    $files['%module.test'] = array(
       'path' => 'src/Tests',
       'filename' => $test_file_name,
       'body' => $this->file_contents(),
