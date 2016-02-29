@@ -271,10 +271,9 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
     // Quote the given strings, as they may contain regex characters.
     $property = preg_quote($property);
     $value    = preg_quote($value);
-    $expected_regex = "^{$property} = {$value}$";
+    $expected_regex = "@^{$property} = {$value}$@m";
 
-    $match = preg_match("[$expected_regex]m", $string);
-    $this->assertEquals($match, 1, $message);
+    $this->assertRegExp($expected_regex, $string, $message);
   }
 
 }
