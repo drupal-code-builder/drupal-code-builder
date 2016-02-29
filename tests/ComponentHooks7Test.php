@@ -43,6 +43,7 @@ class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
         // This goes in the .install file.
         'hook_install',
       ),
+      'readme' => FALSE,
       'requested_build' => array(
         'all' => TRUE,
       ),
@@ -50,8 +51,12 @@ class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
+    $this->assertCount(4, $files, "Four files are returned.");
+
     $file_names = array_keys($files);
+
     $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
     $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
     $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
 
