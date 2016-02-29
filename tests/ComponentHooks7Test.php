@@ -50,9 +50,10 @@ class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertTrue(isset($files["$module_name.module"]), "The files list has a .module file.");
-    $this->assertTrue(isset($files["$module_name.install"]), "The files list has a .install file.");
-    $this->assertTrue(isset($files["$module_name.info"]), "The files list has a .info file.");
+    $file_names = array_keys($files);
+    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
