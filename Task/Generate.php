@@ -215,6 +215,11 @@ class Generate extends Base {
     // Allow all components to alter all the collected files.
     $this->filesAlter($files, $this->component_list);
 
+    // Filter files according to the requested build list.
+    if (isset($component_data['requested_build'])) {
+      $this->root_generator->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
+    }
+
     // Then we assemble the files into a simple array of full filename and
     // contents.
     $files_assembled = $this->assembleFiles($files);

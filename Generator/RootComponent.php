@@ -374,6 +374,19 @@ abstract class RootComponent extends BaseGenerator {
   }
 
   /**
+   * Filter the file info array to just the requested build list.
+   *
+   * @param &$files
+   *  The array of built file info.
+   * @param $build_list
+   *  The build list parameter from the original Generate component data.
+   * @param $component_data
+   *  The original component data.
+   */
+  public function applyBuildListFilter(&$files, $build_list, $component_data) {
+  }
+
+  /**
    * Provides replacement strings for tokens in code body.
    *
    * @return
