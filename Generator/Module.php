@@ -376,6 +376,11 @@ class Module extends RootComponent {
 
     // Case 3: Anything else in the build list is specific filenames, with the
     // module name and the extensions trimmed.
+    // Some daft special cases which should probably be removed.
+    if (isset($build_list['tests'])) {
+      $build_list['test'] = TRUE;
+    }
+
     foreach ($files as $file_key => $file_info) {
       $stripped_file_key = str_replace('%module.', '', $file_key);
       // ARGH TODO REMOVE EXTENSIOn.
