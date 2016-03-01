@@ -338,9 +338,6 @@ class Module extends RootComponent {
     // Modules always have a .info file.
     $components['info'] = 'Info';
 
-    // TODO: this should only be on D7 and lower.
-    $components['%module.module'] = 'ModuleCodeFile';
-
     return $components;
   }
 
