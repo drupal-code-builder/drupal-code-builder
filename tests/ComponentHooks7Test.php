@@ -44,9 +44,6 @@ class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
         'hook_install',
       ),
       'readme' => FALSE,
-      'requested_build' => array(
-        'all' => TRUE,
-      ),
     );
 
     $files = $this->generateModuleFiles($module_data);
