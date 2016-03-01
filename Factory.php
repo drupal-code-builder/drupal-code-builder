@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder;
 
+use DrupalCodeBuilder\Exception\InvalidInputException;
+
 // Include the Composer autoloader for our classes.
 // We use this if we're not being used as a Composer library, for example if
 // installed as a Drupal library in sites/all/libraries, or running as a Drupal
@@ -186,6 +188,10 @@ class Factory {
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
    *  'DrupalCodeBuilder\Task\Collect7'.
+   *
+   * @throws
+   *  Throws \DrupalCodeBuilder\Exception\InvalidInputException if the task type
+   *  does not correspond to a Task class.
    */
   public static function getTaskClass($task_type) {
     $type     = ucfirst($task_type);
@@ -197,8 +203,11 @@ class Factory {
     if (class_exists($versioned_class)) {
       $class    = $versioned_class;
     }
-    else {
+    elseif (class_exists($common_class)) {
       $class    = $common_class;
+    }
+    else {
+      throw new InvalidInputException("Task class not found.");
     }
 
     return $class;
