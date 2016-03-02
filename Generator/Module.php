@@ -333,103 +333,62 @@ class Module extends RootComponent {
    *  An array of subcomponent types.
    */
   protected function requiredComponents() {
-    // Add in defaults. This can't be done in __construct() because root
-    // generators actually don't get their component data till later. WTF!
-    $this->component_data += array(
-      'requested_components' => array(),
-    );
+    $components = $this->component_data['requested_components'];
 
-    // The requested build list is a hairy old thing, so figure that out first
-    // and in a helper.
-    $build_list_components = $this->buildListComponents();
-
-    $components = $build_list_components + $this->component_data['requested_components'];
+    // Modules always have a .info file.
+    $components['info'] = 'Info';
 
     return $components;
   }
 
   /**
-   * Helper to get a component list from the build list.
+   * Filter the file info array to just the requested build list.
    *
-   * The build list is a complex thing that is best left alone!
+   * WARNING: the keys in the $files array will be changing soon!
+   *
+   * @param &$files
+   *  The array of built file info.
+   * @param $build_list
+   *  The build list parameter from the original Generate component data.
+   * @param $component_data
+   *  The original component data.
    */
-  protected function buildListComponents() {
-    $module_data = $this->component_data;
-
-    // A module needs:
-    //  - info file
-    //  - hooks & callbacks: abstract component, which then produces:
-    //    -- files
-    //  - other abstract components which we don't do yet: form, entity type.
-    //    -- (Node these will want to merge into the main module file!!!)
-    //  - tests
-    //    -- files
-    //
-    // $module_data['requested_build'] is an array of stuff. The values that
-    // matter here are 'all', 'info', 'code', 'readme'.
-    // For anything else, the hooks component takes care of further filtering.
-
-    // Start by defining the subcomponents we know how to handle.
-    // Keys are names, values are types (to be used to build class names).
-    $components = array(
-      // Component type case must match the filename for case-sensitive
-      // filesystems (i.e. not OS X).
-      'info' => 'info',
-    );
-
-    // Case 0: nothing was requested, so it means everything.
-    if (!isset($module_data['requested_build'])) {
-      return $components;
-    }
-
-    // Create a build list.
-    // Take the keys, as all values are set to TRUE, and standardize to lower
-    // case for comparisons.
-    $build_list = array_keys($module_data['requested_build']);
-    array_walk($build_list, function(&$s) {
-      $s = strtolower($s);
-    });
-    $build_list = array_combine($build_list, $build_list);
-
-    // Preliminary: if 'all' was requested, we must ensure the module file,
-    // even if it has no hooks.
-    // TODO: this is not the case on D8!
+  public function applyBuildListFilter(&$files, $build_list, $component_data) {
+    // Case 1: everything was requested: don't filter!
     if (isset($build_list['all'])) {
-      $components['%module.module'] = 'ModuleCodeFile';
+      return;
     }
 
-    // Case 1: everything was requested: return everything!
-    if (isset($build_list['all'])) {
-      return $components;
+    // Case 2: 'code' means all PHP files.
+    if (isset($build_list['code'])) {
+      // TODO: make this smarter.
+      // Remove the .info file.
+      unset($files['info']);
+      // Remove the readme.
+      unset($files['readme']);
+      // Remove the API.php file.
+      unset($files['api']);
+      return;
     }
 
-    // Make a list of component names to compare with what was requested.
-    $component_list = array_keys($components);
-    // Standardize to lower case for comparison.
-    array_walk($component_list, function(&$s) {
-      $s = strtolower($s);
-    });
-    //drush_print_r($component_list);
-    //drush_print_r($build_list);
-
-    // Get the components that were requested.
-    $intersection_components = array_intersect($build_list, $component_list);
-    // Get the requested components that we don't understand.
-    $unknown_build_list = array_diff($build_list, $component_list);
-
-    // Case 2: there are no unknown components. Return just what we were asked
-    // for.
-    if (empty($unknown_build_list)) {
-      return $intersection_components;
+    // Case 3: Anything else in the build list is specific filenames, with the
+    // module name and the extensions trimmed.
+    // Some daft special cases which should probably be removed.
+    if (isset($build_list['tests'])) {
+      $build_list['test'] = TRUE;
     }
 
-    // TODO: if the components create files containing classes, we probably
-    // need to add the 'info' component, BUT we need to add to the .info file
-    // rather than rewrite it! This requires (as does template.php) a system for
-    // adding to existing files.
-
-    return $intersection_components;
+    foreach ($files as $file_key => $file_info) {
+      $stripped_file_key = str_replace('%module.', '', $file_key);
+      // ARGH TODO REMOVE EXTENSIOn.
+      $stripped_file_key = str_replace('.inc', '', $stripped_file_key);
+      $stripped_file_key = str_replace('.php', '', $stripped_file_key);
+      if (!isset($build_list[$stripped_file_key])) {
+        unset($files[$file_key]);
+      }
+    }
   }
+
 
   /**
    * Provides replacement strings for tokens in code body.

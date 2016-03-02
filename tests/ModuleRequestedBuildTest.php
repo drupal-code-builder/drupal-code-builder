@@ -28,7 +28,7 @@ class ModuleRequestedBuildTest extends DrupalCodeBuilderTestBase {
     // It is crucial to create a new module name, as we eval() the generated
     // code!
     $module_name = 'testmodule2';
-    $module_data = array(
+    $module_data_base = array(
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -42,25 +42,100 @@ class ModuleRequestedBuildTest extends DrupalCodeBuilderTestBase {
         // This goes in the .install file.
         'hook_install',
       ),
-      'requested_build' => array(
-        'install' => TRUE,
-      ),
-      // Override the default value for this.
-      'readme' => FALSE,
+      'readme' => TRUE,
+      'api' => TRUE,
+      'tests' => TRUE,
     );
+
+    // Test the 'all' build list setting.
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'all' => TRUE,
+    );
+
     $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(7, $files, "Expected number of files are returned.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
+    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
+    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
+    $this->assertContains("$module_name.api.php", $file_names, "The files list has a .api.php file.");
+    $this->assertContains("tests/$module_name.test", $file_names, "The files list has a tests file.");
+    $this->assertContains("README.txt", $file_names, "The files list has a README file.");
+
+    // Test the 'code' build list setting.
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'code' => TRUE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(5, $files, "Expected number of files are returned.");
+    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
+    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
+    $this->assertContains("tests/$module_name.test", $file_names, "The files list has a tests file.");
+    $this->assertContains("$module_name.api.php", $file_names, "The files list has a .api.php file.");
+
+    // Test specific file requests.
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'install' => TRUE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
 
     $this->assertCount(1, $files, "Only one file is returned.");
+    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
 
-    // Check the .install file.
-    $install_file = $files["$module_name.install"];
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'module' => TRUE,
+    );
 
-    $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
 
-    $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
+    $this->assertCount(1, $files, "Only one file is returned.");
+    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
 
-    $this->assertHookDocblock($install_file, 'hook_install', "The install file contains the docblock for hook_install().");
-    $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'info' => TRUE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(1, $files, "Only one file is returned.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
+
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'tokens' => TRUE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(1, $files, "Only one file is returned.");
+    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
+
+    $module_data = $module_data_base;
+    $module_data['requested_build'] = array(
+      'tests' => TRUE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(1, $files, "Only one file is returned.");
+    $this->assertContains("tests/$module_name.test", $file_names, "The files list has a tests file.");
   }
 
 }

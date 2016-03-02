@@ -24,4 +24,16 @@ class Module7 extends Module {
     return $component_data_definition;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function requiredComponents() {
+    $components = parent::requiredComponents();
+
+    // On D7 and lower, modules need a .module file, even if empty.
+    $components['%module.module'] = 'ModuleCodeFile';
+
+    return $components;
+  }
+
 }

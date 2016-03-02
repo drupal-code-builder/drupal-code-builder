@@ -37,9 +37,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
       'requested_components' => array(
         'info' => 'info',
       ),
-      'requested_build' => array(
-        'all'
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
@@ -92,8 +89,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
       'requested_components' => array(
         'info' => 'info',
       ),
-      'requested_build' => array(
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
@@ -128,8 +123,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
        ),
        'requested_components' => array(
          'info' => 'info',
-       ),
-       'requested_build' => array(
        ),
        'readme' => FALSE,
      );
