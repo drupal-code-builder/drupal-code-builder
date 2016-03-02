@@ -33,6 +33,10 @@ class InfoIni extends Info {
           $merged_lines[] = $label . "[] = $data_piece"; // Urgh terrible variable name!
         }
       }
+      elseif ($data == '') {
+        // An empty data value means a blank line.
+        $merged_lines[] = '';
+      }
       else {
         $merged_lines[] = "$label = $data";
       }

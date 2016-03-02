@@ -13,6 +13,20 @@ namespace DrupalCodeBuilder\Generator;
 class Tests7 extends Tests {
 
   /**
+   * Return an array of subcomponent types.
+   */
+  protected function requiredComponents() {
+    $components = array();
+
+    $components['info_class'] = array(
+      'component_type' => 'InfoProperty',
+      'property_name' => 'files[]',
+      'property_value' => 'tests/%module.test',
+    );
+    return $components;
+  }
+
+  /**
    * Build the code files.
    */
   public function getFileInfo() {

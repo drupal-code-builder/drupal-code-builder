@@ -315,11 +315,4 @@ abstract class BaseGenerator {
     return array();
   }
 
-  /**
-   * Allow components to alter the files prior to output.
-   */
-  public function filesAlter(&$files, $component_list) {
-    // Base class does nothing.
-  }
-
 }

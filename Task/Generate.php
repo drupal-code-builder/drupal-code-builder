@@ -212,9 +212,6 @@ class Generate extends Base {
     // registered themselves as first-level children of the root component.
     $files = $this->collectFiles($this->component_list, $tree);
 
-    // Allow all components to alter all the collected files.
-    $this->filesAlter($files, $this->component_list);
-
     // Filter files according to the requested build list.
     if (isset($component_data['requested_build'])) {
       $this->root_generator->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
@@ -290,20 +287,6 @@ class Generate extends Base {
       // Let the file component run over its children iteratively.
       // (Not literally ;)
       $components[$file_component_name]->buildComponentContentsIterative($components, $tree);
-    }
-  }
-
-  /**
-   * Allow components to alter the files prior to output.
-   *
-   * @param $files
-   *  The array of file info, passed by reference.
-   * @param $component_list
-   *  The component list.
-   */
-  protected function filesAlter(&$files, $component_list) {
-    foreach ($component_list as $name => $component) {
-      $component->filesAlter($files, $component_list);
     }
   }
 

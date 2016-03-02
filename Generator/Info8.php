@@ -51,6 +51,10 @@ class Info8 extends Info {
 
     $lines['core'] = "8.x";
 
+    if (!empty($this->extraLines)) {
+      $lines = array_merge($lines, $this->extraLines);
+    }
+
     $info = $this->process_info_lines($lines);
     return $info;
   }
@@ -76,22 +80,6 @@ class Info8 extends Info {
 
     // Because the yaml is all built for us, this is just a singleton array.
     return array($yaml);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function filesAlter(&$files, $component_list) {
-    $info_extra_lines = array();
-
-    // Add a 'configure' line if there's an admin settings form component.
-    if (isset($component_list['AdminSettingsForm'])) {
-      // TODO: get this path from the generator.
-      $info_extra_lines['configure'] = 'admin/config/TODO-SECTION/%module';
-    }
-
-    $lines = $this->process_info_lines($info_extra_lines);
-    $files['info']['body'] = array_merge($files['info']['body'], $this->process_info_lines($info_extra_lines));
   }
 
 }

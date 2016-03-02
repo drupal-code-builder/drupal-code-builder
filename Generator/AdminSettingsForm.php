@@ -78,6 +78,12 @@ class AdminSettingsForm extends Form {
       'permission' => 'administer %module',
     );
 
+    $components['info_configuration'] = array(
+      'component_type' => 'InfoProperty',
+      'property_name' => 'configure',
+      'property_value' => 'admin/config/TODO-SECTION/%module',
+    );
+
     return $components;
   }
 
