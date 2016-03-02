@@ -36,6 +36,12 @@ class Info7 extends InfoIni {
 
     $lines['core'] = "7.x";
 
+    if (!empty($this->extraLines)) {
+      // Add a blank line before the extra lines.
+      $lines[] = '';
+      $lines = array_merge($lines, $this->extraLines);
+    }
+
     $info = $this->process_info_lines($lines);
     return $info;
   }

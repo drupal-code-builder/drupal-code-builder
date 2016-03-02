@@ -51,6 +51,10 @@ class Info8 extends Info {
 
     $lines['core'] = "8.x";
 
+    if (!empty($this->extraLines)) {
+      $lines = array_merge($lines, $this->extraLines);
+    }
+
     $info = $this->process_info_lines($lines);
     return $info;
   }
