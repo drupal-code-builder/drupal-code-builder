@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class ModuleRequestedBuildTest extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(7);
+  }
+
   /**
    * Test build request functionality.
    */
   function testModuleGenerationBuildRequest() {
-    $this->setupDrupalCodeBuilder(7);
-
     // Create a module, specifying limited build.
     // It is crucial to create a new module name, as we eval() the generated
     // code!

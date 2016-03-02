@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(7);
+  }
+
   /**
    * Test generating a module with hooks in various files.
    */
   public function testModuleGenerationHooks() {
-    $this->setupDrupalCodeBuilder(7);
-
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
 

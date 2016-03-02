@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class ComponentPermissions7Test extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(7);
+  }
+
   /**
    * Test Permissions component.
    */
   function testPermissionsGenerationTests() {
-    $this->setupDrupalCodeBuilder(7);
-
     $permission_name = 'my permission name';
 
     // Create a module.

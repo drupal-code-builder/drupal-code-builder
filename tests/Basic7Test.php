@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class Basic7Test extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(7);
+  }
+
   /**
    * Test the hook data is reported correctly.
    */
   public function testReportHookData() {
-    $this->setupDrupalCodeBuilder(7);
-
     $hooks_directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');

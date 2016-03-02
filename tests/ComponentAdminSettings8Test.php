@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(8);
+  }
+
   /**
    * Test Admin Settings component.
    */
   function testAdminSettingsGenerationTest() {
-    $this->setupDrupalCodeBuilder(8);
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = array(
@@ -71,8 +73,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
    * Test Admin Settings component with other permissions.
    */
   function testAdminSettingsOtherPermsTest() {
-    $this->setupDrupalCodeBuilder(8);
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = array(
@@ -103,8 +103,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
     * Test Admin Settings component with other router items.
     */
    function testAdminSettingsOtherRouterItemsTest() {
-     $this->setupDrupalCodeBuilder(8);
-
      // Create a module.
      $module_name = 'testmodule';
      $module_data = array(

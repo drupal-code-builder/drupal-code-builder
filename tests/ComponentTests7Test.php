@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class ComponentTests7Test extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(7);
+  }
+
   /**
    * Test Tests component.
    */
   function testModuleGenerationTests() {
-    $this->setupDrupalCodeBuilder(7);
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = array(

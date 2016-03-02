@@ -18,12 +18,14 @@ require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
  */
 class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
 
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder(7);
+  }
+
   /**
    * Test Admin Settings component.
    */
   function testAdminSettingsGenerationTests() {
-    $this->setupDrupalCodeBuilder(7);
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = array(
@@ -68,8 +70,6 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
    * Test Admin Settings component with other hooks.
    */
   function testAdminSettingsOtherHooksTest() {
-    $this->setupDrupalCodeBuilder(7);
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = array(
@@ -99,8 +99,6 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
    * Test Admin Settings component with other permissions.
    */
   function testAdminSettingsOtherPermsTest() {
-    $this->setupDrupalCodeBuilder(7);
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = array(
