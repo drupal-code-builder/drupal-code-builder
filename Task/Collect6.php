@@ -30,7 +30,6 @@ class Collect6 extends Collect {
       $file_contents = drupal_http_request($data['url']);
 
       // TODO: replace with call to environment output.
-      //_module_builder_drush_print("writing $directory/$file_name", 2);
       file_put_contents("$directory/$file_name", $destination . $file_contents->data);
     }
 
