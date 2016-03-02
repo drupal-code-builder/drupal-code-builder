@@ -17,7 +17,7 @@ class Info extends File {
    */
   public function getFileInfo() {
     $files['info'] = array(
-      'path' => '', // Means base folder.
+      'path' => '',
       'filename' => '%module.info',
       'body' => $this->file_body(),
       // We join the info lines with linebreaks, as they (currently!) do not
