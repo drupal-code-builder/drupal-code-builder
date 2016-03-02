@@ -322,15 +322,7 @@ class Module extends RootComponent {
   }
 
   /**
-   * Declares the subcomponents for this component.
-   *
-   * These are not necessarily child classes, just components this needs.
-   *
-   * TODO: handle version stuff here? Or better to have it transparent in the
-   * factory function?
-   *
-   * @return
-   *  An array of subcomponent types.
+   * {@inheritdoc}
    */
   protected function requiredComponents() {
     $components = $this->component_data['requested_components'];
