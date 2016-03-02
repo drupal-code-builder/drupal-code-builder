@@ -53,6 +53,12 @@ class AdminSettingsForm8 extends Form8 {
       'component_type' => 'Permission',
     );
 
+    $components['info_configuration'] = array(
+      'component_type' => 'InfoProperty',
+      'property_name' => 'configure',
+      'property_value' => 'admin/config/TODO-SECTION/%module',
+    );
+
     return $components;
   }
 

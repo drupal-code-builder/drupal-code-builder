@@ -12,6 +12,12 @@ namespace DrupalCodeBuilder\Generator;
  */
 class Tests6 extends Tests7 {
 
-  // Identical to D7 tests.
+  /**
+   * Return an array of subcomponent types.
+   */
+  protected function requiredComponents() {
+    // We have no subcomponents.
+    return array();
+  }
 
 }
