@@ -57,9 +57,9 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   protected function assertNoTrailingWhitespace($code, $message = NULL) {
-    $matches = array();
-    $match = preg_match_all("[( +)$]m", $code, $matches);
-    $this->assertEquals($match, 0, $message);
+    $whitespace_regex = "[( +)$]m";
+
+    $this->assertNotRegExp($whitespace_regex, $code, $message);
   }
 
   /**
