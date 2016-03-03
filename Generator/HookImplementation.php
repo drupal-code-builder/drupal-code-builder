@@ -37,10 +37,11 @@ class HookImplementation extends PHPFunction {
    * @param $component_name
    *  The name of a function component should be its function (or method) name.
    * @param $component_data
-   *   An array of data for the component. Any missing properties are given
-   *   default values. Valid properties in addition to those from parent classes
-   *   are:
+   *   An array of data for the component. The following properties are
+   *   required:
    *     - 'hook_name': The full name of the hook.
+   *     - 'code_file': The name of the file this hook should be placed in, with
+   *        tokens.
    */
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set defaults.
@@ -65,19 +66,10 @@ class HookImplementation extends PHPFunction {
    *  An array of subcomponent names and types.
    */
   protected function requiredComponents() {
-    // Sanity checks already done at this point; no need to catch exception.
-    $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
-    $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
-    //drush_print_r($hook_function_declarations[$this->name]);
-
-    $this->hook_info = $hook_function_declarations[$this->name];
-
-    $filename = $hook_function_declarations[$this->name]['destination'];
-
-    $this->code_file = $filename;
+    $code_file = $this->component_data['code_file'];
 
     return array(
-      $filename => 'ModuleCodeFile',
+      $code_file => 'ModuleCodeFile',
     );
   }
 
@@ -85,7 +77,7 @@ class HookImplementation extends PHPFunction {
    * Return this component's parent in the component tree.
    */
   function containingComponent() {
-    return $this->code_file;
+    return $this->component_data['code_file'];;
   }
 
   /**
