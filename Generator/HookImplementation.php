@@ -15,23 +15,6 @@ namespace DrupalCodeBuilder\Generator;
 class HookImplementation extends PHPFunction {
 
   /**
-   * The unique name of this generator.
-   *
-   * A generator's name is used as the key in the $components array.
-   *
-   * A HookImplementation generator should use as its name the full hook name,
-   * e.g., 'hook_menu'.
-   */
-  public $name;
-
-  /**
-   * The data for this hook, from the ReportHookData task.
-   *
-   * @see getHookDeclarations() for format.
-   */
-  protected $hook_info;
-
-  /**
    * Constructor.
    *
    * @param $component_name
