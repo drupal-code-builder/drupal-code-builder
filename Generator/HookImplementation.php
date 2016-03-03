@@ -94,7 +94,7 @@ class HookImplementation extends PHPFunction {
     $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
 
     // Replace the function body with template code if it exists.
-    if (isset($this->component_data['template'])) {
+    if (empty($children_contents) && isset($this->component_data['template'])) {
       // Strip out INFO: comments for advanced users
       if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
         // Used to strip INFO messages out of generated file for advanced users.
