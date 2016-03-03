@@ -8,7 +8,7 @@ Drupal Code Builder can be used for any current version of Drupal (7, 8). Older 
 
 ## What Drupal Code Builder can do
 
-Module builder can generate the following for a module:
+Drupal Code Builder can generate the following for a module:
 - code files, containing hook implementations
 - info file (.info.yml on Drupal 8)
 - README file
