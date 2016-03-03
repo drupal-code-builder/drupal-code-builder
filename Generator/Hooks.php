@@ -98,6 +98,9 @@ class Hooks extends BaseGenerator {
           'body' => $hook['body'],
           'has_wrapping_newlines' => TRUE,
         );
+        if (isset($hook['template'])) {
+          $components[$hook_name]['template'] = $hook['template'];
+        }
       }
     }
 

@@ -93,22 +93,17 @@ class HookImplementation extends PHPFunction {
     // Replace the 'hook_' part of the function declaration.
     $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
 
-    // TODO: get the hook template from user-defined stuff.
-    /*
-    // Old code, adapt here:
-    // See if function bodies exist; if so, use function bodies from template
-    if (isset($hook['template'])) {
+    // Replace the function body with template code if it exists.
+    if (isset($this->component_data['template'])) {
       // Strip out INFO: comments for advanced users
       if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
         // Used to strip INFO messages out of generated file for advanced users.
-        $pattern = '#\s+/\* INFO:(.*?)\*FILLERDONTCLOSECOMMENT/#ms';
-        $hook['template'] = preg_replace($pattern, '', $hook['template']);
+        $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
+        $hook['template'] = preg_replace($pattern, '', $this->component_data['template']);
       }
-      //dsm($hook);
 
-      $function_code .= $hook['template'];
+      $this->component_data['body'] = $hook['template'];
     }
-    */
 
     return parent::buildComponentContents($children_contents);
   }
