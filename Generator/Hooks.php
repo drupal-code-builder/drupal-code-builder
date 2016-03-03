@@ -62,11 +62,6 @@ class Hooks extends BaseGenerator {
     $module_data = $this->base_component->component_data;
     $requested_hook_list = $this->component_data['hooks'];
 
-    // Force hook_help() if there is help text in the incoming data.
-    if (isset($module_data['module_help_text'])) {
-      $requested_hook_list['hook_help'] = TRUE;
-    }
-
     // Get a set of hook declarations and function body templates for the hooks
     // we want. This is of the form:
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )

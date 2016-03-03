@@ -334,6 +334,21 @@ class Module extends RootComponent {
     // Modules always have a .info file.
     $components['info'] = 'Info';
 
+    // Add hook_help if help text is given.
+    if (!empty($this->component_data['module_help_text'])) {
+      if (isset($components['hooks'])) {
+        $components['hooks']['hooks']['hook_help'] = TRUE;
+      }
+      else {
+        $components['hooks'] = array(
+          'component_type' => 'Hooks',
+          'hooks' => array(
+            'hook_help' => TRUE,
+          ),
+        );
+      }
+    }
+
     return $components;
   }
 
