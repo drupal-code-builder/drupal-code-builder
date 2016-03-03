@@ -325,7 +325,11 @@ class Module extends RootComponent {
    * {@inheritdoc}
    */
   protected function requiredComponents() {
-    $components = $this->component_data['requested_components'];
+    $components = array();
+
+    if (isset($this->component_data['requested_components'])) {
+      $components += $this->component_data['requested_components'];
+    }
 
     // Modules always have a .info file.
     $components['info'] = 'Info';
