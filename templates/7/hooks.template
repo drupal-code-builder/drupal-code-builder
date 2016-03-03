@@ -6,11 +6,11 @@
  * For the tokens that may be used, see
  * DrupalCodeBuilder\Generator\Module::getReplacements().
  */
- 
+
 == START hook_help ==
   /* INFO:
    * The help hook is for displaying helpful messages at the top of pages indicated
-   * by $section to further explain how they work. Adding certain "keywords" to the end of 
+   * by $section to further explain how they work. Adding certain "keywords" to the end of
    * a given path (like admin/modules#description) will cause this text to display elsewhere
    * in the page as well (in this case, in the description section for the given module).
    */
@@ -21,7 +21,7 @@
   }
 == END ==
 
-== START hook_menu == 
+== START hook_menu ==
   // This is the minimum information you can provide for a menu item.
   $items['%module'] = array(
     'title' => 'TODO: Enter menu item title',
@@ -47,8 +47,8 @@
     'type' => MENU_NORMAL_ITEM, // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM / MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK
     'file' => '%module.admin.inc',
     'menu_name' => '', // Menu to place this item in.
-    'title callback' => '', // Function to generate the title, defaults to t(). 
-    'title arguments' => array(), // Arguments to send to t() or your custom callback. 
+    'title callback' => '', // Function to generate the title, defaults to t().
+    'title arguments' => array(), // Arguments to send to t() or your custom callback.
   );
   // OPTIONAL: Fill in additional menu items
 
@@ -58,7 +58,7 @@
 == START hook_permission ==
   return array(
     'administer my module' => array(
-      'title' => t('Administer my module'), 
+      'title' => t('Administer my module'),
       'description' => t('Perform administration tasks for my module.'),
     ),
   );
