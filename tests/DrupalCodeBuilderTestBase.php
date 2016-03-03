@@ -223,6 +223,10 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   function assertFunctionCode($string, $function_name, $function_code, $message = NULL) {
+    if (empty($message)) {
+      $message = "Expected function code was found in $function_name().";
+    }
+
     // Extract the function's body from the whole string.
     $matches = [];
     $function_body_regex = "^function {$function_name}.*?{\n(.*)^}";
@@ -231,9 +235,9 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
 
     // Quote the code, as it may contain regex characters.
     $function_code = preg_quote($function_code);
-    $match = preg_match("[$function_code]", $function_body);
+    $expected_regex = "[$function_code]";
 
-    $this->assertEquals($match, 1, "Expected function code was found in $function_name().");
+    $this->assertRegExp($expected_regex, $function_body, $message);
   }
 
   /**
