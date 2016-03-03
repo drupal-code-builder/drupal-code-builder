@@ -9,8 +9,7 @@
     // A list of hooks.
     "hooks": [
       "hook_node_info",
-      "hook_access",
-      "hook_perm",
+      "hook_permission",
       "hook_form",
       "hook_validate",
       "hook_insert",
