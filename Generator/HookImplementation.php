@@ -9,6 +9,8 @@ namespace DrupalCodeBuilder\Generator;
 
 /**
  * Generator for a single hook implementation.
+ *
+ * This should not be requested directly; use the Hooks component instead.
  */
 class HookImplementation extends PHPFunction {
 
