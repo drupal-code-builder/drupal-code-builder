@@ -29,7 +29,7 @@ class Permission8 extends Permission {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return '%module.permissions.yml';
+    return 'YMLFile:%module.permissions.yml';
   }
 
   /**

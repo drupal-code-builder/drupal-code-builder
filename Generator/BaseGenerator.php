@@ -109,11 +109,18 @@ namespace DrupalCodeBuilder\Generator;
 abstract class BaseGenerator {
 
   /**
-   * The unique name of this generator.
+   * The name of this generator.
    *
-   * A generator's name is used as the key in the $components array.
+   * @see getUniqueID().
    */
   public $name;
+
+  /**
+   * The generator type.
+   *
+   * This is the unqualified class name without the version suffix.
+   */
+  public $type;
 
   /**
    * Reference to the Generate task handler.
@@ -181,6 +188,19 @@ abstract class BaseGenerator {
     // debug output.
     $this->task = $generate_task;
     $this->base_component = $root_generator;
+  }
+
+  /**
+   * Return a unique ID for this component.
+   *
+   * In most cases, it suffices to prefix the name with the component type;
+   * names will generally be unique within a type.
+   *
+   * @return
+   *  The unique ID
+   */
+  public function getUniqueID() {
+    return $this->type . ':' . $this->name;
   }
 
   /**
@@ -286,8 +306,8 @@ abstract class BaseGenerator {
 
     // Allow each of our children to do the same as this to collect its own
     // children.
-    if (!empty($tree[$this->name])) {
-      foreach ($tree[$this->name] as $child_name) {
+    if (!empty($tree[$this->getUniqueID()])) {
+      foreach ($tree[$this->getUniqueID()] as $child_name) {
         $child_component = $components[$child_name];
         $children_contents[$child_name] = $child_component->buildComponentContentsIterative($components, $tree);
       }

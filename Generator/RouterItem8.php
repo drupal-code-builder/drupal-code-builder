@@ -34,7 +34,7 @@ class RouterItem8 extends RouterItem {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return '%module.routing.yml';
+    return 'Routing:%module.routing.yml';
   }
 
   /**

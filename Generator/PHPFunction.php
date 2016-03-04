@@ -67,7 +67,8 @@ class PHPFunction extends BaseGenerator {
    * Return this component's parent in the component tree.
    */
   function containingComponent() {
-    return $this->code_file;
+    // TODO: WILL BREAK FOR CLASSES!
+    return 'ModuleCodeFile:' . $this->code_file;
   }
 
   /**

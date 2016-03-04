@@ -89,7 +89,7 @@ class RouterItem extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'hook_menu';
+    return 'HookMenu:hook_menu';
   }
 
   /**

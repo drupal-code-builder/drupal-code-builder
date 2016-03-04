@@ -40,7 +40,7 @@ class InfoProperty extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'info';
+    return 'Info:info';
   }
 
   /**

@@ -63,7 +63,7 @@ class Permission extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'hook_permission';
+    return 'HookPermission:hook_permission';
   }
 
   /**

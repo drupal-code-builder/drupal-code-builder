@@ -32,7 +32,7 @@ class Generate extends Base {
   /**
    * The list of components.
    *
-   * This is keyed by the name of the component name. Values are the
+   * This is keyed by the unique ID of the component. Values are the
    * instantiated component generators.
    */
   protected $component_list;
@@ -249,12 +249,12 @@ class Generate extends Base {
 
     // The complete list we'll assemble. Start with the root component.
     $component_list = array(
-      $root_component->name => $root_component,
+      $root_component->getUniqueID() => $root_component,
     );
 
     // Prep the current level with the root component for the first iteration.
     $current_level = array(
-      $root_component->name => $root_component
+      $root_component->getUniqueID() => $root_component,
     );
 
     $level_index = 0;
@@ -275,14 +275,7 @@ class Generate extends Base {
 
         // Instantiate each one (if not already done), and add it to the next
         // level.
-        foreach ($item_subcomponent_info as $component_name => $data) {
-          // Prevent re-requesting an identical previous request.
-          // TODO: use requestedComponentHandling() here?
-          if (isset($requested_info_record[$component_name]) && $requested_info_record[$component_name] == $data) {
-            continue;
-          }
-          $requested_info_record[$component_name] = $data;
-
+        foreach ($item_subcomponent_info as $request_name => $data) {
           // The $data may either be a string giving a class name, or an array.
           if (is_string($data)) {
             $component_type = $data;
@@ -296,25 +289,34 @@ class Generate extends Base {
             $component_data = $data;
           }
 
+          $component_unique_id = $component_type . ':' . $request_name;
+
+          // Prevent re-requesting an identical previous request.
+          // TODO: use requestedComponentHandling() here?
+          if (isset($requested_info_record[$component_unique_id]) && $requested_info_record[$component_unique_id] == $data) {
+            continue;
+          }
+          $requested_info_record[$component_unique_id] = $data;
+
           // A requested subcomponent may already exist in our tree.
-          if (isset($component_list[$component_name])) {
+          if (isset($component_list[$component_unique_id])) {
             // If it already exists, we merge the received data in with the
             // existing component.
-            $generator = $component_list[$component_name];
+            $generator = $component_list[$component_unique_id];
             $generator->mergeComponentData($component_data);
           }
           else {
             // Instantiate the generator.
-            $generator = $this->getGenerator($component_type, $component_name, $component_data);
+            $generator = $this->getGenerator($component_type, $request_name, $component_data);
 
             // Add the new component to the complete array of components.
-            $component_list[$component_name] = $generator;
+            $component_list[$component_unique_id] = $generator;
           }
 
           // Add the new component to the next level, whether it's new to us or
           // not: if it's a repeat, we still need to ask it again for requests
           // based on the new data it's just been given.
-          $next_level[$component_name] = $generator;
+          $next_level[$component_unique_id] = $generator;
         } // each requested subcomponent from a component in the current level.
       } // each component in the current level
 
@@ -382,7 +384,7 @@ class Generate extends Base {
   protected function collectFileContents($components, $tree) {
     // Iterate over all file-providing components, i.e. one level below the root
     // of the tree.
-    $root_component_name = $this->root_generator->name;
+    $root_component_name = $this->root_generator->getUniqueID();
     foreach ($tree[$root_component_name] as $file_component_name) {
       // Skip files with no children in the tree.
       if (empty($tree[$file_component_name])) {
@@ -412,7 +414,7 @@ class Generate extends Base {
 
     // Components which provide a file should have registered themselves as
     // children of the root component.
-    $root_component_name = $this->root_generator->name;
+    $root_component_name = $this->root_generator->getUniqueID();
     foreach ($tree[$root_component_name] as $child_component_name) {
       $child_component = $component_list[$child_component_name];
       $child_component_file_data = $child_component->getFileInfo();
@@ -491,6 +493,8 @@ class Generate extends Base {
     }
 
     $generator = new $class($component_name, $component_data, $this, $this->root_generator);
+    // TODO: add to constructor.
+    $generator->type = $component_type;
 
     return $generator;
   }
