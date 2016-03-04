@@ -89,7 +89,7 @@ class PHPClassFile extends PHPFile {
    */
   function code_body() {
     $return = array_merge([
-        'namespace ' . $this->namespace,
+        'namespace ' . $this->namespace . ';',
         '',
       ],
       $this->docBlock("TODO: class docs."),
