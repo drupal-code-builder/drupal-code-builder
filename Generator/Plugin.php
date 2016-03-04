@@ -107,10 +107,10 @@ class Plugin extends PHPFile {
    * rewriting!
    */
   function code_body() {
-    return array(
-      $this->code_namespace(),
+    return array_merge(
+      array($this->code_namespace()),
       $this->class_annotation(),
-      $this->class_body(),
+      array($this->class_body())
     );
   }
 
