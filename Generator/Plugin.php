@@ -182,7 +182,7 @@ class Plugin extends PHPFile {
     // Indent all the class code.
     // TODO: is there a nice way of doing indents?
     $code = array_map(function ($line) {
-      return '  ' . $line;
+      return empty($line) ? $line : '  ' . $line;
     }, $code);
 
     // Add the top and bottom.
