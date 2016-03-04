@@ -59,13 +59,12 @@ class Hooks extends BaseGenerator {
     $components = array();
 
     // Just translate the variable for easier frankencoding for now!
-    $module_data = $this->root_component->component_data;
     $requested_hook_list = $this->component_data['hooks'];
 
     // Get a set of hook declarations and function body templates for the hooks
     // we want. This is of the form:
     //   'hook_foo' => array( 'declaration' => DATA, 'template' => DATA )
-    $hook_file_data = $this->getTemplates($module_data, $requested_hook_list);
+    $hook_file_data = $this->getTemplates($requested_hook_list);
 
     // Work over this and add our HookImplentation.
     foreach ($hook_file_data as $filename => $file_hook_list) {
@@ -141,7 +140,7 @@ class Hooks extends BaseGenerator {
    *      // ...etc
    *    )
    */
-  function getTemplates($module_data, $requested_hook_list) {
+  function getTemplates($requested_hook_list) {
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
 
