@@ -21,8 +21,8 @@ namespace DrupalCodeBuilder\Generator;
  * The generator system starts with a particular generator for a
  * given component (e.g., 'module'), and then adding generators this one
  * requests, recursing this process into each new generator and building a tree
- * down from the original one. This is done by assembleComponentList(), which is
- * recursively called on each generator class. Each class implements
+ * down from the original one. This is done by Generate::assembleComponentList()
+ * which gathers all the required components in a cascade. Each class implements
  * requiredComponents() to return a list of child components. The process ends
  * when the added generators are themselves one that return no sub-components.
  *
@@ -219,7 +219,7 @@ abstract class BaseGenerator {
    *      Further array properties are determined by the component class's
    *      __construct().
    *
-   * @see assembleComponentList()
+   * @see Generate::assembleComponentList()
    */
   public function requiredComponents() {
     return array();

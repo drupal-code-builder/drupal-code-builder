@@ -193,7 +193,7 @@ class Generate extends Base {
     $this->root_generator = $root_generator;
 
     // Recursively assemble all the components that are needed.
-    $this->component_list = $this->root_generator->assembleComponentList();
+    $this->component_list = $this->assembleComponentList($root_generator);
     \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
 
     // Now assemble them into a tree.
@@ -222,6 +222,112 @@ class Generate extends Base {
     $files_assembled = $this->assembleFiles($files);
 
     return $files_assembled;
+  }
+
+  /**
+   * Get the list of required components for the root generator.
+   *
+   * This iterates down the tree of component requests: starting with the root
+   * component, each component may request further components, and then those
+   * components may request more, and so on.
+   *
+   * Generator classes should implement requiredComponents() to return the list
+   * of component types they require, possibly depending on incoming data.
+   *
+   * Obviously, it's important that eventually this process terminate with
+   * generators that return an empty array for requiredComponents().
+   *
+   * @param $base_component
+   *  The root generator.
+   *  TODO: rename this parameter.
+   *
+   * @return
+   *  The list of components.
+   */
+  protected function assembleComponentList($base_component) {
+    // Keep track of all requests to prevent duplicates.
+    $requested_info_record = array();
+
+    // The complete list we'll assemble. Start with the root component.
+    $component_list = array(
+      $base_component->name => $base_component,
+    );
+
+    // Prep the current level with the root component for the first iteration.
+    $current_level = array(
+      $base_component->name => $base_component
+    );
+
+    $level_index = 0;
+
+    // Do a breadth-first tree traversal, working over the current level to
+    // create the next level, until there are no further items.
+    do {
+      $next_level = array();
+
+      // Log the current level.
+      \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($current_level), "starting level $level_index");
+
+      // Work over the current level, assembling a temporary array for the next
+      // level.
+      foreach ($current_level as $current_level_component_name => $item) {
+        // Each item of the current level gives us some children.
+        $item_subcomponent_info = $item->requiredComponents();
+
+        // Instantiate each one (if not already done), and add it to the next
+        // level.
+        foreach ($item_subcomponent_info as $component_name => $data) {
+          // Prevent re-requesting an identical previous request.
+          // TODO: use requestedComponentHandling() here?
+          if (isset($requested_info_record[$component_name]) && $requested_info_record[$component_name] == $data) {
+            continue;
+          }
+          $requested_info_record[$component_name] = $data;
+
+          // The $data may either be a string giving a class name, or an array.
+          if (is_string($data)) {
+            $component_type = $data;
+            $component_data = array();
+
+            // Set the type in the array for consistency in debugging.
+            $component_data['component_type'] = $component_type;
+          }
+          else {
+            $component_type = $data['component_type'];
+            $component_data = $data;
+          }
+
+          // A requested subcomponent may already exist in our tree.
+          if (isset($component_list[$component_name])) {
+            // If it already exists, we merge the received data in with the
+            // existing component.
+            $generator = $component_list[$component_name];
+            $generator->mergeComponentData($component_data);
+          }
+          else {
+            // Instantiate the generator.
+            $generator = $this->getGenerator($component_type, $component_name, $component_data);
+
+            // Add the new component to the complete array of components.
+            $component_list[$component_name] = $generator;
+          }
+
+          // Add the new component to the next level, whether it's new to us or
+          // not: if it's a repeat, we still need to ask it again for requests
+          // based on the new data it's just been given.
+          $next_level[$component_name] = $generator;
+        } // each requested subcomponent from a component in the current level.
+      } // each component in the current level
+
+      // Now have all the next level.
+
+      // Set the next level to be current for the next loop.
+      $current_level = $next_level;
+      $level_index++;
+
+    } while (!empty($next_level));
+
+    return $component_list;
   }
 
   /**
