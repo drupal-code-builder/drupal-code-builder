@@ -228,7 +228,7 @@ abstract class BaseGenerator {
   /**
    * Merge data from additional requests of a component.
    */
-  protected function mergeComponentData($additional_component_data) {
+  public function mergeComponentData($additional_component_data) {
     $this->component_data = array_merge_recursive($this->component_data, $additional_component_data);
   }
 
