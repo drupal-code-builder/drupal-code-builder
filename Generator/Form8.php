@@ -23,6 +23,7 @@ class Form8 extends PHPClassFile {
       'getFormId' => array(
         'component_type' => 'PHPFunction',
         'code_file' => $this->name,
+        'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => '{@inheritdoc}',
         'declaration' => 'public function getFormId()',
         'body' => array(
@@ -33,6 +34,7 @@ class Form8 extends PHPClassFile {
       'buildForm' => array(
         'component_type' => 'PHPFunction',
         'code_file' => $this->name,
+        'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => 'Form constructor.',
         'declaration' => 'public function buildForm(array $form, FormStateInterface $form_state)',
         'body' => array(
@@ -49,6 +51,7 @@ class Form8 extends PHPClassFile {
       'submitForm' => array(
         'component_type' => 'PHPFunction',
         'code_file' => $this->name,
+        'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => 'Form submission handler.',
         'declaration' => 'public function submitForm(array &$form, FormStateInterface $form_state)',
         'body' => '',
