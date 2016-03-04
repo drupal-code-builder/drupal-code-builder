@@ -360,7 +360,7 @@ class Generate extends Base {
    *  components. So for example, the list of children of component 'foo' is
    *  given by $tree['foo'].
    */
-  public function assembleComponentTree($components) {
+  protected function assembleComponentTree($components) {
     $tree = array();
     foreach ($components as $name => $component) {
       $parent_name = $component->containingComponent();
@@ -436,7 +436,7 @@ class Generate extends Base {
    *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
    *  values are strings of the contents for each file.
    */
-  function assembleFiles($files) {
+  protected function assembleFiles($files) {
     $return = array();
 
     foreach ($files as $file_id => $file_info) {
