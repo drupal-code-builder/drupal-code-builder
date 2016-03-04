@@ -123,7 +123,7 @@ class Plugin extends PHPFile {
     $code[] = 'namespace ' . $this->component_data['namespace'] . ';';
     $code[] = '';
     // TODO!!! is there any way to figure these out??
-    $code[] = 'use yadayada;';
+    $code[] = '// use yadayada;';
     $code[] = '';
 
     return implode("\n", $code);
