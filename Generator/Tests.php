@@ -31,7 +31,7 @@ class Tests extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $module_root_name = $this->base_component->component_data['camel_case_name'];
+    $module_root_name = $this->root_component->component_data['camel_case_name'];
     $test_file_name = $module_root_name . "Test.php";
 
     // The key is arbitrary (at least so far!).
@@ -49,7 +49,7 @@ class Tests extends PHPFile {
    * Return the summary line for the file docblock.
    */
   function file_doc_summary() {
-    $module_readable_name = $this->base_component->component_data['readable_name'];
+    $module_readable_name = $this->root_component->component_data['readable_name'];
     return "Contains tests for the $module_readable_name module.";
   }
 
@@ -57,9 +57,9 @@ class Tests extends PHPFile {
    * Return the main body of the file code.
    */
   function code_body() {
-    $module_root_name = $this->base_component->component_data['root_name'];
-    $module_camel_case = $this->base_component->component_data['camel_case_name'];
-    $module_readable_name = $this->base_component->component_data['readable_name'];
+    $module_root_name = $this->root_component->component_data['root_name'];
+    $module_camel_case = $this->root_component->component_data['camel_case_name'];
+    $module_readable_name = $this->root_component->component_data['readable_name'];
 
     $code = <<<EOT
 /**

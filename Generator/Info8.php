@@ -30,7 +30,7 @@ class Info8 extends Info {
     $args = func_get_args();
     $files = array_shift($args);
 
-    $module_data = $this->base_component->component_data;
+    $module_data = $this->root_component->component_data;
     //print_r($module_data);
 
     $lines = array();

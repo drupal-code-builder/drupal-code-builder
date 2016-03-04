@@ -130,11 +130,11 @@ abstract class BaseGenerator {
   public $task;
 
   /**
-   * Reference to the base component of this component.
+   * Reference to the root component of this component.
    *
    * This should be used to access the component data.
    */
-  public $base_component;
+  public $root_component;
 
   /**
    * The base component's flat list of components.
@@ -187,7 +187,7 @@ abstract class BaseGenerator {
     // TODO: remove these and go via the factory instead, to simplify class
     // debug output.
     $this->task = $generate_task;
-    $this->base_component = $root_generator;
+    $this->root_component = $root_generator;
   }
 
   /**

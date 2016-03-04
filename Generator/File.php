@@ -43,7 +43,7 @@ class File extends BaseGenerator {
    * Files are usually contained by the root component.
    */
   function containingComponent() {
-    return $this->base_component->name . ':' . $this->base_component->name;
+    return $this->root_component->name . ':' . $this->root_component->name;
   }
 
   /**
@@ -77,7 +77,7 @@ class File extends BaseGenerator {
     // Example:
     $files[$this->name] = array(
       'path' => '', // Means base folder.
-      'filename' => $this->base_component->component_data['root_name'] . '.info',
+      'filename' => $this->root_component->component_data['root_name'] . '.info',
       'body' => $this->code_body(),
       // We join the info lines with linebreaks, as they (currently!) do not
       // come with their own lineends.

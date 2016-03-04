@@ -66,12 +66,12 @@ class Plugin extends PHPFile {
     // to the base component property yet.
     // Create a class name.
     // TODO: allow this to be set in the component data.
-    $this->component_data['class_name'] = $this->base_component->component_data['camel_case_name']
+    $this->component_data['class_name'] = $this->root_component->component_data['camel_case_name']
       . ucfirst($this->name);
 
     $this->component_data['namespace'] = implode('\\', array(
       'Drupal',
-      $this->base_component->component_data['root_name'],
+      $this->root_component->component_data['root_name'],
       $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
     ));
 

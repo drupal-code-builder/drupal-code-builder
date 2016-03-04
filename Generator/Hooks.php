@@ -59,7 +59,7 @@ class Hooks extends BaseGenerator {
     $components = array();
 
     // Just translate the variable for easier frankencoding for now!
-    $module_data = $this->base_component->component_data;
+    $module_data = $this->root_component->component_data;
     $requested_hook_list = $this->component_data['hooks'];
 
     // Get a set of hook declarations and function body templates for the hooks

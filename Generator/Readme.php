@@ -46,8 +46,8 @@ class Readme extends File {
    */
   function lines() {
     return array(
-      $this->base_component->component_data['readable_name'],
-      str_repeat('=', strlen($this->base_component->component_data['readable_name'])),
+      $this->root_component->component_data['readable_name'],
+      str_repeat('=', strlen($this->root_component->component_data['readable_name'])),
       '',
       'TODO: write some documentation.',
       '',

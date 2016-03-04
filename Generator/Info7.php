@@ -16,7 +16,7 @@ class Info7 extends InfoIni {
    * Create lines of file body for Drupal 7.
    */
   function file_body() {
-    $module_data = $this->base_component->component_data;
+    $module_data = $this->root_component->component_data;
     //print_r($module_data);
 
     $lines = array();
