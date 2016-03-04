@@ -26,7 +26,7 @@ class AdminSettingsForm8 extends Form8 {
     // Form the full class name.
     $class_name_pieces = array(
       'Drupal',
-      $this->base_component->component_data['root_name'],
+      '%module',
       'Form',
       'AdminSettingsForm',
     );
