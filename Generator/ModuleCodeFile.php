@@ -12,17 +12,31 @@ namespace DrupalCodeBuilder\Generator;
  */
 class ModuleCodeFile extends PHPFile {
 
-  // TODO: declare properties that are special!
+  /**
+   * The name of the file this creates, which may include tokens.
+   */
+  protected $filename;
+
+  /**
+   * Constructor.
+   *
+   * @param $component_name
+   *  The name should be the eventual filename, which may include tokens such as
+   *  %module, which are handled by assembleFiles().
+   * @param $component_data
+   *   An array of data for the component.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    $this->filename = $component_name;
+
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
 
   /**
    * Build the code files.
    */
   public function getFileInfo() {
-    // Our component name is our future filename. Tokens such as '%module' are
-    // replaced by assembleFiles().
-    $this->filename = $this->name;
-
-    $files[$this->name] = array(
+    $files[$this->filename] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->file_contents(),
