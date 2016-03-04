@@ -324,7 +324,7 @@ class Module extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = array();
 
     if (isset($this->component_data['requested_components'])) {

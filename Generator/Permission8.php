@@ -15,7 +15,7 @@ class Permission8 extends Permission {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = array(
       '%module.permissions.yml' => array(
         'component_type' => 'YMLFile',

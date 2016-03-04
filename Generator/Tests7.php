@@ -15,7 +15,7 @@ class Tests7 extends Tests {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = array();
 
     $components['info_class'] = array(

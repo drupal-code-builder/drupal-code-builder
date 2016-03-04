@@ -46,7 +46,7 @@ class Permission extends BaseGenerator {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = array(
       'hooks' => array(
         'component_type' => 'Hooks',

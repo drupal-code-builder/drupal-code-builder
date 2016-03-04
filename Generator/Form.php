@@ -47,7 +47,7 @@ class Form extends BaseGenerator {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $form_name = $this->getFormName();
     $form_builder   = $form_name;
     $form_validate  = $form_name . '_validate';

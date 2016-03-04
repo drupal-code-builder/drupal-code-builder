@@ -72,7 +72,7 @@ class RouterItem extends BaseGenerator {
    * @return
    *  An array of subcomponent names and types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $return = array(
       'hooks' => array(
         'component_type' => 'Hooks',

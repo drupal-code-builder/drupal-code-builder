@@ -27,7 +27,7 @@ class Module7 extends Module {
   /**
    * {@inheritdoc}
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = parent::requiredComponents();
 
     // On D7 and lower, modules need a .module file, even if empty.

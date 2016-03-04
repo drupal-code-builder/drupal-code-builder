@@ -34,7 +34,7 @@ class AdminSettingsForm extends Form {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = parent::requiredComponents();
 
     // Change the body of the form builder.

@@ -48,7 +48,7 @@ class Service extends PHPClassFile {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $yaml_data = [];
 
     $yaml_data['services'] = [

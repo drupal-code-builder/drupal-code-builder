@@ -38,7 +38,7 @@ class AdminSettingsForm8 extends Form8 {
   /**
    * Return an array of subcomponent types.
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $components = parent::requiredComponents();
 
     // This takes care of adding hook_menu() and so on.

@@ -15,7 +15,7 @@ class Form8 extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     $form_name = $this->getFormName();
 
     $components = array(

@@ -221,7 +221,7 @@ abstract class BaseGenerator {
    *
    * @see assembleComponentList()
    */
-  protected function requiredComponents() {
+  public function requiredComponents() {
     return array();
   }
 
