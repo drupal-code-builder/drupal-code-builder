@@ -237,25 +237,24 @@ class Generate extends Base {
    * Obviously, it's important that eventually this process terminate with
    * generators that return an empty array for requiredComponents().
    *
-   * @param $base_component
+   * @param $root_component
    *  The root generator.
-   *  TODO: rename this parameter.
    *
    * @return
    *  The list of components.
    */
-  protected function assembleComponentList($base_component) {
+  protected function assembleComponentList($root_component) {
     // Keep track of all requests to prevent duplicates.
     $requested_info_record = array();
 
     // The complete list we'll assemble. Start with the root component.
     $component_list = array(
-      $base_component->name => $base_component,
+      $root_component->name => $root_component,
     );
 
     // Prep the current level with the root component for the first iteration.
     $current_level = array(
-      $base_component->name => $base_component
+      $root_component->name => $root_component
     );
 
     $level_index = 0;
