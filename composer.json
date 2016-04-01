@@ -1,5 +1,6 @@
 {
   "name": "drupal-code-builder/drupal-code-builder",
+  "license": "GPL-2.0+",
   "require": {
   },
   "require-dev": {
