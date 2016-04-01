@@ -261,6 +261,14 @@ class Collect8 extends Collect {
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
 
+    // Add in core.api.php, which won't have been picked up because it's not
+    // in a module!
+    $system_listing['core.api.php'] = (object) array(
+      'uri' => 'core/core.api.php',
+      'filename' => 'core.api.php',
+      'name' => 'core.api',
+    );
+
     //print_r($system_listing);
 
     foreach ($system_listing as $filename => $file) {
