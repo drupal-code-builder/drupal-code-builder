@@ -261,6 +261,22 @@ class Collect8 extends Collect {
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
 
+    // Add in api.php files in core/lib.
+    $core_directory = new \RecursiveDirectoryIterator('core/lib/Drupal');
+    $iterator = new \RecursiveIteratorIterator($core_directory);
+    $regex = new \RegexIterator($iterator, '/^.+\.api.php$/i', \RecursiveRegexIterator::GET_MATCH);
+    $core_api_files = [];
+    foreach ($regex as $regex_files) {
+      foreach ($regex_files as $file) {
+        $filename = basename($file);
+        $system_listing[$filename] = (object) array(
+          'uri' => $file,
+          'filename' => $filename,
+          'name' => basename($file, '.php'),
+        );
+      }
+    }
+
     // Add in core.api.php, which won't have been picked up because it's not
     // in a module!
     $system_listing['core.api.php'] = (object) array(
