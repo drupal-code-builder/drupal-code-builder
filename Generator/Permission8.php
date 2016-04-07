@@ -39,7 +39,7 @@ class Permission8 extends Permission {
     $permission_name = $this->component_data['permission'];
     $yaml_data[$permission_name] = array(
       'title' => $permission_name,
-      'decription' => 'TODO: permission description',
+      'description' => 'TODO: permission description',
     );
     return $yaml_data;
   }
