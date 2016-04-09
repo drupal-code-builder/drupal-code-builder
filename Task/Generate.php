@@ -101,9 +101,13 @@ class Generate extends Base {
    *  are the names of properties. Each value is an array of information for the
    *  property. Of interest to UIs calling this are:
    *  - 'label': A human-readable label for the property.
+   *  - 'description': (optional) A longer description.
    *  - 'format': Specifies the expected format for the property. One of
-   *    'string' or 'array'.
+   *    'string', 'array', or 'boolean'.
    *  - 'required': Boolean indicating whether this property must be provided.
+   *  - 'default': A default value for the property. Progressive UIs that
+   *    process user input incrementally will get default values that are
+   *    based on the user input so far.
    * For the full documentation for all properties, see
    * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
