@@ -36,8 +36,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
    */
   protected function generateModuleFiles($module_data) {
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-    $root_generator = $mb_task_handler_generate->getRootGenerator();
-    $component_data_info = $root_generator->getComponentDataInfo();
+    $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
 
     // Perform final processing on the component data.
     // This prepares data, for example expands options such as hook presets.
