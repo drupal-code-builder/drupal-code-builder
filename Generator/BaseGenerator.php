@@ -191,6 +191,108 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Define the component data this component needs to function.
+   *
+   * This returns an array of data that defines the component data that
+   * this component should be given to perform its work. This includes:
+   *  - data that must be specified by the user
+   *  - data that may be specified by the user, but can be computed or take from
+   *    defaults
+   *  - data that should not be specified by the user, as it is computed from
+   *    other input.
+   *
+   * This array must be processed in the order in which the properties are
+   * given, so that the callables for defaults and options work properly.
+   *
+   * Note this can't be a class property due to use of closures.
+   *
+   * @return
+   *  An array that defines the data this component needs to operate. The order
+   *  is important, as callbacks may depend on component data that has been
+   *  assembled so far, i.e., on data properties that are earlier in the array.
+   *  Each key corresponds to a key for a property in the $component_data that
+   *  should be passed to this class's __construct(). Each value is an array,
+   *  with the following keys:
+   *  - 'label': A human-readable label for the property.
+   *  - 'description': (optional) A longer description of the property.
+   *  - 'format': (optional) Specifies the expected format for the property.
+   *    One of 'string', 'array', or 'boolean'. Defaults to 'string'.
+   *  - 'default': (optional) The default value for the property. This is either
+   *    a static value, or a callable, in which case it must be called with the
+   *    array of component data assembled so far. Depending on the value of
+   *    'required', this represents either the value that may be presented as a
+   *    default to the user in a UI for convenience, or the value that will be
+   *    set if nothing is provided when instatiating the component. Note that
+   *    this is required if a later property makes use of this property in a
+   *    callback, as non-progressive UIs can only rely on hardcoded default
+   *    values.
+   *  - 'required': (optional) Boolean indicating whether this property must be
+   *    provided. Defaults to FALSE.
+   *  - 'options': (optional) A callable which returns a list of options for the
+   *    property. This receives the component data assembled so far.
+   *  - 'options_structured': (optional) A callable which returns data about the
+   *    possible options for the property. Use this as an alternative to the
+   *    'options' property if you want more information. This returns an array
+   *    keyed by group name (where the group is possibly the module that
+   *    defines the option), whose values are arrays keyed by the options. Each
+   *    value is a further array with these properties:
+   *      - 'description': A longer description of the item.
+   *  - 'processing': (optional) A callback to processComponentData() to use to
+   *    process input values into the final format for the component data array.
+   *  - 'component': (optional) The name of a generator class, relative to the
+   *    namespace. If present, this results in child components of this class
+   *    being added to the component tree. The handling of this is determined
+   *    by the component class's requestedComponentHandling() method.
+   *  - 'computed': (optional) If TRUE, indicates that this property is computed
+   *    by the component, and should not be obtained from the user.
+   *
+   * @see getComponentDataInfo()
+   */
+  protected static function componentDataDefinition() {
+    return array();
+  }
+
+  /**
+   * Get a list of the properties that are required in the component data.
+   *
+   * UIs should use DrupalCodeBuilder\Task\Generate\getRootComponentDataInfo() rather
+   * than this method.
+   *
+   * @param $include_computed
+   *  (optional) Boolean indicating whether to include computed properties.
+   *  Default value is FALSE, as UIs don't need to work with these.
+   *
+   * @return
+   *  An array containing information about the properties this component needs
+   *  in its $component_data array. Keys are the names of properties. Each value
+   *  is an array of information for the property.
+   *
+   * @see componentDataDefinition()
+   * @see prepareComponentDataProperty()
+   * @see processComponentData()
+   */
+  public static function getComponentDataInfo($include_computed = FALSE) {
+    $return = array();
+    foreach (static::componentDataDefinition() as $property_name => $property_info) {
+      if (empty($property_info['computed'])) {
+        $property_info += array(
+          'required' => FALSE,
+          'format' => 'string',
+        );
+      }
+      else {
+        if (!$include_computed) {
+          continue;
+        }
+      }
+
+      $return[$property_name] = $property_info;
+    }
+
+    return $return;
+  }
+
+  /**
    * Return a unique ID for this component.
    *
    * In most cases, it suffices to prefix the name with the component type;
