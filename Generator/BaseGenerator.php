@@ -286,6 +286,12 @@ abstract class BaseGenerator {
         }
       }
 
+      // Expand compound properties.
+      if (isset($property_info['format']) && $property_info['format'] == 'compound') {
+        $component_class = \DrupalCodeBuilder\Task\Generate::getGeneratorClass($property_info['component']);
+        $property_info['properties'] = $component_class::componentDataDefinition();
+      }
+
       $return[$property_name] = $property_info;
     }
 
