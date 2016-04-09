@@ -15,7 +15,7 @@ class Module7 extends Module {
   /**
    * {@inheritdoc}
    */
-  protected function componentDataDefinition() {
+  protected static function componentDataDefinition() {
     $component_data_definition = parent::componentDataDefinition();
 
     unset($component_data_definition['plugins']);

@@ -40,7 +40,7 @@ class Profile extends RootComponent {
    *  - data that should not be specified by the user, as it is computed from
    *    other input.
    */
-  protected function componentDataDefinition() {
+  protected static function componentDataDefinition() {
     $component_data_definition = array(
       'root_name' => array(
         'label' => 'Profile machine name',

@@ -112,7 +112,8 @@ class Generate extends Base {
    * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
   public function getRootComponentDataInfo() {
-    return $this->root_generator->getComponentDataInfo();
+    $class = $this->getGeneratorClass($this->base);
+    return $class::getComponentDataInfo();
   }
 
   /**

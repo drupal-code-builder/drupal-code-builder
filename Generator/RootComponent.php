@@ -73,7 +73,9 @@ abstract class RootComponent extends BaseGenerator {
    *
    * @see getComponentDataInfo()
    */
-  abstract protected function componentDataDefinition();
+  protected static function componentDataDefinition() {
+    return array();
+  }
 
   /**
    * Get a list of the properties that are required in the component data.
@@ -94,9 +96,9 @@ abstract class RootComponent extends BaseGenerator {
    * @see prepareComponentDataProperty()
    * @see processComponentData()
    */
-  public function getComponentDataInfo($include_computed = FALSE) {
+  public static function getComponentDataInfo($include_computed = FALSE) {
     $return = array();
-    foreach ($this->componentDataDefinition() as $property_name => $property_info) {
+    foreach (static::componentDataDefinition() as $property_name => $property_info) {
       if (empty($property_info['computed'])) {
         $property_info += array(
           'required' => FALSE,
