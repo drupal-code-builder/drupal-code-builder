@@ -518,9 +518,9 @@ class Generate extends Base {
    *  A fully qualified class name for the type and, if it exists, version, e.g.
    *  'DrupalCodeBuilder\Generator\Info6'.
    */
-  public function getGeneratorClass($type) {
+  public static function getGeneratorClass($type) {
     $type     = ucfirst($type);
-    $version  = $this->environment->getCoreMajorVersion();
+    $version  = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
     $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
 
     // If there is no version-specific class, use the base class.
