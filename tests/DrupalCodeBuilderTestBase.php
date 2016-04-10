@@ -40,7 +40,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
 
     // Perform final processing on the component data.
     // This prepares data, for example expands options such as hook presets.
-    $mb_task_handler_generate->getRootGenerator()->processComponentData($component_data_info, $module_data);
+    $mb_task_handler_generate->processComponentData($component_data_info, $module_data);
 
     $files = $mb_task_handler_generate->generateComponent($module_data);
 
