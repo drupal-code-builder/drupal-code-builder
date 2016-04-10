@@ -163,7 +163,8 @@ class Generate extends Base {
    *  The component data array.
    */
   public function processComponentData($component_data_info, &$component_data) {
-    $this->root_generator->processComponentData($component_data_info, $component_data);
+    $class = $this->getGeneratorClass($this->base);
+    $class::processComponentData($component_data_info, $component_data);
   }
 
   /**
