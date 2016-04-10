@@ -53,8 +53,6 @@ class Generate extends Base {
     $component_name = $component_type;
 
     $this->base = $component_type;
-    // We don't have any component data to pass in at this point.
-    $this->root_generator = $this->getGenerator($component_type, $component_name);
   }
 
   /**
@@ -181,11 +179,6 @@ class Generate extends Base {
    *  values are the code destined for each file.
    */
   public function generateComponent($component_data) {
-    // The dummy generator that was made by __construct() should now be removed;
-    // it is not fully set up, and its presence would cause a tangled mess in
-    // getGenerator().
-    $this->root_generator = NULL;
-
     // Add the top-level component to the data.
     $component_type = $this->base;
     $component_data['base'] = $component_type;
@@ -193,7 +186,7 @@ class Generate extends Base {
     // The component name is just the same as the type for the base generator.
     $component_name = $component_type;
 
-    // Repeat the steps from __construct() now we have proper component data.
+    // Get the root component generator.
     // The component name is just the same as the type for the base generator.
     $root_generator = $this->getGenerator($component_type, $component_name, $component_data);
 
