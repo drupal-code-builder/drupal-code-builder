@@ -149,7 +149,7 @@ abstract class RootComponent extends BaseGenerator {
    *
    * @see getComponentDataInfo()
    */
-  public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
+  public static function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
     // Set options.
     // This is always a callable if set.
     if (isset($property_info['options'])) {

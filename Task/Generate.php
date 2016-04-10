@@ -145,7 +145,8 @@ class Generate extends Base {
    *  existing user data.
    */
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    $this->root_generator->prepareComponentDataProperty($property_name, $property_info, $component_data);
+    $class = $this->getGeneratorClass($this->base);
+    $class::prepareComponentDataProperty($property_name, $property_info, $component_data);
   }
 
   /**
