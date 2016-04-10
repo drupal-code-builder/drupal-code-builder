@@ -192,11 +192,11 @@ abstract class RootComponent extends BaseGenerator {
    * @param &$component_data
    *  The component data array.
    */
-  public function processComponentData($component_data_info, &$component_data) {
+  public static function processComponentData($component_data_info, &$component_data) {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
-    $component_data_info_original = $this->getComponentDataInfo(TRUE);
+    $component_data_info_original = static::getComponentDataInfo(TRUE);
     foreach ($component_data_info_original as $property_name => $property_info) {
       if (!empty($property_info['computed'])) {
         $component_data_info[$property_name] = $property_info;
@@ -248,7 +248,7 @@ abstract class RootComponent extends BaseGenerator {
         $component_type = $property_info['component'];
 
         // Ask the component type class how to handle this.
-        $class = $this->task->getGeneratorClass($component_type);
+        $class = \DrupalCodeBuilder\Task\Generate::getGeneratorClass($component_type);
         $handling_type = $class::requestedComponentHandling();
 
         switch ($handling_type) {
