@@ -22,7 +22,7 @@ class Profile extends RootComponent {
   /**
    * The sanity level this generator requires to operate.
    */
-  public $sanity_level = 'none';
+  public static $sanity_level = 'none';
 
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);

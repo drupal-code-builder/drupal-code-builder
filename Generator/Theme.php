@@ -22,7 +22,7 @@ class Theme extends BaseGenerator {
   /**
    * The sanity level this generator requires to operate.
    */
-  public $sanity_level = 'none';
+  public static $sanity_level = 'none';
 
   /**
    * The data for the component.

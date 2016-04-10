@@ -16,6 +16,11 @@ namespace DrupalCodeBuilder\Generator;
 abstract class RootComponent extends BaseGenerator {
 
   /**
+   * The sanity level this generator requires to operate.
+   */
+  public static $sanity_level = 'none';
+
+  /**
    * Define the component data this component needs to function.
    *
    * This returns an array of data that defines the component data that
