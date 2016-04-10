@@ -29,6 +29,11 @@ class APIComponentDataTest extends DrupalCodeBuilderTestBase {
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
 
+    // Check that the generate system's processing populated defaults values for
+    // 'format' and 'required'.
+    $this->assertEquals(FALSE, $component_data_info['module_package']['required'], "The 'required' info property has a default value filled in.");
+    $this->assertEquals('string', $component_data_info['module_package']['format'], "The 'format' info property has a default value filled in.");
+
     $module_name = 'my_test_module';
 
     $component_data = array(
