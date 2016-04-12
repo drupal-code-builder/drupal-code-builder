@@ -34,7 +34,9 @@ abstract class RootComponent extends BaseGenerator {
    * placed into $property_info['options'].
    *
    * @param $property_name
-   *  The name of the property.
+   *  The name of the property. A string if this is a top-level property, or an
+   *  array if this is a child property, of the form [parent, child].
+   *  TODO: make this less hacky!
    * @param &$property_info
    *  The definition for this property, from getComponentDataInfo().
    *  If the property has options, this will have its 'options' key set, in the
@@ -48,6 +50,16 @@ abstract class RootComponent extends BaseGenerator {
    * @see getComponentDataInfo()
    */
   public static function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
+    // Recurse compound properties.
+    if ($property_info['format'] == 'compound') {
+      foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
+        $child_property_address = array($property_name, $child_property_name);
+        static::prepareComponentDataProperty($child_property_address, $property_info['properties'][$child_property_name], $component_data);
+      }
+
+      return;
+    }
+
     // Set options.
     // This is always a callable if set.
     if (isset($property_info['options'])) {
@@ -68,11 +80,17 @@ abstract class RootComponent extends BaseGenerator {
       else {
         $default_value = $property_info['default'];
       }
-      $component_data[$property_name] = $default_value;
     }
     else {
       // Always set the property name, even if it's something basically empty.
-      $component_data[$property_name] = $property_info['format'] == 'array' ? array() : NULL;
+      $default_value = $property_info['format'] == 'array' ? array() : NULL;
+    }
+
+    if (is_array($property_name)) {
+      $component_data[$property_name[0]][$property_name[1]] = $default_value;
+    }
+    else {
+      $component_data[$property_name] = $default_value;
     }
   }
 
