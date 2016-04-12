@@ -215,8 +215,19 @@ abstract class BaseGenerator {
    *  with the following keys:
    *  - 'label': A human-readable label for the property.
    *  - 'description': (optional) A longer description of the property.
-   *  - 'format': (optional) Specifies the expected format for the property.
-   *    One of 'string', 'array', or 'boolean'. Defaults to 'string'.
+   *  - 'format': (optional) Specifies the expected format for the property. If
+   *    omitted, defaults to 'string'.
+   *    Possible values are:
+   *    - 'string': The property's data should be a plain string.
+   *    - 'boolean': The property's data should be a boolean.
+   *    - 'array': The property's data should be an array of string values. The
+   *      keys are ignored.
+   *    - 'compound': The property's data should be an array where each element
+   *      is a further array of properties. The keys are ignored. The values in
+   *      each array are specified by the 'properties' key.
+   *  - 'properties': (optional) An array of child properties, in the same
+   *    format at the overall array. This is required if the format is
+   *    'compound'.
    *  - 'default': (optional) The default value for the property. This is either
    *    a static value, or a callable, in which case it must be called with the
    *    array of component data assembled so far. Depending on the value of
