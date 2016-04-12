@@ -275,10 +275,7 @@ abstract class BaseGenerator {
     $return = array();
     foreach (static::componentDataDefinition() as $property_name => $property_info) {
       if (empty($property_info['computed'])) {
-        $property_info += array(
-          'required' => FALSE,
-          'format' => 'string',
-        );
+        static::componentDataInfoAddDefaults($property_info);
       }
       else {
         if (!$include_computed) {
@@ -289,13 +286,32 @@ abstract class BaseGenerator {
       // Expand compound properties.
       if (isset($property_info['format']) && $property_info['format'] == 'compound') {
         $component_class = \DrupalCodeBuilder\Task\Generate::getGeneratorClass($property_info['component']);
-        $property_info['properties'] = $component_class::componentDataDefinition();
+        $child_properties = $component_class::componentDataDefinition();
+
+        array_walk($child_properties, 'static::componentDataInfoAddDefaults');
+
+        $property_info['properties'] = $child_properties;
       }
 
       $return[$property_name] = $property_info;
     }
 
     return $return;
+  }
+
+  /**
+   * Set default values in a component property info array.
+   *
+   * @param &$property_info
+   *  A single value array from a component property info array. In other words,
+   *  the array that describes a single property that would be passed to a
+   *  generator, such as the 'hooks' property.
+   */
+  protected static function componentDataInfoAddDefaults(&$property_info) {
+    $property_info += array(
+      'required' => FALSE,
+      'format' => 'string',
+    );
   }
 
   /**
