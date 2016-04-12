@@ -224,10 +224,8 @@ abstract class BaseGenerator {
    *      keys are ignored.
    *    - 'compound': The property's data should be an array where each element
    *      is a further array of properties. The keys are ignored. The values in
-   *      each array are specified by the 'properties' key.
-   *  - 'properties': (optional) An array of child properties, in the same
-   *    format at the overall array. This is required if the format is
-   *    'compound'.
+   *      each array are specified by calling this method on the class
+   *      determined from the 'component' property.
    *  - 'default': (optional) The default value for the property. This is either
    *    a static value, or a callable, in which case it must be called with the
    *    array of component data assembled so far. Depending on the value of

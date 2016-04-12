@@ -102,7 +102,9 @@ class Generate extends Base {
    *  - 'label': A human-readable label for the property.
    *  - 'description': (optional) A longer description.
    *  - 'format': Specifies the expected format for the property. One of
-   *    'string', 'array', or 'boolean'.
+   *    'string', 'array', 'boolean', or 'compound'.
+   *  - 'properties': If the format is 'compound', this will be an array of
+   *    child properties, in the same format at the overall array.
    *  - 'required': Boolean indicating whether this property must be provided.
    *  - 'default': A default value for the property. Progressive UIs that
    *    process user input incrementally will get default values that are
