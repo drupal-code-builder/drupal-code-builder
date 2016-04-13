@@ -121,27 +121,14 @@ abstract class RootComponent extends BaseGenerator {
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
-      // Skip a property that has a set value.
-      if (!empty($component_data[$property_name])) {
-        continue;
-      }
+      static::setComponentDataPropertyDefault($property_name, $property_info, $component_data);
 
-      // Remove a property whose value is FALSE. This allows a property that has
-      // a default value to be removed completely.
-      if (isset($component_data[$property_name]) && $component_data[$property_name] === FALSE) {
-        unset($component_data[$property_name]);
-        continue;
-      }
-
-      if (isset($property_info['default'])) {
-        if (is_callable($property_info['default'])) {
-          $default_callback = $property_info['default'];
-          $default_value = $default_callback($component_data);
+      if (isset($property_info['properties']) && is_array($component_data[$property_name])) {
+        foreach ($component_data[$property_name] as $delta => &$delta_data) {
+          foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
+            static::setComponentDataPropertyDefault($child_property_name, $child_property_info, $delta_data);
+          }
         }
-        else {
-          $default_value = $property_info['default'];
-        }
-        $component_data[$property_name] = $default_value;
       }
     }
 
@@ -189,6 +176,44 @@ abstract class RootComponent extends BaseGenerator {
         }
       }
     } // expand components
+  }
+
+  /**
+   * Set the default value for a property in component data.
+   *
+   * @param $property_name
+   *  The name of the property. For child properties, this is the name of just
+   *  the child property.
+   * @param $property_info
+   *  The property info array for the property.
+   * @param &$component_data_local
+   *  The array of component data, or for child properties, the item array that
+   *  immediately contains the property. In other words, this array would have
+   *  a key $property_name if data has been supplied for this property.
+   */
+  private static function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+    // Skip a property that has a set value.
+    if (!empty($component_data_local[$property_name])) {
+      return;
+    }
+
+    // Remove a property whose value is FALSE. This allows a property that has
+    // a default value to be removed completely.
+    if (isset($component_data_local[$property_name]) && $component_data_local[$property_name] === FALSE) {
+      unset($component_data_local[$property_name]);
+      return;
+    }
+
+    if (isset($property_info['default'])) {
+      if (is_callable($property_info['default'])) {
+        $default_callback = $property_info['default'];
+        $default_value = $default_callback($component_data_local);
+      }
+      else {
+        $default_value = $property_info['default'];
+      }
+      $component_data_local[$property_name] = $default_value;
+    }
   }
 
   /**
