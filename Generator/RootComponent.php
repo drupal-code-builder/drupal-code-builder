@@ -150,6 +150,17 @@ abstract class RootComponent extends BaseGenerator {
         // Get the component type.
         $component_type = $property_info['component'];
 
+        // If the format is 'compound', handling type is irrelevant.
+        if ($property_info['format'] == 'compound') {
+          foreach ($component_data[$property_name] as $delta => $item_data) {
+            $item_data['component_type'] = $component_type;
+
+            $component_data['requested_components']["{$component_type}_{$delta}"] = $item_data;
+          }
+
+          continue;
+        }
+
         // Ask the component type class how to handle this.
         $class = \DrupalCodeBuilder\Task\Generate::getGeneratorClass($component_type);
         $handling_type = $class::requestedComponentHandling();
