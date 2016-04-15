@@ -51,6 +51,7 @@ class AdminSettingsForm8 extends Form8 {
 
     $components['administer %module'] = array(
       'component_type' => 'Permission',
+      'permission' => 'administer %module',
     );
 
     $components['info_configuration'] = array(
