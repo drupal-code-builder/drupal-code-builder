@@ -202,7 +202,7 @@ abstract class RootComponent extends BaseGenerator {
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
    */
-  private static function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+  public static function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
     // Skip a property that has a set value.
     if (!empty($component_data_local[$property_name])) {
       return;

@@ -309,6 +309,17 @@ class Generate extends Base {
             $generator->mergeComponentData($component_data);
           }
           else {
+            // Fill in defaults for the component data.
+            // (This is the equivalent of handling compound properties when
+            // processing the original input data.)
+            $class = $this->getGeneratorClass($component_type);
+            $component_data_info = $class::getComponentDataInfo(TRUE);
+            foreach ($component_data_info as $property_name => $property_info) {
+              // Quick hack!
+              // TODO: This method should be moved to this class.
+              \DrupalCodeBuilder\Generator\RootComponent::setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+            }
+
             // Instantiate the generator.
             $generator = $this->getGenerator($component_type, $request_name, $component_data);
 
