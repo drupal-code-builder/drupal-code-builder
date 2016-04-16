@@ -50,7 +50,7 @@ class ComponentThemeHook8Test extends DrupalCodeBuilderTestBase {
     $this->assertCount(3, $files, "Expected number of files is returned.");
     $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
     $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("templates/$theme_hook_name.html.twig", $file_names, "The files list has a twig file.");
+    $this->assertContains("templates/my-themeable.html.twig", $file_names, "The files list has a twig file.");
 
     // TODO: check the file contents.
   }
