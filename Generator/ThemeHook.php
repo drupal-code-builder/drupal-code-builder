@@ -41,6 +41,8 @@ class ThemeHook extends BaseGenerator {
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
+    $twig_file_name = $declaration = str_replace('_', '-', $this->name) . '.html.twig';
+
     $components = array(
       'hooks' => array(
         'component_type' => 'Hooks',
@@ -48,7 +50,7 @@ class ThemeHook extends BaseGenerator {
           'hook_theme' => TRUE,
         ),
       ),
-      $this->name . '.html.twig' => array(
+      $twig_file_name => array(
         'component_type' => 'TwigFile',
         'theme_hook_name' => $this->component_data['theme_hook_name'],
       ),
