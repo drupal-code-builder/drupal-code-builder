@@ -41,6 +41,7 @@ class TwigFile extends File {
  *
  * @ingroup themeable
  */
+#}
 <article>
   Content here.
 </article>
