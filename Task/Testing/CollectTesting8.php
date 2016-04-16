@@ -31,6 +31,8 @@ class CollectTesting8 extends Collect8 {
       'block.api.php' => TRUE,
       // Need this for hook_help().
       'help.api.php' => TRUE,
+      // Need this for ThemeHook component.
+      'theme.api.php' => TRUE,
     );
 
     $files = array_intersect_key($files, $testing_files);
