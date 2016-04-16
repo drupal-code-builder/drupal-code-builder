@@ -54,8 +54,9 @@ class File extends BaseGenerator {
    * @return
    *  An array keyed by an arbitrary ID for the file, whose value is an array
    *  of file info. Values in this array are:
-   *  - path: The path to the file, relative to the future component folder. An
-   *    empty string means the base folder of the component.
+   *  - path: The path to the file, relative to the future component folder,
+   *    without the trailing slash. An empty string means the base folder of the
+   *    component.
    *  - filename: The file name. This may contain tokens, to be replaced using
    *    the root component class's getReplacements().
    *  - body: An array of pieces to assemble in order to form the body of the
