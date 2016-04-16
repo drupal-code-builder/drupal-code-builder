@@ -20,6 +20,8 @@ class Module7 extends Module {
 
     unset($component_data_definition['plugins']);
     unset($component_data_definition['services']);
+    // TODO: implement this for D7.
+    unset($component_data_definition['theme_hooks']);
 
     return $component_data_definition;
   }
