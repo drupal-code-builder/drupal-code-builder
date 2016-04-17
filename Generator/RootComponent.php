@@ -123,7 +123,7 @@ abstract class RootComponent extends BaseGenerator {
     foreach ($component_data_info as $property_name => $property_info) {
       static::setComponentDataPropertyDefault($property_name, $property_info, $component_data);
 
-      if (isset($property_info['properties']) && is_array($component_data[$property_name])) {
+      if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
         foreach ($component_data[$property_name] as $delta => $delta_data) {
           foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
             static::setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta]);
