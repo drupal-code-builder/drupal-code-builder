@@ -37,7 +37,11 @@ class ComponentPermissions8Test extends DrupalCodeBuilderTestBase {
       'short_description' => 'Test Module description',
       'hooks' => array(
       ),
-      'permissions' => array($permission_name),
+      'permissions' => array(
+        1 => array(
+          'permission' => $permission_name,
+        ),
+      ),
       'requested_components' => array(
       ),
       'readme' => FALSE,
