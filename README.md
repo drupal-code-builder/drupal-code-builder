@@ -14,6 +14,12 @@ Drupal Code Builder can generate the following for a module:
 - README file
 - test case classes
 - plugin classes
+- theme hooks
+
+Definitions of hooks and plugin types are obtained by analyzing the current
+Drupal codebase of the site where the library is used. This means that Drupal
+Code Builder automatically knows about all hooks and plugin types from contrib
+and custom modules as well as those in Drupal core.
 
 Furthermore, complex subcomponents can generate multiple code elements:
 - an admin settings form adds form builder functions and an admin permission
