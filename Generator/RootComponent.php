@@ -87,7 +87,7 @@ abstract class RootComponent extends BaseGenerator {
     }
 
     if (is_array($property_name)) {
-      $component_data[$property_name[0]][$property_name[1]] = $default_value;
+      $component_data[$property_name[0]][0][$property_name[1]] = $default_value;
     }
     else {
       $component_data[$property_name] = $default_value;
