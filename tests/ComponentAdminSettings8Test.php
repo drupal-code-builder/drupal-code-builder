@@ -84,7 +84,9 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
       'hooks' => array(
       ),
       'permissions' => array(
-        'access testmodule',
+        1 => array(
+          'permission' => 'access testmodule',
+        ),
       ),
       'settings_form' => TRUE,
       'requested_components' => array(
@@ -114,7 +116,9 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
        'hooks' => array(
        ),
        'permissions' => array(
-         'access testmodule',
+         1 => array(
+           'permission' => 'access testmodule',
+         ),
        ),
        'settings_form' => TRUE,
        'router_items' => array(
