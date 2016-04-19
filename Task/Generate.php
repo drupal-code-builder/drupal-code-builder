@@ -145,8 +145,37 @@ class Generate extends Base {
    *  existing user data.
    */
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    $class = $this->getGeneratorClass($this->base);
-    $class::prepareComponentDataProperty($property_name, $property_info, $component_data);
+    // We don't recurse into compound properties to set defaults there, as this
+    // then causes UIs to create a first item even if the user doesn't want one
+    // at all.
+
+    // Set options.
+    // This is always a callable if set.
+    if (isset($property_info['options'])) {
+      $options_callback = $property_info['options'];
+      $options = $options_callback($property_info);
+
+      $property_info['options'] = $options;
+    }
+
+    // Set a default value, if one is available.
+    if (isset($property_info['default'])) {
+      // The default property is either an anonymous function, or
+      // a plain value.
+      if (is_callable($property_info['default'])) {
+        $default_callback = $property_info['default'];
+        $default_value = $default_callback($component_data);
+      }
+      else {
+        $default_value = $property_info['default'];
+      }
+    }
+    else {
+      // Always set the property name, even if it's something basically empty.
+      $default_value = $property_info['format'] == 'array' ? array() : NULL;
+    }
+
+    $component_data[$property_name] = $default_value;
   }
 
   /**

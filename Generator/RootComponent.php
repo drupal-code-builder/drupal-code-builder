@@ -21,67 +21,6 @@ abstract class RootComponent extends BaseGenerator {
   public static $sanity_level = 'none';
 
   /**
-   * Prepares a property in the component data with default value and options.
-   *
-   * This should be called for each property in the component data info that is
-   * obtained from getComponentDataInfo(), in the order given in that array.
-   * This allows UIs to present default values to the user in a progressive
-   * manner. For example, the Drush interactive mode may present a default value
-   * for the module human name based on the value the user has already entered
-   * for the machine name.
-   *
-   * The default value is placed into the $component_data array; the options are
-   * placed into $property_info['options'].
-   *
-   * @param $property_name
-   *  The name of the property.
-   * @param &$property_info
-   *  The definition for this property, from getComponentDataInfo().
-   *  If the property has options, this will have its 'options' key set, in the
-   *  the format VALUE => LABEL.
-   * @param &$component_data
-   *  An array of component data that is being assembled. This should contain
-   *  property data that has been obtained from the user so far. This will have
-   *  its $property_name key set with the default value for the property,
-   *  which may be calculated based on the existing user data.
-   *
-   * @see getComponentDataInfo()
-   */
-  public static function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    // We don't recurse into compound properties to set defaults there, as this
-    // then causes UIs to create a first item even if the user doesn't want one
-    // at all.
-
-    // Set options.
-    // This is always a callable if set.
-    if (isset($property_info['options'])) {
-      $options_callback = $property_info['options'];
-      $options = $options_callback($property_info);
-
-      $property_info['options'] = $options;
-    }
-
-    // Set a default value, if one is available.
-    if (isset($property_info['default'])) {
-      // The default property is either an anonymous function, or
-      // a plain value.
-      if (is_callable($property_info['default'])) {
-        $default_callback = $property_info['default'];
-        $default_value = $default_callback($component_data);
-      }
-      else {
-        $default_value = $property_info['default'];
-      }
-    }
-    else {
-      // Always set the property name, even if it's something basically empty.
-      $default_value = $property_info['format'] == 'array' ? array() : NULL;
-    }
-
-    $component_data[$property_name] = $default_value;
-  }
-
-  /**
    * Process component data prior to passing it to the generator.
    *
    * Performs final processing for the component data:
