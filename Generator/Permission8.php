@@ -37,10 +37,17 @@ class Permission8 extends Permission {
    */
   public function buildComponentContents($children_contents) {
     $permission_name = $this->component_data['permission'];
-    $yaml_data[$permission_name] = array(
+
+    $permission_info = array(
       'title' => $permission_name,
-      'description' => 'TODO: permission description',
+      'description' => $this->component_data['description'],
     );
+    if (!empty($this->component_data['restrict_access'])) {
+      $permission_info['restrict access'] = TRUE;
+    }
+
+    $yaml_data[$permission_name] = $permission_info;
+
     return $yaml_data;
   }
 

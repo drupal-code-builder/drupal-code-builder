@@ -34,9 +34,7 @@ abstract class RootComponent extends BaseGenerator {
    * placed into $property_info['options'].
    *
    * @param $property_name
-   *  The name of the property. A string if this is a top-level property, or an
-   *  array if this is a child property, of the form [parent, child].
-   *  TODO: make this less hacky!
+   *  The name of the property.
    * @param &$property_info
    *  The definition for this property, from getComponentDataInfo().
    *  If the property has options, this will have its 'options' key set, in the
@@ -50,15 +48,9 @@ abstract class RootComponent extends BaseGenerator {
    * @see getComponentDataInfo()
    */
   public static function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    // Recurse compound properties.
-    if ($property_info['format'] == 'compound') {
-      foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
-        $child_property_address = array($property_name, $child_property_name);
-        static::prepareComponentDataProperty($child_property_address, $property_info['properties'][$child_property_name], $component_data);
-      }
-
-      return;
-    }
+    // We don't recurse into compound properties to set defaults there, as this
+    // then causes UIs to create a first item even if the user doesn't want one
+    // at all.
 
     // Set options.
     // This is always a callable if set.
@@ -86,12 +78,7 @@ abstract class RootComponent extends BaseGenerator {
       $default_value = $property_info['format'] == 'array' ? array() : NULL;
     }
 
-    if (is_array($property_name)) {
-      $component_data[$property_name[0]][$property_name[1]] = $default_value;
-    }
-    else {
-      $component_data[$property_name] = $default_value;
-    }
+    $component_data[$property_name] = $default_value;
   }
 
   /**
@@ -123,10 +110,10 @@ abstract class RootComponent extends BaseGenerator {
     foreach ($component_data_info as $property_name => $property_info) {
       static::setComponentDataPropertyDefault($property_name, $property_info, $component_data);
 
-      if (isset($property_info['properties']) && is_array($component_data[$property_name])) {
-        foreach ($component_data[$property_name] as $delta => &$delta_data) {
+      if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
+        foreach ($component_data[$property_name] as $delta => $delta_data) {
           foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
-            static::setComponentDataPropertyDefault($child_property_name, $child_property_info, $delta_data);
+            static::setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta]);
           }
         }
       }
@@ -202,7 +189,7 @@ abstract class RootComponent extends BaseGenerator {
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
    */
-  private static function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+  public static function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
     // Skip a property that has a set value.
     if (!empty($component_data_local[$property_name])) {
       return;
