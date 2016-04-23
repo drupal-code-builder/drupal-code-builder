@@ -31,7 +31,7 @@ class Service extends PHPClassFile {
     // This will start with the module name, eg 'foo.bar'.
     // implode and ucfirst()
     $service_id = $component_name;
-    $service_id_pieces = explode('.', $service_id);
+    $service_id_pieces = preg_split('/[\._]/', $service_id);
     // Create an unqualified class name by turning this into camel case.
     $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
     // Form the full class name by adding a namespace Drupal\MODULE.
