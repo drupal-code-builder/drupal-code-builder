@@ -44,7 +44,7 @@ class RouterItem8 extends RouterItem {
     $path = $this->name;
     $route_name = str_replace('/', '.', $path);
 
-    $routing_data[$route_name] = array(
+    $routing_data['%module.' . $route_name] = array(
       // Prepend a slash to the path for D8.
       'path' => '/' . $path,
       'defaults' => array(
