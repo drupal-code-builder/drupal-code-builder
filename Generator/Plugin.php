@@ -174,14 +174,19 @@ class Plugin extends PHPFile {
     $docblock_code[] = '@' . $annotation_class . '(';
 
     foreach ($annotation_variables as $annotation_variable => $annotation_variable_info) {
+      if ($annotation_variable == 'id') {
+        $docblock_code[] = '  ' . $annotation_variable . ' = "' . $this->component_data['plugin_name'] . '",';
+        continue;
+      }
+
       if ($annotation_variable_info['type'] == '\Drupal\Core\Annotation\Translation') {
         // The annotation property value is translated.
         $docblock_code[] = '  ' . $annotation_variable . ' = @Translation("TODO: replace this with a value"),';
+        continue;
       }
-      else {
-        // It's a plain string.
-        $docblock_code[] = '  ' . $annotation_variable . ' = "TODO: replace this with a value",';
-      }
+
+      // It's a plain string.
+      $docblock_code[] = '  ' . $annotation_variable . ' = "TODO: replace this with a value",';
     }
     $docblock_code[] = ')';
 
