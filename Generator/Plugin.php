@@ -42,13 +42,42 @@ class Plugin extends PHPFile {
     // Set some default properties.
     $component_data += array();
 
+    $plugin_type = $component_data['plugin_type'];
+
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $plugin_data = $mb_task_handler_report_plugins->listPluginData();
-    $plugin_data = $plugin_data[$component_name];
+    $plugin_data = $plugin_data[$plugin_type];
 
     $component_data['plugin_type_data'] = $plugin_data;
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+  /**
+   * Define the component data this component needs to function.
+   */
+  protected static function componentDataDefinition() {
+    return array(
+      'plugin_type' => array(
+        'label' => 'Plugin type',
+        'required' => TRUE,
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+
+          $options = $mb_task_handler_report_plugins->listPluginNamesOptions();
+
+          return $options;
+        },
+      ),
+      'plugin_name' => array(
+        'label' => 'Plugin name',
+        'required' => TRUE,
+        // NOT WORKING!
+        'Xdefault' => function($component_data) {
+          return $component_data['root_name'] . 'PANTS';
+        },
+      ),
+    );
   }
 
   /**
@@ -67,7 +96,7 @@ class Plugin extends PHPFile {
     // Create a class name.
     // TODO: allow this to be set in the component data.
     $this->component_data['class_name'] = $this->root_component->component_data['camel_case_name']
-      . ucfirst($this->name);
+      . ucfirst($this->component_data['plugin_name']);
 
     $this->component_data['namespace'] = implode('\\', array(
       'Drupal',
