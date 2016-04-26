@@ -145,20 +145,18 @@ class Generate extends Base {
    *  existing user data.
    */
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    // We don't recurse into compound properties to set defaults there, as this
-    // then causes UIs to create a first item even if the user doesn't want one
-    // at all.
-
     // Set options.
-    // This is always a callable if set.
-    if (isset($property_info['options'])) {
-      $options_callback = $property_info['options'];
-      $options = $options_callback($property_info);
-
-      $property_info['options'] = $options;
+    $this->prepareComponentDataPropertyCreateOptions($property_name, $property_info);
+    if (isset($property_info['properties'])) {
+      foreach ($property_info['properties'] as $child_property_name => &$child_property_info) {
+        $this->prepareComponentDataPropertyCreateOptions($child_property_name, $child_property_info);
+      }
     }
 
     // Set a default value, if one is available.
+    // We don't recurse into compound properties to set defaults there, as this
+    // then causes UIs to create a first item even if the user doesn't want one
+    // at all.
     if (isset($property_info['default'])) {
       // The default property is either an anonymous function, or
       // a plain value.
@@ -176,6 +174,26 @@ class Generate extends Base {
     }
 
     $component_data[$property_name] = $default_value;
+  }
+
+  /**
+   * Helper to create the options array for a property.
+   *
+   * This calls the property info's options callback and replaces it with the
+   * resulting array of options.
+   *
+   * @param $property_name
+   *  The name of the property.
+   * @param &$property_info
+   *  The property into array, passed by reference.
+   */
+  protected function prepareComponentDataPropertyCreateOptions($property_name, &$property_info) {
+    if (isset($property_info['options'])) {
+      $options_callback = $property_info['options'];
+      $options = $options_callback($property_info);
+
+      $property_info['options'] = $options;
+    }
   }
 
   /**
