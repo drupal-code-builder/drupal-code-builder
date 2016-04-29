@@ -58,6 +58,14 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
     $plugin_file = $files["src/Plugin/Block/TestModuleAlpha.php"];
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertNamespace($plugin_file, ['Drupal', $module_name, 'Plugin', 'Block'], "The plugin class file contains contains the expected namespace.");
+
+    $expected_annotation_properties = [
+      'id' => 'alpha',
+      // A value of NULL here means we don't test the value, only the key.
+      'admin_label' => NULL,
+      'category' => NULL,
+    ];
+    $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
     $this->assertClass($plugin_file, 'TestModuleAlpha', "The plugin class file contains contains the expected class.");
   }
 
