@@ -8,9 +8,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator for a service on Drupal 8.
- *
- * TODO: figure out how to say this is for D8 only.
+ * Generator for a service.
  */
 class Service extends PHPClassFile {
 
