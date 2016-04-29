@@ -53,7 +53,7 @@ class ReportPluginData extends ReportHookDataFolder {
    * @return
    *   An array of plugin types as options suitable for FormAPI.
    */
-  function listPluginNamesOptions($style = 'full') {
+  function listPluginNamesOptions() {
     $data = $this->listPluginData();
 
     $return = array();
