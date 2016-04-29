@@ -31,8 +31,8 @@ class ReportPluginData extends ReportHookDataFolder {
     // TODO: look into finer-grained caching higher up.
     static $plugin_data;
 
-    if (isset($hook_data)) {
-      return $hook_data;
+    if (isset($plugin_data)) {
+      return $plugin_data;
     }
 
     $directory = $this->environment->getHooksDirectory();
