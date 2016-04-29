@@ -179,6 +179,57 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a string contains a class annotation.
+   *
+   * @param $string
+   *  The text to check for a class annotation.
+   * @param $annotation_class
+   *  The class of the annotation block.
+   * @param $annotation_values
+   *  An array of properties and values the annotation should have. To only
+   *  check that a property is present, without checking its value, pass in
+   *  a value of NULL for the array key.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertClassAnnotation($string, $annotation_class, $annotation_values, $message = NULL) {
+    // First, check the class has something that looks like an annotation.
+    $annotation_regex = "[
+    ^ /\*\* \\n # Open docblock.
+    ^ \ \* \ @$annotation_class \( \\n    # Annotation class.
+    ( ^ \ \* \ {3} \w+ \ = \ .* , \\n )+  # Multiple properties.
+    ^ \ \* \ \) \\n
+    ^ \ \* / \\n # Close docblock.
+    ^ class
+    ]mx";
+    $this->assertRegExp($annotation_regex, $string, $message);
+
+    // Now check the annotation properties and values.
+    $matches = [];
+    preg_match_all($annotation_regex, $string, $matches);
+    $annotation_string = $matches[0][0];
+
+    $annotation_property_regex = "[ ^ \ \* \ {3} (?<key> \w+) \ = \ (?<value> .+? ) ,? \\n ]xm";
+    $matches = [];
+    preg_match_all($annotation_property_regex, $annotation_string, $matches,  PREG_SET_ORDER);
+
+    $found_annotation_values = [];
+    // Group the found annotation keys and values.
+    foreach ($matches as $match_set) {
+      $found_annotation_values[$match_set['key']] = $match_set['value'];
+    }
+
+    foreach ($annotation_values as $expected_key => $expected_value) {
+      $this->assertArrayHasKey($expected_key, $found_annotation_values, "The annotation has the property $expected_key.");
+
+      if (!is_null($expected_value)) {
+        $found_value = trim($found_annotation_values[$expected_key], '"\'');
+        $this->assertEquals($expected_value, $found_value, "The annotation has the expected value for the property $expected_key.");
+      }
+    }
+  }
+
+  /**
    * Assert a string contains a function declaration.
    *
    * @param $string
