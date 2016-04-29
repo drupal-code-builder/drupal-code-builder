@@ -255,14 +255,7 @@ class Module extends RootComponent {
       'plugins' => array(
         'label' => 'Plugins',
         'required' => FALSE,
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-
-          $options = $mb_task_handler_report_plugins->listPluginNamesOptions();
-
-          return $options;
-        },
+        'format' => 'compound',
         // This tells the system that this is a request for generator
         // components, and the input data should be placed in a nested array in
         // the module data.

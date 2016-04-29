@@ -38,7 +38,10 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
       'hooks' => array(
       ),
       'plugins' => array(
-        'block',
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+        ]
       ),
       'requested_components' => array(
       ),
@@ -49,13 +52,13 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
     $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("src/Plugin/Block/TestModuleBlock.php", $file_names, "The files list has a plugin file.");
+    $this->assertContains("src/Plugin/Block/TestModuleAlpha.php", $file_names, "The files list has a plugin file.");
 
     // Check the plugin file.
-    $plugin_file = $files["src/Plugin/Block/TestModuleBlock.php"];
+    $plugin_file = $files["src/Plugin/Block/TestModuleAlpha.php"];
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertNamespace($plugin_file, ['Drupal', $module_name, 'Plugin', 'Block'], "The plugin class file contains contains the expected namespace.");
-    $this->assertClass($plugin_file, 'TestModuleBlock', "The plugin class file contains contains the expected class.");
+    $this->assertClass($plugin_file, 'TestModuleAlpha', "The plugin class file contains contains the expected class.");
   }
 
 }
