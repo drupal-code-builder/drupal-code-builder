@@ -94,10 +94,8 @@ class PHPClassFile extends PHPFile {
    * Return the main body of the file code.
    */
   function code_body() {
-    $return = array_merge([
-        'namespace ' . $this->namespace . ';',
-        '',
-      ],
+    $return = array_merge(
+      $this->code_namespace(),
       $this->docBlock("TODO: class docs."),
       [
         "class $this->plain_class_name {",
@@ -107,6 +105,21 @@ class PHPClassFile extends PHPFile {
         '}',
       ]);
     return $return;
+  }
+
+  /**
+   * Produces the namespace and 'use' lines.
+   */
+  function code_namespace() {
+    $code = array();
+
+    $code[] = 'namespace ' . $this->namespace . ';';
+    $code[] = '';
+    // TODO!!! is there any way to figure these out??
+    $code[] = '// use yadayada;';
+    $code[] = '';
+
+    return $code;
   }
 
   /**
