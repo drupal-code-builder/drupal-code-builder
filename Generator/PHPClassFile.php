@@ -96,6 +96,7 @@ class PHPClassFile extends PHPFile {
   function code_body() {
     $return = array_merge(
       $this->code_namespace(),
+      $this->imports(),
       $this->docBlock("TODO: class docs."),
       [
         "class $this->plain_class_name {",
@@ -115,11 +116,19 @@ class PHPClassFile extends PHPFile {
 
     $code[] = 'namespace ' . $this->namespace . ';';
     $code[] = '';
-    // TODO!!! is there any way to figure these out??
-    $code[] = '// use yadayada;';
-    $code[] = '';
 
     return $code;
+  }
+
+  /**
+   * Produces the namespace import statements.
+   */
+  function imports() {
+    $imports = [];
+    // TODO!!! is there any way to figure these out??
+    $imports[] = '// use yadayada;';
+    $imports[] = '';
+    return $imports;
   }
 
   /**
