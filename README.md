@@ -1,8 +1,8 @@
 Drupal Code Builder is a system for generating scaffold code for Drupal modules (and other components).
 
 This is a library, and has no UI of its own. It can be used in several ways:
-- with the [Drupal Module Builder project](https://www.drupal.org/project/module_builder), which provides a UI within Drupal
-- with a Drush command plugin
+- with the [Drupal Module Builder project](https://www.drupal.org/project/module_builder), which provides a UI within Drupal. (The Drupal Code Builder library was formerly part of the Module Builder module.)
+- with a Drush command plugin. This is currently available in this branch of Drush: https://github.com/joachim-n/drush/tree/module-builder-commands.
 
 Drupal Code Builder can be used for any current version of Drupal (7, 8). Older versions are unsupported, but it should produce code for 5 and 6 also.
 
