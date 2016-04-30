@@ -118,7 +118,7 @@ class Plugin extends PHPClassFile {
     return array_merge(
       $this->code_namespace(),
       $this->class_annotation(),
-      array($this->class_body())
+      $this->class_body()
     );
   }
 
@@ -193,7 +193,7 @@ class Plugin extends PHPClassFile {
     // Newline at end of file. TODO: this should be automatic!
     $code[] = '';
 
-    return implode("\n", $code);
+    return $code;
   }
 
   /**
