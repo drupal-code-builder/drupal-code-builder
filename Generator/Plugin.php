@@ -49,6 +49,20 @@ class Plugin extends PHPClassFile {
     $plugin_data = $plugin_data[$plugin_type];
 
     $component_data['plugin_type_data'] = $plugin_data;
+    $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+    $service_data = $task_handler_report_services->listServiceData();
+
+    $component_data['service_definitions'] = array_intersect_key($service_data, array_fill_keys($component_data['injected_services'], TRUE));
+
+    // Add in some extra generated data.
+    foreach ($component_data['service_definitions'] as &$service_info) {
+      $id_pieces = preg_split('@[_.]@', $service_info['id']);
+      $service_info['variable_name'] = implode('_', $id_pieces);
+      $id_pieces_first = array_shift($id_pieces);
+      $service_info['property_name'] = implode('', array_merge([$id_pieces_first], array_map('ucfirst', $id_pieces)));
+      $interface_pieces = explode('\\', $service_info['interface']);
+      $service_info['unqualified_interface'] = array_pop($interface_pieces);
+    }
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
@@ -98,6 +112,18 @@ class Plugin extends PHPClassFile {
           return $component_data['root_name'] . 'PANTS';
         },
       ),
+      'injected_services' => array(
+        'label' => 'Injected services',
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+
+          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+
+          return $options;
+        },
+        'default' => [],
+      ),
     );
   }
 
@@ -117,9 +143,36 @@ class Plugin extends PHPClassFile {
   function code_body() {
     return array_merge(
       $this->code_namespace(),
+      $this->imports(),
       $this->class_annotation(),
       $this->class_body()
     );
+  }
+
+  /**
+   * Produces the namespace import statements.
+   */
+  function imports() {
+    $imports = [];
+
+    $imported_classes = [];
+    foreach ($this->component_data['service_definitions'] as $service_info) {
+      $imported_classes[] = trim($service_info['interface'], '\\');
+    }
+
+    if (!empty($this->component_data['service_definitions'])) {
+      $imported_classes[] = 'Drupal\Core\Plugin\ContainerFactoryPluginInterface';
+      $imported_classes[] = 'Symfony\Component\DependencyInjection\ContainerInterface';
+    }
+
+    if (!empty($imported_classes)) {
+      foreach ($imported_classes as $class) {
+        $imports[] = "use $class;";
+      }
+      $imports[] = '';
+    }
+
+    return $imports;
   }
 
   /**
@@ -163,6 +216,74 @@ class Plugin extends PHPClassFile {
   function class_body() {
     $code = array();
 
+    // Injected services.
+    if (!empty($this->component_data['service_definitions'])) {
+      // Class properties.
+      foreach ($this->component_data['service_definitions'] as $service_info) {
+        $var_doc = $this->docBlock([
+          $service_info['description'] . '.',
+          '',
+          '@var ' . $service_info['interface']
+        ]);
+        $code = array_merge($code, $var_doc);
+        $code[] = 'protected $' . $service_info['property_name'] . ';';
+        $code[] = '';
+      }
+
+      // Class constructor.
+      $constructor_doc_lines = [
+        "Creates a {$this->plain_class_name} instance.",
+        '',
+        '@param array $configuration',
+        '  A configuration array containing information about the plugin instance.',
+        '@param string $plugin_id',
+        '  The plugin_id for the plugin instance.',
+        '@param mixed $plugin_definition',
+        '  The plugin implementation definition.',
+      ];
+      foreach ($this->component_data['service_definitions'] as $service_info) {
+        $constructor_doc_lines[] = "@param {$service_info['interface']} \${$service_info['variable_name']}";
+        $constructor_doc_lines[] = "  {$service_info['description']}.";
+      }
+      $constructor_doc = $this->docBlock($constructor_doc_lines);
+      $code = array_merge($code, $constructor_doc);
+
+      $constructor_declaration = 'public function __construct(array $configuration, $plugin_id, $plugin_definition';
+      foreach ($this->component_data['service_definitions'] as $service_info) {
+        $constructor_declaration .= ", {$service_info['unqualified_interface']} \${$service_info['variable_name']}";
+      }
+      $constructor_declaration .= ') {';
+      $code[] = $constructor_declaration;
+
+      $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
+
+      foreach ($this->component_data['service_definitions'] as $service_info) {
+        $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+      }
+      $code[] = '}';
+      $code[] = '';
+
+      $code = array_merge($code, $this->docBlock('{@inheritdoc}'));
+      $code[] = 'public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {';
+      $code[] = '  return new static(';
+      $code[] = '    $configuration,';
+      $code[] = '    $plugin_id,';
+      $code[] = '    $plugin_definition,';
+
+      end($this->component_data['service_definitions']);
+      $last_service_id = key($this->component_data['service_definitions']);
+      foreach ($this->component_data['service_definitions'] as $service_id => $service_info) {
+        $line = "    \$container->get('{$service_info['id']}')";
+        if ($service_id != $last_service_id) {
+          $line .= ',';
+        }
+        $code[] = $line;
+      }
+      $code[] = '  );';
+      $code[] = '}';
+      $code[] = '';
+    }
+
     foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_name => $interface_method_data) {
       $function_doc = $this->docBlock('{@inheritdoc}');
       $code = array_merge($code, $function_doc);
@@ -187,7 +308,13 @@ class Plugin extends PHPClassFile {
     // Add the top and bottom.
     // Urgh, going backwards! Improve DX here!
     array_unshift($code, '');
-    array_unshift($code, 'class ' . $this->plain_class_name . ' {');
+
+    $class_declaration = 'class ' . $this->plain_class_name;
+    if (!empty($this->component_data['service_definitions'])) {
+      $class_declaration .= " implements ContainerFactoryPluginInterface";
+    }
+    $class_declaration .= ' {';
+    array_unshift($code, $class_declaration);
 
     $code[] = '}';
     // Newline at end of file. TODO: this should be automatic!
