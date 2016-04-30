@@ -10,7 +10,7 @@ namespace DrupalCodeBuilder\Generator;
 /**
  * Generator for a plugin.
  */
-class Plugin extends PHPFile {
+class Plugin extends PHPClassFile {
 
   /**
    * The unique name of this generator.
@@ -54,6 +54,27 @@ class Plugin extends PHPFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setClassNames($component_name) {
+    // Create the fully-qualified class name.
+    // This is of the form:
+    //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
+    $qualified_class_name = implode('\\', [
+      'Drupal',
+      // Module name.
+      $this->root_component->component_data['root_name'],
+      // Plugin subdirectory.
+      $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
+      // Module name, in camel case + plugin ID.
+      $this->root_component->component_data['camel_case_name']
+        . ucfirst($this->component_data['plugin_name'])
+    ]);
+
+    parent::setClassNames($qualified_class_name);
+  }
+
+  /**
    * Define the component data this component needs to function.
    */
   protected static function componentDataDefinition() {
@@ -88,48 +109,6 @@ class Plugin extends PHPFile {
   }
 
   /**
-   * Build the code files.
-   */
-  public function getFileInfo() {
-    // TODO: can these be set up in the constructor? -- but we don't have access
-    // to the base component property yet.
-    // Create a class name.
-    // TODO: allow this to be set in the component data.
-    $this->component_data['class_name'] = $this->root_component->component_data['camel_case_name']
-      . ucfirst($this->component_data['plugin_name']);
-
-    $this->component_data['namespace'] = implode('\\', array(
-      'Drupal',
-      $this->root_component->component_data['root_name'],
-      $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
-    ));
-
-    // Get the path for this plugin from the plugin type data.
-    $this->path = 'src/' . $this->component_data['plugin_type_data']['subdir'];
-
-    // Create a filename
-    $this->filename = $this->component_data['class_name'] . '.php';
-
-    $files[$this->filename] = array(
-      // TODO: revisit
-      'path' => $this->path,
-      'filename' => $this->filename,
-      'body' => $this->file_contents(),
-      // We join code files up on a single newline. This means that each
-      // component is responsible for ending its own lines.
-      'join_string' => "\n",
-    );
-    return $files;
-  }
-
-  /**
-   * Return the summary line for the file docblock.
-   */
-  function file_doc_summary() {
-    return "Contains \\" . $this->component_data['namespace'] . '\\' . $this->component_data['class_name'];
-  }
-
-  /**
    * Return the main body of the file code.
    *
    * TODO: messier and messier arrays within arrays! file_contents() needs
@@ -137,25 +116,10 @@ class Plugin extends PHPFile {
    */
   function code_body() {
     return array_merge(
-      array($this->code_namespace()),
+      $this->code_namespace(),
       $this->class_annotation(),
       array($this->class_body())
     );
-  }
-
-  /**
-   * Produces the namespace and 'use' lines.
-   */
-  function code_namespace() {
-    $code = array();
-
-    $code[] = 'namespace ' . $this->component_data['namespace'] . ';';
-    $code[] = '';
-    // TODO!!! is there any way to figure these out??
-    $code[] = '// use yadayada;';
-    $code[] = '';
-
-    return implode("\n", $code);
   }
 
   /**
@@ -223,7 +187,7 @@ class Plugin extends PHPFile {
     // Add the top and bottom.
     // Urgh, going backwards! Improve DX here!
     array_unshift($code, '');
-    array_unshift($code, 'class ' . $this->component_data['class_name'] . ' {');
+    array_unshift($code, 'class ' . $this->plain_class_name . ' {');
 
     $code[] = '}';
     // Newline at end of file. TODO: this should be automatic!
