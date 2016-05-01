@@ -30,6 +30,9 @@ trait PHPFormattingTrait {
     $lines = array_merge(
       array("/**"),
       array_map(function ($line) {
+        if (empty($line)) {
+          return ' *';
+        }
         return " * $line";
       }, $lines),
       array(" */")
