@@ -94,16 +94,17 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   function assertFileHeader($string, $message = NULL) {
-    $expected_string =
+    $expected_regex =
+      "[" .
       "^<\?php\n" .
       "\n" .
       "/\*\*\n" .
       " \* @file.*\n" .
       " \* .*\n" .
-      " \*/\n";
+      " \*/\n" .
+      "]";
 
-    $match = preg_match("[$expected_string]", $string);
-    $this->assertEquals($match, 1, $message);
+    $this->assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -240,16 +241,16 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   function assertFunction($string, $function_name, $message = NULL) {
-    $expected_regex = "^function {$function_name}\((.*)\)";
-
-    $matches = array();
-    $match = preg_match("[$expected_regex]m", $string, $matches);
-
     if (empty($message)) {
       $message = "The code string contains the function $function_name().";
     }
 
-    $this->assertEquals($match, 1, $message);
+    $expected_regex = "[^function {$function_name}\((.*)\)]m";
+    $this->assertRegExp($expected_regex, $string, $message);
+
+    // Run the regex again so that we can pull out matches.
+    $matches = array();
+    $match = preg_match($expected_regex, $string, $matches);
 
     // Check the function parameters are properly formed.
     if (!empty($matches[1])) {
@@ -271,9 +272,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
         @x';
 
       foreach ($parameters as $parameter) {
-        $match = preg_match($param_regex, $parameter);
-
-        $this->assertEquals($match, 1, "Function parameter '$parameter' for $function_name() is correctly formed.");
+        $this->assertRegExp($param_regex, $parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
       }
     }
   }
