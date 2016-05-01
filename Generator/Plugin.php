@@ -122,7 +122,6 @@ class Plugin extends PHPClassFile {
 
           return $options;
         },
-        'default' => [],
       ),
     );
   }
