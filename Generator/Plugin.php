@@ -84,9 +84,8 @@ class Plugin extends PHPClassFile {
       $this->root_component->component_data['root_name'],
       // Plugin subdirectory.
       $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
-      // Module name, in camel case + plugin ID.
-      $this->root_component->component_data['camel_case_name']
-        . ucfirst($this->component_data['original_plugin_name'])
+      // Plugin ID.
+      $this->toCamel($this->component_data['original_plugin_name'])
     ]);
 
     parent::setClassNames($qualified_class_name);
