@@ -15,6 +15,7 @@ namespace DrupalCodeBuilder\Generator;
 class PHPFile extends File {
 
   use PHPFormattingTrait;
+  use NameFormattingTrait;
 
   /**
    * An array of functions for this file.
