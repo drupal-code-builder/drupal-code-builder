@@ -43,7 +43,7 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "Four files are returned.");
+    $this->assertCount(5, $files, "The expected number of files are returned.");
 
     // Check the form class code.
     $form_file = $files['src/Form/AdminSettingsForm.php'];
