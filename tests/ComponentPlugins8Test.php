@@ -52,21 +52,21 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
     $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("src/Plugin/Block/TestModuleAlpha.php", $file_names, "The files list has a plugin file.");
+    $this->assertContains("src/Plugin/Block/Alpha.php", $file_names, "The files list has a plugin file.");
 
     // Check the plugin file.
-    $plugin_file = $files["src/Plugin/Block/TestModuleAlpha.php"];
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertNamespace($plugin_file, ['Drupal', $module_name, 'Plugin', 'Block'], "The plugin class file contains contains the expected namespace.");
 
     $expected_annotation_properties = [
-      'id' => 'alpha',
+      'id' => 'test_module_alpha',
       // A value of NULL here means we don't test the value, only the key.
       'admin_label' => NULL,
       'category' => NULL,
     ];
     $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
-    $this->assertClass($plugin_file, 'TestModuleAlpha', "The plugin class file contains contains the expected class.");
+    $this->assertClass($plugin_file, 'Alpha', "The plugin class file contains contains the expected class.");
   }
 
 }
