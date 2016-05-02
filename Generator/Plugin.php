@@ -42,6 +42,10 @@ class Plugin extends PHPClassFile {
     // Set some default properties.
     $component_data += array();
 
+    // Prefix the plugin name with the module name.
+    $component_data['original_plugin_name'] = $component_data['plugin_name'];
+    $component_data['plugin_name'] = $root_generator->component_data['root_name'] . '_' . $component_data['plugin_name'];
+
     $plugin_type = $component_data['plugin_type'];
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
@@ -82,7 +86,7 @@ class Plugin extends PHPClassFile {
       $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
       // Module name, in camel case + plugin ID.
       $this->root_component->component_data['camel_case_name']
-        . ucfirst($this->component_data['plugin_name'])
+        . ucfirst($this->component_data['original_plugin_name'])
     ]);
 
     parent::setClassNames($qualified_class_name);
