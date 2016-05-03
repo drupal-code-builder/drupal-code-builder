@@ -55,6 +55,7 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
     // Check the .routing file.
     $routing_file = $files["$module_name.routing.yml"];
     $this->assertYamlProperty($routing_file, 'path', "/admin/config/TODO-SECTION/$module_name", "The routing file declares the admin settings path.");
+    $this->assertYamlProperty($routing_file, '_form', '\\Drupal\\testmodule\\Form\\AdminSettingsForm', "The routing file declares the _form controller.");
     $this->assertYamlProperty($routing_file, '_title', 'Administer Test module', "The routing file declares the admin settings page title.");
     // TODO: check access.
 
