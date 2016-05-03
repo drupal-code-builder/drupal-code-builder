@@ -49,7 +49,10 @@ class AdminSettingsForm8 extends Form8 {
       'description' => 'Configure settings for %readable.',
       // Suppress the router item producing a controller, as we have a form.
       // TODO: pass the form details here.
-      'controller' => [],
+      'controller' => [
+        'controller_property' => '_form',
+        'controller_value' => '\\' . $this->qualified_class_name,
+      ],
     );
 
     $components['administer %module'] = array(
