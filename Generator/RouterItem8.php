@@ -19,7 +19,14 @@ class RouterItem8 extends RouterItem {
   /**
    * Constructor method; sets the component data.
    *
-   * The component name is taken to be the fully-qualified class name.
+   * Properties in $component_data:
+   *  - controller: (optional) An array specifying the source for the route's
+   *    content. May contain:
+   *    - controller_property: (optional) The name of the property in the route
+   *      defaults that sets the controler. E.g, '_controller', '_entity_view'.
+   *    - controller_value: (optional) The corresponding value.
+   *    These default to the plain '_controller' with a controller class of
+   *   {ROUTE}Controller.
    */
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Create a controller name from the route name.
@@ -32,8 +39,11 @@ class RouterItem8 extends RouterItem {
     ]);
 
     $component_data += [
+      'controller' => [
+        'controller_property' => '_controller',
+        'controller_value' => '\\' . "$controller_qualified_class_name::content",
+      ],
       'controller_qualified_class' => $controller_qualified_class_name,
-      'controller_method' => 'content',
     ];
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
@@ -54,11 +64,15 @@ class RouterItem8 extends RouterItem {
       'component_type' => 'Routing',
     );
 
-    $controller_qualified_class = $this->component_data['controller_qualified_class'];
-    $components[$controller_qualified_class] = array(
-      // Add a sample build method to this.
-      'component_type' => 'PHPClassFile',
-    );
+    // Add a controller class if needed.
+    if (!empty($this->component_data['controller']['controller_property'])
+        && $this->component_data['controller']['controller_property'] == '_controller') {
+      $controller_qualified_class = $this->component_data['controller_qualified_class'];
+      $components[$controller_qualified_class] = array(
+        // TODO: Add a sample build method to this.
+        'component_type' => 'PHPClassFile',
+      );
+    }
 
     return $components;
   }
@@ -77,14 +91,16 @@ class RouterItem8 extends RouterItem {
     $path = $this->name;
     $route_name = str_replace('/', '.', $path);
 
+    $route_defaults = [];
+    if (!empty($this->component_data['controller']['controller_property'])) {
+      $route_defaults[$this->component_data['controller']['controller_property']] = $this->component_data['controller']['controller_value'];
+    }
+    $route_defaults['_title'] = $this->component_data['title'];
+
     $routing_data['%module.' . $route_name] = array(
       // Prepend a slash to the path for D8.
       'path' => '/' . $path,
-      'defaults' => array(
-        '_controller' => '\\' . $this->component_data['controller_qualified_class'] .
-          '::' . $this->component_data['controller_method'],
-        '_title' => $this->component_data['title'],
-      ),
+      'defaults' => $route_defaults,
       'requirements' => array(
         '_permission' => 'TODO: set permission machine name',
       ),
