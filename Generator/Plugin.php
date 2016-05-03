@@ -40,7 +40,9 @@ class Plugin extends PHPClassFile {
    */
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
     // Set some default properties.
-    $component_data += array();
+    $component_data += array(
+      'injected_services' => [],
+    );
 
     // Prefix the plugin name with the module name.
     $component_data['original_plugin_name'] = $component_data['plugin_name'];
