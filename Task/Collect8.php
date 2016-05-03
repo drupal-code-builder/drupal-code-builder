@@ -469,7 +469,24 @@ class Collect8 extends Collect {
    * {@inheritdoc}
    */
   protected function getAdditionalHookInfo() {
-    return array();
+    // Keys should match the filename MODULE.api.php
+    $info = array(
+      // Hooks on behalf of Drupal core.
+      'module' => array(
+        'hook_destinations' => array(
+          '%module.install' => array(
+            'hook_requirements',
+            'hook_schema',
+            'hook_schema_alter',
+            'hook_install',
+            'hook_update_N',
+            'hook_update_last_removed',
+            'hook_uninstall',
+          ),
+        ),
+      ),
+    );
+    return $info;
   }
 
 }
