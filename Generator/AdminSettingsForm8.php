@@ -47,6 +47,9 @@ class AdminSettingsForm8 extends Form8 {
       'component_type' => 'RouterItem',
       'title' => 'Administer %readable',
       'description' => 'Configure settings for %readable.',
+      // Suppress the router item producing a controller, as we have a form.
+      // TODO: pass the form details here.
+      'controller' => [],
     );
 
     $components['administer %module'] = array(
