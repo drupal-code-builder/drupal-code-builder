@@ -84,7 +84,7 @@ class Collect extends Base {
    * Builds complete hook data array from downloaded files and stores in a file.
    *
    * @param hook_file_data
-   *  An array of data about the files to process, keyed by (safe) filename:
+   *  An array of data about the files to process:
    *   -[MODULE.FILENAME] => Array // eg system.core.php
    *     - [path] => full path to the file
    *     - [destination] => %module.module
@@ -140,7 +140,8 @@ class Collect extends Base {
 
     // Build list of hooks
     $hook_groups = array();
-    foreach ($hook_file_data as $file => $file_data) {
+    foreach ($hook_file_data as $file_data) {
+      $file = $file_data['filename'];
       $hook_data_raw = $this->processHookFile($file_data['path']);
 
       $file_name = basename($file, '.php');

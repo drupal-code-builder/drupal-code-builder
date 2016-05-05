@@ -353,10 +353,14 @@ class Collect8 extends Collect {
     foreach ($regex as $regex_files) {
       foreach ($regex_files as $file) {
         $filename = basename($file);
-        $system_listing[$filename] = (object) array(
+
+        $component_name = explode('.', $filename)[0];
+        $system_listing['core:' . $filename] = (object) array(
           'uri' => $file,
           'filename' => $filename,
           'name' => basename($file, '.php'),
+          'group' => 'core:' . $component_name,
+          'module' => 'core',
         );
       }
     }
@@ -367,11 +371,13 @@ class Collect8 extends Collect {
       'uri' => 'core/core.api.php',
       'filename' => 'core.api.php',
       'name' => 'core.api',
+      'group' => 'core:core',
+      'module' => 'core',
     );
 
     //print_r($system_listing);
 
-    foreach ($system_listing as $filename => $file) {
+    foreach ($system_listing as $key => $file) {
       // Extract the module name from the path.
       // WARNING: this is not always going to be correct: will fail in the
       // case of submodules. So Commerce is a big problem here.
@@ -387,12 +393,12 @@ class Collect8 extends Collect {
       // Copy the file to the hooks directory.
       copy($drupal_root . '/' . $file->uri, $directory . '/' . $file->filename);
 
-      $hook_files[$filename] = array(
+      $hook_files[$key] = array(
         'original' => $drupal_root . '/' . $file->uri, // no idea if useful
         'path' => $directory . '/' . $file->filename,
         'destination' => '%module.module', // Default. We override this below.
-        'group'       => $module, // @todo specialize this?
-        'module'      => $module,
+        'group'       => isset($file->group) ? $file->group : $module, // @todo specialize this?
+        'module'      => isset($file->module) ? $file->module : $module,
       );
     }
 

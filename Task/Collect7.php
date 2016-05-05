@@ -55,6 +55,7 @@ class Collect7 extends Collect {
 
       $hook_files[$filename] = array(
         'original' => $drupal_root . '/' . $file->uri, // no idea if useful
+        'filename' => $filename,
         'path' => $directory . '/' . $file->filename,
         'destination' => '%module.module', // Default. We override this below.
         'group'       => $module, // @todo specialize this?
