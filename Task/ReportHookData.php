@@ -106,6 +106,7 @@ class ReportHookData extends ReportHookDataFolder {
       $return[$hook_info['group']][$hook_name] = array(
         'description' => $hook_info['description'],
         'type' => $hook_info['type'],
+        'core' => $hook_info['core'],
       );
     }
 

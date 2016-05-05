@@ -384,11 +384,17 @@ class Collect8 extends Collect {
       // We could instead assume we have MODULE.api.php, but some modules
       // have multiple API files with suffixed names, eg Services.
       // @todo: make this more robust, somehow!
-      $matches = array();
-      preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
-      //print_r($matches);
-      $module = $matches[1];
+      if (!isset($file->module)) {
+        $matches = array();
+        preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
+        //print_r($matches);
+        $file->module = $matches[1];
+        $file->group = $file->module;
+      }
       //dsm($matches, $module);
+
+      // Mark core files.
+      $core = (substr($file->uri, 0, 4) == 'core');
 
       // Copy the file to the hooks directory.
       copy($drupal_root . '/' . $file->uri, $directory . '/' . $file->filename);
@@ -397,8 +403,9 @@ class Collect8 extends Collect {
         'original' => $drupal_root . '/' . $file->uri, // no idea if useful
         'path' => $directory . '/' . $file->filename,
         'destination' => '%module.module', // Default. We override this below.
-        'group'       => isset($file->group) ? $file->group : $module, // @todo specialize this?
-        'module'      => isset($file->module) ? $file->module : $module,
+        'group'       => $file->group,
+        'module'      => $file->module,
+        'core'        => $core,
       );
     }
 
