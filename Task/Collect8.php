@@ -470,6 +470,12 @@ class Collect8 extends Collect {
     // Note that the 'module' key is flaky: some modules use a different name
     // for their api.php file.
     $module = $file_data['module'];
+
+    // Bail for 'core' pseudomodule.
+    if ($module == 'core') {
+      return [];
+    }
+
     $hook_info = array();
     if (\Drupal::moduleHandler()->implementsHook($module, 'hook_info')) {
       $hook_info = \Drupal::moduleHandler()->invoke($module, 'hook_info');
