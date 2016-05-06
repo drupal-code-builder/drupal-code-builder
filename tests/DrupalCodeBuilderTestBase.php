@@ -239,13 +239,23 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
    *  The name of the function.
    * @param $message = NULL
    *  The assertion message.
+   * @param $indent
+   *  (optional) The number of spaces the function declaration is indented by.
+   *  Internal use only. Defaults to 0.
    */
-  function assertFunction($string, $function_name, $message = NULL) {
+  function assertFunction($string, $function_name, $message = NULL, $indent = 0) {
     if (empty($message)) {
       $message = "The code string contains the function $function_name().";
     }
 
-    $expected_regex = "[^function {$function_name}\((.*)\)]m";
+    $indent = str_repeat('\ ', $indent);
+
+    $expected_regex = "[
+      ^
+      {$indent}
+      (?<modifiers> \w+ \ ) *
+      function \  {$function_name} \( (?<params> .* ) \)
+    ]mx";
     $this->assertRegExp($expected_regex, $string, $message);
 
     // Run the regex again so that we can pull out matches.
@@ -253,8 +263,8 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
     $match = preg_match($expected_regex, $string, $matches);
 
     // Check the function parameters are properly formed.
-    if (!empty($matches[1])) {
-      $parameters = explode(', ', $matches[1]);
+    if (!empty($matches['params'])) {
+      $parameters = explode(', ', $matches['params']);
 
       $param_regex = '@
         ^
@@ -275,6 +285,20 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
         $this->assertRegExp($param_regex, $parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
       }
     }
+  }
+
+  /**
+   * Assert a string contains a class method declaration.
+   *
+   * @param $string
+   *  The text to check for a function declaration.
+   * @param $function_name
+   *  The name of the function.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertMethod($string, $function_name, $message = NULL) {
+    $this->assertFunction($string, $function_name, $message, 2);
   }
 
   /**
