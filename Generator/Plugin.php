@@ -145,12 +145,16 @@ class Plugin extends PHPClassFile {
    * rewriting!
    */
   function code_body() {
-    return array_merge(
+    $return = array_merge(
       $this->code_namespace(),
       $this->imports(),
       $this->class_annotation(),
-      $this->class_body()
-    );
+      $this->class_declaration(),
+      $this->class_code_body(),
+      [
+        '}',
+      ]);
+    return $return;
   }
 
   /**
@@ -215,9 +219,24 @@ class Plugin extends PHPClassFile {
   }
 
   /**
-   * Produce the class.
+   * Produces the class declaration.
    */
-  function class_body() {
+  function class_declaration() {
+    $class_declaration = 'class ' . $this->plain_class_name;
+    if (!empty($this->component_data['service_definitions'])) {
+      $class_declaration .= " implements ContainerFactoryPluginInterface";
+    }
+    $class_declaration .= ' {';
+
+    return [
+      $class_declaration,
+    ];
+  }
+
+  /**
+   * Return the body of the class's code.
+   */
+  function class_code_body() {
     $code = array();
 
     // Injected services.
@@ -308,21 +327,6 @@ class Plugin extends PHPClassFile {
     $code = array_map(function ($line) {
       return empty($line) ? $line : '  ' . $line;
     }, $code);
-
-    // Add the top and bottom.
-    // Urgh, going backwards! Improve DX here!
-    array_unshift($code, '');
-
-    $class_declaration = 'class ' . $this->plain_class_name;
-    if (!empty($this->component_data['service_definitions'])) {
-      $class_declaration .= " implements ContainerFactoryPluginInterface";
-    }
-    $class_declaration .= ' {';
-    array_unshift($code, $class_declaration);
-
-    $code[] = '}';
-    // Newline at end of file. TODO: this should be automatic!
-    $code[] = '';
 
     return $code;
   }
