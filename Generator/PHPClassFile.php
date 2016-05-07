@@ -95,9 +95,7 @@ class PHPClassFile extends PHPFile {
       $this->code_namespace(),
       $this->imports(),
       $this->docBlock("TODO: class docs."),
-      [
-        "class $this->plain_class_name {",
-      ],
+      $this->class_declaration(),
       $this->class_code_body(),
       [
         '}',
@@ -126,6 +124,15 @@ class PHPClassFile extends PHPFile {
     $imports[] = '// use yadayada;';
     $imports[] = '';
     return $imports;
+  }
+
+  /**
+   * Produces the class declaration.
+   */
+  function class_declaration() {
+    return [
+      "class $this->plain_class_name {",
+    ];
   }
 
   /**
