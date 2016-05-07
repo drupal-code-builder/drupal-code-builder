@@ -69,10 +69,7 @@ class PHPClassFile extends PHPFile {
   function file_contents() {
     // File contents are built up.
     $file_contents = array_merge(
-      array(
-        $this->file_header(),
-      ),
-      // The code header and body are themselves arrays.
+      $this->file_header(),
       $this->code_header(),
       $this->code_body(),
       array(

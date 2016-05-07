@@ -53,9 +53,7 @@ class PHPFile extends File {
 
     // File contents are built up.
     $file_contents = array_merge(
-      array(
-        $this->file_header(),
-      ),
+      $this->file_header(),
       // The code header and body are themselves arrays.
       $this->code_header(),
       $this->code_body()
@@ -69,10 +67,13 @@ class PHPFile extends File {
   }
 
   /**
-   * Return the PHP file header line.
+   * Return the PHP file header lines.
    */
    function file_header()  {
-     return "<?php\n";
+     return [
+       "<?php",
+       '',
+     ];
    }
 
   /**
