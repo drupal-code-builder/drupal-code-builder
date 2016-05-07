@@ -41,7 +41,6 @@ class AdminSettingsForm8 extends Form8 {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    // This takes care of adding hook_menu() and so on.
     $form_name = $this->getFormName();
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
