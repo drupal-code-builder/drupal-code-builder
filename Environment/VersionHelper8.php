@@ -130,6 +130,24 @@ class VersionHelper8 {
    * Get the path to a Drupal extension, e.g. a module or theme
    */
   function getExtensionPath($type, $name) {
+    // Check whether the extension exists, as D8 will throw an error when
+    // calling drupal_get_path() for a non-existent extension.
+    switch ($type) {
+      case 'module':
+        if (!\Drupal::moduleHandler()->moduleExists($name)) {
+          return;
+        }
+        break;
+      case 'theme':
+        if (!\Drupal::service('theme_handler')->themeExists($name)) {
+          return;
+        }
+        break;
+      case 'profile':
+        // TODO.
+        break;
+    }
+
     return drupal_get_path($type, $name);
   }
 
