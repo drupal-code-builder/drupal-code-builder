@@ -156,7 +156,10 @@ class Collect8 extends Collect {
         'type_label' => isset($plugin_types[$plugin_type_id]) ?
           $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id,
         'service_id' => $plugin_manager_service_id,
-        'subdir' => $constant_string_parameters[0],
+        'subdir' => isset($constant_string_parameters[0]) ?
+          // Some plugin managers, e.g. ViewsHandlerManager, get us nothing for
+          // this.
+          $constant_string_parameters[0] : 'Plugin/Subdir',
         // These two are optional parameters for
         // Drupal\Core\Plugin\DefaultPluginManager::__construct(), and so might
         // not be present.
