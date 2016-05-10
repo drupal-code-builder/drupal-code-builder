@@ -282,7 +282,7 @@ class Collect8 extends Collect {
 
       // Skip any which have parameters: the service getter methods have no
       // parameters.
-      if ($method->getNumberOfParameters > 0) {
+      if ($method->getNumberOfParameters() > 0) {
         continue;
       }
 
