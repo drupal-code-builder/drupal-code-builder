@@ -76,6 +76,14 @@ class Collect8 extends Collect {
    *  TODO: document this.
    */
   protected function gatherPluginTypeInfo($plugin_manager_service_ids) {
+    // Get plugin type information if Plugin module is present.
+    // This gets us labels for some plugin types (though not all, as the plugin
+    // type ID used by Plugin module doesn't always match the ID we get from
+    // the service definition, e.g. views_access vs views.access).
+    if (\Drupal::hasService('plugin.plugin_type_manager')) {
+      $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
+    }
+
     // Assemble data from each plugin manager.
     $plugin_type_data = array();
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
@@ -145,6 +153,8 @@ class Collect8 extends Collect {
 
       $data = array(
         'type_id' => $plugin_type_id,
+        'type_label' => isset($plugin_types[$plugin_type_id]) ?
+          $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id,
         'service_id' => $plugin_manager_service_id,
         'subdir' => $constant_string_parameters[0],
         // These two are optional parameters for

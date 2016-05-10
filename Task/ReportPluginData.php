@@ -58,7 +58,7 @@ class ReportPluginData extends ReportHookDataFolder {
 
     $return = array();
     foreach ($data as $plugin_type_name => $plugin_type_info) {
-      $return[$plugin_type_name] = $plugin_type_name;
+      $return[$plugin_type_name] = $plugin_type_info['type_label'];
     }
 
     return $return;

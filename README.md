@@ -26,6 +26,12 @@ Furthermore, complex subcomponents can generate multiple code elements:
 - router paths add menu/router items
 - permission names add the scaffold for the permission definition
 
+## Installation
+
+Follow the instructions given in the component that requests Drupal Coder Builder (e.g., Module Builder, Drush command).
+
+Additionally, if [Plugin module](https://www.drupal.org/project/plugin) is present, plugin type definitions will be enhanced with its data.
+
 ## Usage
 
 This file covers the API. For instructions on how to install this library to use with code that provides a UI, consult the documentation for the UI in question.
