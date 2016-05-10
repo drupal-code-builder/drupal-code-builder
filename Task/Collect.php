@@ -141,10 +141,9 @@ class Collect extends Base {
     // Build list of hooks
     $hook_groups = array();
     foreach ($hook_file_data as $file_data) {
-      $file = $file_data['filename'];
       $hook_data_raw = $this->processHookFile($file_data['path']);
 
-      $file_name = basename($file, '.php');
+      $file_name = basename($file_data['path'], '.php');
       $group = $file_data['group'];
 
       // Get info about hooks from Drupal.
