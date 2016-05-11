@@ -266,23 +266,8 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
     if (!empty($matches['params'])) {
       $parameters = explode(', ', $matches['params']);
 
-      $param_regex = '@
-        ^
-        ( \w+ \  ) ?  # type hint
-        & ?           # pass by reference
-        \$ \w+        # parameter name
-        ( \  = \      # default value, one of:
-          (
-            \d+ |             # numerical
-            [[:upper:]]+ |    # constant
-            \' .* \' |        # string
-            array\(\)         # empty array
-          )
-        ) ?
-        @x';
-
       foreach ($parameters as $parameter) {
-        $this->assertRegExp($param_regex, $parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
+        $this->assertFunctionParameter($parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
       }
     }
   }
