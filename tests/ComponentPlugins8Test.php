@@ -107,7 +107,10 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
+
     $this->assertNamespace($plugin_file, ['Drupal', $module_name, 'Plugin', 'Block'], "The plugin class file contains contains the expected namespace.");
+    $this->assertClassImport($plugin_file, ['Drupal', 'Core', 'Plugin', 'ContainerFactoryPluginInterface']);
+    $this->assertClassImport($plugin_file, ['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface']);
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',
