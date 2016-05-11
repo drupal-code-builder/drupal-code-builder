@@ -287,7 +287,9 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
 
     $param_regex = '@
       ^
-      ( \w+ \  ) ?  # type hint
+      ( [\w\\\\] + \  ) ?  # type hint.
+        # May be a qualified class: need FOUR \ to actually make 2!
+        # Also, the /x modifier appears to not hold within character classes!
       & ?           # pass by reference
       \$ \w+        # parameter name
       ( \  = \      # default value, one of:
