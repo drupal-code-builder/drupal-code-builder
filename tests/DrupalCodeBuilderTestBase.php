@@ -288,6 +288,37 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a function parameter is correctly formed.
+   *
+   * @param $parameter
+   *  The parameter from the function declaration, without the trailing comma.
+   * @param $message = NULL
+   *  (optional) The assertion message.
+   */
+  protected function assertFunctionParameter($parameter, $message = NULL) {
+    if (empty($message)) {
+      $message = "Function parameter '$parameter' is correctly formed.";
+    }
+
+    $param_regex = '@
+      ^
+      ( \w+ \  ) ?  # type hint
+      & ?           # pass by reference
+      \$ \w+        # parameter name
+      ( \  = \      # default value, one of:
+        (
+          \d+ |             # numerical
+          [[:upper:]]+ |    # constant
+          \' .* \' |        # string
+          array\(\)         # empty array
+        )
+      ) ?
+      @x';
+
+    $this->assertRegExp($param_regex, $parameter, $message);
+  }
+
+  /**
    * Assert a string contains a class method declaration.
    *
    * @param $string
