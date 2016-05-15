@@ -13,22 +13,26 @@ namespace DrupalCodeBuilder\Generator;
 class AdminSettingsForm extends Form {
 
   /**
-   * Override the parent to set the code file.
-   */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'code_file' => '%module.admin.inc',
-    );
-
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'singleton';
+  }
+
+  /**
+   * Set properties relating to class name.
+   */
+  protected function setClassNames($component_name) {
+    // Form the full class name.
+    $class_name_pieces = array(
+      'Drupal',
+      '%module',
+      'Form',
+      'AdminSettingsForm',
+    );
+    $qualified_class_name = implode('\\', $class_name_pieces);
+
+    parent::setClassNames($qualified_class_name);
   }
 
   /**
@@ -37,44 +41,20 @@ class AdminSettingsForm extends Form {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    // Change the body of the form builder.
-    $form_name = $this->getFormName();
-    $form_builder = $form_name;
-    $form_validate  = $form_name . '_validate';
-    $form_submit    = $form_name . '_submit';
-
-    // Override the form builder's location and code.
-    $components[$form_builder]['code_file'] = '%module.admin.inc';
-    $components[$form_builder]['code_file_id'] = 'ModuleCodeFile:%module.admin.inc';
-    $components[$form_builder]['body'] = array(
-      "£form['%module_variable_foo'] = array(",
-      "  '#type' => 'textfield',",
-      "  '#title' => t('Foo'),",
-      "  '#default_value' => variable_get('%module_variable_foo', 42),",
-      "  '#required' => TRUE,",
-      ");",
-      "",
-      "return system_settings_form(£form);",
-    );
-
-    // Remove the form validation and submit handlers, as Drupal core takes care
-    // of this for system settings.
-    unset($components[$form_validate]);
-    unset($components[$form_submit]);
-
-    // This takes care of adding hook_menu() and so on.
     $form_name = $this->getFormName();
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
       'title' => 'Administer %readable',
       'description' => 'Configure settings for %readable.',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => "array('{$form_name}')",
-      'access arguments' => "array('administer %module')",
-      'file' => '%module.admin.inc',
+      // Suppress the router item producing a controller, as we have a form.
+      // TODO: pass the form details here.
+      'controller' => [
+        'controller_property' => '_form',
+        'controller_value' => '\\' . $this->qualified_class_name,
+      ],
     );
 
-    $components['Permission'] = array(
+    $components['administer %module'] = array(
       'component_type' => 'Permission',
       'permission' => 'administer %module',
     );
