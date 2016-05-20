@@ -72,8 +72,39 @@ class Collect8 extends Collect {
    *  An array of service IDs.
    *
    * @return
-   *  The assembled plugin type data.
-   *  TODO: document this.
+   *  The assembled plugin type data. This is an array keyed by plugin type ID
+   *  (where we take this to be the name of the plugin manager service for that
+   *  type, with the 'plugin.manager.' prefix removed). Values are arrays with
+   *  the following properties:
+   *    - 'type_id': The plugin type ID.
+   *    - 'type_label': A label for the plugin type. If Plugin module is present
+   *      then this is the label from the definition there, if found. Otherwise,
+   *      this duplicates the ID.
+   *    - 'service_id': The ID of the service for the plugin type's manager.
+   *    - 'subdir: The subdirectory of /src that plugin classes must go in.
+   *      E.g., 'Plugin/Filter'.
+   *    - 'plugin_interface': The interface that plugin classes must implement,
+   *      as a qualified name (but without initial '\').
+   *    - 'plugin_definition_annotation_name': The class that the plugin
+   *      annotation uses, as a qualified name (but without initial '\').
+   *      E.g, 'Drupal\filter\Annotation\Filter'.
+   *    - 'plugin_interface_methods': An array of methods that the plugin's
+   *      interface has. This is keyed by the method name, with each value an
+   *      array with these properties:
+   *      - 'name': The method name.
+   *      - 'declaration': The method declaration line from the interface.
+   *      - 'description': The text from the first line of the docblock.
+   *    - 'plugin_properties: Properties that the plugin class may declare in
+   *      its annotation. These are deduced from the class properties of the
+   *      plugin type's annotation class. An array keyed by the property name,
+   *      whose values are arrays with these properties:
+   *      - 'name': The name of the property.
+   *      - 'description': The description, taken from the docblock of the class
+   *        property on the annotation class.
+   *      - 'type': The data type.
+   *
+   *  Due to the difficult nature of analysing the code for plugin types, some
+   *  of these properties may be empty if they could not be deduced.
    */
   protected function gatherPluginTypeInfo($plugin_manager_service_ids) {
     // Get plugin type information if Plugin module is present.
