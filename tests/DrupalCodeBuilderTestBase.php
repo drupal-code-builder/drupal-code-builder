@@ -62,6 +62,161 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a class file's formatting and line spacing.
+   *
+   * This checks that blocks of code are in the right order and spaced out
+   * correctly. It does not check the actual contents of the code, such as class
+   * names, function names, and so on.
+   *
+   * @param $string
+   *  The code string for the class file.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  protected function assertClassFileFormatting($code) {
+    $lines = explode("\n", $code);
+
+    $empty_line_regex = '[^$]';
+
+    $this->assertRegExp("@^<\?php@", array_shift($lines), 'The first line of the file is the PHP open tag.');
+    $this->assertRegExp($empty_line_regex, array_shift($lines), 'The second line of the file is empty.');
+
+    $docblock_regexes = [
+      'start'   => '@^/\*\*@',
+      // Need to ensure this doesn't also match the end line.
+      'middle'  => '@^ \*[^/]@',
+      'end'     => '@^ \*/@',
+    ];
+    $this->helperRegexBlockLines($lines, $docblock_regexes, 'docblock');
+
+    $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the file docblock.');
+
+    $this->assertRegExp('@^namespace @', array_shift($lines), 'The file has a namespace declaration.');
+    $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the namespace.');
+
+    // Import statements are optional.
+    $import_regexes = [
+      // Need to ensure this doesn't also match the end line.
+      'repeated'  => '@use @',
+      'end'       => $empty_line_regex,
+    ];
+    $this->helperRegexpRepeatedLines($lines, $import_regexes, 0, 'import statements');
+
+    // Class docblock.
+    $this->helperRegexBlockLines($lines, $docblock_regexes, 'docblock');
+
+    $this->assertRegExp('@^class @', array_shift($lines), 'The file has a class declaration.');
+
+    // Multiple class body lines.
+    $class_regexes = [
+      // Empty line or indented.
+      'repeated'  => '@^$|^  @',
+      'end'       => '@}@',
+    ];
+    $this->helperRegexpRepeatedLines($lines, $class_regexes, 0, 'class');
+
+    $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the class.');
+
+    $this->assertEmpty($lines, "The end of the lines was reached.");
+  }
+
+  /**
+   * Helper for assertClassFileFormatting() for an optional variable-length block.
+   *
+   * @param &$lines
+   *  An array of code lines, passed by reference. The code to test for should
+   *  be at the start of this; code which follows is ignored. Lines which are
+   *  tested are removed.
+   * @param $regexes
+   *  An array of regexes to test for the block:
+   *  - 'repeated': The regex for the lines of the block. This must not match
+   *    the end line.
+   *  - 'end': The regex for the terminal line of the block, such as a blank
+   *    line which is only expected if the block is present. This may be empty
+   *    to indicate there is no such line. This is not checked for if the
+   *    block is found to be empty, in other words, if 'repeated' does not match
+   *    any lines.
+   * @param $min_count
+   *  The minimum number of lines of the block, i.e., the minium number of times
+   *  that the 'repeated' regex is expected to match.
+   * @param $block_name = 'block'
+   *  A string to describe the block, to use in assertion messages.
+   */
+  protected function helperRegexpRepeatedLines(&$lines, $regexes, $min_count, $block_name = 'block') {
+    $lines_count = 0;
+
+    // Keep taking off lines until one doesn't match.
+    // Need to test the loop against is_null() rather than just truthiness, as
+    // the shifted line may be empty.
+    while (!is_null($line = array_shift($lines))) {
+      try {
+        $this->assertRegExp($regexes['repeated'], $line, "The line index $lines_count of the $block_name is as expected.");
+        // Count a successful line.
+        $lines_count++;
+      }
+      catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        // Restore the line that didn't match.
+        array_unshift($lines, $line);
+
+        break;
+      }
+    }
+
+    // Check we get the expected minimum of repeated lines.
+    $this->assertGreaterThanOrEqual($min_count, $lines_count, "The $block_name has at least one middle line");
+
+    // Test the terminal line regex if there is one. This only applies if there
+    // was at least one line for the block.
+    if ($lines_count && !empty($regexes['end'])) {
+      $this->assertRegExp($regexes['end'], array_shift($lines), "The end line of the $block_name is as expected.");
+    }
+  }
+
+  /**
+   * Helper for assertClassFileFormatting() for a variable-length block.
+   *
+   * @param &$lines
+   *  An array of code lines, passed by reference. The code to test for should
+   *  be at the start of this; code which follows is ignored. Lines which are
+   *  tested are removed.
+   * @param $regexes
+   *  An array of regexes to test for the block:
+   *  - 'start': The regex for the first line of the block. This may be left
+   *    empty to indicate there is no different start line.
+   *  - 'middle': The regex for any number of intermediate lines. This must not
+   *    match the end line.
+   *  - 'end': The regex for the last line of the block.
+   * @param $block_name = 'block'
+   *  A string to describe the block, to use in assertion messages.
+   */
+  protected function helperRegexBlockLines(&$lines, $regexes, $block_name = 'block') {
+    if (!empty($regexes['start'])) {
+      $this->assertRegExp($regexes['start'], array_shift($lines), "The first line of the $block_name is as expected.");
+    }
+
+    $middle_lines_count = 0;
+    while ($line = array_shift($lines)) {
+      try {
+        $this->assertRegExp($regexes['middle'], $line, "The intermediate line of the $block_name is as expected.");
+        // Count a successful middle line.
+        $middle_lines_count++;
+      }
+      catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        // Catch a failed middle line assertion failure. This is expected to be
+        // the last line, so don't allow this to fail the test.
+        break;
+      }
+    }
+
+    // There should be at least one middle line.
+    $this->assertGreaterThanOrEqual(1, $middle_lines_count, "The $block_name has at least one middle line");
+
+    // Test the line that failed the middle regex, but this time against the end
+    // regex.
+    $this->assertRegExp($regexes['end'], $line, "The last line of the $block_name is as expected.");
+  }
+
+  /**
    * Assert a string is correctly-formed PHP.
    *
    * @param $string
