@@ -456,7 +456,21 @@ class Generate extends Base {
             $component_data = $data;
           }
 
-          $component_unique_id = $component_type . ':' . $request_name;
+          // Instantiate the component so we can get its unique ID.
+          // This may turn out to not be needed and get thrown away!
+          // Fill in defaults for the component data.
+          // (This is the equivalent of handling compound properties when
+          // processing the original input data.)
+          $class = $this->getGeneratorClass($component_type);
+          $component_data_info = $class::getComponentDataInfo(TRUE);
+          foreach ($component_data_info as $property_name => $property_info) {
+            $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+          }
+
+          // Instantiate the generator.
+          $generator = $this->getGenerator($component_type, $request_name, $component_data);
+
+          $component_unique_id = $generator->getUniqueID();
 
           // Prevent re-requesting an identical previous request.
           // TODO: use requestedComponentHandling() here?
@@ -468,23 +482,11 @@ class Generate extends Base {
           // A requested subcomponent may already exist in our tree.
           if (isset($component_list[$component_unique_id])) {
             // If it already exists, we merge the received data in with the
-            // existing component.
+            // existing component, and use the existing generator instead.
             $generator = $component_list[$component_unique_id];
             $generator->mergeComponentData($component_data);
           }
           else {
-            // Fill in defaults for the component data.
-            // (This is the equivalent of handling compound properties when
-            // processing the original input data.)
-            $class = $this->getGeneratorClass($component_type);
-            $component_data_info = $class::getComponentDataInfo(TRUE);
-            foreach ($component_data_info as $property_name => $property_info) {
-              $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
-            }
-
-            // Instantiate the generator.
-            $generator = $this->getGenerator($component_type, $request_name, $component_data);
-
             // Add the new component to the complete array of components.
             $component_list[$component_unique_id] = $generator;
           }
