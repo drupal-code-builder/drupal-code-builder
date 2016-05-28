@@ -118,87 +118,43 @@ class Collect8 extends Collect {
     // Assemble data from each plugin manager.
     $plugin_type_data = array();
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
-      // Get the class for the service.
-      $plugin_manager = \Drupal::service($plugin_manager_service_id);
-      $plugin_manager_class = get_class($plugin_manager);
-
-      //drush_print_r("$plugin_manager_service_id -> $plugin_manager_class");
-
-      // Get a reflection class for the plugin manager class.
-      $plugin_manager_reflection = new \ReflectionClass($plugin_manager_class);
-
-      // Get the lines of code body for the constructor method.
-      $constructor = $plugin_manager_reflection->getConstructor();
-      $filename = $constructor->getFileName();
-      $start_line = $constructor->getStartLine();
-      $end_line = $constructor->getEndLine();
-      $length = $end_line - $start_line;
-      $source = file($filename);
-      $lines = array_slice($source, $start_line, $length);
-
-      // Find the call to the parent constructor. This should be the first line.
-      // WARNING! This will BREAK if the call has a linebreak in it!
-      // TODO: Consider allowing for that!
-      $parent_constructor_call = NULL;
-      foreach ($lines as $line) {
-        if (preg_match('@\s*parent::__construct@', $line)) {
-          $parent_constructor_call = $line;
-          break;
-        }
-      }
-      if (empty($parent_constructor_call)) {
-        // We can't find the parent constructor call -- this plugin manager is
-        // doing something different.
-        // TODO: show a notice in all environments.
-        //drush_print("Unable to find call to parent constructor in plugin manager class constructor method for service $plugin_manager_service_id, class $plugin_manager.");
-        continue;
-      }
-
-      // The call to the constructor's parent method should be in this form:
-      //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
-      // See Drupal\Core\Plugin\DefaultPluginManager for detail on these.
-      // Use PHP's tokenizer to get the string parameters.
-      // We need to add a PHP open tag for that to work.
-      $tokens = token_get_all('<?php ' . $parent_constructor_call);
-
-      // Go through the tokens and get the constant strings: these are the
-      // parameters to the call that we want.
-      $constant_string_parameters = array();
-      foreach ($tokens as $token) {
-        // For some reason, commas are not turned into tokens but appear as raw
-        // strings! WTF?!
-        if (!is_array($token)) {
-          continue;
-        }
-
-        $token_name = token_name($token[0]);
-        if ($token_name == 'T_CONSTANT_ENCAPSED_STRING') {
-          // These come with the quotation marks, so we have to trim those.
-          $constant_string_parameters[] = substr($token[1], 1, -1);
-        }
-      }
-
       // We identify plugin types by the part of the plugin manager service name
       // that comes after 'plugin.manager.'.
       $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
 
-      $data = array(
+      $data = [
         'type_id' => $plugin_type_id,
         'type_label' => isset($plugin_types[$plugin_type_id]) ?
           $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id,
         'service_id' => $plugin_manager_service_id,
-        'subdir' => isset($constant_string_parameters[0]) ?
-          // Some plugin managers, e.g. ViewsHandlerManager, get us nothing for
-          // this.
-          $constant_string_parameters[0] : 'Plugin/Subdir',
-        // These two are optional parameters for
-        // Drupal\Core\Plugin\DefaultPluginManager::__construct(), and so might
-        // not be present.
-        'plugin_interface' => isset($constant_string_parameters[1]) ?
-          $constant_string_parameters[1] : NULL,
-        'plugin_definition_annotation_name' => isset($constant_string_parameters[2]) ?
-            $constant_string_parameters[2] : 'Drupal\Component\Annotation\Plugin',
-      );
+      ];
+
+      // Get the service, and then get the properties that the plugin manager
+      // constructor sets.
+      // E.g., most plugin managers pass this to the parent:
+      //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+      // See Drupal\Core\Plugin\DefaultPluginManager
+      $service = \Drupal::service($plugin_manager_service_id);
+      $reflection = new \ReflectionClass($service);
+
+      // The list of properties we want to grab out of the plugin manager
+      //  => the key in the plugin type data array we want to set this into.
+      $plugin_manager_properties = [
+        'subdir' => 'subdir',
+        'pluginInterface' => 'plugin_interface',
+        'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
+      ];
+      foreach ($plugin_manager_properties as $property_name => $data_key) {
+        if (!$reflection->hasProperty($property_name)) {
+          // plugin.manager.menu.link is different.
+          $data[$data_key] = '';
+          continue;
+        }
+
+        $property = $reflection->getProperty($property_name);
+        $property->setAccessible(TRUE);
+        $data[$data_key] = $property->getValue($service);
+      }
 
       // Analyze the interface, if there is one.
       if (empty($data['plugin_interface'])) {
