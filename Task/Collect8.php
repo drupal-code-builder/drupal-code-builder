@@ -205,35 +205,7 @@ class Collect8 extends Collect {
         $data['plugin_interface_methods'] = array();
       }
       else {
-        // Get a reflection class for the interface.
-        $plugin_interface_reflection = new \ReflectionClass($data['plugin_interface']);
-        $methods = $plugin_interface_reflection->getMethods();
-
-        foreach ($methods as $method) {
-          $interface_method_data = array();
-
-          $interface_method_data['name'] = $method->getName();
-
-          // Methods may be in parent interfaces, so not all in the same file.
-          $filename = $method->getFileName();
-          $source = file($filename);
-          $start_line = $method->getStartLine();
-
-          // Trim whitespace from the front, as this will be indented.
-          $interface_method_data['declaration'] = trim($source[$start_line - 1]);
-
-          // Get the docblock for the method.
-          $method_docblock_lines = explode("\n", $method->getDocComment());
-          foreach ($method_docblock_lines as $line) {
-            // Take the first actual docblock line to be the description.
-            if (substr($line, 0, 5) == '   * ') {
-              $interface_method_data['description'] = substr($line, 5);
-              break;
-            }
-          }
-
-          $data['plugin_interface_methods'][$method->getName()] = $interface_method_data;
-        }
+        $data['plugin_interface_methods'] = $this->collectPluginInterfaceMethods($data['plugin_interface']);
       }
 
       // Now analyze the anotation.
@@ -281,6 +253,56 @@ class Collect8 extends Collect {
     //drush_print_r($plugin_type_data);
 
     return $plugin_type_data;
+  }
+
+  /**
+   * Get data for the methods of a plugin interface.
+   *
+   * Helper for gatherPluginTypeInfo().
+   *
+   * @param $plugin_interface
+   *  The fully-qualified name of the interface.
+   *
+   * @return
+   *  An array keyed by method name, where each value is an array containing:
+   *  - 'name: The name of the method.
+   *  - 'declaration': The function declaration line.
+   *  - 'description': The description from the method's docblock first line.
+   */
+  protected function collectPluginInterfaceMethods($plugin_interface) {
+    // Get a reflection class for the interface.
+    $plugin_interface_reflection = new \ReflectionClass($plugin_interface);
+    $methods = $plugin_interface_reflection->getMethods();
+
+    $data = [];
+
+    foreach ($methods as $method) {
+      $interface_method_data = [];
+
+      $interface_method_data['name'] = $method->getName();
+
+      // Methods may be in parent interfaces, so not all in the same file.
+      $filename = $method->getFileName();
+      $source = file($filename);
+      $start_line = $method->getStartLine();
+
+      // Trim whitespace from the front, as this will be indented.
+      $interface_method_data['declaration'] = trim($source[$start_line - 1]);
+
+      // Get the docblock for the method.
+      $method_docblock_lines = explode("\n", $method->getDocComment());
+      foreach ($method_docblock_lines as $line) {
+        // Take the first actual docblock line to be the description.
+        if (substr($line, 0, 5) == '   * ') {
+          $interface_method_data['description'] = substr($line, 5);
+          break;
+        }
+      }
+
+      $data[$method->getName()] = $interface_method_data;
+    }
+
+    return $data;
   }
 
   /**
