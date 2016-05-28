@@ -209,43 +209,12 @@ class Collect8 extends Collect {
       }
 
       // Now analyze the anotation.
-      // Get a reflection class for the annotation class.
-      // Each property of the annotation class describes a property for the
-      // plugin annotation.
-      $annotation_reflection = new \ReflectionClass($data['plugin_definition_annotation_name']);
-      $properties_reflection = $annotation_reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
-
-      $plugin_properties = array();
-      foreach ($properties_reflection as $property_reflection) {
-        // Assemble data about this annotation property.
-        $annotation_property_data = array();
-        $annotation_property_data['name'] = $property_reflection->name;
-
-        // Get the docblock for the property, so we can figure out whether the
-        // annotation property requires translation, and also add detail to the
-        // annotation code.
-        $property_docblock = $property_reflection->getDocComment();
-        $property_docblock_lines = explode("\n", $property_docblock);
-        foreach ($property_docblock_lines as $line) {
-          if (substr($line, 0, 3) == '/**') {
-            continue;
-          }
-
-          // Take the first actual docblock line to be the description.
-          if (!isset($annotation_property_data['description']) && substr($line, 0, 5) == '   * ') {
-            $annotation_property_data['description'] = substr($line, 5);
-          }
-
-          // Look for a @var token, to tell us the type of the property.
-          if (substr($line, 0, 10) == '   * @var ') {
-            $annotation_property_data['type'] = substr($line, 10);
-          }
-        }
-
-        $plugin_properties[$property_reflection->name] = $annotation_property_data;
+      if (isset($data['plugin_definition_annotation_name']) && class_exists($data['plugin_definition_annotation_name'])) {
+        $data['plugin_properties'] = $this->collectPluginAnnotationProperties($data['plugin_definition_annotation_name']);
       }
-
-      $data['plugin_properties'] = $plugin_properties;
+      else {
+        $data['plugin_properties'] = [];
+      }
 
       $plugin_type_data[$plugin_type_id] = $data;
     }
@@ -303,6 +272,59 @@ class Collect8 extends Collect {
     }
 
     return $data;
+  }
+
+  /**
+   * Get the list of properties from an annotation class.
+   *
+   * Helper for gatherPluginTypeInfo().
+   *
+   * @param $plugin_annotation_class
+   *  The fully-qualified name of the plugin annotation class.
+   *
+   * @return
+   *  An array keyed by property name, where each value is an array containing:
+   *  - 'name: The name of the property.
+   *  - 'description': The description from the property's docblock first line.
+   */
+  protected function collectPluginAnnotationProperties($plugin_annotation_class) {
+    // Get a reflection class for the annotation class.
+    // Each property of the annotation class describes a property for the
+    // plugin annotation.
+    $annotation_reflection = new \ReflectionClass($plugin_annotation_class);
+    $properties_reflection = $annotation_reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+
+    $plugin_properties = [];
+    foreach ($properties_reflection as $property_reflection) {
+      // Assemble data about this annotation property.
+      $annotation_property_data = array();
+      $annotation_property_data['name'] = $property_reflection->name;
+
+      // Get the docblock for the property, so we can figure out whether the
+      // annotation property requires translation, and also add detail to the
+      // annotation code.
+      $property_docblock = $property_reflection->getDocComment();
+      $property_docblock_lines = explode("\n", $property_docblock);
+      foreach ($property_docblock_lines as $line) {
+        if (substr($line, 0, 3) == '/**') {
+          continue;
+        }
+
+        // Take the first actual docblock line to be the description.
+        if (!isset($annotation_property_data['description']) && substr($line, 0, 5) == '   * ') {
+          $annotation_property_data['description'] = substr($line, 5);
+        }
+
+        // Look for a @var token, to tell us the type of the property.
+        if (substr($line, 0, 10) == '   * @var ') {
+          $annotation_property_data['type'] = substr($line, 10);
+        }
+      }
+
+      $plugin_properties[$property_reflection->name] = $annotation_property_data;
+    }
+
+    return $plugin_properties;
   }
 
   /**
