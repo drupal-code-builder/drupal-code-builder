@@ -50,7 +50,7 @@ class HookTheme extends HookImplementation {
 
     $code = array();
     $code[] = 'return array(';
-    foreach ($children_contents as $menu_item_lines) {
+    foreach ($this->filterComponentContentsForRole($children_contents, 'item') as $menu_item_lines) {
       $code = array_merge($code, $menu_item_lines);
     }
     $code[] = ');';

@@ -30,7 +30,7 @@ class PHPFile extends File {
    */
   function buildComponentContents($children_contents) {
     // TEMPORARY, until Generate task handles returned contents.
-    $this->functions = $children_contents;
+    $this->functions = $this->filterComponentContentsForRole($children_contents, 'function');
 
     return array();
   }

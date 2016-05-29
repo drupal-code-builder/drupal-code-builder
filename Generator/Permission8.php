@@ -48,7 +48,10 @@ class Permission8 extends Permission {
 
     $yaml_data[$permission_name] = $permission_info;
 
-    return $yaml_data;
+    return [
+      'role' => 'yaml',
+      'content' => $yaml_data,
+    ];
   }
 
 }

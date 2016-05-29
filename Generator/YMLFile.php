@@ -19,7 +19,7 @@ class YMLFile extends File {
    */
   function buildComponentContents($children_contents) {
     $yaml_data = array();
-    foreach ($children_contents as $component_name => $component_yaml_data) {
+    foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {
       $yaml_data += $component_yaml_data;
     }
 

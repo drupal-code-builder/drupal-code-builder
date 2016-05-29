@@ -432,7 +432,8 @@ abstract class BaseGenerator {
    *  The tree array.
    *
    * @return
-   *  An array of lines for this component's content.
+   *  An array of data for this component's content.
+   *  See buildComponentContents() for details.
    */
   function buildComponentContentsIterative($components, $tree) {
     $children_contents = array();
@@ -459,13 +460,43 @@ abstract class BaseGenerator {
    *  An array of the content that the child components returned.
    *
    * @return
-   *  An array of data for this component's content. The nature of this depends
-   *  on the intended parent: for example PHPFile expects an array of code lines
-   *  whereas YMLFile expects an array of data to be rendered into Yaml.
+   *  The content for this component, destined for the containing component to
+   *  make use of. This is an array with the following keys:
+   *  - 'role': A string indicating to the containing component how to use this
+   *    content.
+   *  - 'content': The content itself. The nature of this depends on the
+   *    intended parent and the role: for example PHPFile 'function' role
+   *    expects an array of code lines whereas YMLFile expects an array of data
+   *    to be rendered into Yaml.
    */
   function buildComponentContents($children_contents) {
     // Base does nothing.
     return array();
+  }
+
+  /**
+   * Filters an array of child contents by role.
+   *
+   * Helper for buildComponentContents().
+   *
+   * @param $contents
+   *  The array of contents as returned by an implementation of
+   *  buildComponentContents().
+   * @param $role
+   *  A role name, as used in the 'role' property of the $contents array.
+   *
+   * @return
+   *  An array of the 'content' data of the given array items that matched the
+   *  role, keyed by the same key as the the given array item.
+   */
+  protected function filterComponentContentsForRole($contents, $role) {
+    $return = [];
+    foreach ($contents as $key => $item) {
+      if ($item['role'] == $role) {
+        $return[$key] = $item['content'];
+      }
+    }
+    return $return;
   }
 
 }

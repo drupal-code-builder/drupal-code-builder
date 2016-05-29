@@ -106,7 +106,10 @@ class RouterItem8 extends RouterItem {
       ),
     );
 
-    return $routing_data;
+    return [
+      'role' => 'yaml',
+      'content' => $routing_data,
+    ];
   }
 
 }

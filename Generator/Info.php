@@ -17,7 +17,7 @@ class Info extends File {
    */
   public function buildComponentContents($children_contents) {
     $lines = array();
-    foreach ($children_contents as $component_name => $component_lines) {
+    foreach ($this->filterComponentContentsForRole($children_contents, 'infoline') as $component_name => $component_lines) {
       // Assume that children components don't tread on each others' toes and
       // provide the same property names.
       $lines += $component_lines;

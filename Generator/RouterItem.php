@@ -118,7 +118,10 @@ class RouterItem extends BaseGenerator {
     }
     $code[] = ");";
 
-    return $code;
+    return [
+      'role' => 'item',
+      'content' => $code,
+    ];
   }
 
 }

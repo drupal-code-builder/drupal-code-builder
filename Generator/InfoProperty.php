@@ -48,7 +48,10 @@ class InfoProperty extends BaseGenerator {
    */
   public function buildComponentContents($children_contents) {
     $data = array(
-      $this->component_data['property_name'] => $this->component_data['property_value'],
+      'role' => 'infoline',
+      'content' => [
+        $this->component_data['property_name'] => $this->component_data['property_value']
+      ],
     );
     return $data;
   }

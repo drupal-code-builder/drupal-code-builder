@@ -107,7 +107,11 @@ class Permission extends BaseGenerator {
     $code[] = "  'title' => t('$permission_description'),";
     $code[] = "  'description' => t('TODO: enter permission description'),";
     $code[] = ");";
-    return $code;
+
+    return [
+      'role' => 'item',
+      'content' => $code,
+    ];
   }
 
 }
