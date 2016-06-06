@@ -117,8 +117,10 @@ class PHPFunction extends BaseGenerator {
     $function_code[] = "}";
 
     return [
-      'role' => 'function',
-      'content' => $function_code,
+      'function' => [
+        'role' => 'function',
+        'content' => $function_code,
+      ],
     ];
   }
 

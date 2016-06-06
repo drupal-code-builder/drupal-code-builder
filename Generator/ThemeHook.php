@@ -80,8 +80,10 @@ class ThemeHook extends BaseGenerator {
     $code[] = "  ),";
 
     return [
-      'role' => 'item',
-      'content' => $code,
+      'item' => [
+        'role' => 'item',
+        'content' => $code,
+      ],
     ];
 
   }

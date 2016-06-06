@@ -432,8 +432,8 @@ abstract class BaseGenerator {
    *  The tree array.
    *
    * @return
-   *  An array of data for this component's content.
-   *  See buildComponentContents() for details.
+   *  An array of data for this component's content, in the same form as the
+   *  return of buildComponentContents().
    */
   function buildComponentContentsIterative($components, $tree) {
     $children_contents = array();
@@ -443,7 +443,10 @@ abstract class BaseGenerator {
     if (!empty($tree[$this->getUniqueID()])) {
       foreach ($tree[$this->getUniqueID()] as $child_name) {
         $child_component = $components[$child_name];
-        $children_contents[$child_name] = $child_component->buildComponentContentsIterative($components, $tree);
+        $child_contents = $child_component->buildComponentContentsIterative($components, $tree);
+        foreach ($child_contents as $key => $contents) {
+          $children_contents[$child_name . ':' . $key] = $contents;
+        }
       }
     }
 

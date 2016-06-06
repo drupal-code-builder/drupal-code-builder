@@ -109,8 +109,10 @@ class Permission extends BaseGenerator {
     $code[] = ");";
 
     return [
-      'role' => 'item',
-      'content' => $code,
+      'permission' => [
+        'role' => 'item',
+        'content' => $code,
+      ],
     ];
   }
 
