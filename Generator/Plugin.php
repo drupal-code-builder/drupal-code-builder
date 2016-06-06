@@ -25,6 +25,11 @@ class Plugin extends PHPClassFile {
   public $name;
 
   /**
+   * An array of data about injected services.
+   */
+  protected $injectedServices = [];
+
+  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name
@@ -55,20 +60,6 @@ class Plugin extends PHPClassFile {
     $plugin_data = $plugin_data[$plugin_type];
 
     $component_data['plugin_type_data'] = $plugin_data;
-    $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-    $service_data = $task_handler_report_services->listServiceData();
-
-    $component_data['service_definitions'] = array_intersect_key($service_data, array_fill_keys($component_data['injected_services'], TRUE));
-
-    // Add in some extra generated data.
-    foreach ($component_data['service_definitions'] as &$service_info) {
-      $id_pieces = preg_split('@[_.]@', $service_info['id']);
-      $service_info['variable_name'] = implode('_', $id_pieces);
-      $id_pieces_first = array_shift($id_pieces);
-      $service_info['property_name'] = implode('', array_merge([$id_pieces_first], array_map('ucfirst', $id_pieces)));
-      $interface_pieces = explode('\\', $service_info['interface']);
-      $service_info['unqualified_interface'] = array_pop($interface_pieces);
-    }
 
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
@@ -139,6 +130,35 @@ class Plugin extends PHPClassFile {
   }
 
   /**
+   * Return an array of subcomponent types.
+   */
+  public function requiredComponents() {
+    $components = parent::requiredComponents();
+
+    foreach ($this->component_data['injected_services'] as $service_id) {
+      $components[$this->name . '_' . $service_id] = array(
+        'component_type' => 'InjectedService',
+        'container' => $this->getUniqueID(),
+        'service_id' => $service_id,
+      );
+    }
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function buildComponentContents($children_contents) {
+    // TEMPORARY, until Generate task handles returned contents.
+    $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
+
+    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
+
+    return array();
+  }
+
+  /**
    * Return the main body of the file code.
    *
    * TODO: messier and messier arrays within arrays! file_contents() needs
@@ -164,11 +184,11 @@ class Plugin extends PHPClassFile {
     $imports = [];
 
     $imported_classes = [];
-    foreach ($this->component_data['service_definitions'] as $service_info) {
+    foreach ($this->injectedServices as $service_info) {
       $imported_classes[] = trim($service_info['interface'], '\\');
     }
 
-    if (!empty($this->component_data['service_definitions'])) {
+    if (!empty($this->injectedServices)) {
       $imported_classes[] = 'Drupal\Core\Plugin\ContainerFactoryPluginInterface';
       $imported_classes[] = 'Symfony\Component\DependencyInjection\ContainerInterface';
     }
@@ -223,7 +243,7 @@ class Plugin extends PHPClassFile {
    */
   function class_declaration() {
     $class_declaration = 'class ' . $this->plain_class_name;
-    if (!empty($this->component_data['service_definitions'])) {
+    if (!empty($this->injectedServices)) {
       $class_declaration .= " implements ContainerFactoryPluginInterface";
     }
     $class_declaration .= ' {';
@@ -240,9 +260,9 @@ class Plugin extends PHPClassFile {
     $code = array();
 
     // Injected services.
-    if (!empty($this->component_data['service_definitions'])) {
+    if (!empty($this->injectedServices)) {
       // Class properties.
-      foreach ($this->component_data['service_definitions'] as $service_info) {
+      foreach ($this->injectedServices as $service_info) {
         $var_doc = $this->docBlock([
           $service_info['description'] . '.',
           '',
@@ -254,57 +274,13 @@ class Plugin extends PHPClassFile {
       }
 
       // Class constructor.
-      $constructor_doc_lines = [
-        "Creates a {$this->plain_class_name} instance.",
-        '',
-        '@param array $configuration',
-        '  A configuration array containing information about the plugin instance.',
-        '@param string $plugin_id',
-        '  The plugin_id for the plugin instance.',
-        '@param mixed $plugin_definition',
-        '  The plugin implementation definition.',
-      ];
-      foreach ($this->component_data['service_definitions'] as $service_info) {
-        $constructor_doc_lines[] = "@param {$service_info['interface']} \${$service_info['variable_name']}";
-        $constructor_doc_lines[] = "  {$service_info['description']}.";
-      }
-      $constructor_doc = $this->docBlock($constructor_doc_lines);
-      $code = array_merge($code, $constructor_doc);
 
-      $constructor_declaration = 'public function __construct(array $configuration, $plugin_id, $plugin_definition';
-      foreach ($this->component_data['service_definitions'] as $service_info) {
-        $constructor_declaration .= ", {$service_info['unqualified_interface']} \${$service_info['variable_name']}";
-      }
-      $constructor_declaration .= ') {';
-      $code[] = $constructor_declaration;
+      // TODO: cleaner system for adding methods!
+      // __construct() method
+      $code = array_merge($code, $this->codeBodyClassMethodConstruct());
 
-      $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
-
-      foreach ($this->component_data['service_definitions'] as $service_info) {
-        $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
-      }
-      $code[] = '}';
-      $code[] = '';
-
-      $code = array_merge($code, $this->docBlock('{@inheritdoc}'));
-      $code[] = 'public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {';
-      $code[] = '  return new static(';
-      $code[] = '    $configuration,';
-      $code[] = '    $plugin_id,';
-      $code[] = '    $plugin_definition,';
-
-      end($this->component_data['service_definitions']);
-      $last_service_id = key($this->component_data['service_definitions']);
-      foreach ($this->component_data['service_definitions'] as $service_id => $service_info) {
-        $line = "    \$container->get('{$service_info['id']}')";
-        if ($service_id != $last_service_id) {
-          $line .= ',';
-        }
-        $code[] = $line;
-      }
-      $code[] = '  );';
-      $code[] = '}';
-      $code[] = '';
+      // create() method.
+      $code = array_merge($code, $this->codeBodyClassMethodCreate());
     }
 
     foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_name => $interface_method_data) {
@@ -328,6 +304,73 @@ class Plugin extends PHPClassFile {
       return empty($line) ? $line : '  ' . $line;
     }, $code);
 
+    return $code;
+  }
+
+  /**
+   * Creates the code lines for the __construct() method.
+   */
+  protected function codeBodyClassMethodConstruct() {
+    $code = [];
+    $constructor_doc_lines = [
+      "Creates a {$this->plain_class_name} instance.",
+      '',
+      '@param array $configuration',
+      '  A configuration array containing information about the plugin instance.',
+      '@param string $plugin_id',
+      '  The plugin_id for the plugin instance.',
+      '@param mixed $plugin_definition',
+      '  The plugin implementation definition.',
+    ];
+    foreach ($this->injectedServices as $service_info) {
+      $constructor_doc_lines[] = "@param {$service_info['interface']} \${$service_info['variable_name']}";
+      $constructor_doc_lines[] = "  {$service_info['description']}.";
+    }
+    $constructor_doc = $this->docBlock($constructor_doc_lines);
+    $code = array_merge($code, $constructor_doc);
+
+    $constructor_declaration = 'public function __construct(array $configuration, $plugin_id, $plugin_definition';
+    foreach ($this->injectedServices as $service_info) {
+      $constructor_declaration .= ", {$service_info['unqualified_interface']} \${$service_info['variable_name']}";
+    }
+    $constructor_declaration .= ') {';
+    $code[] = $constructor_declaration;
+
+    $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
+
+    foreach ($this->injectedServices as $service_info) {
+      $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+    }
+    $code[] = '}';
+    $code[] = '';
+    return $code;
+  }
+
+  /**
+   * Creates the code lines for the create() method.
+   */
+  protected function codeBodyClassMethodCreate() {
+    $code = $this->docBlock('{@inheritdoc}');
+    $code[] = 'public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {';
+    $code[] = '  return new static(';
+    $code[] = '    $configuration,';
+    $code[] = '    $plugin_id,';
+    $code[] = '    $plugin_definition,';
+
+    $container_extraction_lines = [];
+    foreach ($this->childContentsGrouped['container_extraction'] as $container_extraction) {
+      $container_extraction_lines[] = '    ' . $container_extraction;
+    }
+
+    // Remove the last comma.
+    end($container_extraction_lines);
+    $last_line_key = key($container_extraction_lines);
+    $container_extraction_lines[$last_line_key] = rtrim($container_extraction_lines[$last_line_key], ',');
+    $code = array_merge($code, $container_extraction_lines);
+
+    $code[] = '  );';
+    $code[] = '}';
+    $code[] = '';
     return $code;
   }
 

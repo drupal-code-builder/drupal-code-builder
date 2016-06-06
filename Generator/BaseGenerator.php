@@ -502,4 +502,29 @@ abstract class BaseGenerator {
     return $return;
   }
 
+  /**
+   * Groups the array of component contents by their role.
+   *
+   * @param $contents
+   *  The array of contents as returned by an implementation of
+   *  buildComponentContents().
+   *
+   * @return
+   *  An array of the grouped items. The keys are all the values of the 'role'
+   *  item in the contents array. The values are arrays keyed by the keys of the
+   *  contents array, whose values are the content items. For example:
+   *    - role1 =>
+   *      - itemkeyA => item content
+   *      - itemkeyB => item content
+   *    - role2 =>
+   *      - itemkeyC => item content
+   */
+  protected function groupComponentContentsByRole($contents) {
+    $return = [];
+    foreach ($contents as $key => $item) {
+      $return[$item['role']][$key] = $item['content'];
+    }
+    return $return;
+  }
+
 }
