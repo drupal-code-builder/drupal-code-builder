@@ -94,7 +94,7 @@ class PHPClassFile extends PHPFile {
     $return = array_merge(
       $this->code_namespace(),
       $this->imports(),
-      $this->docBlock("TODO: class docs."),
+      $this->class_doc_block(),
       $this->class_declaration(),
       $this->class_code_body(),
       [
@@ -124,6 +124,13 @@ class PHPClassFile extends PHPFile {
     $imports[] = '// use yadayada;';
     $imports[] = '';
     return $imports;
+  }
+
+  /**
+   * Procudes the docblock for the class.
+   */
+  protected function class_doc_block() {
+    return $this->docBlock("TODO: class docs.");
   }
 
   /**

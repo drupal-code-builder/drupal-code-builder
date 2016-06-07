@@ -168,7 +168,7 @@ class Plugin extends PHPClassFile {
     $return = array_merge(
       $this->code_namespace(),
       $this->imports(),
-      $this->class_annotation(),
+      $this->class_doc_block(),
       $this->class_declaration(),
       $this->class_code_body(),
       [
@@ -201,6 +201,13 @@ class Plugin extends PHPClassFile {
     }
 
     return $imports;
+  }
+
+  /**
+   * Procudes the docblock for the class.
+   */
+  protected function class_doc_block() {
+    return $this->class_annotation();
   }
 
   /**
