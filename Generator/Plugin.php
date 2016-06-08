@@ -275,30 +275,39 @@ class Plugin extends PHPClassFile {
    * Creates the code lines for the __construct() method.
    */
   protected function codeBodyClassMethodConstruct() {
-    $code = [];
-    $constructor_doc_lines = [
-      "Creates a {$this->plain_class_name} instance.",
-      '',
-      '@param array $configuration',
-      '  A configuration array containing information about the plugin instance.',
-      '@param string $plugin_id',
-      '  The plugin_id for the plugin instance.',
-      '@param mixed $plugin_definition',
-      '  The plugin implementation definition.',
+    $parameters = [
+      [
+        'name' => 'configuration',
+        'description' => 'A configuration array containing information about the plugin instance.',
+        'typehint' => 'array',
+      ],
+      [
+        'name' => 'plugin_id',
+        'description' => 'The plugin_id for the plugin instance.',
+        'typehint' => 'string',
+      ],
+      [
+        'name' => 'plugin_definition',
+        'description' => 'The plugin implementation definition.',
+        'typehint' => 'mixed',
+      ]
     ];
     foreach ($this->injectedServices as $service_info) {
-      $constructor_doc_lines[] = "@param {$service_info['interface']} \${$service_info['variable_name']}";
-      $constructor_doc_lines[] = "  {$service_info['description']}.";
+      $parameters[] = [
+        'name' => $service_info['variable_name'],
+        'description' => $service_info['description'],
+        'typehint' => $service_info['interface'],
+      ];
     }
-    $constructor_doc = $this->docBlock($constructor_doc_lines);
-    $code = array_merge($code, $constructor_doc);
 
-    $constructor_declaration = 'public function __construct(array $configuration, $plugin_id, $plugin_definition';
-    foreach ($this->injectedServices as $service_info) {
-      $constructor_declaration .= ", {$service_info['interface']} \${$service_info['variable_name']}";
-    }
-    $constructor_declaration .= ') {';
-    $code[] = $constructor_declaration;
+    $code = $this->buildMethodHeader(
+      '__construct',
+      $parameters,
+      [
+        'docblock_first_line' => "Creates a {$this->plain_class_name} instance.",
+        'prefixes' => ['public'],
+      ]
+    );
 
     $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
 
