@@ -323,8 +323,26 @@ class Plugin extends PHPClassFile {
    * Creates the code lines for the create() method.
    */
   protected function codeBodyClassMethodCreate() {
-    $code = $this->docBlock('{@inheritdoc}');
-    $code[] = 'public static function create(\\Symfony\\Component\\DependencyInjection\\ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {';
+    $parameters = [
+      [
+        'name' => 'container',
+        'typehint' => '\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
+      ],
+      [
+        'name' => 'configuration',
+        'typehint' => 'array',
+      ],
+    ];
+
+    $code = $this->buildMethodHeader(
+      'create',
+      $parameters,
+      [
+        'inheritdoc' => TRUE,
+        'prefixes' => ['public', 'static'],
+      ]
+    );
+
     $code[] = '  return new static(';
     $code[] = '    $configuration,';
     $code[] = '    $plugin_id,';
