@@ -179,8 +179,10 @@ class Plugin extends PHPClassFile {
 
   /**
    * Produces the namespace import statements.
+   *
+   * NOTE: $imported_classes does not work on this implementation yet!
    */
-  function imports() {
+  function imports($imported_classes = []) {
     $imports = [];
 
     $imported_classes = [];

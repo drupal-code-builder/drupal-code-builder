@@ -91,12 +91,32 @@ class PHPClassFile extends PHPFile {
    * Return the main body of the file code.
    */
   function code_body() {
-    $return = array_merge(
-      $this->code_namespace(),
-      $this->imports(),
+    // Get the class code from the class docblock onwards first, so it can be
+    // then processed for qualified class names.
+    $class_code = array_merge(
       $this->class_doc_block(),
       $this->class_declaration(),
-      $this->class_code_body(),
+      $this->class_code_body()
+    );
+
+    // Replace any fully-qualified classes with short class names, and keep a
+    // list of the replacements to make import statements with.
+    $imported_classes = [];
+    foreach ($class_code as &$line) {
+      $matches = [];
+      if (preg_match('@(?:\\\\(\w+))+@', $line, $matches) && !preg_match('@^\s*\*@', $line)) {
+        $fully_qualified_class_name = $matches[0];
+        $class_name = $matches[1];
+        $line = preg_replace('@' . preg_quote($fully_qualified_class_name) . '@', $class_name, $line);
+
+        $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
+      }
+    }
+
+    $return = array_merge(
+      $this->code_namespace(),
+      $this->imports($imported_classes),
+      $class_code,
       [
         '}',
       ]);
@@ -117,12 +137,23 @@ class PHPClassFile extends PHPFile {
 
   /**
    * Produces the namespace import statements.
+   *
+   * @param $imported_classes
+   *  (optional) An array of fully-qualified class names.
    */
-  function imports() {
+  function imports($imported_classes = []) {
     $imports = [];
-    // TODO!!! is there any way to figure these out??
-    $imports[] = '// use yadayada;';
-    $imports[] = '';
+
+    if ($imported_classes) {
+      sort($imported_classes);
+      foreach ($imported_classes as $fully_qualified_class_name) {
+        $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
+        $imports[] = "use $fully_qualified_class_name;";
+      }
+
+      $imports[] = '';
+    }
+
     return $imports;
   }
 
