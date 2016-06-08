@@ -159,53 +159,6 @@ class Plugin extends PHPClassFile {
   }
 
   /**
-   * Return the main body of the file code.
-   *
-   * TODO: messier and messier arrays within arrays! file_contents() needs
-   * rewriting!
-   */
-  function code_body() {
-    $return = array_merge(
-      $this->code_namespace(),
-      $this->imports(),
-      $this->class_doc_block(),
-      $this->class_declaration(),
-      $this->class_code_body(),
-      [
-        '}',
-      ]);
-    return $return;
-  }
-
-  /**
-   * Produces the namespace import statements.
-   *
-   * NOTE: $imported_classes does not work on this implementation yet!
-   */
-  function imports($imported_classes = []) {
-    $imports = [];
-
-    $imported_classes = [];
-    foreach ($this->injectedServices as $service_info) {
-      $imported_classes[] = trim($service_info['interface'], '\\');
-    }
-
-    if (!empty($this->injectedServices)) {
-      $imported_classes[] = 'Drupal\Core\Plugin\ContainerFactoryPluginInterface';
-      $imported_classes[] = 'Symfony\Component\DependencyInjection\ContainerInterface';
-    }
-
-    if (!empty($imported_classes)) {
-      foreach ($imported_classes as $class) {
-        $imports[] = "use $class;";
-      }
-      $imports[] = '';
-    }
-
-    return $imports;
-  }
-
-  /**
    * Procudes the docblock for the class.
    */
   protected function class_doc_block() {
@@ -253,7 +206,7 @@ class Plugin extends PHPClassFile {
   function class_declaration() {
     $class_declaration = 'class ' . $this->plain_class_name;
     if (!empty($this->injectedServices)) {
-      $class_declaration .= " implements ContainerFactoryPluginInterface";
+      $class_declaration .= " implements \\Drupal\\Core\\Plugin\\ContainerFactoryPluginInterface";
     }
     $class_declaration .= ' {';
 
@@ -340,7 +293,7 @@ class Plugin extends PHPClassFile {
 
     $constructor_declaration = 'public function __construct(array $configuration, $plugin_id, $plugin_definition';
     foreach ($this->injectedServices as $service_info) {
-      $constructor_declaration .= ", {$service_info['unqualified_interface']} \${$service_info['variable_name']}";
+      $constructor_declaration .= ", {$service_info['interface']} \${$service_info['variable_name']}";
     }
     $constructor_declaration .= ') {';
     $code[] = $constructor_declaration;
@@ -360,7 +313,7 @@ class Plugin extends PHPClassFile {
    */
   protected function codeBodyClassMethodCreate() {
     $code = $this->docBlock('{@inheritdoc}');
-    $code[] = 'public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {';
+    $code[] = 'public static function create(\\Symfony\\Component\\DependencyInjection\\ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {';
     $code[] = '  return new static(';
     $code[] = '    $configuration,';
     $code[] = '    $plugin_id,';
