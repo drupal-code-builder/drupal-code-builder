@@ -224,6 +224,8 @@ class Plugin extends PHPClassFile {
     // Injected services.
     if (!empty($this->injectedServices)) {
       // Class properties.
+      $code[] = '';
+
       foreach ($this->injectedServices as $service_info) {
         $var_doc = $this->docBlock([
           $service_info['description'] . '.',
