@@ -197,4 +197,82 @@ class PHPClassFile extends PHPFile {
     return $code_body;
   }
 
+  /**
+   * Creates code lines for the docblock and declaration line of a method.
+   *
+   * TODO: refactor with PHPFunction class or PHPFormattingTrait.
+   *
+   * @param $name
+   *  The method name (without the ()).
+   * @param $parameters
+   *  (optional) An array of data about the parameters. The key is immaterial;
+   *  each value is an array with these properties:
+   *  - 'name': The name of the parameter, without the initial $.
+   *  - 'typehint': The typehint of the parameter. If this is a class or
+   *    interface, use the fully-qualified form: this will produce import
+   *    statements for the file automatically.
+   *  - 'description': (optional) The description of the parameter. This may be
+   *    omitted if 'inheritdoc' is passed into the options.
+   *    (Single line only supported for now.)
+   * @param $options
+   *  An array of options. May contain:
+   *  - 'docblock_first_line' (optional): The text for the first line of the
+   *    docblock. (Required unless 'inheritdoc' is set.)
+   *  - 'inheritdoc': If TRUE, indicates that the docblock is an @inheritdoc
+   *    tag.
+   *  - 'prefixes': (optional) An array of prefixes such as 'static', 'public'.
+   *
+   * @return
+   *  An array of code lines.
+   */
+  protected function buildMethodHeader($name, $parameters = [], $options = []) {
+    $options += [
+      'inheritdoc' => FALSE,
+      'prefixes' => [],
+    ];
+
+    $code = [];
+
+    $docblock_content_lines = [];
+
+    if ($options['inheritdoc']) {
+      $docblock_content_lines[] = '{@inheritdoc}';
+    }
+    else {
+      $docblock_content_lines[] = $options['docblock_first_line'];
+      if (!empty($parameters)) {
+        $docblock_content_lines[] = '';
+        foreach ($parameters as $parameter_info) {
+          $docblock_content_lines[] = "@param " . $parameter_info['typehint'] . ' $' . $parameter_info['name'];
+          $docblock_content_lines[] = '  ' . $parameter_info['description'];
+        }
+        // TODO: @return line.
+      }
+    }
+
+    $code = array_merge($code, $this->docBlock($docblock_content_lines));
+
+    $declaration_line = '';
+    foreach ($options['prefixes'] as $prefix) {
+      $declaration_line .= $prefix . ' ';
+    }
+    $declaration_line .= 'function ' . $name . '(';
+    $declaration_line_params = [];
+    foreach ($parameters as $parameter_info) {
+      if (in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
+        // Don't type hint scalar types.
+        $declaration_line_params[] = '$' . $parameter_info['name'];
+      }
+      else {
+        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['name'];
+      }
+    }
+    $declaration_line .= implode(', ', $declaration_line_params);
+    $declaration_line .= ') {';
+
+    $code[] = $declaration_line;
+
+    return $code;
+  }
+
 }
