@@ -292,12 +292,8 @@ class Plugin extends PHPClassFile {
         'typehint' => 'mixed',
       ]
     ];
-    foreach ($this->injectedServices as $service_info) {
-      $parameters[] = [
-        'name' => $service_info['variable_name'],
-        'description' => $service_info['description'],
-        'typehint' => $service_info['interface'],
-      ];
+    foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+      $parameters[] = $service_parameter;
     }
 
     $code = $this->buildMethodHeader(
