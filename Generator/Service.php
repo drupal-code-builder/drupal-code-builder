@@ -18,6 +18,10 @@ class Service extends PHPClassFile {
    * The component name is taken to be the service ID.
    */
   function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    // Prefix the service name with the module name.
+    $component_data['original_service_name'] = $component_data['service_name'];
+    $component_data['service_name'] = $root_generator->component_data['root_name'] . '.' . $component_data['service_name'];
+
     parent::__construct($component_name, $component_data, $generate_task, $root_generator);
   }
 
@@ -26,9 +30,8 @@ class Service extends PHPClassFile {
    */
   protected function setClassNames($component_name) {
     // The service name is its ID as a service.
-    // This will start with the module name, eg 'foo.bar'.
     // implode and ucfirst()
-    $service_id = $component_name;
+    $service_id = $this->component_data['original_service_name'];
     $service_id_pieces = preg_split('/[\._]/', $service_id);
     // Create an unqualified class name by turning this into camel case.
     $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
@@ -44,26 +47,133 @@ class Service extends PHPClassFile {
   }
 
   /**
+   * Define the component data this component needs to function.
+   */
+  protected static function componentDataDefinition() {
+    return array(
+      'service_name' => array(
+        'label' => 'Service name',
+        'required' => TRUE,
+      ),
+      'injected_services' => array(
+        'label' => 'Injected services',
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+
+          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+
+          return $options;
+        },
+      ),
+    );
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
-    $yaml_data = [];
+    $components = [];
 
+    $yaml_data_arguments = [];
+    foreach ($this->component_data['injected_services'] as $service_id) {
+      $components[$this->name . '_' . $service_id] = array(
+        'component_type' => 'InjectedService',
+        'container' => $this->getUniqueID(),
+        'service_id' => $service_id,
+      );
+
+      // Add the service ID to the arguments in the YAML data.
+      $yaml_data_arguments[] = '@' . $service_id;
+    }
+
+    $yaml_data = [];
     $yaml_data['services'] = [
-      "%module.$this->name" => [
+      $this->component_data['service_name'] => [
         'class' => $this->qualified_class_name,
-        'arguments' => [],
+        'arguments' => $yaml_data_arguments,
       ],
     ];
 
-    $components = array(
-      '%module.services.yml' => array(
-        'component_type' => 'YMLFile',
-        'yaml_data' => $yaml_data,
-      ),
-    );
+    $components['%module.services.yml'] = [
+      'component_type' => 'YMLFile',
+      'yaml_data' => $yaml_data,
+    ];
 
     return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function buildComponentContents($children_contents) {
+    // TEMPORARY, until Generate task handles returned contents.
+    $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
+
+    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
+
+    return array();
+  }
+
+  /**
+   * Return the body of the class's code.
+   */
+  function class_code_body() {
+    $code = array();
+
+    // Injected services.
+    if (!empty($this->injectedServices)) {
+      // Class properties.
+      $code[] = '';
+
+      foreach ($this->injectedServices as $service_info) {
+        $var_doc = $this->docBlock([
+          $service_info['description'] . '.',
+          '',
+          '@var ' . $service_info['interface']
+        ]);
+        $code = array_merge($code, $var_doc);
+        $code[] = 'protected $' . $service_info['property_name'] . ';';
+        $code[] = '';
+      }
+
+      // __construct() method
+      $code = array_merge($code, $this->codeBodyClassMethodConstruct());
+    }
+
+    // Indent all the class code.
+    // TODO: is there a nice way of doing indents?
+    $code = array_map(function ($line) {
+      return empty($line) ? $line : '  ' . $line;
+    }, $code);
+
+    return $code;
+  }
+
+  /**
+   * Creates the code lines for the __construct() method.
+   */
+  protected function codeBodyClassMethodConstruct() {
+    $parameters = [];
+    foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+      $parameters[] = $service_parameter;
+    }
+
+    $code = $this->buildMethodHeader(
+      '__construct',
+      $parameters,
+      [
+        'docblock_first_line' => "Constructs a new {$this->plain_class_name}.",
+        'prefixes' => ['public'],
+      ]
+    );
+
+    foreach ($this->injectedServices as $service_info) {
+      $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+    }
+    $code[] = '}';
+    $code[] = '';
+    return $code;
   }
 
 }

@@ -147,7 +147,7 @@ class Module extends RootComponent {
         'label' => "Services",
         'description' => 'A list of machine names of services for this module to provide.',
         'required' => FALSE,
-        'format' => 'array',
+        'format' => 'compound',
         'component' => 'Service',
       ),
       'permissions' => array(
