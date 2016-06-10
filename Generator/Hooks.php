@@ -79,7 +79,7 @@ class Hooks extends BaseGenerator {
         // Figure out if there is a dedicated generator class for this hook.
         // TODO: is it really worth this faff? How many will we have, apart from
         // hook_menu? Is coding this a) slow and b) YAGNI?
-        $hook_name_pieces = explode('_', $hook_name);
+        $hook_name_pieces = explode('_', strtolower($hook['name']));
         $hook_name_pieces = array_map(function($word) { return ucwords($word); }, $hook_name_pieces);
         // Make the class name, eg HookMenu.
         $hook_class_name = implode('', $hook_name_pieces);
@@ -89,16 +89,16 @@ class Hooks extends BaseGenerator {
           $hook_class_name = 'HookImplementation';
         }
 
-        $components[$hook_name] = array(
+        $components[$hook['name']] = array(
           'component_type' => $hook_class_name,
           'code_file' => $hook['destination'],
-          'hook_name' => $hook_name,
+          'hook_name' => $hook['name'],
           'declaration' => $hook['definition'],
           'body' => $hook['body'],
           'has_wrapping_newlines' => TRUE,
         );
         if (isset($hook['template'])) {
-          $components[$hook_name]['template'] = $hook['template'];
+          $components[$hook['name']]['template'] = $hook['template'];
         }
       }
     }
