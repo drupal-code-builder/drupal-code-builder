@@ -456,6 +456,9 @@ class Generate extends Base {
             $component_data = $data;
           }
 
+          // Add the root component name to the data.
+          $component_data['root_component_name'] = $root_component->component_data['root_name'];
+
           // Instantiate the component so we can get its unique ID.
           // This may turn out to not be needed and get thrown away!
           // Fill in defaults for the component data.
