@@ -135,7 +135,6 @@ class Module extends RootComponent {
         'default' => NULL,
         'required' => FALSE,
       ),
-      // This adds permissions, so needs to be before permissions.
       'settings_form' => array(
         'label' => "Admin settings form",
         'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
