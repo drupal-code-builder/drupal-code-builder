@@ -38,7 +38,7 @@ class Service extends PHPClassFile {
     // Form the full class name by adding a namespace Drupal\MODULE.
     $class_name_pieces = array(
       'Drupal',
-      $this->root_component->component_data['root_name'],
+      $this->component_data['root_component_name'],
       $unqualified_class_name,
     );
     $qualified_class_name = implode('\\', $class_name_pieces);

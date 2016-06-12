@@ -35,8 +35,7 @@ class API extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $component_data = $this->getRootComponentData();
-    $module_root_name = $component_data['root_name'];
+    $module_root_name = $this->component_data['root_component_name'];
 
     $this->filename = "$module_root_name.api.php";
 
@@ -54,25 +53,17 @@ class API extends PHPFile {
    * Return the summary line for the file docblock.
    */
   function file_doc_summary() {
-    $component_data = $this->getRootComponentData();
-    $module_readable_name = $component_data['readable_name'];
-    return "Hooks provided by the $module_readable_name module.";
+    return "Hooks provided by the %readable module.";
   }
 
   /**
    * Return the main body of the file code.
    */
   function code_body() {
-    $component_data = $this->getRootComponentData();
-
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_analyze = \DrupalCodeBuilder\Factory::getTask('AnalyzeModule');
 
-    $hooks = $mb_task_handler_analyze->getInventedHooks($component_data['root_name']);
-
-    $module_root_name = $component_data['root_name'];
-    $module_root_name_title_case = ucfirst($component_data['root_name']);
-    $module_readable_name = $component_data['readable_name'];
+    $hooks = $mb_task_handler_analyze->getInventedHooks($this->component_data['root_component_name']);
 
     // Build an array of code pieces.
     $code_pieces = array();

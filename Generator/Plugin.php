@@ -51,7 +51,7 @@ class Plugin extends PHPClassFile {
 
     // Prefix the plugin name with the module name.
     $component_data['original_plugin_name'] = $component_data['plugin_name'];
-    $component_data['plugin_name'] = $root_generator->component_data['root_name'] . '_' . $component_data['plugin_name'];
+    $component_data['plugin_name'] = $component_data['root_component_name'] . '_' . $component_data['plugin_name'];
 
     $plugin_type = $component_data['plugin_type'];
 
@@ -74,7 +74,7 @@ class Plugin extends PHPClassFile {
     $qualified_class_name = implode('\\', [
       'Drupal',
       // Module name.
-      $this->root_component->component_data['root_name'],
+      $this->component_data['root_component_name'],
       // Plugin subdirectory.
       $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
       // Plugin ID.

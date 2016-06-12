@@ -79,9 +79,7 @@ class AdminSettingsForm extends Form {
    * The name of the form.
    */
   protected function getFormName() {
-    // TODO: this should be set in our data.
-    $root_component_data = $this->getRootComponentData();
-    $base_component_name = $root_component_data['root_name'];
+    $base_component_name = $this->component_data['root_component_name'];
     return "{$base_component_name}_settings_form";
   }
 
