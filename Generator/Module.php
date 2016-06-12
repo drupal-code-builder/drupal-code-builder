@@ -415,7 +415,7 @@ class Module extends RootComponent {
    */
   function getReplacements() {
     // Get old style variable names.
-    $module_data = $this->getRootComponentData();
+    $module_data = $this->component_data;
 
     return array(
       '%module'       => $module_data['root_name'],
