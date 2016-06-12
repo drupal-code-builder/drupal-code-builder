@@ -21,7 +21,7 @@ class Form extends PHPClassFile {
     $components = array(
       // Request the form functions.
       'getFormId' => array(
-        'component_type' => 'PHPFunction',
+        'component_type' => 'PHPMethod',
         'code_file' => $this->name,
         'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => '{@inheritdoc}',
@@ -32,7 +32,7 @@ class Form extends PHPClassFile {
         'body_indent' => 2,
       ),
       'buildForm' => array(
-        'component_type' => 'PHPFunction',
+        'component_type' => 'PHPMethod',
         'code_file' => $this->name,
         'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => 'Form constructor.',
@@ -49,7 +49,7 @@ class Form extends PHPClassFile {
         'body_indent' => 2,
       ),
       'submitForm' => array(
-        'component_type' => 'PHPFunction',
+        'component_type' => 'PHPMethod',
         'code_file' => $this->name,
         'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => 'Form submission handler.',
