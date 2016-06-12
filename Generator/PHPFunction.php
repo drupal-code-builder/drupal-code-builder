@@ -67,6 +67,16 @@ class PHPFunction extends BaseGenerator {
   }
 
   /**
+   * Return a unique ID for this component.
+   *
+   * @return
+   *  The unique ID
+   */
+  public function getUniqueID() {
+    return implode(':', [$this->type, $this->name]);
+  }
+
+  /**
    * Return this component's parent in the component tree.
    */
   function containingComponent() {

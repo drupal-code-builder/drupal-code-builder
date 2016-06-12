@@ -13,26 +13,33 @@ namespace DrupalCodeBuilder\Generator;
 class AdminSettingsForm extends Form {
 
   /**
+   * Constructor method; sets the component data.
+   *
+   * @param $component_name
+   *   The identifier for the component.
+   * @param $component_data
+   *   (optional) An array of data for the component. Any missing properties
+   *   (or all if this is entirely omitted) are given default values. Valid
+   *   properties are:
+   *    - 'class': The name of the annotation class that defines the plugin
+   *      type, e.g. 'Drupal\Core\Entity\Annotation\EntityType'.
+   *      TODO: since the classnames are unique regardless of namespace, figure
+   *      out if there is a way of just specifying the classname.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    // Set some default properties.
+    $component_data += array(
+      'form_class_name' => 'AdminSettingsForm',
+    );
+
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function requestedComponentHandling() {
     return 'singleton';
-  }
-
-  /**
-   * Set properties relating to class name.
-   */
-  protected function setClassNames($component_name) {
-    // Form the full class name.
-    $class_name_pieces = array(
-      'Drupal',
-      '%module',
-      'Form',
-      'AdminSettingsForm',
-    );
-    $qualified_class_name = implode('\\', $class_name_pieces);
-
-    parent::setClassNames($qualified_class_name);
   }
 
   /**

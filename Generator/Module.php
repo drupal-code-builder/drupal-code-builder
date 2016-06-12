@@ -143,6 +143,13 @@ class Module extends RootComponent {
         'format' => 'boolean',
         'component' => 'AdminSettingsForm',
       ),
+      'forms' => array(
+        'label' => "Forms",
+        'description' => "Forms.",
+        'required' => FALSE,
+        'format' => 'compound',
+        'component' => 'Form',
+      ),
       'services' => array(
         'label' => "Services",
         'description' => 'A list of machine names of services for this module to provide.',

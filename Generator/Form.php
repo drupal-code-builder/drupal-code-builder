@@ -13,10 +13,94 @@ namespace DrupalCodeBuilder\Generator;
 class Form extends PHPClassFile {
 
   /**
+   * An array of data about injected services.
+   */
+  protected $injectedServices = [];
+
+  /**
+   * Constructor method; sets the component data.
+   *
+   * @param $component_name
+   *   The identifier for the component.
+   * @param $component_data
+   *   (optional) An array of data for the component. Any missing properties
+   *   (or all if this is entirely omitted) are given default values. Valid
+   *   properties are:
+   *    - 'class': The name of the annotation class that defines the plugin
+   *      type, e.g. 'Drupal\Core\Entity\Annotation\EntityType'.
+   *      TODO: since the classnames are unique regardless of namespace, figure
+   *      out if there is a way of just specifying the classname.
+   */
+  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+    // Set some default properties.
+    $component_data += array(
+      'injected_services' => [],
+      // TODO: should be in default value callback.
+      'form_id' => $root_generator->component_data['root_name'] . '_' . strtolower($component_data['form_class_name']),
+    );
+
+    // TODO: this should be done in a property processing callback.
+    $component_data['form_class_name'] = ucfirst($component_data['form_class_name']);
+
+    //ddpr($component_data);
+
+    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  }
+
+  /**
+   * Return a unique ID for this component.
+   *
+   * @return
+   *  The unique ID
+   */
+  public function getUniqueID() {
+    return $this->type . ':' . $this->component_data['form_id'];
+  }
+
+  /**
+   * Define the component data this component needs to function.
+   */
+  protected static function componentDataDefinition() {
+    return array(
+      'form_class_name' => array(
+        'label' => 'Form class name',
+        'required' => TRUE,
+      ),
+      'injected_services' => array(
+        'label' => 'Injected services',
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+
+          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+
+          return $options;
+        },
+      ),
+    );
+  }
+
+  /**
+   * Set properties relating to class name.
+   */
+  protected function setClassNames($component_name) {
+    // Form the full class name.
+    $class_name_pieces = array(
+      'Drupal',
+      '%module',
+      'Form',
+      $this->component_data['form_class_name'],
+    );
+    $qualified_class_name = implode('\\', $class_name_pieces);
+
+    parent::setClassNames($qualified_class_name);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function requiredComponents() {
-    $form_name = $this->getFormName();
+    $form_name = $this->component_data['form_id'];
 
     $components = array(
       // Request the form functions.
@@ -59,7 +143,140 @@ class Form extends PHPClassFile {
       ),
     );
 
+    foreach ($this->component_data['injected_services'] as $service_id) {
+      $components[$this->name . '_' . $service_id] = array(
+        'component_type' => 'InjectedService',
+        'container' => $this->getUniqueID(),
+        'service_id' => $service_id,
+      );
+    }
+
     return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function buildComponentContents($children_contents) {
+    // TEMPORARY, until Generate task handles returned contents.
+    $this->functions = $this->filterComponentContentsForRole($children_contents, 'function');
+    $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
+    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
+
+    return array();
+  }
+
+  /**
+   * Return the body of the class's code.
+   */
+  protected function class_code_body() {
+    $code = [];
+
+    $code[] = '';
+
+    // Injected services.
+    // TODO: refactor this along with Plugin to a parent class.
+    if (!empty($this->injectedServices)) {
+      foreach ($this->injectedServices as $service_info) {
+        $var_doc = $this->docBlock([
+          $service_info['description'] . '.',
+          '',
+          '@var ' . $service_info['interface']
+        ]);
+        $code = array_merge($code, $var_doc);
+        $code[] = 'protected $' . $service_info['property_name'] . ';';
+        $code[] = '';
+      }
+
+      // Class constructor.
+
+      // TODO: cleaner system for adding methods!
+      // __construct() method
+      $code = array_merge($code, $this->codeBodyClassMethodConstruct());
+
+      // create() method.
+      $code = array_merge($code, $this->codeBodyClassMethodCreate());
+    }
+
+    // Function data has been set by buildComponentContents().
+    foreach ($this->functions as $component_name => $function_lines) {
+      $code = array_merge($code, $function_lines);
+      // Blank line after the function.
+      $code[] = '';
+    }
+
+    // Indent all the class code.
+    // TODO: is there a nice way of doing indents?
+    $code = array_map(function ($line) {
+      return empty($line) ? $line : '  ' . $line;
+    }, $code);
+
+    return $code;
+  }
+
+  /**
+   * Creates the code lines for the __construct() method.
+   */
+  protected function codeBodyClassMethodConstruct() {
+    $parameters = [];
+    foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+      $parameters[] = $service_parameter;
+    }
+
+    $code = $this->buildMethodHeader(
+      '__construct',
+      $parameters,
+      [
+        'docblock_first_line' => "Creates a {$this->plain_class_name} instance.",
+        'prefixes' => ['public'],
+      ]
+    );
+
+    foreach ($this->injectedServices as $service_info) {
+      $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+    }
+    $code[] = '}';
+    $code[] = '';
+    return $code;
+  }
+
+  /**
+   * Creates the code lines for the create() method.
+   */
+  protected function codeBodyClassMethodCreate() {
+    $parameters = [
+      [
+        'name' => 'container',
+        'typehint' => '\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
+      ],
+    ];
+
+    $code = $this->buildMethodHeader(
+      'create',
+      $parameters,
+      [
+        'inheritdoc' => TRUE,
+        'prefixes' => ['public', 'static'],
+      ]
+    );
+
+    $code[] = '  return new static(';
+
+    $container_extraction_lines = [];
+    foreach ($this->childContentsGrouped['container_extraction'] as $container_extraction) {
+      $container_extraction_lines[] = '    ' . $container_extraction;
+    }
+
+    // Remove the last comma.
+    end($container_extraction_lines);
+    $last_line_key = key($container_extraction_lines);
+    $container_extraction_lines[$last_line_key] = rtrim($container_extraction_lines[$last_line_key], ',');
+    $code = array_merge($code, $container_extraction_lines);
+
+    $code[] = '  );';
+    $code[] = '}';
+    $code[] = '';
+    return $code;
   }
 
 }
