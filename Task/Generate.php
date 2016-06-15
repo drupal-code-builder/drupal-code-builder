@@ -94,6 +94,10 @@ class Generate extends Base {
    * Finally, the array should be passed to generateComponent() to generate the
    * code.
    *
+   * @param $include_computed
+   *  (optional) Boolean indicating whether to include computed properties.
+   *  Default value is FALSE, as UIs don't need to work with these.
+   *
    * @return
    *  An array containing information about the properties our root component
    *  needs in the $component_data array to pass to generateComponent(). Keys
@@ -112,9 +116,9 @@ class Generate extends Base {
    * For the full documentation for all properties, see
    * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
-  public function getRootComponentDataInfo() {
+  public function getRootComponentDataInfo($include_computed = FALSE) {
     $class = $this->getGeneratorClass($this->base);
-    return $class::getComponentDataInfo();
+    return $class::getComponentDataInfo($include_computed);
   }
 
   /**
@@ -211,12 +215,10 @@ class Generate extends Base {
    *  The component data array.
    */
   public function processComponentData($component_data_info, &$component_data) {
-    $class = $this->getGeneratorClass($this->base);
-
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
-    $component_data_info_original = $class::getComponentDataInfo(TRUE);
+    $component_data_info_original = $this->getRootComponentDataInfo(TRUE);
     foreach ($component_data_info_original as $property_name => $property_info) {
       if (!empty($property_info['computed'])) {
         $component_data_info[$property_name] = $property_info;
