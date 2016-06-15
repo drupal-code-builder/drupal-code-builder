@@ -26,13 +26,13 @@ class AdminSettingsForm extends Form {
    *      TODO: since the classnames are unique regardless of namespace, figure
    *      out if there is a way of just specifying the classname.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'form_class_name' => 'AdminSettingsForm',
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

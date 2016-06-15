@@ -35,13 +35,13 @@ class Form7 extends BaseGenerator {
    *      - 'code_file': The code file to place this form in. This may contain
    *        placeholders.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'code_file' => '%module.module',
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

@@ -24,8 +24,8 @@ class InfoProperty extends BaseGenerator {
    *      - 'property_value': The value of the property. Note that arrays are
    *        not supported.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  function __construct($component_name, $component_data, $root_generator) {
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

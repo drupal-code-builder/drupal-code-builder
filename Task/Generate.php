@@ -673,7 +673,7 @@ class Generate extends Base {
       )));
     }
 
-    $generator = new $class($component_name, $component_data, $this, $this->root_generator);
+    $generator = new $class($component_name, $component_data, $this->root_generator);
     // TODO: add to constructor.
     $generator->type = $component_type;
 

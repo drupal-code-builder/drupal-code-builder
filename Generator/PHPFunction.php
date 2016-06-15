@@ -53,7 +53,7 @@ class PHPFunction extends BaseGenerator {
    *    - 'body_indent': (options) The number of spaces to add to the start of
    *      each line, if 'body' is an array.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set defaults.
     $component_data += array(
       'code_file' => '%module.module',
@@ -63,7 +63,7 @@ class PHPFunction extends BaseGenerator {
 
     $this->code_file = $component_data['code_file'];
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

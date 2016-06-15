@@ -21,13 +21,13 @@ class ThemeHook extends BaseGenerator {
    *   An array of data for the component. Valid properties are:
    *    - 'theme_hook_name': The machine name of the theme hook.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'theme_hook_name' => $component_name,
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

@@ -89,8 +89,8 @@ class Module extends RootComponent {
    *      as the return from requiredComponents(), thus keyed by component name,
    *      with values either a component type or an array of data.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  function __construct($component_name, $component_data, $root_generator) {
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

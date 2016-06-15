@@ -28,7 +28,7 @@ class RouterItem8 extends RouterItem {
    *    These default to the plain '_controller' with a controller class of
    *   {ROUTE}Controller.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Create a controller name from the route name.
     $controller_class_name = $this->toCamel($component_name) . 'Controller';
     $controller_qualified_class_name = implode('\\', [
@@ -46,7 +46,7 @@ class RouterItem8 extends RouterItem {
       'controller_qualified_class' => $controller_qualified_class_name,
     ];
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

@@ -24,8 +24,8 @@ class Profile extends RootComponent {
    */
   public static $sanity_level = 'none';
 
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  function __construct($component_name, $component_data, $root_generator) {
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

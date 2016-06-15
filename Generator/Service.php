@@ -17,12 +17,12 @@ class Service extends PHPClassFile {
    *
    * The component name is taken to be the service ID.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Prefix the service name with the module name.
     $component_data['original_service_name'] = $component_data['service_name'];
     $component_data['service_name'] = $root_generator->component_data['root_name'] . '.' . $component_data['service_name'];
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

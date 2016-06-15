@@ -26,13 +26,13 @@ class HookImplementation extends PHPFunction {
    *     - 'code_file': The name of the file this hook should be placed in, with
    *        tokens.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set defaults.
     $component_data += array(
       'doxygen_first' => $this->hook_doxygen_text($component_data['hook_name']),
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
 

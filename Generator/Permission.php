@@ -27,7 +27,7 @@ class Permission extends BaseGenerator {
    *    - 'restrict_access': (optional) Whether to apply the 'restrict_access'
    *      property to the permission.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       // TEMPORARY. Will change when repeat component handling changes in
@@ -35,7 +35,7 @@ class Permission extends BaseGenerator {
       'permission' => $component_name,
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

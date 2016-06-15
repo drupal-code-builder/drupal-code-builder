@@ -173,20 +173,14 @@ abstract class BaseGenerator {
    *   $task->getRootGenerator() (for now!).
    *   TODO: check whether components really need to do this, as removing this
    *   would simplify things!
-   * @param $generate_task
-   *   The Generate task object.
    * @param $root_generator
    *   The root Generator object.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     $this->name = $component_name;
     $this->component_data = $component_data;
 
-    // Each generator needs a link back to the factory to be able to make more
-    // generators, and also so it can access the environment.
-    // TODO: remove these and go via the factory instead, to simplify class
-    // debug output.
-    $this->task = $generate_task;
+    // TODO: Remove this to simplify how generator classes get their data.
     $this->root_component = $root_generator;
   }
 

@@ -43,7 +43,7 @@ class Plugin extends PHPClassFile {
    *      TODO: since the classnames are unique regardless of namespace, figure
    *      out if there is a way of just specifying the classname.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'injected_services' => [],
@@ -61,7 +61,7 @@ class Plugin extends PHPClassFile {
 
     $component_data['plugin_type_data'] = $plugin_data;
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

@@ -15,13 +15,13 @@ class AdminSettingsForm7 extends Form7 {
   /**
    * Override the parent to set the code file.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'code_file' => '%module.admin.inc',
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

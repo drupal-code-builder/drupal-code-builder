@@ -36,8 +36,8 @@ class Hooks extends BaseGenerator {
    *    - 'hooks': An array of requested hooks, where the keys are the long hook
    *      names and the values are TRUE.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+  function __construct($component_name, $component_data, $root_generator) {
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

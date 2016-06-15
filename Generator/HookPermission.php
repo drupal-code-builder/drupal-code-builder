@@ -33,13 +33,13 @@ class HookPermission extends HookImplementation {
    *   Valid properties are:
    *      - 'permissions': (optional) An array of permission names.
    */
-  function __construct($component_name, $component_data, $generate_task, $root_generator) {
+  function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'hook_name' => 'hook_permission',
     );
 
-    parent::__construct($component_name, $component_data, $generate_task, $root_generator);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**
