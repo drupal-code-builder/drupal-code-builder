@@ -32,8 +32,6 @@ class InjectedService extends BaseGenerator {
     $service_data['variable_name'] = implode('_', $id_pieces);
     $id_pieces_first = array_shift($id_pieces);
     $service_data['property_name'] = implode('', array_merge([$id_pieces_first], array_map('ucfirst', $id_pieces)));
-    $interface_pieces = explode('\\', $service_data['interface']);
-    $service_data['unqualified_interface'] = array_pop($interface_pieces);
 
     return [
       'service' => [
