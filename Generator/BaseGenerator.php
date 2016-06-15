@@ -346,10 +346,7 @@ abstract class BaseGenerator {
    *  The base component.
    */
   function getRootComponentData() {
-    // Get the root component from the Task, which is the autority on this.
-    $root_component = $this->task->getRootGenerator();
-
-    return $root_component->component_data;
+    return $this->root_component->component_data;
   }
 
   /**
