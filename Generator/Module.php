@@ -338,7 +338,9 @@ class Module extends RootComponent {
     }
 
     // Modules always have a .info file.
-    $components['info'] = 'Info';
+    $components['info'] = [
+      'component_type' => 'Info',
+    ];
 
     // Add hook_help if help text is given.
     if (!empty($this->component_data['module_help_text'])) {
