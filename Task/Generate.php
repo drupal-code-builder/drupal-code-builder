@@ -157,29 +157,8 @@ class Generate extends Base {
       }
     }
 
-    // Set a default value, if one is available.
-    // We don't recurse into compound properties to set defaults there, as this
-    // then causes UIs to create a first item even if the user doesn't want one
-    // at all.
-    if (isset($property_info['default'])) {
-      // The default property is either an anonymous function, or
-      // a plain value.
-      if (is_callable($property_info['default'])) {
-        $default_callback = $property_info['default'];
-        $default_value = $default_callback($component_data);
-      }
-      else {
-        $default_value = $property_info['default'];
-      }
-    }
-    else {
-      // Always set the property name, even if it's something basically empty.
-      // (This allows UIs to rely on this and set it as their default no matter
-      // what.)
-      $default_value = $property_info['format'] == 'array' ? array() : NULL;
-    }
-
-    $component_data[$property_name] = $default_value;
+    // Set a default value.
+    $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'prepare');
   }
 
   /**
@@ -229,12 +208,12 @@ class Generate extends Base {
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
-      $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+      $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'process');
 
       if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
         foreach ($component_data[$property_name] as $delta => $delta_data) {
           foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
-            $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta]);
+            $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta], 'process');
           }
         }
       }
@@ -309,8 +288,12 @@ class Generate extends Base {
    *  The array of component data, or for child properties, the item array that
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
+   * @param $stage
+   *  Indicates the stage at which this has been called:
+   *    - 'prepare': Called by prepareComponentData().
+   *    - 'process': Called by processComponentData().
    */
-  protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+  protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local, $stage) {
     // Skip a property that has a set value.
     if (!empty($component_data_local[$property_name])) {
       return;
@@ -332,6 +315,16 @@ class Generate extends Base {
         $default_value = $property_info['default'];
       }
       $component_data_local[$property_name] = $default_value;
+    }
+    else {
+      if ($stage == 'prepare') {
+        // In the prepare stage, always set the property name, even if it's
+        // something basically empty.
+        // (This allows UIs to rely on this and set it as their default no matter
+        // what.)
+        $default_value = $property_info['format'] == 'array' ? array() : NULL;
+        $component_data_local[$property_name] = $default_value;
+      }
     }
   }
 
@@ -471,7 +464,8 @@ class Generate extends Base {
           $class = $this->getGeneratorClass($component_type);
           $component_data_info = $class::getComponentDataInfo(TRUE);
           foreach ($component_data_info as $property_name => $property_info) {
-            $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+            // TODO: fix hack on $stage parameter!
+            $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'process');
           }
 
           // Instantiate the generator.
