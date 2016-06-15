@@ -174,6 +174,8 @@ class Generate extends Base {
     }
     else {
       // Always set the property name, even if it's something basically empty.
+      // (This allows UIs to rely on this and set it as their default no matter
+      // what.)
       $default_value = $property_info['format'] == 'array' ? array() : NULL;
     }
 
