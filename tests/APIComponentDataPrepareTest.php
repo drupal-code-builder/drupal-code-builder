@@ -65,7 +65,7 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
         'required' => FALSE,
         'format' => 'string',
       ],
-      'compound' => [
+      'compound_defaults' => [
         'label' => 'Compound properties',
         'properties' => [
           'compound_has_default_fixed' => [
@@ -84,6 +84,11 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
             'required' => FALSE,
             'format' => 'string',
           ],
+        ],
+      ],
+      'compound_options' => [
+        'label' => 'Compound properties',
+        'properties' => [
           'compound_has_options' => [
             'label' => 'Label',
             'options' => function(&$property_info) {
@@ -147,10 +152,10 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
       "The options were set in the component data info.");
 
     // Compound properties.
-    $generate->prepareComponentDataProperty('compound', $component_data_info['compound'], $component_data);
-    $this->assertArrayHasKey('A', $component_data_info['compound']['properties']['compound_has_options']['options'],
+    $generate->prepareComponentDataProperty('compound_options', $component_data_info['compound_options'], $component_data);
+    $this->assertArrayHasKey('A', $component_data_info['compound_options']['properties']['compound_has_options']['options'],
       "The options were set in the component data info.");
-    $this->assertArrayHasKey('B', $component_data_info['compound']['properties']['compound_has_options']['options'],
+    $this->assertArrayHasKey('B', $component_data_info['compound_options']['properties']['compound_has_options']['options'],
       "The options were set in the component data info.");
   }
 
