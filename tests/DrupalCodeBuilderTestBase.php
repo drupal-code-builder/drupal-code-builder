@@ -592,4 +592,5 @@ function ddpr($data, $message = '') {
     print_r("\n" . $message . ':');
   }
   print_r($data);
+  print_r("\n");
 }
