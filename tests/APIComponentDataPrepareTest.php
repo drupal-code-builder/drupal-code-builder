@@ -29,17 +29,17 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
     // A test array of component data info.
     $component_data_info = [
       'no_default_string' => [
-        'label' => 'No default',
+        'label' => 'Label',
         'format' => 'string',
         'required' => FALSE,
       ],
       'no_default_array' => [
-        'label' => 'No default',
+        'label' => 'Label',
         'format' => 'array',
         'required' => FALSE,
       ],
       'has_default_fixed' => [
-        'label' => 'Module machine name',
+        'label' => 'Label',
         'default' => 'has_default_default',
         // We don't go through the system to fill in default info properties
         // here, so need them hardcoded.
@@ -47,7 +47,7 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
         'format' => 'string',
       ],
       'has_default_callable' => [
-        'label' => 'Module machine name',
+        'label' => 'Label',
         'default' => function($component_data) {
           return $component_data['has_default_fixed'] . '_called';
         },
@@ -55,7 +55,7 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
         'format' => 'string',
       ],
       'has_options' => [
-        'label' => 'Module machine name',
+        'label' => 'Label',
         'options' => function(&$property_info) {
           return [
             'A' => 'option_a',
@@ -69,7 +69,7 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
         'label' => 'Compound properties',
         'properties' => [
           'compound_has_default_fixed' => [
-            'label' => 'Module machine name',
+            'label' => 'Label',
             'default' => 'compound_has_default_fixed_default_value',
             // We don't go through the system to fill in default info properties
             // here, so need them hardcoded.
@@ -77,7 +77,7 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
             'format' => 'string',
           ],
           'compound_has_default_callable' => [
-            'label' => 'Module machine name',
+            'label' => 'Label',
             'default' => function($component_data) {
               return $component_data['compound_has_default_fixed'] . '_called';
             },
@@ -85,7 +85,7 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
             'format' => 'string',
           ],
           'compound_has_options' => [
-            'label' => 'Module machine name',
+            'label' => 'Label',
             'options' => function(&$property_info) {
               return [
                 'A' => 'option_a',
