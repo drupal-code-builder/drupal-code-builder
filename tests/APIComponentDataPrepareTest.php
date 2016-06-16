@@ -71,8 +71,6 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
           'compound_has_default_fixed' => [
             'label' => 'Label',
             'default' => 'compound_has_default_fixed_default_value',
-            // We don't go through the system to fill in default info properties
-            // here, so need them hardcoded.
             'required' => FALSE,
             'format' => 'string',
           ],
@@ -119,13 +117,13 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
     $this->assertArrayHasKey('no_default_string', $component_data,
       "The empty string default value was set in the component data.");
     $this->assertEquals($component_data['no_default_string'], '',
-      "The fixed default value was set in the component data.");
+      "The empty string default value was set in the component data.");
 
     $generate->prepareComponentDataProperty('no_default_array', $component_data_info['no_default_array'], $component_data);
     $this->assertArrayHasKey('no_default_array', $component_data,
       "The empty array default value was set in the component data.");
     $this->assertEquals($component_data['no_default_array'], [],
-      "The fixed default value was set in the component data.");
+      "The empty array default value was set in the component data.");
 
     // Properties with an actual default value.
     $generate->prepareComponentDataProperty('has_default_fixed', $component_data_info['has_default_fixed'], $component_data);
