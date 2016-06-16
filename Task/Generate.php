@@ -134,6 +134,11 @@ class Generate extends Base {
    * The default value is placed into $component_data[$property_name]; the
    * options if any are placed into $property_info['options'].
    *
+   * Compound properties can either be called as a single property, in which
+   * case only the options will be set, or can be called for each child property
+   * with a child item data array for $component_data. This may be repeated for
+   * multiple child items.
+   *
    * @param $property_name
    *  The name of the property.
    * @param &$property_info
@@ -156,9 +161,19 @@ class Generate extends Base {
         $this->prepareComponentDataPropertyCreateOptions($child_property_name, $child_property_info);
       }
     }
+    // Argh, deal with PHP's wacky behaviour with refereced loop variables.
+    unset($child_property_info);
 
     // Set a default value.
     $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'prepare');
+    // Handle compound property child items if they are present.
+    if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
+      foreach ($component_data[$property_name] as $delta => $delta_data) {
+        foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
+          $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta], 'prepare');
+        }
+      }
+    }
   }
 
   /**
@@ -175,6 +190,11 @@ class Generate extends Base {
   protected function prepareComponentDataPropertyCreateOptions($property_name, &$property_info) {
     if (isset($property_info['options'])) {
       $options_callback = $property_info['options'];
+      // We may have prepared this options array from a callback previously,
+      // when preparing multiple child items of a compound property.
+      if (!is_callable($options_callback)) {
+        return;
+      }
       $options = $options_callback($property_info);
 
       $property_info['options'] = $options;
@@ -320,8 +340,8 @@ class Generate extends Base {
       if ($stage == 'prepare') {
         // In the prepare stage, always set the property name, even if it's
         // something basically empty.
-        // (This allows UIs to rely on this and set it as their default no matter
-        // what.)
+        // (This allows UIs to rely on this and set it as their default no
+        // matter what.)
         $default_value = $property_info['format'] == 'array' ? array() : NULL;
         $component_data_local[$property_name] = $default_value;
       }

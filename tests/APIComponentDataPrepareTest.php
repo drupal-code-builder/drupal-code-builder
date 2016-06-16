@@ -73,6 +73,14 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
             'default' => 'compound_has_default_fixed_default_value',
             'required' => FALSE,
             'format' => 'string',
+            // These are here to test that repeated preparing of this property
+            // for several child items handles only expanding the options once.
+            'options' => function(&$property_info) {
+              return [
+                'A' => 'option_a',
+                'B' => 'option_b',
+              ];
+            },
           ],
           'compound_has_default_callable' => [
             'label' => 'Label',
@@ -139,7 +147,50 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
       "The default value from a callable was set in the component data.");
 
     // Compound properties.
-    // TODO: these don't get set yet!
+    // Initialize a child item for the compound property: defaults will only be
+    // set if this exists.
+    $component_data['compound_defaults'][0] = [];
+    $generate->prepareComponentDataProperty(
+      'compound_has_default_fixed',
+      $component_data_info['compound_defaults']['properties']['compound_has_default_fixed'],
+      $component_data['compound_defaults'][0]
+    );
+    $this->assertArrayHasKey('compound_has_default_fixed', $component_data['compound_defaults'][0],
+      "The fixed default value was set in the component data child item.");
+    $this->assertEquals('compound_has_default_fixed_default_value', $component_data['compound_defaults'][0]['compound_has_default_fixed'],
+      "The fixed default value was set in the component data child item.");
+
+    $generate->prepareComponentDataProperty(
+      'compound_has_default_callable',
+      $component_data_info['compound_defaults']['properties']['compound_has_default_callable'],
+      $component_data['compound_defaults'][0]
+    );
+    $this->assertArrayHasKey('compound_has_default_callable', $component_data['compound_defaults'][0],
+      "The  were set in the component data info.");
+    $this->assertEquals('compound_has_default_fixed_default_value_called', $component_data['compound_defaults'][0]['compound_has_default_callable'],
+      "The options were set in the component data info.");
+
+    // Create a 2nd child to check this works.
+    $component_data['compound_defaults'][1] = [];
+    $generate->prepareComponentDataProperty(
+      'compound_has_default_fixed',
+      $component_data_info['compound_defaults']['properties']['compound_has_default_fixed'],
+      $component_data['compound_defaults'][1]
+    );
+    $this->assertArrayHasKey('compound_has_default_fixed', $component_data['compound_defaults'][1],
+      "The fixed default value was set in the component data child item.");
+    $this->assertEquals('compound_has_default_fixed_default_value', $component_data['compound_defaults'][1]['compound_has_default_fixed'],
+      "The fixed default value was set in the component data child item.");
+
+    $generate->prepareComponentDataProperty(
+      'compound_has_default_callable',
+      $component_data_info['compound_defaults']['properties']['compound_has_default_callable'],
+      $component_data['compound_defaults'][1]
+    );
+    $this->assertArrayHasKey('compound_has_default_callable', $component_data['compound_defaults'][1],
+      "The  were set in the component data info.");
+    $this->assertEquals('compound_has_default_fixed_default_value_called', $component_data['compound_defaults'][1]['compound_has_default_callable'],
+      "The options were set in the component data info.");
 
     // Component data info options get filled out.
     // Simple properties.
@@ -150,6 +201,8 @@ class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
       "The options were set in the component data info.");
 
     // Compound properties.
+    // If we're interested in options, we can prepare the compound property in
+    // one go.
     $generate->prepareComponentDataProperty('compound_options', $component_data_info['compound_options'], $component_data);
     $this->assertArrayHasKey('A', $component_data_info['compound_options']['properties']['compound_has_options']['options'],
       "The options were set in the component data info.");
