@@ -25,7 +25,7 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
   /**
    * Test Plugins component.
    */
-  function testPluginsGenerationTests() {
+  function testPluginsGeneration() {
     $permission_name = 'my permission name';
 
     // Create a module.
