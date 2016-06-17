@@ -102,6 +102,7 @@ class Plugin extends PHPClassFile {
       ),
       'plugin_name' => array(
         'label' => 'Plugin name',
+        // TODO: say in help text that the module name will be prepended for you!
         'required' => TRUE,
         'default' => function($component_data) {
           // Keep a running count of the plugins of each type, so we can offer
