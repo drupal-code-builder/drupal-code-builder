@@ -103,9 +103,19 @@ class Plugin extends PHPClassFile {
       'plugin_name' => array(
         'label' => 'Plugin name',
         'required' => TRUE,
-        // NOT WORKING!
-        'Xdefault' => function($component_data) {
-          return $component_data['root_name'] . 'PANTS';
+        'default' => function($component_data) {
+          // Keep a running count of the plugins of each type, so we can offer
+          // a default in the form 'block_one', 'block_two'.
+          $plugin_type = $component_data['plugin_type'];
+          static $counters;
+          if (!isset($counters[$plugin_type])) {
+            $counters[$plugin_type] = 0;
+          }
+          $counters[$plugin_type]++;
+
+          $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
+
+          return $component_data['plugin_type'] . '_' . $formatter->format($counters[$plugin_type]);
         },
       ),
       'injected_services' => array(
