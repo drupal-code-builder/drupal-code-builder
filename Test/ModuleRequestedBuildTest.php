@@ -5,8 +5,7 @@
  * Contains ModuleRequestedBuildTest.
  */
 
-// Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
+namespace DrupalCodeBuilder\Test;
 
 /**
  * Test the functionality for requesting only certain files to be generated.

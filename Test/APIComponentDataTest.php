@@ -5,8 +5,7 @@
  * Contains APIComponentDataTest.
  */
 
-// Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
+namespace DrupalCodeBuilder\Test;
 
 /**
  * Tests the AdminSettingsForm generator class.

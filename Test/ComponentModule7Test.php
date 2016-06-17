@@ -2,24 +2,23 @@
 
 /**
  * @file
- * Contains ComponentModule8Test.
+ * Contains ComponentModule7Test.
  */
 
-// Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
+namespace DrupalCodeBuilder\Test;
 
 /**
  * Tests the AdminSettingsForm generator class.
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/ComponentModule8Test.php
+ *   vendor/phpunit/phpunit/phpunit  tests/ComponentModule7Test.php
  * @endcode
  */
-class ComponentModule8Test extends DrupalCodeBuilderTestBase {
+class ComponentModule7Test extends DrupalCodeBuilderTestBase {
 
   protected function setUp() {
-    $this->setupDrupalCodeBuilder(8);
+    $this->setupDrupalCodeBuilder(7);
   }
 
   /**
@@ -27,7 +26,7 @@ class ComponentModule8Test extends DrupalCodeBuilderTestBase {
    */
   function testNoOptions() {
     // Create a module.
-    $module_name = 'testmodule8a';
+    $module_name = 'testmodule';
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
@@ -40,9 +39,10 @@ class ComponentModule8Test extends DrupalCodeBuilderTestBase {
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
-    $this->assertCount(1, $files, "One file is returned.");
+    $this->assertCount(2, $files, "Two files are returned.");
 
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
   }
 
   /**
@@ -50,7 +50,7 @@ class ComponentModule8Test extends DrupalCodeBuilderTestBase {
    */
   function testHelptextOption() {
     // Create a module.
-    $module_name = 'testmodule8b';
+    $module_name = 'testmodule';
     $help_text = 'This is the test help text';
     $module_data = array(
       'base' => 'module',
@@ -68,7 +68,7 @@ class ComponentModule8Test extends DrupalCodeBuilderTestBase {
     $this->assertCount(2, $files, "Two files are returned.");
 
     $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

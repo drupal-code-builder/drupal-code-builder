@@ -5,8 +5,7 @@
  * Contains Basic7Test.
  */
 
-// Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
+namespace DrupalCodeBuilder\Test;
 
 /**
  * Basic test class.

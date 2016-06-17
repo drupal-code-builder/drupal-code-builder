@@ -5,8 +5,7 @@
  * Contains DrupalCodeBuilderAssertionsTest.
  */
 
-// Can't be bothered to figure out autoloading for tests.
-require_once __DIR__ . '/DrupalCodeBuilderTestBase.php';
+namespace DrupalCodeBuilder\Test;
 
 /**
  * Tests the custom assertions in our base tests class.
@@ -38,7 +37,7 @@ class DrupalCodeBuilderAssertionsTest extends DrupalCodeBuilderTestBase {
         self::fail("assertNoTrailingWhitespace() should fail for '$code'");
       }
     }
-    catch (PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         self::fail("assertNoTrailingWhitespace() should pass for '$code'");
@@ -77,7 +76,7 @@ class DrupalCodeBuilderAssertionsTest extends DrupalCodeBuilderTestBase {
         self::fail("assertFunctionParameter() should fail for '$code'");
       }
     }
-    catch (PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         throw $e;
@@ -122,7 +121,7 @@ class DrupalCodeBuilderAssertionsTest extends DrupalCodeBuilderTestBase {
         self::fail("assertFunction() should fail for '$code'");
       }
     }
-    catch (PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         throw $e;

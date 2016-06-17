@@ -5,12 +5,14 @@
  * Contains DrupalCodeBuilderTestBase.
  */
 
+namespace DrupalCodeBuilder\Test;
+
 /**
  * Base class for PHPUnit tests.
  *
  * Contains helper methods and assertions.
  */
-abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
+abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
 
   /**
    * Perform the factory setup, spoofing in the given core major version.
@@ -154,7 +156,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
         // Count a successful line.
         $lines_count++;
       }
-      catch (PHPUnit_Framework_ExpectationFailedException $e) {
+      catch (\PHPUnit_Framework_ExpectationFailedException $e) {
         // Restore the line that didn't match.
         array_unshift($lines, $line);
 
@@ -201,7 +203,7 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
         // Count a successful middle line.
         $middle_lines_count++;
       }
-      catch (PHPUnit_Framework_ExpectationFailedException $e) {
+      catch (\PHPUnit_Framework_ExpectationFailedException $e) {
         // Catch a failed middle line assertion failure. This is expected to be
         // the last line, so don't allow this to fail the test.
         break;
@@ -584,13 +586,4 @@ abstract class DrupalCodeBuilderTestBase extends PHPUnit_Framework_TestCase {
     $this->assertRegExp($expected_regex, $string, $message);
   }
 
-}
-
-
-function ddpr($data, $message = '') {
-  if (!empty($message)) {
-    print_r("\n" . $message . ':');
-  }
-  print_r($data);
-  print_r("\n");
 }
