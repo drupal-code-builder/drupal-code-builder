@@ -79,7 +79,7 @@ class ComponentModule7Test extends DrupalCodeBuilderTestBase {
 
     $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
 
-    $this->assertHookDocblock($module_file, 'hook_help', "The module file contains the docblock for hook_menu().");
+    $this->assertHookDocblock('hook_help', $module_file, "The module file contains the docblock for hook_menu().");
     $this->assertHookImplementation($module_file, 'hook_help', $module_name, "The module file contains a function declaration that implements hook_menu().");
 
     $this->assertFunctionCode($module_file, $module_name . '_help', $help_text, "The hook_help() implementation contains the requested help text.");
