@@ -119,7 +119,7 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
     $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
 
     $this->assertMethod('__construct', $plugin_file, "The plugin class has a constructor method.");
-    $this->assertMethod('create', $plugin_file, "The plugin class has a constructor method.");
+    $this->assertMethod('create', $plugin_file, "The plugin class has a create method.");
   }
 
 }
