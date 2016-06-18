@@ -519,6 +519,13 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
     $matches = [];
     $function_body_regex = "^{$indent}(?:\w+ )?function {$function_name}.*?{\n(.*?)^{$indent}}";
     $match = preg_match("[$function_body_regex]ms", $string, $matches);
+
+    // We can't use assertRegExp() because we want to capture, so throw the
+    // failure exception ourselves if the match isn't found.
+    if (!isset($matches[1])) {
+      throw new \PHPUnit_Framework_ExpectationFailedException($message);
+    }
+
     $function_body = $matches[1];
 
     // Quote the code, as it may contain regex characters.
