@@ -484,14 +484,14 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Assert a string contains a class method declaration.
    *
-   * @param $string
-   *  The text to check for a function declaration.
    * @param $function_name
    *  The name of the function.
+   * @param $string
+   *  The text to check for a function declaration.
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertMethod($string, $function_name, $message = NULL) {
+  function assertMethod($function_name, $string, $message = NULL) {
     $this->assertFunction($function_name, $string, $message, 2);
   }
 
