@@ -8,9 +8,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator for module permissions.
- *
- * TODO: Change name to singular when D8 version is also changed.
+ * Generator for module permissions on Drupal 8.
  */
 class Permission extends BaseGenerator {
 
@@ -65,22 +63,12 @@ class Permission extends BaseGenerator {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
-  }
-
-  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
     $components = array(
-      'hooks' => array(
-        'component_type' => 'Hooks',
-        'hooks' => array(
-          'hook_permission' => TRUE,
-        ),
+      '%module.permissions.yml' => array(
+        'component_type' => 'YMLFile',
       ),
     );
 
@@ -91,27 +79,29 @@ class Permission extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'HookPermission:hook_permission';
+    return 'YMLFile:%module.permissions.yml';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
-    // Return code for a single permission item for the hook.
-    $code = array();
-
     $permission_name = $this->component_data['permission'];
-    $permission_description = $this->component_data['description'];
-    $code[] = "£permissions['$permission_name'] = array(";
-    $code[] = "  'title' => t('$permission_description'),";
-    $code[] = "  'description' => t('TODO: enter permission description'),";
-    $code[] = ");";
+
+    $permission_info = array(
+      'title' => $permission_name,
+      'description' => $this->component_data['description'],
+    );
+    if (!empty($this->component_data['restrict_access'])) {
+      $permission_info['restrict access'] = TRUE;
+    }
+
+    $yaml_data[$permission_name] = $permission_info;
 
     return [
       'permission' => [
-        'role' => 'item',
-        'content' => $code,
+        'role' => 'yaml',
+        'content' => $yaml_data,
       ],
     ];
   }

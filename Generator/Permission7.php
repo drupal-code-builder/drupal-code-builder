@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Contains DrupalCodeBuilder\Generator\Permission7.
+ */
+
+namespace DrupalCodeBuilder\Generator;
+
+/**
+ * Generator for module permission on Drupal 7 and prior.
+ */
+class Permission7 extends Permission {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function requestedComponentHandling() {
+    return 'repeat';
+  }
+
+  /**
+   * Return an array of subcomponent types.
+   */
+  public function requiredComponents() {
+    $components = array(
+      'hooks' => array(
+        'component_type' => 'Hooks',
+        'hooks' => array(
+          'hook_permission' => TRUE,
+        ),
+      ),
+    );
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function containingComponent() {
+    return 'HookPermission:hook_permission';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildComponentContents($children_contents) {
+    // Return code for a single permission item for the hook.
+    $code = array();
+
+    $permission_name = $this->component_data['permission'];
+    $permission_description = $this->component_data['description'];
+    $code[] = "£permissions['$permission_name'] = array(";
+    $code[] = "  'title' => t('$permission_description'),";
+    $code[] = "  'description' => t('TODO: enter permission description'),";
+    $code[] = ");";
+
+    return [
+      'permission' => [
+        'role' => 'item',
+        'content' => $code,
+      ],
+    ];
+  }
+
+}
