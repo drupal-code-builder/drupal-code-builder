@@ -19,12 +19,7 @@ class AdminSettingsForm extends Form {
    *   The identifier for the component.
    * @param $component_data
    *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values. Valid
-   *   properties are:
-   *    - 'class': The name of the annotation class that defines the plugin
-   *      type, e.g. 'Drupal\Core\Entity\Annotation\EntityType'.
-   *      TODO: since the classnames are unique regardless of namespace, figure
-   *      out if there is a way of just specifying the classname.
+   *   (or all if this is entirely omitted) are given default values.
    */
   function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
