@@ -285,14 +285,14 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Assert a string does not contain a PHP docblock for a hook.
    *
-   * @param $string
-   *  The text to check for a docblock.
    * @param $hook_name
    *  The full name of the hook, e.g. 'hook_menu'.
+   * @param $string
+   *  The text to check for a docblock.
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertNoHookDocblock($string, $hook_name, $message = NULL) {
+  function assertNoHookDocblock($hook_name, $string, $message = NULL) {
     $docblock =
       "/**\n" .
       " * Implements {$hook_name}().\n" .

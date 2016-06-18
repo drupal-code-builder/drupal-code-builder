@@ -74,7 +74,7 @@ class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
     $this->assertHookDocblock('hook_block_info', $module_file, "The module file contains the docblock for hook_block_info().");
     $this->assertHookImplementation($module_file, 'hook_block_info', $module_name, "The module file contains a function declaration that implements hook_block_info().");
 
-    $this->assertNoHookDocblock($module_file, 'hook_install', "The module file does not contain the docblock for hook_install().");
+    $this->assertNoHookDocblock('hook_install', $module_file, "The module file does not contain the docblock for hook_install().");
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];
@@ -88,8 +88,8 @@ class ComponentHooks7Test extends DrupalCodeBuilderTestBase {
     $this->assertHookDocblock('hook_install', $install_file, "The install file contains the docblock for hook_install().");
     $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
 
-    $this->assertNoHookDocblock($install_file, 'hook_menu', "The install file does not contain the docblock for hook_menu().");
-    $this->assertNoHookDocblock($install_file, 'hook_block_info', "The install file does not contain the docblock for hook_block_info().");
+    $this->assertNoHookDocblock('hook_menu', $install_file, "The install file does not contain the docblock for hook_menu().");
+    $this->assertNoHookDocblock('hook_block_info', $install_file, "The install file does not contain the docblock for hook_block_info().");
 
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
