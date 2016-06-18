@@ -47,7 +47,7 @@ class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];
     $this->assertNoTrailingWhitespace($admin_file, "The admin.inc file contains no trailing whitespace.");
-    $this->assertFunction($admin_file, "{$module_name}_settings_form", "The admin.inc file contains the settings form builder.");
+    $this->assertFunction("{$module_name}_settings_form", $admin_file, "The admin.inc file contains the settings form builder.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

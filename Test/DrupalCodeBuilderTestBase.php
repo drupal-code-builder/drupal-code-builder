@@ -409,17 +409,17 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Assert a string contains a function declaration.
    *
-   * @param $string
-   *  The text to check for a function declaration.
    * @param $function_name
    *  The name of the function.
+   * @param $string
+   *  The text to check for a function declaration.
    * @param $message = NULL
    *  The assertion message.
    * @param $indent
    *  (optional) The number of spaces the function declaration is indented by.
    *  Internal use only. Defaults to 0.
    */
-  function assertFunction($string, $function_name, $message = NULL, $indent = 0) {
+  function assertFunction($function_name, $string, $message = NULL, $indent = 0) {
     if (empty($message)) {
       $message = "The code string contains the function $function_name().";
     }
@@ -492,7 +492,7 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   function assertMethod($string, $function_name, $message = NULL) {
-    $this->assertFunction($string, $function_name, $message, 2);
+    $this->assertFunction($function_name, $string, $message, 2);
   }
 
   /**
@@ -541,7 +541,7 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
     $hook_short_name = substr($hook_name, 5);
     $function_name = $module_name . '_' . $hook_short_name;
 
-    $this->assertFunction($code, $function_name, $message);
+    $this->assertFunction($function_name, $code, $message);
   }
 
   /**

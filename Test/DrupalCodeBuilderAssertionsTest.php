@@ -115,7 +115,7 @@ class DrupalCodeBuilderAssertionsTest extends DrupalCodeBuilderTestBase {
    */
   public function testAssertFunction($code, $pass) {
     try {
-      $this->assertFunction($code, 'do_the_thing');
+      $this->assertFunction('do_the_thing', $code);
       // Assertion passed.
       if (!$pass) {
         self::fail("assertFunction() should fail for '$code'");
