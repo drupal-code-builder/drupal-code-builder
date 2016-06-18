@@ -50,7 +50,7 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
     $this->assertClassFileFormatting($form_file);
 
     $this->assertNamespace($form_file, ['Drupal', $module_name, 'Form'], "The form class file contains contains the expected namespace.");
-    $this->assertClass($form_file, 'AdminSettingsForm', "The form class file contains contains the expected class.");
+    $this->assertClass('AdminSettingsForm', $form_file, "The form class file contains contains the expected class.");
     // TODO: check the methods.
 
     // Check the .routing file.

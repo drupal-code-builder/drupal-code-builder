@@ -56,7 +56,7 @@ class ComponentTests7Test extends DrupalCodeBuilderTestBase {
     // Can't use assertWellFormedPHP() as the parent class does not exist here.
 
     $this->assertFileHeader($tests_file, "The install file contains the correct PHP open tag and file doc header");
-    $this->assertClass($tests_file, 'TestModuleTestCase', "The test class file contains the correct class");
+    $this->assertClass('TestModuleTestCase', $tests_file, "The test class file contains the correct class");
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];

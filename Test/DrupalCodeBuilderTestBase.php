@@ -305,14 +305,14 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
    *
    * TODO: add checking of inheritance, interfaces, namespace.
    *
-   * @param $string
-   *  The text to check for a class declaration.
    * @param $class_name
    *  The name of the class.
+   * @param $string
+   *  The text to check for a class declaration.
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertClass($string, $class_name, $message = NULL) {
+  function assertClass($class_name, $string, $message = NULL) {
     $expected_regex = "@^class {$class_name}@m";
 
     $this->assertRegExp($expected_regex, $string, $message);

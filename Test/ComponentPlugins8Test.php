@@ -67,7 +67,7 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
       'category' => NULL,
     ];
     $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
-    $this->assertClass($plugin_file, 'Alpha', "The plugin class file contains contains the expected class.");
+    $this->assertClass('Alpha', $plugin_file, "The plugin class file contains contains the expected class.");
   }
 
   /**
