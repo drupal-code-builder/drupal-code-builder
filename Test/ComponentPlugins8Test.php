@@ -111,8 +111,8 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
     $this->assertClassFileFormatting($plugin_file);
 
     $this->assertNamespace(['Drupal', $module_name, 'Plugin', 'Block'], $plugin_file, "The plugin class file contains contains the expected namespace.");
-    $this->assertClassImport($plugin_file, ['Drupal', 'Core', 'Plugin', 'ContainerFactoryPluginInterface']);
-    $this->assertClassImport($plugin_file, ['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface']);
+    $this->assertClassImport(['Drupal', 'Core', 'Plugin', 'ContainerFactoryPluginInterface'], $plugin_file);
+    $this->assertClassImport(['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface'], $plugin_file);
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',

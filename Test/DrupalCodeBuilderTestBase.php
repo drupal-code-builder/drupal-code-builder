@@ -339,15 +339,15 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Assert a string contains an import statement.
    *
-   * @param $string
-   *  The text to check for a class declaration.
    * @param $qualified_class_pieces
    *  The expected qualified class name, as an array of pieces to concatenate
    *  with '\'.
+   * @param $string
+   *  The text to check for a class declaration.
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  function assertClassImport($string, $qualified_class_pieces, $message = NULL) {
+  function assertClassImport($qualified_class_pieces, $string, $message = NULL) {
     $qualified_class = implode('\\', $qualified_class_pieces);
     $qualified_class = preg_quote($qualified_class);
     $expected_regex = "@^use {$qualified_class};@m";
