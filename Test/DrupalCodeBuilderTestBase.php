@@ -512,9 +512,12 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
       $message = "Expected function code was found in $function_name().";
     }
 
+    // Account for an indent if this is a class method.
+    $indent = '(?:  )?';
+
     // Extract the function's body from the whole string.
     $matches = [];
-    $function_body_regex = "^function {$function_name}.*?{\n(.*)^}";
+    $function_body_regex = "^{$indent}(?:\w+ )?function {$function_name}.*?{\n(.*?)^{$indent}}";
     $match = preg_match("[$function_body_regex]ms", $string, $matches);
     $function_body = $matches[1];
 
