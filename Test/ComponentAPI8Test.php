@@ -46,7 +46,7 @@ class ComponentAPI8Test extends DrupalCodeBuilderTestBase {
     $this->assertCount(2, $files, "Two files are returned.");
 
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .module file.");
-    $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has a .tokens.inc file.");
+    $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has an api.php file.");
 
     $api_file = $files["$module_name.api.php"];
     $this->assertNoTrailingWhitespace($api_file);
