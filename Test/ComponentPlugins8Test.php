@@ -25,8 +25,6 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
    * Test Plugins component.
    */
   function testPluginsGeneration() {
-    $permission_name = 'my permission name';
-
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -74,8 +72,6 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
    * Test Plugins component with injected services.
    */
   function testPluginsGenerationWithServices() {
-    $permission_name = 'my permission name';
-
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
