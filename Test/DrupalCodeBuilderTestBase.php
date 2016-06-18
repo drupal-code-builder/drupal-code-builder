@@ -321,14 +321,14 @@ abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Assert a string contains a namespace declaration.
    *
-   * @param $string
-   *  The text to check for a class declaration.
    * @param $namespace_pieces
    *  A PHP namespace, as an array of pieces to concatenate with '\'.
+   * @param $string
+   *  The text to check for a class declaration.
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertNamespace($string, $namespace_pieces, $message = NULL) {
+  function assertNamespace($namespace_pieces, $string, $message = NULL) {
     $namespace = implode('\\', $namespace_pieces);
     $namespace = preg_quote($namespace);
     $expected_regex = "@^namespace {$namespace};@m";

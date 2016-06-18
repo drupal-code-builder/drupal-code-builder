@@ -49,7 +49,7 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
     $this->assertNoTrailingWhitespace($form_file, "The form class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($form_file);
 
-    $this->assertNamespace($form_file, ['Drupal', $module_name, 'Form'], "The form class file contains contains the expected namespace.");
+    $this->assertNamespace(['Drupal', $module_name, 'Form'], $form_file, "The form class file contains contains the expected namespace.");
     $this->assertClass('AdminSettingsForm', $form_file, "The form class file contains contains the expected class.");
     // TODO: check the methods.
 

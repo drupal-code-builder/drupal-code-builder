@@ -58,7 +58,7 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
-    $this->assertNamespace($plugin_file, ['Drupal', $module_name, 'Plugin', 'Block'], "The plugin class file contains contains the expected namespace.");
+    $this->assertNamespace(['Drupal', $module_name, 'Plugin', 'Block'], $plugin_file, "The plugin class file contains contains the expected namespace.");
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',
@@ -110,7 +110,7 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
-    $this->assertNamespace($plugin_file, ['Drupal', $module_name, 'Plugin', 'Block'], "The plugin class file contains contains the expected namespace.");
+    $this->assertNamespace(['Drupal', $module_name, 'Plugin', 'Block'], $plugin_file, "The plugin class file contains contains the expected namespace.");
     $this->assertClassImport($plugin_file, ['Drupal', 'Core', 'Plugin', 'ContainerFactoryPluginInterface']);
     $this->assertClassImport($plugin_file, ['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface']);
 
