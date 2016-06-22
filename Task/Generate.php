@@ -214,12 +214,19 @@ class Generate extends Base {
    *  The complete component data info.
    * @param &$component_data
    *  The component data array.
+   * @param $component_type
+   *  (optional) Internal only. The component type for the data being processed.
    */
-  public function processComponentData($component_data_info, &$component_data) {
+  public function processComponentData($component_data_info, &$component_data, $component_type = NULL) {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
-    $component_data_info_original = $this->getRootComponentDataInfo(TRUE);
+    if (empty($component_type)) {
+      $component_type = $this->base;
+    }
+    $class = $this->getGeneratorClass($component_type);
+    $component_data_info_original = $class::getComponentDataInfo(TRUE);
+
     foreach ($component_data_info_original as $property_name => $property_info) {
       if (!empty($property_info['computed'])) {
         $component_data_info[$property_name] = $property_info;
@@ -228,6 +235,13 @@ class Generate extends Base {
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
+      // No need to set defaults on components here; the defaults will be filled
+      // in when the component is instantiated in assembleComponentList() and
+      // and this is called with the component's own data.
+      if (isset($property_info['component'])) {
+        continue;
+      }
+
       $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'process');
 
       if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
@@ -319,11 +333,23 @@ class Generate extends Base {
       return;
     }
 
-    // Remove a property whose value is FALSE. This allows a property that has
-    // a default value to be removed completely.
-    if (isset($component_data_local[$property_name]) && $component_data_local[$property_name] === FALSE) {
-      unset($component_data_local[$property_name]);
-      return;
+    switch ($stage) {
+      case 'prepare':
+        // In the 'prepare' stage, always provide a default.
+        break;
+
+      case 'process':
+        // In the 'process' stage, only give a default if the property info has
+        // 'process_default' set.
+        if (isset($component_data_local[$property_name])) {
+          // User has provided a default: don't clobber that.
+          return;
+        }
+        if (empty($property_info['process_default']) && empty($property_info['computed'])) {
+          return;
+        }
+
+        break;
     }
 
     if (isset($property_info['default'])) {
@@ -481,12 +507,12 @@ class Generate extends Base {
           // Fill in defaults for the component data.
           // (This is the equivalent of handling compound properties when
           // processing the original input data.)
+
+          // TODO: this is silly as we're about to fetch it again in the method.
+          // Remove the parameter when this changes to protected.
           $class = $this->getGeneratorClass($component_type);
           $component_data_info = $class::getComponentDataInfo(TRUE);
-          foreach ($component_data_info as $property_name => $property_info) {
-            // TODO: fix hack on $stage parameter!
-            $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'process');
-          }
+          $this->processComponentData($component_data_info, $component_data, $component_type);
 
           // Instantiate the generator.
           $generator = $this->getGenerator($component_type, $request_name, $component_data);

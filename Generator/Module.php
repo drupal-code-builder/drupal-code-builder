@@ -114,6 +114,7 @@ class Module extends RootComponent {
         'label' => 'Module .info file description',
         'default' => 'TODO: Description of module',
         'required' => FALSE,
+        'process_default' => TRUE,
       ),
       'module_package' => array(
         'label' => 'Module .info file package',

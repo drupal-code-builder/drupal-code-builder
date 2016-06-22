@@ -205,6 +205,14 @@ abstract class BaseGenerator {
    *    values.
    *  - 'required': (optional) Boolean indicating whether this property must be
    *    provided. Defaults to FALSE.
+   *  - 'process_default': (optional) Boolean indicating if TRUE that this
+   *    property will have the default value set on it if it is empty in the
+   *    process stage. This is different from 'required', in that the user may
+   *    leave the empty. The purpose of this is for properties where in the
+   *    absence of user input, we can derive a sensible value, but we choose to
+   *    allow the user to override this. For example, the description on
+   *    permissions, which can be derived from the machine name. Defaults to
+   *    FALSE.
    *  - 'options': (optional) A callable which returns a list of options for the
    *    property. This receives the component data assembled so far.
    *  - 'options_structured': (optional) A callable which returns data about the

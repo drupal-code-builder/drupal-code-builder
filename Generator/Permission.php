@@ -53,6 +53,7 @@ class Permission extends BaseGenerator {
             return ucfirst(str_replace('_', ' ', $component_data['permission']));
           }
         },
+        'process_default' => TRUE,
       ),
       'restrict_access' => array(
         'label' => 'Whether the permission should show a warning that it should be granted with care.',
