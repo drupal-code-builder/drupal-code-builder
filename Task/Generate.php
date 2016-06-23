@@ -328,28 +328,22 @@ class Generate extends Base {
    *    - 'process': Called by processComponentData().
    */
   protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local, $stage) {
-    // Skip a property that has a set value.
-    if (!empty($component_data_local[$property_name])) {
-      return;
-    }
-
-    switch ($stage) {
-      case 'prepare':
-        // In the 'prepare' stage, always provide a default.
-        break;
-
-      case 'process':
-        // In the 'process' stage, only give a default if the property info has
-        // 'process_default' set.
-        if (isset($component_data_local[$property_name])) {
-          // User has provided a default: don't clobber that.
-          return;
-        }
-        if (empty($property_info['process_default']) && empty($property_info['computed'])) {
-          return;
-        }
-
-        break;
+    // In the 'prepare' stage, we always want to provide a default, for the
+    // convenience of the user in the UI.
+    // In the 'process' stage, it's not as clear-cut.
+    if ($stage == 'process') {
+      if (!empty($component_data_local[$property_name])) {
+        // User has provided a default: don't clobber that.
+        return;
+      }
+      if (empty($property_info['process_default']) && empty($property_info['computed'])) {
+        // Allow an empty value to remain empty if the property is neither:
+        //  - computed: this never gets shown to the user, so we must provide a
+        //    default always.
+        //  - process_default: this forces a default value, effectively
+        //    preventing a property from being left empty.
+        return;
+      }
     }
 
     if (isset($property_info['default'])) {
