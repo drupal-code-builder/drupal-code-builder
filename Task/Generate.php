@@ -475,11 +475,11 @@ class Generate extends Base {
       // level.
       foreach ($current_level as $current_level_component_name => $item) {
         // Each item of the current level gives us some children.
-        $item_subcomponent_info = $item->requiredComponents();
+        $item_required_subcomponent_list = $item->requiredComponents();
 
         // Instantiate each one (if not already done), and add it to the next
         // level.
-        foreach ($item_subcomponent_info as $request_name => $data) {
+        foreach ($item_required_subcomponent_list as $request_name => $data) {
           // The $data may either be a string giving a class name, or an array.
           if (is_string($data)) {
             $component_type = $data;
