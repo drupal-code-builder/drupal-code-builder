@@ -41,8 +41,6 @@ class ComponentPermissions8Test extends DrupalCodeBuilderTestBase {
           'permission' => $permission_name,
         ),
       ),
-      'requested_components' => array(
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);

@@ -34,10 +34,7 @@ class ComponentTests7Test extends DrupalCodeBuilderTestBase {
       'short_description' => 'Test Module description',
       'hooks' => array(
       ),
-      'requested_components' => array(
-        'tests' => 'tests',
-        'info' => 'info',
-      ),
+      'tests' => TRUE,
       'requested_build' => array(
         'tests' => TRUE,
         'info' => TRUE,

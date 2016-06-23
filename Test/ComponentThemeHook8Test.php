@@ -39,8 +39,6 @@ class ComponentThemeHook8Test extends DrupalCodeBuilderTestBase {
       'theme_hooks' => array(
         $theme_hook_name,
       ),
-      'requested_components' => array(
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);

@@ -40,8 +40,6 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
           'plugin_name' => 'alpha',
         ]
       ),
-      'requested_components' => array(
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
@@ -89,8 +87,6 @@ class ComponentPlugins8Test extends DrupalCodeBuilderTestBase {
             'current_user',
           ],
         ],
-      ),
-      'requested_components' => array(
       ),
       'readme' => FALSE,
     );

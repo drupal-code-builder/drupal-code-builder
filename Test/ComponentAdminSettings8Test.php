@@ -35,9 +35,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
       'hooks' => array(
       ),
       'settings_form' => TRUE,
-      'requested_components' => array(
-        'info' => 'info',
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
@@ -91,9 +88,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
         ),
       ),
       'settings_form' => TRUE,
-      'requested_components' => array(
-        'info' => 'info',
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
@@ -125,9 +119,6 @@ class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
        'settings_form' => TRUE,
        'router_items' => array(
           'requested/route/path',
-       ),
-       'requested_components' => array(
-         'info' => 'info',
        ),
        'readme' => FALSE,
      );
