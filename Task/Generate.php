@@ -298,13 +298,6 @@ class Generate extends Base {
               $component_data['requested_components'][$requested_component_name] = $component_type;
             }
             break;
-          case 'group':
-            // Request a single component with the list of data.
-            $component_data['requested_components'][$component_type] = array(
-              'request_data' => $component_data[$property_name],
-              'component_type' => $component_type,
-            );
-            break;
         }
       }
     } // expand components
