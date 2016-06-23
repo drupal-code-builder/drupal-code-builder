@@ -156,6 +156,13 @@ abstract class BaseGenerator {
 
     // TODO: Remove this to simplify how generator classes get their data.
     $this->root_component = $root_generator;
+
+    // Set the type. This is the short class name without the numeric version
+    // suffix.
+    $class = get_class($this);
+    $class_pieces = explode('\\', $class);
+    $short_class = array_pop($class_pieces);
+    $this->type = preg_replace('@\d+$@', '', $short_class);
   }
 
   /**

@@ -43,7 +43,7 @@ class File extends BaseGenerator {
    * Files are usually contained by the root component.
    */
   function containingComponent() {
-    return $this->root_component->name . ':' . $this->root_component->name;
+    return $this->root_component->getUniqueID();
   }
 
   /**
