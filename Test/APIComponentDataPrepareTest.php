@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/APIComponentDataPrepareTest.php
+ *   vendor/phpunit/phpunit/phpunit Test/APIComponentDataPrepareTest.php
  * @endcode
  */
 class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {

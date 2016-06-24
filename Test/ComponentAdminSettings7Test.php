@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/ComponentAdminSettings7Test.php
+ *   vendor/phpunit/phpunit/phpunit Test/ComponentAdminSettings7Test.php
  * @endcode
  */
 class ComponentAdminSettings7Test extends DrupalCodeBuilderTestBase {

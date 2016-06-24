@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/Basic7Test.php
+ *   vendor/phpunit/phpunit/phpunit Test/Basic7Test.php
  * @endcode
  */
 class Basic7Test extends DrupalCodeBuilderTestBase {

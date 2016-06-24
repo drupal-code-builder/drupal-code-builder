@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/DrupalCodeBuilderAssertionsTest.php
+ *   vendor/phpunit/phpunit/phpunit Test/DrupalCodeBuilderAssertionsTest.php
  * @endcode
  *
  * @see http://stackoverflow.com/questions/12412601/phpunit-writing-tests-for-custom-assertions

@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit  tests/ComponentThemeHook8Test.php
+ *   vendor/phpunit/phpunit/phpunit Test/ComponentThemeHook8Test.php
  * @endcode
  */
 class ComponentThemeHook8Test extends DrupalCodeBuilderTestBase {
