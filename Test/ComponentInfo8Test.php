@@ -17,7 +17,7 @@ use Symfony\Component\Yaml\Yaml;
  *   vendor/phpunit/phpunit/phpunit Test/ComponentInfo8Test.php
  * @endcode
  */
-class ComponentInfo8Test extends DrupalCodeBuilderTestBase {
+class ComponentInfo8Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

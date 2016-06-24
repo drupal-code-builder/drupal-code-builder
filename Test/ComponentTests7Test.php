@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Test;
  *   vendor/phpunit/phpunit/phpunit Test/ComponentTests7Test.php
  * @endcode
  */
-class ComponentTests7Test extends DrupalCodeBuilderTestBase {
+class ComponentTests7Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);

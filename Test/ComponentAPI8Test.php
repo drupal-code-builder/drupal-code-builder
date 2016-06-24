@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Test;
  *   vendor/phpunit/phpunit/phpunit Test/ComponentAPI8Test.php
  * @endcode
  */
-class ComponentAPI8Test extends DrupalCodeBuilderTestBase {
+class ComponentAPI8Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

@@ -17,7 +17,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * @see http://stackoverflow.com/questions/12412601/phpunit-writing-tests-for-custom-assertions
  */
-class DrupalCodeBuilderAssertionsTest extends DrupalCodeBuilderTestBase {
+class DrupalCodeBuilderAssertionsTest extends TestBase {
 
   /**
    * Tests the assertNoTrailingWhitespace() assertion.

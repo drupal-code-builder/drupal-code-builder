@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Test;
  *   vendor/phpunit/phpunit/phpunit Test/ModuleRequestedBuildTest.php
  * @endcode
  */
-class ModuleRequestedBuildTest extends DrupalCodeBuilderTestBase {
+class ModuleRequestedBuildTest extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);

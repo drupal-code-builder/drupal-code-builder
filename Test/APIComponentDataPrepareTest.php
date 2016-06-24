@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Test;
  *   vendor/phpunit/phpunit/phpunit Test/APIComponentDataPrepareTest.php
  * @endcode
  */
-class APIComponentDataPrepareTest extends DrupalCodeBuilderTestBase {
+class APIComponentDataPrepareTest extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

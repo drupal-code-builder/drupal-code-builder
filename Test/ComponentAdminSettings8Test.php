@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Test;
  *   vendor/phpunit/phpunit/phpunit Test/ComponentAdminSettings8Test.php
  * @endcode
  */
-class ComponentAdminSettings8Test extends DrupalCodeBuilderTestBase {
+class ComponentAdminSettings8Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

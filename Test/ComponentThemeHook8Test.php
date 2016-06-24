@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Test;
  *   vendor/phpunit/phpunit/phpunit Test/ComponentThemeHook8Test.php
  * @endcode
  */
-class ComponentThemeHook8Test extends DrupalCodeBuilderTestBase {
+class ComponentThemeHook8Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

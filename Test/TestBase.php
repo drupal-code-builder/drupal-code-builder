@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains DrupalCodeBuilderTestBase.
+ * Contains TestBase.
  */
 
 namespace DrupalCodeBuilder\Test;
@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Test;
  *
  * Contains helper methods and assertions.
  */
-abstract class DrupalCodeBuilderTestBase extends \PHPUnit_Framework_TestCase {
+abstract class TestBase extends \PHPUnit_Framework_TestCase {
 
   /**
    * Perform the factory setup, spoofing in the given core major version.
