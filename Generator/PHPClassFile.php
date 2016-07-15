@@ -261,12 +261,15 @@ class PHPClassFile extends PHPFile {
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
     foreach ($parameters as $parameter_info) {
-      if (in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
+      if (isset($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
         // Don't type hint scalar types.
         $declaration_line_params[] = '$' . $parameter_info['name'];
       }
-      else {
+      elseif (isset($parameter_info['typehint'])) {
         $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['name'];
+      }
+      else {
+        $declaration_line_params[] = '$' . $parameter_info['name'];
       }
     }
     $declaration_line .= implode(', ', $declaration_line_params);
