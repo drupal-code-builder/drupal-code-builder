@@ -334,6 +334,12 @@ class Plugin extends PHPClassFile {
         'name' => 'configuration',
         'typehint' => 'array',
       ],
+      [
+        'name' => 'plugin_id',
+      ],
+      [
+        'name' => 'plugin_definition',
+      ],
     ];
 
     $code = $this->buildMethodHeader(
