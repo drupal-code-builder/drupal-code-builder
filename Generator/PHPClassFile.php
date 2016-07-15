@@ -104,12 +104,14 @@ class PHPClassFile extends PHPFile {
     $imported_classes = [];
     foreach ($class_code as &$line) {
       $matches = [];
-      if (preg_match('@(?:\\\\(\w+))+@', $line, $matches) && !preg_match('@^\s*\*@', $line)) {
-        $fully_qualified_class_name = $matches[0];
-        $class_name = $matches[1];
-        $line = preg_replace('@' . preg_quote($fully_qualified_class_name) . '@', $class_name, $line);
+      if (preg_match_all('@(?:\\\\(\w+))+@', $line, $matches, PREG_SET_ORDER) && !preg_match('@^\s*\*@', $line)) {
+        foreach ($matches as $match_set) {
+          $fully_qualified_class_name = $match_set[0];
+          $class_name = $match_set[1];
+          $line = preg_replace('@' . preg_quote($fully_qualified_class_name) . '@', $class_name, $line);
 
-        $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
+          $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
+        }
       }
     }
 
