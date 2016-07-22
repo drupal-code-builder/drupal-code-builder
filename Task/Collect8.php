@@ -175,6 +175,9 @@ class Collect8 extends Collect {
       $plugin_type_data[$plugin_type_id] = $data;
     }
 
+    // Sort by ID.
+    ksort($plugin_type_data);
+
     //drush_print_r($plugin_type_data);
 
     return $plugin_type_data;
@@ -362,6 +365,9 @@ class Collect8 extends Collect {
       ];
       $service_definitions[$service_id] = $service_definition;
     }
+
+    // Sort by ID.
+    ksort($service_definitions);
 
     return $service_definitions;
   }
