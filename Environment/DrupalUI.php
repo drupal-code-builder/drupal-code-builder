@@ -26,7 +26,7 @@ class DrupalUI extends BaseEnvironment {
   /**
    * Output debug data.
    */
-  function debug($data, $message = '') {
+  public function debug($data, $message = '') {
     if (module_exists('devel')) {
       dpm($data, $message);
     }

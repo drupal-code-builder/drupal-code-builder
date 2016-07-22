@@ -15,7 +15,7 @@ class DrupalLibrary extends BaseEnvironment {
   /**
    * Output debug data.
    */
-  function debug($data, $message = '') {
+  public function debug($data, $message = '') {
     if (function_exists('dpm')) {
       dpm($data, $message);
     }

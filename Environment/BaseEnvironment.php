@@ -165,7 +165,7 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   /**
    * Output debug data.
    */
-  abstract function debug($data, $message = '');
+  abstract public function debug($data, $message = '');
 
   /**
    * Output verbose log data.

@@ -61,7 +61,7 @@ class Drush extends BaseEnvironment {
   /**
    * Output debug data.
    */
-  function debug($data, $message = '') {
+  public function debug($data, $message = '') {
     drush_print_r("== $message:");
     drush_print_r($data);
   }
