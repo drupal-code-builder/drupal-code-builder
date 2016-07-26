@@ -124,6 +124,7 @@ class Plugin extends PHPClassFile {
 
           return $options;
         },
+        'options_allow_other' => TRUE,
       ),
     );
   }

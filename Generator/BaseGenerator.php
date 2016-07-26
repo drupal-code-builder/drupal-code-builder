@@ -229,6 +229,8 @@ abstract class BaseGenerator {
    *    defines the option), whose values are arrays keyed by the options. Each
    *    value is a further array with these properties:
    *      - 'description': A longer description of the item.
+   *  - 'options_allow_other': (optional) If TRUE, specifies that values outside
+   *    the list of options are allowable.
    *  - 'processing': (optional) A callback to processComponentData() to use to
    *    process input values into the final format for the component data array.
    *  - 'component': (optional) The name of a generator class, relative to the
