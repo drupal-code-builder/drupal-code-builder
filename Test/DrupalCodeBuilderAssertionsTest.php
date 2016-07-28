@@ -104,6 +104,157 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
   }
 
   /**
+   * Tests the assertDocBlock() assertion.
+   *
+   * @dataProvider providerAssertDocBlock
+   *
+   * @param $lines
+   *  The docblock lines to test with the assertion.
+   * @param $code
+   *  The code to test with the assertion.
+   * @param $pass
+   *  Whether the assertion is expected to pass (TRUE) or fail (FALSE).
+   */
+  public function testAssertDocBlock($lines, $code, $indent, $pass) {
+    try {
+      $this->assertDocBlock($lines, $code, '', $indent);
+      // Assertion passed.
+      if (!$pass) {
+        self::fail("assertDocBlock() should fail for '$code'");
+      }
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      // Assertion failed.
+      if ($pass) {
+        self::fail("assertDocBlock() should pass for '$code'");
+        throw $e;
+      }
+    }
+  }
+
+  /**
+   * Data provider for testAssertDocBlock().
+   */
+  public function providerAssertDocBlock() {
+    $data = [];
+
+    $data['simple docblock'] = [
+      // lines
+      [
+        'Implements my_hook().'
+      ],
+      // docblock
+      <<<'EOT'
+/**
+ * Implements my_hook().
+ */
+
+EOT
+      ,
+      // Indent.
+      0,
+      // Expected result.
+      TRUE,
+    ];
+
+    $data['no docblock'] = [
+      [
+        'Implements my_hook().',
+      ],
+      'Not a docblock',
+      0,
+      FALSE,
+    ];
+
+    $data['missing lines'] = [
+      // lines
+      [
+        'Implements my_hook().',
+      ],
+      // docblock
+      <<<'EOT'
+/**
+ * Implements my_hook().
+ *
+ * An extra line
+ */
+
+EOT
+      ,
+      // Indent.
+      0,
+      // Expected result.
+      FALSE,
+    ];
+
+    $data['surplus lines'] = [
+      // lines
+      [
+        'Implements my_hook().',
+        '',
+        'An extra line',
+      ],
+      // docblock
+      <<<'EOT'
+/**
+ * Implements my_hook().
+ */
+
+EOT
+      ,
+      // Indent.
+      0,
+      // Expected result.
+      FALSE,
+    ];
+
+    $data['class property'] = [
+      // lines
+      [
+        'The foobar property.',
+        '',
+        '@var \Drupal\node\NodeGrantDatabaseStorageInterface',
+      ],
+      // docblock
+      <<<'EOT'
+  /**
+   * The foobar property.
+   *
+   * @var \Drupal\node\NodeGrantDatabaseStorageInterface
+   */
+  protected $grantStorage;
+EOT
+      ,
+      // Indent
+      2,
+      // Expected result.
+      TRUE,
+    ];
+
+    $data['class method'] = [
+      // lines
+      [
+        'My method.'
+      ],
+      // docblock
+      <<<'EOT'
+  /**
+   * My method.
+   */
+  function myMethod {
+  }
+EOT
+      ,
+      2,
+      // Expected result.
+      TRUE,
+    ];
+
+
+    return $data;
+  }
+
+  /**
    * Tests the assertFunction() assertion.
    *
    * @dataProvider providerAssertFunction

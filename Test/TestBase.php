@@ -243,6 +243,67 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a string contains a docblock with specified lines.
+   *
+   * @param $lines
+   *  An array of the expected lines of the docblock, without the docblock
+   *  formatting. For example, for this docblock the first item of the array
+   *  would be:
+   *    'Assert a string contains a docblock with specified lines.'
+   * @param $string
+   *  The text to check for a docblock.
+   * @param $message = NULL
+   *  (optional) The assertion message.
+   * @param $indent
+   *  (optional) The number of spaces the expected docblock is indented by.
+   *  Internal use only. Defaults to 0.
+   */
+  function assertDocBlock($lines, $string, $message = NULL, $indent = 0) {
+    if (!isset($message)) {
+      $message = "Code contains a docblock with the expected lines.";
+    }
+
+    $indent = str_repeat('\ ', $indent);
+
+    $expected_regex = "$indent/\*\*\n" ;
+
+    foreach ($lines as $line) {
+      $line = preg_quote($line);
+
+      if (empty($line)) {
+        $expected_regex .= "$indent \*\n";
+      }
+      else {
+        $expected_regex .= "$indent \* $line\n";
+      }
+    }
+
+    $expected_regex .= "$indent \*/\n";
+
+    // Wrap the regex.
+    $expected_regex = '[' . $expected_regex . ']';
+
+    $this->assertRegExp($expected_regex, $string, $message);
+  }
+
+  /**
+   * Assert a string contains a docblock, in a class, with specified lines.
+   *
+   * @param $lines
+   *  An array of the expected lines of the docblock, without the docblock
+   *  formatting. For example, for this docblock the first item of the array
+   *  would be:
+   *    'Assert a string contains a docblock with specified lines.'
+   * @param $string
+   *  The text to check for a docblock.
+   * @param $message = NULL
+   *  (optional) The assertion message.
+   */
+  function assertClassDocBlock($lines, $string, $message = NULL) {
+    $this->assertDocBlock($lines, $string, $message, 2);
+  }
+
+  /**
    * Assert a string contains the correct file header.
    *
    * @param $string
