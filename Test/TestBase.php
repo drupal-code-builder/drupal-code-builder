@@ -299,7 +299,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  function assertClassDocBlock($lines, $string, $message = NULL) {
+  function assertDocBlockInClass($lines, $string, $message = NULL) {
     $this->assertDocBlock($lines, $string, $message, 2);
   }
 
