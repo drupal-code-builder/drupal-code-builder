@@ -467,6 +467,30 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Assert a string contains a class property declaration.
+   *
+   * @param $function_name
+   *  The name of the function.
+   * @param $string
+   *  The text to check for a function declaration.
+   * @param $message = NULL
+   *  The assertion message.
+   */
+  function assertClassProperty($property_name, $string, $message = NULL) {
+    $expected_regex =
+      "[" .
+      "  /\*\*\n" .
+      "   \* .*\n" . // Property name.
+      "   \*\n" .
+      "   \* @var.*\n" . // @var.
+      "   \*/\n" .
+      '  (public|protected|private)? \\$' . $property_name . ";\n" .
+      "]";
+
+    $this->assertRegExp($expected_regex, $string, $message);
+  }
+
+  /**
    * Assert a string contains a function declaration.
    *
    * @param $function_name
