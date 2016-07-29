@@ -114,8 +114,29 @@ class ComponentPlugins8Test extends TestBase {
     ];
     $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
 
+    // Check the injected service.
+    $this->assertClassProperty('currentUser', $plugin_file, "The plugin class has a property for the injected service.");
+
     $this->assertMethod('__construct', $plugin_file, "The plugin class has a constructor method.");
+    $parameters = [
+      'configuration',
+      'plugin_id',
+      'plugin_definition',
+      'current_user',
+    ];
+    $this->assertFunctionHasParameters('__construct', $parameters, $plugin_file);
+    $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition);');
+    $this->assertFunctionCode($plugin_file, '__construct', '$this->currentUser = $current_user;');
+
     $this->assertMethod('create', $plugin_file, "The plugin class has a create method.");
+    $parameters = [
+      'container',
+      'configuration',
+      'plugin_id',
+      'plugin_definition',
+    ];
+    $this->assertFunctionHasParameters('create', $parameters, $plugin_file);
+    $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'current_user\')');
   }
 
 }
