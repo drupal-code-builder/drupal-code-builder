@@ -70,7 +70,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
    */
   public function testAssertFunctionParameter($code, $pass) {
     try {
-      $this->assertFunctionParameter($code);
+      $this->assertFunctionParameter('', $code);
       // Assertion passed.
       if (!$pass) {
         self::fail("assertFunctionParameter() should fail for '$code'");
