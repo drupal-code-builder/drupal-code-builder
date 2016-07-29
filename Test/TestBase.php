@@ -649,11 +649,9 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
     $function_body_regex = "^{$indent}(?:\w+ )*function {$function_name}.*?{\n(.*?)^{$indent}}";
     $match = preg_match("[$function_body_regex]ms", $string, $matches);
 
-    // We can't use assertRegExp() because we want to capture, so throw the
-    // failure exception ourselves if the match isn't found.
-    if (!isset($matches[1])) {
-      throw new \PHPUnit_Framework_ExpectationFailedException($message);
-    }
+    // Run the regex again as an assertion so if the function isn't found, the
+    // test fails.
+    $this->assertRegExp("[$function_body_regex]ms", $string, "The function is found in the string");
 
     $function_body = $matches[1];
 
