@@ -527,20 +527,57 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
       $parameters = explode(', ', $matches['params']);
 
       foreach ($parameters as $parameter) {
-        $this->assertFunctionParameter($parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
+        $this->assertFunctionParameter('', $parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
       }
+    }
+  }
+
+  /**
+   * Assert a code string contains a function with the specified parameters.
+   *
+   * This doesn't check for the declaration being well-formed, so use
+   * assertFunction() as well.
+   *
+   * @param $function_name
+   *  The name of the function.
+   * @param $parameters
+   *  An array of parameter names, in the expected order, without the initial $.
+   * @param $string
+   *  The string containing the parameters from the function declaration.
+   * @param $message = NULL
+   *  (optional) The assertion message.
+   */
+  public function assertFunctionHasParameters($function_name, $parameters, $string, $message = NULL) {
+    $function_capturing_regex = "[function {$function_name}\((?<params>.*)\)]";
+    $matches = array();
+    $match = preg_match($function_capturing_regex, $string, $matches);
+
+    if (empty($matches['params'])) {
+      self::fail("Function $function_name was not found in the string.");
+    }
+
+    $found_parameters = explode(', ', $matches['params']);
+
+    $this->assertEquals(count($parameters), count($found_parameters), "The expected number of parameters was found.");
+
+    foreach ($parameters as $parameter) {
+      $found_parameter = array_shift($found_parameters);
+      $this->assertFunctionParameter($parameter, $found_parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
     }
   }
 
   /**
    * Assert a function parameter is correctly formed.
    *
+   * @param $expected_parameter_name
+   *  The name of the parameter that is expected in the given $parameter,
+   *  without the initial $. If this is empty, then the name is not checked.
    * @param $parameter
    *  The parameter from the function declaration, without the trailing comma.
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  protected function assertFunctionParameter($parameter, $message = NULL) {
+  protected function assertFunctionParameter($expected_parameter_name, $parameter, $message = NULL) {
     if (empty($message)) {
       $message = "Function parameter '$parameter' is correctly formed.";
     }
@@ -551,7 +588,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
         # May be a qualified class: need FOUR \ to actually make 2!
         # Also, the /x modifier appears to not hold within character classes!
       & ?           # pass by reference
-      \$ \w+        # parameter name
+      \$ (?<parameter> \w+ )       # parameter name
       ( \  = \      # default value, one of:
         (
           \d+ |             # numerical
@@ -561,6 +598,14 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
         )
       ) ?
       @x';
+
+    if (!empty($expected_parameter_name)) {
+      $matches = array();
+      $match = preg_match($param_regex, $parameter, $matches);
+      $found_parameter_name = $matches['parameter'];
+
+      $this->assertEquals($expected_parameter_name, $found_parameter_name, "The function parameter $expected_parameter_name has the expected name.");
+    }
 
     $this->assertRegExp($param_regex, $parameter, $message);
   }
