@@ -646,7 +646,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
 
     // Extract the function's body from the whole string.
     $matches = [];
-    $function_body_regex = "^{$indent}(?:\w+ )?function {$function_name}.*?{\n(.*?)^{$indent}}";
+    $function_body_regex = "^{$indent}(?:\w+ )*function {$function_name}.*?{\n(.*?)^{$indent}}";
     $match = preg_match("[$function_body_regex]ms", $string, $matches);
 
     // We can't use assertRegExp() because we want to capture, so throw the
