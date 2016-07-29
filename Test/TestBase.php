@@ -336,11 +336,10 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
    *  The assertion message.
    */
   function assertHookDocblock($expected_hook_name, $string, $message = NULL) {
-    $docblock =
-      "/**\n" .
-      " * Implements {$expected_hook_name}().\n" .
-      " */";
-    $this->assertContains($docblock, $string, $message);
+    $lines = [
+      "Implements {$expected_hook_name}().",
+    ];
+    $this->assertDocBlock($lines, $string, $message);
   }
 
   /**
