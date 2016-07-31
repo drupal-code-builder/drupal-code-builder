@@ -744,10 +744,10 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
 
     if (isset($value)) {
       $value    = preg_quote($value);
-      $expected_regex = "@^\s*{$property}: '?{$value}'?$@m";
+      $expected_regex = "@^\s*'?{$property}'?: '?{$value}'?$@m";
     }
     else {
-      $expected_regex = "@^\s*{$property}:$@m";
+      $expected_regex = "@^\s*'?{$property}'?:$@m";
     }
 
     $this->assertRegExp($expected_regex, $string, $message);
