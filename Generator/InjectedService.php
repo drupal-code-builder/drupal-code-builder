@@ -12,6 +12,8 @@ namespace DrupalCodeBuilder\Generator;
  */
 class InjectedService extends BaseGenerator {
 
+  use NameFormattingTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -76,10 +78,8 @@ class InjectedService extends BaseGenerator {
     }
 
     // Derive further information.
-    // TODO: use NameFormattingTrait methods here.
     $service_info['variable_name'] = implode('_', $id_pieces);
-    $id_pieces_first = array_shift($id_pieces);
-    $service_info['property_name'] = implode('', array_merge([$id_pieces_first], array_map('ucfirst', $id_pieces)));
+    $service_info['property_name'] = lcfirst($this->toCamel($service_info['variable_name']));
 
     return [
       'service' => [
