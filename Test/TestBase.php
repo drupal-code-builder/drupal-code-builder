@@ -732,15 +732,23 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
    * @param $property
    *  The property name, e.g. 'core'.
    * @param $value
-   *  The value to check, e.g., '7.x'.
+   *  (optional) The value to check, e.g., '7.x'. If NULL or omitted, the value
+   *  is not checked for and the property name is expected to be the only thing
+   *  on its line.
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertYamlProperty($string, $property, $value, $message = NULL) {
+  function assertYamlProperty($string, $property, $value = NULL, $message = NULL) {
     // Quote the given strings, as they may contain regex characters.
     $property = preg_quote($property);
-    $value    = preg_quote($value);
-    $expected_regex = "@^\s*{$property}: '?{$value}'?$@m";
+
+    if (isset($value)) {
+      $value    = preg_quote($value);
+      $expected_regex = "@^\s*{$property}: '?{$value}'?$@m";
+    }
+    else {
+      $expected_regex = "@^\s*{$property}:$@m";
+    }
 
     $this->assertRegExp($expected_regex, $string, $message);
   }
