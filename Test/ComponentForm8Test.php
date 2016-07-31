@@ -45,7 +45,7 @@ class ComponentForm8Test extends TestBase {
 
     $this->assertCount(2, $files, "Two files are returned.");
 
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
     $this->assertArrayHasKey("src/Form/MyForm.php", $files, "The files list has a form class file.");
 
     $form_file = $files["src/Form/MyForm.php"];
