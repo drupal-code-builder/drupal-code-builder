@@ -29,8 +29,9 @@ class RouterItem8 extends RouterItem {
    *   {ROUTE}Controller.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    // Create a controller name from the route name.
-    $controller_class_name = $this->toCamel($component_name) . 'Controller';
+    // Create a controller name from the route path.
+    $snake = str_replace(['/', '-'], '_', $component_name);
+    $controller_class_name = $this->toCamel($snake) . 'Controller';
     $controller_qualified_class_name = implode('\\', [
       'Drupal',
       '%module',
