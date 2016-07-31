@@ -102,7 +102,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
       'repeated'  => '@use @',
       'end'       => $empty_line_regex,
     ];
-    $this->helperRegexpRepeatedLines($lines, $import_regexes, 0, 'import statements');
+    $this->helperRegexpRepeatedLines($lines, $import_regexes, [], 'import statements');
 
     // Class docblock.
     $this->helperRegexBlockLines($lines, $docblock_regexes, 'docblock');
@@ -115,7 +115,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
       'repeated'  => '@^$|^  @',
       'end'       => '@}@',
     ];
-    $this->helperRegexpRepeatedLines($lines, $class_regexes, 0, 'class');
+    $this->helperRegexpRepeatedLines($lines, $class_regexes, ['expect_end_if_empty' => TRUE], 'class');
 
     $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the class.');
 
@@ -138,13 +138,26 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
    *    to indicate there is no such line. This is not checked for if the
    *    block is found to be empty, in other words, if 'repeated' does not match
    *    any lines.
-   * @param $min_count
-   *  The minimum number of lines of the block, i.e., the minium number of times
-   *  that the 'repeated' regex is expected to match.
+   * @param $options
+   *  (optional) An array of additional options. May include:
+   *    - 'min_count': The minimum number of lines of the block, that is, the
+   *      the minium number of times that the 'repeated' regex is expected to
+   *      match.
+   *    - 'expect_end_if_empty': A boolean indicating whether the 'end' regex is
+   *      expected if no lines match the 'repeated' regex. If TRUE, it is not
+   *      possible for the block to be completely empty: the end line is
+   *      required. If FALSE, then the absence of repeated lines means the end
+   *      line won't be looked for, and the entire block is allowed to contain
+   *      no lines at all.
    * @param $block_name = 'block'
    *  A string to describe the block, to use in assertion messages.
    */
-  protected function helperRegexpRepeatedLines(&$lines, $regexes, $min_count, $block_name = 'block') {
+  protected function helperRegexpRepeatedLines(&$lines, $regexes, $options = [], $block_name = 'block') {
+    $options += [
+      'min_count' => 0,
+      'expect_end_if_empty' => FALSE,
+    ];
+
     $lines_count = 0;
 
     // Keep taking off lines until one doesn't match.
@@ -165,11 +178,20 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
     }
 
     // Check we get the expected minimum of repeated lines.
-    $this->assertGreaterThanOrEqual($min_count, $lines_count, "The $block_name has at least one middle line");
+    $this->assertGreaterThanOrEqual($options['min_count'], $lines_count, "The $block_name has at least {$options['min_count']} middle line");
 
-    // Test the terminal line regex if there is one. This only applies if there
-    // was at least one line for the block.
-    if ($lines_count && !empty($regexes['end'])) {
+    // Test the terminal line regex if there is one and it's expected.
+    // An end line is only expected if a regex was given for it.
+    $expect_end_line = !empty($regexes['end']);
+    if ($expect_end_line) {
+      // Additionally, if no middle lines were found, we only expect an end line
+      // if the option for that was set.
+      if (($lines_count == 0)) {
+        $expect_end_line = $options['expect_end_if_empty'];
+      }
+    }
+
+    if ($expect_end_line) {
       $this->assertRegExp($regexes['end'], array_shift($lines), "The end line of the $block_name is as expected.");
     }
   }
