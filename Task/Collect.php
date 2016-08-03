@@ -138,6 +138,9 @@ class Collect extends Base {
     // then rarer core, then contrib in the order defined by the MB hook.
     ksort($hook_file_data);
 
+    // Get hook_hook_info() from Drupal.
+    $hook_info = $this->getDrupalHookInfo();
+
     // Build list of hooks
     $hook_groups = array();
     foreach ($hook_file_data as $file_data) {
@@ -145,9 +148,6 @@ class Collect extends Base {
 
       $file_name = basename($file_data['path'], '.php');
       $group = $file_data['group'];
-
-      // Get info about hooks from Drupal.
-      $hook_info = $this->getDrupalHookInfo($file_data);
 
       // Create an array in the form of:
       // array(
@@ -290,22 +290,11 @@ class Collect extends Base {
    *
    * This invokes hook_hook_info().
    *
-   * @param $file_data
-   *  An array of file data for a hook documentation file.
-   *
    * @return
-   *  The data from the implementation of hook_hook_info() for the module that
-   *  provided the documentation file.
+   *  The data from hook_hook_info().
    */
-  protected function getDrupalHookInfo($file_data) {
-    // Note that the 'module' key is flaky: some modules use a different name
-    // for their api.php file.
-    $module = $file_data['module'];
-    $hook_info = array();
-    if (module_hook($module, 'hook_info')) {
-      $hook_info = module_invoke($module, 'hook_info');
-    }
-
+  protected function getDrupalHookInfo() {
+    $hook_info = module_invoke_all('hook_info');
     return $hook_info;
   }
 

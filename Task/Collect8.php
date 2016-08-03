@@ -514,23 +514,11 @@ class Collect8 extends Collect {
   /**
    * Get info about hooks from Drupal.
    *
-   * This invokes hook_hook_info().
+   * @return
+   *  The data from hook_hook_info().
    */
-  protected function getDrupalHookInfo($file_data) {
-    // Note that the 'module' key is flaky: some modules use a different name
-    // for their api.php file.
-    $module = $file_data['module'];
-
-    // Bail for 'core' pseudomodule.
-    if ($module == 'core') {
-      return [];
-    }
-
-    $hook_info = array();
-    if (\Drupal::moduleHandler()->implementsHook($module, 'hook_info')) {
-      $hook_info = \Drupal::moduleHandler()->invoke($module, 'hook_info');
-    }
-
+  protected function getDrupalHookInfo() {
+    $hook_info = \Drupal::service('module_handler')->getHookInfo();
     return $hook_info;
   }
 
