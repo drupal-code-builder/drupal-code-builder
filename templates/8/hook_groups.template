@@ -12,6 +12,13 @@
       "hook_node_load"
     ]
   },
+  "tokens":{
+    "label": "Define tokens",
+    "hooks": [
+      "hook_token_info",
+      "hook_tokens"
+    ]
+  },
   "views":{
     "label": "Define views data",
     "hooks": [
