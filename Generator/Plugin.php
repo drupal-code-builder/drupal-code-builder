@@ -214,11 +214,11 @@ class Plugin extends PHPClassFile {
   function class_code_body() {
     $code = array();
 
+    $code[] = '';
+
     // Injected services.
     if (!empty($this->injectedServices)) {
       // Class properties.
-      $code[] = '';
-
       foreach ($this->injectedServices as $service_info) {
         $var_doc = $this->docBlock([
           $service_info['description'] . '.',
