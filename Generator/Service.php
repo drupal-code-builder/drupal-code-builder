@@ -15,35 +15,28 @@ class Service extends PHPClassFile {
   /**
    * Constructor method; sets the component data.
    *
-   * The component name is taken to be the service ID.
+   * The component name is taken to be the service ID. KILL
    */
   function __construct($component_name, $component_data, $root_generator) {
     // Prefix the service name with the module name.
     $component_data['original_service_name'] = $component_data['service_name'];
     $component_data['service_name'] = $root_generator->component_data['root_name'] . '.' . $component_data['service_name'];
 
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
-   * Set properties relating to class name.
-   */
-  protected function setClassNames($component_name) {
     // The service name is its ID as a service.
     // implode and ucfirst()
-    $service_id = $this->component_data['original_service_name'];
+    $service_id = $component_data['original_service_name'];
     $service_id_pieces = preg_split('/[\._]/', $service_id);
     // Create an unqualified class name by turning this into camel case.
     $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
     // Form the full class name by adding a namespace Drupal\MODULE.
     $class_name_pieces = array(
       'Drupal',
-      $this->component_data['root_component_name'],
+      $component_data['root_component_name'],
       $unqualified_class_name,
     );
-    $qualified_class_name = implode('\\', $class_name_pieces);
+    $component_data['qualified_class_name'] = implode('\\', $class_name_pieces);
 
-    parent::setClassNames($qualified_class_name);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**
@@ -78,6 +71,7 @@ class Service extends PHPClassFile {
 
     $yaml_data_arguments = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
+      // TODO: UPDATE!
       $components[$this->name . '_' . $service_id] = array(
         'component_type' => 'InjectedService',
         'container' => $this->getUniqueID(),

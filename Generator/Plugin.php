@@ -14,13 +14,6 @@ class Plugin extends PHPClassFile {
 
   /**
    * The unique name of this generator.
-   *
-   * A generator's name is used as the key in the $components array.
-   *
-   * A Plugin generator should use as its name the part of the plugin manager
-   * service name after 'plugin.manager.'
-   * TODO: change this so we can generate more than one plugin of a particular
-   * type at a time!
    */
   public $name;
 
@@ -56,27 +49,20 @@ class Plugin extends PHPClassFile {
 
     $component_data['plugin_type_data'] = $plugin_data;
 
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setClassNames($component_name) {
     // Create the fully-qualified class name.
     // This is of the form:
     //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
-    $qualified_class_name = implode('\\', [
+    $component_data['qualified_class_name'] = implode('\\', [
       'Drupal',
       // Module name.
-      $this->component_data['root_component_name'],
+      $component_data['root_component_name'],
       // Plugin subdirectory.
-      $this->pathToNamespace($this->component_data['plugin_type_data']['subdir']),
+      $this->pathToNamespace($component_data['plugin_type_data']['subdir']),
       // Plugin ID.
-      $this->toCamel($this->component_data['original_plugin_name'])
+      $this->toCamel($component_data['original_plugin_name'])
     ]);
 
-    parent::setClassNames($qualified_class_name);
+    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**

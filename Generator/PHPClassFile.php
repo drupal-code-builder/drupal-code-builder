@@ -15,20 +15,17 @@ class PHPClassFile extends PHPFile {
   /**
    * Constructor method; sets the component data.
    *
-   * The component name is taken to be the fully-qualified class name.
+   * Properties in $component_data:
+   *  - 'qualified_class_name': The fully-qualified class name.
    */
   function __construct($component_name, $component_data, $root_generator) {
     parent::__construct($component_name, $component_data, $root_generator);
 
-    // The component name is the fully-qualified class name.
-    $this->setClassNames($this->name);
+    $this->setClassNames($component_data['qualified_class_name']);
   }
 
   /**
    * Set properties relating to class name.
-   *
-   * This is called by this class's constructor. Child classes should override
-   * this and call the parent method to change the parameter it receives.
    *
    * @param $qualified_class_name
    *  The fully-qualified class name, e.g. 'Drupal\\foo\\Bar\\Classname'.

@@ -72,6 +72,7 @@ class RouterItem8 extends RouterItem {
       $components[$controller_qualified_class] = array(
         // TODO: Add a sample build method to this.
         'component_type' => 'PHPClassFile',
+        'qualified_class_name' => $controller_qualified_class,
       );
     }
 

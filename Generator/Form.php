@@ -37,6 +37,14 @@ class Form extends PHPClassFile {
     // TODO: this should be done in a property processing callback.
     $component_data['form_class_name'] = ucfirst($component_data['form_class_name']);
 
+    $class_name_pieces = array(
+      'Drupal',
+      '%module',
+      'Form',
+      $component_data['form_class_name'],
+    );
+    $component_data['qualified_class_name'] = implode('\\', $class_name_pieces);
+
     //ddpr($component_data);
 
     parent::__construct($component_name, $component_data, $root_generator);
@@ -74,22 +82,6 @@ class Form extends PHPClassFile {
         'options_allow_other' => TRUE,
       ),
     );
-  }
-
-  /**
-   * Set properties relating to class name.
-   */
-  protected function setClassNames($component_name) {
-    // Form the full class name.
-    $class_name_pieces = array(
-      'Drupal',
-      '%module',
-      'Form',
-      $this->component_data['form_class_name'],
-    );
-    $qualified_class_name = implode('\\', $class_name_pieces);
-
-    parent::setClassNames($qualified_class_name);
   }
 
   /**
