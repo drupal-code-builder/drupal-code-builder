@@ -213,9 +213,9 @@ class Generate extends Base {
    * @param &$component_data
    *  The component data array.
    * @param $component_type
-   *  (optional) Internal only. The component type for the data being processed.
+   *  The component type for the data being processed.
    */
-  protected function processComponentData(&$component_data, $component_type = NULL) {
+  protected function processComponentData(&$component_data, $component_type) {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
