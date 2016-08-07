@@ -40,10 +40,6 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
 
-    // Perform final processing on the component data.
-    // This prepares data, for example expands options such as hook presets.
-    $mb_task_handler_generate->processComponentData($component_data_info, $module_data);
-
     $files = $mb_task_handler_generate->generateComponent($module_data);
 
     return $files;

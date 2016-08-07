@@ -76,9 +76,6 @@ This is done as follows:
   }
   // Set your values.
   $component_data['root_name'] = 'foo_bar';
-  // Perform any final processing on the component data.
-  // This prepares data, for example expands options such as hook presets.
-  $task->processComponentData($component_data_info, $component_data);
   // Get the files of generated code.
   // This is an array keyed by filename, where each value is the text of the
   // file.

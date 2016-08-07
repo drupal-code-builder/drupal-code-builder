@@ -217,7 +217,7 @@ class Generate extends Base {
    * @param $component_type
    *  (optional) Internal only. The component type for the data being processed.
    */
-  public function processComponentData($component_data_info, &$component_data, $component_type = NULL) {
+  protected function processComponentData($component_data_info, &$component_data, $component_type = NULL) {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
@@ -381,6 +381,10 @@ class Generate extends Base {
 
     // The component name is just the same as the type for the base generator.
     $component_name = $component_type;
+
+    // Process the root component's data.
+    $component_data_info = $this->getRootComponentDataInfo();
+    $this->processComponentData($component_data_info, $component_data, $component_type);
 
     // Get the root component generator.
     // The component name is just the same as the type for the base generator.
