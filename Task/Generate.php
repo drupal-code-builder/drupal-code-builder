@@ -70,18 +70,6 @@ class Generate extends Base {
   }
 
   /**
-   * Get the root generator.
-   *
-   * This may be used by UIs that want to provide interactive building up of
-   * component parameters.
-   *
-   * @see DrupalCodeBuilder\Generator\BaseGenerator::getComponentDataDefaultValue().
-   */
-  public function getRootGenerator() {
-    return $this->root_generator;
-  }
-
-  /**
    * Get a list of the properties that the root component should be given.
    *
    * UIs may use this to present the options to the user. Each property should
