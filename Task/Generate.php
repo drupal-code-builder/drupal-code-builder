@@ -210,14 +210,12 @@ class Generate extends Base {
    *  - performs additional processing that a property may require
    *  - expand properties that represent child components.
    *
-   * @param $component_data_info
-   *  The complete component data info.
    * @param &$component_data
    *  The component data array.
    * @param $component_type
    *  (optional) Internal only. The component type for the data being processed.
    */
-  protected function processComponentData($component_data_info, &$component_data, $component_type = NULL) {
+  protected function processComponentData(&$component_data, $component_type = NULL) {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
@@ -225,13 +223,8 @@ class Generate extends Base {
       $component_type = $this->base;
     }
     $class = $this->getGeneratorClass($component_type);
-    $component_data_info_original = $class::getComponentDataInfo(TRUE);
 
-    foreach ($component_data_info_original as $property_name => $property_info) {
-      if (!empty($property_info['computed'])) {
-        $component_data_info[$property_name] = $property_info;
-      }
-    }
+    $component_data_info = $class::getComponentDataInfo(TRUE);
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
@@ -383,8 +376,7 @@ class Generate extends Base {
     $component_name = $component_type;
 
     // Process the root component's data.
-    $component_data_info = $this->getRootComponentDataInfo();
-    $this->processComponentData($component_data_info, $component_data, $component_type);
+    $this->processComponentData($component_data, $component_type);
 
     // Get the root component generator.
     // The component name is just the same as the type for the base generator.
@@ -499,11 +491,7 @@ class Generate extends Base {
           // (This is the equivalent of handling compound properties when
           // processing the original input data.)
 
-          // TODO: this is silly as we're about to fetch it again in the method.
-          // Remove the parameter when this changes to protected.
-          $class = $this->getGeneratorClass($component_type);
-          $component_data_info = $class::getComponentDataInfo(TRUE);
-          $this->processComponentData($component_data_info, $component_data, $component_type);
+          $this->processComponentData($component_data, $component_type);
 
           // Instantiate the generator.
           $generator = $this->getGenerator($component_type, $request_name, $component_data);
