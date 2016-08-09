@@ -78,14 +78,17 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    * Initialize the environment.
    */
   public function initEnvironment() {
-    // Set the hooks directory.
-    $this->getHooksDirectorySetting();
+    // Does nothing!
   }
 
   /**
    * {@inheritdoc}
    */
   public function getHooksDirectory() {
+    if (empty($this->hooks_directory)) {
+      $this->getHooksDirectorySetting();
+    }
+
     return $this->hooks_directory;
   }
 
@@ -116,6 +119,9 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     if ($sanity_level == 'none') {
       return;
     }
+
+    // Read the hooks directory from settings.
+    $this->getHooksDirectorySetting();
 
     // Sanity level 'data_directory_exists':
     if (!file_exists($this->hooks_directory)) {
