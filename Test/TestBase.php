@@ -22,9 +22,11 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function setupDrupalCodeBuilder($version) {
     $environment = new \DrupalCodeBuilder\Environment\TestsSampleLocation;
+
     $version_helper = new \DrupalCodeBuilder\Environment\VersionHelperTestsPHPUnit;
     $version_helper->setFakeCoreMajorVersion($version);
-    \DrupalCodeBuilder\Factory::setEnvironment($environment, $version_helper);
+
+    \DrupalCodeBuilder\Factory::setEnvironment($environment)->setCoreVersionHelper($version_helper);
   }
 
   /**

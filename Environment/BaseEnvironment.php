@@ -65,20 +65,28 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected $version_helper;
 
   /**
+   * {@inheritdoc}
+   */
+  public function setCoreVersionNumber($drupal_core_version) {
+    // Get the major version from the core version number.
+    list($major_version) = explode('.', $drupal_core_version);
+
+    $helper_class_name = '\DrupalCodeBuilder\Environment\VersionHelper' . $major_version;
+
+    $this->version_helper = new $helper_class_name();
+  }
+
+  /**
    * Set the version helper object.
+   *
+   * Internal. This is used by tests which use their own dummy version helper
+   * class rather than set a core version number.
    *
    * @param $version_helper
    *  The version helper object.
    */
-  public function setVersionHelper($version_helper) {
+  public function setCoreVersionHelper($version_helper) {
     $this->version_helper = $version_helper;
-  }
-
-  /**
-   * Initialize the environment.
-   */
-  public function initEnvironment() {
-    // Does nothing!
   }
 
   /**

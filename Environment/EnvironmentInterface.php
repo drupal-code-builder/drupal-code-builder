@@ -13,6 +13,15 @@ namespace DrupalCodeBuilder\Environment;
 interface EnvironmentInterface {
 
   /**
+   * Set the core Drupal version number.
+   *
+   * @param int|string
+   *  The Drupal core version. May be either just the major number, such as 8,
+   *  or a complete version number string, such as '8.2.x'.
+   */
+  public function setCoreVersionNumber($drupal_core_version);
+
+  /**
    * Sanity check our basic environment to a specified level.
    *
    * This is called by DrupalCodeBuilder\Factory when a Task is requested from it.
