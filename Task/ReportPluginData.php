@@ -46,7 +46,27 @@ class ReportPluginData extends ReportHookDataFolder {
     // skipped, return something that makes sense to the caller.
     return array();
   }
-  
+
+  /**
+   * Returns a list of plugin types, keyed by subdirectory.
+   *
+   * @return
+   *  A list of all plugin types that use annotation discovery, keyed by the
+   *  subdirectory the plugin files go in, for example, 'Block', 'QueueWorker'.
+   */
+  public function listPluginDataBySubdirectory() {
+    $plugin_types_data = $this->listPluginData();
+    $plugin_types_data_by_subdirectory = [];
+    foreach ($plugin_types_data as $plugin_id => $plugin_definition) {
+      if (!empty($plugin_definition['subdir'])) {
+        $subdir = substr($plugin_definition['subdir'], strlen('Plugin/'));
+
+        $plugin_types_data_by_subdirectory[$subdir] = $plugin_definition;
+      }
+    }
+    return $plugin_types_data_by_subdirectory;
+  }
+
   /**
    * Get plugin types as a list of options.
    *

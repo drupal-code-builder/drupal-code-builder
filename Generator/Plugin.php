@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use \DrupalCodeBuilder\Exception\InvalidInputException;
+
 /**
  * Generator for a plugin.
  */
@@ -30,6 +32,8 @@ class Plugin extends PHPClassFile {
    * @param $component_data
    *   (optional) An array of data for the component. Any missing properties
    *   (or all if this is entirely omitted) are given default values.
+   *
+   * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    */
   function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
@@ -44,8 +48,22 @@ class Plugin extends PHPClassFile {
     $plugin_type = $component_data['plugin_type'];
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-    $plugin_data = $mb_task_handler_report_plugins->listPluginData();
-    $plugin_data = $plugin_data[$plugin_type];
+    $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
+
+    // Try to find the intended plugin type.
+    if (isset($plugin_types_data[$plugin_type])) {
+      $plugin_data = $plugin_types_data[$plugin_type];
+    }
+    else {
+      $plugin_types_data_by_subdirectory = $mb_task_handler_report_plugins->listPluginDataBySubdirectory();
+      if (isset($plugin_types_data_by_subdirectory[$plugin_type])) {
+        $plugin_data = $plugin_types_data_by_subdirectory[$plugin_type];
+      }
+      else {
+        // Nothing found. Throw exception.
+        throw new InvalidInputException("Plugin type not found.");
+      }
+    }
 
     $component_data['plugin_type_data'] = $plugin_data;
 
@@ -71,6 +89,7 @@ class Plugin extends PHPClassFile {
   protected static function componentDataDefinition() {
     return array(
       'plugin_type' => array(
+        // TODO: document that plugin subdirectory can be used as well.
         'label' => 'Plugin type',
         'required' => TRUE,
         'options' => function(&$property_info) {
