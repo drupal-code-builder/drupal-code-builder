@@ -143,8 +143,7 @@ abstract class BaseGenerator {
    * @param $component_data
    *   An array of data for the component.
    *   While each component will have its own array of data, components may also
-   *   need to access the data of the root component. For this, use
-   *   $task->getRootGenerator() (for now!).
+   *   need to access the data of the root component.
    *   TODO: check whether components really need to do this, as removing this
    *   would simplify things!
    * @param $root_generator
