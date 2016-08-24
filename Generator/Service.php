@@ -20,7 +20,7 @@ class Service extends PHPClassFile {
   function __construct($component_name, $component_data, $root_generator) {
     // Prefix the service name with the module name.
     $component_data['original_service_name'] = $component_data['service_name'];
-    $component_data['service_name'] = $root_generator->component_data['root_name'] . '.' . $component_data['service_name'];
+    $component_data['service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
 
     // The service name is its ID as a service.
     // implode and ucfirst()
