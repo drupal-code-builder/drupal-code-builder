@@ -48,7 +48,8 @@ For example:
   // (Not necessary if using DCB via Composer.)
   include_once('Factory.php');
   // Tell DCB which environment it's being used in and the Drupal core version.
-  \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
+  \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('Drush')
+    ->setCoreVersionNumber(8);
   // Get the Task handler.
   $dcb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
   // Call a method in the Task handler to perform the operation.
