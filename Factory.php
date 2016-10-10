@@ -40,7 +40,8 @@ if (!class_exists('\DrupalCodeBuilder\Environment\BaseEnvironment')) {
  * For example:
  * @code
  *  include_once('path/to/Factory.php');
- *  \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
+ *  \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('Drush')
+ *    ->setCoreVersionNumber(8);
  *  $task = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
  * @endcode
  */
@@ -49,7 +50,7 @@ class Factory {
   /**
    * The current environment object; subclass of DrupalCodeBuilderEnvironmentBase.
    *
-   * @see setEnvironmentClass()
+   * @see setEnvironmentLocalClass()
    * @see getEnvironment()
    */
   protected static $environment;

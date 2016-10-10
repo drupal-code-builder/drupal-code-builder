@@ -48,7 +48,6 @@ interface EnvironmentInterface {
    *
    * This may be set on the environment after it has been initialized. Example:
    * @code
-   * \DrupalCodeBuilder\Factory::setEnvironmentClass('Drush', 8);
    * \DrupalCodeBuilder\Factory::getEnvironment()->skipSanityCheck(TRUE);
    * @endcode
    *
