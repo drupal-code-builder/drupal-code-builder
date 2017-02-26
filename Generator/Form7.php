@@ -63,7 +63,7 @@ class Form7 extends BaseGenerator {
         'doxygen_first' => 'Form builder.',
         'declaration' => "function $form_builder(£form, &£form_state)",
         'body' => array(
-          "£form['element] = array(",
+          "£form['element'] = array(",
           "  '#type' => 'textfield',",
           "  '#title' => t('Enter a value'),",
           "  '#required' => TRUE,",
