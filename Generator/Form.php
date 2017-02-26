@@ -110,7 +110,7 @@ class Form extends PHPClassFile {
         'doxygen_first' => 'Form constructor.',
         'declaration' => 'public function buildForm(array $form, FormStateInterface $form_state)',
         'body' => array(
-          "£form['element] = array(",
+          "£form['element'] = array(",
           "  '#type' => 'textfield',",
           "  '#title' => t('Enter a value'),",
           "  '#required' => TRUE,",
