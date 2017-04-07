@@ -175,6 +175,7 @@ class Module extends RootComponent {
 
           // Stash the hook presets in the property info so the processing
           // callback doesn't have to repeat the work.
+          // TODO: this is not working! See the processing callback.
           $property_info['_presets'] = $hook_presets;
 
           $options = array();
@@ -186,8 +187,11 @@ class Module extends RootComponent {
         // The processing callback alters the component data in place, and may
         // in fact alter another value.
         'processing' => function($value, &$component_data, &$property_info) {
-          // Get the presets from where the 'options' callback left them.
-          $hook_presets = $property_info['_presets'];
+          // TODO: the options aren't there, as generateComponent() only gets
+          // given data, not the component info array. However, it's probably
+          // better to re-compute these lazily rather than do them all.
+          $mb_task_handler_report_presets = \DrupalCodeBuilder\Factory::getTask('ReportHookPresets');
+          $hook_presets = $mb_task_handler_report_presets->getHookPresets();
 
           foreach ($value as $given_preset_name) {
             if (!isset($hook_presets[$given_preset_name])) {
