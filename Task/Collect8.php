@@ -529,7 +529,9 @@ class Collect8 extends Collect {
     // Keys should match the filename MODULE.api.php
     $info = array(
       // Hooks on behalf of Drupal core.
-      'module' => array(
+      // api.php files that are in core rather than in a module have a prefix of
+      // 'core:'.
+      'core:module' => array(
         'hook_destinations' => array(
           '%module.install' => array(
             'hook_requirements',
