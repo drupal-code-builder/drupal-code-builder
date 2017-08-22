@@ -90,7 +90,7 @@ class Plugin extends PHPClassFile {
     return array(
       'plugin_type' => array(
         'label' => 'Plugin type',
-        'description' => "The identifier of the plugin type. This can be either the manager service name with the 'plugin.manager.' prefix removed, ' .
+        'description' => "The identifier of the plugin type. This can be either the manager service name with the 'plugin.manager.' prefix removed, " .
           ' or the subdirectory name.',
         'required' => TRUE,
         'options' => function(&$property_info) {
