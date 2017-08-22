@@ -25,6 +25,8 @@ class ReportPluginData extends ReportHookDataFolder {
    *
    * @return
    *  The unserialized contents of the processed plugin data file.
+   *
+   * @see \DrupalCodeBuilder\Task\Collect8::gatherPluginTypeInfo()
    */
   function listPluginData() {
     // We may come here several times, so cache this.
