@@ -87,9 +87,6 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase {
       'middle'  => '@^ \*[^/]@',
       'end'     => '@^ \*/@',
     ];
-    $this->helperRegexBlockLines($lines, $docblock_regexes, 'docblock');
-
-    $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the file docblock.');
 
     $this->assertRegExp('@^namespace @', array_shift($lines), 'The file has a namespace declaration.');
     $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the namespace.');

@@ -78,10 +78,11 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Return the summary line for the file docblock.
+   * Returns file header code.
    */
-  function file_doc_summary() {
-    return "Contains $this->qualified_class_name.";
+  function code_header() {
+    // Class files have no file docblock. Return an empty array.
+    return [];
   }
 
   /**
