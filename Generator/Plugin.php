@@ -89,8 +89,9 @@ class Plugin extends PHPClassFile {
   protected static function componentDataDefinition() {
     return array(
       'plugin_type' => array(
-        // TODO: document that plugin subdirectory can be used as well.
         'label' => 'Plugin type',
+        'description' => "The identifier of the plugin type. This can be either the manager service name with the 'plugin.manager.' prefix removed, ' .
+          ' or the subdirectory name.',
         'required' => TRUE,
         'options' => function(&$property_info) {
           $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
