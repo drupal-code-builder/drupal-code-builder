@@ -2,68 +2,55 @@
 
 /**
  * @file
- * Contains DrupalCodeBuilder\Generator\RouterItem.
+ * Contains DrupalCodeBuilder\Generator\RouterItem8.
  */
 
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator for a router item.
+ * Generator for router item on Drupal 8.
  *
- * This class covers Drupal 6 and 7, where it is purely an intermediary which
- * adds a HookMenu component.
- *
- * @see RouterItem8
+ * This adds a routing item to the routing component.
  */
 class RouterItem extends BaseGenerator {
 
-  /**
-   * The unique name of this generator.
-   *
-   * A generator's name is used as the key in the $components array.
-   *
-   * A RouterItem generator should use as its name its path.
-   *
-   * TODO: at what point do names start to clash and we need prefixes based on
-   * type???!!
-   */
-  public $name;
+  use NameFormattingTrait;
 
   /**
    * Constructor method; sets the component data.
    *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   *   Valid properties are:
-   *      - 'title': The title for the item.
-   *      - TODO: further properties such as access!
+   * Properties in $component_data:
+   *  - controller: (optional) An array specifying the source for the route's
+   *    content. May contain:
+   *    - controller_property: (optional) The name of the property in the route
+   *      defaults that sets the controler. E.g, '_controller', '_entity_view'.
+   *    - controller_value: (optional) The corresponding value.
+   *    These default to the plain '_controller' with a controller class of
+   *   {ROUTE}Controller.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    // This allows the user to leave off specifying details like title and
-    // access, and get default strings in place that they can replace in
-    // generated module code.
-    $component_data += array(
+    // Create a controller name from the route path.
+    $snake = str_replace(['/', '-'], '_', $component_name);
+    $controller_class_name = $this->toCamel($snake) . 'Controller';
+    $controller_qualified_class_name = implode('\\', [
+      'Drupal',
+      '%module',
+      'Controller',
+      $controller_class_name
+    ]);
+
+    $component_data += [
       // Use a default that can be selected with a single double-click, to make
       // it easy to replace.
       'title' => 'myPage',
-      'page callback' => 'example_page',
-      // These have to be a code string, not an actual array!
-      'page arguments' => "array()",
-      'access arguments' => "array('access content')",
-    );
+      'controller' => [
+        'controller_property' => '_controller',
+        'controller_value' => '\\' . "$controller_qualified_class_name::content",
+      ],
+      'controller_qualified_class' => $controller_qualified_class_name,
+    ];
 
     parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
   }
 
   /**
@@ -73,55 +60,61 @@ class RouterItem extends BaseGenerator {
    *  An array of subcomponent names and types.
    */
   public function requiredComponents() {
-    $return = array(
-      'hooks' => array(
-        'component_type' => 'Hooks',
-        'hooks' => array(
-          'hook_menu' => TRUE,
-        ),
-      ),
+    $components = [];
+
+    // Each RouterItem that gets added will cause a repeat request of these
+    // components.
+    $components['%module.routing.yml'] = array(
+      'component_type' => 'Routing',
     );
 
-    return $return;
+    // Add a controller class if needed.
+    if (!empty($this->component_data['controller']['controller_property'])
+        && $this->component_data['controller']['controller_property'] == '_controller') {
+      $controller_qualified_class = $this->component_data['controller_qualified_class'];
+      $components[$controller_qualified_class] = array(
+        // TODO: Add a sample build method to this.
+        'component_type' => 'PHPClassFile',
+        'qualified_class_name' => $controller_qualified_class,
+      );
+    }
+
+    return $components;
   }
 
   /**
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'HookMenu:hook_menu';
+    return 'Routing:%module.routing.yml';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
-    // Return code for a single menu item. Our parent in the component tree,
-    // HookMenu, will merge it in its own buildComponentContents().
-    $code = array();
-    $code[] = "£items['{$this->name}'] = array(";
-    $code[] = "  'title' => '{$this->component_data['title']}',";
-    if (isset($this->component_data['description'])) {
-      $code[] = "  'description' => '{$this->component_data['description']}',";
+    $path = $this->name;
+    $route_name = str_replace('/', '.', $path);
+
+    $route_defaults = [];
+    if (!empty($this->component_data['controller']['controller_property'])) {
+      $route_defaults[$this->component_data['controller']['controller_property']] = $this->component_data['controller']['controller_value'];
     }
-    $code[] = "  'page callback' => '{$this->component_data['page callback']}',";
-    // This is an array, so not quoted.
-    $code[] = "  'page arguments' => {$this->component_data['page arguments']},";
-    // This is an array, so not quoted.
-    $code[] = "  'access arguments' => {$this->component_data['access arguments']},";
-    if (isset($this->component_data['file'])) {
-      $code[] = "  'file' => '{$this->component_data['file']}',";
-    }
-    if (isset($this->component_data['type'])) {
-      // The type is a constant, so is not quoted.
-      $code[] = "  'type' => {$this->component_data['type']},";
-    }
-    $code[] = ");";
+    $route_defaults['_title'] = $this->component_data['title'];
+
+    $routing_data['%module.' . $route_name] = array(
+      // Prepend a slash to the path for D8.
+      'path' => '/' . $path,
+      'defaults' => $route_defaults,
+      'requirements' => array(
+        '_permission' => 'TODO: set permission machine name',
+      ),
+    );
 
     return [
       'route' => [
-        'role' => 'item',
-        'content' => $code,
+        'role' => 'yaml',
+        'content' => $routing_data,
       ],
     ];
   }

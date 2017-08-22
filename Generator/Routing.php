@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Generator;
  *
  * Note this only is requested for Drupal 8.
  *
- * @see RouterItem8
+ * @see RouterItem
  */
 class Routing extends YMLFile {
 
