@@ -33,8 +33,13 @@ class CollectTesting8 extends Collect8 {
     // For testing, only take a subset of api.php files so we're not storing a
     // massive list of hooks.
     $testing_files = array(
-      'system.api.php' => TRUE,
       'block.api.php' => TRUE,
+      // Need this for hook_install().
+      'core:module.api.php' => TRUE,
+      // Need this for hook_form_alter().
+      'core:form.api.php' => TRUE,
+      // Need this for hook_tokens().
+      'core:token.api.php' => TRUE,
       // Need this for hook_help().
       'help.api.php' => TRUE,
       // Need this for ThemeHook component.
