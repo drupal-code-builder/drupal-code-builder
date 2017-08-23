@@ -214,7 +214,7 @@ abstract class BaseGenerator {
    *  - 'process_default': (optional) Boolean indicating if TRUE that this
    *    property will have the default value set on it if it is empty in the
    *    process stage. This is different from 'required', in that the user may
-   *    leave the empty. The purpose of this is for properties where in the
+   *    leave this empty. The purpose of this is for properties where in the
    *    absence of user input, we can derive a sensible value, but we choose to
    *    allow the user to override this. For example, the description on
    *    permissions, which can be derived from the machine name. Defaults to
@@ -438,7 +438,7 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Collects contents for this file.
+   * Collects contents for this component.
    *
    * @param $children_contents
    *  An array of the content that the child components returned.
