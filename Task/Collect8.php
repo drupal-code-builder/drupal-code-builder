@@ -198,8 +198,10 @@ class Collect8 extends Collect {
     $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
 
     foreach ($plugin_type_data as $plugin_type_id => $data) {
+      // Add the label, casting it to a string so we don't have to deal with
+      // TranslatableMarkup objects.
       $plugin_type_data[$plugin_type_id]['type_label'] = isset($plugin_types[$plugin_type_id]) ?
-        $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
+        (string) $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
     }
   }
 
