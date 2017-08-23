@@ -132,7 +132,7 @@ class PHPFile extends File {
   protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes) {
     foreach ($class_code as &$line) {
       $matches = [];
-      if (preg_match_all('@(?:\\\\(\w+))+@', $line, $matches, PREG_SET_ORDER) && !preg_match('@^\s*\*@', $line)) {
+      if (preg_match_all('@(?:\\\\(\w+)){2,}@', $line, $matches, PREG_SET_ORDER) && !preg_match('@^\s*\*@', $line)) {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];
