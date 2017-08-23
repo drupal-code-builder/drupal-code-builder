@@ -15,6 +15,12 @@ use DrupalCodeBuilder\Factory;
  *
  * This task is meant for internal use only, to keep the testing hook
  * definitions up to date.
+ *
+ * The Drush command mb-download has a developer option 'test' which switches
+ * it to use this task:
+ * @code
+ *   drush mbdl --test --strict=0
+ * @endcode
  */
 class CollectTesting8 extends Collect8 {
 
