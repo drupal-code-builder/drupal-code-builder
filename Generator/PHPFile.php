@@ -116,7 +116,16 @@ class PHPFile extends File {
       $code_body[] = '';
     }
 
-    return $code_body;
+    // Replace any fully-qualified classes with short class names, and keep a
+    // list of the replacements to make import statements with.
+    $imported_classes = [];
+    $this->extractFullyQualifiedClasses($code_body, $imported_classes);
+
+    $return = array_merge(
+      $this->imports($imported_classes),
+      $code_body
+    );
+    return $return;
   }
 
   /**
