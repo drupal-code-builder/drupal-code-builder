@@ -61,7 +61,6 @@ class ComponentForm8Test extends TestBase {
       $this->assertMethod($method, $form_file, "The form file contains the $method method.");
     }
 
-    // TODO: should be 'my_form' instead. Bug!
     $this->assertFunctionCode($form_file, 'getFormId', "return 'test_module_myform");
   }
 
