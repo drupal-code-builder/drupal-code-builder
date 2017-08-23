@@ -1,6 +1,6 @@
 <?php
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Integration;
 
 use Drupal\KernelTests\KernelTestBase;
 
@@ -9,12 +9,12 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * These need to be run from Drupal's PHPUnit, rather than ours:
  * @code
- *  [drupal]/core $ ../vendor/bin/phpunit [DCB path]/Integration/IntegrationTest.php
+ *  [drupal]/core $ ../vendor/bin/phpunit [DCB path]/Integration/CollectPluginInfoTest.php
  * @endcode
  *
  * @todo move these under /Test once the unit tests are moved into a subfolder.
  */
-class IntegrationTest extends KernelTestBase {
+class CollectPluginInfoTest extends KernelTestBase {
 
   /**
    * The modules to enable.
@@ -29,7 +29,7 @@ class IntegrationTest extends KernelTestBase {
   protected function setUp() {
     // Drupal doesn't know about DCB, so won't have it in its autoloader, so
     // rely on the Factory file's autoloader.
-    $dcb_root = dirname(__DIR__);
+    $dcb_root = dirname(dirname(__DIR__));
     require_once("$dcb_root/Factory.php");
 
     \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
