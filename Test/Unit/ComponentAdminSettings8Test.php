@@ -5,7 +5,7 @@
  * Contains ComponentAdminSettings8Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the AdminSettingsForm generator class.

@@ -5,7 +5,7 @@
  * Contains TestBase.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Base class for PHPUnit tests.

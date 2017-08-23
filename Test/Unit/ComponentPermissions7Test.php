@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains ComponentPermissions8Test.
+ * Contains ComponentPermissions7Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the Permissions generator class.
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentPermissions8Test.php
+ *   vendor/phpunit/phpunit/phpunit Test/ComponentPermissions7Test.php
  * @endcode
  */
-class ComponentPermissions8Test extends TestBase {
+class ComponentPermissions7Test extends TestBase {
 
   protected function setUp() {
-    $this->setupDrupalCodeBuilder(8);
+    $this->setupDrupalCodeBuilder(7);
   }
 
   /**
@@ -44,15 +44,14 @@ class ComponentPermissions8Test extends TestBase {
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
-    $file_names = array_keys($files);
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("$module_name.permissions.yml", $file_names, "The files list has a .permissions.yml file.");
 
-    // Check the .permissions.yml file.
-    $permissions_file = $files["$module_name.permissions.yml"];
-    $this->assertYamlProperty($permissions_file, 'title', $permission_name, "The permissions file declares the requested permission.");
+    // Check the .module file.
+    $module_file = $files["$module_name.module"];
+    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
+    $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['$permission_name']");
   }
 
 }

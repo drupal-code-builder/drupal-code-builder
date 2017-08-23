@@ -5,7 +5,7 @@
  * Contains ComponentPlugins8Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the Plugins generator class.

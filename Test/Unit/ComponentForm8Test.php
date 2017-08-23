@@ -5,7 +5,7 @@
  * Contains ComponentForm8Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Form component.

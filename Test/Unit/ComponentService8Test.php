@@ -5,7 +5,7 @@
  * Contains ComponentService8Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Service component.

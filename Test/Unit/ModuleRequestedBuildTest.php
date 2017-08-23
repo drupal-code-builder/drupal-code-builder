@@ -5,7 +5,7 @@
  * Contains ModuleRequestedBuildTest.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Test the functionality for requesting only certain files to be generated.

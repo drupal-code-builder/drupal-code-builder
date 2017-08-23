@@ -5,7 +5,7 @@
  * Contains DrupalCodeBuilderAssertionsTest.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the custom assertions in our base tests class.

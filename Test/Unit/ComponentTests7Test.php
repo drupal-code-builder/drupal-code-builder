@@ -5,7 +5,7 @@
  * Contains ComponentTests7Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Basic test class.

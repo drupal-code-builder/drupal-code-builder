@@ -5,7 +5,7 @@
  * Contains ComponentHooks7Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Hooks component.

@@ -5,7 +5,7 @@
  * Contains ComponentInfo8Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 use Symfony\Component\Yaml\Yaml;
 

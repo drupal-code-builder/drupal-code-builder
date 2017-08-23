@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains ComponentModule8Test.
+ * Contains ComponentModule7Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the AdminSettingsForm generator class.
  *
  * Run with:
  * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentModule8Test.php
+ *   vendor/phpunit/phpunit/phpunit Test/ComponentModule7Test.php
  * @endcode
  */
-class ComponentModule8Test extends TestBase {
+class ComponentModule7Test extends TestBase {
 
   protected function setUp() {
-    $this->setupDrupalCodeBuilder(8);
+    $this->setupDrupalCodeBuilder(7);
   }
 
   /**
@@ -26,7 +26,7 @@ class ComponentModule8Test extends TestBase {
    */
   function testNoOptions() {
     // Create a module.
-    $module_name = 'testmodule8a';
+    $module_name = 'testmodule';
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
@@ -39,9 +39,10 @@ class ComponentModule8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
-    $this->assertCount(1, $files, "One file is returned.");
+    $this->assertCount(2, $files, "Two files are returned.");
 
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
   }
 
   /**
@@ -49,7 +50,7 @@ class ComponentModule8Test extends TestBase {
    */
   function testHelptextOption() {
     // Create a module.
-    $module_name = 'testmodule8b';
+    $module_name = 'testmodule';
     $help_text = 'This is the test help text';
     $module_data = array(
       'base' => 'module',
@@ -67,7 +68,7 @@ class ComponentModule8Test extends TestBase {
     $this->assertCount(2, $files, "Two files are returned.");
 
     $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

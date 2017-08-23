@@ -5,7 +5,7 @@
  * Contains ComponentAPI8Test.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for API component.

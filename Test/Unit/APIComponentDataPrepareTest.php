@@ -5,7 +5,7 @@
  * Contains DrupalCodeBuilder\Test\APIComponentDataPrepareTest.
  */
 
-namespace DrupalCodeBuilder\Test;
+namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the preparation step of component data.
