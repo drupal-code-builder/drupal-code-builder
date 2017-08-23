@@ -100,6 +100,29 @@ class PHPClassFile extends PHPFile {
     // Replace any fully-qualified classes with short class names, and keep a
     // list of the replacements to make import statements with.
     $imported_classes = [];
+    $this->extractFullyQualifiedClasses($class_code, $imported_classes);
+
+    $return = array_merge(
+      $this->code_namespace(),
+      $this->imports($imported_classes),
+      $class_code,
+      [
+        '}',
+      ]);
+    return $return;
+  }
+
+  /**
+   * Remove fully-qualified classnames, extracting them to an array.
+   *
+   * @param &$class_code
+   *  An array of PHP code lines to work on. All namespaced classes will be
+   *  replaced with plain classes.
+   * @param &$imported_classes
+   *  An array to populate with the fully-qualified classnames which are
+   *  removed.
+   */
+  protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes) {
     foreach ($class_code as &$line) {
       $matches = [];
       if (preg_match_all('@(?:\\\\(\w+))+@', $line, $matches, PREG_SET_ORDER) && !preg_match('@^\s*\*@', $line)) {
@@ -112,15 +135,6 @@ class PHPClassFile extends PHPFile {
         }
       }
     }
-
-    $return = array_merge(
-      $this->code_namespace(),
-      $this->imports($imported_classes),
-      $class_code,
-      [
-        '}',
-      ]);
-    return $return;
   }
 
   /**
