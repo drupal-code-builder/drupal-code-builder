@@ -126,35 +126,12 @@ class Collect8 extends Collect {
     // Get plugin type information if Plugin module is present.
     $this->addPluginModuleData($plugin_type_data);
 
+    // Add data from the plugin type manager service.
+    // This gets us the subdirectory, interface, and annotation name.
+    $this->addPluginTypeServiceData($plugin_type_data);
+
     // Assemble data from each plugin manager.
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Get the service, and then get the properties that the plugin manager
-      // constructor sets.
-      // E.g., most plugin managers pass this to the parent:
-      //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
-      // See Drupal\Core\Plugin\DefaultPluginManager
-      $service = \Drupal::service($data['service_id']);
-      $reflection = new \ReflectionClass($service);
-
-      // The list of properties we want to grab out of the plugin manager
-      //  => the key in the plugin type data array we want to set this into.
-      $plugin_manager_properties = [
-        'subdir' => 'subdir',
-        'pluginInterface' => 'plugin_interface',
-        'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
-      ];
-      foreach ($plugin_manager_properties as $property_name => $data_key) {
-        if (!$reflection->hasProperty($property_name)) {
-          // plugin.manager.menu.link is different.
-          $data[$data_key] = '';
-          continue;
-        }
-
-        $property = $reflection->getProperty($property_name);
-        $property->setAccessible(TRUE);
-        $data[$data_key] = $property->getValue($service);
-      }
-
       // Analyze the interface, if there is one.
       if (empty($data['plugin_interface'])) {
         $data['plugin_interface_methods'] = array();
@@ -202,6 +179,48 @@ class Collect8 extends Collect {
       // TranslatableMarkup objects.
       $plugin_type_data[$plugin_type_id]['type_label'] = isset($plugin_types[$plugin_type_id]) ?
         (string) $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
+    }
+  }
+
+  /**
+   * Adds plugin type information from each plugin type manager service.
+   *
+   * This adds:
+   *  - subdir
+   *  - pluginInterface
+   *  - pluginDefinitionAnnotationName
+   *
+   * @param &$plugin_type_data
+   *  The array of plugin data.
+   */
+  protected function addPluginTypeServiceData(&$plugin_type_data) {
+    foreach ($plugin_type_data as $plugin_type_id => &$data) {
+      // Get the service, and then get the properties that the plugin manager
+      // constructor sets.
+      // E.g., most plugin managers pass this to the parent:
+      //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+      // See Drupal\Core\Plugin\DefaultPluginManager
+      $service = \Drupal::service($data['service_id']);
+      $reflection = new \ReflectionClass($service);
+
+      // The list of properties we want to grab out of the plugin manager
+      //  => the key in the plugin type data array we want to set this into.
+      $plugin_manager_properties = [
+        'subdir' => 'subdir',
+        'pluginInterface' => 'plugin_interface',
+        'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
+      ];
+      foreach ($plugin_manager_properties as $property_name => $data_key) {
+        if (!$reflection->hasProperty($property_name)) {
+          // plugin.manager.menu.link is different.
+          $data[$data_key] = '';
+          continue;
+        }
+
+        $property = $reflection->getProperty($property_name);
+        $property->setAccessible(TRUE);
+        $data[$data_key] = $property->getValue($service);
+      }
     }
   }
 
