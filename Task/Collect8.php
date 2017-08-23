@@ -133,16 +133,8 @@ class Collect8 extends Collect {
     // Add data from the plugin interface (which the manager service gave us).
     $this->addPluginInterfaceData($plugin_type_data);
 
-    // Assemble data from each plugin manager.
-    foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Now analyze the anotation.
-      if (isset($data['plugin_definition_annotation_name']) && class_exists($data['plugin_definition_annotation_name'])) {
-        $data['plugin_properties'] = $this->collectPluginAnnotationProperties($data['plugin_definition_annotation_name']);
-      }
-      else {
-        $data['plugin_properties'] = [];
-      }
-    }
+    // Add data from the plugin annotation class.
+    $this->addPluginAnnotationData($plugin_type_data);
 
     // Sort by ID.
     ksort($plugin_type_data);
@@ -288,9 +280,26 @@ class Collect8 extends Collect {
   }
 
   /**
+   * Adds plugin type information from the plugin annotation class.
+   *
+   * @param &$plugin_type_data
+   *  The array of plugin data.
+   */
+  protected function addPluginAnnotationData(&$plugin_type_data) {
+    foreach ($plugin_type_data as $plugin_type_id => &$data) {
+      if (isset($data['plugin_definition_annotation_name']) && class_exists($data['plugin_definition_annotation_name'])) {
+        $data['plugin_properties'] = $this->collectPluginAnnotationProperties($data['plugin_definition_annotation_name']);
+      }
+      else {
+        $data['plugin_properties'] = [];
+      }
+    }
+  }
+
+  /**
    * Get the list of properties from an annotation class.
    *
-   * Helper for gatherPluginTypeInfo().
+   * Helper for addPluginAnnotationData().
    *
    * @param $plugin_annotation_class
    *  The fully-qualified name of the plugin annotation class.
