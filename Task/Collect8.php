@@ -118,22 +118,16 @@ class Collect8 extends Collect {
       $plugin_type_data[$plugin_type_id] = [
         'type_id' => $plugin_type_id,
         'service_id' => $plugin_manager_service_id,
+        // Plugin module may replace this if present.
+        'type_label' => $plugin_type_id,
       ];
     }
 
+    // Get plugin type information if Plugin module is present.
+    $this->addPluginModuleData($plugin_type_data);
+
     // Assemble data from each plugin manager.
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Get plugin type information if Plugin module is present.
-      // This gets us labels for some plugin types (though not all, as the plugin
-      // type ID used by Plugin module doesn't always match the ID we get from
-      // the service definition, e.g. views_access vs views.access).
-      if (\Drupal::hasService('plugin.plugin_type_manager')) {
-        $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
-      }
-
-      $data['type_label'] = isset($plugin_types[$plugin_type_id]) ?
-        $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
-
       // Get the service, and then get the properties that the plugin manager
       // constructor sets.
       // E.g., most plugin managers pass this to the parent:
@@ -184,6 +178,29 @@ class Collect8 extends Collect {
     //drush_print_r($plugin_type_data);
 
     return $plugin_type_data;
+  }
+
+  /**
+   * Adds plugin type information from Plugin module if present.
+   *
+   * @param &$plugin_type_data
+   *  The array of plugin data.
+   */
+  protected function addPluginModuleData(&$plugin_type_data) {
+    // Bail if Plugin module isn't present.
+    if (!\Drupal::hasService('plugin.plugin_type_manager')) {
+      return;
+    }
+
+    // This gets us labels for some plugin types (though not all, as the plugin
+    // type ID used by Plugin module doesn't always match the ID we get from
+    // the service definition, e.g. views_access vs views.access).
+    $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
+
+    foreach ($plugin_type_data as $plugin_type_id => $data) {
+      $plugin_type_data[$plugin_type_id]['type_label'] = isset($plugin_types[$plugin_type_id]) ?
+        $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
+    }
   }
 
   /**
