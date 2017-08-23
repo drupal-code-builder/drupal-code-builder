@@ -42,7 +42,7 @@ class CollectTesting7 extends Collect7 {
   protected function writeProcessedData($data, $type) {
     // Write the processed data to a file in our testing folder.
     $directory = Factory::getLibraryBaseDirectory()
-      . '/tests/sample_hook_definitions/'
+      . '/Test/sample_hook_definitions/'
       . $this->environment->getCoreMajorVersion();
     $serialized = serialize($data);
     file_put_contents("{$directory}/{$type}_processed.php", $serialized);
