@@ -380,6 +380,12 @@ class Collect8 extends Collect {
    * present in the codebase (rather than needing to be downloaded from an
    * online code repository viewer as is the case in previous versions of
    * Drupal).
+   *
+   * Because Drupal 8 puts api.php files in places other than module folders,
+   * keys of the return array may be in one of these forms:
+   *  - foo.api.php: The API file for foo module.
+   *  - core:foo.api.php: The API file in a Drupal component.
+   *  - core.api.php: The single core.api.php file.
    */
   protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
