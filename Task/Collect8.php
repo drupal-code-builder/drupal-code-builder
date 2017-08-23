@@ -130,16 +130,11 @@ class Collect8 extends Collect {
     // This gets us the subdirectory, interface, and annotation name.
     $this->addPluginTypeServiceData($plugin_type_data);
 
+    // Add data from the plugin interface (which the manager service gave us).
+    $this->addPluginInterfaceData($plugin_type_data);
+
     // Assemble data from each plugin manager.
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Analyze the interface, if there is one.
-      if (empty($data['plugin_interface'])) {
-        $data['plugin_interface_methods'] = array();
-      }
-      else {
-        $data['plugin_interface_methods'] = $this->collectPluginInterfaceMethods($data['plugin_interface']);
-      }
-
       // Now analyze the anotation.
       if (isset($data['plugin_definition_annotation_name']) && class_exists($data['plugin_definition_annotation_name'])) {
         $data['plugin_properties'] = $this->collectPluginAnnotationProperties($data['plugin_definition_annotation_name']);
@@ -225,9 +220,27 @@ class Collect8 extends Collect {
   }
 
   /**
+   * Adds plugin type information from the plugin interface.
+   *
+   * @param &$plugin_type_data
+   *  The array of plugin data.
+   */
+  protected function addPluginInterfaceData(&$plugin_type_data) {
+    foreach ($plugin_type_data as $plugin_type_id => &$data) {
+      // Analyze the interface, if there is one.
+      if (empty($data['plugin_interface'])) {
+        $data['plugin_interface_methods'] = array();
+      }
+      else {
+        $data['plugin_interface_methods'] = $this->collectPluginInterfaceMethods($data['plugin_interface']);
+      }
+    }
+  }
+
+  /**
    * Get data for the methods of a plugin interface.
    *
-   * Helper for gatherPluginTypeInfo().
+   * Helper for addPluginInterfaceData().
    *
    * @param $plugin_interface
    *  The fully-qualified name of the interface.
