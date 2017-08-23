@@ -107,34 +107,39 @@ class Collect8 extends Collect {
    *  of these properties may be empty if they could not be deduced.
    */
   protected function gatherPluginTypeInfo($plugin_manager_service_ids) {
-    // Get plugin type information if Plugin module is present.
-    // This gets us labels for some plugin types (though not all, as the plugin
-    // type ID used by Plugin module doesn't always match the ID we get from
-    // the service definition, e.g. views_access vs views.access).
-    if (\Drupal::hasService('plugin.plugin_type_manager')) {
-      $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
-    }
-
-    // Assemble data from each plugin manager.
+    // Assemble a basic array of plugin type data, that we will successively add
+    // data to.
     $plugin_type_data = array();
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
       // We identify plugin types by the part of the plugin manager service name
       // that comes after 'plugin.manager.'.
       $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
 
-      $data = [
+      $plugin_type_data[$plugin_type_id] = [
         'type_id' => $plugin_type_id,
-        'type_label' => isset($plugin_types[$plugin_type_id]) ?
-          $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id,
         'service_id' => $plugin_manager_service_id,
       ];
+    }
+
+    // Assemble data from each plugin manager.
+    foreach ($plugin_type_data as $plugin_type_id => &$data) {
+      // Get plugin type information if Plugin module is present.
+      // This gets us labels for some plugin types (though not all, as the plugin
+      // type ID used by Plugin module doesn't always match the ID we get from
+      // the service definition, e.g. views_access vs views.access).
+      if (\Drupal::hasService('plugin.plugin_type_manager')) {
+        $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
+      }
+
+      $data['type_label'] = isset($plugin_types[$plugin_type_id]) ?
+        $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
 
       // Get the service, and then get the properties that the plugin manager
       // constructor sets.
       // E.g., most plugin managers pass this to the parent:
       //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
       // See Drupal\Core\Plugin\DefaultPluginManager
-      $service = \Drupal::service($plugin_manager_service_id);
+      $service = \Drupal::service($data['service_id']);
       $reflection = new \ReflectionClass($service);
 
       // The list of properties we want to grab out of the plugin manager
@@ -171,8 +176,6 @@ class Collect8 extends Collect {
       else {
         $data['plugin_properties'] = [];
       }
-
-      $plugin_type_data[$plugin_type_id] = $data;
     }
 
     // Sort by ID.
