@@ -49,9 +49,6 @@ class Generate extends Base {
   public function __construct($environment, $component_type) {
     $this->environment = $environment;
 
-    // The component name is just the same as the type for the base generator.
-    $component_name = $component_type;
-
     $this->base = $component_type;
   }
 
