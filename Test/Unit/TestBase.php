@@ -7,12 +7,14 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Base class for PHPUnit tests.
  *
  * Contains helper methods and assertions.
  */
-abstract class TestBase extends \PHPUnit_Framework_TestCase {
+abstract class TestBase extends TestCase {
 
   /**
    * Perform the factory setup, spoofing in the given core major version.
