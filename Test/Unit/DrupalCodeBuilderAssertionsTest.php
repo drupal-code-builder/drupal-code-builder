@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\ExpectationFailedException;
+
 /**
  * Tests the custom assertions in our base tests class.
  *
@@ -37,7 +39,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
         self::fail("assertNoTrailingWhitespace() should fail for '$code'");
       }
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         self::fail("assertNoTrailingWhitespace() should pass for '$code'");
@@ -76,7 +78,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
         self::fail("assertFunctionParameter() should fail for '$code'");
       }
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         throw $e;
@@ -123,7 +125,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
         self::fail("assertDocBlock() should fail for '$code'");
       }
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         self::fail("assertDocBlock() should pass for '$code'");
@@ -272,7 +274,7 @@ EOT
         self::fail("assertFunction() should fail for '$code'");
       }
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass) {
         throw $e;
