@@ -55,6 +55,7 @@ class ComponentPlugins8Test extends TestBase {
     $this->assertClassFileFormatting($plugin_file);
 
     $this->assertNamespace(['Drupal', $module_name, 'Plugin', 'Block'], $plugin_file, "The plugin class file contains contains the expected namespace.");
+    $this->assertClassImport(['Drupal', 'Core', 'Block', 'BlockBase'], $plugin_file);
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',
@@ -63,7 +64,8 @@ class ComponentPlugins8Test extends TestBase {
       'category' => NULL,
     ];
     $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
-    $this->assertClass('Alpha', $plugin_file, "The plugin class file contains contains the expected class.");
+    // Hack for now to cover the inheritance.
+    $this->assertClass('Alpha extends BlockBase', $plugin_file, "The plugin class file contains contains the expected class.");
   }
 
   /**
