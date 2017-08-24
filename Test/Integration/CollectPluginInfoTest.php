@@ -21,7 +21,11 @@ class CollectPluginInfoTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [];
+  public static $modules = [
+    // Modules for the help section service.
+    'help',
+    'tour',
+  ];
 
   /**
    * {@inheritdoc}
@@ -51,13 +55,17 @@ class CollectPluginInfoTest extends KernelTestBase {
     $method->setAccessible(TRUE);
 
     $test_plugin_types = [
+      // In Core, and other modules provide plugins.
       'plugin.manager.queue_worker',
+      // In Core, and our name doesn't match Plugin module's name.
       'plugin.manager.field.field_type',
+      // In a module, and other modules provide plugins.
+      'plugin.manager.help_section',
     ];
 
     $plugin_types_info = $method->invoke($task_handler_collect, $test_plugin_types);
 
-    $this->assertCount(2, $plugin_types_info);
+    $this->assertCount(3, $plugin_types_info);
     $this->assertArrayHasKey('queue_worker', $plugin_types_info, "The plugin types list has the queue_worker plugin type.");
     $this->assertArrayHasKey('field.field_type', $plugin_types_info, "The plugin types list has the field.field_type plugin type.");
 
