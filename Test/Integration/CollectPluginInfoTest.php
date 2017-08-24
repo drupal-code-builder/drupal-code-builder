@@ -25,6 +25,8 @@ class CollectPluginInfoTest extends KernelTestBase {
     // Modules for the help section service.
     'help',
     'tour',
+    // Provides a queue worker plugin.
+    'aggregator',
   ];
 
   /**
