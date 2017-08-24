@@ -136,6 +136,9 @@ class Collect8 extends Collect {
     // Add data from the plugin annotation class.
     $this->addPluginAnnotationData($plugin_type_data);
 
+    // Try to detect a base class for plugins
+    $this->addPluginBaseClass($plugin_type_data);
+
     // Sort by ID.
     ksort($plugin_type_data);
 
@@ -347,6 +350,84 @@ class Collect8 extends Collect {
     }
 
     return $plugin_properties;
+  }
+
+  /**
+   * Adds plugin type information from the plugin annotation TODO!.
+   *
+   * @param &$plugin_type_data
+   *  The array of plugin data.
+   */
+  protected function addPluginBaseClass(&$plugin_type_data) {
+    foreach ($plugin_type_data as $plugin_type_id => &$data) {
+      $service = \Drupal::service($data['service_id']);
+
+      $service_class_name = get_class($service);
+      // Get the module or component that the service class is in.
+      $service_component_namespace = $this->getClassComponentNamespace($service_class_name);
+
+      // Work over each plugin of this type, until we find one with a suitable-
+      // looking ancestor class.
+      $definitions = $service->getDefinitions();
+      foreach ($definitions as $plugin_id => $definition) {
+        $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
+
+        // Get the full ancestry of the plugin's class.
+        $plugin_class_reflection = new \ReflectionClass($definition['class']);
+
+        $class_reflection = $plugin_class_reflection;
+        $lineage = [];
+        $parent_class_component_namespace = NULL;
+        while ($class_reflection = $class_reflection->getParentClass()) {
+          $lineage[] = $class_reflection->getName();
+        }
+
+        // We want the oldest ancestor which is in the same namespace as the
+        // plugin manager. The lineage array has the oldest ancestors last.
+        while ($ancestor_class = array_pop($lineage)) {
+          $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
+
+          if ($parent_class_component_namespace == $service_component_namespace) {
+            // We've found an ancestor class in the plugin's hierarchy which is
+            // in the same namespace as the plugin manager service. Assume it's
+            // a good base class, and move on to the next plugin type.
+            $data['base_class'] = $ancestor_class;
+
+            // TODO: should we check more than the first plugin we find?
+
+            goto done_plugin_definition;
+          }
+        }
+      }
+
+      // Done with this plugin definition; move on to the next one.
+      done_plugin_definition:
+    }
+  }
+
+  /**
+   * Gets the namespace for the component a class is in.
+   *
+   * This is either a module namespace, or a core component namespace, e.g.:
+   *  - 'Drupal\foo'
+   *  - 'Drupal\Core\Foo'
+   *  - 'Drupal\Component\Foo'
+   *
+   * @param string $class_name
+   *  The class name.
+   *
+   * @return string
+   *  The namespace.
+   */
+  protected function getClassComponentNamespace($class_name) {
+    $pieces = explode('\\', $class_name);
+
+    if ($pieces[1] == 'Core' || $pieces[1] == 'Component') {
+      return implode('\\', array_slice($pieces, 0, 3));
+    }
+    else {
+      return implode('\\', array_slice($pieces, 0, 2));
+    }
   }
 
   /**
