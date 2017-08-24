@@ -70,6 +70,7 @@ class CollectPluginInfoTest extends KernelTestBase {
     $this->assertCount(3, $plugin_types_info);
     $this->assertArrayHasKey('queue_worker', $plugin_types_info, "The plugin types list has the queue_worker plugin type.");
     $this->assertArrayHasKey('field.field_type', $plugin_types_info, "The plugin types list has the field.field_type plugin type.");
+    $this->assertArrayHasKey('help_section', $plugin_types_info, "The plugin types list has the help_section plugin type.");
 
     // Check the info for the queue worker plugin type.
     $queue_worker_type_info = $plugin_types_info['queue_worker'];
@@ -78,6 +79,7 @@ class CollectPluginInfoTest extends KernelTestBase {
     $this->assertEquals('Plugin/QueueWorker', $queue_worker_type_info['subdir']);
     $this->assertEquals('Drupal\Core\Queue\QueueWorkerInterface', $queue_worker_type_info['plugin_interface']);
     $this->assertEquals('Drupal\Core\Annotation\QueueWorker', $queue_worker_type_info['plugin_definition_annotation_name']);
+    $this->assertEquals('Drupal\Core\Queue\QueueWorkerBase', $queue_worker_type_info['base_class']);
 
     $this->assertArrayHasKey('plugin_interface_methods', $queue_worker_type_info);
     $plugin_interface_methods = $queue_worker_type_info['plugin_interface_methods'];
@@ -100,6 +102,7 @@ class CollectPluginInfoTest extends KernelTestBase {
     $this->assertEquals('Plugin/Field/FieldType', $field_type_info['subdir']);
     $this->assertEquals('Drupal\Core\Field\FieldItemInterface', $field_type_info['plugin_interface']);
     $this->assertEquals('Drupal\Core\Field\Annotation\FieldType', $field_type_info['plugin_definition_annotation_name']);
+    $this->assertEquals('Drupal\Core\Field\FieldItemBase', $field_type_info['base_class']);
 
     $this->assertArrayHasKey('plugin_interface_methods', $field_type_info);
     $plugin_interface_methods = $field_type_info['plugin_interface_methods'];
@@ -120,6 +123,15 @@ class CollectPluginInfoTest extends KernelTestBase {
     $this->assertArrayHasKey('default_widget', $plugin_properties);
     $this->assertArrayHasKey('default_formatter', $plugin_properties);
     // ... TODO loads more!
+
+    // Check the info for the help section type plugin type.
+    $help_section_type_info = $plugin_types_info['help_section'];
+    $this->assertEquals('help_section', $help_section_type_info['type_id']);
+    $this->assertEquals('plugin.manager.help_section', $help_section_type_info['service_id']);
+    $this->assertEquals('Plugin/HelpSection', $help_section_type_info['subdir']);
+    $this->assertEquals('Drupal\help\HelpSectionPluginInterface', $help_section_type_info['plugin_interface']);
+    $this->assertEquals('Drupal\help\Annotation\HelpSection', $help_section_type_info['plugin_definition_annotation_name']);
+    $this->assertEquals('Drupal\help\Plugin\HelpSection\HelpSectionPluginBase', $help_section_type_info['base_class']);
   }
 
 }
