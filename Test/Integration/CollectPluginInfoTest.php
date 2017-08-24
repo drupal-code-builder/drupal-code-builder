@@ -75,6 +75,7 @@ class CollectPluginInfoTest extends KernelTestBase {
     // Check the info for the queue worker plugin type.
     $queue_worker_type_info = $plugin_types_info['queue_worker'];
     $this->assertEquals('queue_worker', $queue_worker_type_info['type_id']);
+    $this->assertEquals('queue_worker', $queue_worker_type_info['type_label']);
     $this->assertEquals('plugin.manager.queue_worker', $queue_worker_type_info['service_id']);
     $this->assertEquals('Plugin/QueueWorker', $queue_worker_type_info['subdir']);
     $this->assertEquals('Drupal\Core\Queue\QueueWorkerInterface', $queue_worker_type_info['plugin_interface']);
@@ -98,6 +99,7 @@ class CollectPluginInfoTest extends KernelTestBase {
     // Check the info for the field type plugin type.
     $field_type_info = $plugin_types_info['field.field_type'];
     $this->assertEquals('field.field_type', $field_type_info['type_id']);
+    $this->assertEquals('field.field_type', $field_type_info['type_label']);
     $this->assertEquals('plugin.manager.field.field_type', $field_type_info['service_id']);
     $this->assertEquals('Plugin/Field/FieldType', $field_type_info['subdir']);
     $this->assertEquals('Drupal\Core\Field\FieldItemInterface', $field_type_info['plugin_interface']);
@@ -127,6 +129,7 @@ class CollectPluginInfoTest extends KernelTestBase {
     // Check the info for the help section type plugin type.
     $help_section_type_info = $plugin_types_info['help_section'];
     $this->assertEquals('help_section', $help_section_type_info['type_id']);
+    $this->assertEquals('help_section', $help_section_type_info['type_label']);
     $this->assertEquals('plugin.manager.help_section', $help_section_type_info['service_id']);
     $this->assertEquals('Plugin/HelpSection', $help_section_type_info['subdir']);
     $this->assertEquals('Drupal\help\HelpSectionPluginInterface', $help_section_type_info['plugin_interface']);
