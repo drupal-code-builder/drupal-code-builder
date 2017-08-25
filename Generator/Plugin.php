@@ -61,7 +61,7 @@ class Plugin extends PHPClassFile {
       }
       else {
         // Nothing found. Throw exception.
-        throw new InvalidInputException("Plugin type not found.");
+        throw new InvalidInputException("Plugin type $plugin_type not found.");
       }
     }
 
