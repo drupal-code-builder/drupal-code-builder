@@ -373,7 +373,7 @@ class Collect8 extends Collect {
         // We can't work with plugins that don't define a class: skip the whole
         // plugin type.
         if (empty($definition['class'])) {
-          goto done_plugin_definition;
+          goto done_plugin_type;
         }
 
         $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
@@ -401,13 +401,13 @@ class Collect8 extends Collect {
 
             // TODO: should we check more than the first plugin we find?
 
-            goto done_plugin_definition;
+            goto done_plugin_type;
           }
         }
       }
 
       // Done with this plugin definition; move on to the next one.
-      done_plugin_definition:
+      done_plugin_type:
     }
   }
 
