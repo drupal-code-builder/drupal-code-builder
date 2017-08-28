@@ -370,6 +370,12 @@ class Collect8 extends Collect {
       // looking ancestor class.
       $definitions = $service->getDefinitions();
       foreach ($definitions as $plugin_id => $definition) {
+        // We can't work with plugins that don't define a class: skip the whole
+        // plugin type.
+        if (empty($definition['class'])) {
+          goto done_plugin_definition;
+        }
+
         $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
 
         // Get the full ancestry of the plugin's class.
