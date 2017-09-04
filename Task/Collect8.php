@@ -254,6 +254,10 @@ class Collect8 extends Collect {
     $data = [];
 
     foreach ($methods as $method) {
+      if ($method->getName() != 'storageSettingsForm') {
+        //continue;
+      }
+
       $interface_method_data = [];
 
       $interface_method_data['name'] = $method->getName();
@@ -275,6 +279,35 @@ class Collect8 extends Collect {
           break;
         }
       }
+
+      // Replace class typehints on method parameters with their full namespaced
+      // versions, as typically these will be short class names. The PHPFile
+      // generator will then take care of extracting namespaces and creating
+      // import statements.
+      // Get the typehint classes on parameters.
+      $parameters = $method->getParameters();
+      $parameter_hinted_class_short_names = [];
+      $parameter_hinted_class_full_names = [];
+      foreach ($parameters as $parameter) {
+        $parameter_hinted_class = $parameter->getClass();
+
+        // Skip a parameter that doesn't have a class hint.
+        if (is_null($parameter_hinted_class)) {
+          continue;
+        }
+
+        // Create arrays for str_replace() of short and long classnames.
+        $parameter_hinted_class_short_names[] = $parameter_hinted_class->getShortName();
+        // The PHPFile generator works with fully-qualified classnames, with
+        // an initial '\', so we need to prepend that.
+        $parameter_hinted_class_full_names[] = '\\' . $parameter_hinted_class->getName();
+      }
+
+      $interface_method_data['declaration'] = str_replace(
+        $parameter_hinted_class_short_names,
+        $parameter_hinted_class_full_names,
+        $interface_method_data['declaration']
+      );
 
       $data[$method->getName()] = $interface_method_data;
     }
