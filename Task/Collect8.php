@@ -159,16 +159,30 @@ class Collect8 extends Collect {
       return;
     }
 
-    // This gets us labels for some plugin types (though not all, as the plugin
-    // type ID used by Plugin module doesn't always match the ID we get from
-    // the service definition, e.g. views_access vs views.access).
+    // This gets us labels for the plugin types which are declared to Plugin
+    // module.
     $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
 
-    foreach ($plugin_type_data as $plugin_type_id => $data) {
-      // Add the label, casting it to a string so we don't have to deal with
-      // TranslatableMarkup objects.
-      $plugin_type_data[$plugin_type_id]['type_label'] = isset($plugin_types[$plugin_type_id]) ?
-        (string) $plugin_types[$plugin_type_id]->getLabel() : $plugin_type_id;
+    // We need to re-key these by the service ID, as Plugin module uses IDs for
+    // plugin types which don't always the ID we use for them based on the
+    // plugin manager service ID, , e.g. views_access vs views.access.
+    // Unfortunately, there's no accessor for this, so some reflection hackery
+    // is required until https://www.drupal.org/node/2907862 is fixed.
+    $reflection = new \ReflectionProperty(\Drupal\plugin\PluginType\PluginType::class, 'pluginManagerServiceId');
+    $reflection->setAccessible(TRUE);
+
+    foreach ($plugin_types as $plugin_type) {
+      // Get the service ID from the reflection, and then our ID.
+      $plugin_manager_service_id = $reflection->getValue($plugin_type);
+      $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
+
+      if (!isset($plugin_type_data[$plugin_type_id])) {
+        return;
+      }
+
+      // Replace the default label with the one from Plugin module, casting it
+      // to a string so we don't have to deal with TranslatableMarkup objects.
+      $plugin_type_data[$plugin_type_id]['type_label'] = (string) $plugin_type->getLabel();
     }
   }
 
