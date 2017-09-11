@@ -589,6 +589,14 @@ class Generate extends Base {
   /**
    * Collect file data from components.
    *
+   * This assembles an array, keyed by an arbitrary ID for the file, whose
+   * values are arrays with the following properties:
+   *  - 'body': An array of lines of content for the file.
+   *  - 'path': The path for the file, relative to the module folder.
+   *  - 'filename': The filename for the file.
+   *  - 'join_string': The string with which to join the items in the body
+   *    array. (TODO: remove this!)
+   *
    * @param $component_list
    *  The component list.
    * @param $tree
