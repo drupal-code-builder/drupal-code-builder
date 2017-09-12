@@ -347,12 +347,15 @@ class Generate extends Base {
    *  component class. For details, see the constructor of the generator, of the
    *  form DrupalCodeBuilder\Generator\COMPONENT, e.g.
    *  DrupalCodeBuilder\Generator\Module::__construct().
+   * @param $existing_module_files
+   *  (optional) An array of existing files for this module. Keys should be
+   *  file paths relative to the module, values absolute paths.
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
    *  values are the code destined for each file.
    */
-  public function generateComponent($component_data) {
+  public function generateComponent($component_data, $existing_module_files = []) {
     // Add the top-level component to the data.
     $component_type = $this->base;
     $component_data['base'] = $component_type;
@@ -373,6 +376,10 @@ class Generate extends Base {
     // Recursively assemble all the components that are needed.
     $this->component_list = $this->assembleComponentList($root_generator);
     \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
+
+    // Let each component detect whether it already exists in the given module
+    // files.
+    $this->detectExistence($this->component_list, $existing_module_files);
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
@@ -521,6 +528,26 @@ class Generate extends Base {
   }
 
   /**
+   * Lets each component determine whether it is already in existing files.
+   *
+   * Existence is determined at the component level, rather than the file level,
+   * because one component may want to add to several files, and several
+   * components may want to add to the same file. For example, a service may
+   * exist, but other components might want to add services and therefore add
+   * code to the services.yml file.
+   *
+   * @param $component_list
+   *  The component list.
+   * @param $existing_module_files
+   *  The array of existing file names.
+   */
+  protected function detectExistence($component_list, $existing_module_files) {
+    foreach ($component_list as $name => $component) {
+      $component->detectExistence($existing_module_files);
+    }
+  }
+
+  /**
    * Assemble a tree of components, grouped by what they contain.
    *
    * For example, a code file contains its functions; a form component
@@ -614,6 +641,16 @@ class Generate extends Base {
     $root_component_name = $this->root_generator->getUniqueID();
     foreach ($tree[$root_component_name] as $child_component_name) {
       $child_component = $component_list[$child_component_name];
+
+      // Don't get files for existing components.
+      // TODO! This is quick and dirty! It's a lot more complicated than this,
+      // for instance with components that affect other files.
+      // Currently the only component that will set this is Info, to make
+      // adding code to existing modules look like it works!
+      if ($child_component->exists) {
+        continue;
+      }
+
       $child_component_file_data = $child_component->getFileInfo();
       if (is_array($child_component_file_data)) {
         $file_info += $child_component_file_data;

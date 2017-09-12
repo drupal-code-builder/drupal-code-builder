@@ -134,6 +134,13 @@ abstract class BaseGenerator {
   public $component_data = array();
 
   /**
+   * Boolean to indicate whether this component already exists.
+   *
+   * @see detectExistence()
+   */
+  public $exists = FALSE;
+
+  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name
@@ -383,6 +390,20 @@ abstract class BaseGenerator {
    */
   public static function requestedComponentHandling() {
     return 'repeat';
+  }
+
+  /**
+   * Detect whether this component exists in the given module files.
+   *
+   * Components should set $this->exists on themselves if they find they already
+   * exist in the module.
+   *
+   * @param $existing_module_files
+   *  An array of information about existing module files. Keys are filenames
+   *  relative to the module, values are absolute filenames.
+   */
+  public function detectExistence($existing_module_files) {
+    // Do nothing by default.
   }
 
   /**

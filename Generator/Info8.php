@@ -13,6 +13,20 @@ namespace DrupalCodeBuilder\Generator;
 class Info8 extends Info {
 
   /**
+   * {@inheritdoc}
+   */
+  public function detectExistence($existing_module_files) {
+    // Quick and dirty hack!
+    $root_component_name = $this->component_data['root_component_name'];
+    // Violates DRY as this is also in getFileInfo()!
+    $filename = "{$root_component_name}.info.yml";
+
+    if (isset($existing_module_files[$filename])) {
+      $this->exists = TRUE;
+    }
+  }
+
+  /**
    * Build the code files.
    */
   public function getFileInfo() {
