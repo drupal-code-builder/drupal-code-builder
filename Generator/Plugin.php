@@ -175,13 +175,13 @@ class Plugin extends PHPClassFile {
    * Procudes the docblock for the class.
    */
   protected function class_doc_block() {
-    return $this->class_annotation();
+    return $this->classAnnotation();
   }
 
   /**
    * Produces the plugin class annotation.
    */
-  function class_annotation() {
+  function classAnnotation() {
     $annotation_variables = $this->component_data['plugin_type_data']['plugin_properties'];
     //ddpr($class_variables);
 
