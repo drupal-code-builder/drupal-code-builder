@@ -12,6 +12,8 @@ namespace DrupalCodeBuilder\Generator;
  */
 class Service extends PHPClassFile {
 
+  use NameFormattingTrait;
+
   /**
    * Constructor method; sets the component data.
    *
@@ -34,7 +36,7 @@ class Service extends PHPClassFile {
       $component_data['root_component_name'],
       $unqualified_class_name,
     );
-    $component_data['qualified_class_name'] = implode('\\', $class_name_pieces);
+    $component_data['qualified_class_name'] = $this->makeQualifiedClassName($class_name_pieces);
 
     parent::__construct($component_name, $component_data, $root_generator);
   }
