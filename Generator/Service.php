@@ -97,6 +97,10 @@ class Service extends PHPClassFile {
     if ($yaml_data_arguments) {
       $yaml_service_definition['arguments'] = $yaml_data_arguments;
     }
+    // TODO: document and declare this property!
+    if (isset($this->component_data['parent'])) {
+      $yaml_service_definition['parents'] = $this->component_data['parent'];
+    }
 
     $yaml_data = [];
     $yaml_data['services'] = [
