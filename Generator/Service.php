@@ -24,19 +24,21 @@ class Service extends PHPClassFile {
     $component_data['original_service_name'] = $component_data['service_name'];
     $component_data['service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
 
-    // The service name is its ID as a service.
-    // implode and ucfirst()
-    $service_id = $component_data['original_service_name'];
-    $service_id_pieces = preg_split('/[\._]/', $service_id);
-    // Create an unqualified class name by turning this into camel case.
-    $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
-    // Form the full class name by adding a namespace Drupal\MODULE.
-    $class_name_pieces = array(
-      'Drupal',
-      $component_data['root_component_name'],
-      $unqualified_class_name,
-    );
-    $component_data['qualified_class_name'] = $this->makeQualifiedClassName($class_name_pieces);
+    if (empty($component_data['qualified_class_name'])) {
+      // The service name is its ID as a service.
+      // implode and ucfirst()
+      $service_id = $component_data['original_service_name'];
+      $service_id_pieces = preg_split('/[\._]/', $service_id);
+      // Create an unqualified class name by turning this into camel case.
+      $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
+      // Form the full class name by adding a namespace Drupal\MODULE.
+      $class_name_pieces = array(
+        'Drupal',
+        $component_data['root_component_name'],
+        $unqualified_class_name,
+      );
+      $component_data['qualified_class_name'] = $this->makeQualifiedClassName($class_name_pieces);
+    }
 
     parent::__construct($component_name, $component_data, $root_generator);
   }
