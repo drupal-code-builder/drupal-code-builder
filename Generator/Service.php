@@ -20,8 +20,11 @@ class Service extends PHPClassFile {
    * The component name is taken to be the service ID. KILL
    */
   function __construct($component_name, $component_data, $root_generator) {
-    // Prefix the service name with the module name.
-    $component_data['prefixed_service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
+    // TODO: use computed properties for these.
+    if (empty($component_data['prefixed_service_name'])) {
+      // Prefix the service name with the module name.
+      $component_data['prefixed_service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
+    }
 
     if (empty($component_data['qualified_class_name'])) {
       // The service name is its ID as a service.
