@@ -21,13 +21,12 @@ class Service extends PHPClassFile {
    */
   function __construct($component_name, $component_data, $root_generator) {
     // Prefix the service name with the module name.
-    $component_data['original_service_name'] = $component_data['service_name'];
-    $component_data['service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
+    $component_data['prefixed_service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
 
     if (empty($component_data['qualified_class_name'])) {
       // The service name is its ID as a service.
       // implode and ucfirst()
-      $service_id = $component_data['original_service_name'];
+      $service_id = $component_data['service_name'];
       $service_id_pieces = preg_split('/[\._]/', $service_id);
       // Create an unqualified class name by turning this into camel case.
       $unqualified_class_name = implode('', array_map('ucfirst', $service_id_pieces));
@@ -88,7 +87,7 @@ class Service extends PHPClassFile {
 
     $yaml_data = [];
     $yaml_data['services'] = [
-      $this->component_data['service_name'] => [
+      $this->component_data['prefixed_service_name'] => [
         'class' => $this->qualified_class_name,
         'arguments' => $yaml_data_arguments,
       ],
