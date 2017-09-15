@@ -91,12 +91,16 @@ class Service extends PHPClassFile {
       $yaml_data_arguments[] = '@' . $service_id;
     }
 
+    $yaml_service_definition = [
+      'class' => $this->qualified_class_name,
+    ];
+    if ($yaml_data_arguments) {
+      $yaml_service_definition['arguments'] = $yaml_data_arguments;
+    }
+
     $yaml_data = [];
     $yaml_data['services'] = [
-      $this->component_data['prefixed_service_name'] => [
-        'class' => $this->qualified_class_name,
-        'arguments' => $yaml_data_arguments,
-      ],
+      $this->component_data['prefixed_service_name'] => $yaml_service_definition,
     ];
 
     $components['%module.services.yml'] = [
