@@ -51,7 +51,9 @@ class PHPFunction extends BaseGenerator {
    *    - 'has_wrapping_newlines': (optional) If the 'body' is a string, this
    *      indicates whether the string has first and closing newlines.
    *    - 'body_indent': (options) The number of spaces to add to the start of
-   *      each line, if 'body' is an array.
+   *      each line, if 'body' is an array. This is relative to the indentation
+   *      of the function as a whole; that is, it does not need to be increased
+   *      for a class method.
    */
   function __construct($component_name, $component_data, $root_generator) {
     // Set defaults.
