@@ -87,7 +87,7 @@ class Plugin extends PHPClassFile {
    * Define the component data this component needs to function.
    */
   protected static function componentDataDefinition() {
-    return array(
+    return parent::componentDataDefinition() + array(
       'plugin_type' => array(
         'label' => 'Plugin type',
         'description' => "The identifier of the plugin type. This can be either the manager service name with the 'plugin.manager.' prefix removed, " .
@@ -175,6 +175,7 @@ class Plugin extends PHPClassFile {
    * Procudes the docblock for the class.
    */
   protected function class_doc_block() {
+    // TODO: add docblock_first_line.
     return $this->classAnnotation();
   }
 

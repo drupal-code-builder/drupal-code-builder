@@ -64,7 +64,7 @@ class Form extends PHPClassFile {
    * Define the component data this component needs to function.
    */
   protected static function componentDataDefinition() {
-    return array(
+    return parent::componentDataDefinition() + array(
       'form_class_name' => array(
         'label' => 'Form class name',
         'required' => TRUE,

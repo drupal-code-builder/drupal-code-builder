@@ -25,6 +25,22 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected static function componentDataDefinition() {
+    return [
+      'docblock_first_line' => [
+        'format' => 'string',
+        // May be set by requesters, but not by UIs.
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return 'TODO: class docs.';
+        },
+      ],
+    ];
+  }
+
+  /**
    * Set properties relating to class name.
    *
    * @param $qualified_class_name
@@ -128,7 +144,7 @@ class PHPClassFile extends PHPFile {
    * Procudes the docblock for the class.
    */
   protected function class_doc_block() {
-    return $this->docBlock("TODO: class docs.");
+    return $this->docBlock($this->component_data['docblock_first_line']);
   }
 
   /**
