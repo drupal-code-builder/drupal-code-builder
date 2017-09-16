@@ -32,6 +32,7 @@ class RouterItem extends BaseGenerator {
     // Create a controller name from the route path.
     $snake = str_replace(['/', '-'], '_', $component_name);
     $controller_class_name = $this->toCamel($snake) . 'Controller';
+    // TODO: clean up, use helper.
     $controller_qualified_class_name = implode('\\', [
       'Drupal',
       '%module',
@@ -47,7 +48,7 @@ class RouterItem extends BaseGenerator {
         'controller_property' => '_controller',
         'controller_value' => '\\' . "$controller_qualified_class_name::content",
       ],
-      'controller_qualified_class' => $controller_qualified_class_name,
+      'controller_relative_class' => ['Controller', $controller_class_name],
     ];
 
     parent::__construct($component_name, $component_data, $root_generator);
@@ -68,14 +69,14 @@ class RouterItem extends BaseGenerator {
       'component_type' => 'Routing',
     );
 
+    $controller_relative_class = $this->component_data['controller_relative_class'];
+
     // Add a controller class if needed.
     if (!empty($this->component_data['controller']['controller_property'])
         && $this->component_data['controller']['controller_property'] == '_controller') {
-      $controller_qualified_class = $this->component_data['controller_qualified_class'];
-      $components[$controller_qualified_class] = array(
-        // TODO: Add a sample build method to this.
+      $components[implode('\\', $controller_relative_class)] = array(
         'component_type' => 'PHPClassFile',
-        'qualified_class_name' => $controller_qualified_class,
+        'relative_class_name' => $controller_relative_class,
       );
     }
 

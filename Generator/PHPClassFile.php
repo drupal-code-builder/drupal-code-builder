@@ -21,7 +21,7 @@ class PHPClassFile extends PHPFile {
   function __construct($component_name, $component_data, $root_generator) {
     parent::__construct($component_name, $component_data, $root_generator);
 
-    $this->setClassNames($component_data['qualified_class_name']);
+    $this->setClassNames($component_data['relative_class_name']);
   }
 
   /**
@@ -29,6 +29,12 @@ class PHPClassFile extends PHPFile {
    */
   protected static function componentDataDefinition() {
     return [
+      'relative_class_name' => [
+        'label' => 'The qualifed classname pieces, relative to the module namespace.',
+        'format' => 'array',
+        // May be set by requesters, but not by UIs.
+        'computed' => TRUE,
+      ],
       'docblock_first_line' => [
         'format' => 'string',
         // May be set by requesters, but not by UIs.
@@ -43,17 +49,22 @@ class PHPClassFile extends PHPFile {
   /**
    * Set properties relating to class name.
    *
-   * @param $qualified_class_name
-   *  The fully-qualified class name, e.g. 'Drupal\\foo\\Bar\\Classname'.
+   * @param array $relative_class_name_pieces
+   *  TODO The fully-qualified class name, e.g. 'Drupal\\foo\\Bar\\Classname'.
    */
-  protected function setClassNames($qualified_class_name) {
-    $this->qualified_class_name = $qualified_class_name;
-    $pieces = explode('\\', $this->qualified_class_name);
-    $this->plain_class_name = array_pop($pieces);
-    $this->namespace  = implode('\\', $pieces);
-    $path_pieces = array_slice($pieces, 2);
+  protected function setClassNames($relative_class_name_pieces) {
+    $class_name_pieces = array_merge([
+      'Drupal',
+      '%module',
+    ], $relative_class_name_pieces);
+
+    $this->qualified_class_name = $this->makeQualifiedClassName($class_name_pieces);
+
+    $this->plain_class_name = array_pop($class_name_pieces);
+    $this->namespace  = implode('\\', $class_name_pieces);
+    $path_pieces = array_slice($class_name_pieces, 2);
     array_unshift($path_pieces, 'src');
-    $this->path       = implode('/', $path_pieces);
+    $this->path = implode('/', $path_pieces);
   }
 
   /**

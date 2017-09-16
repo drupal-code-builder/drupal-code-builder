@@ -37,13 +37,7 @@ class Service extends PHPClassFile {
       $component_data['plain_class_name'] = implode('', array_map('ucfirst', $service_id_pieces));
     }
 
-    // Form the full class name by adding a namespace Drupal\MODULE.
-    $class_name_pieces = array(
-      'Drupal',
-      $component_data['root_component_name'],
-      $component_data['plain_class_name'],
-    );
-    $component_data['qualified_class_name'] = $this->makeQualifiedClassName($class_name_pieces);
+    $component_data['relative_class_name'] = [$component_data['plain_class_name']];
 
     parent::__construct($component_name, $component_data, $root_generator);
   }

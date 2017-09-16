@@ -67,18 +67,17 @@ class Plugin extends PHPClassFile {
 
     $component_data['plugin_type_data'] = $plugin_data;
 
-    // Create the fully-qualified class name.
-    // This is of the form:
+    // Create the relative qualified class name.
+    // The full class name will be of the form:
     //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
-    $component_data['qualified_class_name'] = implode('\\', [
-      'Drupal',
-      // Module name.
-      $component_data['root_component_name'],
+    $component_data['relative_class_name'] = array_merge(
       // Plugin subdirectory.
-      $this->pathToNamespace($component_data['plugin_type_data']['subdir']),
+      $this->pathToNamespacePieces($component_data['plugin_type_data']['subdir']),
       // Plugin ID.
-      $this->toCamel($component_data['original_plugin_name'])
-    ]);
+      [
+        $this->toCamel($component_data['original_plugin_name']),
+      ]
+    );
 
     parent::__construct($component_name, $component_data, $root_generator);
   }
@@ -389,8 +388,8 @@ class Plugin extends PHPClassFile {
   /**
    * TODO: is there a core function for this?
    */
-  function pathToNamespace($path) {
-    return str_replace('/', '\\', $path);
+  function pathToNamespacePieces($path) {
+    return explode('/', $path);
   }
 
 }

@@ -37,13 +37,7 @@ class Form extends PHPClassFile {
     // TODO: this should be done in a property processing callback.
     $component_data['form_class_name'] = ucfirst($component_data['form_class_name']);
 
-    $class_name_pieces = array(
-      'Drupal',
-      '%module',
-      'Form',
-      $component_data['form_class_name'],
-    );
-    $component_data['qualified_class_name'] = implode('\\', $class_name_pieces);
+    $component_data['relative_class_name'] = ['Form', $component_data['form_class_name']];
 
     //ddpr($component_data);
 
