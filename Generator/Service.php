@@ -37,7 +37,9 @@ class Service extends PHPClassFile {
       $component_data['plain_class_name'] = implode('', array_map('ucfirst', $service_id_pieces));
     }
 
-    $component_data['relative_class_name'] = [$component_data['plain_class_name']];
+    if (empty($component_data['relative_class_name'])) {
+      $component_data['relative_class_name'] = [$component_data['plain_class_name']];
+    }
 
     parent::__construct($component_name, $component_data, $root_generator);
   }
