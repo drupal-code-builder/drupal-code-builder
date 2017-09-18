@@ -85,7 +85,7 @@ class Plugin extends PHPClassFile {
   /**
    * Define the component data this component needs to function.
    */
-  protected static function componentDataDefinition() {
+  public static function componentDataDefinition() {
     return parent::componentDataDefinition() + array(
       'plugin_type' => array(
         'label' => 'Plugin type',

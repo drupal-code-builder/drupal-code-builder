@@ -45,7 +45,7 @@ class Service extends PHPClassFile {
   /**
    * Define the component data this component needs to function.
    */
-  protected static function componentDataDefinition() {
+  public static function componentDataDefinition() {
     return parent::componentDataDefinition() + array(
       'service_name' => array(
         'label' => 'Service name',

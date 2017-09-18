@@ -27,7 +27,7 @@ class PHPClassFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  protected static function componentDataDefinition() {
+  public static function componentDataDefinition() {
     return [
       'relative_class_name' => [
         'label' => 'The qualifed classname pieces, relative to the module namespace.',

@@ -96,7 +96,7 @@ class Module extends RootComponent {
   /**
    * Define the component data this component needs to function.
    */
-  protected static function componentDataDefinition() {
+  public static function componentDataDefinition() {
     $component_data_definition = array(
       'root_name' => array(
         'label' => 'Module machine name',

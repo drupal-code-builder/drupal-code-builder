@@ -246,72 +246,10 @@ abstract class BaseGenerator {
    *  - 'computed': (optional) If TRUE, indicates that this property is computed
    *    by the component, and should not be obtained from the user.
    *
-   * @see getComponentDataInfo()
+   * @see Generate::getComponentDataInfo()
    */
-  protected static function componentDataDefinition() {
+  public static function componentDataDefinition() {
     return array();
-  }
-
-  /**
-   * Get a list of the properties that are required in the component data.
-   *
-   * UIs should use DrupalCodeBuilder\Task\Generate\getRootComponentDataInfo() rather
-   * than this method.
-   *
-   * @param $include_computed
-   *  (optional) Boolean indicating whether to include computed properties.
-   *  Default value is FALSE, as UIs don't need to work with these.
-   *
-   * @return
-   *  An array containing information about the properties this component needs
-   *  in its $component_data array. Keys are the names of properties. Each value
-   *  is an array of information for the property.
-   *
-   * @see componentDataDefinition()
-   * @see prepareComponentDataProperty()
-   * @see processComponentData()
-   */
-  public static function getComponentDataInfo($include_computed = FALSE) {
-    $return = array();
-    foreach (static::componentDataDefinition() as $property_name => $property_info) {
-      if (empty($property_info['computed'])) {
-        static::componentDataInfoAddDefaults($property_info);
-      }
-      else {
-        if (!$include_computed) {
-          continue;
-        }
-      }
-
-      // Expand compound properties.
-      if (isset($property_info['format']) && $property_info['format'] == 'compound') {
-        $component_class = \DrupalCodeBuilder\Task\Generate::getGeneratorClass($property_info['component']);
-        $child_properties = $component_class::componentDataDefinition();
-
-        array_walk($child_properties, 'static::componentDataInfoAddDefaults');
-
-        $property_info['properties'] = $child_properties;
-      }
-
-      $return[$property_name] = $property_info;
-    }
-
-    return $return;
-  }
-
-  /**
-   * Set default values in a component property info array.
-   *
-   * @param &$property_info
-   *  A single value array from a component property info array. In other words,
-   *  the array that describes a single property that would be passed to a
-   *  generator, such as the 'hooks' property.
-   */
-  protected static function componentDataInfoAddDefaults(&$property_info) {
-    $property_info += array(
-      'required' => FALSE,
-      'format' => 'string',
-    );
   }
 
   /**
