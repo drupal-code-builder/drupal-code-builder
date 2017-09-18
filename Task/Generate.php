@@ -63,7 +63,7 @@ class Generate extends Base {
    */
   public function getSanityLevel() {
     $class = $this->getGeneratorClass($this->base);
-    return $class::$sanity_level;
+    return $class::getSanityLevel();
   }
 
   /**

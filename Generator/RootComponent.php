@@ -18,8 +18,17 @@ abstract class RootComponent extends BaseGenerator {
   /**
    * The sanity level this generator requires to operate.
    */
-  public static $sanity_level = 'none';
+  protected static $sanity_level = 'none';
 
+  /**
+   * Returns this generator's sanity level.
+   *
+   * @return string
+   *  The sanity level name.
+   */
+  public static function getSanityLevel() {
+    return static::$sanity_level;
+  }
 
   /**
    * Filter the file info array to just the requested build list.
