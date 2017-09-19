@@ -93,8 +93,7 @@ class APIComponentDataInfoTest extends TestBase {
     $this->assertArrayHasKey('property_child_public', $child_info, "The public property is returned.");
     $this->assertArrayHasKey('property_child_format', $child_info, "The format property is returned.");
     $this->assertArrayHasKey('property_child_required', $child_info, "The required property is returned.");
-    // TODO: this will fail due to a bug!
-    //$this->assertArrayNotHasKey('property_child_computed', $child_info, "The computed property is not returned.");
+    $this->assertArrayNotHasKey('property_child_computed', $child_info, "The computed property is not returned.");
 
     $this->assertEquals('string', $child_info['property_child_public']['format'], "The default format is filled in.");
     $this->assertEquals(FALSE, $child_info['property_child_public']['required'], "The default required is filled in.");
