@@ -142,9 +142,9 @@ class Generate extends Base {
       // Expand compound properties.
       if (isset($property_info['format']) && $property_info['format'] == 'compound') {
         $component_class = $this->getGeneratorClass($property_info['component']);
-        $child_properties = $component_class::componentDataDefinition();
 
-        array_walk($child_properties, [$this, 'componentDataInfoAddDefaults']);
+        // Recurse to get the child properties.
+        $child_properties = $this->getComponentDataInfo($component_class, $include_computed);
 
         $property_info['properties'] = $child_properties;
       }
