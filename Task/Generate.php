@@ -109,6 +109,9 @@ class Generate extends Base {
   /**
    * Get a list of the properties that are required in the component data.
    *
+   * This adds in default values, recurses into child components, and filters
+   * out computed values so they are not available to UIs.
+   *
    * @param $class
    *  The class to get properties for. Compound properties are recursed into.
    * @param $include_computed
