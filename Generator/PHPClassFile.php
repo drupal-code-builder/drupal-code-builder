@@ -121,7 +121,7 @@ class PHPClassFile extends PHPFile {
     $class_code = array_merge(
       $this->class_doc_block(),
       $this->class_declaration(),
-      $this->class_code_body()
+      $this->classCodeBody()
     );
 
     // Replace any fully-qualified classes with short class names, and keep a
@@ -170,7 +170,7 @@ class PHPClassFile extends PHPFile {
   /**
    * Return the body of the class's code.
    */
-  protected function class_code_body() {
+  protected function classCodeBody() {
     $code_body = array();
 
     // Blank line before the first method.

@@ -124,7 +124,7 @@ class Service extends PHPClassFile {
   /**
    * Return the body of the class's code.
    */
-  function class_code_body() {
+  function classCodeBody() {
     $code = array();
 
     // Injected services.

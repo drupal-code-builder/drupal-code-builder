@@ -151,7 +151,7 @@ class Form extends PHPClassFile {
   /**
    * Return the body of the class's code.
    */
-  protected function class_code_body() {
+  protected function classCodeBody() {
     $code = [];
 
     $code[] = '';
