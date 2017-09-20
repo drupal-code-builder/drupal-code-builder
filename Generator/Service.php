@@ -125,35 +125,27 @@ class Service extends PHPClassFile {
    * Return the body of the class's code.
    */
   function classCodeBody() {
-    $code = array();
-
+    // TODO: this code sets up class properties for the parent classCodeBody()
+    // to work with, as if they had been set by buildComponentContents().
+    // This should be refactored in due course.
     // Injected services.
     if (!empty($this->injectedServices)) {
-      // Class properties.
-      $code[] = '';
-
       foreach ($this->injectedServices as $service_info) {
-        $var_doc = $this->docBlock([
+        $property_code = $this->docBlock([
           $service_info['description'] . '.',
           '',
           '@var ' . $service_info['interface']
         ]);
-        $code = array_merge($code, $var_doc);
-        $code[] = 'protected $' . $service_info['property_name'] . ';';
-        $code[] = '';
+        $property_code[] = 'protected $' . $service_info['property_name'] . ';';
+
+        $this->properties[] = $property_code;
       }
 
       // __construct() method
-      $code = array_merge($code, $this->codeBodyClassMethodConstruct());
+      $this->constructor = $this->codeBodyClassMethodConstruct();
     }
 
-    // Indent all the class code.
-    // TODO: is there a nice way of doing indents?
-    $code = array_map(function ($line) {
-      return empty($line) ? $line : '  ' . $line;
-    }, $code);
-
-    return $code;
+    return parent::classCodeBody();
   }
 
   /**
@@ -178,7 +170,7 @@ class Service extends PHPClassFile {
       $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
     }
     $code[] = '}';
-    $code[] = '';
+
     return $code;
   }
 
