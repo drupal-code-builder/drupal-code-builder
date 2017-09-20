@@ -152,48 +152,33 @@ class Form extends PHPClassFile {
    * Return the body of the class's code.
    */
   protected function classCodeBody() {
-    $code = [];
-
-    $code[] = '';
-
+    // TODO: this code sets up class properties for the parent classCodeBody()
+    // to work with, as if they had been set by buildComponentContents().
+    // This should be refactored in due course.
     // Injected services.
     // TODO: refactor this along with Plugin to a parent class.
     if (!empty($this->injectedServices)) {
       foreach ($this->injectedServices as $service_info) {
-        $var_doc = $this->docBlock([
+        $property_code = $this->docBlock([
           $service_info['description'] . '.',
           '',
           '@var ' . $service_info['interface']
         ]);
-        $code = array_merge($code, $var_doc);
-        $code[] = 'protected $' . $service_info['property_name'] . ';';
-        $code[] = '';
+        $property_code[] = 'protected $' . $service_info['property_name'] . ';';
+
+        $this->properties[] = $property_code;
       }
 
-      // Class constructor.
-
-      // TODO: cleaner system for adding methods!
       // __construct() method
-      $code = array_merge($code, $this->codeBodyClassMethodConstruct());
+      $this->constructor = $this->codeBodyClassMethodConstruct();
 
       // create() method.
-      $code = array_merge($code, $this->codeBodyClassMethodCreate());
+      // Function data has been set by buildComponentContents().
+      // Goes first in the functions.
+      $this->functions = array_merge([$this->codeBodyClassMethodCreate()], $this->functions);
     }
 
-    // Function data has been set by buildComponentContents().
-    foreach ($this->functions as $component_name => $function_lines) {
-      $code = array_merge($code, $function_lines);
-      // Blank line after the function.
-      $code[] = '';
-    }
-
-    // Indent all the class code.
-    // TODO: is there a nice way of doing indents?
-    $code = array_map(function ($line) {
-      return empty($line) ? $line : '  ' . $line;
-    }, $code);
-
-    return $code;
+    return parent::classCodeBody();
   }
 
   /**
@@ -218,7 +203,7 @@ class Form extends PHPClassFile {
       $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
     }
     $code[] = '}';
-    $code[] = '';
+
     return $code;
   }
 
@@ -257,7 +242,7 @@ class Form extends PHPClassFile {
 
     $code[] = '  );';
     $code[] = '}';
-    $code[] = '';
+
     return $code;
   }
 
