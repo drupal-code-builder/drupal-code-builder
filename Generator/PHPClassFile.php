@@ -173,22 +173,88 @@ class PHPClassFile extends PHPFile {
   protected function classCodeBody() {
     $code_body = array();
 
-    // Blank line before the first method.
+    // Class body always has at least one blank line.
     $code_body[] = '';
 
-    // Function data has been set by buildComponentContents().
-    foreach ($this->functions as $component_name => $function_lines) {
-      // Add extra indent for methods.
-      $function_lines = array_map(function($line) {
-        return empty($line) ? $line : '  ' . $line;
-      }, $function_lines);
 
-      $code_body = array_merge($code_body, $function_lines);
-      // Blank line after the function.
-      $code_body[] = '';
+    $section_types = [
+      // These are the names of class properties.
+      // TODO: change these to being roles in the child components.
+      'constants',
+      'properties',
+      'constructor',
+      'functions',
+    ];
+    foreach ($section_types as $section_type) {
+      $section_blocks = $this->getSectionBlocks($section_type);
+      $code_body = array_merge($code_body, $this->mergeSectionCode($section_blocks));
     }
 
+    // Indent all the class code.
+    // TODO: is there a nice way of doing indents?
+    $code_body = array_map(function ($line) {
+      return empty($line) ? $line : '  ' . $line;
+    }, $code_body);
+
     return $code_body;
+  }
+
+  /**
+   * Returns the section blocks for the given section.
+   *
+   * Helper for classCodeBody(). We consider that class code is made up of sections such as
+   * properties, constructor, methods. Each section has multiple blocks, i.e. the multiple
+   * properties or methods (the constructor is a special case).
+   *
+   * For each type of section, we assemble an array of the blocks, where each block is an
+   * array of code lines.
+   *
+   * Merging these items, and merging the different sections takes place in
+   * mergeSectionCode(), which takes care of spacing between items and spacing between
+   * different sections.
+   *
+   * @param string $section_type
+   *   A section type is a string identifying the type of the section, e.g. 'functions'.
+   *
+   * @return array
+   *   An array of blocks
+   */
+  protected function getSectionBlocks($section_type) {
+    if ($section_type == 'constructor' && isset($this->constructor)) {
+      // TODO: remove this special casing.
+      $this->constructor = [$this->constructor];
+    }
+
+    $code_blocks = [];
+    if (!empty($this->{$section_type})) {
+      foreach ($this->{$section_type} as $component_name => $lines) {
+        $code_blocks[] = $lines;
+      }
+    }
+
+    return $code_blocks;
+  }
+
+  /**
+   * Merge an array of blocks for a section.
+   *
+   * @param $section_blocks
+   *   An array of section blocks. Each block is itself an array of code lines. There should
+   *   be no
+   *
+   * @return
+   *   An array of code lines.
+   */
+  protected function mergeSectionCode($section_blocks) {
+    $code = [];
+    foreach ($section_blocks as $block) {
+      $code = array_merge($code, $block);
+
+      // Blank line after each block.
+      $code[] = '';
+    }
+
+    return $code;
   }
 
   /**
