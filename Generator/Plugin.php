@@ -237,56 +237,50 @@ class Plugin extends PHPClassFile {
    * Return the body of the class's code.
    */
   function classCodeBody() {
-    $code = array();
-
-    $code[] = '';
-
+    // TODO: this code sets up class properties for the parent classCodeBody()
+    // to work with, as if they had been set by buildComponentContents().
+    // This should be refactored in due course.
     // Injected services.
+    // TODO: refactor this along with Plugin to a parent class.
     if (!empty($this->injectedServices)) {
-      // Class properties.
       foreach ($this->injectedServices as $service_info) {
-        $var_doc = $this->docBlock([
+        $property_code = $this->docBlock([
           $service_info['description'] . '.',
           '',
           '@var ' . $service_info['interface']
         ]);
-        $code = array_merge($code, $var_doc);
-        $code[] = 'protected $' . $service_info['property_name'] . ';';
-        $code[] = '';
+        $property_code[] = 'protected $' . $service_info['property_name'] . ';';
+
+        $this->properties[] = $property_code;
       }
 
-      // Class constructor.
-
-      // TODO: cleaner system for adding methods!
       // __construct() method
-      $code = array_merge($code, $this->codeBodyClassMethodConstruct());
+      $this->constructor = $this->codeBodyClassMethodConstruct();
 
       // create() method.
-      $code = array_merge($code, $this->codeBodyClassMethodCreate());
+      $this->functions = array_merge([$this->codeBodyClassMethodCreate()], $this->functions);
     }
 
+    // TODO: move this to a component.
     foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_name => $interface_method_data) {
+      $function_code = [];
       $function_doc = $this->docBlock('{@inheritdoc}');
-      $code = array_merge($code, $function_doc);
+      $function_code = array_merge($function_code, $function_doc);
 
       // Trim the semicolon from the end of the interface method.
       $method_declaration = substr($interface_method_data['declaration'], 0, -1);
 
-      $code[] = "$method_declaration {";
+      $function_code[] = "$method_declaration {";
       // Add a comment with the method's first line of docblock, so the user
       // has something more informative than '{@inheritdoc}' to go on!
-      $code[] = '  // ' . $interface_method_data['description'];
-      $code[] = '}';
-      $code[] = '';
+      $function_code[] = '  // ' . $interface_method_data['description'];
+      $function_code[] = '}';
+
+      // Add to the functions section array for the parent to merge.
+      $this->functions[] = $function_code;
     }
 
-    // Indent all the class code.
-    // TODO: is there a nice way of doing indents?
-    $code = array_map(function ($line) {
-      return empty($line) ? $line : '  ' . $line;
-    }, $code);
-
-    return $code;
+    return parent::classCodeBody();
   }
 
   /**
@@ -329,7 +323,7 @@ class Plugin extends PHPClassFile {
       $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
     }
     $code[] = '}';
-    $code[] = '';
+
     return $code;
   }
 
@@ -381,7 +375,7 @@ class Plugin extends PHPClassFile {
 
     $code[] = '  );';
     $code[] = '}';
-    $code[] = '';
+
     return $code;
   }
 
