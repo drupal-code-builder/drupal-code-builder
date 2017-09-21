@@ -28,17 +28,18 @@ class Service extends PHPClassFile {
 
     // Allow components to specify a plain class name (or indeed, cheat, and
     // specify namespaces that come beneath the module namespace).
-    if (empty($component_data['plain_class_name'])) {
+    if (empty($component_data['plain_class_name']) && empty($component_data['relative_class_name'])) {
       // The service name is its ID as a service.
       // implode and ucfirst()
       $service_id = $component_data['service_name'];
       $service_id_pieces = preg_split('/[\._]/', $service_id);
       // Create an unqualified class name by turning this into camel case.
       $component_data['plain_class_name'] = implode('', array_map('ucfirst', $service_id_pieces));
-    }
 
-    if (empty($component_data['relative_class_name'])) {
       $component_data['relative_class_name'] = [$component_data['plain_class_name']];
+    }
+    else {
+      $component_data['plain_class_name'] = end($component_data['relative_class_name']);
     }
 
     parent::__construct($component_name, $component_data, $root_generator);
