@@ -156,6 +156,10 @@ class Service extends PHPClassFile {
    * Creates the code lines for the __construct() method.
    */
   protected function codeBodyClassMethodConstruct() {
+    if (empty($this->injectedServices)) {
+      return [];
+    }
+
     $parameters = [];
     foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
       $parameters[] = $service_parameter;
