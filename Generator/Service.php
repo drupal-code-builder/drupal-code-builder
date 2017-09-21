@@ -115,6 +115,8 @@ class Service extends PHPClassFile {
    * {@inheritdoc}
    */
   function buildComponentContents($children_contents) {
+    parent::buildComponentContents($children_contents);
+
     // TEMPORARY, until Generate task handles returned contents.
     $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
 
