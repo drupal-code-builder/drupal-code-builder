@@ -136,7 +136,7 @@ class PHPFile extends File {
    *  replaced with plain classes.
    * @param &$imported_classes
    *  An array to populate with the fully-qualified classnames which are
-   *  removed.
+   *  removed. These are without the initial namespace separator.
    */
   protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes) {
     foreach ($class_code as &$line) {
