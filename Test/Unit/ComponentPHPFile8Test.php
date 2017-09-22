@@ -86,8 +86,6 @@ class ComponentPHPFile8Test extends TestBase {
         NULL,
         NULL,
       ],
-      /*
-      // These currently fail!
       'comment' => [
         '// We call \Foo\Bar::myfunc() at this point.',
         NULL,
@@ -103,7 +101,6 @@ class ComponentPHPFile8Test extends TestBase {
         NULL,
         NULL,
       ],
-      */
     ];
   }
 
