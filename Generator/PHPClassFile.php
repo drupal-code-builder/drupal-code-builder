@@ -42,6 +42,12 @@ class PHPClassFile extends PHPFile {
           return 'TODO: class docs.';
         },
       ],
+      'abstract' => [
+        'label' => 'Abstract',
+        'format' => 'boolean',
+        'internal' => TRUE,
+        'default' => FALSE,
+      ],
       'parent_class_name' => [
         'label' => 'The parent class name',
         // Inconsistent with other properties, but we tend to have parents be
@@ -175,7 +181,11 @@ class PHPClassFile extends PHPFile {
    * Produces the class declaration.
    */
   function class_declaration() {
-    $line = "class $this->plain_class_name";
+    $line = '';
+    if ($this->component_data['abstract']) {
+      $line .= 'abstract ';
+    }
+    $line .= "class $this->plain_class_name";
     if ($this->component_data['parent_class_name']) {
       $line .= " extends {$this->component_data['parent_class_name']}";
     }
