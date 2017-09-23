@@ -55,7 +55,7 @@ class ComponentForm8Test extends TestBase {
     $this->assertClassFileFormatting($form_file);
 
     $this->assertNamespace(['Drupal', $module_name, 'Form'], $form_file, "The form class file contains contains the expected namespace.");
-    $this->assertClass('MyForm', $form_file, "The form file contains the form class.");
+    $this->assertClass('MyForm extends FormBase', $form_file, "The form file contains the form class.");
 
     foreach (['getFormId', 'buildForm', 'submitForm'] as $method) {
       $this->assertMethod($method, $form_file, "The form file contains the $method method.");

@@ -149,6 +149,15 @@ class Form extends PHPClassFile {
   }
 
   /**
+   * Produces the class declaration.
+   */
+  function class_declaration() {
+    $this->component_data['parent_class_name'] = '\Drupal\Core\Form\FormBase';
+
+    return parent::class_declaration();
+  }
+
+  /**
    * Return the body of the class's code.
    */
   protected function classCodeBody() {
