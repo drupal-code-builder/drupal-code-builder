@@ -217,20 +217,15 @@ class Plugin extends PHPClassFile {
    * Produces the class declaration.
    */
   function class_declaration() {
-    $class_declaration = 'class ' . $this->plain_class_name;
-
     if (isset($this->component_data['plugin_type_data']['base_class'])) {
-      $class_declaration .= " extends \\{$this->component_data['plugin_type_data']['base_class']}";
+      $this->component_data['parent_class_name'] = '\\' . $this->component_data['plugin_type_data']['base_class'];
     }
 
     if (!empty($this->injectedServices)) {
-      $class_declaration .= " implements \\Drupal\\Core\\Plugin\\ContainerFactoryPluginInterface";
+      $this->component_data['interfaces'][] = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
     }
-    $class_declaration .= ' {';
 
-    return [
-      $class_declaration,
-    ];
+    return parent::class_declaration();
   }
 
   /**
