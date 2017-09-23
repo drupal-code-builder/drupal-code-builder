@@ -11,14 +11,37 @@ namespace DrupalCodeBuilder\Generator;
 class PHPInterfaceFile extends PHPClassFile {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    $definition = parent::componentDataDefinition();
+
+    // Remove properties that are not relevant.
+    unset($definition['abstract']);
+    unset($definition['interfaces']);
+    unset($definition['parent_class_name']);
+
+    $definition['parent_interface_names'] = [
+      'label' => 'Parent interface names',
+      'format' => 'array',
+      'internal' => TRUE,
+      'default' => [],
+    ];
+
+    return $definition;
+  }
+
+  /**
    * Produces the interface declaration.
    */
   function class_declaration() {
     $line = '';
     $line .= "interface $this->plain_class_name";
-    if ($this->component_data['parent_class_name']) {
-      // TODO! extends more than 1 interface!
-      $line .= " extends {$this->component_data['parent_class_name']}";
+    if ($this->component_data['parent_interface_names']) {
+      $line .= ' extends';
+      foreach ($this->component_data['parent_interface_names'] as $interface_name) {
+        $line .= ' ' . $interface_name;
+      }
     }
     $line .= ' {';
 

@@ -272,6 +272,12 @@ class Module extends RootComponent {
         // the module data.
         'component' => 'Plugin',
       ),
+      'plugin_types' => array(
+        'label' => 'Plugin types',
+        'required' => FALSE,
+        'format' => 'compound',
+        'component' => 'PluginType',
+      ),
       'theme_hooks' => array(
         'label' => "Theme hooks",
         'description' => "The name of theme hooks, without the leading 'theme_'.",
