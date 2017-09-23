@@ -130,13 +130,16 @@ class Generate extends Base {
   protected function getComponentDataInfo($class, $include_computed = FALSE) {
     $return = array();
     foreach ($class::componentDataDefinition() as $property_name => $property_info) {
-      if (empty($property_info['computed'])) {
-        $this->componentDataInfoAddDefaults($property_info);
-      }
-      else {
-        if (!$include_computed) {
+      // Skip computed and internal if not requested.
+      if (!$include_computed) {
+        if (!empty($property_info['computed']) || !empty($property_info['internal'])) {
           continue;
         }
+      }
+
+      // Add defaults for a non-computed property.
+      if (empty($property_info['computed'])) {
+        $this->componentDataInfoAddDefaults($property_info);
       }
 
       // Expand compound properties.
@@ -371,10 +374,14 @@ class Generate extends Base {
         // User has provided a default: don't clobber that.
         return;
       }
-      if (empty($property_info['process_default']) && empty($property_info['computed'])) {
+      if (empty($property_info['process_default']) &&
+        empty($property_info['computed']) &&
+        empty($property_info['internal'])
+      ) {
         // Allow an empty value to remain empty if the property is neither:
         //  - computed: this never gets shown to the user, so we must provide a
         //    default always.
+        //  - internal: we always want our own defaults to be processed.
         //  - process_default: this forces a default value, effectively
         //    preventing a property from being left empty.
         return;

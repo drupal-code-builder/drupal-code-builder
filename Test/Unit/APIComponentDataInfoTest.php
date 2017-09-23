@@ -35,6 +35,11 @@ class APIComponentDataInfoTest extends TestBase {
           'label' => 'Computed',
           'computed' => TRUE,
         ],
+        // Internal.
+        'property_internal' => [
+          'label' => 'Internal',
+          'internal' => TRUE,
+        ],
         // Compound. Will get the properties from the Child class mock.
         'property_compound' => [
           'label' => 'Compound',
@@ -65,6 +70,10 @@ class APIComponentDataInfoTest extends TestBase {
           'label' => 'Computed',
           'computed' => TRUE,
         ],
+        'property_child_internal' => [
+          'label' => 'Internal',
+          'internal' => TRUE,
+        ],
       ],
     ]);
 
@@ -77,6 +86,7 @@ class APIComponentDataInfoTest extends TestBase {
     $this->assertArrayHasKey('property_public_format', $info, "The public property is returned.");
     $this->assertArrayHasKey('property_compound', $info, "The compound property is returned.");
     $this->assertArrayNotHasKey('property_computed', $info, "The computed property is not returned.");
+    $this->assertArrayNotHasKey('property_internal', $info, "The internal property is not returned.");
 
     $this->assertEquals('string', $info['property_public']['format'], "The default format is filled in.");
     $this->assertEquals(FALSE, $info['property_public']['required'], "The default required is filled in.");
@@ -94,6 +104,7 @@ class APIComponentDataInfoTest extends TestBase {
     $this->assertArrayHasKey('property_child_format', $child_info, "The format property is returned.");
     $this->assertArrayHasKey('property_child_required', $child_info, "The required property is returned.");
     $this->assertArrayNotHasKey('property_child_computed', $child_info, "The computed property is not returned.");
+    $this->assertArrayNotHasKey('property_child_internal', $child_info, "The internal property is not returned.");
 
     $this->assertEquals('string', $child_info['property_child_public']['format'], "The default format is filled in.");
     $this->assertEquals(FALSE, $child_info['property_child_public']['required'], "The default required is filled in.");

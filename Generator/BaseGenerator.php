@@ -245,6 +245,9 @@ abstract class BaseGenerator {
    *    by the component class's requestedComponentHandling() method.
    *  - 'computed': (optional) If TRUE, indicates that this property is computed
    *    by the component, and should not be obtained from the user.
+   *  - 'internal': (optional) If TRUE, indicates that this property should not
+   *    be returned to UIs, as it is for internal use only when requested by
+   *    other generators.
    *
    * @see Generate::getComponentDataInfo()
    */
