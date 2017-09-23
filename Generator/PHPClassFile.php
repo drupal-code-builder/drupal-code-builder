@@ -32,8 +32,7 @@ class PHPClassFile extends PHPFile {
       'relative_class_name' => [
         'label' => 'The qualifed classname pieces, relative to the module namespace.',
         'format' => 'array',
-        // May be set by requesters, but not by UIs.
-        'computed' => TRUE,
+        'internal' => TRUE,
       ],
       'docblock_first_line' => [
         'format' => 'string',
@@ -48,15 +47,13 @@ class PHPClassFile extends PHPFile {
         // Inconsistent with other properties, but we tend to have parents be
         // class names from existing code.
         'format' => 'string',
-        // May be set by requesters, but not by UIs.
-        'computed' => TRUE,
+        'internal' => TRUE,
         'default' => '',
       ],
       'interfaces' => [
         'label' => 'Interfaces',
         'format' => 'array',
-        // May be set by requesters, but not by UIs.
-        'computed' => TRUE,
+        'internal' => TRUE,
         'default' => [],
       ],
     ];
