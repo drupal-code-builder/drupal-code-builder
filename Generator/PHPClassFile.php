@@ -43,6 +43,22 @@ class PHPClassFile extends PHPFile {
           return 'TODO: class docs.';
         },
       ],
+      'parent_class_name' => [
+        'label' => 'The parent class name',
+        // Inconsistent with other properties, but we tend to have parents be
+        // class names from existing code.
+        'format' => 'string',
+        // May be set by requesters, but not by UIs.
+        'computed' => TRUE,
+        'default' => '',
+      ],
+      'interfaces' => [
+        'label' => 'Interfaces',
+        'format' => 'array',
+        // May be set by requesters, but not by UIs.
+        'computed' => TRUE,
+        'default' => [],
+      ],
     ];
   }
 
@@ -162,8 +178,19 @@ class PHPClassFile extends PHPFile {
    * Produces the class declaration.
    */
   function class_declaration() {
+    $line = "class $this->plain_class_name";
+    if ($this->component_data['parent_class_name']) {
+      $line .= " extends {$this->component_data['parent_class_name']}";
+    }
+    if ($this->component_data['interfaces']) {
+      foreach ($this->component_data['interfaces'] as $interface) {
+        $line .= " implements $interface";
+      }
+    }
+    $line .= ' {';
+
     return [
-      "class $this->plain_class_name {",
+      $line,
     ];
   }
 
