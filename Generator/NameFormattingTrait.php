@@ -21,7 +21,7 @@ trait NameFormattingTrait {
    * @return
    *  The converted string, e.g. 'ConvertThis'.
    */
-  function toCamel($snake_case_string) {
+  public static function toCamel($snake_case_string) {
     // TODO: support split on '.' if needed?
     $pieces = explode('_', $snake_case_string);
 
@@ -40,7 +40,7 @@ trait NameFormattingTrait {
    *  The qualified class name string, without the initial slash, e.g.
    *  'Drupal\Foo\SomeClass'.
    */
-  function makeQualifiedClassName($class_name_pieces) {
+  public static function makeQualifiedClassName($class_name_pieces) {
     $qualified_class_name = implode('\\', $class_name_pieces);
     return $qualified_class_name;
   }

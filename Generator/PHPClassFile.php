@@ -71,7 +71,7 @@ class PHPClassFile extends PHPFile {
       '%module',
     ], $relative_class_name_pieces);
 
-    $this->qualified_class_name = $this->makeQualifiedClassName($class_name_pieces);
+    $this->qualified_class_name = self::makeQualifiedClassName($class_name_pieces);
 
     $this->plain_class_name = array_pop($class_name_pieces);
     $this->namespace  = implode('\\', $class_name_pieces);

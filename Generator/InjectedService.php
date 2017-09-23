@@ -79,7 +79,7 @@ class InjectedService extends BaseGenerator {
 
     // Derive further information.
     $service_info['variable_name'] = implode('_', $id_pieces);
-    $service_info['property_name'] = lcfirst($this->toCamel($service_info['variable_name']));
+    $service_info['property_name'] = lcfirst(self::toCamel($service_info['variable_name']));
 
     return [
       'service' => [

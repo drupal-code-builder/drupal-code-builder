@@ -75,7 +75,7 @@ class Plugin extends PHPClassFile {
       $this->pathToNamespacePieces($component_data['plugin_type_data']['subdir']),
       // Plugin ID.
       [
-        $this->toCamel($component_data['original_plugin_name']),
+        self::toCamel($component_data['original_plugin_name']),
       ]
     );
 
