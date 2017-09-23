@@ -41,4 +41,20 @@ trait PHPFormattingTrait {
     return $lines;
   }
 
+  /**
+   * Indent all the non-empty lines in a block of code.
+   *
+   * @param array $lines
+   *   An array of code lines.
+   *
+   * @return
+   *   The array of code lines with the indentation applied.
+   */
+  function indentCodeLines($lines) {
+    $indented_lines = array_map(function ($line) {
+      return empty($line) ? $line : '  ' . $line;
+    }, $lines);
+    return $indented_lines;
+  }
+
 }
