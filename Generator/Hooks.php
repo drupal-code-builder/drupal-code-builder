@@ -84,7 +84,7 @@ class Hooks extends BaseGenerator {
         // Make the class name, eg HookMenu.
         $hook_class_name = implode('', $hook_name_pieces);
         // Make the fully qualified class name.
-        $hook_class = \DrupalCodeBuilder\Task\Generate::getGeneratorClass($hook_class_name);
+        $hook_class = $this->classHandlerHelper->getGeneratorClass($hook_class_name);
         if (!class_exists($hook_class)) {
           $hook_class_name = 'HookImplementation';
         }

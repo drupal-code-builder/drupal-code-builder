@@ -38,6 +38,13 @@ class Generate extends Base {
   protected $component_list;
 
   /**
+   *  Helper objects.
+   *
+   * @var array
+   */
+  private $helpers = [];
+
+  /**
    * Override the base constructor.
    *
    * @param $environment
@@ -787,19 +794,11 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given component type does not correspond to
    *   a component class.
+   *
+   * @deprecated
    */
   public function getGenerator($component_type, $component_name, $component_data = array()) {
-    $class = $this->getGeneratorClass($component_type);
-
-    if (!class_exists($class)) {
-      throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Invalid component type !type.", array(
-        '!type' => htmlspecialchars($component_type, ENT_QUOTES, 'UTF-8'),
-      )));
-    }
-
-    $generator = new $class($component_name, $component_data, $this->root_generator);
-
-    return $generator;
+    return $this->getHelper('ComponentClassHandler')->getGenerator($component_type, $component_name, $component_data, $this->root_generator);
   }
 
   /**
@@ -813,17 +812,30 @@ class Generate extends Base {
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
    *  'DrupalCodeBuilder\Generator\Info6'.
+   *
+   * @deprecated
    */
-  public static function getGeneratorClass($type) {
-    $type     = ucfirst($type);
-    $version  = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
-    $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
+  public function getGeneratorClass($type) {
+    return $this->getHelper('ComponentClassHandler')->getGeneratorClass($type);
+  }
 
-    // If there is no version-specific class, use the base class.
-    if (!class_exists($class)) {
-      $class  = 'DrupalCodeBuilder\\Generator\\' . $type;
+  /**
+   * Returns the helper for the given short class name.
+   *
+   * @param $class
+   *   The short class name.
+   *
+   * @return
+   *   The helper object.
+   */
+  protected function getHelper($class) {
+    if (!isset($this->helpers[$class])) {
+      $qualified_class = '\DrupalCodeBuilder\Task\Generate\\' . $class;
+
+      $this->helpers[$class] = new $qualified_class();
     }
-    return $class;
+
+    return $this->helpers[$class];
   }
 
 }
