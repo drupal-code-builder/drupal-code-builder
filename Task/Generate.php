@@ -278,9 +278,6 @@ class Generate extends Base {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
-    if (empty($component_type)) {
-      $component_type = $this->base;
-    }
     $class = $this->getGeneratorClass($component_type);
 
     $component_data_info = $this->getComponentDataInfo($class, TRUE);
