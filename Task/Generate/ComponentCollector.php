@@ -32,7 +32,7 @@ class ComponentCollector {
   }
 
   /**
-   * Get the list of required components for the root generator.
+   * Get the list of required components for an initial request.
    *
    * This iterates down the tree of component requests: starting with the root
    * component, each component may request further components, and then those
@@ -44,13 +44,23 @@ class ComponentCollector {
    * Obviously, it's important that eventually this process terminate with
    * generators that return an empty array for requiredComponents().
    *
-   * @param $root_component
-   *  The root generator.
+   * @param $component_data
+   *  The requested component data.
    *
    * @return
    *  The list of components.
    */
-  public function assembleComponentList($root_component) {
+  public function assembleComponentList($component_data) {
+    $component_type = $component_data['base'];
+
+    // Process the root component's data.
+    $this->processComponentData($component_data, $component_type);
+
+    // Get the root component generator.
+    // The component name is just the same as the type for the base generator.
+    $component_name = $component_type;
+    $root_component = $this->classHandler->getGenerator($component_type, $component_name, $component_data, NULL);
+
     // Keep track of all requests to prevent duplicates.
     $requested_info_record = array();
 
@@ -158,14 +168,12 @@ class ComponentCollector {
    *  - performs additional processing that a property may require
    *  - expand properties that represent child components.
    *
-   * @todo Change this to protected once Generate no longer needs to call it.
-   *
    * @param &$component_data
    *  The component data array.
    * @param $component_type
    *  The component type for the data being processed.
    */
-  public function processComponentData(&$component_data, $component_type) {
+  protected function processComponentData(&$component_data, $component_type) {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.

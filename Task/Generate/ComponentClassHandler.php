@@ -30,7 +30,8 @@ class ComponentClassHandler {
    *   An array of data for the component. This is passed to the generator's
    *   __construct().
    * @param $root_generator
-   *   The root generator.
+   *   The root generator, or NULL if it's the root generator itself that is
+   *   being created.
    *
    * @return
    *   A generator object, with the component name and data set on it, as well
@@ -49,6 +50,8 @@ class ComponentClassHandler {
       )));
     }
 
+    // TODO: this passes in the NULL $root_generator when we're constructing
+    // the root generator itself! Clean this up!
     $generator = new $class($component_name, $component_data, $root_generator);
 
     // Quick hack for the benefit of the Hooks generator.

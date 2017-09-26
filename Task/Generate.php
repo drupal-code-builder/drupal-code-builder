@@ -278,20 +278,11 @@ class Generate extends Base {
     // The component name is just the same as the type for the base generator.
     $component_name = $component_type;
 
-    // Process the root component's data.
-    // TODO: move this into the helper.
-    $this->getHelper('ComponentCollector')->processComponentData($component_data, $component_type);
+    // Assemble the component list from the request data.
+    $this->component_list = $this->assembleComponentList($component_data);
+    // The root generator is the first component in the list.
+    $this->root_generator = reset($this->component_list);
 
-
-    // Get the root component generator.
-    // The component name is just the same as the type for the base generator.
-    $root_generator = $this->getGenerator($component_type, $component_name, $component_data);
-
-    // Set the root generator on ourselves now we actually have it.
-    $this->root_generator = $root_generator;
-
-    // Recursively assemble all the components that are needed.
-    $this->component_list = $this->assembleComponentList($root_generator);
     \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
 
     // Let each component detect whether it already exists in the given module
