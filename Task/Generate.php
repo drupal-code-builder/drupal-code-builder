@@ -109,75 +109,7 @@ class Generate extends Base {
    * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
   public function getRootComponentDataInfo($include_computed = FALSE) {
-    $class = $this->getGeneratorClass($this->base);
-    return $this->getComponentDataInfo($class, $include_computed);
-  }
-
-  /**
-   * Get a list of the properties that are required in the component data.
-   *
-   * This adds in default values, recurses into child components, and filters
-   * out computed values so they are not available to UIs.
-   *
-   * @param $class
-   *  The class to get properties for. Compound properties are recursed into.
-   * @param $include_computed
-   *  (optional) Boolean indicating whether to include computed properties.
-   *  Default value is FALSE, as UIs don't need to work with these.
-   *
-   * @return
-   *  An array containing information about the properties this component needs
-   *  in its $component_data array. Keys are the names of properties. Each value
-   *  is an array of information for the property.
-   *
-   * @see BaseGenerator::componentDataDefinition()
-   * @see BaseGenerator::prepareComponentDataProperty()
-   * @see BaseGenerator::processComponentData()
-   */
-  protected function getComponentDataInfo($class, $include_computed = FALSE) {
-    $return = array();
-    foreach ($class::componentDataDefinition() as $property_name => $property_info) {
-      // Skip computed and internal if not requested.
-      if (!$include_computed) {
-        if (!empty($property_info['computed']) || !empty($property_info['internal'])) {
-          continue;
-        }
-      }
-
-      // Add defaults for a non-computed property.
-      if (empty($property_info['computed'])) {
-        $this->componentDataInfoAddDefaults($property_info);
-      }
-
-      // Expand compound properties.
-      if (isset($property_info['format']) && $property_info['format'] == 'compound') {
-        $component_class = $this->getGeneratorClass($property_info['component']);
-
-        // Recurse to get the child properties.
-        $child_properties = $this->getComponentDataInfo($component_class, $include_computed);
-
-        $property_info['properties'] = $child_properties;
-      }
-
-      $return[$property_name] = $property_info;
-    }
-
-    return $return;
-  }
-
-  /**
-   * Set default values in a component property info array.
-   *
-   * @param &$property_info
-   *  A single value array from a component property info array. In other words,
-   *  the array that describes a single property that would be passed to a
-   *  generator, such as the 'hooks' property.
-   */
-  protected function componentDataInfoAddDefaults(&$property_info) {
-    $property_info += array(
-      'required' => FALSE,
-      'format' => 'string',
-    );
+    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($this->base, $include_computed);
   }
 
   /**
@@ -280,7 +212,7 @@ class Generate extends Base {
     // this time, so we can add them in.
     $class = $this->getGeneratorClass($component_type);
 
-    $component_data_info = $this->getComponentDataInfo($class, TRUE);
+    $component_data_info = $this->getHelper('ComponentDataInfoGatherer')->getComponentDataInfo($class, TRUE);
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
@@ -829,7 +761,16 @@ class Generate extends Base {
     if (!isset($this->helpers[$class])) {
       $qualified_class = '\DrupalCodeBuilder\Task\Generate\\' . $class;
 
-      $this->helpers[$class] = new $qualified_class();
+      switch ($class) {
+        case 'ComponentDataInfoGatherer':
+          $helper = new $qualified_class($this->getHelper('ComponentClassHandler'));
+          break;
+        default:
+          $helper = new $qualified_class();
+          break;
+      }
+
+      $this->helpers[$class] = $helper;
     }
 
     return $this->helpers[$class];
