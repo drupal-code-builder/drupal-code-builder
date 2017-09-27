@@ -27,8 +27,9 @@ class ComponentDataInfoGatherer {
    *
    * @param $root_component_type
    *   The type of the root component, e.g. 'module'.
-   * @param $include_computed
-   *  (optional) Boolean indicating whether to include computed properties.
+   * @param $include_internal
+   *  (optional) Boolean indicating whether to include internal properties.
+   *  These are the properties marked as either 'computed' or 'internal'.
    *  Default value is FALSE, as UIs don't need to work with these.
    *  TODO: Deprecate this parameter, it is not used.
    *
@@ -50,10 +51,10 @@ class ComponentDataInfoGatherer {
    * For the full documentation for all properties, see
    * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
-  public function getRootComponentDataInfo($root_component_type, $include_computed = FALSE) {
+  public function getRootComponentDataInfo($root_component_type, $include_internal = FALSE) {
     $class = $this->classHandler->getGeneratorClass($root_component_type);
 
-    return $this->getComponentDataInfo($class, $include_computed);
+    return $this->getComponentDataInfo($class, $include_internal);
   }
 
   /**
@@ -64,9 +65,10 @@ class ComponentDataInfoGatherer {
    *
    * @param $class
    *  The class to get properties for. Compound properties are recursed into.
-   * @param $include_computed
-   *  (optional) Boolean indicating whether to include computed properties.
-   *  Default value is FALSE, as UIs don't need to work with these.
+   * @param $include_internal
+   *  (optional) Boolean indicating whether to include internal properties.
+   *  These are the properties marked as either 'computed' or 'internal'.
+   *  Defaults to FALSE.
    *
    * @return
    *  An array containing information about the properties this component needs
@@ -77,11 +79,11 @@ class ComponentDataInfoGatherer {
    * @see BaseGenerator::prepareComponentDataProperty()
    * @see BaseGenerator::processComponentData()
    */
-  public function getComponentDataInfo($class, $include_computed = FALSE) {
+  public function getComponentDataInfo($class, $include_internal = FALSE) {
     $return = array();
     foreach ($class::componentDataDefinition() as $property_name => $property_info) {
       // Skip computed and internal if not requested.
-      if (!$include_computed) {
+      if (!$include_internal) {
         if (!empty($property_info['computed']) || !empty($property_info['internal'])) {
           continue;
         }
@@ -97,7 +99,7 @@ class ComponentDataInfoGatherer {
         $component_class = $this->classHandler->getGeneratorClass($property_info['component']);
 
         // Recurse to get the child properties.
-        $child_properties = $this->getComponentDataInfo($component_class, $include_computed);
+        $child_properties = $this->getComponentDataInfo($component_class, $include_internal);
 
         $property_info['properties'] = $child_properties;
       }
