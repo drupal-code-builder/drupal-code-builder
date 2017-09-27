@@ -184,4 +184,14 @@ interface EnvironmentInterface {
    */
   public function getExtensionPath($type, $name);
 
+  /**
+   * Output verbose log data.
+   *
+   * @param $data
+   *   Some data to output.
+   * @param string $message
+   *   A message that describes the data.
+   */
+  public function log($data, $message = '');
+
 }
