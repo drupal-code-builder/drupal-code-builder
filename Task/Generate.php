@@ -89,6 +89,7 @@ class Generate extends Base {
    * @param $include_computed
    *  (optional) Boolean indicating whether to include computed properties.
    *  Default value is FALSE, as UIs don't need to work with these.
+   *  TODO: Deprecate this parameter, it is not used in any calls we make.
    *
    * @return
    *  An array containing information about the properties our root component
