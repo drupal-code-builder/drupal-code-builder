@@ -52,9 +52,7 @@ class ComponentDataInfoGatherer {
    * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
    */
   public function getRootComponentDataInfo($root_component_type, $include_internal = FALSE) {
-    $class = $this->classHandler->getGeneratorClass($root_component_type);
-
-    return $this->getComponentDataInfo($class, $include_internal);
+    return $this->getComponentDataInfo($root_component_type, $include_internal);
   }
 
   /**
@@ -63,8 +61,9 @@ class ComponentDataInfoGatherer {
    * This adds in default values, recurses into child components, and filters
    * out computed values so they are not available to UIs.
    *
-   * @param $class
-   *  The class to get properties for. Compound properties are recursed into.
+   * @param $component_type
+   *  The component type to get properties for. Compound properties are
+   *  recursed into.
    * @param $include_internal
    *  (optional) Boolean indicating whether to include internal properties.
    *  These are the properties marked as either 'computed' or 'internal'.
@@ -79,8 +78,10 @@ class ComponentDataInfoGatherer {
    * @see BaseGenerator::prepareComponentDataProperty()
    * @see BaseGenerator::processComponentData()
    */
-  public function getComponentDataInfo($class, $include_internal = FALSE) {
+  public function getComponentDataInfo($component_type, $include_internal = FALSE) {
     $return = array();
+
+    $class = $this->classHandler->getGeneratorClass($component_type);
     foreach ($class::componentDataDefinition() as $property_name => $property_info) {
       // Skip computed and internal if not requested.
       if (!$include_internal) {
@@ -96,10 +97,10 @@ class ComponentDataInfoGatherer {
 
       // Expand compound properties.
       if (isset($property_info['format']) && $property_info['format'] == 'compound') {
-        $component_class = $this->classHandler->getGeneratorClass($property_info['component']);
+        $component_type = $property_info['component'];
 
         // Recurse to get the child properties.
-        $child_properties = $this->getComponentDataInfo($component_class, $include_internal);
+        $child_properties = $this->getComponentDataInfo($component_type, $include_internal);
 
         $property_info['properties'] = $child_properties;
       }

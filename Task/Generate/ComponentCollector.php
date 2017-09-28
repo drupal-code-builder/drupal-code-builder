@@ -177,9 +177,7 @@ class ComponentCollector {
     // Set defaults for properties that don't have a value yet.
     // First, get the component data info again, with the computed properties
     // this time, so we can add them in.
-    $class = $this->classHandler->getGeneratorClass($component_type);
-
-    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($class, TRUE);
+    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
     // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
