@@ -17,6 +17,24 @@ class ComponentClassHandler {
   }
 
   /**
+   * Gets the repeat handling a component type specifies.
+   *
+   * This wraps around the static call so it can be mocked in tests.
+   *
+   * @param $component_type
+   *   The component type.
+   *
+   * @return
+   *   The handle type, as returned by the generator class's
+   *   requestedComponentHandling().
+   */
+  public function getRepeatComponentHandling($component_type) {
+    $class = $this->getGeneratorClass($component_type);
+
+    return $class::requestedComponentHandling();
+  }
+
+  /**
    * Generator factory.
    *
    * @param $component_type

@@ -231,8 +231,7 @@ class ComponentCollector {
         }
 
         // Ask the component type class how to handle this.
-        $class = $this->classHandler->getGeneratorClass($component_type);
-        $handling_type = $class::requestedComponentHandling();
+        $handling_type = $this->classHandler->getRepeatComponentHandling($component_type);
 
         switch ($handling_type) {
           case 'singleton':
