@@ -53,6 +53,14 @@ class ComponentCollector {
   public function assembleComponentList($component_data) {
     $component_type = $component_data['base'];
 
+    // All generators assume that the root component has this property and
+    // that it's required.
+    // TODO: clean this up? Allow root generators to specify which properties
+    // are passed along to requested components?
+    // Or remove this when we are able to specify containment in requests
+    // without needing to repeat the root name all the time?
+    $root_component_name = $component_data['root_name'];
+
     // Process the root component's data.
     $this->processComponentData($component_data, $component_type);
 
@@ -107,7 +115,7 @@ class ComponentCollector {
           }
 
           // Add the root component name to the data.
-          $component_data['root_component_name'] = $root_component->component_data['root_name'];
+          $component_data['root_component_name'] = $root_component_name;
 
           // Instantiate the component so we can get its unique ID.
           // This may turn out to not be needed and get thrown away!
