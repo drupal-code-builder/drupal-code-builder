@@ -7,6 +7,15 @@ namespace DrupalCodeBuilder\Task\Generate;
  */
 class ComponentClassHandler {
 
+  /**
+   * Cache of classes for types.
+   *
+   * Keys are the types in Title case, values are the class names.
+   *
+   * @var array
+   */
+  protected $classes = [];
+
   // TODO: this is not yet in use!
   // Basically a wrapper around the static call, so we can mock this helper
   // in tests.
@@ -91,15 +100,21 @@ class ComponentClassHandler {
    *  'DrupalCodeBuilder\Generator\Info6'.
    */
   public function getGeneratorClass($type) {
-    $type     = ucfirst($type);
-    $version  = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
-    $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
+    $type = ucfirst($type);
 
-    // If there is no version-specific class, use the base class.
-    if (!class_exists($class)) {
-      $class  = 'DrupalCodeBuilder\\Generator\\' . $type;
+    if (!isset($this->classes[$type])) {
+      $version  = 8; // \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
+      $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
+
+      // If there is no version-specific class, use the base class.
+      if (!class_exists($class)) {
+        $class  = 'DrupalCodeBuilder\\Generator\\' . $type;
+      }
+
+      $this->classes[$type] = $class;
     }
-    return $class;
+
+    return $this->classes[$type];
   }
 
 }
