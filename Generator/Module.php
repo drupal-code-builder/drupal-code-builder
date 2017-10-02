@@ -84,10 +84,6 @@ class Module extends RootComponent {
    *       - FILE ID: requests a particular code file, by the abbreviated name.
    *         This is the filename without the initial 'MODULE.' or the '.inc'
    *         extension.
-   *    - 'requested_components': An array of components to build (in addition
-   *      to any that are added automatically). This should in the same form
-   *      as the return from requiredComponents(), thus keyed by component name,
-   *      with values either a component type or an array of data.
    */
   function __construct($component_name, $component_data, $root_generator) {
     parent::__construct($component_name, $component_data, $root_generator);
@@ -348,10 +344,6 @@ class Module extends RootComponent {
         'component_type' => 'Hooks',
         'hooks' => $this->component_data['hooks'],
       );
-    }
-
-    if (isset($this->component_data['requested_components'])) {
-      $components += $this->component_data['requested_components'];
     }
 
     // Modules always have a .info file.
