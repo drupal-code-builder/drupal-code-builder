@@ -257,10 +257,8 @@ class Module extends RootComponent {
           // Filter out empty values, in case Drupal UI forms haven't done so.
           $hooks = array_filter($hooks);
 
-          $component_data['requested_components']['hooks'] = array(
-            'component_type' => 'Hooks',
-            'hooks' => $hooks,
-          );
+          // Set the processed hooks list back into the component data.
+          $component_data['hooks'] = $hooks;
         }
       ),
       'plugins' => array(
@@ -343,6 +341,14 @@ class Module extends RootComponent {
    */
   public function requiredComponents() {
     $components = array();
+
+    // Turn the hooks property into the Hooks component.
+    if (!empty($this->component_data['hooks'])) {
+      $components['hooks'] = array(
+        'component_type' => 'Hooks',
+        'hooks' => $this->component_data['hooks'],
+      );
+    }
 
     if (isset($this->component_data['requested_components'])) {
       $components += $this->component_data['requested_components'];
