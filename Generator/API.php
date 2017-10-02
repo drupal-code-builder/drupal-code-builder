@@ -43,7 +43,7 @@ class API extends PHPFile {
     $files['module.api.php'] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
-      'body' => $this->file_contents(),
+      'body' => $this->fileContents(),
       'join_string' => "\n",
     );
     return $files;

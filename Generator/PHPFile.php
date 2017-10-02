@@ -43,7 +43,7 @@ class PHPFile extends File {
    * @return
    *  An array of text strings, in the correct order for concatenation.
    */
-  function file_contents() {
+  protected function fileContents() {
     // If only bare code is requested, only output the body, wthout headers
     // or footer.
     $module_data = $this->root_component->component_data;

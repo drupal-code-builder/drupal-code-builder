@@ -38,7 +38,7 @@ class Tests extends PHPFile {
     $files['%module.test'] = array(
       'path' => 'src/Tests',
       'filename' => $test_file_name,
-      'body' => $this->file_contents(),
+      'body' => $this->fileContents(),
       'join_string' => "\n",
       'contains_classes' => TRUE,
     );

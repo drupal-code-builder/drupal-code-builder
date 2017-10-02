@@ -95,7 +95,7 @@ class PHPClassFile extends PHPFile {
     $files[$this->path . '/' . $this->plain_class_name . '.php'] = array(
       'path' => $this->path,
       'filename' => $this->plain_class_name . '.php',
-      'body' => $this->file_contents(),
+      'body' => $this->fileContents(),
       'join_string' => "\n",
     );
     return $files;
@@ -109,7 +109,7 @@ class PHPClassFile extends PHPFile {
    * @return
    *  An array of text strings, in the correct order for concatenation.
    */
-  function file_contents() {
+  protected function fileContents() {
     // File contents are built up.
     $file_contents = array_merge(
       $this->file_header(),

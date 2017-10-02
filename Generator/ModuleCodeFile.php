@@ -39,7 +39,7 @@ class ModuleCodeFile extends PHPFile {
     $files[$this->filename] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
-      'body' => $this->file_contents(),
+      'body' => $this->fileContents(),
       // We join code files up on a single newline. This means that each
       // component is responsible for ending its own lines.
       'join_string' => "\n",
