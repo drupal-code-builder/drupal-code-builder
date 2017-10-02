@@ -307,15 +307,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $class_handler->getGenerator(
       'my_root',
       'my_root',
-      // Use a wildcard rather than $root_data, as the current system puts
-      // component properties into the 'requested_components' property for the
-      // root generator to then request in its requiredComponents() -- and this
-      // is something we're changing soon.
       Argument::that(function ($arg) use ($root_data) {
-        // Use a wildcard rather than $root_data, as the current system puts
-        // component properties into the 'requested_components' property for the
-        // root generator to then request in its requiredComponents() -- and this
-        // is something we're changing soon.
+        // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
         // (Can't use array_diff() that doesn't do nested arrays FFS!)
         foreach ($root_data as $key => $value) {
@@ -328,13 +321,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       NULL
     )
     ->will(function ($args) use ($root_component) {
-      // This is conditional so the test still passes when this is removed.
-      // TODO: clean up this part of the test once it's no longer needed.
-      $root_component_required = $args[2]['requested_components'] ?? [];
-      $root_component->requiredComponents()->willReturn($root_component_required);
-
       return $root_component->reveal();
     });
+    $root_component->requiredComponents()->willReturn([]);
+
 
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
 
@@ -415,15 +405,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $class_handler->getGenerator(
       'my_root',
       'my_root',
-      // Use a wildcard rather than $root_data, as the current system puts
-      // component properties into the 'requested_components' property for the
-      // root generator to then request in its requiredComponents() -- and this
-      // is something we're changing soon.
       Argument::that(function ($arg) use ($root_data) {
-        // Use a wildcard rather than $root_data, as the current system puts
-        // component properties into the 'requested_components' property for the
-        // root generator to then request in its requiredComponents() -- and this
-        // is something we're changing soon.
+        // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
         // (Can't use array_diff() that doesn't do nested arrays FFS!)
         foreach ($root_data as $key => $value) {
@@ -436,13 +419,9 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       NULL
     )
     ->will(function ($args) use ($root_component) {
-      // This is conditional so the test still passes when this is removed.
-      // TODO: clean up this part of the test once it's no longer needed.
-      $root_component_required = $args[2]['requested_components'] ?? [];
-      $root_component->requiredComponents()->willReturn($root_component_required);
-
       return $root_component->reveal();
     });
+    $root_component->requiredComponents()->willReturn([]);
 
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
 
@@ -546,10 +525,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'my_root',
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
-        // Use a wildcard rather than $root_data, as the current system puts
-        // component properties into the 'requested_components' property for the
-        // root generator to then request in its requiredComponents() -- and this
-        // is something we're changing soon.
+        // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
         // (Can't use array_diff() that doesn't do nested arrays FFS!)
         foreach ($root_data as $key => $value) {
@@ -562,13 +538,9 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       NULL
     )
     ->will(function ($args) use ($root_component) {
-      // This is conditional so the test still passes when this is removed.
-      // TODO: clean up this part of the test once it's no longer needed.
-      $root_component_required = $args[2]['requested_components'] ?? [];
-      $root_component->requiredComponents()->willReturn($root_component_required);
-
       return $root_component->reveal();
     });
+    $root_component->requiredComponents()->willReturn([]);
 
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
 
