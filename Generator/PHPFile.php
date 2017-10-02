@@ -84,7 +84,7 @@ class PHPFile extends File {
   function code_header() {
     $lines = array(
       "@file",
-      $this->file_doc_summary(),
+      $this->fileDocblockSummary(),
     );
     $code = $this->docBlock($lines);
     // Blank line after the file docblock.
@@ -188,9 +188,12 @@ class PHPFile extends File {
   }
 
   /**
-   * Return the summary line for the file docblock.
+   * Returns the summary line for the file docblock.
+   *
+   * @return
+   *   The text to go after the @file tag in the file's docblock.
    */
-  function file_doc_summary() {
+  function fileDocblockSummary() {
     return "TODO: Enter file description here.";
   }
 

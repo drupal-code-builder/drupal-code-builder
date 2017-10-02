@@ -48,7 +48,7 @@ class Tests extends PHPFile {
   /**
    * Return the summary line for the file docblock.
    */
-  function file_doc_summary() {
+  function fileDocblockSummary() {
     $module_readable_name = $this->root_component->component_data['readable_name'];
     return "Contains tests for the $module_readable_name module.";
   }

@@ -52,7 +52,7 @@ class API extends PHPFile {
   /**
    * Return the summary line for the file docblock.
    */
-  function file_doc_summary() {
+  function fileDocblockSummary() {
     return "Hooks provided by the %readable module.";
   }
 

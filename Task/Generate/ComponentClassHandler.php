@@ -103,7 +103,7 @@ class ComponentClassHandler {
     $type = ucfirst($type);
 
     if (!isset($this->classes[$type])) {
-      $version  = 8; // \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
+      $version  = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
       $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
 
       // If there is no version-specific class, use the base class.
