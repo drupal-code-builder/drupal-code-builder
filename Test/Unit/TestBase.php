@@ -18,6 +18,22 @@ use PHPUnit\Framework\ExpectationFailedException;
 abstract class TestBase extends TestCase {
 
   /**
+   * The Drupal core major version to set up for this test.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion = NULL;
+
+  /**
+   * This expects the class property $drupalMajorVersion to be defined.
+   *
+   * Classes that don't have this yet should override this.
+   */
+  protected function setUp() {
+    $this->setupDrupalCodeBuilder($this->drupalMajorVersion);
+  }
+
+  /**
    * Perform the factory setup, spoofing in the given core major version.
    *
    * @param $version
