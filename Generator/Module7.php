@@ -19,6 +19,7 @@ class Module7 extends Module {
     $component_data_definition = parent::componentDataDefinition();
 
     unset($component_data_definition['plugins']);
+    unset($component_data_definition['plugin_types']);
     unset($component_data_definition['services']);
     // TODO: implement these for D7.
     unset($component_data_definition['theme_hooks']);
