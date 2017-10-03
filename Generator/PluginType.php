@@ -44,7 +44,7 @@ class PluginType extends BaseGenerator {
 
           // Convert the plugin type to camel case. E.g., 'my_plugin' becomes
           // 'MyPlugin'.
-          return self::toCamel($plugin_type);
+          return self::snakeToCamel($plugin_type);
         },
         'process_default' => TRUE,
       ),
@@ -56,7 +56,7 @@ class PluginType extends BaseGenerator {
 
           // Convert the plugin type to camel case. E.g., 'my_plugin' becomes
           // 'MyPlugin'.
-          return self::toCamel($plugin_type);
+          return self::snakeToCamel($plugin_type);
         },
         'process_default' => TRUE,
       ),

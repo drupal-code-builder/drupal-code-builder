@@ -21,7 +21,7 @@ trait NameFormattingTrait {
    * @return
    *  The converted string, e.g. 'ConvertThis'.
    */
-  public static function toCamel($snake_case_string) {
+  public static function snakeToCamel($snake_case_string) {
     // TODO: support split on '.' if needed?
     $pieces = explode('_', $snake_case_string);
 

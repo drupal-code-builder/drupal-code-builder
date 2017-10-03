@@ -31,7 +31,7 @@ class RouterItem extends BaseGenerator {
   function __construct($component_name, $component_data, $root_generator) {
     // Create a controller name from the route path.
     $snake = str_replace(['/', '-'], '_', $component_name);
-    $controller_class_name = self::toCamel($snake) . 'Controller';
+    $controller_class_name = self::snakeToCamel($snake) . 'Controller';
     // TODO: clean up, use helper.
     $controller_qualified_class_name = implode('\\', [
       'Drupal',
