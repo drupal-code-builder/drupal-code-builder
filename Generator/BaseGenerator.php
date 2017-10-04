@@ -237,8 +237,10 @@ abstract class BaseGenerator {
    *      - 'description': A longer description of the item.
    *  - 'options_allow_other': (optional) If TRUE, specifies that values outside
    *    the list of options are allowable.
-   *  - 'processing': (optional) A callback to processComponentData() to use to
-   *    process input values into the final format for the component data array.
+   *  - 'processing': (optional) A callback to process input values into the
+   *    final format for the component data array. Any changes values should be
+   *    placed into the data array. This is called by
+   *    ComponentCollector::processComponentData().
    *  - 'component': (optional) The name of a generator class, relative to the
    *    namespace. If present, this results in child components of this class
    *    being added to the component tree. The handling of this is determined
