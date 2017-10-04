@@ -90,13 +90,14 @@ class ComponentDataInfoGatherer {
         }
       }
 
-      // Add defaults for a non-computed property.
-      if (empty($property_info['computed'])) {
-        $this->componentDataInfoAddDefaults($property_info);
-      }
+      // Add defaults.
+      // We add these for internal properties as well, even though UIs won't
+      // see them, for our own convenience of not having to check whether
+      // keys such as 'format' are set.
+      $this->componentDataInfoAddDefaults($property_info);
 
       // Expand compound properties.
-      if (isset($property_info['format']) && $property_info['format'] == 'compound') {
+      if ($property_info['format'] == 'compound') {
         $component_type = $property_info['component'];
 
         // Recurse to get the child properties.
