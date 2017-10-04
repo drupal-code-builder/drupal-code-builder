@@ -85,10 +85,31 @@ class ComponentDataInfoGatherer {
    * @see BaseGenerator::processComponentData()
    */
   public function getComponentDataInfo($component_type, $include_internal = FALSE) {
-    $return = array();
-
     $class = $this->classHandler->getGeneratorClass($component_type);
-    foreach ($class::componentDataDefinition() as $property_name => $property_info) {
+
+    $properties = $class::componentDataDefinition();
+
+    $properties_processed = $this->processPropertyList($properties, $include_internal);
+
+    return $properties_processed;
+  }
+
+  /**
+   * Process a property list to add default keys and filter out internals.
+   *
+   * @param $properties
+   *   A property list, in the foramt returned from componentDataDefinition().
+   * @param $include_internal
+   *  (optional) The parameter from getComponentDataInfo().
+   *
+   * @return
+   *   The given property list, with defaults filled in and internal properties
+   *   removed if requested.
+   */
+  protected function processPropertyList($properties, $include_internal) {
+    $return = [];
+
+    foreach ($properties as $property_name => $property_info) {
       // Skip computed and internal if not requested.
       if (!$include_internal) {
         if (!empty($property_info['computed']) || !empty($property_info['internal'])) {
@@ -102,14 +123,21 @@ class ComponentDataInfoGatherer {
       // keys such as 'format' are set.
       $this->componentDataInfoAddDefaults($property_info);
 
-      // Expand compound properties that use a generator.
-      if ($property_info['format'] == 'compound' && isset($property_info['component'])) {
-        $component_type = $property_info['component'];
+      // Expand compound properties..
+      if ($property_info['format'] == 'compound') {
+        if (isset($property_info['component'])) {
+          // Properties that use a generator.
+          $component_type = $property_info['component'];
 
-        // Recurse to get the child properties.
-        $child_properties = $this->getComponentDataInfo($component_type, $include_internal);
+          // Recurse to get the child properties.
+          $child_properties = $this->getComponentDataInfo($component_type, $include_internal);
 
-        $property_info['properties'] = $child_properties;
+          $property_info['properties'] = $child_properties;
+        }
+        else {
+          // Recurse into the child properties list.
+          $property_info['properties'] = $this->processPropertyList($property_info['properties'], $include_internal);
+        }
       }
 
       $return[$property_name] = $property_info;

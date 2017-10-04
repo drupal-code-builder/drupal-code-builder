@@ -44,11 +44,38 @@ class APIComponentDataInfoTest extends TestBase {
           'label' => 'Internal',
           'internal' => TRUE,
         ],
-        // Compound. Will get the properties from the Child class mock.
-        'property_compound' => [
-          'label' => 'Compound',
+        // Compound using a component. Will get the properties from the Child
+        // class mock.
+        'property_compound_component' => [
+          'label' => 'Compound component',
           'format' => 'compound',
           'component' => 'Child',
+        ],
+        // Compound with child properties.
+        'property_compound_child' => [
+          'label' => 'Compound child',
+          'format' => 'compound',
+          'properties' => [
+            'property_child_public' => [
+              'label' => 'Public',
+            ],
+            'property_child_format' => [
+              'label' => 'Public',
+              'format' => 'boolean',
+            ],
+            'property_child_required' => [
+              'label' => 'Public',
+              'required' => TRUE,
+            ],
+            'property_child_computed' => [
+              'label' => 'Computed',
+              'computed' => TRUE,
+            ],
+            'property_child_internal' => [
+              'label' => 'Internal',
+              'internal' => TRUE,
+            ],
+          ],
         ],
       ],
     ]);
@@ -88,7 +115,7 @@ class APIComponentDataInfoTest extends TestBase {
 
     $this->assertArrayHasKey('property_public', $info, "The public property is returned.");
     $this->assertArrayHasKey('property_public_format', $info, "The public property is returned.");
-    $this->assertArrayHasKey('property_compound', $info, "The compound property is returned.");
+    $this->assertArrayHasKey('property_compound_component', $info, "The compound property is returned.");
     $this->assertArrayNotHasKey('property_computed', $info, "The computed property is not returned.");
     $this->assertArrayNotHasKey('property_internal', $info, "The internal property is not returned.");
 
@@ -98,23 +125,37 @@ class APIComponentDataInfoTest extends TestBase {
     $this->assertEquals('boolean', $info['property_public_format']['format'], "The specified format is preserved.");
     $this->assertEquals(TRUE, $info['property_public_required']['required'], "The specified required is preserved.");
 
-    $this->assertEquals('Child', $info['property_compound']['component'], "The compound property specifies the component.");
-    $this->assertEquals('compound', $info['property_compound']['format'], "The compound property specifies the format.");
-    $this->assertArrayHasKey('properties', $info['property_compound'], "The compound property has an array of child properties.");
+    $this->assertEquals('Child', $info['property_compound_component']['component'], "The compound property specifies the component.");
+    $this->assertEquals('compound', $info['property_compound_component']['format'], "The compound property specifies the format.");
+    $this->assertArrayHasKey('properties', $info['property_compound_component'], "The compound property has an array of child properties.");
 
-    $child_info = $info['property_compound']['properties'];
+    $component_child_info = $info['property_compound_component']['properties'];
 
-    $this->assertArrayHasKey('property_child_public', $child_info, "The public property is returned.");
-    $this->assertArrayHasKey('property_child_format', $child_info, "The format property is returned.");
-    $this->assertArrayHasKey('property_child_required', $child_info, "The required property is returned.");
-    $this->assertArrayNotHasKey('property_child_computed', $child_info, "The computed property is not returned.");
-    $this->assertArrayNotHasKey('property_child_internal', $child_info, "The internal property is not returned.");
+    $this->assertArrayHasKey('property_child_public', $component_child_info, "The public property is returned.");
+    $this->assertArrayHasKey('property_child_format', $component_child_info, "The format property is returned.");
+    $this->assertArrayHasKey('property_child_required', $component_child_info, "The required property is returned.");
+    $this->assertArrayNotHasKey('property_child_computed', $component_child_info, "The computed property is not returned.");
+    $this->assertArrayNotHasKey('property_child_internal', $component_child_info, "The internal property is not returned.");
 
-    $this->assertEquals('string', $child_info['property_child_public']['format'], "The default format is filled in.");
-    $this->assertEquals(FALSE, $child_info['property_child_public']['required'], "The default required is filled in.");
+    $this->assertEquals('string', $component_child_info['property_child_public']['format'], "The default format is filled in.");
+    $this->assertEquals(FALSE, $component_child_info['property_child_public']['required'], "The default required is filled in.");
 
-    $this->assertEquals('boolean', $child_info['property_child_format']['format'], "The specified format is preserved.");
-    $this->assertEquals(TRUE, $child_info['property_child_required']['required'], "The specified required is preserved.");
+    $this->assertEquals('boolean', $component_child_info['property_child_format']['format'], "The specified format is preserved.");
+    $this->assertEquals(TRUE, $component_child_info['property_child_required']['required'], "The specified required is preserved.");
+
+    $child_property_info = $info['property_compound_child']['properties'];
+
+    $this->assertArrayHasKey('property_child_public', $child_property_info, "The public property is returned.");
+    $this->assertArrayHasKey('property_child_format', $child_property_info, "The format property is returned.");
+    $this->assertArrayHasKey('property_child_required', $child_property_info, "The required property is returned.");
+    $this->assertArrayNotHasKey('property_child_computed', $child_property_info, "The computed property is not returned.");
+    $this->assertArrayNotHasKey('property_child_internal', $child_property_info, "The internal property is not returned.");
+
+    $this->assertEquals('string', $child_property_info['property_child_public']['format'], "The default format is filled in.");
+    $this->assertEquals(FALSE, $child_property_info['property_child_public']['required'], "The default required is filled in.");
+
+    $this->assertEquals('boolean', $child_property_info['property_child_format']['format'], "The specified format is preserved.");
+    $this->assertEquals(TRUE, $child_property_info['property_child_required']['required'], "The specified required is preserved.");
   }
 
   public function tearDown() {
