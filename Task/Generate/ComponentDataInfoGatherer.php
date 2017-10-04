@@ -96,8 +96,8 @@ class ComponentDataInfoGatherer {
       // keys such as 'format' are set.
       $this->componentDataInfoAddDefaults($property_info);
 
-      // Expand compound properties.
-      if ($property_info['format'] == 'compound') {
+      // Expand compound properties that use a generator.
+      if ($property_info['format'] == 'compound' && isset($property_info['component'])) {
         $component_type = $property_info['component'];
 
         // Recurse to get the child properties.
