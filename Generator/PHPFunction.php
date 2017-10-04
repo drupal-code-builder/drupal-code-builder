@@ -58,6 +58,7 @@ class PHPFunction extends BaseGenerator {
   function __construct($component_name, $component_data, $root_generator) {
     // Set defaults.
     $component_data += array(
+      // TODO: Remove, unused.
       'code_file' => '%module.module',
       'code_file_id' => 'ModuleCodeFile:%module.module',
       'doxygen_first' => 'TODO: write function documentation',
