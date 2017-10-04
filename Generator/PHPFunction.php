@@ -50,10 +50,10 @@ class PHPFunction extends BaseGenerator {
    *      - an array of lines of code. These should not have their newlines.
    *    - 'has_wrapping_newlines': (optional) If the 'body' is a string, this
    *      indicates whether the string has first and closing newlines.
-   *    - 'body_indent': (options) The number of spaces to add to the start of
+   *    - 'body_indent': (optional) The number of spaces to add to the start of
    *      each line, if 'body' is an array. This is relative to the indentation
    *      of the function as a whole; that is, it does not need to be increased
-   *      for a class method.
+   *      for a class method. Defaults to 2.
    */
   function __construct($component_name, $component_data, $root_generator) {
     // Set defaults.
@@ -61,6 +61,8 @@ class PHPFunction extends BaseGenerator {
       'code_file' => '%module.module',
       'code_file_id' => 'ModuleCodeFile:%module.module',
       'doxygen_first' => 'TODO: write function documentation',
+      // TODO: does anyone set this to anything else?
+      'body_indent' => 2,
     );
 
     $this->code_file = $component_data['code_file'];
