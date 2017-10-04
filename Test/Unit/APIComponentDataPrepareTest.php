@@ -1,19 +1,12 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Test\APIComponentDataPrepareTest.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the preparation step of component data.
  *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/APIComponentDataPrepareTest.php
- * @endcode
+ * This tests that when UIs call prepareComponentDataProperty() on component
+ * data info, options and defaults are properly set up.
  */
 class APIComponentDataPrepareTest extends TestBase {
 
@@ -26,6 +19,9 @@ class APIComponentDataPrepareTest extends TestBase {
    */
   function testComponentDataDefaults() {
     // A test array of component data info.
+    // This should be in the same format as returned from
+    // Generate::getRootComponentDataInfo(), so with keys such as 'format'
+    // and 'required' always populated.
     $component_data_info = [
       'no_default_string' => [
         'label' => 'Label',

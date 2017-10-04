@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Tests the retrieval of of component data from component classes.
+ * Tests the retrieval of component data from component classes.
  */
 class APIComponentDataInfoTest extends TestBase {
 
