@@ -4,6 +4,10 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the retrieval of component data from component classes.
+ *
+ * This tests data definitions from BaseGenerator::componentDataDefinition()
+ * are properly prepared for consumption by UIs when
+ * Generate::getRootComponentDataInfo() is called.
  */
 class APIComponentDataInfoTest extends TestBase {
 

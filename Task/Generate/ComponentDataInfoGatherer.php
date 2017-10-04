@@ -3,7 +3,13 @@
 namespace DrupalCodeBuilder\Task\Generate;
 
 /**
- *  Task helper for getting info on data properties from components.
+ * Task helper for getting info on data properties from components.
+ *
+ * This takes data that a component generator class defines in
+ * componentDataDefinition() and prepares it for use by UIs.
+ *
+ * @see BaseGenerator::componentDataDefinition()
+ * @see Generate::getRootComponentDataInfo()
  */
 class ComponentDataInfoGatherer {
 
