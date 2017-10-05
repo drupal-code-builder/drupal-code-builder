@@ -421,7 +421,7 @@ abstract class TestBase extends TestCase {
    * @param $namespace_pieces
    *  A PHP namespace, as an array of pieces to concatenate with '\'.
    * @param $string
-   *  The text to check for a class declaration.
+   *  The text to check for a namespace declaration.
    * @param $message = NULL
    *  The assertion message.
    */
