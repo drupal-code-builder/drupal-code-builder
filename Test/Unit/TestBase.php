@@ -102,8 +102,9 @@ abstract class TestBase extends TestCase {
 
     $docblock_regexes = [
       'start'   => '@^/\*\*@',
-      // Need to ensure this doesn't also match the end line.
-      'middle'  => '@^ \*[^/]@',
+      // Need to ensure this doesn't also match the end line, so use a negative
+      // lookahead to prevent matching ' */'.
+      'middle'  => '@^ \*(?!/)@',
       'end'     => '@^ \*/@',
     ];
 
