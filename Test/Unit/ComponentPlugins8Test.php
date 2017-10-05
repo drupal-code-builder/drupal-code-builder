@@ -63,7 +63,7 @@ class ComponentPlugins8Test extends TestBase {
       'admin_label' => NULL,
       'category' => NULL,
     ];
-    $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
+    $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
     // Hack for now to cover the inheritance.
     $this->assertClass('Alpha extends BlockBase', $plugin_file, "The plugin class file contains contains the expected class.");
   }
@@ -114,7 +114,7 @@ class ComponentPlugins8Test extends TestBase {
       'admin_label' => NULL,
       'category' => NULL,
     ];
-    $this->assertClassAnnotation($plugin_file, 'Block', $expected_annotation_properties, "The plugin class has the correct annotation.");
+    $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
 
     // Check the injected service.
     $this->assertClassProperty('currentUser', $plugin_file, "The plugin class has a property for the injected service.");

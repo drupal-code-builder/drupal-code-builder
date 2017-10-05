@@ -455,18 +455,18 @@ abstract class TestBase extends TestCase {
   /**
    * Assert a string contains a class annotation.
    *
-   * @param $string
-   *  The text to check for a class annotation.
    * @param $annotation_class
-   *  The class of the annotation block.
+   *  The expected class of the annotation block.
    * @param $annotation_values
    *  An array of properties and values the annotation should have. To only
    *  check that a property is present, without checking its value, pass in
    *  a value of NULL for the array key.
+   * @param $string
+   *  The text to check for a class annotation.
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertClassAnnotation($string, $annotation_class, $annotation_values, $message = NULL) {
+  function assertClassAnnotation($annotation_class, $annotation_values, $string, $message = NULL) {
     // First, check the class has something that looks like an annotation.
     $annotation_regex = "[
     ^ /\*\* \\n # Open docblock.
