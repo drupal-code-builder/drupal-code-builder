@@ -175,7 +175,10 @@ class PHPFile extends File {
     $imports = [];
 
     if ($imported_classes) {
+      // Remove duplicates, and sort.
+      $imported_classes = array_unique($imported_classes);
       sort($imported_classes);
+
       foreach ($imported_classes as $fully_qualified_class_name) {
         $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
         $imports[] = "use $fully_qualified_class_name;";
