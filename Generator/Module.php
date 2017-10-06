@@ -257,6 +257,15 @@ class Module extends RootComponent {
           $component_data['hooks'] = $hooks;
         }
       ),
+      'content_entity_types' => array(
+        'label' => 'Content entity types',
+        'required' => FALSE,
+        'format' => 'compound',
+        // This tells the system that this is a request for generator
+        // components, and the input data should be placed in a nested array in
+        // the module data.
+        'component' => 'ContentEntityType',
+      ),
       'plugins' => array(
         'label' => 'Plugins',
         'required' => FALSE,
