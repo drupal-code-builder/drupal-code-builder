@@ -56,6 +56,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         },
       ],
     ];
+    $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -131,6 +132,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'format' => 'string',
       ],
     ];
+    $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -214,6 +216,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'format' => 'string',
       ],
     ];
+    $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -328,6 +331,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'component' => 'simple'
       ],
     ];
+    $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -423,6 +427,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'component' => 'array'
       ],
     ];
+    $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -538,6 +543,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'component' => 'compound'
       ],
     ];
+    $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -651,5 +657,29 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   - repeat requests
   - ....?
   */
+
+  /**
+   * Add in default values for property info keys.
+   *
+   * This does the work of
+   * ComponentDataInfoGatherer::componentDataInfoAddDefaults() as we mock
+   * that helper.
+   *
+   * @param &$data_info
+   *   A data info array, passed by reference and altered in place.
+   */
+  protected function componentDataInfoAddDefaults(&$data_info) {
+    foreach ($data_info as &$property_info) {
+      $property_info += array(
+        'required' => FALSE,
+        'format' => 'string',
+      );
+
+      // Recurse into child properties.
+      if (isset($property_info['properties'])) {
+        $this->componentDataInfoAddDefaults($property_info['properties']);
+      }
+    }
+  }
 
 }
