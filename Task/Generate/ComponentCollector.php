@@ -323,7 +323,7 @@ class ComponentCollector {
         continue;
       }
 
-      $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'process');
+      $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
     }
 
     // Allow each property to apply its processing callback. Note that this may
@@ -340,8 +340,6 @@ class ComponentCollector {
   /**
    * Set the default value for a property in component data.
    *
-   * TODO remove $stage and code for 'prepare' stage.
-   *
    * @param $property_name
    *  The name of the property. For child properties, this is the name of just
    *  the child property.
@@ -351,32 +349,24 @@ class ComponentCollector {
    *  The array of component data, or for child properties, the item array that
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
-   * @param $stage
-   *  Indicates the stage at which this has been called:
-   *    - 'prepare': Called by prepareComponentData().
-   *    - 'process': Called by processComponentData().
    */
-  protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local, $stage) {
-    // In the 'prepare' stage, we always want to provide a default, for the
-    // convenience of the user in the UI.
-    // In the 'process' stage, it's not as clear-cut.
-    if ($stage == 'process') {
-      if (!empty($component_data_local[$property_name])) {
-        // User has provided a default: don't clobber that.
-        return;
-      }
-      if (empty($property_info['process_default']) &&
-        empty($property_info['computed']) &&
-        empty($property_info['internal'])
-      ) {
-        // Allow an empty value to remain empty if the property is neither:
-        //  - computed: this never gets shown to the user, so we must provide a
-        //    default always.
-        //  - internal: we always want our own defaults to be processed.
-        //  - process_default: this forces a default value, effectively
-        //    preventing a property from being left empty.
-        return;
-      }
+  protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+    // Determine whether we should fill in a default value.
+    if (!empty($component_data_local[$property_name])) {
+      // User has provided a default: don't clobber that.
+      return;
+    }
+    if (empty($property_info['process_default']) &&
+      empty($property_info['computed']) &&
+      empty($property_info['internal'])
+    ) {
+      // Allow an empty value to remain empty if the property is neither:
+      //  - computed: this never gets shown to the user, so we must provide a
+      //    default always.
+      //  - internal: we always want our own defaults to be processed.
+      //  - process_default: this forces a default value, effectively
+      //    preventing a property from being left empty.
+      return;
     }
 
     if (isset($property_info['default'])) {
@@ -388,16 +378,6 @@ class ComponentCollector {
         $default_value = $property_info['default'];
       }
       $component_data_local[$property_name] = $default_value;
-    }
-    else {
-      if ($stage == 'prepare') {
-        // In the prepare stage, always set the property name, even if it's
-        // something basically empty.
-        // (This allows UIs to rely on this and set it as their default no
-        // matter what.)
-        $default_value = $property_info['format'] == 'array' ? array() : NULL;
-        $component_data_local[$property_name] = $default_value;
-      }
     }
   }
 
