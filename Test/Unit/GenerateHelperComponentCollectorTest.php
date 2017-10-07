@@ -27,12 +27,57 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'plain_property_string' => [
         'format' => 'string',
       ],
+      'plain_property_default' => [
+        'default' => 'default_value',
+      ],
+      'plain_property_process_default' => [
+        'default' => 'default_value',
+        'process_default' => TRUE,
+      ],
+      'plain_property_internal' => [
+        'default' => 'default_value',
+        'internal' => TRUE,
+      ],
+      'plain_property_computed' => [
+        'default' => 'default_value',
+        'computed' => TRUE,
+      ],
+      'plain_property_processing' => [
+        'processing' => function($value, &$component_data, &$property_info) {
+          $component_data['plain_property_processing'] = 'processed_value:' . $value;
+        },
+      ],
+      // Test processing works on the default value.
+      'plain_property_process_default_processing' => [
+        'default' => 'default_value',
+        'process_default' => TRUE,
+        'processing' => function($value, &$component_data, &$property_info) {
+          $component_data['plain_property_process_default_processing'] = 'processed_value:' . $value;
+        },
+      ],
     ];
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
       'root_name' => 'my_component',
       'plain_property_string' => 'string_value',
+      // We don't supply plain_property_default, and it does not get set.
+      // We don't supply plain_property_process_default, and because it has
+      // 'process_default' set, its value gets filled in.
+      'plain_property_processing' => 'value_for_processing',
+    ];
+    // Expected data for the root component.
+    // This is $root_data once it's been processed.
+    $root_component_construction_data = [
+      'base' => 'my_root',
+      'root_name' => 'my_component',
+      'plain_property_string' => 'string_value',
+      'plain_property_process_default' => 'default_value',
+      'plain_property_internal' => 'default_value',
+      'plain_property_computed' => 'default_value',
+      'plain_property_processing' => 'processed_value:value_for_processing',
+      'plain_property_process_default_processing' => 'processed_value:default_value',
+      'component_type' => 'my_root',
     ];
 
     // Mock the ComponentCollector's injected dependencies.
@@ -51,11 +96,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $class_handler->getGenerator(
       'my_root',
       'my_root',
-      Argument::that(function ($arg) use ($root_data) {
-        // Data array given to constructor should contain at least the root
-        // data; the component collection process may add more properties.
-        return empty(array_diff($root_data, $arg));
-      }),
+      $root_component_construction_data,
       NULL
     )->willReturn($root_component->reveal());
 
