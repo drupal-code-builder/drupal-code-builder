@@ -169,7 +169,8 @@ class ComponentCollector {
     // Process the component's data.
     //dump($component_data);
     $component_type = $component_data['component_type'];
-    $this->processComponentData($component_data, $component_type);
+    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
+    $this->processComponentData($component_data, $component_data_info);
 
     // Instantiate the generator in question.
     // We always pass in the root component.
@@ -220,8 +221,6 @@ class ComponentCollector {
 
     // Pick out any data properties which are components themselves, and create the
     // child components.
-    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
-
     foreach ($component_data_info as $property_name => $property_info) {
       // We're only interested in component properties.
       if (!isset($property_info['component'])) {
@@ -304,16 +303,11 @@ class ComponentCollector {
    *
    * @param &$component_data
    *  The component data array.
-   * @param $component_type
-   *  The component type for the data being processed.
+   * @param $component_data_info
+   *  The component data info for the data being processed.
    */
-  protected function processComponentData(&$component_data, $component_type) {
+  protected function processComponentData(&$component_data, $component_data_info) {
     // Set defaults for properties that don't have a value yet.
-    // First, get the component data info again, with the computed properties
-    // this time, so we can add them in.
-    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
-
-    // TODO: refactor this with code in prepareComponentDataProperty().
     foreach ($component_data_info as $property_name => $property_info) {
       // No need to set defaults on components here; the defaults will be filled
       // in when the component is instantiated in assembleComponentList() and
@@ -335,6 +329,32 @@ class ComponentCollector {
         $processing_callback($component_data[$property_name], $component_data, $property_info);
       }
     } // processing callback
+
+    // Recurse into compound properties.
+    // We do this last to allow the parent property to have default and
+    // processing applied to the child data as a whole.
+    // (TODO: test this!)
+    foreach ($component_data_info as $property_name => $property_info) {
+      // Only work with compound properties.
+      if ($property_info['format'] != 'compound') {
+        continue;
+      }
+
+      // Don't work with component child properties, as the generator will
+      // handle this.
+      if (isset($property_info['component'])) {
+        continue;
+      }
+
+      if (!isset($component_data[$property_name])) {
+        // Skip if no data for this property.
+        continue;
+      }
+
+      foreach ($component_data[$property_name] as $delta => &$item_data) {
+        $this->processComponentData($item_data, $property_info['properties']);
+      }
+    }
   }
 
   /**

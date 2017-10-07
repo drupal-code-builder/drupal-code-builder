@@ -650,6 +650,140 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $this->assertArrayHasKey('compound:compound_1', $component_list, "The component list has the simple property generator.");
   }
 
+  /**
+   * Request with the root generator and a compound component property.
+   */
+  public function testCompoundChildPropertyNoRequests() {
+    // The mocked root component's data info.
+    $root_data_info = [
+      // This property is assumed to exist by the collector.
+      'root_name' => [
+        'label' => 'Component machine name',
+        'required' => TRUE,
+      ],
+      'plain_property_string' => [
+        'format' => 'string',
+      ],
+      'property_compound' => [
+        'format' => 'compound',
+        'properties' => [
+          'child_property_string' => [
+            'format' => 'string',
+          ],
+          'child_property_string_default' => [
+            'format' => 'string',
+            'default' => 'default_value',
+          ],
+          'child_property_string_process_default' => [
+            'format' => 'string',
+            'default' => 'default_value',
+            'process_default' => TRUE,
+          ],
+          'child_property_internal' => [
+            'default' => 'default_value',
+            'internal' => TRUE,
+          ],
+          'child_property_computed' => [
+            'default' => 'default_value',
+            'computed' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    $this->componentDataInfoAddDefaults($root_data_info);
+    // The request data we pass in to the system.
+    $root_data = [
+      'base' => 'my_root',
+      'root_name' => 'my_component',
+      'plain_property_string' => 'string_value',
+      'property_compound' => [
+        0 => [
+          'child_property_string' => 'child_property_string:value_0',
+          'child_property_string_default' => 'child_property_string_default:value_0',
+          'child_property_string_process_default' => 'child_property_string_process_default:value_0',
+        ],
+        1 => [
+          'child_property_string' => 'child_property_string:value_1',
+        ],
+        2 => [
+          // Nothing.
+          // This is a bit of an odd case: the presense of this item data array,
+          // even though empty, will mean it gets process defaults and internal
+          // values filled in.
+        ],
+      ],
+    ];
+    // Expected data for the root component.
+    // This is $root_data once it's been processed.
+    $root_component_construction_data = [
+      'base' => 'my_root',
+      'root_name' => 'my_component',
+      'plain_property_string' => 'string_value',
+      'property_compound' => [
+        0 => [
+          // These were speficied.
+          'child_property_string' => 'child_property_string:value_0',
+          'child_property_string_default' => 'child_property_string_default:value_0',
+          'child_property_string_process_default' => 'child_property_string_process_default:value_0',
+          // Internal properties get filled in.
+          "child_property_internal" => "default_value",
+          "child_property_computed" => "default_value",
+        ],
+        1 => [
+          // This was specified.
+          "child_property_string" => "child_property_string:value_1",
+           // These are filled in.
+          "child_property_string_process_default" => "default_value",
+          "child_property_internal" => "default_value",
+          "child_property_computed" => "default_value",
+        ],
+        2 => [
+          // These are filled in.
+         "child_property_string_process_default" => "default_value",
+         "child_property_internal" => "default_value",
+         "child_property_computed" => "default_value",
+        ],
+      ],
+      'component_type' => 'my_root',
+    ];
+
+    $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
+    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
+    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
+
+    // Root component.
+    $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
+
+    $root_component->getUniqueID()->willReturn('root:root');
+
+    $class_handler->getGenerator(
+      'my_root',
+      'my_root',
+      $root_component_construction_data,
+      NULL
+    )
+    ->will(function ($args) use ($root_component) {
+      return $root_component->reveal();
+    });
+    $root_component->requiredComponents()->willReturn([]);
+
+    // The ComponentDataInfoGatherer mock returns the generator's info.
+    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
+
+    // Create the helper, with mocks passed in.
+    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
+      $environment->reveal(),
+      $class_handler->reveal(),
+      $data_info_gatherer->reveal()
+    );
+
+    $component_list = $component_collector->assembleComponentList($root_data);
+
+    $this->assertCount(1, $component_list, "The expected number of components is returned.");
+
+    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
+  }
+
   /*
   Further tests todo:
   - basic properties, single generator makes requests
