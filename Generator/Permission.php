@@ -56,7 +56,8 @@ class Permission extends BaseGenerator {
         'process_default' => TRUE,
       ),
       'restrict_access' => array(
-        'label' => 'Whether the permission should show a warning that it should be granted with care.',
+        'label' => 'Access warning',
+        'description' => 'Whether the permission should show a warning that it should be granted with care.',
         'default' => FALSE,
         'format' => 'boolean',
       ),
