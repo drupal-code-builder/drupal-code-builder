@@ -157,12 +157,12 @@ class Generate extends Base {
     unset($child_property_info);
 
     // Set a default value.
-    $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data, 'prepare');
+    $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
     // Handle compound property child items if they are present.
     if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
       foreach ($component_data[$property_name] as $delta => $delta_data) {
         foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
-          $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta], 'prepare');
+          $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta]);
         }
       }
     }
@@ -205,34 +205,10 @@ class Generate extends Base {
    *  The array of component data, or for child properties, the item array that
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
-   * @param $stage
-   *  Indicates the stage at which this has been called:
-   *    - 'prepare': Called by prepareComponentData().
-   *    - 'process': Called by processComponentData().
    */
-  protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local, $stage) {
-    // In the 'prepare' stage, we always want to provide a default, for the
+  protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+    // During the prepare stage, we always want to provide a default, for the
     // convenience of the user in the UI.
-    // In the 'process' stage, it's not as clear-cut.
-    if ($stage == 'process') {
-      if (!empty($component_data_local[$property_name])) {
-        // User has provided a default: don't clobber that.
-        return;
-      }
-      if (empty($property_info['process_default']) &&
-        empty($property_info['computed']) &&
-        empty($property_info['internal'])
-      ) {
-        // Allow an empty value to remain empty if the property is neither:
-        //  - computed: this never gets shown to the user, so we must provide a
-        //    default always.
-        //  - internal: we always want our own defaults to be processed.
-        //  - process_default: this forces a default value, effectively
-        //    preventing a property from being left empty.
-        return;
-      }
-    }
-
     if (isset($property_info['default'])) {
       if (is_callable($property_info['default'])) {
         $default_callback = $property_info['default'];
@@ -244,14 +220,12 @@ class Generate extends Base {
       $component_data_local[$property_name] = $default_value;
     }
     else {
-      if ($stage == 'prepare') {
-        // In the prepare stage, always set the property name, even if it's
-        // something basically empty.
-        // (This allows UIs to rely on this and set it as their default no
-        // matter what.)
-        $default_value = $property_info['format'] == 'array' ? array() : NULL;
-        $component_data_local[$property_name] = $default_value;
-      }
+      // In the prepare stage, always set the property name, even if it's
+      // something basically empty.
+      // (This allows UIs to rely on this and set it as their default no
+      // matter what.)
+      $default_value = $property_info['format'] == 'array' ? array() : NULL;
+      $component_data_local[$property_name] = $default_value;
     }
   }
 
