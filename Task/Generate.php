@@ -207,6 +207,15 @@ class Generate extends Base {
    *  a key $property_name if data has been supplied for this property.
    */
   protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
+    // Don't clobber a default value that's already been set. This can happen
+    // if a parent property sets a default value for a child item.
+    // TODO: consider whether the child item should win if it has a default
+    // value or callback of its own -- or indeed if this combination ever
+    // happens.
+    if (isset($component_data_local[$property_name])) {
+      return;
+    }
+
     // During the prepare stage, we always want to provide a default, for the
     // convenience of the user in the UI.
     if (isset($property_info['default'])) {
