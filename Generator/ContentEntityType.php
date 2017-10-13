@@ -7,153 +7,140 @@ use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
 /**
  * Generator for a content entity type.
  */
-class ContentEntityType extends PHPClassFile {
-
-  use NameFormattingTrait;
-
-  use AnnotationTrait;
+class ContentEntityType extends EntityTypeBase {
 
   /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
-    $data_definition = [
-      'entity_type_id' => [
-        'label' => 'Entity type ID',
-        'description' => "The identifier of the entity type.",
-        'required' => TRUE,
-      ],
-      'entity_type_label' => [
-        'label' => 'Entity type label',
-        'description' => "The human-readable label for the entity type.",
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          $entity_type_id = $component_data['entity_type_id'];
+    $data_definition = parent::componentDataDefinition();
 
-          // Convert the entity type to camel case. E.g., 'my_entity_type'
-          //  becomes 'My Entity Type'.
-          return self::snakeToTitle($entity_type_id);
-        },
-      ],
-      'entity_class_name' => [
-        'label' => 'Entity class name',
-        'description' => "The short class name of the entity.",
-        'process_default' => TRUE,
+    $bundle_entity_properties = [
+      'bundle_entity' => [
+        'label' => 'Bundle config entity',
+        'format' => 'compound',
+        // TODO: cardinality!
+        'component' => 'ConfigEntityType',
         'default' => function($component_data) {
-          $entity_type_id = $component_data['entity_type_id'];
-          return self::snakeToCamel($entity_type_id);
-        },
-      ],
-      'interface_parents' => [
-        'label' => 'Interface parents',
-        'description' => "The interfaces the entity interface inherits from.",
-        'format' => 'array',
-        // Data for the options and processing callbacks.
-        '_long_options' => [
-          '\Drupal\Core\Entity\EntityChangedInterface' => 'EntityChangedInterface, for entities that store a timestamp for their last change',
-          '\Drupal\user\EntityOwnerInterface' => 'EntityOwnerInterface, for entities that have an owner',
-          // EntityPublishedInterface? but this has its own base class.
-          // EntityDescriptionInterface? but only used in core for config.
-        ],
-        'options' => function(&$property_info) {
-          // Trim the namespace off the options, for UIs that show the keys,
-          // such as Drush.
-          $options = [];
-          foreach ($property_info['_long_options'] as $key => $text) {
-            $short_class_name = substr(strrchr($key, "\\"), 1);
-            $options[$short_class_name] = $text;
-          }
-          return $options;
+          return [
+            0 => [
+              // The bundle entity type ID defaults to CONTENT_TYPE_type.
+              'entity_type_id' => $component_data['entity_type_id'] . '_type',
+              'bundle_of_entity' => $component_data['entity_type_id'],
+            ],
+          ];
         },
         'processing' => function($value, &$component_data, &$property_info) {
-          $lookup = [];
-          foreach ($property_info['_long_options'] as $qualified_class_name => $text) {
-            $short_class_name = substr(strrchr($qualified_class_name, "\\"), 1);
-            $lookup[$qualified_class_name] = $short_class_name;
+          // Fill in defaults if an item is requested.
+          // Bit faffy, but needed for non-progressive UIs.
+          if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
+            $component_data['bundle_entity'][0]['bundle_of_entity'] = $component_data['entity_type_id'];
           }
-          // TODO: DRY: prevent repetition of property name!
-          $component_data['interface_parents'] = array_keys(array_intersect($lookup, $value));
-        },
-        // TODO: methods from this in the entity class!
-        // TODO: use corresponding traits, eg EntityChangedTrait;
-      ],
-      'base_fields' => [
-        'label' => 'Base fields',
-        'format' => 'compound',
-        // TODO: default, populated by things such as interface choice!
-        'properties' => [
-          'name' => [
-            'label' => 'Field name',
-          ],
-          'label' => [
-            'label' => 'Field label',
-            'default' => function($component_data) {
-              $entity_type_id = $component_data['name'];
-              return self::snakeToTitle($entity_type_id);
-            },
-            // TODO: Doesn't work yet due to bug in ComponentCollector!
-            'process_default' => TRUE,
-          ],
-          'type' => [
-            'label' => 'Field type',
-            'options' => [
-              // TODO: get these from Field/FieldType plugins, via collection,
-              // or from the environment on the fly.
-              'string' => 'A simple string.',
-              'boolean' => 'A boolean stored as an integer.',
-              'integer' => 'An integer, with settings for min and max value validation (also provided for decimal and float)',
-              'decimal' => 'A decimal with configurable precision and scale.',
-              'float' => 'A float number',
-              'language' => 'Contains a language code and the language as a computed property',
-              'timestamp' => 'A Unix timestamp stored as an integer',
-              'created' => 'A timestamp that uses the current time as a default value.',
-              'changed' => 'A timestamp that is automatically updated to the current time if the entity is saved.',
-              'datetime' => 'A date stored as an ISO 8601 string.',
-              'uri' => 'Contains a URI. The link module also provides a link field type that can include a link title and can point to an internal or external URI/route.',
-              'uuid' => 'A UUID field that generates a new UUID as the default value.',
-              'email' => 'An email, with corresponding validation and widgets and formatters.',
-              'entity_reference' => 'An entity reference with a target_id and a computed entity field property. entity_reference.module provides widgets and formatters when enabled.',
-              // Broken in core!
-              //'map' => 'Can contain any number of arbitrary properties, stored as a serialized string',
-            ],
-          ],
-        ],
-      ],
-      'entity_keys' => [
-        'label' => 'Entity keys',
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          $value = [
-            'id' => $component_data['entity_type_id'] . '_id',
-            // TOD: further keys.
-          ];
-          return $value;
-        },
-      ],
-      'entity_interface_name' => [
-        'label' => 'Interface',
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return $component_data['entity_class_name'] . 'Interface';
         },
       ],
     ];
+    self::insert($data_definition, 'entity_class_name', $bundle_entity_properties);
 
-    // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
+    $data_definition['bundle_entity_type'] = [
+      'label' => 'Bundle entity type',
+      'format' => 'string',
+      'internal' => TRUE,
+      'default' => function($component_data) {
+        return $component_data['bundle_entity'][0]['entity_type_id'] ?? NULL;
+      },
+    ];
 
-    // Override some parent definitions to provide computed defaults.
-    $data_definition['relative_class_name']['default'] = function ($component_data) {
-      return [
-        'Entity',
-        $component_data['entity_class_name'],
-      ];
-    };
-    $data_definition['docblock_first_line']['default'] = function ($component_data) {
-      return "Provides the {$component_data['entity_type_label']} entity.";
-    };
+    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
+
+    // Default property values for a handler that core fills in if not
+    // specified, e.g. the access handler.
+    $handler_property_defaults_core_default = [
+      'format' => 'boolean',
+    ];
+
+    // Default property values for a handler that core leaves empty if not
+    // specified, e.g. the list builder handler.
+    $handler_property_defaults_core_empty = [
+      'format' => 'string',
+      'options' => [
+        'none' => 'Do not use a handler',
+        'core' => 'Use the core handler class',
+        'custom' => 'Provide a custom handler class',
+      ],
+    ];
+
+    foreach (static::getHandlerTypes() as $key => $handler_type_info) {
+      if ($handler_type_info['mode'] == 'core_default') {
+        $handler_property = $handler_property_defaults_core_default;
+
+        $handler_property['label'] = "Custom {$handler_type_info['label']} handler";
+      }
+      else {
+        $handler_property = $handler_property_defaults_core_empty;
+
+        $handler_property['label'] = "{$handler_type_info['label']} handler";
+      }
+
+      $handler_property['handler_label'] = $handler_type_info['label'];
+      $handler_property['parent_class_name'] = $handler_type_info['base_class'];
+
+      $data_definition["handler_{$key}"] = $handler_property;
+    }
 
     return $data_definition;
+  }
+
+  protected static function getHandlerTypes() {
+    return [
+      'storage' => [
+        'label' => 'storage',
+        // Core fills this in if entity type doesn't specify.
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\Core\Entity\Sql\SqlContentEntityStorage',
+      ],
+      'view_builder' => [
+        'label' => 'view builder',
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\Core\Entity\EntityViewBuilder',
+      ],
+      'list_builder' => [
+        'label' => 'list builder',
+        'mode' => 'core_none',
+        'base_class' => '\Drupal\Core\Entity\EntityListBuilder',
+      ],
+      "views_data" => [
+        'label' => 'Views data',
+        // Core leaves empty if not specified.
+        'mode' => 'core_none',
+        'base_class' => '\Drupal\views\EntityViewsData',
+      ],
+      // TODO: this belongs in the base entity type; config have them too.
+      'access' => [
+        'label' => 'access',
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\Core\Entity\EntityAccessControlHandler',
+      ],
+      // routing: several options...
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function interfaceParents() {
+    return [
+      '\Drupal\Core\Entity\EntityChangedInterface' => 'EntityChangedInterface, for entities that store a timestamp for their last change',
+      '\Drupal\user\EntityOwnerInterface' => 'EntityOwnerInterface, for entities that have an owner',
+      // EntityPublishedInterface? but this has its own base class.
+      // EntityDescriptionInterface? but only used in core for config.
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function interfaceBasicParent() {
+    return '\Drupal\Core\Entity\ContentEntityInterface';
   }
 
   /**
@@ -162,21 +149,7 @@ class ContentEntityType extends PHPClassFile {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    //dump($this->component_data);
-
-    $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
-      'component_type' => 'PHPInterfaceFile',
-      'relative_class_name' => [
-        'Entity',
-        $this->component_data['entity_interface_name'],
-      ],
-      'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
-      'parent_interface_names' => array_merge([
-          '\Drupal\Core\Entity\ContentEntityInterface',
-        ],
-        $this->component_data['interface_parents']
-      ),
-    ];
+    dump($this->component_data);
 
     $method_body = [];
     // Calling the parent defines fields for entity keys.
@@ -200,6 +173,33 @@ class ContentEntityType extends PHPClassFile {
     ];
 
     // TODO: other methods!
+
+    // Handlers.
+    foreach (static::getHandlerTypes() as $key => $handler_type_info) {
+      $data_key = "handler_{$key}";
+
+      // Skip if nothing in the data.
+      if (empty($this->component_data[$data_key])) {
+        continue;
+      }
+
+      // For handlers that core doesn't fill in, only provide a class if
+      // for the 'custom' option.
+      if ($handler_type_info['mode'] == 'core_none') {
+        if ($this->component_data[$data_key] != 'custom') {
+          continue;
+        }
+      }
+
+      $components[$data_key] = [
+        'component_type' => 'EntityHandler',
+        'entity_class_name' => $this->component_data['entity_class_name'],
+        'entity_type_label' => $this->component_data['entity_type_label'],
+        'handler_type' => $key,
+        'handler_label' => $handler_type_info['label'],
+        'parent_class_name' => $handler_type_info['base_class'],
+      ];
+    }
 
     return $components;
   }
@@ -235,18 +235,51 @@ class ContentEntityType extends PHPClassFile {
         'label_count' => [
           '#class' => 'PluralTranslation',
           '#data' => [
-            'singular' => "@count license",
-            'plural' => "@count licenses",
+            'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
+            'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
           ],
         ],
-        // TODO: bundle stuff
-        // TODO: handlers
         // Use the entity type ID as the base table.
         'base_table' => $this->component_data['entity_type_id'],
-        'label_plural' => 'administer ' . strtolower($this->component_data['entity_type_label']) . 's',
-        'fieldable' => TRUE,
-        'entity_keys' => $this->component_data['entity_keys'],
       ],
+    ];
+
+    if (isset($this->component_data['bundle_entity_type'])) {
+      $annotation['#data']['bundle_entity_type'] = $this->component_data['bundle_entity_type'];
+      // This gets set into the child component data when the compound property
+      // gets prepared and defaults set.
+      $annotation['#data']['bundle_label'] = $this->component_data['entity_type_label'];
+    }
+
+    // Handlers.
+    foreach (static::getHandlerTypes() as $key => $handler_type_info) {
+      $data_key = "handler_{$key}";
+
+      // Skip if nothing in the data.
+      if (empty($this->component_data[$data_key])) {
+        continue;
+      }
+
+      if ($handler_type_info['mode'] == 'core_none' && $this->component_data[$data_key] == 'core') {
+        $handler_class = substr($handler_type_info['base_class'], 1);
+      }
+      else {
+        $handler_class = static::makeQualifiedClassName([
+          // TODO: DRY, with EntityHandler class.
+          'Drupal',
+          '%module',
+          'Entity',
+          'Handler',
+          $this->component_data['entity_class_name'] . static::snakeToCamel($key),
+        ]);
+      }
+
+      $annotation['#data']['handlers'][$key] = $handler_class;
+    }
+
+    $annotation['#data'] += [
+      'fieldable' => TRUE,
+      'entity_keys' => $this->component_data['entity_keys'],
     ];
 
     $docblock_lines = array_merge($docblock_lines, $this->renderAnnnotation($annotation));
