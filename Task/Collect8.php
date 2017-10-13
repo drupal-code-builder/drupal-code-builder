@@ -751,4 +751,22 @@ class Collect8 extends Collect {
     return $info;
   }
 
+  /**
+   * Returns the helper for the given short class name.
+   *
+   * @param $class
+   *   The short class name.
+   *
+   * @return
+   *   The helper object.
+   */
+  protected function getHelper($class) {
+    // No need for static caching, we only use these once.
+    $qualified_class = '\DrupalCodeBuilder\Task\Collect\\' . $class;
+
+    $helper = new $qualified_class();
+
+    return $helper;
+  }
+
 }
