@@ -21,6 +21,7 @@ class Collect8 extends Collect {
     $this->collectHooks();
     $this->collectPlugins();
     $this->collectServices();
+    $this->collectServiceTagTypes();
   }
 
   /**
@@ -567,6 +568,13 @@ class Collect8 extends Collect {
     ksort($service_definitions);
 
     return $service_definitions;
+  }
+
+  protected function collectServiceTagTypes() {
+    $service_tag_type_definitions = $this->getHelper('ServiceTagTypes')->collectServiceTagTypes();
+
+    // Save the data.
+    $this->writeProcessedData($service_tag_type_definitions, 'service_tag_types');
   }
 
   /**
