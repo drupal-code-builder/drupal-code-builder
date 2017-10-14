@@ -58,6 +58,7 @@ class PHPClassFile extends PHPFile {
       ],
       'interfaces' => [
         'label' => 'Interfaces',
+        'description' => 'List of interfaces this class implements, as fully-qualified names with initial \.',
         'format' => 'array',
         'internal' => TRUE,
         'default' => [],
