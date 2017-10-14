@@ -269,6 +269,7 @@ class Collect8 extends Collect {
     $data = [];
 
     foreach ($methods as $method) {
+      // Dev trapdoor.
       if ($method->getName() != 'storageSettingsForm') {
         //continue;
       }
