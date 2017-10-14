@@ -9,7 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * These need to be run from Drupal's PHPUnit, rather than ours:
  * @code
- *  [drupal]/core $ ../vendor/bin/phpunit [DCB path]/Integration/CollectPluginInfoTest.php
+ *  [drupal]/core $ ../vendor/bin/phpunit ../vendor/drupal-code-builder/drupal-code-builder/Test/Integration/CollectPluginInfoTest.php
  * @endcode
  *
  * @todo move these under /Test once the unit tests are moved into a subfolder.
