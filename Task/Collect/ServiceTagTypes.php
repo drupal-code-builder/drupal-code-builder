@@ -30,8 +30,11 @@ class ServiceTagTypes {
    * Collect data on tagged services.
    *
    * @return
-   *  An array whose keys are service tags, and whose values are the interface
-   *  that each tagged service must implement.
+   *  An array whose keys are service tags, and whose values arrays containing:
+   *    - 'interface': The fully-qualified name (without leading slash) of the
+   *      interface that each tagged service must implement.
+   *    - 'methods': An array of the methods of this interface, in the same
+   *      format as returned by MethodCollector::collectMethods().
    */
   public function collectServiceTagTypes() {
     // Get the kernel, and hack it to get a compiled container.
@@ -73,7 +76,18 @@ class ServiceTagTypes {
 
         $type = (string) $collecting_method_paramR[0]->getType();
 
-        $data[$tag] = $type;
+        if (!interface_exists($type)) {
+          // Shouldn't happen, as the typehint will be an interface the
+          // collected services must implement.
+          continue;
+        }
+
+        $type_hint_methods = $this->methodCollector->collectMethods($type);
+
+        $data[$tag] = [
+          'interface' => $type,
+          'methods' => $type_hint_methods,
+        ];
       }
     }
 
