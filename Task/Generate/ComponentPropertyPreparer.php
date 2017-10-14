@@ -37,10 +37,14 @@ class ComponentPropertyPreparer {
   }
 
   /**
-   * Helper to create the options array for a property.
+   * Creates the options array for a property.
    *
-   * This calls the property info's options callback and replaces it with the
-   * resulting array of options.
+   * An options array may be in the info array, or generated in one of the
+   * following ways:
+   *  - The property info's 'options' key is a callback, which returns the
+   *    array of options.
+   *  - The property info's has a 'presets' key, whose items are converted to
+   *    the options.
    *
    * @param $property_name
    *  The name of the property.
@@ -56,6 +60,18 @@ class ComponentPropertyPreparer {
         return;
       }
       $options = $options_callback($property_info);
+
+      $property_info['options'] = $options;
+
+      return;
+    }
+
+    // Extract options from a list of presets for the property.
+    if (isset($property_info['presets'])) {
+      $options = [];
+      foreach ($property_info['presets'] as $key => $preset_info) {
+        $options[$key] = $preset_info['label'];
+      }
 
       $property_info['options'] = $options;
     }

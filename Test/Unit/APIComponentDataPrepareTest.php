@@ -60,6 +60,21 @@ class APIComponentDataPrepareTest extends TestBase {
         'required' => FALSE,
         'format' => 'string',
       ],
+      'has_presets' => [
+        'label' => 'Label',
+        'presets' => [
+          'A' => [
+            'label' => 'option_a',
+            'data' => []
+          ],
+          'B' => [
+            'label' => 'option_b',
+            'data' => []
+          ],
+        ],
+        'required' => FALSE,
+        'format' => 'string',
+      ],
       'compound_defaults' => [
         'label' => 'Compound properties',
         'properties' => [
@@ -194,6 +209,11 @@ class APIComponentDataPrepareTest extends TestBase {
       "The options were set in the component data info.");
     $this->assertArraySubset(['B' => 'option_b'], $component_data_info['has_options']['options'],
       "The options were set in the component data info.");
+
+    // Presets.
+    $generate->prepareComponentDataProperty('has_presets', $component_data_info['has_presets'], $component_data);
+    $this->assertArraySubset(['A' => 'option_a'], $component_data_info['has_presets']['options']);
+    $this->assertArraySubset(['B' => 'option_b'], $component_data_info['has_presets']['options']);
 
     // Compound properties.
     // If we're interested in options, we can prepare the compound property in
