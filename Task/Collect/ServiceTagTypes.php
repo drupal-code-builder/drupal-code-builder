@@ -10,6 +10,23 @@ namespace DrupalCodeBuilder\Task\Collect;
 class ServiceTagTypes {
 
   /**
+   * The method collector helper
+   */
+  protected $methodCollector;
+
+  /**
+   * Constructs a new helper.
+   *
+   * @param MethodCollector $method_collector
+   *   The method collector helper.
+   */
+  public function __construct(
+    MethodCollector $method_collector
+  ) {
+    $this->methodCollector = $method_collector;
+  }
+
+  /**
    * Collect data on tagged services.
    *
    * @return

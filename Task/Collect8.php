@@ -15,6 +15,13 @@ namespace DrupalCodeBuilder\Task;
 class Collect8 extends Collect {
 
   /**
+   *  Helper objects.
+   *
+   * @var array
+   */
+  protected $helpers = [];
+
+  /**
    * Collect data about Drupal components from the current site's codebase.
    */
   public function collectComponentData() {
@@ -686,12 +693,22 @@ class Collect8 extends Collect {
    *   The helper object.
    */
   protected function getHelper($class) {
-    // No need for static caching, we only use these once.
-    $qualified_class = '\DrupalCodeBuilder\Task\Collect\\' . $class;
+    if (!isset($this->helpers[$class])) {
+      $qualified_class = '\DrupalCodeBuilder\Task\Collect\\' . $class;
 
-    $helper = new $qualified_class();
+      switch ($class) {
+        case 'ServiceTagTypes':
+          $helper = new $qualified_class($this->getHelper('MethodCollector'));
+          break;
+        default:
+          $helper = new $qualified_class();
+          break;
+      }
 
-    return $helper;
+      $this->helpers[$class] = $helper;
+    }
+
+    return $this->helpers[$class];
   }
 
 }
