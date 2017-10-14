@@ -190,18 +190,18 @@ class APIComponentDataPrepareTest extends TestBase {
     // Component data info options get filled out.
     // Simple properties.
     $generate->prepareComponentDataProperty('has_options', $component_data_info['has_options'], $component_data);
-    $this->assertArrayHasKey('A', $component_data_info['has_options']['options'],
+    $this->assertArraySubset(['A' => 'option_a'], $component_data_info['has_options']['options'],
       "The options were set in the component data info.");
-    $this->assertArrayHasKey('B', $component_data_info['has_options']['options'],
+    $this->assertArraySubset(['B' => 'option_b'], $component_data_info['has_options']['options'],
       "The options were set in the component data info.");
 
     // Compound properties.
     // If we're interested in options, we can prepare the compound property in
     // one go.
     $generate->prepareComponentDataProperty('compound_options', $component_data_info['compound_options'], $component_data);
-    $this->assertArrayHasKey('A', $component_data_info['compound_options']['properties']['compound_has_options']['options'],
+    $this->assertArraySubset(['A' => 'option_a'], $component_data_info['compound_options']['properties']['compound_has_options']['options'],
       "The options were set in the component data info.");
-    $this->assertArrayHasKey('B', $component_data_info['compound_options']['properties']['compound_has_options']['options'],
+    $this->assertArraySubset(['B' => 'option_b'], $component_data_info['compound_options']['properties']['compound_has_options']['options'],
       "The options were set in the component data info.");
   }
 
