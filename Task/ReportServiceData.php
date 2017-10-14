@@ -61,4 +61,23 @@ class ReportServiceData extends ReportHookDataFolder {
     return $return;
   }
 
+  /**
+   * Get the list of Service types data.
+   *
+   * @return
+   *  The unserialized contents of the processed Service types data file.
+   */
+  public function listServiceTypeData() {
+    $directory = $this->environment->getHooksDirectory();
+
+    $service_types_file = "$directory/service_tag_types_processed.php";
+    if (file_exists($service_types_file)) {
+      $service_types_data = unserialize(file_get_contents($service_types_file));
+      return $service_types_data;
+    }
+    // Sanity checks ensure we never get here, but in case they have been
+    // skipped, return something that makes sense to the caller.
+    return [];
+  }
+
 }
