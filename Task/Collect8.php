@@ -242,18 +242,16 @@ class Collect8 extends Collect {
         $data['plugin_interface_methods'] = array();
       }
       else {
-        $data['plugin_interface_methods'] = $this->collectPluginInterfaceMethods($data['plugin_interface']);
+        $data['plugin_interface_methods'] = $this->collectMethods($data['plugin_interface']);
       }
     }
   }
 
   /**
-   * Get data for the methods of a plugin interface.
+   * Get data for the methods of a class or interface.
    *
-   * Helper for addPluginInterfaceData().
-   *
-   * @param $plugin_interface
-   *  The fully-qualified name of the interface.
+   * @param $name
+   *  The fully-qualified name of the class or interface.
    *
    * @return
    *  An array keyed by method name, where each value is an array containing:
@@ -261,10 +259,10 @@ class Collect8 extends Collect {
    *  - 'declaration': The function declaration line.
    *  - 'description': The description from the method's docblock first line.
    */
-  protected function collectPluginInterfaceMethods($plugin_interface) {
+  protected function collectMethods($name) {
     // Get a reflection class for the interface.
-    $plugin_interface_reflection = new \ReflectionClass($plugin_interface);
-    $methods = $plugin_interface_reflection->getMethods();
+    $reflection = new \ReflectionClass($name);
+    $methods = $reflection->getMethods();
 
     $data = [];
 
