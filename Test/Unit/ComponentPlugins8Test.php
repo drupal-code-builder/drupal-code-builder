@@ -66,6 +66,11 @@ class ComponentPlugins8Test extends TestBase {
     $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
     // Hack for now to cover the inheritance.
     $this->assertClass('Alpha extends BlockBase', $plugin_file, "The plugin class file contains contains the expected class.");
+
+    // Interface methods.
+    $this->assertMethod('blockForm', $plugin_file);
+    $this->assertMethod('blockValidate  ', $plugin_file);
+    $this->assertMethod('blockForm', $plugin_file);
   }
 
   /**
