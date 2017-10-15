@@ -258,7 +258,7 @@ class Module extends RootComponent {
         }
       ),
       'content_entity_types' => array(
-        'label' => 'Content entity types',
+        'label' => 'Content entity types (experimental)',
         'required' => FALSE,
         'format' => 'compound',
         // This tells the system that this is a request for generator
