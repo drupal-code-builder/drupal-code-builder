@@ -49,7 +49,62 @@ class Service extends PHPClassFile {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + array(
+    $data_definition = parent::componentDataDefinition();
+
+    // Create the presets definition for service tag type property.
+    $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+    $service_types_data = $task_handler_report_services->listServiceTypeData();
+    $presets = [];
+    foreach ($service_types_data as $type_tag => $type_data) {
+      // Make a label from the interface name.
+      $interface_pieces = explode('\\', $type_data['interface']);
+      $label = array_pop($interface_pieces);
+      $label = preg_replace('@Interface$@', '', $label);
+
+      // Form the suggested service name from the last portion of the tag, thus:
+      // 'module_install.uninstall_validator' -> 'mymodule.uninstall_validator'
+      $type_tag_pieces = explode('.', $type_tag);
+      $service_name_suggestion = array_pop($type_tag_pieces);
+
+      $presets[$type_tag] = [
+        // Option label.
+        'label' => $label,
+        'data' => [
+          // Values that are forced on other properties.
+          // These are set in the process stage.
+          'force' => [
+            // Name of another property => Value for that property.
+            'interfaces' => [
+              'value' => [
+                '\\' . $type_data['interface'],
+              ],
+            ],
+            // TODO: methods.
+          ],
+          // Values that are suggested for other properties.
+          // These don't do much yet -- UIs will need to handle these in 3.2.x
+          'suggest' => [
+            'service_name' => [
+              'value' => $service_name_suggestion,
+            ],
+            // TODO: skip for now, until plain_class_name is a proper property!
+            /*
+            'plain_class_name' => [
+              // not just data -- data + processing instructions.
+
+            ],
+            */
+          ],
+        // states: TODO.
+        ],
+      ];
+    }
+
+    $data_definition += array(
+      'service_tag_type' => [
+        'label' => 'Service type preset',
+        'presets' => $presets,
+      ],
       'service_name' => array(
         'label' => 'Service name',
         'description' => "The name of the service, without the module name prefix.",
@@ -68,6 +123,8 @@ class Service extends PHPClassFile {
         'options_allow_other' => TRUE,
       ),
     );
+
+    return $data_definition;
   }
 
   /**
@@ -95,6 +152,17 @@ class Service extends PHPClassFile {
     if ($yaml_data_arguments) {
       $yaml_service_definition['arguments'] = $yaml_data_arguments;
     }
+
+    // Service tags.
+    // TODO: document and declare this property!
+    if (!empty($this->component_data['service_tag_type'])) {
+      $yaml_service_definition['tags'][] = [
+        // The preset option is the tag.
+        'name' => $this->component_data['service_tag_type'],
+        'priority' => 0,
+      ];
+    }
+
     // TODO: document and declare this property!
     if (isset($this->component_data['parent'])) {
       $yaml_service_definition['parent'] = $this->component_data['parent'];
@@ -108,6 +176,7 @@ class Service extends PHPClassFile {
     $components['%module.services.yml'] = [
       'component_type' => 'YMLFile',
       'yaml_data' => $yaml_data,
+      'yaml_inline_level' => 4,
     ];
 
     return $components;
@@ -151,6 +220,14 @@ class Service extends PHPClassFile {
       $this->constructor = $this->codeBodyClassMethodConstruct();
     }
 
+    // Add methods from the tag type interface.
+    if (!empty($this->component_data['service_tag_type'])) {
+      $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+      $service_types_data = $task_handler_report_services->listServiceTypeData();
+      $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
+      $this->createBlocksFromMethodData($service_type_interface_data);
+    }
+
     return parent::classCodeBody();
   }
 
@@ -171,6 +248,7 @@ class Service extends PHPClassFile {
       '__construct',
       $parameters,
       [
+        // TODO: make plain_class_name a shortcut property only, don't use it here.
         'docblock_first_line' => "Constructs a new {$this->plain_class_name}.",
         'prefixes' => ['public'],
       ]

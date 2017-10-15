@@ -64,6 +64,45 @@ class ComponentService8Test extends TestBase {
   }
 
   /**
+   * Test generating a module with a service using a preset.
+   *
+   * @group dev
+   */
+  public function testServiceGenerationFromPreset() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_tag_type' => 'breadcrumb_builder',
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
+    $services_file = $files["$module_name.services.yml"];
+
+    // TODO: assertYamlProperty() is not powerful enough for this.
+    //$this->assertYamlProperty($services_file, 'tags', [], "The services file declares the service class.");
+    // Quick hack in the meantime.
+    $this->assertContains('name: breadcrumb_builder', $services_file);
+
+    $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
+    $service_class_file = $files["src/BreadcrumbBuilder.php"];
+
+    // Interface methods.
+    $this->assertMethod('applies', $service_class_file);
+    $this->assertMethod('build', $service_class_file);
+  }
+
+  /**
    * Test a service with with injected services.
    */
   function testServiceGenerationWithServices() {
