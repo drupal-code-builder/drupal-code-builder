@@ -116,6 +116,8 @@ return array(
     'DrupalCodeBuilder\\Task\\Collect6' => $baseDir . '/Task/Collect6.php',
     'DrupalCodeBuilder\\Task\\Collect7' => $baseDir . '/Task/Collect7.php',
     'DrupalCodeBuilder\\Task\\Collect8' => $baseDir . '/Task/Collect8.php',
+    'DrupalCodeBuilder\\Task\\Collect\\MethodCollector' => $baseDir . '/Task/Collect/MethodCollector.php',
+    'DrupalCodeBuilder\\Task\\Collect\\ServiceTagTypes' => $baseDir . '/Task/Collect/ServiceTagTypes.php',
     'DrupalCodeBuilder\\Task\\ComponentFolderRecursiveFilterIterator' => $baseDir . '/Task/AnalyzeModule.php',
     'DrupalCodeBuilder\\Task\\Generate' => $baseDir . '/Task/Generate.php',
     'DrupalCodeBuilder\\Task\\Generate\\ComponentClassHandler' => $baseDir . '/Task/Generate/ComponentClassHandler.php',
