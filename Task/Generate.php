@@ -100,6 +100,9 @@ class Generate extends Base {
    *  - 'description': (optional) A longer description.
    *  - 'format': Specifies the expected format for the property. One of
    *    'string', 'array', 'boolean', or 'compound'.
+   *  - 'cardinality': (optional) For properties with format 'array' or
+   *    'compound', specifies the maximum number of values. If omitted,
+   *    unlimited values are allowed.
    *  - 'properties': If the format is 'compound', this will be an array of
    *    child properties, in the same format at the overall array.
    *  - 'required': Boolean indicating whether this property must be provided.

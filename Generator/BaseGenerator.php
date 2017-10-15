@@ -218,6 +218,9 @@ abstract class BaseGenerator {
    *    values.
    *  - 'required': (optional) Boolean indicating whether this property must be
    *    provided. Defaults to FALSE.
+   *  - 'cardinality': (optional) For properties with format 'array' or
+   *    'compound', specifies the maximum number of values. If omitted,
+   *    unlimited values are allowed.
    *  - 'process_default': (optional) Boolean indicating if TRUE that this
    *    property will have the default value set on it if it is empty in the
    *    process stage. This is different from 'required', in that the user may
