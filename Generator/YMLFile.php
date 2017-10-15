@@ -63,7 +63,12 @@ class YMLFile extends File {
    */
   protected function getYamlBody($yaml_data_array) {
     $yaml_parser = new \Symfony\Component\Yaml\Yaml;
-    $yaml = $yaml_parser->dump($yaml_data_array, 6, 2);
+
+    // TODO: document and declare this property.
+    $yaml_parser_inline_switch_level = $this->component_data['yaml_inline_level']
+      ?? 6;
+
+    $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, 2);
     //drush_print_r($yaml);
 
     // Because the yaml is all built for us, this is just a singleton array.
