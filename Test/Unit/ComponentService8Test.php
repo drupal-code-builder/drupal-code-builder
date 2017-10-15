@@ -35,7 +35,6 @@ class ComponentService8Test extends TestBase {
       'services' => array(
         0 => [
           'service_name' => 'my_service',
-          'injected_services' => [],
         ],
       ),
       'readme' => FALSE,
@@ -128,7 +127,6 @@ class ComponentService8Test extends TestBase {
       'services' => array(
         0 => [
           'service_name' => 'my_service',
-          'injected_services' => [],
           // Non-declared properties (for now!) that requesters can specify.
           'prefixed_service_name' => 'my_prefix.my_service',
           'relative_class_name' => ['MyServiceClass'],
