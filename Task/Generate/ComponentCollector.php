@@ -386,6 +386,12 @@ class ComponentCollector {
       //  - internal: we always want our own defaults to be processed.
       //  - process_default: this forces a default value, effectively
       //    preventing a property from being left empty.
+      //  For array properties, set an empty array for the benefit of iterators.
+      //  (This is mostly for tests, as UIs will bring in the empty array that
+      //  is set in by ComponentPropertyPreparer.)
+      if ($property_info['format'] == 'array' || $property_info['format'] == 'compound') {
+        $component_data_local[$property_name] = [];
+      }
       return;
     }
 
