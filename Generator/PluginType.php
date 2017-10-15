@@ -104,8 +104,10 @@ class PluginType extends BaseGenerator {
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
       'parent' => 'default_plugin_manager',
-      // TODO: a service should be able to detect this from defs.... if we had all of them.
+      // TODO: a service should be able to detect the parent class name from
+      // service definitions.... if we had all of them.
       // TODO: passing all these in is tedious.
+      // We want the collector to magically pass these in?
       'parent_class_name' => '\Drupal\Core\Plugin\DefaultPluginManager',
       'plugin_type' => $this->component_data['plugin_type'],
       'plugin_subdirectory' => $this->component_data['plugin_subdirectory'],
