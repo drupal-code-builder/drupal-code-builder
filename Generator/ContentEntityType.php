@@ -19,7 +19,7 @@ class ContentEntityType extends EntityTypeBase {
       'bundle_entity' => [
         'label' => 'Bundle config entity',
         'format' => 'compound',
-        // TODO: cardinality!
+        'cardinality' => 1,
         'component' => 'ConfigEntityType',
         'default' => function($component_data) {
           return [
