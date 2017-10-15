@@ -82,11 +82,13 @@ class Service extends PHPClassFile {
             // TODO: methods.
           ],
           // Values that are suggested for other properties.
-          // These don't do much yet -- UIs will need to handle these in 3.2.x
           'suggest' => [
+            /*
+            // These don't do much yet -- UIs will need to handle these in 3.2.x
             'service_name' => [
               'value' => $service_name_suggestion,
             ],
+            */
             // TODO: skip for now, until plain_class_name is a proper property!
             /*
             'plain_class_name' => [
