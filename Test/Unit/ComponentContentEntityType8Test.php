@@ -104,7 +104,7 @@ class ComponentContentEntityType8Test extends TestBase {
     );
 
     $files = $this->generateModuleFiles($module_data);
-    dump($files);
+    //dump($files);
 
     $this->assertCount(5, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
