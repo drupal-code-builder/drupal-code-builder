@@ -52,6 +52,7 @@ class Service extends PHPClassFile {
     return parent::componentDataDefinition() + array(
       'service_name' => array(
         'label' => 'Service name',
+        'description' => "The name of the service, without the module name prefix.",
         'required' => TRUE,
       ),
       'injected_services' => array(
