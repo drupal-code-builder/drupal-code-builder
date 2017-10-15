@@ -299,6 +299,7 @@ class ComponentCollector {
    * Performs final processing for the component data:
    *  - sets default values on empty properties. To prevent a default being set
    *    and keep the component a property represents absent, set it to FALSE.
+   *  - sets values forced by other properties' presets.
    *  - performs additional processing that a property may require
    *
    * @param &$component_data
@@ -307,6 +308,46 @@ class ComponentCollector {
    *  The component data info for the data being processed.
    */
   protected function processComponentData(&$component_data, $component_data_info) {
+    // Set values forced by a preset.
+    foreach ($component_data_info as $property_name => $property_info) {
+      if (!isset($property_info['presets'])) {
+        continue;
+      }
+
+      if (empty($component_data[$property_name])) {
+        continue;
+      }
+
+      $preset_key = $component_data[$property_name];
+      $selected_preset_info = $property_info['presets'][$preset_key];
+
+      // Set values which are forced by the preset.
+      foreach ($selected_preset_info['data']['force'] as $forced_property_name => $forced_data) {
+        // Plain value.
+        if (isset($forced_data['value'])) {
+          $component_data[$forced_property_name] = $forced_data['value'];
+        }
+
+        // TODO: processed value, using chain of processing instructions.
+      }
+
+      // Set values which are suggested by the preset, if the value is empty.
+      foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
+        // Only set this if no incoming value is set.
+        if (!empty($component_data[$suggested_property_name])) {
+          continue;
+        }
+
+        // Plain value.
+        if (isset($suggested_data['value'])) {
+          $component_data[$suggested_property_name] = $suggested_data['value'];
+        }
+
+        // TODO: processed value, using chain of processing instructions.
+      }
+
+    }
+
     // Set defaults for properties that don't have a value yet.
     foreach ($component_data_info as $property_name => $property_info) {
       // No need to set defaults on components here; the defaults will be filled
