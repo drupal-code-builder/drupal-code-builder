@@ -257,23 +257,7 @@ class Plugin extends PHPClassFile {
     }
 
     // TODO: move this to a component.
-    foreach ($this->component_data['plugin_type_data']['plugin_interface_methods'] as $interface_method_name => $interface_method_data) {
-      $function_code = [];
-      $function_doc = $this->docBlock('{@inheritdoc}');
-      $function_code = array_merge($function_code, $function_doc);
-
-      // Trim the semicolon from the end of the interface method.
-      $method_declaration = substr($interface_method_data['declaration'], 0, -1);
-
-      $function_code[] = "$method_declaration {";
-      // Add a comment with the method's first line of docblock, so the user
-      // has something more informative than '{@inheritdoc}' to go on!
-      $function_code[] = '  // ' . $interface_method_data['description'];
-      $function_code[] = '}';
-
-      // Add to the functions section array for the parent to merge.
-      $this->functions[] = $function_code;
-    }
+    $this->createBlocksFromMethodData($this->component_data['plugin_type_data']['plugin_interface_methods']);
 
     return parent::classCodeBody();
   }

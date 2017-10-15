@@ -293,6 +293,32 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
+   * Create blocks in the 'function' section from data describing methods.
+   *
+   * @param $methods_data
+   *   An array of method data as returned by reporting.
+   */
+  protected function createBlocksFromMethodData($methods_data) {
+    foreach ($methods_data as $interface_method_name => $interface_method_data) {
+      $function_code = [];
+      $function_doc = $this->docBlock('{@inheritdoc}');
+      $function_code = array_merge($function_code, $function_doc);
+
+      // Trim the semicolon from the end of the interface method.
+      $method_declaration = substr($interface_method_data['declaration'], 0, -1);
+
+      $function_code[] = "$method_declaration {";
+      // Add a comment with the method's first line of docblock, so the user
+      // has something more informative than '{@inheritdoc}' to go on!
+      $function_code[] = '  // ' . $interface_method_data['description'];
+      $function_code[] = '}';
+
+      // Add to the functions section array for the parent to merge.
+      $this->functions[] = $function_code;
+    }
+  }
+
+  /**
    * Creates code lines for the docblock and declaration line of a method.
    *
    * TODO: refactor with PHPFunction class or PHPFormattingTrait.
