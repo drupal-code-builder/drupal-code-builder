@@ -79,6 +79,8 @@ class ComponentService8Test extends TestBase {
       'services' => array(
         0 => [
           'service_tag_type' => 'breadcrumb_builder',
+          // TODO: remove once the 'suggest' preset info is live.
+          'service_name' => 'breadcrumb_builder',
         ],
       ),
       'readme' => FALSE,
