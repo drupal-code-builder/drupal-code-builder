@@ -65,8 +65,6 @@ class ComponentService8Test extends TestBase {
 
   /**
    * Test generating a module with a service using a preset.
-   *
-   * @group dev
    */
   public function testServiceGenerationFromPreset() {
     // Assemble module data.
