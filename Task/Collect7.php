@@ -50,9 +50,6 @@ class Collect7 extends Collect {
       $module = $matches[1];
       //dsm($matches, $module);
 
-      // Copy the file to the hooks directory.
-      copy($drupal_root . '/' . $file->uri, $directory . '/' . $file->filename);
-
       $hook_files[$filename] = array(
         'original' => $drupal_root . '/' . $file->uri, // no idea if useful
         'filename' => $filename,

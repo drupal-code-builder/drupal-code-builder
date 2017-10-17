@@ -581,9 +581,6 @@ class Collect8 extends Collect {
       // Mark core files.
       $core = (substr($file->uri, 0, 4) == 'core');
 
-      // Copy the file to the hooks directory.
-      copy($drupal_root . '/' . $file->uri, $directory . '/' . $file->filename);
-
       $hook_files[$key] = array(
         'original' => $drupal_root . '/' . $file->uri, // no idea if useful
         'path' => $directory . '/' . $file->filename,

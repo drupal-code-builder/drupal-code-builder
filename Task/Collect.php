@@ -37,6 +37,13 @@ class Collect extends Base {
     // Update the hook documentation.
     $hook_files = $this->gatherHookDocumentationFiles();
 
+    // Copy the hook files to the hooks directory.
+    // This is done after the files have been gathered, so when gathering
+    // sample data for tests the filtered files only are written.
+    foreach ($hook_files as $file_info) {
+      copy($file_info['original'], $file_info['path']);
+    }
+
     // Process the hook files into a single array for storage.
     $processed_hook_data = $this->processHookData($hook_files);
 
