@@ -10,6 +10,11 @@ namespace DrupalCodeBuilder\Environment;
 class WriteTestsSampleLocation extends Drush {
 
   /**
+   * The short class name of the storage helper to use.
+   */
+  protected $storageType = 'ExportEval';
+
+  /**
    * Indicates that the Collect task should filter for sample data.
    *
    * This is accessed by the Collect task helpers.
