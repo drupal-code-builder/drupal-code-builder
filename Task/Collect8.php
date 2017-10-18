@@ -495,7 +495,7 @@ class Collect8 extends Collect {
   }
 
   protected function collectServiceTagTypes() {
-    $service_tag_type_definitions = $this->getHelper('ServiceTagTypes')->collectServiceTagTypes();
+    $service_tag_type_definitions = $this->getHelper('ServiceTagTypesCollector')->collectServiceTagTypes();
 
     // Save the data.
     $this->environment->getStorage()->store('service_tag_types', $service_tag_type_definitions);
@@ -694,7 +694,7 @@ class Collect8 extends Collect {
       $qualified_class = '\DrupalCodeBuilder\Task\Collect\\' . $class;
 
       switch ($class) {
-        case 'ServiceTagTypes':
+        case 'ServiceTagTypesCollector':
           $helper = new $qualified_class(
             $this->environment,
             $this->getHelper('MethodCollector')

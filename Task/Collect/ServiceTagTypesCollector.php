@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
  *
  * TODO: there is no way of collecting these for test sample data.
  */
-class ServiceTagTypes {
+class ServiceTagTypesCollector {
 
   /**
    * The method collector helper
