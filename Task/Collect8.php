@@ -40,7 +40,7 @@ class Collect8 extends Collect {
     $plugin_type_data = $this->gatherPluginTypeInfo($plugin_manager_service_ids);
 
     // Save the data.
-    $this->writeProcessedData($plugin_type_data, 'plugins');
+    $this->environment->getStorage()->store('plugins', $plugin_type_data);
   }
 
   /**
@@ -415,7 +415,7 @@ class Collect8 extends Collect {
     $service_definitions = $this->gatherServiceDefinitions();
 
     // Save the data.
-    $this->writeProcessedData($service_definitions, 'services');
+    $this->environment->getStorage()->store('services', $service_definitions);
   }
 
   /**
@@ -498,7 +498,7 @@ class Collect8 extends Collect {
     $service_tag_type_definitions = $this->getHelper('ServiceTagTypes')->collectServiceTagTypes();
 
     // Save the data.
-    $this->writeProcessedData($service_tag_type_definitions, 'service_tag_types');
+    $this->environment->getStorage()->store('service_tag_types', $service_tag_type_definitions);
   }
 
   /**

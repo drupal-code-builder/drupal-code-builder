@@ -48,7 +48,7 @@ class Collect extends Base {
     $processed_hook_data = $this->processHookData($hook_files);
 
     // Save the hook data.
-    $this->writeProcessedData($processed_hook_data, 'hooks');
+    $this->environment->getStorage()->store('hooks', $processed_hook_data);
   }
 
   /**
@@ -332,19 +332,6 @@ class Collect extends Base {
   protected function getAdditionalHookInfo() {
     // Subclasses should override this.
     return array();
-  }
-
-  /**
-   * Write data to storage.
-   *
-   * @param $data
-   *  An array of data to write.
-   * @param $type
-   *  A machine string used to form the filename. E.g. 'hooks'. This is
-   *  prepended to the filename.
-   */
-  protected function writeProcessedData($data, $type) {
-    $this->environment->getStorage()->store($type, $data);
   }
 
 }
