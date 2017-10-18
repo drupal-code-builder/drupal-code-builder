@@ -85,16 +85,4 @@ class CollectTesting8 extends Collect8 {
     return $service_definitions;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeProcessedData($data, $type) {
-    // Write the processed data to a file in our testing folder.
-    $directory = Factory::getLibraryBaseDirectory()
-      . '/Test/sample_hook_definitions/'
-      . $this->environment->getCoreMajorVersion();
-    $serialized = serialize($data);
-    file_put_contents("{$directory}/{$type}_processed.php", $serialized);
-  }
-
 }
