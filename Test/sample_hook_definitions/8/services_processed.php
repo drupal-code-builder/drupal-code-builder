@@ -1,1 +1,18 @@
-a:2:{s:12:"current_user";a:5:{s:2:"id";s:12:"current_user";s:5:"label";s:19:"Current active user";s:13:"static_method";s:11:"currentUser";s:9:"interface";s:42:"\Drupal\Core\Session\AccountProxyInterface";s:11:"description";s:23:"The current active user";}s:14:"entity.manager";a:5:{s:2:"id";s:14:"entity.manager";s:5:"label";s:22:"Entity manager service";s:13:"static_method";s:13:"entityManager";s:9:"interface";s:42:"\Drupal\Core\Entity\EntityManagerInterface";s:11:"description";s:26:"The entity manager service";}}
+array (
+  'current_user' => 
+  array (
+    'id' => 'current_user',
+    'label' => 'Current active user',
+    'static_method' => 'currentUser',
+    'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
+    'description' => 'The current active user',
+  ),
+  'entity.manager' => 
+  array (
+    'id' => 'entity.manager',
+    'label' => 'Entity manager service',
+    'static_method' => 'entityManager',
+    'interface' => '\\Drupal\\Core\\Entity\\EntityManagerInterface',
+    'description' => 'The entity manager service',
+  ),
+)

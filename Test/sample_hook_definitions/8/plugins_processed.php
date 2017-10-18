@@ -1,1 +1,334 @@
-a:2:{s:5:"block";a:9:{s:7:"type_id";s:5:"block";s:10:"service_id";s:20:"plugin.manager.block";s:10:"type_label";s:5:"block";s:6:"subdir";s:12:"Plugin/Block";s:16:"plugin_interface";s:38:"Drupal\Core\Block\BlockPluginInterface";s:33:"plugin_definition_annotation_name";s:34:"Drupal\Core\Block\Annotation\Block";s:24:"plugin_interface_methods";a:22:{s:5:"label";a:3:{s:4:"name";s:5:"label";s:11:"declaration";s:24:"public function label();";s:11:"description";s:36:"Returns the user-facing block label.";}s:6:"access";a:3:{s:4:"name";s:6:"access";s:11:"declaration";s:98:"public function access(\Drupal\Core\Session\AccountInterface $account, $return_as_object = FALSE);";s:11:"description";s:44:"Indicates whether the block should be shown.";}s:5:"build";a:3:{s:4:"name";s:5:"build";s:11:"declaration";s:24:"public function build();";s:11:"description";s:62:"Builds and returns the renderable array for this block plugin.";}s:21:"setConfigurationValue";a:3:{s:4:"name";s:21:"setConfigurationValue";s:11:"declaration";s:52:"public function setConfigurationValue($key, $value);";s:11:"description";s:46:"Sets a particular value in the block settings.";}s:9:"blockForm";a:3:{s:4:"name";s:9:"blockForm";s:11:"declaration";s:83:"public function blockForm($form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:70:"Returns the configuration form elements specific to this block plugin.";}s:13:"blockValidate";a:3:{s:4:"name";s:13:"blockValidate";s:11:"declaration";s:87:"public function blockValidate($form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:55:"Adds block type-specific validation for the block form.";}s:11:"blockSubmit";a:3:{s:4:"name";s:11:"blockSubmit";s:11:"declaration";s:85:"public function blockSubmit($form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:64:"Adds block type-specific submission handling for the block form.";}s:24:"getMachineNameSuggestion";a:3:{s:4:"name";s:24:"getMachineNameSuggestion";s:11:"declaration";s:43:"public function getMachineNameSuggestion();";s:11:"description";s:62:"Suggests a machine name to identify an instance of this block.";}s:16:"getConfiguration";a:3:{s:4:"name";s:16:"getConfiguration";s:11:"declaration";s:35:"public function getConfiguration();";s:11:"description";s:33:"Gets this plugin's configuration.";}s:16:"setConfiguration";a:3:{s:4:"name";s:16:"setConfiguration";s:11:"declaration";s:55:"public function setConfiguration(array $configuration);";s:11:"description";s:48:"Sets the configuration for this plugin instance.";}s:20:"defaultConfiguration";a:3:{s:4:"name";s:20:"defaultConfiguration";s:11:"declaration";s:39:"public function defaultConfiguration();";s:11:"description";s:43:"Gets default configuration for this plugin.";}s:21:"calculateDependencies";a:3:{s:4:"name";s:21:"calculateDependencies";s:11:"declaration";s:40:"public function calculateDependencies();";s:11:"description";s:50:"Calculates dependencies for the configured plugin.";}s:22:"buildConfigurationForm";a:3:{s:4:"name";s:22:"buildConfigurationForm";s:11:"declaration";s:102:"public function buildConfigurationForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:17:"Form constructor.";}s:25:"validateConfigurationForm";a:3:{s:4:"name";s:25:"validateConfigurationForm";s:11:"declaration";s:106:"public function validateConfigurationForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:24:"Form validation handler.";}s:23:"submitConfigurationForm";a:3:{s:4:"name";s:23:"submitConfigurationForm";s:11:"declaration";s:104:"public function submitConfigurationForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:24:"Form submission handler.";}s:11:"getPluginId";a:3:{s:4:"name";s:11:"getPluginId";s:11:"declaration";s:30:"public function getPluginId();";s:11:"description";s:42:"Gets the plugin_id of the plugin instance.";}s:19:"getPluginDefinition";a:3:{s:4:"name";s:19:"getPluginDefinition";s:11:"declaration";s:38:"public function getPluginDefinition();";s:11:"description";s:49:"Gets the definition of the plugin implementation.";}s:16:"getCacheContexts";a:3:{s:4:"name";s:16:"getCacheContexts";s:11:"declaration";s:35:"public function getCacheContexts();";s:11:"description";s:47:"The cache contexts associated with this object.";}s:12:"getCacheTags";a:3:{s:4:"name";s:12:"getCacheTags";s:11:"declaration";s:31:"public function getCacheTags();";s:11:"description";s:43:"The cache tags associated with this object.";}s:14:"getCacheMaxAge";a:3:{s:4:"name";s:14:"getCacheMaxAge";s:11:"declaration";s:33:"public function getCacheMaxAge();";s:11:"description";s:52:"The maximum age for which this object may be cached.";}s:9:"getBaseId";a:3:{s:4:"name";s:9:"getBaseId";s:11:"declaration";s:28:"public function getBaseId();";s:11:"description";s:47:"Gets the base_plugin_id of the plugin instance.";}s:15:"getDerivativeId";a:3:{s:4:"name";s:15:"getDerivativeId";s:11:"declaration";s:34:"public function getDerivativeId();";s:11:"description";s:46:"Gets the derivative_id of the plugin instance.";}}s:17:"plugin_properties";a:3:{s:2:"id";a:3:{s:4:"name";s:2:"id";s:11:"description";s:14:"The plugin ID.";s:4:"type";s:6:"string";}s:11:"admin_label";a:3:{s:4:"name";s:11:"admin_label";s:11:"description";s:38:"The administrative label of the block.";s:4:"type";s:35:"\Drupal\Core\Annotation\Translation";}s:8:"category";a:3:{s:4:"name";s:8:"category";s:11:"description";s:60:"The category in the admin UI where the block will be listed.";s:4:"type";s:35:"\Drupal\Core\Annotation\Translation";}}s:10:"base_class";s:27:"Drupal\Core\Block\BlockBase";}s:15:"field.formatter";a:9:{s:7:"type_id";s:15:"field.formatter";s:10:"service_id";s:30:"plugin.manager.field.formatter";s:10:"type_label";s:15:"field.formatter";s:6:"subdir";s:27:"Plugin/Field/FieldFormatter";s:16:"plugin_interface";s:36:"Drupal\Core\Field\FormatterInterface";s:33:"plugin_definition_annotation_name";s:43:"Drupal\Core\Field\Annotation\FieldFormatter";s:24:"plugin_interface_methods";a:19:{s:12:"settingsForm";a:3:{s:4:"name";s:12:"settingsForm";s:11:"declaration";s:92:"public function settingsForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state);";s:11:"description";s:55:"Returns a form to configure settings for the formatter.";}s:15:"settingsSummary";a:3:{s:4:"name";s:15:"settingsSummary";s:11:"declaration";s:34:"public function settingsSummary();";s:11:"description";s:59:"Returns a short summary for the current formatter settings.";}s:11:"prepareView";a:3:{s:4:"name";s:11:"prepareView";s:11:"declaration";s:51:"public function prepareView(array $entities_items);";s:11:"description";s:71:"Allows formatters to load information for field values being displayed.";}s:4:"view";a:3:{s:4:"name";s:4:"view";s:11:"declaration";s:89:"public function view(\Drupal\Core\Field\FieldItemListInterface $items, $langcode = NULL);";s:11:"description";s:51:"Builds a renderable array for a fully themed field.";}s:12:"viewElements";a:3:{s:4:"name";s:12:"viewElements";s:11:"declaration";s:90:"public function viewElements(\Drupal\Core\Field\FieldItemListInterface $items, $langcode);";s:11:"description";s:44:"Builds a renderable array for a field value.";}s:12:"isApplicable";a:3:{s:4:"name";s:12:"isApplicable";s:11:"declaration";s:99:"public static function isApplicable(\Drupal\Core\Field\FieldDefinitionInterface $field_definition);";s:11:"description";s:60:"Returns if the formatter can be used for the provided field.";}s:15:"defaultSettings";a:3:{s:4:"name";s:15:"defaultSettings";s:11:"declaration";s:41:"public static function defaultSettings();";s:11:"description";s:45:"Defines the default settings for this plugin.";}s:11:"getSettings";a:3:{s:4:"name";s:11:"getSettings";s:11:"declaration";s:30:"public function getSettings();";s:11:"description";s:71:"Returns the array of settings, including defaults for missing settings.";}s:10:"getSetting";a:3:{s:4:"name";s:10:"getSetting";s:11:"declaration";s:33:"public function getSetting($key);";s:11:"description";s:63:"Returns the value of a setting, or its default value if absent.";}s:11:"setSettings";a:3:{s:4:"name";s:11:"setSettings";s:11:"declaration";s:45:"public function setSettings(array $settings);";s:11:"description";s:33:"Sets the settings for the plugin.";}s:10:"setSetting";a:3:{s:4:"name";s:10:"setSetting";s:11:"declaration";s:41:"public function setSetting($key, $value);";s:11:"description";s:43:"Sets the value of a setting for the plugin.";}s:19:"onDependencyRemoval";a:3:{s:4:"name";s:19:"onDependencyRemoval";s:11:"declaration";s:57:"public function onDependencyRemoval(array $dependencies);";s:11:"description";s:73:"Informs the plugin that some configuration it depends on will be deleted.";}s:11:"getPluginId";a:3:{s:4:"name";s:11:"getPluginId";s:11:"declaration";s:30:"public function getPluginId();";s:11:"description";s:42:"Gets the plugin_id of the plugin instance.";}s:19:"getPluginDefinition";a:3:{s:4:"name";s:19:"getPluginDefinition";s:11:"declaration";s:38:"public function getPluginDefinition();";s:11:"description";s:49:"Gets the definition of the plugin implementation.";}s:20:"setThirdPartySetting";a:3:{s:4:"name";s:20:"setThirdPartySetting";s:11:"declaration";s:60:"public function setThirdPartySetting($module, $key, $value);";s:11:"description";s:40:"Sets the value of a third-party setting.";}s:20:"getThirdPartySetting";a:3:{s:4:"name";s:20:"getThirdPartySetting";s:11:"declaration";s:69:"public function getThirdPartySetting($module, $key, $default = NULL);";s:11:"description";s:40:"Gets the value of a third-party setting.";}s:21:"getThirdPartySettings";a:3:{s:4:"name";s:21:"getThirdPartySettings";s:11:"declaration";s:47:"public function getThirdPartySettings($module);";s:11:"description";s:48:"Gets all third-party settings of a given module.";}s:22:"unsetThirdPartySetting";a:3:{s:4:"name";s:22:"unsetThirdPartySetting";s:11:"declaration";s:54:"public function unsetThirdPartySetting($module, $key);";s:11:"description";s:29:"Unsets a third-party setting.";}s:22:"getThirdPartyProviders";a:3:{s:4:"name";s:22:"getThirdPartyProviders";s:11:"declaration";s:41:"public function getThirdPartyProviders();";s:11:"description";s:54:"Gets the list of third parties that store information.";}}s:17:"plugin_properties";a:6:{s:2:"id";a:3:{s:4:"name";s:2:"id";s:11:"description";s:14:"The plugin ID.";s:4:"type";s:6:"string";}s:5:"label";a:3:{s:4:"name";s:5:"label";s:11:"description";s:46:"The human-readable name of the formatter type.";s:4:"type";s:35:"\Drupal\Core\Annotation\Translation";}s:11:"description";a:3:{s:4:"name";s:11:"description";s:11:"description";s:42:"A short description of the formatter type.";s:4:"type";s:35:"\Drupal\Core\Annotation\Translation";}s:5:"class";a:3:{s:4:"name";s:5:"class";s:11:"description";s:38:"The name of the field formatter class.";s:4:"type";s:6:"string";}s:11:"field_types";a:3:{s:4:"name";s:11:"field_types";s:11:"description";s:47:"An array of field types the formatter supports.";s:4:"type";s:5:"array";}s:6:"weight";a:3:{s:4:"name";s:6:"weight";s:11:"description";s:70:"An integer to determine the weight of this formatter relative to other";s:4:"type";s:12:"int optional";}}s:10:"base_class";s:36:"Drupal\Core\Field\PluginSettingsBase";}}
+array (
+  'block' => 
+  array (
+    'type_id' => 'block',
+    'service_id' => 'plugin.manager.block',
+    'type_label' => 'block',
+    'subdir' => 'Plugin/Block',
+    'plugin_interface' => 'Drupal\\Core\\Block\\BlockPluginInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
+    'plugin_interface_methods' => 
+    array (
+      'label' => 
+      array (
+        'name' => 'label',
+        'declaration' => 'public function label();',
+        'description' => 'Returns the user-facing block label.',
+      ),
+      'access' => 
+      array (
+        'name' => 'access',
+        'declaration' => 'public function access(\\Drupal\\Core\\Session\\AccountInterface $account, $return_as_object = FALSE);',
+        'description' => 'Indicates whether the block should be shown.',
+      ),
+      'build' => 
+      array (
+        'name' => 'build',
+        'declaration' => 'public function build();',
+        'description' => 'Builds and returns the renderable array for this block plugin.',
+      ),
+      'setConfigurationValue' => 
+      array (
+        'name' => 'setConfigurationValue',
+        'declaration' => 'public function setConfigurationValue($key, $value);',
+        'description' => 'Sets a particular value in the block settings.',
+      ),
+      'blockForm' => 
+      array (
+        'name' => 'blockForm',
+        'declaration' => 'public function blockForm($form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Returns the configuration form elements specific to this block plugin.',
+      ),
+      'blockValidate' => 
+      array (
+        'name' => 'blockValidate',
+        'declaration' => 'public function blockValidate($form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Adds block type-specific validation for the block form.',
+      ),
+      'blockSubmit' => 
+      array (
+        'name' => 'blockSubmit',
+        'declaration' => 'public function blockSubmit($form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Adds block type-specific submission handling for the block form.',
+      ),
+      'getMachineNameSuggestion' => 
+      array (
+        'name' => 'getMachineNameSuggestion',
+        'declaration' => 'public function getMachineNameSuggestion();',
+        'description' => 'Suggests a machine name to identify an instance of this block.',
+      ),
+      'getConfiguration' => 
+      array (
+        'name' => 'getConfiguration',
+        'declaration' => 'public function getConfiguration();',
+        'description' => 'Gets this plugin\'s configuration.',
+      ),
+      'setConfiguration' => 
+      array (
+        'name' => 'setConfiguration',
+        'declaration' => 'public function setConfiguration(array $configuration);',
+        'description' => 'Sets the configuration for this plugin instance.',
+      ),
+      'defaultConfiguration' => 
+      array (
+        'name' => 'defaultConfiguration',
+        'declaration' => 'public function defaultConfiguration();',
+        'description' => 'Gets default configuration for this plugin.',
+      ),
+      'calculateDependencies' => 
+      array (
+        'name' => 'calculateDependencies',
+        'declaration' => 'public function calculateDependencies();',
+        'description' => 'Calculates dependencies for the configured plugin.',
+      ),
+      'buildConfigurationForm' => 
+      array (
+        'name' => 'buildConfigurationForm',
+        'declaration' => 'public function buildConfigurationForm(array $form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Form constructor.',
+      ),
+      'validateConfigurationForm' => 
+      array (
+        'name' => 'validateConfigurationForm',
+        'declaration' => 'public function validateConfigurationForm(array &$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Form validation handler.',
+      ),
+      'submitConfigurationForm' => 
+      array (
+        'name' => 'submitConfigurationForm',
+        'declaration' => 'public function submitConfigurationForm(array &$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Form submission handler.',
+      ),
+      'getPluginId' => 
+      array (
+        'name' => 'getPluginId',
+        'declaration' => 'public function getPluginId();',
+        'description' => 'Gets the plugin_id of the plugin instance.',
+      ),
+      'getPluginDefinition' => 
+      array (
+        'name' => 'getPluginDefinition',
+        'declaration' => 'public function getPluginDefinition();',
+        'description' => 'Gets the definition of the plugin implementation.',
+      ),
+      'getCacheContexts' => 
+      array (
+        'name' => 'getCacheContexts',
+        'declaration' => 'public function getCacheContexts();',
+        'description' => 'The cache contexts associated with this object.',
+      ),
+      'getCacheTags' => 
+      array (
+        'name' => 'getCacheTags',
+        'declaration' => 'public function getCacheTags();',
+        'description' => 'The cache tags associated with this object.',
+      ),
+      'getCacheMaxAge' => 
+      array (
+        'name' => 'getCacheMaxAge',
+        'declaration' => 'public function getCacheMaxAge();',
+        'description' => 'The maximum age for which this object may be cached.',
+      ),
+      'getBaseId' => 
+      array (
+        'name' => 'getBaseId',
+        'declaration' => 'public function getBaseId();',
+        'description' => 'Gets the base_plugin_id of the plugin instance.',
+      ),
+      'getDerivativeId' => 
+      array (
+        'name' => 'getDerivativeId',
+        'declaration' => 'public function getDerivativeId();',
+        'description' => 'Gets the derivative_id of the plugin instance.',
+      ),
+    ),
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The plugin ID.',
+        'type' => 'string',
+      ),
+      'admin_label' => 
+      array (
+        'name' => 'admin_label',
+        'description' => 'The administrative label of the block.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'category' => 
+      array (
+        'name' => 'category',
+        'description' => 'The category in the admin UI where the block will be listed.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+    ),
+    'base_class' => 'Drupal\\Core\\Block\\BlockBase',
+  ),
+  'field.formatter' => 
+  array (
+    'type_id' => 'field.formatter',
+    'service_id' => 'plugin.manager.field.formatter',
+    'type_label' => 'field.formatter',
+    'subdir' => 'Plugin/Field/FieldFormatter',
+    'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
+    'plugin_interface_methods' => 
+    array (
+      'settingsForm' => 
+      array (
+        'name' => 'settingsForm',
+        'declaration' => 'public function settingsForm(array $form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Returns a form to configure settings for the formatter.',
+      ),
+      'settingsSummary' => 
+      array (
+        'name' => 'settingsSummary',
+        'declaration' => 'public function settingsSummary();',
+        'description' => 'Returns a short summary for the current formatter settings.',
+      ),
+      'prepareView' => 
+      array (
+        'name' => 'prepareView',
+        'declaration' => 'public function prepareView(array $entities_items);',
+        'description' => 'Allows formatters to load information for field values being displayed.',
+      ),
+      'view' => 
+      array (
+        'name' => 'view',
+        'declaration' => 'public function view(\\Drupal\\Core\\Field\\FieldItemListInterface $items, $langcode = NULL);',
+        'description' => 'Builds a renderable array for a fully themed field.',
+      ),
+      'viewElements' => 
+      array (
+        'name' => 'viewElements',
+        'declaration' => 'public function viewElements(\\Drupal\\Core\\Field\\FieldItemListInterface $items, $langcode);',
+        'description' => 'Builds a renderable array for a field value.',
+      ),
+      'isApplicable' => 
+      array (
+        'name' => 'isApplicable',
+        'declaration' => 'public static function isApplicable(\\Drupal\\Core\\Field\\FieldDefinitionInterface $field_definition);',
+        'description' => 'Returns if the formatter can be used for the provided field.',
+      ),
+      'defaultSettings' => 
+      array (
+        'name' => 'defaultSettings',
+        'declaration' => 'public static function defaultSettings();',
+        'description' => 'Defines the default settings for this plugin.',
+      ),
+      'getSettings' => 
+      array (
+        'name' => 'getSettings',
+        'declaration' => 'public function getSettings();',
+        'description' => 'Returns the array of settings, including defaults for missing settings.',
+      ),
+      'getSetting' => 
+      array (
+        'name' => 'getSetting',
+        'declaration' => 'public function getSetting($key);',
+        'description' => 'Returns the value of a setting, or its default value if absent.',
+      ),
+      'setSettings' => 
+      array (
+        'name' => 'setSettings',
+        'declaration' => 'public function setSettings(array $settings);',
+        'description' => 'Sets the settings for the plugin.',
+      ),
+      'setSetting' => 
+      array (
+        'name' => 'setSetting',
+        'declaration' => 'public function setSetting($key, $value);',
+        'description' => 'Sets the value of a setting for the plugin.',
+      ),
+      'onDependencyRemoval' => 
+      array (
+        'name' => 'onDependencyRemoval',
+        'declaration' => 'public function onDependencyRemoval(array $dependencies);',
+        'description' => 'Informs the plugin that some configuration it depends on will be deleted.',
+      ),
+      'getPluginId' => 
+      array (
+        'name' => 'getPluginId',
+        'declaration' => 'public function getPluginId();',
+        'description' => 'Gets the plugin_id of the plugin instance.',
+      ),
+      'getPluginDefinition' => 
+      array (
+        'name' => 'getPluginDefinition',
+        'declaration' => 'public function getPluginDefinition();',
+        'description' => 'Gets the definition of the plugin implementation.',
+      ),
+      'setThirdPartySetting' => 
+      array (
+        'name' => 'setThirdPartySetting',
+        'declaration' => 'public function setThirdPartySetting($module, $key, $value);',
+        'description' => 'Sets the value of a third-party setting.',
+      ),
+      'getThirdPartySetting' => 
+      array (
+        'name' => 'getThirdPartySetting',
+        'declaration' => 'public function getThirdPartySetting($module, $key, $default = NULL);',
+        'description' => 'Gets the value of a third-party setting.',
+      ),
+      'getThirdPartySettings' => 
+      array (
+        'name' => 'getThirdPartySettings',
+        'declaration' => 'public function getThirdPartySettings($module);',
+        'description' => 'Gets all third-party settings of a given module.',
+      ),
+      'unsetThirdPartySetting' => 
+      array (
+        'name' => 'unsetThirdPartySetting',
+        'declaration' => 'public function unsetThirdPartySetting($module, $key);',
+        'description' => 'Unsets a third-party setting.',
+      ),
+      'getThirdPartyProviders' => 
+      array (
+        'name' => 'getThirdPartyProviders',
+        'declaration' => 'public function getThirdPartyProviders();',
+        'description' => 'Gets the list of third parties that store information.',
+      ),
+    ),
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The plugin ID.',
+        'type' => 'string',
+      ),
+      'label' => 
+      array (
+        'name' => 'label',
+        'description' => 'The human-readable name of the formatter type.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'description' => 
+      array (
+        'name' => 'description',
+        'description' => 'A short description of the formatter type.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'class' => 
+      array (
+        'name' => 'class',
+        'description' => 'The name of the field formatter class.',
+        'type' => 'string',
+      ),
+      'field_types' => 
+      array (
+        'name' => 'field_types',
+        'description' => 'An array of field types the formatter supports.',
+        'type' => 'array',
+      ),
+      'weight' => 
+      array (
+        'name' => 'weight',
+        'description' => 'An integer to determine the weight of this formatter relative to other',
+        'type' => 'int optional',
+      ),
+    ),
+    'base_class' => 'Drupal\\Core\\Field\\PluginSettingsBase',
+  ),
+)
