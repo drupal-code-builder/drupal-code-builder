@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Task\Collect;
 
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
+
 /**
  *  Task helper for collecting data on tagged services.
  *
@@ -15,14 +17,25 @@ class ServiceTagTypes {
   protected $methodCollector;
 
   /**
+   * The names of services to collect for testing sample data.
+   */
+  protected $testingServiceCollectorNames = [
+    'breadcrumb' => TRUE,
+  ];
+
+  /**
    * Constructs a new helper.
    *
+   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
+   *   The environment object.
    * @param MethodCollector $method_collector
    *   The method collector helper.
    */
   public function __construct(
+    EnvironmentInterface $environment,
     MethodCollector $method_collector
   ) {
+    $this->environment = $environment;
     $this->methodCollector = $method_collector;
   }
 
@@ -118,6 +131,11 @@ class ServiceTagTypes {
     // Get the details of all service collector services.
     // Note that the docs for this method are completely wrong.
     $collectors_info = $container_builder->findTaggedServiceIds('service_collector');
+
+    // Filter for testing sample data collection.
+    if (!empty($this->environment->sample_data_write)) {
+      $collectors_info = array_intersect_key($collectors_info, $this->testingServiceCollectorNames);
+    }
 
     return $collectors_info;
   }
