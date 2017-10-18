@@ -82,6 +82,11 @@ interface EnvironmentInterface {
   public function getHooksDirectory();
 
   /**
+   * Gets the storage helper.
+   */
+  public function getStorage();
+
+  /**
    * Get a path to a resource that is safe to use either on Drupal or Drush.
    *
    * @param $subpath

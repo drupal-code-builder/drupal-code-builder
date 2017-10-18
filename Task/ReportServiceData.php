@@ -21,7 +21,7 @@ class ReportServiceData extends ReportHookDataFolder {
    * Get the list of Service data.
    *
    * @return
-   *  The unserialized contents of the processed Service data file.
+   *  The processed Service data.
    */
   function listServiceData() {
     // We may come here several times, so cache this.
@@ -32,16 +32,8 @@ class ReportServiceData extends ReportHookDataFolder {
       return $service_data;
     }
 
-    $directory = $this->environment->getHooksDirectory();
-
-    $services_file = "$directory/services_processed.php";
-    if (file_exists($services_file)) {
-      $service_data = unserialize(file_get_contents($services_file));
-      return $service_data;
-    }
-    // Sanity checks ensure we never get here, but in case they have been
-    // skipped, return something that makes sense to the caller.
-    return array();
+    $service_data = $this->environment->getStorage()->retrieve('services');
+    return $service_data;
   }
 
   /**
@@ -65,19 +57,11 @@ class ReportServiceData extends ReportHookDataFolder {
    * Get the list of Service types data.
    *
    * @return
-   *  The unserialized contents of the processed Service types data file.
+   *  The processed Service types data.
    */
   public function listServiceTypeData() {
-    $directory = $this->environment->getHooksDirectory();
-
-    $service_types_file = "$directory/service_tag_types_processed.php";
-    if (file_exists($service_types_file)) {
-      $service_types_data = unserialize(file_get_contents($service_types_file));
-      return $service_types_data;
-    }
-    // Sanity checks ensure we never get here, but in case they have been
-    // skipped, return something that makes sense to the caller.
-    return [];
+    $service_types_data = $this->environment->getStorage()->retrieve('service_tag_types');
+    return $service_types_data;
   }
 
 }

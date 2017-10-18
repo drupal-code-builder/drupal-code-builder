@@ -335,7 +335,7 @@ class Collect extends Base {
   }
 
   /**
-   * Write data to a file as serialized PHP.
+   * Write data to storage.
    *
    * @param $data
    *  An array of data to write.
@@ -344,10 +344,7 @@ class Collect extends Base {
    *  prepended to the filename.
    */
   protected function writeProcessedData($data, $type) {
-    // Write the processed data to a file.
-    $directory = $this->environment->getHooksDirectory();
-    $serialized = serialize($data);
-    file_put_contents("{$directory}/{$type}_processed.php", $serialized);
+    $this->environment->getStorage()->store($type, $data);
   }
 
 }

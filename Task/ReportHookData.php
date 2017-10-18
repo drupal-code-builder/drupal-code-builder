@@ -23,7 +23,7 @@ class ReportHookData extends ReportHookDataFolder {
    * Get the list of hook data.
    *
    * @return
-   *  The unserialized contents of the processed hook data file.
+   *  The processed hook data.
    */
   function listHookData() {
     // We may come here several times, so cache this.
@@ -34,16 +34,8 @@ class ReportHookData extends ReportHookDataFolder {
       return $hook_data;
     }
 
-    $directory = $this->environment->getHooksDirectory();
-
-    $hooks_file = "$directory/hooks_processed.php";
-    if (file_exists($hooks_file)) {
-      $hook_data = unserialize(file_get_contents($hooks_file));
-      return $hook_data;
-    }
-    // Sanity checks ensure we never get here, but in case they have been
-    // skipped, return something that makes sense to the caller.
-    return array();
+    $hook_data = $this->environment->getStorage()->retrieve('hooks');
+    return $hook_data;
   }
 
   /**

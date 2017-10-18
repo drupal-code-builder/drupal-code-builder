@@ -24,7 +24,7 @@ class ReportPluginData extends ReportHookDataFolder {
    * Get the list of plugin data.
    *
    * @return
-   *  The unserialized contents of the processed plugin data file.
+   *  The processed plugin data.
    *
    * @see \DrupalCodeBuilder\Task\Collect8::gatherPluginTypeInfo()
    */
@@ -37,16 +37,8 @@ class ReportPluginData extends ReportHookDataFolder {
       return $plugin_data;
     }
 
-    $directory = $this->environment->getHooksDirectory();
-
-    $plugins_file = "$directory/plugins_processed.php";
-    if (file_exists($plugins_file)) {
-      $plugins_data = unserialize(file_get_contents($plugins_file));
-      return $plugins_data;
-    }
-    // Sanity checks ensure we never get here, but in case they have been
-    // skipped, return something that makes sense to the caller.
-    return array();
+    $plugin_data = $this->environment->getStorage()->retrieve('plugins');
+    return $plugin_data;
   }
 
   /**

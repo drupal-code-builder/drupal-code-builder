@@ -43,6 +43,16 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected $loggingLevel = 0;
 
   /**
+   * The short class name of the storage helper to use.
+   */
+  protected $storageType = 'Serialized';
+
+  /**
+   * The storage helper.
+   */
+  protected $storage;
+
+  /**
    * The path to the hooks directory.
    *
    * Depending on our environment this is either relative to Drupal root or
@@ -174,6 +184,18 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    */
   public function getCoreMajorVersion() {
     return $this->version_helper->getCoreMajorVersion();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStorage() {
+    if (!isset($this->storage)) {
+      $storage_class_name = '\DrupalCodeBuilder\Storage\\' . $this->storageType;
+      $this->storage = new $storage_class_name($this);
+    }
+
+    return $this->storage;
   }
 
   /**
