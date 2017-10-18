@@ -48,8 +48,7 @@ class ServiceTagTypes {
 
     $container_builder = $compileContainerR->invoke($kernel);
 
-    // Get the details of all service collector services.
-    $collectors_info = $container_builder->findTaggedServiceIds('service_collector');
+    $collectors_info = $this->getCollectorServiceIds($container_builder);
 
     $data = [];
 
@@ -92,6 +91,35 @@ class ServiceTagTypes {
     }
 
     return $data;
+  }
+
+  /**
+   * Gets the names of all service collector services from the container.
+   *
+   * @param \Symfony\Component\DependencyInjection\TaggedContainerInterface $container_builder
+   *  The container.
+   *
+   * @return string[]
+   *  An array of data about services. Structure is as follows:
+   *  @code
+   *   "path_processor_manager" => array:2 [
+   *     0 => array:2 [
+   *      "tag" => "path_processor_inbound"
+   *      "call" => "addInbound"
+   *    ]
+   *    1 => array:2 [
+   *      "tag" => "path_processor_outbound"
+   *      "call" => "addOutbound"
+   *    ]
+   *  ]
+   *  @endcode
+   */
+  protected function getCollectorServiceIds(\Symfony\Component\DependencyInjection\TaggedContainerInterface $container_builder) {
+    // Get the details of all service collector services.
+    // Note that the docs for this method are completely wrong.
+    $collectors_info = $container_builder->findTaggedServiceIds('service_collector');
+
+    return $collectors_info;
   }
 
 }
