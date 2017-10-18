@@ -68,21 +68,4 @@ class CollectTesting8 extends Collect8 {
     return $plugin_manager_service_ids;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function gatherServiceDefinitions() {
-    $service_definitions = parent::gatherServiceDefinitions();
-
-    // For testing, only take a subset of service names.
-    $testing_service_ids = array(
-      'current_user' => TRUE,
-      'entity.manager' => TRUE,
-    );
-
-    $service_definitions = array_intersect_key($service_definitions, $testing_service_ids);
-
-    return $service_definitions;
-  }
-
 }

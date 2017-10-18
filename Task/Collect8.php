@@ -412,86 +412,10 @@ class Collect8 extends Collect {
    * Collect data about services.
    */
   protected function collectServices() {
-    $service_definitions = $this->gatherServiceDefinitions();
+    $service_definitions = $this->getHelper('ServicesCollector')->collect();
 
     // Save the data.
     $this->environment->getStorage()->store('services', $service_definitions);
-  }
-
-  /**
-   * Get definitions of services from the static container.
-   *
-   * We collect an incomplete list of services, namely, those which have special
-   * methods in the \Drupal static container. This is because (AFAIK) these are
-   * the only ones for which we can detect the interface and a description.
-   */
-  protected function gatherServiceDefinitions() {
-    // We can get service IDs from the container,
-    $static_container_reflection = new \ReflectionClass('\Drupal');
-    $filename = $static_container_reflection->getFileName();
-    $source = file($filename);
-
-    $methods = $static_container_reflection->getMethods();
-    $service_definitions = [];
-    foreach ($methods as $method) {
-      $name = $method->getName();
-
-      // Skip any which have parameters: the service getter methods have no
-      // parameters.
-      if ($method->getNumberOfParameters() > 0) {
-        continue;
-      }
-
-      $start_line = $method->getStartLine();
-      $end_line = $method->getEndLine();
-
-      // Skip any which have more than 2 lines: the service getter methods have
-      // only 1 line of code.
-      if ($end_line - $start_line > 2) {
-        continue;
-      }
-
-      // Get the single code line.
-      $code_line = $source[$start_line];
-
-      // Extract the service ID from the call to getContainer().
-      $matches = [];
-      $code_line_regex = "@return static::getContainer\(\)->get\('([\w.]+)'\);@";
-      if (!preg_match($code_line_regex, $code_line, $matches)) {
-        continue;
-      }
-      $service_id = $matches[1];
-
-      $docblock = $method->getDocComment();
-
-      // Extract the interface for the service from the docblock @return.
-      $matches = [];
-      preg_match("[@return (.+)]", $docblock, $matches);
-      $interface = $matches[1];
-
-      // Extract a description from the docblock first line.
-      $docblock_lines = explode("\n", $docblock);
-      $doc_first_line = $docblock_lines[1];
-
-      $matches = [];
-      preg_match("@(the (.*))\.@", $doc_first_line, $matches);
-      $description = ucfirst($matches[1]);
-      $label = ucfirst($matches[2]);
-
-      $service_definition = [
-        'id' => $service_id,
-        'label' => $label,
-        'static_method' => $name,
-        'interface' => $interface,
-        'description' => $description,
-      ];
-      $service_definitions[$service_id] = $service_definition;
-    }
-
-    // Sort by ID.
-    ksort($service_definitions);
-
-    return $service_definitions;
   }
 
   protected function collectServiceTagTypes() {
@@ -701,7 +625,7 @@ class Collect8 extends Collect {
           );
           break;
         default:
-          $helper = new $qualified_class();
+          $helper = new $qualified_class($this->environment);
           break;
       }
 
