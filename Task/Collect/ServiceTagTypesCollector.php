@@ -6,8 +6,6 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 
 /**
  *  Task helper for collecting data on tagged services.
- *
- * TODO: there is no way of collecting these for test sample data.
  */
 class ServiceTagTypesCollector {
 
