@@ -10,6 +10,16 @@ namespace DrupalCodeBuilder\Environment;
 class WriteTestsSampleLocation extends Drush {
 
   /**
+   * Indicates that the Collect task should filter for sample data.
+   *
+   * This is accessed by the Collect task helpers.
+   *
+   * TODO: change all Collect task code to use this and remove the
+   * CollectTesting* classes.
+   */
+  public $sample_data_write = TRUE;
+
+  /**
    * Set the hooks directory.
    *
    * TODO: define this in a trait to keep the directory name DRY.
