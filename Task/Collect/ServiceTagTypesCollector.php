@@ -15,6 +15,11 @@ class ServiceTagTypesCollector {
   protected $methodCollector;
 
   /**
+   * The container builder helper.
+   */
+  protected $containerBuilderGetter;
+
+  /**
    * The names of services to collect for testing sample data.
    */
   protected $testingServiceCollectorNames = [
@@ -26,14 +31,18 @@ class ServiceTagTypesCollector {
    *
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
    *   The environment object.
+   * @param ContainerBuilderGetter $method_collector
+   *   The container builder helper.
    * @param MethodCollector $method_collector
    *   The method collector helper.
    */
   public function __construct(
     EnvironmentInterface $environment,
+    ContainerBuilderGetter $container_builder_getter,
     MethodCollector $method_collector
   ) {
     $this->environment = $environment;
+    $this->containerBuilderGetter = $container_builder_getter;
     $this->methodCollector = $method_collector;
   }
 
@@ -48,16 +57,7 @@ class ServiceTagTypesCollector {
    *      format as returned by MethodCollector::collectMethods().
    */
   public function collectServiceTagTypes() {
-    // Get the kernel, and hack it to get a compiled container.
-    // We need this rather than the normal cached container, as that doesn't
-    // allow us to get the full service definitions.
-    $kernel = \Drupal::service('kernel');
-    $kernelR = new \ReflectionClass($kernel);
-
-    $compileContainerR = $kernelR->getMethod('compileContainer');
-    $compileContainerR->setAccessible(TRUE);
-
-    $container_builder = $compileContainerR->invoke($kernel);
+    $container_builder = $this->containerBuilderGetter->getContainerBuilder();
 
     $collectors_info = $this->getCollectorServiceIds($container_builder);
 

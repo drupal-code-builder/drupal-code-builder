@@ -621,7 +621,14 @@ class Collect8 extends Collect {
         case 'ServiceTagTypesCollector':
           $helper = new $qualified_class(
             $this->environment,
+            $this->getHelper('ContainerBuilderGetter'),
             $this->getHelper('MethodCollector')
+          );
+          break;
+        case 'ServicesCollector':
+          $helper = new $qualified_class(
+            $this->environment,
+            $this->getHelper('ContainerBuilderGetter')
           );
           break;
         default:
