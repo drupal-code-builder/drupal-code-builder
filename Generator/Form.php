@@ -73,7 +73,7 @@ class Form extends PHPClassFile {
 
           return $options;
         },
-        'options_allow_other' => TRUE,
+        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
     );
   }
