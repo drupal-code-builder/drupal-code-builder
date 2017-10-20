@@ -129,6 +129,8 @@ class Plugin extends PHPClassFile {
 
           return $options;
         },
+        // TODO: allow this to be a callback.
+        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
         'options_allow_other' => TRUE,
       ),
     );
