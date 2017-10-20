@@ -24,29 +24,39 @@ class ReportServiceData extends ReportHookDataFolder {
    *  The processed Service data.
    */
   function listServiceData() {
-    // We may come here several times, so cache this.
-    // TODO: look into finer-grained caching higher up.
-    static $service_data;
+    $service_data = $this->loadServiceData();
 
-    if (isset($service_data)) {
-      return $service_data;
-    }
-
-    $service_data = $this->environment->getStorage()->retrieve('services');
-    return $service_data;
+    return $service_data['all'];
   }
 
   /**
-   * Get Service types as a list of options.
+   * Get a list of options of the major services.
    *
    * @return
    *   An array of Service types as options suitable for FormAPI.
    */
   function listServiceNamesOptions() {
-    $data = $this->listServiceData();
+    $service_data = $this->loadServiceData();
 
     $return = array();
-    foreach ($data as $service_id => $service_info) {
+    foreach ($service_data['primary'] as $service_id => $service_info) {
+      $return[$service_id] = $service_info['label'];
+    }
+
+    return $return;
+  }
+
+  /**
+   * Get a list of options of all the services.
+   *
+   * @return
+   *   An array of Service types as options suitable for FormAPI.
+   */
+  public function listServiceNamesOptionsAll() {
+    $service_data = $this->loadServiceData();
+
+    $return = array();
+    foreach ($service_data['all'] as $service_id => $service_info) {
       $return[$service_id] = $service_info['label'];
     }
 
@@ -62,6 +72,20 @@ class ReportServiceData extends ReportHookDataFolder {
   public function listServiceTypeData() {
     $service_types_data = $this->environment->getStorage()->retrieve('service_tag_types');
     return $service_types_data;
+  }
+
+  /**
+   * Loads the service data from storage.
+   *
+   * @return
+   *   The data array, as stored by the ServicesCollector.
+   */
+  protected function loadServiceData() {
+    if (!isset($this->serviceData)) {
+      $this->serviceData = $this->environment->getStorage()->retrieve('services');
+    }
+
+    return $this->serviceData;
   }
 
 }
