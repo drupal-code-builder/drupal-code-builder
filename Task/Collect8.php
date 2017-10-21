@@ -29,6 +29,7 @@ class Collect8 extends Collect {
     $result += $this->collectPlugins();
     $result += $this->collectServices();
     $result += $this->collectServiceTagTypes();
+    $result += $this->collectFieldTypes();
 
     return $result;
   }
@@ -443,6 +444,21 @@ class Collect8 extends Collect {
     $this->environment->getStorage()->store('service_tag_types', $service_tag_type_definitions);
 
     return ['tagged service types' => count($service_tag_type_definitions)];
+  }
+
+  /**
+   * Collect data about field_type types.
+   *
+   * @return
+   *  A summary in the same format as returned by collectComponentData().
+   */
+  protected function collectFieldTypes() {
+    $field_type_definitions = $this->getHelper('FieldTypesCollector')->collectFieldTypes();
+
+    // Save the data.
+    $this->environment->getStorage()->store('field_types', $field_type_definitions);
+
+    return ['field types' => count($field_type_definitions)];
   }
 
   /**
