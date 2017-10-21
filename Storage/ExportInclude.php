@@ -58,7 +58,10 @@ class ExportInclude {
     $directory = $this->environment->getHooksDirectory();
     $data_file = "$directory/{$key}_processed.php";
     if (file_exists($data_file)) {
-      include_once($data_file);
+      // Don't use include_once, in case callers are neglecting to cache their
+      // data an come here several times for the same key. (Which they really
+      // shouldn't, but it's not a nice way to catch the problem.)
+      include $data_file;
       return $data;
     }
 
