@@ -1,3 +1,4 @@
+<?php $data =
 array (
   'breadcrumb_builder' => 
   array (
@@ -18,4 +19,4 @@ array (
       ),
     ),
   ),
-)
+);

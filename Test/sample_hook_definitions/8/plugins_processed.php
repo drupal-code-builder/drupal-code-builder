@@ -1,3 +1,4 @@
+<?php $data =
 array (
   'block' => 
   array (
@@ -331,4 +332,4 @@ array (
     ),
     'base_class' => 'Drupal\\Core\\Field\\PluginSettingsBase',
   ),
-)
+);

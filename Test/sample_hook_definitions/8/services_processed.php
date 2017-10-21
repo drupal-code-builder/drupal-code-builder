@@ -1,3 +1,4 @@
+<?php $data =
 array (
   'primary' => 
   array (
@@ -20,14 +21,6 @@ array (
   ),
   'all' => 
   array (
-    'entity_type.manager' => 
-    array (
-      'id' => 'entity_type.manager',
-      'label' => 'Entity type manager',
-      'static_method' => 'entityTypeManager',
-      'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
-      'description' => 'The entity type manager',
-    ),
     'current_user' => 
     array (
       'id' => 'current_user',
@@ -36,5 +29,13 @@ array (
       'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
       'description' => 'The current active user',
     ),
+    'entity_type.manager' => 
+    array (
+      'id' => 'entity_type.manager',
+      'label' => 'Entity type manager',
+      'static_method' => 'entityTypeManager',
+      'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
+      'description' => 'The entity type manager',
+    ),
   ),
-)
+);

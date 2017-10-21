@@ -1,3 +1,4 @@
+<?php $data =
 array (
   'block' => 
   array (
@@ -1685,4 +1686,4 @@ array (
 ',
     ),
   ),
-)
+);
