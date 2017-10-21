@@ -25,9 +25,15 @@ class Collect extends Base {
 
   /**
    * Collect data about Drupal components from the current site's codebase.
+   *
+   * @return array
+   *   An array summarizing the collected data. Each key is a label, each value
+   *   is a count of that type of item.
    */
   public function collectComponentData() {
-    $this->collectHooks();
+    $result = $this->collectHooks();
+
+    return $result;
   }
 
   /**
@@ -49,6 +55,13 @@ class Collect extends Base {
 
     // Save the hook data.
     $this->environment->getStorage()->store('hooks', $processed_hook_data);
+
+    $count = 0;
+    foreach ($hook_files as $group => $hooks) {
+      $count += count($hooks);
+    }
+
+    return ['hook definitions' => $count];
   }
 
   /**

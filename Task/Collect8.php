@@ -22,17 +22,22 @@ class Collect8 extends Collect {
   protected $helpers = [];
 
   /**
-   * Collect data about Drupal components from the current site's codebase.
+   * {@inheritdoc}
    */
   public function collectComponentData() {
-    $this->collectHooks();
-    $this->collectPlugins();
-    $this->collectServices();
-    $this->collectServiceTagTypes();
+    $result = $this->collectHooks();
+    $result += $this->collectPlugins();
+    $result += $this->collectServices();
+    $result += $this->collectServiceTagTypes();
+
+    return $result;
   }
 
   /**
    * Collect data about plugin types and process it.
+   *
+   * @return
+   *  A summary in the same format as returned by collectComponentData().
    */
   protected function collectPlugins() {
     $plugin_manager_service_ids = $this->getPluginManagerServices();
@@ -41,6 +46,8 @@ class Collect8 extends Collect {
 
     // Save the data.
     $this->environment->getStorage()->store('plugins', $plugin_type_data);
+
+    return ['plugin types' => count($plugin_type_data)];
   }
 
   /**
@@ -410,19 +417,32 @@ class Collect8 extends Collect {
 
   /**
    * Collect data about services.
+   *
+   * @return
+   *  A summary in the same format as returned by collectComponentData().
    */
   protected function collectServices() {
     $service_definitions = $this->getHelper('ServicesCollector')->collect();
 
     // Save the data.
     $this->environment->getStorage()->store('services', $service_definitions);
+
+    return ['services' => count($service_definitions['all'])];
   }
 
+  /**
+   * Collect data about tagged service types.
+   *
+   * @return
+   *  A summary in the same format as returned by collectComponentData().
+   */
   protected function collectServiceTagTypes() {
     $service_tag_type_definitions = $this->getHelper('ServiceTagTypesCollector')->collectServiceTagTypes();
 
     // Save the data.
     $this->environment->getStorage()->store('service_tag_types', $service_tag_type_definitions);
+
+    return ['tagged service types' => count($service_tag_type_definitions)];
   }
 
   /**
