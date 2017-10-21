@@ -1,14 +1,15 @@
+<?php $data =
 array (
-  'block' => 
+  'block' =>
   array (
-    'hook_block_info' => 
+    'hook_block_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_info',
       'definition' => 'function hook_block_info()',
       'description' => 'Define all blocks provided by the module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -29,14 +30,14 @@ array (
   return $blocks;
 ',
     ),
-    'hook_block_info_alter' => 
+    'hook_block_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_info_alter',
       'definition' => 'function hook_block_info_alter(&$blocks, $theme, $code_blocks)',
       'description' => 'Change block definition before saving to the database.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -47,14 +48,14 @@ array (
   $blocks[\'user\'][\'login\'][\'status\'] = 0;
 ',
     ),
-    'hook_block_configure' => 
+    'hook_block_configure' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_configure',
       'definition' => 'function hook_block_configure($delta = \'\')',
       'description' => 'Define a configuration form for a block.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -74,14 +75,14 @@ array (
   return $form;
 ',
     ),
-    'hook_block_save' => 
+    'hook_block_save' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_save',
       'definition' => 'function hook_block_save($delta = \'\', $edit = array())',
       'description' => 'Save the configuration options from hook_block_configure().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -94,14 +95,14 @@ array (
   }
 ',
     ),
-    'hook_block_view' => 
+    'hook_block_view' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_view',
       'definition' => 'function hook_block_view($delta = \'\')',
       'description' => 'Return a rendered or renderable view of a block.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -138,14 +139,14 @@ array (
   return $block;
 ',
     ),
-    'hook_block_view_alter' => 
+    'hook_block_view_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_view_alter',
       'definition' => 'function hook_block_view_alter(&$data, $block)',
       'description' => 'Perform alterations to the content of a block.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -163,14 +164,14 @@ array (
   }
 ',
     ),
-    'hook_block_view_MODULE_DELTA_alter' => 
+    'hook_block_view_MODULE_DELTA_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_view_MODULE_DELTA_alter',
       'definition' => 'function hook_block_view_MODULE_DELTA_alter(&$data, $block)',
       'description' => 'Perform alterations to a specific block.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -186,14 +187,14 @@ array (
   $data[\'subject\'] = t(\'New title of the block\');
 ',
     ),
-    'hook_block_list_alter' => 
+    'hook_block_list_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_block_list_alter',
       'definition' => 'function hook_block_list_alter(&$blocks)',
       'description' => 'Act on blocks prior to rendering.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'hook_block_info',
       ),
@@ -233,16 +234,16 @@ array (
 ',
     ),
   ),
-  'system' => 
+  'system' =>
   array (
-    'hook_hook_info' => 
+    'hook_hook_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_hook_info',
       'definition' => 'function hook_hook_info()',
       'description' => 'Defines one or more hooks that are exposed by a module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -257,14 +258,14 @@ array (
   return $hooks;
 ',
     ),
-    'hook_hook_info_alter' => 
+    'hook_hook_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_hook_info_alter',
       'definition' => 'function hook_hook_info_alter(&$hooks)',
       'description' => 'Alter information from hook_hook_info().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -276,14 +277,14 @@ array (
   $hooks[\'tokens\'][\'group\'] = \'mytokens\';
 ',
     ),
-    'hook_entity_info' => 
+    'hook_entity_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_info',
       'definition' => 'function hook_entity_info()',
       'description' => 'Inform the base system and the Field API about one or more entity types.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'callback_entity_info_uri',
         1 => 'callback_entity_info_label',
@@ -362,14 +363,14 @@ array (
   return $return;
 ',
     ),
-    'hook_entity_info_alter' => 
+    'hook_entity_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_info_alter',
       'definition' => 'function hook_entity_info_alter(&$entity_info)',
       'description' => 'Alter the entity info.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -380,14 +381,14 @@ array (
   $entity_info[\'node\'][\'controller class\'] = \'MyCustomNodeController\';
 ',
     ),
-    'hook_entity_load' => 
+    'hook_entity_load' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_load',
       'definition' => 'function hook_entity_load($entities, $type)',
       'description' => 'Act on entities when loaded.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -398,14 +399,14 @@ array (
   }
 ',
     ),
-    'hook_entity_presave' => 
+    'hook_entity_presave' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_presave',
       'definition' => 'function hook_entity_presave($entity, $type)',
       'description' => 'Act on an entity before it is about to be created or updated.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -414,14 +415,14 @@ array (
   $entity->changed = REQUEST_TIME;
 ',
     ),
-    'hook_entity_insert' => 
+    'hook_entity_insert' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_insert',
       'definition' => 'function hook_entity_insert($entity, $type)',
       'description' => 'Act on entities when inserted.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -440,14 +441,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_entity_update' => 
+    'hook_entity_update' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_update',
       'definition' => 'function hook_entity_update($entity, $type)',
       'description' => 'Act on entities when updated.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -465,14 +466,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_entity_delete' => 
+    'hook_entity_delete' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_delete',
       'definition' => 'function hook_entity_delete($entity, $type)',
       'description' => 'Act on entities when deleted.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -487,14 +488,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_entity_query_alter' => 
+    'hook_entity_query_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_query_alter',
       'definition' => 'function hook_entity_query_alter($query)',
       'description' => 'Alter or execute an EntityFieldQuery.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -503,14 +504,14 @@ array (
   $query->executeCallback = \'my_module_query_callback\';
 ',
     ),
-    'hook_entity_view' => 
+    'hook_entity_view' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_view',
       'definition' => 'function hook_entity_view($entity, $type, $view_mode, $langcode)',
       'description' => 'Act on entities being assembled before rendering.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -523,14 +524,14 @@ array (
   );
 ',
     ),
-    'hook_entity_view_alter' => 
+    'hook_entity_view_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_view_alter',
       'definition' => 'function hook_entity_view_alter(&$build, $type)',
       'description' => 'Alter the results of ENTITY_view().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -545,14 +546,14 @@ array (
   }
 ',
     ),
-    'hook_entity_view_mode_alter' => 
+    'hook_entity_view_mode_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_view_mode_alter',
       'definition' => 'function hook_entity_view_mode_alter(&$view_mode, $context)',
       'description' => 'Change the view mode of an entity that is being displayed.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -564,14 +565,14 @@ array (
   }
 ',
     ),
-    'hook_admin_paths' => 
+    'hook_admin_paths' =>
     array (
       'type' => 'hook',
       'name' => 'hook_admin_paths',
       'definition' => 'function hook_admin_paths()',
       'description' => 'Define administrative paths.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -584,14 +585,14 @@ array (
   return $paths;
 ',
     ),
-    'hook_admin_paths_alter' => 
+    'hook_admin_paths_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_admin_paths_alter',
       'definition' => 'function hook_admin_paths_alter(&$paths)',
       'description' => 'Redefine administrative paths defined by other modules.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -604,14 +605,14 @@ array (
   $paths[\'node/add/forum\'] = FALSE;
 ',
     ),
-    'hook_entity_prepare_view' => 
+    'hook_entity_prepare_view' =>
     array (
       'type' => 'hook',
       'name' => 'hook_entity_prepare_view',
       'definition' => 'function hook_entity_prepare_view($entities, $type, $langcode)',
       'description' => 'Act on entities as they are being prepared for view.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -626,14 +627,14 @@ array (
   }
 ',
     ),
-    'hook_cron' => 
+    'hook_cron' =>
     array (
       'type' => 'hook',
       'name' => 'hook_cron',
       'definition' => 'function hook_cron()',
       'description' => 'Perform periodic actions.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -659,14 +660,14 @@ array (
   }
 ',
     ),
-    'hook_cron_queue_info' => 
+    'hook_cron_queue_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_cron_queue_info',
       'definition' => 'function hook_cron_queue_info()',
       'description' => 'Declare queues holding items that need to be run periodically.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
         0 => 'callback_queue_worker',
       ),
@@ -680,14 +681,14 @@ array (
   return $queues;
 ',
     ),
-    'hook_cron_queue_info_alter' => 
+    'hook_cron_queue_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_cron_queue_info_alter',
       'definition' => 'function hook_cron_queue_info_alter(&$queues)',
       'description' => 'Alter cron queue information before cron runs.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -698,14 +699,14 @@ array (
   $queues[\'aggregator_feeds\'][\'time\'] = 90;
 ',
     ),
-    'hook_element_info' => 
+    'hook_element_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_element_info',
       'definition' => 'function hook_element_info()',
       'description' => 'Allows modules to declare their own Form API element types and specify their',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -717,14 +718,14 @@ array (
   return $types;
 ',
     ),
-    'hook_element_info_alter' => 
+    'hook_element_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_element_info_alter',
       'definition' => 'function hook_element_info_alter(&$type)',
       'description' => 'Alter the element type information returned from modules.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -736,14 +737,14 @@ array (
   }
 ',
     ),
-    'hook_exit' => 
+    'hook_exit' =>
     array (
       'type' => 'hook',
       'name' => 'hook_exit',
       'definition' => 'function hook_exit($destination = NULL)',
       'description' => 'Perform cleanup tasks.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -755,14 +756,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_js_alter' => 
+    'hook_js_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_js_alter',
       'definition' => 'function hook_js_alter(&$javascript)',
       'description' => 'Perform necessary alterations to the JavaScript before it is presented on',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -772,14 +773,14 @@ array (
   $javascript[\'misc/jquery.js\'][\'data\'] = drupal_get_path(\'module\', \'jquery_update\') . \'/jquery.js\';
 ',
     ),
-    'hook_library' => 
+    'hook_library' =>
     array (
       'type' => 'hook',
       'name' => 'hook_library',
       'definition' => 'function hook_library()',
       'description' => 'Registers JavaScript/CSS libraries associated with a module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -824,14 +825,14 @@ array (
   return $libraries;
 ',
     ),
-    'hook_library_alter' => 
+    'hook_library_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_library_alter',
       'definition' => 'function hook_library_alter(&$libraries, $module)',
       'description' => 'Alters the JavaScript/CSS library registry.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -850,14 +851,14 @@ array (
   }
 ',
     ),
-    'hook_css_alter' => 
+    'hook_css_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_css_alter',
       'definition' => 'function hook_css_alter(&$css)',
       'description' => 'Alter CSS files before they are output on the page.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -867,14 +868,14 @@ array (
   unset($css[drupal_get_path(\'module\', \'system\') . \'/defaults.css\']);
 ',
     ),
-    'hook_ajax_render_alter' => 
+    'hook_ajax_render_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_ajax_render_alter',
       'definition' => 'function hook_ajax_render_alter(&$commands)',
       'description' => 'Alter the commands that are sent to the user through the Ajax framework.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -884,14 +885,14 @@ array (
   $commands[] = ajax_command_prepend(\'#block-system-main .content\', theme(\'status_messages\'));
 ',
     ),
-    'hook_page_build' => 
+    'hook_page_build' =>
     array (
       'type' => 'hook',
       'name' => 'hook_page_build',
       'definition' => 'function hook_page_build(&$page)',
       'description' => 'Add elements to a page before it is rendered.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -907,14 +908,14 @@ array (
   }
 ',
     ),
-    'hook_menu_get_item_alter' => 
+    'hook_menu_get_item_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_get_item_alter',
       'definition' => 'function hook_menu_get_item_alter(&$router_item, $path, $original_map)',
       'description' => 'Alter a menu router item right after it has been retrieved from the database or cache.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -927,14 +928,14 @@ array (
   }
 ',
     ),
-    'hook_menu' => 
+    'hook_menu' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu',
       'definition' => 'function hook_menu()',
       'description' => 'Define menu items and page callbacks.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -956,14 +957,14 @@ array (
   return $items;
 ',
     ),
-    'hook_menu_alter' => 
+    'hook_menu_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_alter',
       'definition' => 'function hook_menu_alter(&$items)',
       'description' => 'Alter the data being saved to the {menu_router} table after hook_menu is invoked.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -973,14 +974,14 @@ array (
   $items[\'node/add\'][\'access callback\'] = FALSE;
 ',
     ),
-    'hook_menu_link_alter' => 
+    'hook_menu_link_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_link_alter',
       'definition' => 'function hook_menu_link_alter(&$item)',
       'description' => 'Alter the data being saved to the {menu_links} table by menu_link_save().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1002,14 +1003,14 @@ array (
   }
 ',
     ),
-    'hook_translated_menu_link_alter' => 
+    'hook_translated_menu_link_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_translated_menu_link_alter',
       'definition' => 'function hook_translated_menu_link_alter(&$item, $map)',
       'description' => 'Alter a menu link after it has been translated and before it is rendered.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1020,14 +1021,14 @@ array (
   }
 ',
     ),
-    'hook_menu_link_insert' => 
+    'hook_menu_link_insert' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_link_insert',
       'definition' => 'function hook_menu_link_insert($link)',
       'description' => 'Inform modules that a menu link has been created.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1041,14 +1042,14 @@ array (
   drupal_write_record(\'menu_example\', $record);
 ',
     ),
-    'hook_menu_link_update' => 
+    'hook_menu_link_update' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_link_update',
       'definition' => 'function hook_menu_link_update($link)',
       'description' => 'Inform modules that a menu link has been updated.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1064,14 +1065,14 @@ array (
   }
 ',
     ),
-    'hook_menu_link_delete' => 
+    'hook_menu_link_delete' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_link_delete',
       'definition' => 'function hook_menu_link_delete($link)',
       'description' => 'Inform modules that a menu link has been deleted.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1083,14 +1084,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_menu_local_tasks_alter' => 
+    'hook_menu_local_tasks_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_local_tasks_alter',
       'definition' => 'function hook_menu_local_tasks_alter(&$data, $router_item, $root_path)',
       'description' => 'Alter tabs and actions displayed on the page before they are rendered.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1129,14 +1130,14 @@ array (
   );
 ',
     ),
-    'hook_menu_breadcrumb_alter' => 
+    'hook_menu_breadcrumb_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_breadcrumb_alter',
       'definition' => 'function hook_menu_breadcrumb_alter(&$active_trail, $item)',
       'description' => 'Alter links in the active trail before it is rendered as the breadcrumb.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1154,14 +1155,14 @@ array (
   }
 ',
     ),
-    'hook_menu_contextual_links_alter' => 
+    'hook_menu_contextual_links_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_contextual_links_alter',
       'definition' => 'function hook_menu_contextual_links_alter(&$links, $router_item, $root_path)',
       'description' => 'Alter contextual links before they are rendered.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1181,14 +1182,14 @@ array (
   }
 ',
     ),
-    'hook_page_alter' => 
+    'hook_page_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_page_alter',
       'definition' => 'function hook_page_alter(&$page)',
       'description' => 'Perform alterations before a page is rendered.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1201,14 +1202,14 @@ array (
   );
 ',
     ),
-    'hook_form_alter' => 
+    'hook_form_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_form_alter',
       'definition' => 'function hook_form_alter(&$form, &$form_state, $form_id)',
       'description' => 'Perform alterations before a form is rendered.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1224,14 +1225,14 @@ array (
   }
 ',
     ),
-    'hook_form_FORM_ID_alter' => 
+    'hook_form_FORM_ID_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_form_FORM_ID_alter',
       'definition' => 'function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id)',
       'description' => 'Provide a form-specific alteration instead of the global hook_form_alter().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1249,14 +1250,14 @@ array (
   );
 ',
     ),
-    'hook_form_BASE_FORM_ID_alter' => 
+    'hook_form_BASE_FORM_ID_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_form_BASE_FORM_ID_alter',
       'definition' => 'function hook_form_BASE_FORM_ID_alter(&$form, &$form_state, $form_id)',
       'description' => 'Provide a form-specific alteration for shared (\'base\') forms.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1274,14 +1275,14 @@ array (
   );
 ',
     ),
-    'hook_forms' => 
+    'hook_forms' =>
     array (
       'type' => 'hook',
       'name' => 'hook_forms',
       'definition' => 'function hook_forms($form_id, $args)',
       'description' => 'Map form_ids to form builder functions.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1311,14 +1312,14 @@ array (
   return $forms;
 ',
     ),
-    'hook_boot' => 
+    'hook_boot' =>
     array (
       'type' => 'hook',
       'name' => 'hook_boot',
       'definition' => 'function hook_boot()',
       'description' => 'Perform setup tasks for all page requests.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1329,14 +1330,14 @@ array (
   drupal_register_shutdown_function(\'devel_shutdown\');
 ',
     ),
-    'hook_init' => 
+    'hook_init' =>
     array (
       'type' => 'hook',
       'name' => 'hook_init',
       'definition' => 'function hook_init()',
       'description' => 'Perform setup tasks for non-cached page requests.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1349,14 +1350,14 @@ array (
   }
 ',
     ),
-    'hook_image_toolkits' => 
+    'hook_image_toolkits' =>
     array (
       'type' => 'hook',
       'name' => 'hook_image_toolkits',
       'definition' => 'function hook_image_toolkits()',
       'description' => 'Define image toolkits provided by this module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1374,14 +1375,14 @@ array (
   );
 ',
     ),
-    'hook_mail_alter' => 
+    'hook_mail_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_mail_alter',
       'definition' => 'function hook_mail_alter(&$message)',
       'description' => 'Alter an email message created with the drupal_mail() function.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1398,14 +1399,14 @@ array (
   }
 ',
     ),
-    'hook_module_implements_alter' => 
+    'hook_module_implements_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_module_implements_alter',
       'definition' => 'function hook_module_implements_alter(&$implementations, $hook)',
       'description' => 'Alter the registry of modules implementing a hook.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1422,14 +1423,14 @@ array (
   }
 ',
     ),
-    'hook_system_theme_info' => 
+    'hook_system_theme_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_system_theme_info',
       'definition' => 'function hook_system_theme_info()',
       'description' => 'Return additional themes provided by modules.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1439,14 +1440,14 @@ array (
   return $themes;
 ',
     ),
-    'hook_system_info_alter' => 
+    'hook_system_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_system_info_alter',
       'definition' => 'function hook_system_info_alter(&$info, $file, $type)',
       'description' => 'Alter the information parsed from module and theme .info files',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1458,14 +1459,14 @@ array (
   }
 ',
     ),
-    'hook_permission' => 
+    'hook_permission' =>
     array (
       'type' => 'hook',
       'name' => 'hook_permission',
       'definition' => 'function hook_permission()',
       'description' => 'Define user permissions.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1479,14 +1480,14 @@ array (
   );
 ',
     ),
-    'hook_help' => 
+    'hook_help' =>
     array (
       'type' => 'hook',
       'name' => 'hook_help',
       'definition' => 'function hook_help($path, $arg)',
       'description' => 'Provide online user help.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1503,14 +1504,14 @@ array (
   }
 ',
     ),
-    'hook_theme' => 
+    'hook_theme' =>
     array (
       'type' => 'hook',
       'name' => 'hook_theme',
       'definition' => 'function hook_theme($existing, $type, $theme, $path)',
       'description' => 'Register a module (or theme\'s) theme implementations.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1540,14 +1541,14 @@ array (
   );
 ',
     ),
-    'hook_theme_registry_alter' => 
+    'hook_theme_registry_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_theme_registry_alter',
       'definition' => 'function hook_theme_registry_alter(&$theme_registry)',
       'description' => 'Alter the theme registry information returned from hook_theme().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1561,14 +1562,14 @@ array (
   }
 ',
     ),
-    'hook_custom_theme' => 
+    'hook_custom_theme' =>
     array (
       'type' => 'hook',
       'name' => 'hook_custom_theme',
       'definition' => 'function hook_custom_theme()',
       'description' => 'Return the machine-readable name of the theme to use for the current page.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1580,14 +1581,14 @@ array (
   }
 ',
     ),
-    'hook_xmlrpc' => 
+    'hook_xmlrpc' =>
     array (
       'type' => 'hook',
       'name' => 'hook_xmlrpc',
       'definition' => 'function hook_xmlrpc()',
       'description' => 'Register XML-RPC callbacks.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1603,14 +1604,14 @@ array (
   );
 ',
     ),
-    'hook_xmlrpc_alter' => 
+    'hook_xmlrpc_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_xmlrpc_alter',
       'definition' => 'function hook_xmlrpc_alter(&$methods)',
       'description' => 'Alters the definition of XML-RPC methods before they are called.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1632,14 +1633,14 @@ array (
   }
 ',
     ),
-    'hook_watchdog' => 
+    'hook_watchdog' =>
     array (
       'type' => 'hook',
       'name' => 'hook_watchdog',
       'definition' => 'function hook_watchdog(array $log_entry)',
       'description' => 'Log an event message.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1694,14 +1695,14 @@ array (
   drupal_mail(\'emaillog\', \'entry\', $to, $language, $params);
 ',
     ),
-    'hook_mail' => 
+    'hook_mail' =>
     array (
       'type' => 'hook',
       'name' => 'hook_mail',
       'definition' => 'function hook_mail($key, &$message, $params)',
       'description' => 'Prepare a message based on parameters; called from drupal_mail().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1744,14 +1745,14 @@ array (
   $message[\'body\'][] = drupal_html_to_text($body);
 ',
     ),
-    'hook_flush_caches' => 
+    'hook_flush_caches' =>
     array (
       'type' => 'hook',
       'name' => 'hook_flush_caches',
       'definition' => 'function hook_flush_caches()',
       'description' => 'Add a list of cache tables to be cleared.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1760,14 +1761,14 @@ array (
   return array(\'cache_example\');
 ',
     ),
-    'hook_modules_installed' => 
+    'hook_modules_installed' =>
     array (
       'type' => 'hook',
       'name' => 'hook_modules_installed',
       'definition' => 'function hook_modules_installed($modules)',
       'description' => 'Perform necessary actions after modules are installed.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1778,14 +1779,14 @@ array (
   }
 ',
     ),
-    'hook_modules_enabled' => 
+    'hook_modules_enabled' =>
     array (
       'type' => 'hook',
       'name' => 'hook_modules_enabled',
       'definition' => 'function hook_modules_enabled($modules)',
       'description' => 'Perform necessary actions after modules are enabled.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1797,14 +1798,14 @@ array (
   }
 ',
     ),
-    'hook_modules_disabled' => 
+    'hook_modules_disabled' =>
     array (
       'type' => 'hook',
       'name' => 'hook_modules_disabled',
       'definition' => 'function hook_modules_disabled($modules)',
       'description' => 'Perform necessary actions after modules are disabled.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1815,14 +1816,14 @@ array (
   }
 ',
     ),
-    'hook_modules_uninstalled' => 
+    'hook_modules_uninstalled' =>
     array (
       'type' => 'hook',
       'name' => 'hook_modules_uninstalled',
       'definition' => 'function hook_modules_uninstalled($modules)',
       'description' => 'Perform necessary actions after modules are uninstalled.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1836,14 +1837,14 @@ array (
   mymodule_cache_rebuild();
 ',
     ),
-    'hook_stream_wrappers' => 
+    'hook_stream_wrappers' =>
     array (
       'type' => 'hook',
       'name' => 'hook_stream_wrappers',
       'definition' => 'function hook_stream_wrappers()',
       'description' => 'Registers PHP stream wrapper implementations associated with a module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1886,14 +1887,14 @@ array (
   );
 ',
     ),
-    'hook_stream_wrappers_alter' => 
+    'hook_stream_wrappers_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_stream_wrappers_alter',
       'definition' => 'function hook_stream_wrappers_alter(&$wrappers)',
       'description' => 'Alters the list of PHP stream wrapper implementations.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1903,14 +1904,14 @@ array (
   $wrappers[\'private\'][\'name\'] = t(\'Slow files\');
 ',
     ),
-    'hook_file_load' => 
+    'hook_file_load' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_load',
       'definition' => 'function hook_file_load($files)',
       'description' => 'Load additional information into file objects.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1925,14 +1926,14 @@ array (
   }
 ',
     ),
-    'hook_file_validate' => 
+    'hook_file_validate' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_validate',
       'definition' => 'function hook_file_validate($file)',
       'description' => 'Check that files meet a given criteria.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1950,14 +1951,14 @@ array (
   return $errors;
 ',
     ),
-    'hook_file_presave' => 
+    'hook_file_presave' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_presave',
       'definition' => 'function hook_file_presave($file)',
       'description' => 'Act on a file being inserted or updated.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1967,14 +1968,14 @@ array (
   $file->timestamp -= 3600;
 ',
     ),
-    'hook_file_insert' => 
+    'hook_file_insert' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_insert',
       'definition' => 'function hook_file_insert($file)',
       'description' => 'Respond to a file being added.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -1987,14 +1988,14 @@ array (
   }
 ',
     ),
-    'hook_file_update' => 
+    'hook_file_update' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_update',
       'definition' => 'function hook_file_update($file)',
       'description' => 'Respond to a file being updated.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2011,14 +2012,14 @@ array (
   }
 ',
     ),
-    'hook_file_copy' => 
+    'hook_file_copy' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_copy',
       'definition' => 'function hook_file_copy($file, $source)',
       'description' => 'Respond to a file that has been copied.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2034,14 +2035,14 @@ array (
   }
 ',
     ),
-    'hook_file_move' => 
+    'hook_file_move' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_move',
       'definition' => 'function hook_file_move($file, $source)',
       'description' => 'Respond to a file that has been moved.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2057,14 +2058,14 @@ array (
   }
 ',
     ),
-    'hook_file_delete' => 
+    'hook_file_delete' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_delete',
       'definition' => 'function hook_file_delete($file)',
       'description' => 'Respond to a file being deleted.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2074,14 +2075,14 @@ array (
   db_delete(\'upload\')->condition(\'fid\', $file->fid)->execute();
 ',
     ),
-    'hook_file_download' => 
+    'hook_file_download' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_download',
       'definition' => 'function hook_file_download($uri)',
       'description' => 'Control access to private file downloads and specify HTTP headers.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2103,14 +2104,14 @@ array (
   }
 ',
     ),
-    'hook_file_url_alter' => 
+    'hook_file_url_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_url_alter',
       'definition' => 'function hook_file_url_alter(&$uri)',
       'description' => 'Alter the URL to a file.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2160,14 +2161,14 @@ array (
   }
 ',
     ),
-    'hook_requirements' => 
+    'hook_requirements' =>
     array (
       'type' => 'hook',
       'name' => 'hook_requirements',
       'definition' => 'function hook_requirements($phase)',
       'description' => 'Check installation requirements and do status reporting.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2219,14 +2220,14 @@ array (
   return $requirements;
 ',
     ),
-    'hook_schema' => 
+    'hook_schema' =>
     array (
       'type' => 'hook',
       'name' => 'hook_schema',
       'definition' => 'function hook_schema()',
       'description' => 'Define the current version of the database schema.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2287,14 +2288,14 @@ array (
   return $schema;
 ',
     ),
-    'hook_schema_alter' => 
+    'hook_schema_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_schema_alter',
       'definition' => 'function hook_schema_alter(&$schema)',
       'description' => 'Perform alterations to existing database schemas.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2309,14 +2310,14 @@ array (
   );
 ',
     ),
-    'hook_query_alter' => 
+    'hook_query_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_query_alter',
       'definition' => 'function hook_query_alter(QueryAlterableInterface $query)',
       'description' => 'Perform alterations to a structured query.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2327,14 +2328,14 @@ array (
   }
 ',
     ),
-    'hook_query_TAG_alter' => 
+    'hook_query_TAG_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_query_TAG_alter',
       'definition' => 'function hook_query_TAG_alter(QueryAlterableInterface $query)',
       'description' => 'Perform alterations to a structured query for a given tag.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2372,14 +2373,14 @@ array (
   }
 ',
     ),
-    'hook_install' => 
+    'hook_install' =>
     array (
       'type' => 'hook',
       'name' => 'hook_install',
       'definition' => 'function hook_install()',
       'description' => 'Perform setup tasks when the module is installed.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2398,14 +2399,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_update_N' => 
+    'hook_update_N' =>
     array (
       'type' => 'hook',
       'name' => 'hook_update_N',
       'definition' => 'function hook_update_N(&$sandbox)',
       'description' => 'Perform a single update.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2457,14 +2458,14 @@ array (
   throw new DrupalUpdateException(\'Something went wrong; here is what you should do.\');
 ',
     ),
-    'hook_update_dependencies' => 
+    'hook_update_dependencies' =>
     array (
       'type' => 'hook',
       'name' => 'hook_update_dependencies',
       'definition' => 'function hook_update_dependencies()',
       'description' => 'Return an array of information about module update dependencies.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2489,14 +2490,14 @@ array (
   return $dependencies;
 ',
     ),
-    'hook_update_last_removed' => 
+    'hook_update_last_removed' =>
     array (
       'type' => 'hook',
       'name' => 'hook_update_last_removed',
       'definition' => 'function hook_update_last_removed()',
       'description' => 'Return a number which is no longer available as hook_update_N().',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2507,14 +2508,14 @@ array (
   return 5103;
 ',
     ),
-    'hook_uninstall' => 
+    'hook_uninstall' =>
     array (
       'type' => 'hook',
       'name' => 'hook_uninstall',
       'definition' => 'function hook_uninstall()',
       'description' => 'Remove any information that the module sets.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2523,14 +2524,14 @@ array (
   variable_del(\'upload_file_types\');
 ',
     ),
-    'hook_enable' => 
+    'hook_enable' =>
     array (
       'type' => 'hook',
       'name' => 'hook_enable',
       'definition' => 'function hook_enable()',
       'description' => 'Perform necessary actions after module is enabled.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2539,14 +2540,14 @@ array (
   mymodule_cache_rebuild();
 ',
     ),
-    'hook_disable' => 
+    'hook_disable' =>
     array (
       'type' => 'hook',
       'name' => 'hook_disable',
       'definition' => 'function hook_disable()',
       'description' => 'Perform necessary actions before module is disabled.',
       'destination' => '%module.install',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2555,14 +2556,14 @@ array (
   mymodule_cache_rebuild();
 ',
     ),
-    'hook_registry_files_alter' => 
+    'hook_registry_files_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_registry_files_alter',
       'definition' => 'function hook_registry_files_alter(&$files, $modules)',
       'description' => 'Perform necessary alterations to the list of files parsed by the registry.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2582,14 +2583,14 @@ array (
   }
 ',
     ),
-    'hook_install_tasks' => 
+    'hook_install_tasks' =>
     array (
       'type' => 'hook',
       'name' => 'hook_install_tasks',
       'definition' => 'function hook_install_tasks(&$install_state)',
       'description' => 'Return an array of tasks to be performed by an installation profile.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2655,14 +2656,14 @@ array (
   return $tasks;
 ',
     ),
-    'hook_drupal_goto_alter' => 
+    'hook_drupal_goto_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_drupal_goto_alter',
       'definition' => 'function hook_drupal_goto_alter(&$path, &$options, &$http_response_code)',
       'description' => 'Change the page the user is sent to by drupal_goto().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2672,14 +2673,14 @@ array (
   $http_response_code = 500;
 ',
     ),
-    'hook_html_head_alter' => 
+    'hook_html_head_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_html_head_alter',
       'definition' => 'function hook_html_head_alter(&$head_elements)',
       'description' => 'Alter XHTML HEAD tags before they are rendered by drupal_get_html_head().',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2693,14 +2694,14 @@ array (
   }
 ',
     ),
-    'hook_install_tasks_alter' => 
+    'hook_install_tasks_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_install_tasks_alter',
       'definition' => 'function hook_install_tasks_alter(&$tasks, $install_state)',
       'description' => 'Alter the full list of installation tasks.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2711,14 +2712,14 @@ array (
   $tasks[\'install_select_locale\'][\'function\'] = \'myprofile_locale_selection\';
 ',
     ),
-    'hook_file_mimetype_mapping_alter' => 
+    'hook_file_mimetype_mapping_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_file_mimetype_mapping_alter',
       'definition' => 'function hook_file_mimetype_mapping_alter(&$mapping)',
       'description' => 'Alter MIME type mappings used to determine MIME type from a file extension.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2732,14 +2733,14 @@ array (
   $mapping[\'extensions\'][\'ogg\'] = 189;
 ',
     ),
-    'hook_action_info' => 
+    'hook_action_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_action_info',
       'definition' => 'function hook_action_info()',
       'description' => 'Declares information about actions.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2769,14 +2770,14 @@ array (
   );
 ',
     ),
-    'hook_actions_delete' => 
+    'hook_actions_delete' =>
     array (
       'type' => 'hook',
       'name' => 'hook_actions_delete',
       'definition' => 'function hook_actions_delete($aid)',
       'description' => 'Executes code after an action is deleted.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2787,14 +2788,14 @@ array (
     ->execute();
 ',
     ),
-    'hook_action_info_alter' => 
+    'hook_action_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_action_info_alter',
       'definition' => 'function hook_action_info_alter(&$actions)',
       'description' => 'Alters the actions declared by another module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2803,14 +2804,14 @@ array (
   $actions[\'node_unpublish_action\'][\'label\'] = t(\'Unpublish and remove from public view.\');
 ',
     ),
-    'hook_archiver_info' => 
+    'hook_archiver_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_archiver_info',
       'definition' => 'function hook_archiver_info()',
       'description' => 'Declare archivers to the system.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2824,14 +2825,14 @@ array (
   );
 ',
     ),
-    'hook_archiver_info_alter' => 
+    'hook_archiver_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_archiver_info_alter',
       'definition' => 'function hook_archiver_info_alter(&$info)',
       'description' => 'Alter archiver information declared by other modules.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2840,14 +2841,14 @@ array (
   $info[\'tar\'][\'extensions\'][] = \'tgz\';
 ',
     ),
-    'hook_date_format_types' => 
+    'hook_date_format_types' =>
     array (
       'type' => 'hook',
       'name' => 'hook_date_format_types',
       'definition' => 'function hook_date_format_types()',
       'description' => 'Define additional date types.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2861,14 +2862,14 @@ array (
   );
 ',
     ),
-    'hook_date_format_types_alter' => 
+    'hook_date_format_types_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_date_format_types_alter',
       'definition' => 'function hook_date_format_types_alter(&$types)',
       'description' => 'Modify existing date types.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2879,14 +2880,14 @@ array (
   }
 ',
     ),
-    'hook_date_formats' => 
+    'hook_date_formats' =>
     array (
       'type' => 'hook',
       'name' => 'hook_date_formats',
       'definition' => 'function hook_date_formats()',
       'description' => 'Define additional date formats.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2911,14 +2912,14 @@ array (
   );
 ',
     ),
-    'hook_date_formats_alter' => 
+    'hook_date_formats_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_date_formats_alter',
       'definition' => 'function hook_date_formats_alter(&$formats)',
       'description' => 'Alter date formats declared by another module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2929,14 +2930,14 @@ array (
   }
 ',
     ),
-    'hook_page_delivery_callback_alter' => 
+    'hook_page_delivery_callback_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_page_delivery_callback_alter',
       'definition' => 'function hook_page_delivery_callback_alter(&$callback)',
       'description' => 'Alters the delivery callback used to send the result of the page callback to the browser.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2950,14 +2951,14 @@ array (
   }
 ',
     ),
-    'hook_system_themes_page_alter' => 
+    'hook_system_themes_page_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_system_themes_page_alter',
       'definition' => 'function hook_system_themes_page_alter(&$theme_groups)',
       'description' => 'Alters theme operation links.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2975,14 +2976,14 @@ array (
   }
 ',
     ),
-    'hook_url_inbound_alter' => 
+    'hook_url_inbound_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_url_inbound_alter',
       'definition' => 'function hook_url_inbound_alter(&$path, $original_path, $path_language)',
       'description' => 'Alters inbound URL requests.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -2995,14 +2996,14 @@ array (
   }
 ',
     ),
-    'hook_url_outbound_alter' => 
+    'hook_url_outbound_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_url_outbound_alter',
       'definition' => 'function hook_url_outbound_alter(&$path, &$options, $original_path)',
       'description' => 'Alters outbound URLs.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3023,14 +3024,14 @@ array (
   }
 ',
     ),
-    'hook_username_alter' => 
+    'hook_username_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_username_alter',
       'definition' => 'function hook_username_alter(&$name, $account)',
       'description' => 'Alter the username that is displayed for a user.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3042,14 +3043,14 @@ array (
   }
 ',
     ),
-    'hook_tokens' => 
+    'hook_tokens' =>
     array (
       'type' => 'hook',
       'name' => 'hook_tokens',
       'definition' => 'function hook_tokens($type, $tokens, array $data = array(), array $options = array())',
       'description' => 'Provide replacement values for placeholder tokens.',
       'destination' => '%module.tokens.inc',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3110,14 +3111,14 @@ array (
   return $replacements;
 ',
     ),
-    'hook_tokens_alter' => 
+    'hook_tokens_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_tokens_alter',
       'definition' => 'function hook_tokens_alter(array &$replacements, array $context)',
       'description' => 'Alter replacement values for placeholder tokens.',
       'destination' => '%module.tokens.inc',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3146,14 +3147,14 @@ array (
   }
 ',
     ),
-    'hook_token_info' => 
+    'hook_token_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_token_info',
       'definition' => 'function hook_token_info()',
       'description' => 'Provide information about available placeholder tokens and token types.',
       'destination' => '%module.tokens.inc',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3197,14 +3198,14 @@ array (
   );
 ',
     ),
-    'hook_token_info_alter' => 
+    'hook_token_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_token_info_alter',
       'definition' => 'function hook_token_info_alter(&$data)',
       'description' => 'Alter the metadata about available placeholder tokens and token types.',
       'destination' => '%module.tokens.inc',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3228,14 +3229,14 @@ array (
   );
 ',
     ),
-    'hook_batch_alter' => 
+    'hook_batch_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_batch_alter',
       'definition' => 'function hook_batch_alter(&$batch)',
       'description' => 'Alter batch information before a batch is processed.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3253,14 +3254,14 @@ array (
   }
 ',
     ),
-    'hook_updater_info' => 
+    'hook_updater_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_updater_info',
       'definition' => 'function hook_updater_info()',
       'description' => 'Provide information on Updaters (classes that can update Drupal).',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3280,14 +3281,14 @@ array (
   );
 ',
     ),
-    'hook_updater_info_alter' => 
+    'hook_updater_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_updater_info_alter',
       'definition' => 'function hook_updater_info_alter(&$updaters)',
       'description' => 'Alter the Updater information array.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3298,14 +3299,14 @@ array (
   $updaters[\'theme\'][\'weight\'] = -1;
 ',
     ),
-    'hook_countries_alter' => 
+    'hook_countries_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_countries_alter',
       'definition' => 'function hook_countries_alter(&$countries)',
       'description' => 'Alter the default country list.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3315,14 +3316,14 @@ array (
   $countries[\'EB\'] = \'Elbonia\';
 ',
     ),
-    'hook_menu_site_status_alter' => 
+    'hook_menu_site_status_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_menu_site_status_alter',
       'definition' => 'function hook_menu_site_status_alter(&$menu_site_status, $path)',
       'description' => 'Control site status before menu dispatching.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3334,14 +3335,14 @@ array (
   }
 ',
     ),
-    'hook_filetransfer_info' => 
+    'hook_filetransfer_info' =>
     array (
       'type' => 'hook',
       'name' => 'hook_filetransfer_info',
       'definition' => 'function hook_filetransfer_info()',
       'description' => 'Register information about FileTransfer classes provided by a module.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3356,14 +3357,14 @@ array (
   return $info;
 ',
     ),
-    'hook_filetransfer_info_alter' => 
+    'hook_filetransfer_info_alter' =>
     array (
       'type' => 'hook',
       'name' => 'hook_filetransfer_info_alter',
       'definition' => 'function hook_filetransfer_info_alter(&$filetransfer_info)',
       'description' => 'Alter the FileTransfer class registry.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3377,14 +3378,14 @@ array (
   }
 ',
     ),
-    'callback_queue_worker' => 
+    'callback_queue_worker' =>
     array (
       'type' => 'callback',
       'name' => 'callback_queue_worker',
       'definition' => 'function callback_queue_worker($queue_item_data)',
       'description' => 'Work on a single queue item.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3395,14 +3396,14 @@ array (
   node_save($node);
 ',
     ),
-    'callback_entity_info_uri' => 
+    'callback_entity_info_uri' =>
     array (
       'type' => 'callback',
       'name' => 'callback_entity_info_uri',
       'definition' => 'function callback_entity_info_uri($entity)',
       'description' => 'Return the URI for an entity.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3413,14 +3414,14 @@ array (
   );
 ',
     ),
-    'callback_entity_info_label' => 
+    'callback_entity_info_label' =>
     array (
       'type' => 'callback',
       'name' => 'callback_entity_info_label',
       'definition' => 'function callback_entity_info_label($entity, $entity_type)',
       'description' => 'Return the label of an entity.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3429,14 +3430,14 @@ array (
   return empty($entity->title) ? \'Untitled entity\' : $entity->title;
 ',
     ),
-    'callback_entity_info_language' => 
+    'callback_entity_info_language' =>
     array (
       'type' => 'callback',
       'name' => 'callback_entity_info_language',
       'definition' => 'function callback_entity_info_language($entity, $entity_type)',
       'description' => 'Return the language code of the entity.',
       'destination' => '%module.module',
-      'dependencies' => 
+      'dependencies' =>
       array (
       ),
       'group' => 'system',
@@ -3446,4 +3447,4 @@ array (
 ',
     ),
   ),
-)
+);
