@@ -65,6 +65,12 @@ class ServicesCollector {
     // data from the static Drupal class.
     $all_services = array_merge($all_services, $static_container_services);
 
+    // Filter for testing sample data collection.
+    if (!empty($this->environment->sample_data_write)) {
+      $static_container_services = array_intersect_key($static_container_services, $this->testingServiceNames);
+      $all_services = array_intersect_key($all_services, $this->testingServiceNames);
+    }
+
     $return = [
       'primary' => $static_container_services,
       'all' => $all_services,
@@ -284,11 +290,6 @@ class ServicesCollector {
 
     // Sort by ID.
     ksort($service_definitions);
-
-    // Filter for testing sample data collection.
-    if (!empty($this->environment->sample_data_write)) {
-      $service_definitions = array_intersect_key($service_definitions, $this->testingServiceNames);
-    }
 
     return $service_definitions;
   }
