@@ -14,7 +14,7 @@ class ServicesCollector {
    */
   protected $testingServiceNames = [
     'current_user' => TRUE,
-    'entity.manager' => TRUE,
+    'entity_type.manager' => TRUE,
   ];
 
   /**
