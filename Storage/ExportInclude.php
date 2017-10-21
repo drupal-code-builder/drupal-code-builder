@@ -41,7 +41,7 @@ class ExportInclude {
    */
   public function store($key, $data) {
     $directory = $this->environment->getHooksDirectory();
-    $export = '<?php $data = ' . "\n" . var_export($data, TRUE) . ';';
+    $export = '<?php $data =' . "\n" . var_export($data, TRUE) . ';';
     file_put_contents("{$directory}/{$key}_processed.php", $export);
   }
 
