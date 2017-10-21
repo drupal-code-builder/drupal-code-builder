@@ -1,18 +1,40 @@
 array (
-  'current_user' => 
+  'primary' => 
   array (
-    'id' => 'current_user',
-    'label' => 'Current active user',
-    'static_method' => 'currentUser',
-    'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
-    'description' => 'The current active user',
+    'current_user' => 
+    array (
+      'id' => 'current_user',
+      'label' => 'Current active user',
+      'static_method' => 'currentUser',
+      'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
+      'description' => 'The current active user',
+    ),
+    'entity_type.manager' => 
+    array (
+      'id' => 'entity_type.manager',
+      'label' => 'Entity type manager',
+      'static_method' => 'entityTypeManager',
+      'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
+      'description' => 'The entity type manager',
+    ),
   ),
-  'entity.manager' => 
+  'all' => 
   array (
-    'id' => 'entity.manager',
-    'label' => 'Entity manager service',
-    'static_method' => 'entityManager',
-    'interface' => '\\Drupal\\Core\\Entity\\EntityManagerInterface',
-    'description' => 'The entity manager service',
+    'entity_type.manager' => 
+    array (
+      'id' => 'entity_type.manager',
+      'label' => 'Entity type manager',
+      'static_method' => 'entityTypeManager',
+      'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
+      'description' => 'The entity type manager',
+    ),
+    'current_user' => 
+    array (
+      'id' => 'current_user',
+      'label' => 'Current active user',
+      'static_method' => 'currentUser',
+      'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
+      'description' => 'The current active user',
+    ),
   ),
 )
