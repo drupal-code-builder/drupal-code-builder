@@ -163,6 +163,8 @@ class ServicesCollector {
       ];
     }
 
+    ksort($data);
+
     return $data;
   }
 
