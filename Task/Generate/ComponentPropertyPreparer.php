@@ -56,10 +56,28 @@ class ComponentPropertyPreparer {
       $options_callback = $property_info['options'];
       // We may have prepared this options array from a callback previously,
       // when preparing multiple child items of a compound property.
-      if (!is_callable($options_callback)) {
+      if (!is_callable($options_callback) && is_array($options_callback)) {
         return;
       }
-      $options = $options_callback($property_info);
+
+      if (is_callable($options_callback)) {
+        // The 'options' attribute is a callback that supplies the options
+        // array.
+        $options = $options_callback($property_info);
+      }
+      elseif (is_string($options_callback) && strpos($options_callback, ':') !== FALSE) {
+        // The 'options' attribute is in the form 'TASKNAME:METHOD', to call to
+        // get the options array.
+        list($task_name, $method) = explode(':', $options_callback);
+
+        $task_handler = \DrupalCodeBuilder\Factory::getTask($task_name);
+
+        $options = call_user_func([$task_handler, $method]);
+      }
+      else {
+        // The 'options' attribute format is incorrect.
+        throw new \Exception("Unable to prepare options for property $property_name.");
+      }
 
       $property_info['options'] = $options;
 

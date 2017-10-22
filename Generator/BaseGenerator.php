@@ -229,8 +229,11 @@ abstract class BaseGenerator {
    *    allow the user to override this. For example, the description on
    *    permissions, which can be derived from the machine name. Defaults to
    *    FALSE.
-   *  - 'options': (optional) A callable which returns a list of options for the
-   *    property. This receives the component data assembled so far.
+   *  - 'options': (optional) One of:
+   *    - A callable which returns a list of options for the property. This
+   *      receives the component data assembled so far.
+   *    - A string in the form 'TASKNAME:METHOD' to call to get the array of
+   *      options.
    *  - 'options_structured': (optional) A callable which returns data about the
    *    possible options for the property. Use this as an alternative to the
    *    'options' property if you want more information. This returns an array
