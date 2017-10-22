@@ -56,6 +56,11 @@ class Serialized {
     $data_file = "$directory/{$key}_processed.php";
     if (file_exists($data_file)) {
       $data = unserialize(file_get_contents($data_file));
+
+      if ($data === FALSE) {
+        throw new \Exception("Data file {$data_file} does not contain PHP serialized data.");
+      }
+
       return $data;
     }
 
