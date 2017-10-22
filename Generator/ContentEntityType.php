@@ -178,7 +178,7 @@ class ContentEntityType extends EntityTypeBase {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    dump($this->component_data);
+    //dump($this->component_data);
 
     $method_body = [];
     // Calling the parent defines fields for entity keys.
