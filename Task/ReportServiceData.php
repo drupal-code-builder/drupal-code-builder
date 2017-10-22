@@ -70,8 +70,10 @@ class ReportServiceData extends ReportHookDataFolder {
    *  The processed Service types data.
    */
   public function listServiceTypeData() {
-    $service_types_data = $this->environment->getStorage()->retrieve('service_tag_types');
-    return $service_types_data;
+    if (!isset($this->serviceTypesData)) {
+      $this->serviceTypesData = $this->environment->getStorage()->retrieve('service_tag_types');
+    }
+    return $this->serviceTypesData;
   }
 
   /**
