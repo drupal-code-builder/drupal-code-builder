@@ -3,9 +3,12 @@
 namespace DrupalCodeBuilder\Task;
 
 /**
- * Task handler for reporting
+ * Task handler for reporting a summary of all stored analysis data.
+ *
+ * TODO: change the base class; this only extends from ReportHookDataFolder to
+ * get the lastUpdatedDate() method.
  */
-class ReportSummary extends Base {
+class ReportSummary extends ReportHookDataFolder {
 
   /**
    * The sanity level this task requires to operate.
