@@ -56,11 +56,6 @@ class Service extends PHPClassFile {
     $service_types_data = $task_handler_report_services->listServiceTypeData();
     $presets = [];
     foreach ($service_types_data as $type_tag => $type_data) {
-      // Make a label from the interface name.
-      $interface_pieces = explode('\\', $type_data['interface']);
-      $label = array_pop($interface_pieces);
-      $label = preg_replace('@Interface$@', '', $label);
-
       // Form the suggested service name from the last portion of the tag, thus:
       // 'module_install.uninstall_validator' -> 'mymodule.uninstall_validator'
       $type_tag_pieces = explode('.', $type_tag);
@@ -68,7 +63,7 @@ class Service extends PHPClassFile {
 
       $presets[$type_tag] = [
         // Option label.
-        'label' => $label,
+        'label' => $type_data['label'],
         'data' => [
           // Values that are forced on other properties.
           // These are set in the process stage.

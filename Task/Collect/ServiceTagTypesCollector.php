@@ -92,9 +92,16 @@ class ServiceTagTypesCollector {
           continue;
         }
 
+        // Make a label from the interface name: take the short interface name,
+        // and remove an 'Interface' suffix.
+        $interface_pieces = explode('\\', $type);
+        $label = array_pop($interface_pieces);
+        $label = preg_replace('@Interface$@', '', $label);
+
         $type_hint_methods = $this->methodCollector->collectMethods($type);
 
         $data[$tag] = [
+          'label' => $label,
           'interface' => $type,
           'methods' => $type_hint_methods,
         ];
