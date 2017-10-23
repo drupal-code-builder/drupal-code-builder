@@ -315,6 +315,7 @@ class Module extends RootComponent {
       ),
       'tests' => array(
         'label' => "Simpletest test case class",
+        'description' => 'NOTICE: These are deprecated in Drupal 8.',
         'required' => FALSE,
         'default' => FALSE,
         'format' => 'boolean',

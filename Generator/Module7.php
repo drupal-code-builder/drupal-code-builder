@@ -21,6 +21,8 @@ class Module7 extends Module {
     unset($component_data_definition['plugins']);
     unset($component_data_definition['plugin_types']);
     unset($component_data_definition['services']);
+    unset($component_data_definition['tests']['description']);
+
     // TODO: implement these for D7.
     unset($component_data_definition['content_entity_types']);
     unset($component_data_definition['theme_hooks']);
