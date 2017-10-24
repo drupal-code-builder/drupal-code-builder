@@ -14,9 +14,6 @@ class PHPClassFile extends PHPFile {
 
   /**
    * Constructor method; sets the component data.
-   *
-   * Properties in $component_data:
-   *  - 'qualified_class_name': The fully-qualified class name.
    */
   function __construct($component_name, $component_data, $root_generator) {
     parent::__construct($component_name, $component_data, $root_generator);
@@ -33,6 +30,63 @@ class PHPClassFile extends PHPFile {
         'label' => 'The qualifed classname pieces, relative to the module namespace.',
         'format' => 'array',
         'internal' => TRUE,
+      ],
+      'qualified_class_name_pieces' => [
+        'computed' => TRUE,
+        'format' => 'array',
+        'default' => function($component_data) {
+          $class_name_pieces = array_merge([
+            'Drupal',
+            '%module',
+          ], $component_data['relative_class_name']);
+
+          return $class_name_pieces;
+        },
+      ],
+      'qualified_class_name' => [
+        'computed' => TRUE,
+        'format' => 'string',
+        'default' => function($component_data) {
+          $class_name_pieces = array_merge([
+            'Drupal',
+            '%module',
+          ], $component_data['relative_class_name']);
+
+          return self::makeQualifiedClassName($class_name_pieces);
+        },
+      ],
+      // This comes after the relative classname, since internally we usually
+      // want to specify that rather than this.
+      // For UIs though, it'll be the other way round: the user is asked the
+      // short class name, and other things should be derived from it. To do
+      // this, subclasses should add a property ahead of all these, and then
+      // derive relative_class_name.
+      'plain_class_name' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return end($component_data['qualified_class_name_pieces']);
+        },
+      ],
+      'namespace' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          $qualified_class_name_pieces = $component_data['qualified_class_name_pieces'];
+          array_pop($qualified_class_name_pieces);
+
+          return implode('\\', $qualified_class_name_pieces);
+        },
+      ],
+      'path' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          // Lop off the initial Drupal\module and the final class name to
+          // build the path.
+          $path_pieces = array_slice($component_data['qualified_class_name_pieces'], 2, -1);
+          // Add the initial src to the front.
+          array_unshift($path_pieces, 'src');
+
+          return implode('/', $path_pieces);
+        },
       ],
       'docblock_first_line' => [
         'format' => 'string',
@@ -73,18 +127,12 @@ class PHPClassFile extends PHPFile {
    *  TODO The fully-qualified class name, e.g. 'Drupal\\foo\\Bar\\Classname'.
    */
   protected function setClassNames($relative_class_name_pieces) {
-    $class_name_pieces = array_merge([
-      'Drupal',
-      '%module',
-    ], $relative_class_name_pieces);
-
-    $this->qualified_class_name = self::makeQualifiedClassName($class_name_pieces);
-
-    $this->plain_class_name = array_pop($class_name_pieces);
-    $this->namespace  = implode('\\', $class_name_pieces);
-    $path_pieces = array_slice($class_name_pieces, 2);
-    array_unshift($path_pieces, 'src');
-    $this->path = implode('/', $path_pieces);
+    // Quick backwards-compatibility hack.
+    // TODO: remove this method, change all uses.
+    $this->qualified_class_name = $this->component_data['qualified_class_name'];
+    $this->plain_class_name = $this->component_data['plain_class_name'];
+    $this->namespace = $this->component_data['namespace'];
+    $this->path = $this->component_data['path'];
   }
 
   /**
