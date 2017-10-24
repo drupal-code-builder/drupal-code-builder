@@ -67,7 +67,7 @@ abstract class EntityTypeBase extends PHPClassFile {
           }
           return $options;
         },
-        'processing' => function($value, &$component_data, &$property_info) {
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
           $lookup = [];
           foreach ($property_info['_long_options'] as $qualified_class_name => $text) {
             $short_class_name = substr(strrchr($qualified_class_name, "\\"), 1);

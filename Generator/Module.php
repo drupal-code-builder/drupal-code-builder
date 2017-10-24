@@ -182,7 +182,7 @@ class Module extends RootComponent {
         },
         // The processing callback alters the component data in place, and may
         // in fact alter another value.
-        'processing' => function($value, &$component_data, &$property_info) {
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
           // TODO: the options aren't there, as generateComponent() only gets
           // given data, not the component info array. However, it's probably
           // better to re-compute these lazily rather than do them all.
@@ -228,7 +228,7 @@ class Module extends RootComponent {
 
           return $hook_options;
         },
-        'processing' => function($value, &$component_data, &$property_info) {
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
           $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
           // Get the flat list of hooks, standardized to lower case.
           $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());

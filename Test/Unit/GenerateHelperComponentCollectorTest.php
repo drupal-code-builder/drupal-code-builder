@@ -43,7 +43,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'computed' => TRUE,
       ],
       'plain_property_processing' => [
-        'processing' => function($value, &$component_data, &$property_info) {
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
           $component_data['plain_property_processing'] = 'processed_value:' . $value;
         },
       ],
@@ -51,7 +51,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'plain_property_process_default_processing' => [
         'default' => 'default_value',
         'process_default' => TRUE,
-        'processing' => function($value, &$component_data, &$property_info) {
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
           $component_data['plain_property_process_default_processing'] = 'processed_value:' . $value;
         },
       ],

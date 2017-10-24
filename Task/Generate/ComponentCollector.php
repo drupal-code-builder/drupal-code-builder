@@ -367,7 +367,7 @@ class ComponentCollector {
       if (isset($property_info['processing']) && !empty($component_data[$property_name])) {
         $processing_callback = $property_info['processing'];
 
-        $processing_callback($component_data[$property_name], $component_data, $property_info);
+        $processing_callback($component_data[$property_name], $component_data, $property_name, $property_info);
       }
     } // processing callback
 

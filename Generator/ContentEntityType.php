@@ -30,7 +30,7 @@ class ContentEntityType extends EntityTypeBase {
             ],
           ];
         },
-        'processing' => function($value, &$component_data, &$property_info) {
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
           // Fill in defaults if an item is requested.
           // Bit faffy, but needed for non-progressive UIs.
           if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
