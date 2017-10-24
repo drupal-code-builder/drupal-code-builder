@@ -74,6 +74,36 @@ class ComponentPlugins8Test extends TestBase {
   }
 
   /**
+   * Test Plugins component using the plugin folder name.
+   */
+  function testPluginsGenerationFromPluginFolder() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          // Specify the folder name rather than the plugin ID.
+          'plugin_type' => 'Field/FieldFormatter',
+          'plugin_name' => 'alpha',
+        ]
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(2, $files, "Expected number of files is returned.");
+    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertContains("src/Plugin/Field/FieldFormatter/Alpha.php", $file_names, "The files list has a plugin file.");
+  }
+
+  /**
    * Test Plugins component with injected services.
    */
   function testPluginsGenerationWithServices() {
