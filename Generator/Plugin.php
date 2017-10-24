@@ -52,21 +52,7 @@ class Plugin extends PHPClassFile {
 
     // The plugin type has already been validated by the plugin_type property's
     // processing.
-    $plugin_data = $plugin_types_data[$plugin_type];
-
-    $component_data['plugin_type_data'] = $plugin_data;
-
-    // Create the relative qualified class name.
-    // The full class name will be of the form:
-    //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
-    $component_data['relative_class_name'] = array_merge(
-      // Plugin subdirectory.
-      $this->pathToNamespacePieces($component_data['plugin_type_data']['subdir']),
-      // Plugin ID.
-      [
-        self::snakeToCamel($component_data['original_plugin_name']),
-      ]
-    );
+    $component_data['plugin_type_data'] = $plugin_types_data[$plugin_type];
 
     parent::__construct($component_name, $component_data, $root_generator);
   }
@@ -75,7 +61,7 @@ class Plugin extends PHPClassFile {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + array(
+    $data_definition = array(
       'plugin_type' => array(
         'label' => 'Plugin type',
         'description' => "The identifier of the plugin type. This can be either the manager service name with the 'plugin.manager.' prefix removed, " .
@@ -111,6 +97,18 @@ class Plugin extends PHPClassFile {
               throw new InvalidInputException("Plugin type {$value} not found.");
             }
           }
+
+          // Set the relative qualified class name.
+          // The full class name will be of the form:
+          //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
+          $component_data['relative_class_name'] = array_merge(
+            // Plugin subdirectory.
+            self::pathToNamespacePieces($plugin_data['subdir']),
+            // Plugin ID.
+            [
+              self::snakeToCamel($component_data['plugin_name']),
+            ]
+          );
         },
       ),
       'plugin_name' => array(
@@ -146,6 +144,11 @@ class Plugin extends PHPClassFile {
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
     );
+
+    // Put the parent definitions after ours.
+    $data_definition += parent::componentDataDefinition();
+
+    return $data_definition;
   }
 
   /**
@@ -375,7 +378,7 @@ class Plugin extends PHPClassFile {
   /**
    * TODO: is there a core function for this?
    */
-  function pathToNamespacePieces($path) {
+  static function pathToNamespacePieces($path) {
     return explode('/', $path);
   }
 
