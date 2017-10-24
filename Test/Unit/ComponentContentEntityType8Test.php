@@ -86,6 +86,16 @@ class ComponentContentEntityType8Test extends TestBase {
           'bundle_entity' => [
             0 => [
               'entity_type_id' => 'kitty_cat_type',
+              'entity_properties' => [
+                0 => [
+                  'name' => 'foo',
+                  'type' => 'string',
+                ],
+                1 => [
+                  'name' => 'colour',
+                  'type' => 'string',
+                ],
+              ],
             ],
           ],
           'base_fields' => [
@@ -104,12 +114,14 @@ class ComponentContentEntityType8Test extends TestBase {
     );
 
     $files = $this->generateModuleFiles($module_data);
-    //dump($files);
 
-    $this->assertCount(5, $files, "Expected number of files is returned.");
+    $this->assertCount(6, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatType.php", $files, "The files list has a bundle entity class file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatTypeInterface.php", $files, "The files list has a bundle entity interface file.");
+    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -120,6 +132,18 @@ class ComponentContentEntityType8Test extends TestBase {
     // TODO: the annotation assertion doens't handle arrays or nested
     // annotations.
     //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
+
+    $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
+
+    $this->assertNoTrailingWhitespace($bundle_entity_class_file);
+    $this->assertClassFileFormatting($bundle_entity_class_file);
+    $this->assertNamespace(['Drupal', $module_name, 'Entity'], $bundle_entity_class_file);
+    $this->assertClass('KittyCatType extends ConfigEntityBase', $bundle_entity_class_file);
+
+    $config_yaml_file = $files['config/schema/test_module.schema.yml'];
+    $this->assertYamlProperty($config_yaml_file, 'test_module.kitty_cat_type');
+    $this->assertYamlProperty($config_yaml_file, 'type', 'config_entity');
+    $this->assertYamlProperty($config_yaml_file, 'label', 'Kitty Cat Type');
   }
 
 }
