@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use \DrupalCodeBuilder\Exception\InvalidInputException;
+
 /**
  * Tests the Plugins generator class.
  *
@@ -76,7 +78,7 @@ class ComponentPlugins8Test extends TestBase {
   /**
    * Test Plugins component using the plugin folder name.
    */
-  function testPluginsGenerationFromPluginFolder() {
+  function testPluginsGenerationBadPluginType() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -101,6 +103,33 @@ class ComponentPlugins8Test extends TestBase {
     $this->assertCount(2, $files, "Expected number of files is returned.");
     $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
     $this->assertContains("src/Plugin/Field/FieldFormatter/Alpha.php", $file_names, "The files list has a plugin file.");
+  }
+
+  /**
+   * Test Plugins component with an invalid plugin type.
+   */
+  function testPluginsGenerationFromPluginFolder() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          'plugin_type' => 'made_up',
+          'plugin_name' => 'alpha',
+        ]
+      ),
+      'readme' => FALSE,
+    );
+
+    $this->expectException(InvalidInputException::class);
+
+    $files = $this->generateModuleFiles($module_data);
   }
 
   /**
