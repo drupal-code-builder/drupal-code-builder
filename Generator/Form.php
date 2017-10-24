@@ -37,8 +37,6 @@ class Form extends PHPClassFile {
     // TODO: this should be done in a property processing callback.
     $component_data['form_class_name'] = ucfirst($component_data['form_class_name']);
 
-    $component_data['relative_class_name'] = ['Form', $component_data['form_class_name']];
-
     //ddpr($component_data);
 
     parent::__construct($component_name, $component_data, $root_generator);
@@ -58,7 +56,7 @@ class Form extends PHPClassFile {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + array(
+    $data_definition = array(
       'form_class_name' => array(
         'label' => 'Form class name',
         'required' => TRUE,
@@ -76,6 +74,16 @@ class Form extends PHPClassFile {
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
     );
+
+    // Put the parent definitions after ours.
+    $data_definition += parent::componentDataDefinition();
+
+    // Take the class name from the service name.
+    $data_definition['relative_class_name']['default'] = function($component_data) {
+      return ['Form', $component_data['form_class_name']];
+    };
+
+    return $data_definition;
   }
 
   /**

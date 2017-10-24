@@ -13,21 +13,15 @@ namespace DrupalCodeBuilder\Generator;
 class AdminSettingsForm extends Form {
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
+   * {@inheritdoc}
    */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'form_class_name' => 'AdminSettingsForm',
-    );
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
 
-    parent::__construct($component_name, $component_data, $root_generator);
+    $data_definition['form_class_name']['default'] = 'AdminSettingsForm';
+    $data_definition['form_class_name']['process_default'] = TRUE;
+
+    return $data_definition;
   }
 
   /**
