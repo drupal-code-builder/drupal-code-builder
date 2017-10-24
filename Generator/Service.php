@@ -26,22 +26,6 @@ class Service extends PHPClassFile {
       $component_data['prefixed_service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
     }
 
-    // Allow components to specify a plain class name (or indeed, cheat, and
-    // specify namespaces that come beneath the module namespace).
-    if (empty($component_data['plain_class_name']) && empty($component_data['relative_class_name'])) {
-      // The service name is its ID as a service.
-      // implode and ucfirst()
-      $service_id = $component_data['service_name'];
-      $service_id_pieces = preg_split('/[\._]/', $service_id);
-      // Create an unqualified class name by turning this into camel case.
-      $component_data['plain_class_name'] = implode('', array_map('ucfirst', $service_id_pieces));
-
-      $component_data['relative_class_name'] = [$component_data['plain_class_name']];
-    }
-    else {
-      $component_data['plain_class_name'] = end($component_data['relative_class_name']);
-    }
-
     parent::__construct($component_name, $component_data, $root_generator);
   }
 
@@ -49,8 +33,6 @@ class Service extends PHPClassFile {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
-
     // Create the presets definition for service tag type property.
     $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
     $service_types_data = $task_handler_report_services->listServiceTypeData();
@@ -97,7 +79,7 @@ class Service extends PHPClassFile {
       ];
     }
 
-    $data_definition += array(
+    $data_definition = array(
       'service_tag_type' => [
         'label' => 'Service type preset',
         'presets' => $presets,
@@ -120,6 +102,22 @@ class Service extends PHPClassFile {
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
     );
+
+    // Put the parent definitions after ours.
+    $data_definition += parent::componentDataDefinition();
+
+    // Take the class name from the service name.
+    $data_definition['relative_class_name']['default'] = function($component_data) {
+      // The service name is its ID as a service.
+      // implode and ucfirst()
+      $service_id = $component_data['service_name'];
+      $service_id_pieces = preg_split('/[\._]/', $service_id);
+      // Create an unqualified class name by turning this into camel case.
+      $plain_class_name = implode('', array_map('ucfirst', $service_id_pieces));
+
+      // Services are typically in the module's top namespace.
+      return [$plain_class_name];
+    };
 
     return $data_definition;
   }
