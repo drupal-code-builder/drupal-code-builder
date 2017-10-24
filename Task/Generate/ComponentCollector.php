@@ -348,16 +348,15 @@ class ComponentCollector {
 
     }
 
-    // Set defaults for properties that don't have a value yet.
+    // Set defaults and apply processing callbacks.
     foreach ($component_data_info as $property_name => $property_info) {
+      // Set defaults for properties that don't have a value yet.
       $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
-    }
 
-    // Allow each property to apply its processing callback. Note that this may
-    // set or alter other properties in the component data array.
-    foreach ($component_data_info as $property_name => $property_info) {
+      // Allow each property to apply its processing callback. Note that this
+      // may set or alter other properties in the component data array.
       $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
-    } // processing callback
+    }
 
     // Recurse into compound properties.
     // We do this last to allow the parent property to have default and
