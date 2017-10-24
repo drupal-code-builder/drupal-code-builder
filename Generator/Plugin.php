@@ -50,20 +50,9 @@ class Plugin extends PHPClassFile {
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
 
-    // Try to find the intended plugin type.
-    if (isset($plugin_types_data[$plugin_type])) {
-      $plugin_data = $plugin_types_data[$plugin_type];
-    }
-    else {
-      $plugin_types_data_by_subdirectory = $mb_task_handler_report_plugins->listPluginDataBySubdirectory();
-      if (isset($plugin_types_data_by_subdirectory[$plugin_type])) {
-        $plugin_data = $plugin_types_data_by_subdirectory[$plugin_type];
-      }
-      else {
-        // Nothing found. Throw exception.
-        throw new InvalidInputException("Plugin type $plugin_type not found.");
-      }
-    }
+    // The plugin type has already been validated by the plugin_type property's
+    // processing.
+    $plugin_data = $plugin_types_data[$plugin_type];
 
     $component_data['plugin_type_data'] = $plugin_data;
 
@@ -98,6 +87,30 @@ class Plugin extends PHPClassFile {
           $options = $mb_task_handler_report_plugins->listPluginNamesOptions();
 
           return $options;
+        },
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          // Validate the plugin type, and find it if given a folder rather than
+          // a type.
+          $task_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+          $plugin_types_data = $task_report_plugins->listPluginData();
+
+          // Try to find the intended plugin type.
+          if (isset($plugin_types_data[$value])) {
+            $plugin_data = $plugin_types_data[$value];
+          }
+          else {
+            $plugin_types_data_by_subdirectory = $task_report_plugins->listPluginDataBySubdirectory();
+            if (isset($plugin_types_data_by_subdirectory[$value])) {
+              $plugin_data = $plugin_types_data_by_subdirectory[$value];
+
+              // Set the plugin ID in the the property.
+              $component_data[$property_name] = $plugin_data['type_id'];
+            }
+            else {
+              // Nothing found. Throw exception.
+              throw new InvalidInputException("Plugin type {$value} not found.");
+            }
+          }
         },
       ),
       'plugin_name' => array(
