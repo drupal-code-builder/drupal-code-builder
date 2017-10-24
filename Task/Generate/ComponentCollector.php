@@ -350,14 +350,6 @@ class ComponentCollector {
 
     // Set defaults for properties that don't have a value yet.
     foreach ($component_data_info as $property_name => $property_info) {
-      // No need to set defaults on components here; the defaults will be filled
-      // in when the component is instantiated in assembleComponentList() and
-      // and this is called with the component's own data.
-      // TODO? Still true?
-      if (isset($property_info['component'])) {
-        continue;
-      }
-
       $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
     }
 
@@ -413,6 +405,14 @@ class ComponentCollector {
    */
   protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
     // Determine whether we should fill in a default value.
+    if (isset($property_info['component'])) {
+      // No need to set defaults on components here; the defaults will be filled
+      // in when the component is instantiated in assembleComponentList() and
+      // and this is called with the component's own data.
+      // TODO? Still true?
+      return;
+    }
+
     if (!empty($component_data_local[$property_name])) {
       // User has provided a default: don't clobber that.
       return;
