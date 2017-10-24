@@ -78,7 +78,7 @@ class ComponentPlugins8Test extends TestBase {
   /**
    * Test Plugins component using the plugin folder name.
    */
-  function testPluginsGenerationBadPluginType() {
+  function testPluginsGenerationFromPluginFolder() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -108,7 +108,7 @@ class ComponentPlugins8Test extends TestBase {
   /**
    * Test Plugins component with an invalid plugin type.
    */
-  function testPluginsGenerationFromPluginFolder() {
+  function testPluginsGenerationBadPluginType() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
