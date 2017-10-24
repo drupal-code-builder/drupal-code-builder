@@ -356,11 +356,7 @@ class ComponentCollector {
     // Allow each property to apply its processing callback. Note that this may
     // set or alter other properties in the component data array.
     foreach ($component_data_info as $property_name => $property_info) {
-      if (isset($property_info['processing']) && !empty($component_data[$property_name])) {
-        $processing_callback = $property_info['processing'];
-
-        $processing_callback($component_data[$property_name], $component_data, $property_name, $property_info);
-      }
+      $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
     } // processing callback
 
     // Recurse into compound properties.
@@ -446,6 +442,35 @@ class ComponentCollector {
       }
       $component_data_local[$property_name] = $default_value;
     }
+  }
+
+  /**
+   * Applies the processing callback for a property in component data.
+   *
+   * @param $property_name
+   *  The name of the property. For child properties, this is the name of just
+   *  the child property.
+   * @param $property_info
+   *  The property info array for the property.
+   * @param &$component_data_local
+   *  The array of component data, or for child properties, the item array that
+   *  immediately contains the property. In other words, this array would have
+   *  a key $property_name if data has been supplied for this property.
+   */
+  protected function applyComponentDataPropertyProcessing($property_name, $property_info, &$component_data_local) {
+    if (!isset($property_info['processing'])) {
+      // No processing: nothing to do.
+      return;
+    }
+
+    if (empty($component_data_local[$property_name])) {
+      // Don't apply to an empty property.
+      return;
+    }
+
+    $processing_callback = $property_info['processing'];
+
+    $processing_callback($component_data_local[$property_name], $component_data_local, $property_name, $property_info);
   }
 
   /**
