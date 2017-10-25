@@ -36,17 +36,21 @@ class ComponentService8Test extends TestBase {
         0 => [
           'service_name' => 'my_service',
         ],
+        1 => [
+          'service_name' => 'my_other_service',
+        ],
       ),
       'readme' => FALSE,
     );
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(3, $files, "Three files are returned.");
+    $this->assertCount(4, $files, "The expected number of files is returned.");
 
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
     $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
     $this->assertArrayHasKey("src/MyService.php", $files, "The files list has a service class file.");
+    $this->assertArrayHasKey("src/MyOtherService.php", $files, "The files list has a service class file.");
 
     $services_file = $files["$module_name.services.yml"];
 
