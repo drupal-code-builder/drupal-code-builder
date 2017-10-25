@@ -341,6 +341,66 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
+   * Create a property block for use by getSectionBlocks().
+   *
+   * @param string $property_name
+   *   The property's name, without the initial '$'.
+   * @param string $type
+   *   The typehint. Classes and interfaces should be fully-qualified, with the
+   *   initial '\'.
+   * @param string $description
+   *   A single-line description for the docblock.
+   * @param array $modifiers
+   *   An array of the modifiers. Defaults to 'protected'.
+   * @param $default
+   *   The default value, as the actual value. May be any type.
+   *
+   * @return
+   *  An array suitable to be set for getSectionBlocks().
+   */
+  protected function createPropertyBlock($property_name, $type, $description, $modifiers = ['protected'], $default = NULL) {
+    $property_code = $this->docBlock([
+      $description,
+      '',
+      '@var ' . $type
+    ]);
+
+    $declaration_line = '';
+
+    if ($modifiers) {
+      $declaration_line .= implode(' ', $modifiers) . ' ';
+    }
+
+    $declaration_line .= '$' . $property_name;
+
+    if ($default) {
+      $declaration_line .= ' = ';
+
+      if (is_array($default)) {
+        // Quick hack, these are always strings so far!
+        $declaration_line .= '[' . implode(', ', array_map(function ($value) {
+          return "'$value'";
+        }, $default)) . ']';
+      }
+      elseif (is_bool($default)) {
+        $declaration_line .= strtoupper((string) $default);
+      }
+      elseif (is_numeric($default)) {
+        $declaration_line .= $default;
+      }
+      else {
+        $declaration_line .= "'{$default}'";
+      }
+    }
+
+    $declaration_line .= ';';
+
+    $property_code[] = $declaration_line;
+
+    return $property_code;
+  }
+
+  /**
    * Create blocks in the 'function' section from data describing methods.
    *
    * @param $methods_data
