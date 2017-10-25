@@ -332,18 +332,20 @@ class ComponentCollector {
       }
 
       // Set values which are suggested by the preset, if the value is empty.
-      foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
-        // Only set this if no incoming value is set.
-        if (!empty($component_data[$suggested_property_name])) {
-          continue;
-        }
+      if (isset($selected_preset_info['data']['suggest'])) {
+        foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
+          // Only set this if no incoming value is set.
+          if (!empty($component_data[$suggested_property_name])) {
+            continue;
+          }
 
-        // Plain value.
-        if (isset($suggested_data['value'])) {
-          $component_data[$suggested_property_name] = $suggested_data['value'];
-        }
+          // Plain value.
+          if (isset($suggested_data['value'])) {
+            $component_data[$suggested_property_name] = $suggested_data['value'];
+          }
 
-        // TODO: processed value, using chain of processing instructions.
+          // TODO: processed value, using chain of processing instructions.
+        }
       }
 
     }
