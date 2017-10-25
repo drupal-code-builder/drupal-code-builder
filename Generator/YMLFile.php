@@ -17,6 +17,18 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
+  public function mergeComponentData($additional_component_data) {
+    parent::mergeComponentData($additional_component_data);
+
+    // The hacky yaml_inline_level property may not be an array!
+    if (is_array($this->component_data['yaml_inline_level'])) {
+      $this->component_data['yaml_inline_level'] = reset($this->component_data['yaml_inline_level']);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   function buildComponentContents($children_contents) {
     $yaml_data = array();
     foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {
