@@ -12,6 +12,7 @@ Drupal Code Builder can generate the following for a module:
 - code files, containing hook implementations
 - info file (.info.yml on Drupal 8)
 - README file
+- PHPUnit test case classes, with presets for different types
 - Simpletest test case classes
 - plugin classes
 - services, with presets for tagged service types
