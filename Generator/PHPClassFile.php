@@ -27,10 +27,12 @@ class PHPClassFile extends PHPFile {
   public static function componentDataDefinition() {
     return [
       'relative_class_name' => [
+        // E.g. ['Form', 'MyFormClass']
         'label' => 'The qualifed classname pieces, relative to the module namespace.',
         'format' => 'array',
         'internal' => TRUE,
       ],
+      // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
       'qualified_class_name_pieces' => [
         'computed' => TRUE,
         'format' => 'array',
@@ -43,6 +45,7 @@ class PHPClassFile extends PHPFile {
           return $class_name_pieces;
         },
       ],
+      // E.g. 'Drupal\my_module\Form\MyFormClass'
       'qualified_class_name' => [
         'computed' => TRUE,
         'format' => 'string',
