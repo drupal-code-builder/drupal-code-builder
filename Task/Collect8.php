@@ -30,6 +30,7 @@ class Collect8 extends Collect {
     $result += $this->collectServices();
     $result += $this->collectServiceTagTypes();
     $result += $this->collectFieldTypes();
+    $result += $this->collectDataTypes();
 
     return $result;
   }
@@ -92,6 +93,21 @@ class Collect8 extends Collect {
     $this->environment->getStorage()->store('field_types', $field_type_definitions);
 
     return ['field types' => count($field_type_definitions)];
+  }
+
+  /**
+   * Collect data about config data types.
+   *
+   * @return
+   *  A summary in the same format as returned by collectComponentData().
+   */
+  protected function collectDataTypes() {
+    $data_type_definitions = $this->getHelper('DataTypesCollector')->collect();
+
+    // Save the data.
+    $this->environment->getStorage()->store('data_types', $data_type_definitions);
+
+    return ['data types' => count($data_type_definitions)];
   }
 
   /**
