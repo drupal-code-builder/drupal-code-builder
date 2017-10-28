@@ -51,21 +51,4 @@ class CollectTesting8 extends Collect8 {
     return $files;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getPluginManagerServices() {
-    $plugin_manager_service_ids = parent::getPluginManagerServices();
-
-    // For testing, only take a subset of service names.
-    $testing_service_ids = array(
-      'plugin.manager.block',
-      'plugin.manager.field.formatter',
-    );
-
-    $plugin_manager_service_ids = array_intersect($plugin_manager_service_ids, $testing_service_ids);
-
-    return $plugin_manager_service_ids;
-  }
-
 }

@@ -48,11 +48,14 @@ class CollectPluginInfoTest extends KernelTestBase {
    * Tests collection of plugin type info
    */
   public function testPluginTypesInfoCollection() {
-    $task_handler_collect = \DrupalCodeBuilder\Factory::getTask('Collect');
+    $plugin_types_collector = new \DrupalCodeBuilder\Task\Collect\PluginTypesCollector(
+      \DrupalCodeBuilder\Factory::getEnvironment(),
+      new \DrupalCodeBuilder\Task\Collect\MethodCollector
+    );
 
     // Hack the task handler so we can call the processing method with a subset
     // of plugin manager service IDs.
-    $class = new \ReflectionObject($task_handler_collect);
+    $class = new \ReflectionObject($plugin_types_collector);
     $method = $class->getMethod('gatherPluginTypeInfo');
     $method->setAccessible(TRUE);
 
@@ -65,7 +68,7 @@ class CollectPluginInfoTest extends KernelTestBase {
       'plugin.manager.help_section',
     ];
 
-    $plugin_types_info = $method->invoke($task_handler_collect, $test_plugin_types);
+    $plugin_types_info = $method->invoke($plugin_types_collector, $test_plugin_types);
 
     $this->assertCount(3, $plugin_types_info);
     $this->assertArrayHasKey('queue_worker', $plugin_types_info, "The plugin types list has the queue_worker plugin type.");
