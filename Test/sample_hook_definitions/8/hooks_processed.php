@@ -109,7 +109,7 @@ array (
     array (
       'type' => 'callback',
       'name' => 'callback_batch_operation',
-      'definition' => 'function callback_batch_operation($MULTIPLE_PARAMS, &$context)',
+      'definition' => 'function callback_batch_operation($multiple_params, &$context)',
       'description' => 'Perform a single batch operation.',
       'destination' => '%module.module',
       'dependencies' => 
@@ -439,8 +439,7 @@ array (
       'body' => '
   // Create the styles directory and ensure it\'s writable.
   $directory = file_default_scheme() . \'://styles\';
-  $mode = isset($GLOBALS[\'install_state\'][\'mode\']) ? $GLOBALS[\'install_state\'][\'mode\'] : NULL;
-  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $mode);
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 ',
     ),
     'hook_module_preuninstall' => 
@@ -567,8 +566,7 @@ array (
     // tasks are complete, with a link to reload the current page and therefore
     // pass on to the final Drupal installation tasks when the user is ready to
     // do so).
-    \'myprofile_final_site_setup\' => [
-    ],
+    \'myprofile_final_site_setup\' => [],
   ];
   return $tasks;
 ',
