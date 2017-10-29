@@ -95,7 +95,14 @@ trait AnnotationTrait {
         $value = '"' . $value . '"';
       }
 
-      $docblock_lines[] = str_repeat('  ', $indent) . "{$key} = {$value},";
+      $docblock_lines[] = str_repeat('  ', $indent)
+        . (
+          is_numeric($key)
+          ? ''
+          : $key . ' = '
+        )
+      . $value
+      . ',';
     }
   }
 
