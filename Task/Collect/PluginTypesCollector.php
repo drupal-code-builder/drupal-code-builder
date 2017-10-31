@@ -414,11 +414,11 @@ class PluginTypesCollector {
         $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
 
         // Get the full ancestry of the plugin's class.
-        $plugin_class_reflection = new \ReflectionClass($definition['class']);
-
-        $class_reflection = $plugin_class_reflection;
+        // Build a lineage array, from youngest to oldest, i.e. closest parents
+        // first.
         $lineage = [];
-        $parent_class_component_namespace = NULL;
+        $plugin_class_reflection = new \ReflectionClass($definition['class']);
+        $class_reflection = $plugin_class_reflection;
         while ($class_reflection = $class_reflection->getParentClass()) {
           $lineage[] = $class_reflection->getName();
         }
