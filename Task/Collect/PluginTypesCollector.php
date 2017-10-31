@@ -423,9 +423,32 @@ class PluginTypesCollector {
           $lineage[] = $class_reflection->getName();
         }
 
-        // We want the oldest ancestor which is in the same namespace as the
-        // plugin manager. The lineage array has the oldest ancestors last.
-        while ($ancestor_class = array_pop($lineage)) {
+        // Try to get the nearest ancestor in the same namespace whose class
+        // name ends in 'Base'.
+        foreach ($lineage as $ancestor_class) {
+          $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
+          if ($parent_class_component_namespace != $data['service_component_namespace']) {
+            // No longer in the plugin manager's component: stop looking.
+            break;
+          }
+
+          if (substr($ancestor_class, - strlen('Base')) == 'Base') {
+            $data['base_class'] = $ancestor_class;
+
+            // Done.
+            goto done_plugin_type;
+          }
+        }
+
+        // If we failed to find a class called FooBase in the same component.
+        // Ue the youngest ancestor which is in the same component as the
+        // plugin manager.
+        // Getting the youngest ancestor account for modules that define
+        // multiple plugin types and have a common base class for all of them
+        // (e.g. Views), but unfortunately sometimes gets us a base class that
+        // is too specialized in modules that provide several base classes,
+        // for example a general base class and a more specific one.
+        foreach ($lineage as $ancestor_class) {
           $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
 
           if ($parent_class_component_namespace == $data['service_component_namespace']) {
@@ -434,14 +457,14 @@ class PluginTypesCollector {
             // a good base class, and move on to the next plugin type.
             $data['base_class'] = $ancestor_class;
 
-            // TODO: should we check more than the first plugin we find?
-
+            // Done.
             goto done_plugin_type;
           }
         }
       }
 
       // Done with this plugin definition; move on to the next one.
+      // TODO: check more than just the first plugin we find.
       done_plugin_type:
     }
   }
