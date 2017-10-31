@@ -169,7 +169,7 @@ array (
         'type' => 'int optional',
       ),
     ),
-    'base_class' => 'Drupal\\Core\\Field\\PluginSettingsBase',
+    'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
     'plugin_interface_methods' => 
     array (
       'settingsForm' => 
