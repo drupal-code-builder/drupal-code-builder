@@ -4,10 +4,34 @@ array (
   array (
     'type_id' => 'block',
     'service_id' => 'plugin.manager.block',
+    'service_class_name' => 'Drupal\\Core\\Block\\BlockManager',
+    'service_component_namespace' => 'Drupal\\Core\\Block',
     'type_label' => 'block',
     'subdir' => 'Plugin/Block',
     'plugin_interface' => 'Drupal\\Core\\Block\\BlockPluginInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The plugin ID.',
+        'type' => 'string',
+      ),
+      'admin_label' => 
+      array (
+        'name' => 'admin_label',
+        'description' => 'The administrative label of the block.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'category' => 
+      array (
+        'name' => 'category',
+        'description' => 'The category in the admin UI where the block will be listed.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+    ),
+    'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'plugin_interface_methods' => 
     array (
       'label' => 
@@ -58,30 +82,6 @@ array (
         'declaration' => 'public function getMachineNameSuggestion();',
         'description' => 'Suggests a machine name to identify an instance of this block.',
       ),
-      'getConfiguration' => 
-      array (
-        'name' => 'getConfiguration',
-        'declaration' => 'public function getConfiguration();',
-        'description' => 'Gets this plugin\'s configuration.',
-      ),
-      'setConfiguration' => 
-      array (
-        'name' => 'setConfiguration',
-        'declaration' => 'public function setConfiguration(array $configuration);',
-        'description' => 'Sets the configuration for this plugin instance.',
-      ),
-      'defaultConfiguration' => 
-      array (
-        'name' => 'defaultConfiguration',
-        'declaration' => 'public function defaultConfiguration();',
-        'description' => 'Gets default configuration for this plugin.',
-      ),
-      'calculateDependencies' => 
-      array (
-        'name' => 'calculateDependencies',
-        'declaration' => 'public function calculateDependencies();',
-        'description' => 'Calculates dependencies for the configured plugin.',
-      ),
       'buildConfigurationForm' => 
       array (
         'name' => 'buildConfigurationForm',
@@ -99,18 +99,6 @@ array (
         'name' => 'submitConfigurationForm',
         'declaration' => 'public function submitConfigurationForm(array &$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Form submission handler.',
-      ),
-      'getPluginId' => 
-      array (
-        'name' => 'getPluginId',
-        'declaration' => 'public function getPluginId();',
-        'description' => 'Gets the plugin_id of the plugin instance.',
-      ),
-      'getPluginDefinition' => 
-      array (
-        'name' => 'getPluginDefinition',
-        'declaration' => 'public function getPluginDefinition();',
-        'description' => 'Gets the definition of the plugin implementation.',
       ),
       'getCacheContexts' => 
       array (
@@ -130,19 +118,18 @@ array (
         'declaration' => 'public function getCacheMaxAge();',
         'description' => 'The maximum age for which this object may be cached.',
       ),
-      'getBaseId' => 
-      array (
-        'name' => 'getBaseId',
-        'declaration' => 'public function getBaseId();',
-        'description' => 'Gets the base_plugin_id of the plugin instance.',
-      ),
-      'getDerivativeId' => 
-      array (
-        'name' => 'getDerivativeId',
-        'declaration' => 'public function getDerivativeId();',
-        'description' => 'Gets the derivative_id of the plugin instance.',
-      ),
     ),
+  ),
+  'field.formatter' => 
+  array (
+    'type_id' => 'field.formatter',
+    'service_id' => 'plugin.manager.field.formatter',
+    'service_class_name' => 'Drupal\\Core\\Field\\FormatterPluginManager',
+    'service_component_namespace' => 'Drupal\\Core\\Field',
+    'type_label' => 'field.formatter',
+    'subdir' => 'Plugin/Field/FieldFormatter',
+    'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
     'plugin_properties' => 
     array (
       'id' => 
@@ -151,29 +138,38 @@ array (
         'description' => 'The plugin ID.',
         'type' => 'string',
       ),
-      'admin_label' => 
+      'label' => 
       array (
-        'name' => 'admin_label',
-        'description' => 'The administrative label of the block.',
+        'name' => 'label',
+        'description' => 'The human-readable name of the formatter type.',
         'type' => '\\Drupal\\Core\\Annotation\\Translation',
       ),
-      'category' => 
+      'description' => 
       array (
-        'name' => 'category',
-        'description' => 'The category in the admin UI where the block will be listed.',
+        'name' => 'description',
+        'description' => 'A short description of the formatter type.',
         'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'class' => 
+      array (
+        'name' => 'class',
+        'description' => 'The name of the field formatter class.',
+        'type' => 'string',
+      ),
+      'field_types' => 
+      array (
+        'name' => 'field_types',
+        'description' => 'An array of field types the formatter supports.',
+        'type' => 'array',
+      ),
+      'weight' => 
+      array (
+        'name' => 'weight',
+        'description' => 'An integer to determine the weight of this formatter relative to other',
+        'type' => 'int optional',
       ),
     ),
-    'base_class' => 'Drupal\\Core\\Block\\BlockBase',
-  ),
-  'field.formatter' => 
-  array (
-    'type_id' => 'field.formatter',
-    'service_id' => 'plugin.manager.field.formatter',
-    'type_label' => 'field.formatter',
-    'subdir' => 'Plugin/Field/FieldFormatter',
-    'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
-    'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
+    'base_class' => 'Drupal\\Core\\Field\\PluginSettingsBase',
     'plugin_interface_methods' => 
     array (
       'settingsForm' => 
@@ -248,88 +244,6 @@ array (
         'declaration' => 'public function onDependencyRemoval(array $dependencies);',
         'description' => 'Informs the plugin that some configuration it depends on will be deleted.',
       ),
-      'getPluginId' => 
-      array (
-        'name' => 'getPluginId',
-        'declaration' => 'public function getPluginId();',
-        'description' => 'Gets the plugin_id of the plugin instance.',
-      ),
-      'getPluginDefinition' => 
-      array (
-        'name' => 'getPluginDefinition',
-        'declaration' => 'public function getPluginDefinition();',
-        'description' => 'Gets the definition of the plugin implementation.',
-      ),
-      'setThirdPartySetting' => 
-      array (
-        'name' => 'setThirdPartySetting',
-        'declaration' => 'public function setThirdPartySetting($module, $key, $value);',
-        'description' => 'Sets the value of a third-party setting.',
-      ),
-      'getThirdPartySetting' => 
-      array (
-        'name' => 'getThirdPartySetting',
-        'declaration' => 'public function getThirdPartySetting($module, $key, $default = NULL);',
-        'description' => 'Gets the value of a third-party setting.',
-      ),
-      'getThirdPartySettings' => 
-      array (
-        'name' => 'getThirdPartySettings',
-        'declaration' => 'public function getThirdPartySettings($module);',
-        'description' => 'Gets all third-party settings of a given module.',
-      ),
-      'unsetThirdPartySetting' => 
-      array (
-        'name' => 'unsetThirdPartySetting',
-        'declaration' => 'public function unsetThirdPartySetting($module, $key);',
-        'description' => 'Unsets a third-party setting.',
-      ),
-      'getThirdPartyProviders' => 
-      array (
-        'name' => 'getThirdPartyProviders',
-        'declaration' => 'public function getThirdPartyProviders();',
-        'description' => 'Gets the list of third parties that store information.',
-      ),
     ),
-    'plugin_properties' => 
-    array (
-      'id' => 
-      array (
-        'name' => 'id',
-        'description' => 'The plugin ID.',
-        'type' => 'string',
-      ),
-      'label' => 
-      array (
-        'name' => 'label',
-        'description' => 'The human-readable name of the formatter type.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
-      ),
-      'description' => 
-      array (
-        'name' => 'description',
-        'description' => 'A short description of the formatter type.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
-      ),
-      'class' => 
-      array (
-        'name' => 'class',
-        'description' => 'The name of the field formatter class.',
-        'type' => 'string',
-      ),
-      'field_types' => 
-      array (
-        'name' => 'field_types',
-        'description' => 'An array of field types the formatter supports.',
-        'type' => 'array',
-      ),
-      'weight' => 
-      array (
-        'name' => 'weight',
-        'description' => 'An integer to determine the weight of this formatter relative to other',
-        'type' => 'int optional',
-      ),
-    ),
-    'base_class' => 'Drupal\\Core\\Field\\PluginSettingsBase',
   ),
 );
