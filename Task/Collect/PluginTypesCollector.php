@@ -52,6 +52,8 @@ class PluginTypesCollector {
       $plugin_manager_service_ids = array_intersect($plugin_manager_service_ids, $this->testingPluginManagerServiceIds);
     }
 
+    //$plugin_manager_service_ids = ['plugin.manager.block'];
+
     $plugin_type_data = $this->gatherPluginTypeInfo($plugin_manager_service_ids);
 
     return $plugin_type_data;
@@ -267,10 +269,51 @@ class PluginTypesCollector {
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
       // Analyze the interface, if there is one.
       if (empty($data['plugin_interface'])) {
-        $data['plugin_interface_methods'] = array();
+        $data['plugin_interface_methods'] = [];
       }
       else {
-        $data['plugin_interface_methods'] = $this->methodCollector->collectMethods($data['plugin_interface']);
+        $reflection = new \ReflectionClass($data['plugin_interface']);
+        $methods = $reflection->getMethods();
+
+        $data['plugin_interface_methods'] = [];
+
+        // Check each method from the plugin interface for suitability.
+        foreach ($methods as $method_reflection) {
+          // Start by assuming we won't include it.
+          $include_method = FALSE;
+
+          // Get the actual class/interface that declares the method, as the
+          // plugin interface will in most cases inherit from one or more
+          // interfaces.
+          $declaring_class = $method_reflection->getDeclaringClass()->getName();
+          // Get the namespace of the component the class belongs to.
+          $declaring_class_component_namespace = $this->getClassComponentNamespace($declaring_class);
+
+          if ($declaring_class_component_namespace == $data['service_component_namespace']) {
+            // The plugin interface method is declared in the same component as
+            // the plugin manager service.
+            // Add it to the list of methods a plugin should implement.
+            $include_method = TRUE;
+          }
+          else {
+            // The plugin interface method is declared in a namespace other
+            // than the plugin manager. Therefore it's something from a base
+            // interface, e.g. from PluginInspectionInterface, and we shouldn't
+            // add it to the list of methods a plugin should implement...
+            // except for a few special cases.
+
+            if ($declaring_class == 'Drupal\Core\Plugin\PluginFormInterface') {
+              $include_method = TRUE;
+            }
+            if ($declaring_class == 'Drupal\Core\Cache\CacheableDependencyInterface') {
+              $include_method = TRUE;
+            }
+          }
+
+          if ($include_method) {
+            $data['plugin_interface_methods'][$method_reflection->getName()] = $this->methodCollector->getMethodData($method_reflection);
+          }
+        }
       }
     }
   }
