@@ -87,10 +87,8 @@ class CollectPluginInfoTest extends KernelTestBase {
 
     $this->assertArrayHasKey('plugin_interface_methods', $queue_worker_type_info);
     $plugin_interface_methods = $queue_worker_type_info['plugin_interface_methods'];
-    $this->assertCount(3, $plugin_interface_methods);
+    $this->assertCount(1, $plugin_interface_methods);
     $this->assertArrayHasKey('processItem', $plugin_interface_methods);
-    $this->assertArrayHasKey('getPluginId', $plugin_interface_methods);
-    $this->assertArrayHasKey('getPluginDefinition', $plugin_interface_methods);
 
     $this->assertArrayHasKey('plugin_properties', $queue_worker_type_info);
     $plugin_properties = $queue_worker_type_info['plugin_properties'];
