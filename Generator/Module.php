@@ -258,13 +258,19 @@ class Module extends RootComponent {
         }
       ),
       'content_entity_types' => array(
-        'label' => 'Content entity types (experimental)',
+        'label' => 'Content entity types',
         'required' => FALSE,
         'format' => 'compound',
         // This tells the system that this is a request for generator
         // components, and the input data should be placed in a nested array in
         // the module data.
         'component' => 'ContentEntityType',
+      ),
+      'config_entity_types' => array(
+        'label' => 'Config entity types',
+        'required' => FALSE,
+        'format' => 'compound',
+        'component' => 'ConfigEntityType',
       ),
       'plugins' => array(
         'label' => 'Plugins',
