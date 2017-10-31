@@ -137,9 +137,16 @@ class PluginTypesCollector {
       // that comes after 'plugin.manager.'.
       $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
 
+      // Get the class name for the service.
+      $service = \Drupal::service($plugin_manager_service_id);
+      $service_class_name = get_class($service);
+      $service_component_namespace = $this->getClassComponentNamespace($service_class_name);
+
       $plugin_type_data[$plugin_type_id] = [
         'type_id' => $plugin_type_id,
         'service_id' => $plugin_manager_service_id,
+        'service_class_name' => $service_class_name,
+        'service_component_namespace' => $service_component_namespace,
         // Plugin module may replace this if present.
         'type_label' => $plugin_type_id,
       ];
@@ -346,14 +353,9 @@ class PluginTypesCollector {
    */
   protected function addPluginBaseClass(&$plugin_type_data) {
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      $service = \Drupal::service($data['service_id']);
-
-      $service_class_name = get_class($service);
-      // Get the module or component that the service class is in.
-      $service_component_namespace = $this->getClassComponentNamespace($service_class_name);
-
       // Work over each plugin of this type, until we find one with a suitable-
       // looking ancestor class.
+      $service = \Drupal::service($data['service_id']);
       $definitions = $service->getDefinitions();
       foreach ($definitions as $plugin_id => $definition) {
         // We can't work with plugins that don't define a class: skip the whole
@@ -379,7 +381,7 @@ class PluginTypesCollector {
         while ($ancestor_class = array_pop($lineage)) {
           $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
 
-          if ($parent_class_component_namespace == $service_component_namespace) {
+          if ($parent_class_component_namespace == $data['service_component_namespace']) {
             // We've found an ancestor class in the plugin's hierarchy which is
             // in the same namespace as the plugin manager service. Assume it's
             // a good base class, and move on to the next plugin type.
