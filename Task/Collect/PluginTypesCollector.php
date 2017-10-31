@@ -152,14 +152,14 @@ class PluginTypesCollector {
     // This gets us the subdirectory, interface, and annotation name.
     $this->addPluginTypeServiceData($plugin_type_data);
 
-    // Add data from the plugin interface (which the manager service gave us).
-    $this->addPluginInterfaceData($plugin_type_data);
-
     // Add data from the plugin annotation class.
     $this->addPluginAnnotationData($plugin_type_data);
 
     // Try to detect a base class for plugins
     $this->addPluginBaseClass($plugin_type_data);
+
+    // Add data from the plugin interface (which the manager service gave us).
+    $this->addPluginMethods($plugin_type_data);
 
     // Sort by ID.
     ksort($plugin_type_data);
@@ -251,12 +251,12 @@ class PluginTypesCollector {
   }
 
   /**
-   * Adds plugin type information from the plugin interface.
+   * Adds list of methods for the plugin based on the plugin interface.
    *
    * @param &$plugin_type_data
    *  The array of plugin data.
    */
-  protected function addPluginInterfaceData(&$plugin_type_data) {
+  protected function addPluginMethods(&$plugin_type_data) {
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
       // Analyze the interface, if there is one.
       if (empty($data['plugin_interface'])) {
