@@ -393,7 +393,7 @@ class PluginTypesCollector {
   }
 
   /**
-   * Adds plugin type information from the plugin annotation TODO!.
+   * Determines the base class that plugins should use.
    *
    * @param &$plugin_type_data
    *  The array of plugin data.
