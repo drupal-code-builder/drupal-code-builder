@@ -6,7 +6,7 @@ namespace DrupalCodeBuilder\Task\Collect;
  * Task helper for collecting data on methods of classes or interfaces.
  *
  * TODO: This is currently used to help collectors with their own data; change
- * this into a system that keeps data on all interfaces and classes we're 
+ * this into a system that keeps data on all interfaces and classes we're
  * interested in.
  */
 class MethodCollector {
