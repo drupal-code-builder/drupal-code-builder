@@ -400,72 +400,78 @@ class PluginTypesCollector {
    */
   protected function addPluginBaseClass(&$plugin_type_data) {
     foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Work over each plugin of this type, until we find one with a suitable-
-      // looking ancestor class.
-      $service = \Drupal::service($data['service_id']);
-      $definitions = $service->getDefinitions();
-      foreach ($definitions as $plugin_id => $definition) {
-        // We can't work with plugins that don't define a class: skip the whole
-        // plugin type.
-        if (empty($definition['class'])) {
-          goto done_plugin_type;
+      $base_class = $this->analysePluginTypeBaseClass($data);
+      if ($base_class) {
+        $data['base_class'] = $base_class;
+      }
+    }
+  }
+
+  /**
+   * Analyses plugins of the given type to find a suitable base class.
+   *
+   * @param array $data
+   *   The array of data for the plugin type.
+   *
+   * @return string
+   *   The base class to use when generating plugins of this type.
+   */
+  protected function analysePluginTypeBaseClass($data) {
+    // Work over each plugin of this type, until we find one with a suitable-
+    // looking ancestor class.
+    $service = \Drupal::service($data['service_id']);
+    $definitions = $service->getDefinitions();
+    foreach ($definitions as $plugin_id => $definition) {
+      // We can't work with plugins that don't define a class: skip the whole
+      // plugin type.
+      if (empty($definition['class'])) {
+        return;
+      }
+
+      $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
+
+      // Get the full ancestry of the plugin's class.
+      // Build a lineage array, from youngest to oldest, i.e. closest parents
+      // first.
+      $lineage = [];
+      $plugin_class_reflection = new \ReflectionClass($definition['class']);
+      $class_reflection = $plugin_class_reflection;
+      while ($class_reflection = $class_reflection->getParentClass()) {
+        $lineage[] = $class_reflection->getName();
+      }
+
+      // Try to get the nearest ancestor in the same namespace whose class
+      // name ends in 'Base'.
+      foreach ($lineage as $ancestor_class) {
+        $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
+        if ($parent_class_component_namespace != $data['service_component_namespace']) {
+          // No longer in the plugin manager's component: stop looking.
+          break;
         }
 
-        $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
-
-        // Get the full ancestry of the plugin's class.
-        // Build a lineage array, from youngest to oldest, i.e. closest parents
-        // first.
-        $lineage = [];
-        $plugin_class_reflection = new \ReflectionClass($definition['class']);
-        $class_reflection = $plugin_class_reflection;
-        while ($class_reflection = $class_reflection->getParentClass()) {
-          $lineage[] = $class_reflection->getName();
-        }
-
-        // Try to get the nearest ancestor in the same namespace whose class
-        // name ends in 'Base'.
-        foreach ($lineage as $ancestor_class) {
-          $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
-          if ($parent_class_component_namespace != $data['service_component_namespace']) {
-            // No longer in the plugin manager's component: stop looking.
-            break;
-          }
-
-          if (substr($ancestor_class, - strlen('Base')) == 'Base') {
-            $data['base_class'] = $ancestor_class;
-
-            // Done.
-            goto done_plugin_type;
-          }
-        }
-
-        // If we failed to find a class called FooBase in the same component.
-        // Ue the youngest ancestor which is in the same component as the
-        // plugin manager.
-        // Getting the youngest ancestor account for modules that define
-        // multiple plugin types and have a common base class for all of them
-        // (e.g. Views), but unfortunately sometimes gets us a base class that
-        // is too specialized in modules that provide several base classes,
-        // for example a general base class and a more specific one.
-        foreach ($lineage as $ancestor_class) {
-          $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
-
-          if ($parent_class_component_namespace == $data['service_component_namespace']) {
-            // We've found an ancestor class in the plugin's hierarchy which is
-            // in the same namespace as the plugin manager service. Assume it's
-            // a good base class, and move on to the next plugin type.
-            $data['base_class'] = $ancestor_class;
-
-            // Done.
-            goto done_plugin_type;
-          }
+        if (substr($ancestor_class, - strlen('Base')) == 'Base') {
+          return $ancestor_class;
         }
       }
 
-      // Done with this plugin definition; move on to the next one.
-      // TODO: check more than just the first plugin we find.
-      done_plugin_type:
+      // If we failed to find a class called FooBase in the same component.
+      // Ue the youngest ancestor which is in the same component as the
+      // plugin manager.
+      // Getting the youngest ancestor account for modules that define
+      // multiple plugin types and have a common base class for all of them
+      // (e.g. Views), but unfortunately sometimes gets us a base class that
+      // is too specialized in modules that provide several base classes,
+      // for example a general base class and a more specific one.
+      foreach ($lineage as $ancestor_class) {
+        $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
+
+        if ($parent_class_component_namespace == $data['service_component_namespace']) {
+          // We've found an ancestor class in the plugin's hierarchy which is
+          // in the same namespace as the plugin manager service. Assume it's
+          // a good base class, and move on to the next plugin type.
+          return $ancestor_class;
+        }
+      }
     }
   }
 
