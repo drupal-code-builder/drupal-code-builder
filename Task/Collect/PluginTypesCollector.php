@@ -417,8 +417,10 @@ class PluginTypesCollector {
    *   The base class to use when generating plugins of this type.
    */
   protected function analysePluginTypeBaseClass($data) {
-    // Work over each plugin of this type, until we find one with a suitable-
-    // looking ancestor class.
+    // Work over each plugin of this type, finding a suitable candidate for
+    // base class with each one.
+    $potential_base_classes = [];
+
     $service = \Drupal::service($data['service_id']);
     $definitions = $service->getDefinitions();
     foreach ($definitions as $plugin_id => $definition) {
@@ -450,18 +452,22 @@ class PluginTypesCollector {
         }
 
         if (substr($ancestor_class, - strlen('Base')) == 'Base') {
-          return $ancestor_class;
+          $potential_base_classes[] = $ancestor_class;
+
+          // Done with this plugin.
+          goto next_plugin;
         }
-      }
+      } // foreach lineage
 
       // If we failed to find a class called FooBase in the same component.
       // Ue the youngest ancestor which is in the same component as the
       // plugin manager.
-      // Getting the youngest ancestor account for modules that define
+      // Getting the youngest ancestor accounts for modules that define
       // multiple plugin types and have a common base class for all of them
       // (e.g. Views), but unfortunately sometimes gets us a base class that
       // is too specialized in modules that provide several base classes,
-      // for example a general base class and a more specific one.
+      // for example a general base class and a more specific one. The next
+      // step addresses that.
       foreach ($lineage as $ancestor_class) {
         $parent_class_component_namespace = $this->getClassComponentNamespace($ancestor_class);
 
@@ -469,10 +475,113 @@ class PluginTypesCollector {
           // We've found an ancestor class in the plugin's hierarchy which is
           // in the same namespace as the plugin manager service. Assume it's
           // a good base class, and move on to the next plugin type.
-          return $ancestor_class;
+          // TODO: don't take this if the class itself is a plugin.
+          $potential_base_classes[] = $ancestor_class;
+
+          // Done with this plugin.
+          goto next_plugin;
         }
+      } // foreach lineage
+
+      // End of the loop for the current plugin.
+      next_plugin:
+    } // foreach $definitions
+
+    // If we found nothing, we're done.
+    if (empty($potential_base_classes)) {
+      return;
+    }
+
+    // We now have an array of several base classes, potentially as many as one
+    // for each plugin.
+    // Collapse this down to unique values.
+    $potential_base_classes_unique = array_unique($potential_base_classes);
+
+    // If that leaves us with only one base class, return that.
+    if (count($potential_base_classes_unique) == 1) {
+      return reset($potential_base_classes_unique);
+    }
+
+    // If we have more than one base class, it's most likely because there are
+    // specialized base classes in addition to the main one (e.g. if our plugins
+    // were animals, AnimalBase and FelineBase). Now organize the classes by
+    // ancestry, and take the oldest one.
+
+    // Try to form an ancestry chain of the potential base classes.
+    // Start by partitioning the set of base classes into sets of classes that
+    // are related by ancestry, so we can pick the largest set, and then sort
+    // it by ancestry.
+    $ancestry_sets = [];
+    $current_set = [];
+    foreach ($potential_base_classes_unique as $class) {
+      // If the current set is empty, then the class goes in as it's trivially
+      // related to itself.
+      if (empty($current_set)) {
+        $current_set[] = $class;
+        continue;
+      }
+
+      // Get a sample class from the set. It doesn't matter which.
+      $other_class = reset($current_set);
+
+      if (is_subclass_of($class, $other_class) || is_subclass_of($other_class, $class)) {
+        // If the current class is related to a class in the current set, add
+        // it to the set.
+        $current_set[] = $class;
+      }
+      else {
+        // The current class is not related. Stash the current set, as we are
+        // done with it, and start a new one.
+        $ancestry_sets[] = $current_set;
+
+        $current_set = [];
+        $current_set[] = $class;
       }
     }
+    // Once we're done with the loop, our current set remains: put it into the
+    // partition list.
+    $ancestry_sets[] = $current_set;
+
+    // If there is more than one partition, take the largest.
+    if (count($ancestry_sets) > 1) {
+      $ancestry_sets_counts = [];
+      foreach ($ancestry_sets as $index => $set) {
+        $ancestry_sets_counts[$index] = count($set);
+      }
+
+      // Find the index of the largest set.
+      // (If more than one are joint largest, it doesn't matter which one we
+      // take as we have no way of choosing anyway.)
+      // (Also note that in core, the only plugin type that produces more than
+      // one set is archiver, which is hardly going to be used much.)
+      $max_count = max($ancestry_sets_counts);
+      $max_index = array_search($max_count, $ancestry_sets_counts);
+
+      $set = $ancestry_sets[$max_index];
+    }
+    else {
+      // There is only one set; take that.
+      $set = $ancestry_sets[0];
+    }
+
+    // Sort the array of classes by parentage, youngest to oldest.
+    usort($set, function($a, $b) {
+      if (is_subclass_of($a, $b)) {
+        return -1;
+      }
+      else {
+        return 1;
+      }
+      // We filtered the array for uniqueness, so the 0 case won't ever happen,
+      // and we partitioned the array, so we know the classes are always
+      // related.
+    });
+
+    // Return the oldest parent, as this is the most generic of the found base
+    // classes.
+    $base_class = end($set);
+
+    return $base_class;
   }
 
   /**
