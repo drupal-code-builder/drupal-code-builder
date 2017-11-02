@@ -170,6 +170,9 @@ class PluginTypesCollector {
     // Add data from the plugin interface (which the manager service gave us).
     $this->addPluginMethods($plugin_type_data);
 
+    // Add data about the factory method of the base class, if any.
+    $this->addBaseClassCreationData($plugin_type_data);
+
     // Sort by ID.
     ksort($plugin_type_data);
 
@@ -584,6 +587,74 @@ class PluginTypesCollector {
     }
   }
 
+  /**
+   * Adds data about the base class's create() method.
+   *
+   * This allows generated plugins that have injected services to correctly
+   * call the parent constructor, and pass the injected services to the base
+   * class.
+   *
+   * @param &$plugin_type_data
+   *   The array of data for all plugin types.
+   */
+  protected function addBaseClassCreationData(&$plugin_type_data) {
+    foreach ($plugin_type_data as $plugin_type_id => &$data) {
+      if (!isset($data['base_class'])) {
+        // Can't do anything if we didn't find a base class.
+        continue;
+      }
+
+      if (!method_exists($data['base_class'], 'create')) {
+        // Nothing to do if the base class has no static creator.
+        continue;
+      }
+
+      // Analyze the params to the __construct() method to get the typehints
+      // and parameter names.
+      $construct_R = new \ReflectionMethod($data['base_class'], '__construct');
+      $construct_params_R = $construct_R->getParameters();
+
+      if (count($construct_params_R) < 4) {
+        // The first 3 params are the basic plugin constructor params, so there
+        // is nothing to do if it's only those.
+        continue;
+      }
+
+      $construct_parameters = [];
+      foreach (array_slice($construct_params_R, 3) as $i => $parameter) {
+        $name = $parameter->getName();
+        $type = (string) $parameter->getType();
+        // TODO: Get description from the docblock.
+
+        $construct_parameters[] = [
+          'type' => $type,
+          'name' => $parameter->getName(),
+        ];
+      }
+
+      // Get the call from the body of the create() method.
+      $create_R = new \ReflectionMethod($data['base_class'], 'create');
+
+      // Get the source code of the create() method.
+      $start_line = $create_R->getStartLine() - 1;
+      $end_line = $create_R->getEndLine();
+
+      $file_source = file($create_R->getFileName());
+      $create_method_body = implode("", array_slice($file_source, $start_line, $end_line - $start_line));
+
+      $matches = [];
+      preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
+
+      $parameters = explode(',', $matches[1]);
+
+      $create_container_extractions = [];
+      foreach (array_slice($parameters, 3) as $i => $parameter) {
+        $construct_parameters[$i]['extraction'] = trim($parameter);
+      }
+
+      $data['construction'] = $construct_parameters;
+    }
+  }
 
   /**
    * Gets the namespace for the component a class is in.
