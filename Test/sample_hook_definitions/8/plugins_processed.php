@@ -246,4 +246,97 @@ array (
       ),
     ),
   ),
+  'image.effect' => 
+  array (
+    'type_id' => 'image.effect',
+    'service_id' => 'plugin.manager.image.effect',
+    'service_class_name' => 'Drupal\\image\\ImageEffectManager',
+    'service_component_namespace' => 'Drupal\\image',
+    'type_label' => 'image.effect',
+    'subdir' => 'Plugin/ImageEffect',
+    'plugin_interface' => 'Drupal\\image\\ImageEffectInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The plugin ID.',
+        'type' => 'string',
+      ),
+      'label' => 
+      array (
+        'name' => 'label',
+        'description' => 'The human-readable name of the image effect.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'description' => 
+      array (
+        'name' => 'description',
+        'description' => 'A brief description of the image effect.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation (optional)',
+      ),
+    ),
+    'base_class' => 'Drupal\\image\\ImageEffectBase',
+    'plugin_interface_methods' => 
+    array (
+      'applyEffect' => 
+      array (
+        'name' => 'applyEffect',
+        'declaration' => 'public function applyEffect(\\Drupal\\Core\\Image\\ImageInterface $image);',
+        'description' => 'Applies an image effect to the image object.',
+      ),
+      'transformDimensions' => 
+      array (
+        'name' => 'transformDimensions',
+        'declaration' => 'public function transformDimensions(array &$dimensions, $uri);',
+        'description' => 'Determines the dimensions of the styled image.',
+      ),
+      'getDerivativeExtension' => 
+      array (
+        'name' => 'getDerivativeExtension',
+        'declaration' => 'public function getDerivativeExtension($extension);',
+        'description' => 'Returns the extension the derivative would have have after applying this',
+      ),
+      'getSummary' => 
+      array (
+        'name' => 'getSummary',
+        'declaration' => 'public function getSummary();',
+        'description' => 'Returns a render array summarizing the configuration of the image effect.',
+      ),
+      'label' => 
+      array (
+        'name' => 'label',
+        'declaration' => 'public function label();',
+        'description' => 'Returns the image effect label.',
+      ),
+      'getUuid' => 
+      array (
+        'name' => 'getUuid',
+        'declaration' => 'public function getUuid();',
+        'description' => 'Returns the unique ID representing the image effect.',
+      ),
+      'getWeight' => 
+      array (
+        'name' => 'getWeight',
+        'declaration' => 'public function getWeight();',
+        'description' => 'Returns the weight of the image effect.',
+      ),
+      'setWeight' => 
+      array (
+        'name' => 'setWeight',
+        'declaration' => 'public function setWeight($weight);',
+        'description' => 'Sets the weight for this image effect.',
+      ),
+    ),
+    'construction' => 
+    array (
+      0 => 
+      array (
+        'type' => 'Psr\\Log\\LoggerInterface',
+        'name' => 'logger',
+        'extraction' => '$container->get(\'logger.factory\')->get(\'image\')',
+      ),
+    ),
+  ),
 );

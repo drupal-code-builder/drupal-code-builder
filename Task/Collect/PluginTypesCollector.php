@@ -20,6 +20,7 @@ class PluginTypesCollector {
   protected $testingPluginManagerServiceIds = [
     'plugin.manager.block',
     'plugin.manager.field.formatter',
+    'plugin.manager.image.effect',
   ];
 
   /**
