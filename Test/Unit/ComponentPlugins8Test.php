@@ -205,4 +205,66 @@ class ComponentPlugins8Test extends TestBase {
     $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'current_user\')');
   }
 
+  /**
+   * Test Plugins component with a plugin base class with an existing create().
+   */
+  function testPluginsGenerationWithExistingCreate() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          'plugin_type' => 'image.effect',
+          'plugin_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(2, $files, "Expected number of files is returned.");
+    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertContains("src/Plugin/ImageEffect/Alpha.php", $file_names, "The files list has a plugin file.");
+
+    // Check the plugin file.
+    $plugin_file = $files["src/Plugin/ImageEffect/Alpha.php"];
+    $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
+    $this->assertClassFileFormatting($plugin_file);
+
+    $this->assertClassImport(['Psr', 'Log', 'LoggerInterface'], $plugin_file);
+
+    $this->assertMethod('__construct', $plugin_file, "The plugin class has a constructor method.");
+    $parameters = [
+      'configuration',
+      'plugin_id',
+      'plugin_definition',
+      'logger',
+      'current_user',
+    ];
+    $this->assertFunctionHasParameters('__construct', $parameters, $plugin_file);
+    $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);');
+    $this->assertFunctionCode($plugin_file, '__construct', '$this->currentUser = $current_user;');
+
+    $this->assertMethod('create', $plugin_file, "The plugin class has a create method.");
+    $parameters = [
+      'container',
+      'configuration',
+      'plugin_id',
+      'plugin_definition',
+    ];
+    $this->assertFunctionHasParameters('create', $parameters, $plugin_file);
+    $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'logger.factory\')->get(\'image\'),');
+    $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'current_user\')');
+  }
+
 }
