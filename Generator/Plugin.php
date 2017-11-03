@@ -98,6 +98,10 @@ class Plugin extends PHPClassFile {
             }
           }
 
+          // Set the plugin type data.
+          // Bit of a cheat, as undeclared data property!
+          $component_data['plugin_type_data'] = $plugin_data;
+
           // Set the relative qualified class name.
           // The full class name will be of the form:
           //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
@@ -283,6 +287,7 @@ class Plugin extends PHPClassFile {
    * Creates the code lines for the __construct() method.
    */
   protected function codeBodyClassMethodConstruct() {
+    // The common parameters to a plugin constructor.
     $parameters = [
       [
         'name' => 'configuration',
@@ -300,6 +305,19 @@ class Plugin extends PHPClassFile {
         'typehint' => 'mixed',
       ]
     ];
+
+    // The parameters for the base class's constructor.
+    if (isset($this->component_data['plugin_type_data']['construction'])) {
+      foreach ($this->component_data['plugin_type_data']['construction'] as $construction_item) {
+        $parameters[] = [
+          'name' => $construction_item['name'],
+          'description' => 'The ' . strtr($construction_item['name'], '_', ' ')  . '.',
+          'typehint' => '\\' . $construction_item['type'],
+        ];
+      }
+    }
+
+    // Parameters for this plugin's services.
     foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
       $parameters[] = $service_parameter;
     }
@@ -313,7 +331,16 @@ class Plugin extends PHPClassFile {
       ]
     );
 
-    $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
+    if (isset($this->component_data['plugin_type_data']['construction'])) {
+      $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition, '
+        . implode(', ', array_map(function($item) {
+          return '$' . $item['name'];
+        }, $this->component_data['plugin_type_data']['construction']))
+        . ');';
+    }
+    else {
+      $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
+    }
 
     foreach ($this->injectedServices as $service_info) {
       $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
@@ -353,11 +380,22 @@ class Plugin extends PHPClassFile {
       ]
     );
 
+    // The common parameters to a plugin constructor.
     $code[] = '  return new static(';
     $code[] = '    $configuration,';
     $code[] = '    $plugin_id,';
     $code[] = '    $plugin_definition,';
 
+    // The parameters for the base class's constructor.
+    if (isset($this->component_data['plugin_type_data']['construction'])) {
+      foreach ($this->component_data['plugin_type_data']['construction'] as $construction_item) {
+        // We always want a comma, as if we're here it's because there are
+        // services specific to the generated plugin too.
+        $code[] = '    ' . $construction_item['extraction'] . ',';
+      }
+    }
+
+    // Parameters for this plugin's services.
     $container_extraction_lines = [];
     foreach ($this->childContentsGrouped['container_extraction'] as $container_extraction) {
       $container_extraction_lines[] = '    ' . $container_extraction;
