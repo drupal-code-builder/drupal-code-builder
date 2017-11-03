@@ -21,9 +21,11 @@ class ComponentPHPFile8Test extends TestBase {
    * @param $code
    *   The code to extract class names from.
    * @param $expected_changed_code
-   *   The original code, with the expected alteration.
+   *   The original code, with the expected alteration. NULL if no extraction
+   *   is expected.
    * @param $expected_qualified_class_name
-   *   The expected qualified class name that will be extracted from the code.
+   *   The expected qualified class name that will be extracted from the code;
+   *   NULL if we do not expect extraction.
    */
   public function testQualifiedClassNameExtraction($code, $expected_changed_code, $expected_qualified_class_name) {
     // Make the protected method we're testing callable.
