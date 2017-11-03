@@ -46,7 +46,7 @@ class ComponentPHPFile8Test extends TestBase {
       $this->assertEmpty($imported_classes, "No class name was extracted.");
     }
     else {
-      $this->assertContains($expected_qualified_class_name, $imported_classes, "The qualified class name was extracted.");
+      $this->assertEquals([$expected_qualified_class_name], $imported_classes, "The qualified class name was extracted.");
 
       $changed_code = array_pop($code_lines);
       $this->assertEquals($expected_changed_code, $changed_code, "The code was changed to use the short class name.");
@@ -81,6 +81,13 @@ class ComponentPHPFile8Test extends TestBase {
       'new' => [
         '$foo = new \Foo\Bar()',
         '$foo = new Bar()',
+        'Foo\Bar',
+      ],
+      'repeated' => [
+        '$foo = new \Foo\Bar();
+          $bar = new \Foo\Bar();',
+        '$foo = new Bar();
+          $bar = new Bar();',
         'Foo\Bar',
       ],
       'docblock param' => [
