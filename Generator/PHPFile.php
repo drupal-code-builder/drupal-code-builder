@@ -163,6 +163,9 @@ class PHPFile extends File {
         }
       }
     }
+
+    // Remove duplicates.
+    $imported_classes = array_unique($imported_classes);
   }
 
   /**
@@ -175,8 +178,7 @@ class PHPFile extends File {
     $imports = [];
 
     if ($imported_classes) {
-      // Remove duplicates, and sort.
-      $imported_classes = array_unique($imported_classes);
+      // Sort the imported classes.
       sort($imported_classes);
 
       foreach ($imported_classes as $fully_qualified_class_name) {
