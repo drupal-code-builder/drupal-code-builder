@@ -137,8 +137,13 @@ class PHPFile extends File {
    * @param &$imported_classes
    *  An array to populate with the fully-qualified classnames which are
    *  removed. These are without the initial namespace separator.
+   * @param string $current_namespace
+   *  (optional) The namespace of the current file, without the initial '\'. If
+   *  omitted, no comparison of namespace is done.
    */
-  protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes) {
+  protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes, $current_namespace = '') {
+    $current_namespace_pieces = explode('\\', $current_namespace);
+
     foreach ($class_code as &$line) {
       // Skip lines which are a comment.
       if (preg_match('@^\s*\*@', $line)) {
@@ -159,7 +164,12 @@ class PHPFile extends File {
           $class_name = $match_set[1];
           $line = preg_replace('@' . preg_quote($fully_qualified_class_name) . '@', $class_name, $line);
 
-          $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
+          $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
+          $namespace_pieces = array_slice(explode('\\', $fully_qualified_class_name), 0, -1);
+
+          if ($namespace_pieces != $current_namespace_pieces) {
+            $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
+          }
         }
       }
     }

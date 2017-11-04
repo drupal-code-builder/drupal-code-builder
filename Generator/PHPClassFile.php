@@ -70,6 +70,7 @@ class PHPClassFile extends PHPFile {
           return end($component_data['qualified_class_name_pieces']);
         },
       ],
+      // The namespace, without the inital '\'.
       'namespace' => [
         'computed' => TRUE,
         'default' => function($component_data) {
@@ -198,7 +199,7 @@ class PHPClassFile extends PHPFile {
     // Replace any fully-qualified classes with short class names, and keep a
     // list of the replacements to make import statements with.
     $imported_classes = [];
-    $this->extractFullyQualifiedClasses($class_code, $imported_classes);
+    $this->extractFullyQualifiedClasses($class_code, $imported_classes, $this->component_data['namespace']);
 
     $return = array_merge(
       $this->code_namespace(),

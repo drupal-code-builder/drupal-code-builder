@@ -40,7 +40,7 @@ class ComponentPHPFile8Test extends TestBase {
 
     $imported_classes = [];
 
-    $method->invokeArgs($php_file_generator, [&$code_lines, &$imported_classes]);
+    $method->invokeArgs($php_file_generator, [&$code_lines, &$imported_classes, 'Current\Namespace']);
 
     if (is_null($expected_qualified_class_name)) {
       $this->assertEmpty($imported_classes, "No class name was extracted.");
@@ -89,6 +89,11 @@ class ComponentPHPFile8Test extends TestBase {
         '$foo = new Bar();
           $bar = new Bar();',
         'Foo\Bar',
+      ],
+      'current' => [
+        '$foo = new \Current\Namespace\Bar()',
+        '$foo = new Bar()',
+        NULL,
       ],
       'docblock param' => [
         ' * @param \Foo\Bar $param',
