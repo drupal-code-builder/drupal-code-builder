@@ -16,7 +16,8 @@ Drupal Code Builder can generate the following for a module:
 - Simpletest test case classes
 - plugin classes
 - services, with presets for tagged service types
-- content entity types (experimental)
+- content entity types, with bundle entity and base fields
+- config entity types, with properties
 - plugin types
 - theme hooks
 
