@@ -64,6 +64,15 @@ class ServiceTagTypesCollector {
 
     $data = [];
 
+    // Declare event subscriber services. These don't have collectors in Drupal
+    // as they are native to Symfony, so we need to declare explicitly.
+    $data['event_subscriber'] = [
+      'label' => 'Event subscriber',
+      'interface' => 'Symfony\Component\EventDispatcher\EventSubscriberInterface',
+      'methods' => $this->methodCollector->collectMethods('Symfony\Component\EventDispatcher\EventSubscriberInterface'),
+      // TODO: services of this type should go in the EventSubscriber namespace.
+    ];
+
     foreach ($collectors_info as $service_name => $tag_infos) {
       // A single service collector service can collect on more than one tag.
       foreach ($tag_infos as $tag_info) {
