@@ -20,4 +20,18 @@ array (
       ),
     ),
   ),
+  'event_subscriber' => 
+  array (
+    'label' => 'Event subscriber',
+    'interface' => 'Symfony\\Component\\EventDispatcher\\EventSubscriberInterface',
+    'methods' => 
+    array (
+      'getSubscribedEvents' => 
+      array (
+        'name' => 'getSubscribedEvents',
+        'declaration' => 'public static function getSubscribedEvents();',
+        'description' => 'Returns an array of event names this subscriber wants to listen to.',
+      ),
+    ),
+  ),
 );
