@@ -51,6 +51,7 @@ class ServiceTagTypesCollector {
    *
    * @return
    *  An array whose keys are service tags, and whose values arrays containing:
+   *    - 'label': A label for the tag.
    *    - 'interface': The fully-qualified name (without leading slash) of the
    *      interface that each tagged service must implement.
    *    - 'methods': An array of the methods of this interface, in the same
