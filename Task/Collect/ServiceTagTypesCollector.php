@@ -118,6 +118,9 @@ class ServiceTagTypesCollector {
       }
     }
 
+    // Sort by ID.
+    ksort($data);
+
     return $data;
   }
 
