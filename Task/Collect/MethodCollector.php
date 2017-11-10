@@ -73,8 +73,10 @@ class MethodCollector {
     $method_docblock_lines = explode("\n", $method->getDocComment());
     foreach ($method_docblock_lines as $line) {
       // Take the first actual docblock line to be the description.
-      if (substr($line, 0, 5) == '   * ') {
-        $interface_method_data['description'] = substr($line, 5);
+      // Need to use preg_match() rather than match exactly to account for
+      $matches = [];
+      if (preg_match('@^ +\* (.+)@', $line, $matches)) {
+        $interface_method_data['description'] = $matches[1];
         break;
       }
     }
