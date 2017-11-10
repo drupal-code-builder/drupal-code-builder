@@ -24,6 +24,7 @@ class ServiceTagTypesCollector {
    */
   protected $testingServiceCollectorNames = [
     'breadcrumb' => TRUE,
+    // Note that event_subscriber will also be included as it's hardcoded.
   ];
 
   /**
