@@ -68,7 +68,7 @@ class Service extends PHPClassFile {
             */
             // TODO: skip for now, until plain_class_name is a proper property!
             /*
-            'plain_class_name' => [
+            'service_class_name' => [
               // not just data -- data + processing instructions.
 
             ],
@@ -101,22 +101,31 @@ class Service extends PHPClassFile {
         },
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
+      'service_class_name' => [
+        'computed' => TRUE,
+        'format' => 'string',
+        'default' => function($component_data) {
+          // The service name is its ID as a service.
+          // implode and ucfirst()
+          $service_id = $component_data['service_name'];
+          $service_id_pieces = preg_split('/[\._]/', $service_id);
+          // Create an unqualified class name by turning this into camel case.
+          $plain_class_name = implode('', array_map('ucfirst', $service_id_pieces));
+
+          return $plain_class_name;
+        },
+      ],
     );
 
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    // Take the class name from the service name.
+    // Take the relative class name from the service class name.
     $data_definition['relative_class_name']['default'] = function($component_data) {
-      // The service name is its ID as a service.
-      // implode and ucfirst()
-      $service_id = $component_data['service_name'];
-      $service_id_pieces = preg_split('/[\._]/', $service_id);
-      // Create an unqualified class name by turning this into camel case.
-      $plain_class_name = implode('', array_map('ucfirst', $service_id_pieces));
-
       // Services are typically in the module's top namespace.
-      return [$plain_class_name];
+      $service_class_name = $component_data['service_class_name'];
+
+      return [$service_class_name];
     };
 
     return $data_definition;
