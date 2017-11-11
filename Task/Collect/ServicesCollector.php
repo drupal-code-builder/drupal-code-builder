@@ -32,10 +32,12 @@ class ServicesCollector {
    */
   public function __construct(
     EnvironmentInterface $environment,
-    ContainerBuilderGetter $container_builder_getter
+    ContainerBuilderGetter $container_builder_getter,
+    CodeAnalyser $code_analyser
   ) {
     $this->environment = $environment;
     $this->containerBuilderGetter = $container_builder_getter;
+    $this->codeAnalyser = $code_analyser;
   }
 
   /**
@@ -141,11 +143,15 @@ class ServicesCollector {
         continue;
       }
 
-      // Skip if the class doesn't exist, as we can't work with just an ID
-      // to generate things like injection.
-      if (!class_exists($service_class)) {
+      // Skip if the class doesn't exist, or its parent doesn't exist, as we
+      // can't work with just an ID to generate things like injection.
+      // (The case of a service class whose parent does not exist happens if
+      // a module Foo provides a service for module Bar's collection with a
+      // service tag. Metatag module is one such example.)
+      if (!$this->codeAnalyser->classIsUsable($service_class)) {
         continue;
       }
+
 
       // Get the short class name to use as a label.
       $service_class_pieces = explode('\\', $service_class);

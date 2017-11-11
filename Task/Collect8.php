@@ -319,7 +319,8 @@ class Collect8 extends Collect {
         case 'ServicesCollector':
           $helper = new $qualified_class(
             $this->environment,
-            $this->getHelper('ContainerBuilderGetter')
+            $this->getHelper('ContainerBuilderGetter'),
+            $this->getHelper('CodeAnalyser')
           );
           break;
         default:
