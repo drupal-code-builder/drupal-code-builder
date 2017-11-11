@@ -107,6 +107,44 @@ class ComponentService8Test extends TestBase {
   }
 
   /**
+   * Test generating an event subscriber service.
+   */
+  public function testServiceGenerationEventSubscriber() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_tag_type' => 'event_subscriber',
+          // TODO: remove once the 'suggest' preset info is live.
+          'service_name' => 'event_subscriber',
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
+    $services_file = $files["$module_name.services.yml"];
+
+    // TODO: assertYamlProperty() is not powerful enough for this.
+    //$this->assertYamlProperty($services_file, 'tags', [], "The services file declares the service class.");
+    // Quick hack in the meantime.
+    $this->assertContains('name: event_subscriber', $services_file);
+
+    $this->assertArrayHasKey("src/EventSubscriber/EventSubscriber.php", $files, "The files list has a service class file.");
+    $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
+
+    // Interface methods.
+    $this->assertMethod('getSubscribedEvents', $service_class_file);
+  }
+
+  /**
    * Test a service with with injected services.
    */
   function testServiceGenerationWithServices() {
