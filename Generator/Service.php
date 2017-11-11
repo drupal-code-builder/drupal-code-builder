@@ -79,6 +79,9 @@ class Service extends PHPClassFile {
       ];
     }
 
+    // TODO: implement this once we have a processing system.
+    //$presets['event_subscriber']['data']['force']['relative_class_name'] ...
+
     $data_definition = array(
       'service_tag_type' => [
         'label' => 'Service type preset',
@@ -124,6 +127,12 @@ class Service extends PHPClassFile {
     $data_definition['relative_class_name']['default'] = function($component_data) {
       // Services are typically in the module's top namespace.
       $service_class_name = $component_data['service_class_name'];
+
+      // Quick hack!
+      // TODO remove once the processor system is done.
+      if ($component_data['service_tag_type'] == 'event_subscriber') {
+        return ['EventSubscriber', $service_class_name];
+      }
 
       return [$service_class_name];
     };
