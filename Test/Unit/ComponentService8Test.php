@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentService8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Service component.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentService8Test.php
- * @endcode
  */
 class ComponentService8Test extends TestBase {
 

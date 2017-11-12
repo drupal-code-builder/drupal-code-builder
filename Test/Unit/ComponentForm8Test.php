@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentForm8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Form component.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentForm8Test.php
- * @endcode
  */
 class ComponentForm8Test extends TestBase {
 

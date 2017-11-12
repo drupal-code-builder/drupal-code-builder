@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentThemeHook8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Tests the AdminSettingsForm generator class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentThemeHook8Test.php
- * @endcode
+ * Tests the theme hook generator class.
  */
 class ComponentThemeHook8Test extends TestBase {
 

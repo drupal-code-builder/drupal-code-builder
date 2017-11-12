@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentTests7Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Basic test class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentTests7Test.php
- * @endcode
+ * Tests the Simpletest test class generator.
  */
 class ComponentTests7Test extends TestBase {
 

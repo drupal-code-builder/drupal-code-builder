@@ -1,21 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilderAssertionsTest.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Tests the custom assertions in our base tests class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/DrupalCodeBuilderAssertionsTest.php
- * @endcode
  *
  * @see http://stackoverflow.com/questions/12412601/phpunit-writing-tests-for-custom-assertions
  */

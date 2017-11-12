@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentModule7Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Tests the AdminSettingsForm generator class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentModule7Test.php
- * @endcode
+ * Tests basic module generation.
  */
 class ComponentModule7Test extends TestBase {
 

@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentHooks7Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Hooks component.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentHooks8Test.php
- * @endcode
  */
 class ComponentHooks8Test extends TestBase {
 

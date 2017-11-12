@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ModuleRequestedBuildTest.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Test the functionality for requesting only certain files to be generated.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ModuleRequestedBuildTest.php
- * @endcode
  */
 class ModuleRequestedBuildTest extends TestBase {
 

@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentPermissions8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the Permissions generator class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentPermissions8Test.php
- * @endcode
  */
 class ComponentPermissions8Test extends TestBase {
 

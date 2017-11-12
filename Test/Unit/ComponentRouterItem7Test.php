@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentRouterItem8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests for Router item component.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentRouterItem7Test.php
- * @endcode
  */
 class ComponentRouterItem7Test extends TestBase {
 

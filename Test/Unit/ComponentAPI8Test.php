@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains ComponentAPI8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Tests for API component.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentAPI8Test.php
- * @endcode
+ * Tests the API documentation file component.
  */
 class ComponentAPI8Test extends TestBase {
 

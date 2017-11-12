@@ -3,12 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Tests the Plugins generator class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentPluginType8Test.php
- * @endcode
+ * Tests the Plugin Type generator class.
  */
 class ComponentPluginType8Test extends TestBase {
 
@@ -17,9 +12,9 @@ class ComponentPluginType8Test extends TestBase {
   }
 
   /**
-   * Test Plugins component.
+   * Test Plugin Type component.
    */
-  function testPluginsGeneration() {
+  function testPluginTypeGeneration() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(

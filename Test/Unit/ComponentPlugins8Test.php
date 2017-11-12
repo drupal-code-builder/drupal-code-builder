@@ -1,21 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains ComponentPlugins8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 
 /**
  * Tests the Plugins generator class.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentPlugins8Test.php
- * @endcode
  */
 class ComponentPlugins8Test extends TestBase {
 

@@ -1,21 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains ComponentInfo8Test.
- */
-
 namespace DrupalCodeBuilder\Test\Unit;
 
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests for Info component.
- *
- * Run with:
- * @code
- *   vendor/phpunit/phpunit/phpunit Test/ComponentInfo8Test.php
- * @endcode
  */
 class ComponentInfo8Test extends TestBase {
 
@@ -80,4 +70,3 @@ class ComponentInfo8Test extends TestBase {
   }
 
 }
-
