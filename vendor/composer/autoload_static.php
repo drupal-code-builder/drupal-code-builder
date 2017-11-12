@@ -204,6 +204,7 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
         'DrupalCodeBuilder\\Task\\Collect6' => __DIR__ . '/../..' . '/Task/Collect6.php',
         'DrupalCodeBuilder\\Task\\Collect7' => __DIR__ . '/../..' . '/Task/Collect7.php',
         'DrupalCodeBuilder\\Task\\Collect8' => __DIR__ . '/../..' . '/Task/Collect8.php',
+        'DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser' => __DIR__ . '/../..' . '/Task/Collect/CodeAnalyser.php',
         'DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter' => __DIR__ . '/../..' . '/Task/Collect/ContainerBuilderGetter.php',
         'DrupalCodeBuilder\\Task\\Collect\\DataTypesCollector' => __DIR__ . '/../..' . '/Task/Collect/DataTypesCollector.php',
         'DrupalCodeBuilder\\Task\\Collect\\FieldTypesCollector' => __DIR__ . '/../..' . '/Task/Collect/FieldTypesCollector.php',

@@ -121,6 +121,7 @@ return array(
     'DrupalCodeBuilder\\Task\\Collect6' => $baseDir . '/Task/Collect6.php',
     'DrupalCodeBuilder\\Task\\Collect7' => $baseDir . '/Task/Collect7.php',
     'DrupalCodeBuilder\\Task\\Collect8' => $baseDir . '/Task/Collect8.php',
+    'DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser' => $baseDir . '/Task/Collect/CodeAnalyser.php',
     'DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter' => $baseDir . '/Task/Collect/ContainerBuilderGetter.php',
     'DrupalCodeBuilder\\Task\\Collect\\DataTypesCollector' => $baseDir . '/Task/Collect/DataTypesCollector.php',
     'DrupalCodeBuilder\\Task\\Collect\\FieldTypesCollector' => $baseDir . '/Task/Collect/FieldTypesCollector.php',
