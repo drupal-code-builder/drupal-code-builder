@@ -185,7 +185,7 @@ class ContentEntityType extends EntityTypeBase {
     $method_body[] = '$fields = parent::baseFieldDefinitions($entity_type);';
     $method_body[] = '';
     foreach ($this->component_data['base_fields'] as $base_field_data) {
-      $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')'";
+      $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
       $method_body[] = "  ->setLabel(t('{$base_field_data['label']}'))";
       $method_body[] = "  ->setDescription(t('TODO: description of field.'));";
 
