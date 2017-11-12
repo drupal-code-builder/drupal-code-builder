@@ -43,6 +43,7 @@ class ComponentPlugins8Test extends TestBase {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $this->assertWellFormedPHP($plugin_file);
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
@@ -155,6 +156,7 @@ class ComponentPlugins8Test extends TestBase {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $this->assertWellFormedPHP($plugin_file);
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
@@ -228,6 +230,7 @@ class ComponentPlugins8Test extends TestBase {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/ImageEffect/Alpha.php"];
+    $this->assertWellFormedPHP($plugin_file);
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 

@@ -38,6 +38,7 @@ class ComponentRouterItem7Test extends TestBase {
 
     $module_file = $files["$module_name.module"];
 
+    $this->assertWellFormedPHP($module_file);
     $this->assertHookImplementation($module_file, 'hook_menu', $module_name);
     $this->assertHookDocblock('hook_menu', $module_file, "The module file contains a hook_menu() implementation");
 

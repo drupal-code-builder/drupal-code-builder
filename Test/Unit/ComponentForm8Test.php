@@ -39,8 +39,8 @@ class ComponentForm8Test extends TestBase {
     $this->assertArrayHasKey("src/Form/MyForm.php", $files, "The files list has a form class file.");
 
     $form_file = $files["src/Form/MyForm.php"];
-    $this->assertNoTrailingWhitespace($form_file);
 
+    $this->assertWellFormedPHP($form_file);
     $this->assertNoTrailingWhitespace($form_file, "The form class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($form_file);
 
@@ -81,6 +81,8 @@ class ComponentForm8Test extends TestBase {
     $this->assertCount(2, $files, "Two files are returned.");
 
     $form_file = $files["src/Form/MyForm.php"];
+
+    $this->assertWellFormedPHP($form_file);
 
     $this->assertClassImport(['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface'], $form_file);
     $this->assertClassImport(['Drupal', 'Core', 'Session', 'AccountProxyInterface'], $form_file);

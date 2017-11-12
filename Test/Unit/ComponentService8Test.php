@@ -50,6 +50,7 @@ class ComponentService8Test extends TestBase {
 
     $service_class_file = $files["src/MyService.php"];
 
+    $this->assertWellFormedPHP($service_class_file);
     $this->assertNoTrailingWhitespace($service_class_file, "The service class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($service_class_file);
 
@@ -91,6 +92,8 @@ class ComponentService8Test extends TestBase {
     $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
 
+    $this->assertWellFormedPHP($service_class_file);
+
     // Interface methods.
     $this->assertMethod('applies', $service_class_file);
     $this->assertMethod('build', $service_class_file);
@@ -129,6 +132,8 @@ class ComponentService8Test extends TestBase {
 
     $this->assertArrayHasKey("src/EventSubscriber/EventSubscriber.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
+
+    $this->assertWellFormedPHP($service_class_file);
 
     // Interface methods.
     $this->assertMethod('getSubscribedEvents', $service_class_file);
@@ -172,6 +177,8 @@ class ComponentService8Test extends TestBase {
     // TODO: check service argument is present.
 
     $service_class_file = $files["src/MyService.php"];
+
+    $this->assertWellFormedPHP($service_class_file);
 
     // Check the injected service.
     $this->assertClassProperty('currentUser', $service_class_file, "The service class has a property for the injected service.");
@@ -219,6 +226,8 @@ class ComponentService8Test extends TestBase {
     $this->assertYamlProperty($services_file, 'class', "Drupal\\$module_name\\MyServiceClass", "The services file declares the service class.");
 
     $service_class_file = $files["src/MyServiceClass.php"];
+
+    $this->assertWellFormedPHP($service_class_file);
 
     $this->assertNamespace(['Drupal', $module_name], $service_class_file, "The service class file contains contains the expected namespace.");
     $this->assertClass('MyServiceClass', $service_class_file, "The service file contains the service class.");

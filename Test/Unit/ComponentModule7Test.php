@@ -33,6 +33,10 @@ class ComponentModule7Test extends TestBase {
 
     $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
     $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
+
+    // Check the .module file.
+    $module_file = $files["$module_name.module"];
+    $this->assertWellFormedPHP($module_file);
   }
 
   /**

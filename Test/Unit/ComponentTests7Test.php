@@ -38,6 +38,8 @@ class ComponentTests7Test extends TestBase {
     // Check the .test file.
     $tests_file = $files["tests/$module_name.test"];
 
+    $this->assertWellFormedPHP($tests_file);
+
     $this->assertNoTrailingWhitespace($tests_file, "The tests file contains no trailing whitespace.");
 
     // Can't use assertWellFormedPHP() as the parent class does not exist here.

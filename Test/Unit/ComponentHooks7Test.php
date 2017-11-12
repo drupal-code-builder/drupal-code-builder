@@ -84,6 +84,7 @@ class ComponentHooks7Test extends TestBase {
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
+    $this->assertWellFormedPHP($tokens_file);
     $this->assertNoTrailingWhitespace($tokens_file, "The tokens file contains no trailing whitespace.");
     $this->assertHookDocblock('hook_tokens', $tokens_file, "The tokens file contains the docblock for hook_tokens().");
     $this->assertHookImplementation($tokens_file, 'hook_tokens', $module_name, "The tokens file contains a function declaration that implements hook_tokens().");

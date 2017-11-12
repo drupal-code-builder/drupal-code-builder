@@ -39,6 +39,7 @@ class ComponentPermissions7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
+    $this->assertWellFormedPHP($module_file);
     $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
     $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['$permission_name']");

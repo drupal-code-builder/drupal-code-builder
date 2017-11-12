@@ -33,6 +33,7 @@ class ComponentAdminSettings8Test extends TestBase {
 
     // Check the form class code.
     $form_file = $files['src/Form/AdminSettingsForm.php'];
+    $this->assertWellFormedPHP($form_file);
     $this->assertNoTrailingWhitespace($form_file, "The form class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($form_file);
 

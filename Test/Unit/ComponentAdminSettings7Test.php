@@ -38,6 +38,7 @@ class ComponentAdminSettings7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
+    $this->assertWellFormedPHP($module_file);
     $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
     $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
@@ -73,6 +74,7 @@ class ComponentAdminSettings7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
+    $this->assertWellFormedPHP($module_file);
     $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertHookImplementation($module_file, 'hook_init', $module_name, "The module file contains a function declaration that implements hook_permission().");
@@ -103,6 +105,7 @@ class ComponentAdminSettings7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
+    $this->assertWellFormedPHP($module_file);
     $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['access testmodule']");

@@ -39,6 +39,7 @@ class ComponentAPI8Test extends TestBase {
     $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has an api.php file.");
 
     $api_file = $files["$module_name.api.php"];
+    $this->assertWellFormedPHP($api_file);
     $this->assertNoTrailingWhitespace($api_file);
     $this->assertFileHeader($api_file);
 

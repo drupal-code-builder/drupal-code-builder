@@ -46,6 +46,7 @@ class ComponentRouterItem8Test extends TestBase {
 
     $controller_file = $files["src/Controller/MyPathController.php"];
 
+    $this->assertWellFormedPHP($controller_file);
     $this->assertNoTrailingWhitespace($controller_file, "The controller file contains no trailing whitespace.");
     $this->assertClassFileFormatting($controller_file);
 

@@ -56,6 +56,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
+    $this->assertWellFormedPHP($entity_class_file);
     $this->assertNoTrailingWhitespace($entity_class_file);
     $this->assertClassFileFormatting($entity_class_file);
     $this->assertNamespace(['Drupal', $module_name, 'Entity'], $entity_class_file);
@@ -125,6 +126,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
+    $this->assertWellFormedPHP($entity_class_file);
     $this->assertNoTrailingWhitespace($entity_class_file);
     $this->assertClassFileFormatting($entity_class_file);
     $this->assertNamespace(['Drupal', $module_name, 'Entity'], $entity_class_file);
@@ -135,6 +137,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
+    $this->assertWellFormedPHP($bundle_entity_class_file);
     $this->assertNoTrailingWhitespace($bundle_entity_class_file);
     $this->assertClassFileFormatting($bundle_entity_class_file);
     $this->assertNamespace(['Drupal', $module_name, 'Entity'], $bundle_entity_class_file);

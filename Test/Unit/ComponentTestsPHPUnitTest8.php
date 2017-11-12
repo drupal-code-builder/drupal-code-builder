@@ -40,6 +40,7 @@ class ComponentTestsPHPUnitTest8 extends TestBase {
 
     $test_file = $files["tests/src/MyTest.php"];
 
+    $this->assertWellFormedPHP($test_file);
     $this->assertNoTrailingWhitespace($test_file, "The test class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($test_file);
 
@@ -74,6 +75,7 @@ class ComponentTestsPHPUnitTest8 extends TestBase {
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
+    $this->assertWellFormedPHP($test_file);
     $this->assertNoTrailingWhitespace($test_file, "The test class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($test_file);
 

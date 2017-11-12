@@ -71,6 +71,7 @@ class ComponentHooks8Test extends TestBase {
     // Check the .install file.
     $install_file = $files["$module_name.install"];
 
+    $this->assertWellFormedPHP($install_file);
     $this->assertNoTrailingWhitespace($install_file, "The install file contains no trailing whitespace.");
 
     $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
@@ -86,6 +87,7 @@ class ComponentHooks8Test extends TestBase {
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
+    $this->assertWellFormedPHP($tokens_file);
     $this->assertNoTrailingWhitespace($tokens_file, "The tokens file contains no trailing whitespace.");
     $this->assertHookDocblock('hook_tokens', $tokens_file, "The tokens file contains the docblock for hook_tokens().");
     $this->assertHookImplementation($tokens_file, 'hook_tokens', $module_name, "The tokens file contains a function declaration that implements hook_tokens().");
