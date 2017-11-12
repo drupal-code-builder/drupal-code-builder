@@ -100,7 +100,7 @@ class PluginType extends BaseGenerator {
       // Namespace the service name after the prefix.
       'prefixed_service_name' => 'plugin.manager.' . $this->component_data['root_component_name'] . '_' . $this->component_data['plugin_type'],
       // Use the annotation class name as the basis for the manager class name.
-      'relative_class_name' => [$this->component_data['annotation_class'] . 'Manager'],
+      'service_class_name' => $this->component_data['annotation_class'] . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
       'parent' => 'default_plugin_manager',
