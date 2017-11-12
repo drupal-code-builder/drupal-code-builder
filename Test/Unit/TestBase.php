@@ -268,15 +268,27 @@ abstract class TestBase extends TestCase {
       $message = "String evaluates as correct PHP.";
     }
 
-    // Code passed to eval() should not have an opening PHP tag, which our
-    // module code does. However, we can close a PHP tag at the start and then
-    // our opening tag is acceptable.
-    // It should be safe to eval as all of the functions will be prefixed with
-    // the module name (unless something has gone horribly wrong, in which case
-    // case the test should fail anyway.)
-    $eval = eval('?>' . $code);
-    // eval() returns FALSE if there is a parse error.
-    $this->assertTrue($eval === NULL, $message);
+    // Escape all the backslashes. This is to prevent any escaped character
+    // sequences from being formed by namespaces and long classes, e.g.
+    // 'namespace Foo\testmodule;' will treat the '\t' as a tab character.
+    // TODO: find a better way to do this that doesn't involve changing the
+    // code.
+    $escaped_code = str_replace('\\', '\\\\', $code);
+
+    // Pass the code to PHP for linting.
+    $output = NULL;
+    $exit = NULL;
+    $result = exec(sprintf('echo %s | php -l', escapeshellarg($escaped_code)), $output, $exit);
+
+    if (!empty($exit)) {
+      // Dump the code lines as an array so we get the line numbers.
+      $code_lines = explode("\n", $code);
+      // Re-key it so the line numbers start at 1.
+      $code_lines = array_combine(range(1, count($code_lines)), $code_lines);
+      dump($code_lines);
+
+      $this->fail("Error parsing the code resulted in: \n" . implode("\n", $output));
+    }
   }
 
   /**
