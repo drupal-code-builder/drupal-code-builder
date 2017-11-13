@@ -40,6 +40,7 @@ class ComponentAPI8Test extends TestBase {
 
     $api_file = $files["$module_name.api.php"];
     $this->assertWellFormedPHP($api_file);
+    $this->assertDrupalCodingStandards($api_file);
     $this->assertNoTrailingWhitespace($api_file);
     $this->assertFileHeader($api_file);
 

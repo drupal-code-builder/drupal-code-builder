@@ -51,6 +51,7 @@ class ComponentService8Test extends TestBase {
     $service_class_file = $files["src/MyService.php"];
 
     $this->assertWellFormedPHP($service_class_file);
+    $this->assertDrupalCodingStandards($service_class_file);
     $this->assertNoTrailingWhitespace($service_class_file, "The service class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($service_class_file);
 
@@ -93,6 +94,7 @@ class ComponentService8Test extends TestBase {
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
 
     $this->assertWellFormedPHP($service_class_file);
+    $this->assertDrupalCodingStandards($service_class_file);
 
     // Interface methods.
     $this->assertMethod('applies', $service_class_file);
@@ -134,6 +136,7 @@ class ComponentService8Test extends TestBase {
     $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
 
     $this->assertWellFormedPHP($service_class_file);
+    $this->assertDrupalCodingStandards($service_class_file);
 
     // Interface methods.
     $this->assertMethod('getSubscribedEvents', $service_class_file);
@@ -179,6 +182,7 @@ class ComponentService8Test extends TestBase {
     $service_class_file = $files["src/MyService.php"];
 
     $this->assertWellFormedPHP($service_class_file);
+    $this->assertDrupalCodingStandards($service_class_file);
 
     // Check the injected service.
     $this->assertClassProperty('currentUser', $service_class_file, "The service class has a property for the injected service.");
@@ -228,6 +232,7 @@ class ComponentService8Test extends TestBase {
     $service_class_file = $files["src/MyServiceClass.php"];
 
     $this->assertWellFormedPHP($service_class_file);
+    $this->assertDrupalCodingStandards($service_class_file);
 
     $this->assertNamespace(['Drupal', $module_name], $service_class_file, "The service class file contains contains the expected namespace.");
     $this->assertClass('MyServiceClass', $service_class_file, "The service file contains the service class.");

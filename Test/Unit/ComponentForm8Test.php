@@ -41,6 +41,7 @@ class ComponentForm8Test extends TestBase {
     $form_file = $files["src/Form/MyForm.php"];
 
     $this->assertWellFormedPHP($form_file);
+    $this->assertDrupalCodingStandards($form_file);
     $this->assertNoTrailingWhitespace($form_file, "The form class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($form_file);
 

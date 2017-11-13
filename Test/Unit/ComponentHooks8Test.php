@@ -57,6 +57,7 @@ class ComponentHooks8Test extends TestBase {
     $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
 
     $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
+    $this->assertDrupalCodingStandards($module_file);
 
     $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
 
