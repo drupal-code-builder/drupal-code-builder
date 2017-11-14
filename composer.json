@@ -8,7 +8,8 @@
     "drupal/coder": "^8.2",
     "mockery/mockery": "dev-master",
     "symfony/yaml": "^3.2",
-    "symfony/var-dumper": "^3.2"
+    "symfony/var-dumper": "^3.2",
+    "morrislaptop/var-dumper-with-context": "^0.1.0"
   },
   "autoload": {
     "psr-4": {
