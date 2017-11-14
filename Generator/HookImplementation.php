@@ -80,6 +80,10 @@ class HookImplementation extends PHPFunction {
       }
 
       $this->component_data['body'] = $hook['template'];
+
+      // The code is a single string, already indented. Tell
+      // buildComponentContents() not to indent it again.
+      $this->component_data['body_indent'] = 0;
     }
 
     return parent::buildComponentContents($children_contents);

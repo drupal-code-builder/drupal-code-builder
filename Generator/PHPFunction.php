@@ -62,7 +62,6 @@ class PHPFunction extends BaseGenerator {
       'code_file' => '%module.module',
       'code_file_id' => 'ModuleCodeFile:%module.module',
       'doxygen_first' => 'TODO: write function documentation',
-      // TODO: does anyone set this to anything else?
       'body_indent' => 2,
     );
 
