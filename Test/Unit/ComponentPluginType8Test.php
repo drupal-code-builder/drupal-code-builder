@@ -40,7 +40,37 @@ class ComponentPluginType8Test extends TestBase {
     $this->assertArrayHasKey('test_module.services.yml', $files, "The services file is generated.");
     $this->assertArrayHasKey('test_module.plugin_type.yml', $files, "The plugin type definition file is generated.");
 
-    // TODO! test file contents!
+    // Check the plugin manager file.
+    $plugin_manager_file = $files["src/CatFeederManager.php"];
+    $this->assertWellFormedPHP($plugin_manager_file);
+    $this->assertDrupalCodingStandards($plugin_manager_file);
+    $this->assertNoTrailingWhitespace($plugin_manager_file, "The plugin service class file contains no trailing whitespace.");
+    $this->assertClassFileFormatting($plugin_manager_file);
+
+    // Check the annotation class file.
+    $annotation_file = $files["src/Annotation/CatFeeder.php"];
+    $this->assertWellFormedPHP($annotation_file);
+    $this->assertDrupalCodingStandards($annotation_file);
+    $this->assertNoTrailingWhitespace($annotation_file, "The plugin service class file contains no trailing whitespace.");
+    $this->assertClassFileFormatting($annotation_file);
+
+    // Check the plugin base class file.
+    $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeederBase.php"];
+    $this->assertWellFormedPHP($plugin_base_file);
+    $this->assertDrupalCodingStandards($plugin_base_file);
+    $this->assertNoTrailingWhitespace($plugin_base_file);
+    // Doesn't work with interface and so on yet.
+    //$this->assertClassFileFormatting($plugin_base_file);
+
+    // Check the plugin interface file.
+    $plugin_interface_file = $files["src/Plugin/CatFeeder/CatFeederInterface.php"];
+    $this->assertWellFormedPHP($plugin_interface_file);
+    $this->assertDrupalCodingStandards($plugin_interface_file);
+    $this->assertNoTrailingWhitespace($plugin_interface_file);
+    // Doesn't do interfaces.
+    //$this->assertClassFileFormatting($plugin_interface_file);
+
+    // TODO! test further file contents!
 
     /*
     $file_names = array_keys($files);
