@@ -15,6 +15,18 @@ class ComponentTestsPHPUnitTest8 extends TestBase {
   protected $drupalMajorVersion = 8;
 
   /**
+   * The PHP CodeSniffer to exclude for this test.
+   *
+   * @var string[]
+   */
+  static protected $phpcsExcludedSniffs = [
+    // This picks up that the setUp() merely calls the parent class, but this
+    // is useful to developers as a starting point to add code to, therefore
+    // this is excluded.
+    'Generic.CodeAnalysis.UselessOverridingMethod',
+  ];
+
+  /**
    * Create a test class without a preset.
    */
   function testModuleGenerationTestsWithoutPreset() {
@@ -41,9 +53,7 @@ class ComponentTestsPHPUnitTest8 extends TestBase {
     $test_file = $files["tests/src/MyTest.php"];
 
     $this->assertWellFormedPHP($test_file);
-    // TODO: this triggers Generic_Sniffs_CodeAnalysis_UselessOverridingMethodSniff
-    // for the setUp() method...
-    //$this->assertDrupalCodingStandards($test_file);
+    $this->assertDrupalCodingStandards($test_file);
     $this->assertNoTrailingWhitespace($test_file, "The test class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($test_file);
 
@@ -79,9 +89,7 @@ class ComponentTestsPHPUnitTest8 extends TestBase {
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
     $this->assertWellFormedPHP($test_file);
-    // TODO: this triggers Generic_Sniffs_CodeAnalysis_UselessOverridingMethodSniff
-    // for the setUp() method...
-    //$this->assertDrupalCodingStandards($test_file);
+    $this->assertDrupalCodingStandards($test_file);
     $this->assertNoTrailingWhitespace($test_file, "The test class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($test_file);
 
