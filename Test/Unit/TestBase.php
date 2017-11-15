@@ -606,6 +606,8 @@ abstract class TestBase extends TestCase {
     // First, check the class has something that looks like an annotation.
     $annotation_regex = "[
     ^ /\*\* \\n # Open docblock.
+    ^ \ \* \ .+ \\n # Docblock first line.
+    ^ \ \* \\n # Empty line.
     ^ \ \* \ @$annotation_class \( \\n    # Annotation class.
     ( ^ \ \* \ {3} \w+ \ = \ .* , \\n )+  # Multiple properties.
     ^ \ \* \ \) \\n

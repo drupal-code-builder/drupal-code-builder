@@ -195,12 +195,19 @@ class Plugin extends PHPClassFile {
    * Procudes the docblock for the class.
    */
   protected function class_doc_block() {
-    // TODO: add docblock_first_line.
-    return $this->classAnnotation();
+    $docblock_code[] = $this->component_data['docblock_first_line'];
+    $docblock_code[] = '';
+
+    $docblock_code = array_merge($docblock_code, $this->classAnnotation());
+
+    return $this->docBlock($docblock_code);
   }
 
   /**
-   * Produces the plugin class annotation.
+   * Produces the plugin class annotation lines.
+   *
+   * @return
+   *   An array of lines suitable for docBlock().
    */
   function classAnnotation() {
     $annotation_variables = $this->component_data['plugin_type_data']['plugin_properties'];
@@ -231,7 +238,7 @@ class Plugin extends PHPClassFile {
     }
     $docblock_code[] = ')';
 
-    return $this->docBlock($docblock_code);
+    return $docblock_code;
   }
 
   /**
