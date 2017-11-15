@@ -488,7 +488,18 @@ class PHPClassFile extends PHPFile {
         $docblock_content_lines[] = '';
         foreach ($parameters as $parameter_info) {
           $docblock_content_lines[] = "@param " . $parameter_info['typehint'] . ' $' . $parameter_info['name'];
-          $docblock_content_lines[] = '  ' . $parameter_info['description'];
+
+          // Wrap the description to 80 characters minus the indentation.
+          $indent_count =
+            2 // Class code indent.
+            + 2 // Space and the doc comment asterisk.
+            + 3; // Indentation for the parameter description.
+          $wrapped_description = wordwrap($parameter_info['description'], 80 - $indent_count);
+          $wrapped_description_lines = explode("\n", $wrapped_description);
+
+          foreach ($wrapped_description_lines as $line) {
+            $docblock_content_lines[] = '  ' . $line;
+          }
         }
         // TODO: @return line.
       }
