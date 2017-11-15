@@ -407,7 +407,7 @@ abstract class TestBase extends TestCase {
         $after = substr($code_line, $column_number - 1);
         dump($before . '^' . $after);
         foreach ($messages as $message_info) {
-          dump("{$message_info['type']}: line $line_number, column $column_number: {$message_info['message']}");
+          dump("{$message_info['type']}: line $line_number, column $column_number: {$message_info['message']} - {$message_info['source']}");
         }
       }
     }
