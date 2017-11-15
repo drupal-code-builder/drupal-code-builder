@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests for Hooks component.
  */
-class ComponentHooks8Test extends TestBase {
+class ComponentHooks8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

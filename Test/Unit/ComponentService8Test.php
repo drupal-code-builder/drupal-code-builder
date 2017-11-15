@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests for Service component.
  */
-class ComponentService8Test extends TestBase {
+class ComponentService8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

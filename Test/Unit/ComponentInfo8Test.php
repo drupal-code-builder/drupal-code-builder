@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Tests for Info component.
  */
-class ComponentInfo8Test extends TestBase {
+class ComponentInfo8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

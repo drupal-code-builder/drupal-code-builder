@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the Permissions generator class.
  */
-class ComponentPermissions8Test extends TestBase {
+class ComponentPermissions8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

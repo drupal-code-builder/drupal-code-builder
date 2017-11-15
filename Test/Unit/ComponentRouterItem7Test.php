@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests for Router item component.
  */
-class ComponentRouterItem7Test extends TestBase {
+class ComponentRouterItem7Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);

@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the API documentation file component.
  */
-class ComponentAPI8Test extends TestBase {
+class ComponentAPI8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

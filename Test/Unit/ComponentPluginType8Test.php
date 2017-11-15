@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the Plugin Type generator class.
  */
-class ComponentPluginType8Test extends TestBase {
+class ComponentPluginType8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

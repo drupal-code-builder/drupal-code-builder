@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the theme hook generator class.
  */
-class ComponentThemeHook8Test extends TestBase {
+class ComponentThemeHook8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the AdminSettingsForm generator class.
  */
-class ComponentAdminSettings8Test extends TestBase {
+class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);

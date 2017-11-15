@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the Simpletest test class generator.
  */
-class ComponentTests7Test extends TestBase {
+class ComponentTests7Test extends TestBaseComponentGeneration {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);

@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the entity type generator class.
  */
-class ComponentContentEntityType8Test extends TestBase {
+class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
   /**
    * The Drupal core major version to set up for this test.
