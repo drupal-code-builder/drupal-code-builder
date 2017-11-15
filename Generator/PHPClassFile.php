@@ -422,6 +422,17 @@ class PHPClassFile extends PHPFile {
       $function_code[] = "$method_declaration {";
       // Add a comment with the method's first line of docblock, so the user
       // has something more informative than '{@inheritdoc}' to go on!
+
+      // Babysit documentation that is missing a final full stop, so PHP
+      // Codesniffer doesn't complain in our own tests, and we output correctly
+      // formatted code ourselves.
+      // (This can happen either if the full stop is missing, or if the first
+      // line overruns to two, in which case our analysis will have truncated
+      // the sentence.)
+      if (substr($interface_method_data['description'], -1) != '.') {
+        $interface_method_data['description'] .= '.';
+      }
+
       $function_code[] = '  // ' . $interface_method_data['description'];
       $function_code[] = '}';
 
