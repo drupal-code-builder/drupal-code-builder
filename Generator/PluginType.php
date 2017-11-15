@@ -66,7 +66,7 @@ class PluginType extends BaseGenerator {
         'default' => function($component_data) {
           return '\\' . self::makeQualifiedClassName([
             'Drupal',
-            $component_data['root_component_name'],
+            '%module',
             'Plugin',
             // TODO: won't work if plugin subdir has nesting.
             $component_data['plugin_subdirectory'],
