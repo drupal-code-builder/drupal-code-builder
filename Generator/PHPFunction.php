@@ -61,7 +61,7 @@ class PHPFunction extends BaseGenerator {
       // TODO: Remove, unused.
       'code_file' => '%module.module',
       'code_file_id' => 'ModuleCodeFile:%module.module',
-      'doxygen_first' => 'TODO: write function documentation',
+      'doxygen_first' => 'TODO: write function documentation.',
       'body_indent' => 2,
     );
 
