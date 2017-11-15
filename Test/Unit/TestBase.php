@@ -33,6 +33,13 @@ abstract class TestBase extends TestCase {
   static protected $phpcs;
 
   /**
+   * The PHP CodeSniffer to exclude for this test.
+   *
+   * @var string[]
+   */
+  static protected $phpcsExcludedSniffs = [];
+
+  /**
    * Sets up PHPCS.
    */
   public static function setUpBeforeClass() {
@@ -60,7 +67,13 @@ abstract class TestBase extends TestCase {
       FALSE
     );
 
-    $phpcs->initStandard('Drupal');
+    $phpcs->initStandard(
+      'Drupal',
+      // Include all standards.
+      [],
+      // Exclude standards defined in the test class.
+      static::$phpcsExcludedSniffs
+    );
 
     // Mock a PHP_CodeSniffer_CLI object, as the PHP_CodeSniffer object expects
     // to have this and be able to retrieve settings from it.
