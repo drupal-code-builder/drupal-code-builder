@@ -1,5 +1,6 @@
 {
   "name": "drupal-code-builder/drupal-code-builder",
+  "description": "Code generator for Drupal",
   "license": "GPL-2.0+",
   "require": {
   },
