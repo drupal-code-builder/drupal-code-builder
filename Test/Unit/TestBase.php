@@ -292,7 +292,10 @@ abstract class TestBase extends TestCase {
       }
     }
 
-    $expected_regex .= "$indent \*/\n";
+    // Would be nice to check that there's the closing newline, but a docblock
+    // retrieved by PHP Parser doesn't contain it.
+    // The PHP CodeSniffer assertion should pick up a problem with that though.
+    $expected_regex .= "$indent \*/";
 
     // Wrap the regex.
     $expected_regex = '[' . $expected_regex . ']';
