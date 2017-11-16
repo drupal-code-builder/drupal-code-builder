@@ -12,6 +12,13 @@ use PHPUnit\Framework\ExpectationFailedException;
 class DrupalCodeBuilderAssertionsTest extends TestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setupDrupalCodeBuilder($version) {
+    // Do nothing; we don't need to set up DCB.
+  }
+
+  /**
    * Tests the assertNoTrailingWhitespace() assertion.
    *
    * @dataProvider providerAssertNoTrailingWhitespace
