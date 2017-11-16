@@ -3,6 +3,16 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHP_CodeSniffer;
+use PhpParser\Error;
+use PhpParser\NodeDumper;
+use PhpParser\ParserFactory;
+
+use PhpParser\Node;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
+
 
 /**
  * Base class for unit tests that generate code and test the result.
@@ -179,6 +189,148 @@ abstract class TestBaseComponentGeneration extends TestBase {
     }
 
     $this->fail("PHPCS failed with $error_count errors and $warning_count warnings.");
+  }
+
+  /**
+   * Parses a code file string and sets various parser nodes on this test.
+   *
+   * This populates $this->parser_nodes with groups parser nodes, after
+   * resetting it from any previous call to this method.
+   *
+   * @param string $code
+   *   The code file to parse.
+   */
+  protected function parseCode($code) {
+    $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+    try {
+      $ast = $parser->parse($code);
+    }
+    catch (Error $error) {
+      $this->fail("Parse error: {$error->getMessage()}");
+    }
+
+    // Reset our array of parser nodes.
+    $this->parser_nodes = [];
+
+    // Group the parser nodes by type, so subsequent assertions can easily
+    // find them.
+    $visitor = new class($this->parser_nodes) extends NodeVisitorAbstract {
+
+      public function __construct(&$nodes) {
+        $this->nodes = &$nodes;
+      }
+
+      public function enterNode(Node $node) {
+        $node_class_lookup = [
+          Function_::class => 'functions',
+          \PhpParser\Node\Stmt\Interface_::class => 'interfaces',
+          Class_::class => 'classes',
+        ];
+
+        foreach ($node_class_lookup as $class => $key) {
+          if ($node instanceof $class) {
+            $this->nodes[$key][$node->name] = $node;
+          }
+        }
+      }
+    };
+
+    $traverser = new NodeTraverser();
+    $traverser->addVisitor($visitor);
+
+    $ast = $traverser->traverse($ast);
+  }
+
+  /**
+   * Asserts the parsed code is entirely procedural.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertIsProcedural($message = NULL) {
+    $message = $message ?? "The file contains only procedural code.";
+
+    $this->assertArrayNotHasKey('classes', $this->parser_nodes, $message);
+    $this->assertArrayNotHasKey('interfaces', $this->parser_nodes, $message);
+    // Technically we should cover traits too, but we don't generate any of
+    // those.
+  }
+
+  /**
+   * Asserts the parsed code contains the class name.
+   *
+   * @param string $class_name
+   *   The class name to check for.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertHasClass($class_name, $message = NULL) {
+    $message = $message ?? "The file contains the class {$class_name}.";
+
+    $this->assertCount(1, $this->parser_nodes['classes']);
+    $this->assertContains($class_name, $this->parser_nodes['classes']);
+  }
+
+  protected function assertClassHasParent($parent_class_name) {
+    // TODO
+  }
+
+  function assertClassHasInterfaces($interface_names) {
+    // TODO
+  }
+
+  /**
+   * Assert the parsed code contains the given function.
+   *
+   * @param string $function_name
+   *   The function name to check for.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  function assertHasFunction($function_name, $message = NULL) {
+    $message = $message ?? "The file contains the function {$function_name}.";
+
+    $this->assertArrayHasKey($function_name, $this->parser_nodes['functions'], $message);
+  }
+
+  /**
+   * Assert the parsed code contains the given method.
+   *
+   * @param string $method_name
+   *   The method name to check for.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  function assertHasMethod($method_name, $message = NULL) {
+    $message = $message ?? "The file contains the method {$method_name}.";
+
+    $this->assertHasFunction($method_name, $message);
+  }
+
+  /**
+   * Assert the parsed code implements the given hook.
+   *
+   * Also checks the hook implementation docblock has the correct text.
+   *
+   * @param string $hook_name
+   *   The full name of the hook to check for, e.g. 'hook_help'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  function assertHasHookImplementation($hook_name, $module_name, $message = NULL) {
+    $message = $message ?? "The code has a function that implements the hook $hook_name for module $module_name.";
+
+    $hook_short_name = substr($hook_name, 5);
+    $function_name = $module_name . '_' . $hook_short_name;
+
+    $this->assertHasFunction($function_name, $message);
+
+    // Use the older assertHookDocblock() assertion, but pass it just the
+    // docblock contents rather than the whole file!
+    $function_node = $this->parser_nodes['functions'][$function_name];
+    $comments = $function_node->getAttribute('comments');
+    $docblock_text = $comments[0]->getReformattedText();
+    $this->assertHookDocblock($hook_name, $docblock_text, "The module file contains the docblock for hook_menu().");
   }
 
 }
