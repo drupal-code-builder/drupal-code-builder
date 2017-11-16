@@ -67,10 +67,11 @@ class ComponentModule8Test extends TestBaseComponentGeneration {
     $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
     $this->assertDrupalCodingStandards($module_file);
 
-    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
+    $this->parseCode($module_file);
+    $this->assertIsProcedural();
+    $this->assertHasHookImplementation('hook_help', $module_name);
 
-    $this->assertHookDocblock('hook_help', $module_file, "The module file contains the docblock for hook_menu().");
-    $this->assertHookImplementation($module_file, 'hook_help', $module_name, "The module file contains a function declaration that implements hook_menu().");
+    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
 
     $this->assertFunctionCode($module_file, $module_name . '_help', $help_text, "The hook_help() implementation contains the requested help text.");
   }
