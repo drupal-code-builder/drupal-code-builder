@@ -7,6 +7,19 @@ namespace DrupalCodeBuilder\Test\Unit;
  */
 class ComponentHooks8Test extends TestBaseComponentGeneration {
 
+  /**
+   * The PHP CodeSniffer snifs to exclude for this test.
+   *
+   * @var string[]
+   */
+  static protected $phpcsExcludedSniffs = [
+    // Temporarily exclude the sniff for comment lines being too long, as a
+    // comment in hook_form_alter() violates this.
+    // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
+    // is fixed.
+    'Drupal.Files.LineLength.TooLong',
+  ];
+
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);
   }
