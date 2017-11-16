@@ -329,7 +329,15 @@ abstract class TestBaseComponentGeneration extends TestBase {
     // docblock contents rather than the whole file!
     $function_node = $this->parser_nodes['functions'][$function_name];
     $comments = $function_node->getAttribute('comments');
-    $docblock_text = $comments[0]->getReformattedText();
+
+    // Workaround for issue with PHP Parser: if the function is the first in the
+    // file, and there are no import statements, then the @file docblock will
+    // be treated as one of the function's comments. Therefore, we need to take
+    // the last comment in the array to be sure of having the actual function
+    // docblock.
+    // @see https://github.com/nikic/PHP-Parser/issues/445
+    $function_docblock = end($comments);
+    $docblock_text = $function_docblock->getReformattedText();
     $this->assertHookDocblock($hook_name, $docblock_text, "The module file contains the docblock for hook_menu().");
   }
 
