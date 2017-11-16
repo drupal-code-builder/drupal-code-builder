@@ -110,7 +110,7 @@ class Form extends PHPClassFile {
         'code_file' => $this->name,
         'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => 'Form constructor.',
-        'declaration' => 'public function buildForm(array $form, FormStateInterface $form_state)',
+        'declaration' => 'public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => array(
           "£form['element'] = array(",
           "  '#type' => 'textfield',",
@@ -127,7 +127,7 @@ class Form extends PHPClassFile {
         'code_file' => $this->name,
         'code_file_id' => $this->getUniqueId(),
         'doxygen_first' => 'Form submission handler.',
-        'declaration' => 'public function submitForm(array &$form, FormStateInterface $form_state)',
+        'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
         'body_indent' => 2,
       ),
