@@ -20,6 +20,13 @@ class ReportHookData extends ReportHookDataFolder {
   protected $sanity_level = 'component_data_processed';
 
   /**
+   * The cached hook data.
+   *
+   * @var array
+   */
+  protected $hook_data;
+
+  /**
    * Get the list of hook data.
    *
    * @return
@@ -27,15 +34,12 @@ class ReportHookData extends ReportHookDataFolder {
    */
   function listHookData() {
     // We may come here several times, so cache this.
-    // TODO: look into finer-grained caching higher up.
-    static $hook_data;
-
-    if (isset($hook_data)) {
-      return $hook_data;
+    if (!empty($this->hook_data)) {
+      return $this->hook_data;
     }
 
-    $hook_data = $this->environment->getStorage()->retrieve('hooks');
-    return $hook_data;
+    $this->hook_data = $this->environment->getStorage()->retrieve('hooks');
+    return $this->hook_data;
   }
 
   /**
