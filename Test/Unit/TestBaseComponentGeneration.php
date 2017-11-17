@@ -209,7 +209,11 @@ abstract class TestBaseComponentGeneration extends TestBase {
       $this->fail("Parse error: {$error->getMessage()}");
     }
 
+    //dump($ast);
+
     // Reset our array of parser nodes.
+    // This then passed into the anonymous visitor class, and populated with the
+    // nodes we are interested in for subsequent assertions.
     $this->parser_nodes = [];
 
     // Group the parser nodes by type, so subsequent assertions can easily
@@ -221,16 +225,25 @@ abstract class TestBaseComponentGeneration extends TestBase {
       }
 
       public function enterNode(Node $node) {
-        $node_class_lookup = [
-          Function_::class => 'functions',
-          \PhpParser\Node\Stmt\Interface_::class => 'interfaces',
-          Class_::class => 'classes',
-        ];
-
-        foreach ($node_class_lookup as $class => $key) {
-          if ($node instanceof $class) {
-            $this->nodes[$key][$node->name] = $node;
-          }
+        switch (get_class($node)) {
+          case \PhpParser\Node\Stmt\Namespace_::class:
+            $this->nodes['namespace'][] = $node;
+            break;
+          case \PhpParser\Node\Stmt\Use_::class:
+            $this->nodes['imports'][] = $node;
+            break;
+          case \PhpParser\Node\Stmt\Class_::class:
+            $this->nodes['classes'][$node->name] = $node;
+            break;
+          case \PhpParser\Node\Stmt\Property::class:
+            $this->nodes['properties'][$node->props[0]->name] = $node;
+            break;
+          case \PhpParser\Node\Stmt\Function_::class:
+            $this->nodes['functions'][$node->name] = $node;
+            break;
+          case \PhpParser\Node\Stmt\ClassMethod::class:
+            $this->nodes['methods'][$node->name] = $node;
+            break;
         }
       }
     };
@@ -257,26 +270,185 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
-   * Asserts the parsed code contains the class name.
+   * Asserts the parsed code imports the given class.
    *
-   * @param string $class_name
-   *   The class name to check for.
+   * @param string[] $class_name
+   *   Array of the full class name pieces.
    * @param string $message
    *   (optional) The assertion message.
    */
-  protected function assertHasClass($class_name, $message = NULL) {
-    $message = $message ?? "The file contains the class {$class_name}.";
+  protected function assertImportsClassLike($class_name_parts, $message = NULL) {
+    // Find the matching import statement.
+    foreach ($this->parser_nodes['imports'] as $use_node) {
+      if ($use_node->uses[0]->name->parts === $class_name_parts) {
+        return;
+      }
+    }
 
+    $class_name = implode('\\', $class_name_parts);
+    $this->fail("The full class name for the parent class {$class_name} is imported.");
+  }
+
+  /**
+   * Asserts the parsed code contains the class name.
+   *
+   * @param string $class_name
+   *   The full class name, without the leading \.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertHasClass($full_class_name, $message = NULL) {
+    $class_name_parts = explode('\\', $full_class_name);
+    $class_short_name = end($class_name_parts);
+    $namespace_parts = array_slice($class_name_parts, 0, -1);
+
+    $message = $message ?? "The file contains the class {$class_short_name}.";
+
+    // All the class files we generate contain only one class.
     $this->assertCount(1, $this->parser_nodes['classes']);
-    $this->assertArrayHasKey($class_name, $this->parser_nodes['classes']);
+    $this->assertArrayHasKey($class_short_name, $this->parser_nodes['classes']);
+
+    // Check the namespace of the class.
+    $this->assertCount(1, $this->parser_nodes['namespace']);
+    $this->assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts);
   }
 
-  protected function assertClassHasParent($parent_class_name) {
-    // TODO
+  /**
+   * Asserts the parsed code's class extends the given parent class.
+   *
+   * @param string $class_name
+   *   The full parent class name, without the leading \.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertClassHasParent($parent_full_class_name, $message = NULL) {
+    $parent_class_name_parts = explode('\\', $parent_full_class_name);
+
+    // There will be only one class.
+    $class_node = reset($this->parser_nodes['classes']);
+    $class_name = $class_node->name;
+
+    $parent_class_short_name = end($parent_class_name_parts);
+
+    $message = $message ?? "The class {$class_name} has inherits from parent class {$parent_class_short_name}.";
+
+    // Check the class is declared as extending the short parent name.
+    $extends_node = $class_node->extends;
+    $this->assertTrue($extends_node->isUnqualified(), "The class parent is unqualified.");
+    $this->assertEquals($parent_class_short_name, $extends_node->getLast(), $message);
+
+    // Check the full parent name is imported.
+    $this->assertImportsClassLike($parent_class_name_parts);
   }
 
-  function assertClassHasInterfaces($interface_names) {
-    // TODO
+  /**
+   * Asserts that the parsed class implements the given interfaces.
+   *
+   * @param string[] $expected_interface_names
+   *   An array of fully-qualified interface names, without the leading '\'.
+   */
+  function assertClassHasInterfaces($expected_interface_names) {
+    // There will be only one class.
+    $class_node = reset($this->parser_nodes['classes']);
+
+    $class_node_interfaces = [];
+    foreach ($class_node->implements as $implements) {
+      $this->assertCount(1, $implements->parts);
+      $class_node_interfaces[] = $implements->parts[0];
+    }
+
+    foreach ($expected_interface_names as $interface_full_name) {
+      $interface_parts = explode('\\', $interface_full_name);
+
+      $this->assertContains(end($interface_parts), $class_node_interfaces);
+      $this->assertImportsClassLike($interface_parts);
+    }
+
+  }
+
+  /**
+   * Assert the parsed class has the given property.
+   *
+   * @param string $property_name
+   *   The name of the property, without the initial '$'.
+   * @param string $typehint
+   *   The typehint for the property, without the initial '\'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertClassHasProperty($property_name, $typehint, $message = NULL) {
+    $message = $message ?? "The class defines the property \${$property_name}";
+
+    $this->assertArrayHasKey($property_name, $this->parser_nodes['properties'], $message);
+
+    $property_node = $this->parser_nodes['properties'][$property_name];
+    $property_docblock = $property_node->getAttribute('comments')[0]->getText();
+    $this->assertContains("@var \\{$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
+  }
+
+  /**
+   * Assert the parsed class injects the given services.
+   *
+   * @param array $injected_services
+   *   Array of the injected services.
+   * @param string $message
+   *   The assertion message.
+   */
+  protected function assertInjectedServicesWithFactory($injected_services, $message = NULL) {
+    $service_count = count($injected_services);
+
+    // Assert the create() factory method.
+    $this->assertHasMethod('create');
+    $create_node = $this->parser_nodes['methods']['create'];
+    $this->assertTrue($create_node->isStatic(), "The create() method is static.");
+
+    // This should have a single return statement.
+    $this->assertCount(1, $create_node->stmts);
+    $return_statement = $create_node->stmts[0];
+    $this->assertEquals(\PhpParser\Node\Stmt\Return_::class, get_class($return_statement), "The create() method's statement is a return.");
+    $return_args = $return_statement->expr->args;
+
+    // Slice the construct call arguments to the count of services.
+    $construct_service_args = array_slice($return_args, - $service_count);
+
+    // After the basic arguments, each one should match a service.
+    foreach ($construct_service_args as $index => $arg) {
+      // The argument is a container extraction.
+      $this->assertEquals('container', $arg->value->var->name);
+      $this->assertEquals('get', $arg->value->name);
+      $this->assertCount(1, $arg->value->args);
+      $this->assertEquals($injected_services[$index]['parameter_name'], $arg->value->args[0]->value->value);
+    }
+
+    // Assert the constructor method.
+    $this->assertHasMethod('__construct');
+    $construct_node = $this->parser_nodes['methods']['__construct'];
+
+    // Constructor parameters and container extraction much match the same
+    // order.
+    // Slice the construct method params to the count of services.
+    $construct_service_params = array_slice($construct_node->params, - $service_count);
+    // Check that the constructor has parameters for all the services, after
+    // any basic parameters.
+    foreach ($construct_service_params as $index => $param) {
+      $this->assertEquals($injected_services[$index]['parameter_name'], $param->name);
+    }
+
+    // Check the class property assignments in the constructor.
+    $assign_index = 0;
+    foreach ($construct_node->stmts as $stmt_node) {
+      if (get_class($stmt_node) == \PhpParser\Node\Expr\Assign::class) {
+        $this->assertEquals($injected_services[$assign_index]['property_name'], $stmt_node->var->name);
+        $this->assertEquals($injected_services[$assign_index]['parameter_name'], $stmt_node->expr->name);
+
+        $assign_index++;
+      }
+    }
+
+    // For each service, assert the property.
+    foreach ($injected_services as $injected_service_details) {
+      $this->assertClassHasProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
+    }
   }
 
   /**
@@ -304,7 +476,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
   function assertHasMethod($method_name, $message = NULL) {
     $message = $message ?? "The file contains the method {$method_name}.";
 
-    $this->assertHasFunction($method_name, $message);
+    $this->assertArrayHasKey($method_name, $this->parser_nodes['methods'], $message);
   }
 
   /**
