@@ -268,7 +268,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $message = $message ?? "The file contains the class {$class_name}.";
 
     $this->assertCount(1, $this->parser_nodes['classes']);
-    $this->assertContains($class_name, $this->parser_nodes['classes']);
+    $this->assertArrayHasKey($class_name, $this->parser_nodes['classes']);
   }
 
   protected function assertClassHasParent($parent_class_name) {
