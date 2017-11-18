@@ -81,6 +81,9 @@ class InjectedService extends BaseGenerator {
     $service_info['variable_name'] = implode('_', $id_pieces);
     $service_info['property_name'] = lcfirst(self::snakeToCamel($service_info['variable_name']));
 
+    // If the service has no interface, typehint on the class.
+    $service_info['typehint'] = $service_info['interface'] ?? $service_info['class'];
+
     return [
       'service' => [
         'role' => 'service',
@@ -94,7 +97,7 @@ class InjectedService extends BaseGenerator {
         'role' => 'constructor_param',
         'content' => [
           'name'        => $service_info['variable_name'],
-          'typehint'    => $service_info['interface'],
+          'typehint'    => $service_info['typehint'],
           'description' => $service_info['description'] . '.',
         ],
       ],

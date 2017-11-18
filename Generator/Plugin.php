@@ -270,7 +270,7 @@ class Plugin extends PHPClassFile {
         $property_code = $this->docBlock([
           $service_info['description'] . '.',
           '',
-          '@var ' . $service_info['interface']
+          '@var ' . $service_info['typehint']
         ]);
         $property_code[] = 'protected $' . $service_info['property_name'] . ';';
 
