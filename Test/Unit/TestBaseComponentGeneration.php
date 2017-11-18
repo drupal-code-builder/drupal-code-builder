@@ -394,31 +394,8 @@ abstract class TestBaseComponentGeneration extends TestBase {
    * @param string $message
    *   The assertion message.
    */
-  protected function assertInjectedServicesWithFactory($injected_services, $message = NULL) {
+  protected function assertInjectedServices($injected_services, $message = NULL) {
     $service_count = count($injected_services);
-
-    // Assert the create() factory method.
-    $this->assertHasMethod('create');
-    $create_node = $this->parser_nodes['methods']['create'];
-    $this->assertTrue($create_node->isStatic(), "The create() method is static.");
-
-    // This should have a single return statement.
-    $this->assertCount(1, $create_node->stmts);
-    $return_statement = $create_node->stmts[0];
-    $this->assertEquals(\PhpParser\Node\Stmt\Return_::class, get_class($return_statement), "The create() method's statement is a return.");
-    $return_args = $return_statement->expr->args;
-
-    // Slice the construct call arguments to the count of services.
-    $construct_service_args = array_slice($return_args, - $service_count);
-
-    // After the basic arguments, each one should match a service.
-    foreach ($construct_service_args as $index => $arg) {
-      // The argument is a container extraction.
-      $this->assertEquals('container', $arg->value->var->name);
-      $this->assertEquals('get', $arg->value->name);
-      $this->assertCount(1, $arg->value->args);
-      $this->assertEquals($injected_services[$index]['parameter_name'], $arg->value->args[0]->value->value);
-    }
 
     // Assert the constructor method.
     $this->assertHasMethod('__construct');
@@ -449,6 +426,44 @@ abstract class TestBaseComponentGeneration extends TestBase {
     foreach ($injected_services as $injected_service_details) {
       $this->assertClassHasProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
     }
+  }
+
+  /**
+   * Assert the parsed class injects the given services using a static factory.
+   *
+   * @param array $injected_services
+   *   Array of the injected services.
+   * @param string $message
+   *   The assertion message.
+   */
+  protected function assertInjectedServicesWithFactory($injected_services, $message = NULL) {
+    $service_count = count($injected_services);
+
+    // Assert the create() factory method.
+    $this->assertHasMethod('create');
+    $create_node = $this->parser_nodes['methods']['create'];
+    $this->assertTrue($create_node->isStatic(), "The create() method is static.");
+
+    // This should have a single return statement.
+    $this->assertCount(1, $create_node->stmts);
+    $return_statement = $create_node->stmts[0];
+    $this->assertEquals(\PhpParser\Node\Stmt\Return_::class, get_class($return_statement), "The create() method's statement is a return.");
+    $return_args = $return_statement->expr->args;
+
+    // Slice the construct call arguments to the count of services.
+    $construct_service_args = array_slice($return_args, - $service_count);
+
+    // After the basic arguments, each one should match a service.
+    foreach ($construct_service_args as $index => $arg) {
+      // The argument is a container extraction.
+      $this->assertEquals('container', $arg->value->var->name);
+      $this->assertEquals('get', $arg->value->name);
+      $this->assertCount(1, $arg->value->args);
+      $this->assertEquals($injected_services[$index]['parameter_name'], $arg->value->args[0]->value->value);
+    }
+
+    // Assert the constructor and the class properties.
+    $this->assertInjectedServices($injected_services, $message);
   }
 
   /**
