@@ -84,12 +84,21 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
     $form_file = $files["src/Form/MyForm.php"];
 
     $this->assertWellFormedPHP($form_file);
+    $this->assertDrupalCodingStandards($form_file);
 
-    $this->assertClassImport(['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface'], $form_file);
-    $this->assertClassImport(['Drupal', 'Core', 'Session', 'AccountProxyInterface'], $form_file);
+    $this->parseCode($form_file);
+    $this->assertHasClass('Drupal\test_module\Form\MyForm');
+    $this->assertClassHasParent('Drupal\Core\Form\FormBase');
 
-    $this->assertMethod('__construct', $form_file, "The form class has a constructor method.");
-    $this->assertMethod('create', $form_file, "The form class has a create method.");
+    // Check service injection.
+    $this->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+    ]);
   }
 
 }
