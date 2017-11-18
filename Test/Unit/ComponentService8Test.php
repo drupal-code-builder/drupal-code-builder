@@ -184,15 +184,18 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $this->assertWellFormedPHP($service_class_file);
     $this->assertDrupalCodingStandards($service_class_file);
 
-    // Check the injected service.
-    $this->assertClassProperty('currentUser', $service_class_file, "The service class has a property for the injected service.");
+    $this->parseCode($service_class_file);
+    $this->assertHasClass('Drupal\test_module\MyService');
 
-    $this->assertMethod('__construct', $service_class_file, "The service class has a constructor method.");
-    $parameters = [
-      'current_user',
-    ];
-    $this->assertFunctionHasParameters('__construct', $parameters, $service_class_file);
-    $this->assertFunctionCode($service_class_file, '__construct', '$this->currentUser = $current_user;');
+    // Check service injection.
+    $this->assertInjectedServices([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+    ]);
   }
 
   /**
