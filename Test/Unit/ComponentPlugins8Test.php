@@ -162,9 +162,22 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
-    $this->assertNamespace(['Drupal', $module_name, 'Plugin', 'Block'], $plugin_file, "The plugin class file contains contains the expected namespace.");
-    $this->assertClassImport(['Drupal', 'Core', 'Plugin', 'ContainerFactoryPluginInterface'], $plugin_file);
-    $this->assertClassImport(['Symfony', 'Component', 'DependencyInjection', 'ContainerInterface'], $plugin_file);
+    $this->parseCode($plugin_file);
+    $this->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $this->assertClassHasParent('Drupal\Core\Block\BlockBase');
+
+    // Check service injection.
+    $this->assertClassHasInterfaces([
+      'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
+    ]);
+    $this->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+    ]);
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',
