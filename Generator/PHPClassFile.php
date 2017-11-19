@@ -13,15 +13,6 @@ namespace DrupalCodeBuilder\Generator;
 class PHPClassFile extends PHPFile {
 
   /**
-   * Constructor method; sets the component data.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
-
-    $this->setClassNames($component_data['relative_class_name']);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
@@ -125,29 +116,14 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Set properties relating to class name.
-   *
-   * @param array $relative_class_name_pieces
-   *  TODO The fully-qualified class name, e.g. 'Drupal\\foo\\Bar\\Classname'.
-   */
-  protected function setClassNames($relative_class_name_pieces) {
-    // Quick backwards-compatibility hack.
-    // TODO: remove this method, change all uses.
-    $this->qualified_class_name = $this->component_data['qualified_class_name'];
-    $this->plain_class_name = $this->component_data['plain_class_name'];
-    $this->namespace = $this->component_data['namespace'];
-    $this->path = $this->component_data['path'];
-  }
-
-  /**
    * Build the code files.
    *
    * Subclasses should override this to add their file data to the list.
    */
   public function getFileInfo() {
-    $files[$this->path . '/' . $this->plain_class_name . '.php'] = array(
-      'path' => $this->path,
-      'filename' => $this->plain_class_name . '.php',
+    $files[$this->component_data['path'] . '/' . $this->component_data['plain_class_name'] . '.php'] = array(
+      'path' => $this->component_data['path'],
+      'filename' => $this->component_data['plain_class_name'] . '.php',
       'body' => $this->fileContents(),
       'join_string' => "\n",
     );
@@ -217,7 +193,7 @@ class PHPClassFile extends PHPFile {
   function code_namespace() {
     $code = array();
 
-    $code[] = 'namespace ' . $this->namespace . ';';
+    $code[] = 'namespace ' . $this->component_data['namespace'] . ';';
     $code[] = '';
 
     return $code;
@@ -238,7 +214,7 @@ class PHPClassFile extends PHPFile {
     if ($this->component_data['abstract']) {
       $line .= 'abstract ';
     }
-    $line .= "class $this->plain_class_name";
+    $line .= "class {$this->component_data['plain_class_name']}";
     if ($this->component_data['parent_class_name']) {
       $line .= " extends {$this->component_data['parent_class_name']}";
     }

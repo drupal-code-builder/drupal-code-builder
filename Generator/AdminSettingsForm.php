@@ -46,7 +46,7 @@ class AdminSettingsForm extends Form {
       // TODO: pass the form details here.
       'controller' => [
         'controller_property' => '_form',
-        'controller_value' => '\\' . $this->qualified_class_name,
+        'controller_value' => '\\' . $this->component_data['qualified_class_name'],
       ],
     );
 

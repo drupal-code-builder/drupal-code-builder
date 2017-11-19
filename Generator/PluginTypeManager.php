@@ -49,7 +49,7 @@ class PluginTypeManager extends Service {
       '__construct',
       $parameters,
       [
-        'docblock_first_line' => "Constructs a new {$this->plain_class_name}.",
+        'docblock_first_line' => "Constructs a new {$this->component_data['plain_class_name']}.",
         'prefixes' => ['public'],
       ]
     );

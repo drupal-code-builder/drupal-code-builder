@@ -211,7 +211,7 @@ class Form extends PHPClassFile {
       '__construct',
       $parameters,
       [
-        'docblock_first_line' => "Creates a {$this->plain_class_name} instance.",
+        'docblock_first_line' => "Creates a {$this->component_data['plain_class_name']} instance.",
         'prefixes' => ['public'],
       ]
     );

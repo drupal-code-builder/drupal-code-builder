@@ -164,7 +164,7 @@ class Service extends PHPClassFile {
     }
 
     $yaml_service_definition = [
-      'class' => $this->qualified_class_name,
+      'class' => $this->component_data['qualified_class_name'],
     ];
     if ($yaml_data_arguments) {
       $yaml_service_definition['arguments'] = $yaml_data_arguments;
@@ -266,7 +266,7 @@ class Service extends PHPClassFile {
       $parameters,
       [
         // TODO: make plain_class_name a shortcut property only, don't use it here.
-        'docblock_first_line' => "Constructs a new {$this->plain_class_name}.",
+        'docblock_first_line' => "Constructs a new {$this->component_data['plain_class_name']}.",
         'prefixes' => ['public'],
       ]
     );
