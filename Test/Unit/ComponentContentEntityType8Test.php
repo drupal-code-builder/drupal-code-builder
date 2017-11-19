@@ -60,8 +60,12 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $this->assertDrupalCodingStandards($entity_class_file);
     $this->assertNoTrailingWhitespace($entity_class_file);
     $this->assertClassFileFormatting($entity_class_file);
-    $this->assertNamespace(['Drupal', $module_name, 'Entity'], $entity_class_file);
-    $this->assertClass('KittyCat', $entity_class_file);
+
+    $this->parseCode($entity_class_file);
+    $this->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $this->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+    $this->assertHasMethods(['baseFieldDefinitions']);
+
     // TODO: the annotation assertion doens't handle arrays or nested
     // annotations.
     //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
@@ -130,8 +134,12 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $this->assertWellFormedPHP($entity_class_file);
     $this->assertNoTrailingWhitespace($entity_class_file);
     $this->assertClassFileFormatting($entity_class_file);
-    $this->assertNamespace(['Drupal', $module_name, 'Entity'], $entity_class_file);
-    $this->assertClass('KittyCat', $entity_class_file);
+
+    $this->parseCode($entity_class_file);
+    $this->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $this->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+    $this->assertHasMethods(['baseFieldDefinitions']);
+
     // TODO: the annotation assertion doens't handle arrays or nested
     // annotations.
     //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
@@ -141,8 +149,11 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $this->assertWellFormedPHP($bundle_entity_class_file);
     $this->assertNoTrailingWhitespace($bundle_entity_class_file);
     $this->assertClassFileFormatting($bundle_entity_class_file);
-    $this->assertNamespace(['Drupal', $module_name, 'Entity'], $bundle_entity_class_file);
-    $this->assertClass('KittyCatType extends ConfigEntityBase', $bundle_entity_class_file);
+
+    $this->parseCode($bundle_entity_class_file);
+    $this->assertHasClass('Drupal\test_module\Entity\KittyCatType');
+    $this->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $this->assertHasNoMethods();
 
     $config_yaml_file = $files['config/schema/test_module.schema.yml'];
     $this->assertYamlProperty($config_yaml_file, 'test_module.kitty_cat_type');
