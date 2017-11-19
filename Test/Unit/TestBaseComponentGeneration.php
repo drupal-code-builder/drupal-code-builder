@@ -495,6 +495,21 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
+   * Assert the parsed code contains the given methods.
+   *
+   * @param string[] $method_name
+   *   An array of method names to check for.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  function assertHasMethods($method_names, $message = NULL) {
+    $method_names_string = implode(", ", $method_names);
+    $message = $message ?? "The file contains the methods {$method_names_string}.";
+
+    $this->assertArraySubset($method_names, array_keys($this->parser_nodes['methods']), $message);
+  }
+
+  /**
    * Assert the parsed code implements the given hook.
    *
    * Also checks the hook implementation docblock has the correct text.
