@@ -235,6 +235,9 @@ abstract class TestBaseComponentGeneration extends TestBase {
           case \PhpParser\Node\Stmt\Class_::class:
             $this->nodes['classes'][$node->name] = $node;
             break;
+          case \PhpParser\Node\Stmt\Interface_::class:
+            $this->nodes['interfaces'][$node->name] = $node;
+            break;
           case \PhpParser\Node\Stmt\Property::class:
             $this->nodes['properties'][$node->props[0]->name] = $node;
             break;
@@ -309,6 +312,30 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $this->assertArrayHasKey($class_short_name, $this->parser_nodes['classes']);
 
     // Check the namespace of the class.
+    $this->assertCount(1, $this->parser_nodes['namespace']);
+    $this->assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts);
+  }
+
+  /**
+   * Asserts the parsed code defines the interface.
+   *
+   * @param string $full_interface_name
+   *   The full interface name, without the leading \.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertHasInterface($full_interface_name, $message = NULL) {
+    $interface_name_parts = explode('\\', $full_interface_name);
+    $interface_short_name = end($interface_name_parts);
+    $namespace_parts = array_slice($interface_name_parts, 0, -1);
+
+    $message = $message ?? "The file contains the interface {$interface_short_name}.";
+
+    // All the class files we generate contain only one class.
+    $this->assertCount(1, $this->parser_nodes['interfaces']);
+    $this->assertArrayHasKey($interface_short_name, $this->parser_nodes['interfaces']);
+
+    // Check the namespace of the interface.
     $this->assertCount(1, $this->parser_nodes['namespace']);
     $this->assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts);
   }
