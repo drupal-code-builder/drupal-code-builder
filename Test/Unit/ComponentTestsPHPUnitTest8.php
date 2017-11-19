@@ -57,8 +57,9 @@ class ComponentTestsPHPUnitTest8 extends TestBaseComponentGeneration {
     $this->assertNoTrailingWhitespace($test_file, "The test class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($test_file);
 
-    $this->assertNamespace(['Drupal', 'Tests', $module_name], $test_file, "The test class file contains contains the expected namespace.");
-    $this->assertClass('MyTest', $test_file, "The test file contains the form class.");
+    $this->parseCode($test_file);
+    $this->assertHasClass('Drupal\Tests\test_module\MyTest');
+    $this->assertHasMethods(['setUp', 'testMyTest']);
   }
 
   /**
@@ -93,8 +94,10 @@ class ComponentTestsPHPUnitTest8 extends TestBaseComponentGeneration {
     $this->assertNoTrailingWhitespace($test_file, "The test class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($test_file);
 
-    $this->assertNamespace(['Drupal', 'Tests', $module_name, 'Kernel'], $test_file, "The test class file contains contains the expected namespace.");
-    $this->assertClass('MyTest extends KernelTestBase', $test_file, "The test file contains the form class.");
+    $this->parseCode($test_file);
+    $this->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
+    $this->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
+    $this->assertHasMethods(['setUp', 'testMyTest']);
   }
 
 }
