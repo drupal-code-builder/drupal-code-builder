@@ -69,6 +69,15 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     // TODO: the annotation assertion doens't handle arrays or nested
     // annotations.
     //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
+
+    $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
+
+    $this->assertWellFormedPHP($entity_interface_file);
+    $this->assertDrupalCodingStandards($entity_interface_file);
+    $this->assertNoTrailingWhitespace($entity_interface_file);
+
+    $this->parseCode($entity_interface_file);
+    $this->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
   }
 
   /**

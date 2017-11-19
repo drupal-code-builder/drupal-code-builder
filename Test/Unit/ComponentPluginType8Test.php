@@ -67,8 +67,9 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
     $this->assertWellFormedPHP($plugin_interface_file);
     $this->assertDrupalCodingStandards($plugin_interface_file);
     $this->assertNoTrailingWhitespace($plugin_interface_file);
-    // Doesn't do interfaces.
-    //$this->assertClassFileFormatting($plugin_interface_file);
+
+    $this->parseCode($plugin_interface_file);
+    $this->assertHasInterface('Drupal\test_module\Plugin\CatFeeder\CatFeederInterface');
 
     // TODO! test further file contents!
 
