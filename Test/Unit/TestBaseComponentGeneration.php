@@ -494,6 +494,50 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
+   * Asserts that the class construction has the given base parameters.
+   *
+   * @param $parameters
+   *   An array of parameters, in the same format as for
+   *   assertMethodHasParameters().
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertConstructorBaseParameters($parameters, $message = NULL) {
+    $message = $message ?? "The constructor method has the expected base parameters.";
+
+    $this->assertHasMethod('__construct');
+    $this->assertHasMethod('create');
+
+    // Check that the __construct() method has the base parameters before the
+    // services.
+    $this->assertHelperMethodHasParametersSlice($parameters, '__construct', $message, 0);
+
+    // The first statement in the __construct() should be parent call, with
+    // the base parameters.
+    $parent_call_node = $this->parser_nodes['methods']['__construct']->stmts[0];
+    $this->assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $parent_call_node);
+    $this->assertEquals('parent', $parent_call_node->class->parts[0]);
+    $this->assertEquals('__construct', $parent_call_node->name);
+    $call_arg_names = [];
+    foreach ($parent_call_node->args as $arg) {
+      $call_arg_names[] = $arg->value->name;
+    }
+    $this->assertEquals(array_keys($parameters), $call_arg_names, "The call to the parent constructor has the base parameters.");
+
+    // The only statement in the create() method should return the new object.
+    $create_node = $this->parser_nodes['methods']['create'];
+
+    $object_create_node = $this->parser_nodes['methods']['create']->stmts[0];
+    // Slice the construct call arguments to the given parameters.
+    $construct_base_args = array_slice($create_node->stmts[0]->expr->args, 0, count($parameters));
+    $create_arg_names = [];
+    foreach ($construct_base_args as $arg) {
+      $create_arg_names[] = $arg->value->name;
+    }
+    $this->assertEquals(array_keys($parameters), $create_arg_names, "The object creation call has the base parameters.");
+  }
+
+  /**
    * Assert the parsed code contains the given function.
    *
    * @param string $function_name
