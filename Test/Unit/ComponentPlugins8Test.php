@@ -178,6 +178,11 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
         'parameter_name' => 'current_user',
       ],
     ]);
+    $this->assertConstructorBaseParameters([
+      'configuration' => 'array',
+      'plugin_id' => NULL,
+      'plugin_definition' => NULL,
+    ]);
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',
