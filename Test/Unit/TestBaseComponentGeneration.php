@@ -522,6 +522,74 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
+   * Asserts a method of the parsed class has the given parameters.
+   *
+   * @param $parameters
+   *   An array of parameters: keys are the parameter names, values are the
+   *   typehint, with NULL for no typehint.
+   * @param string $method_name
+   *   The method name.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertMethodHasParameters($parameters, $method_name, $message = NULL) {
+    $expected_parameter_names = array_keys($parameters);
+
+    $parameter_names_string = implode(", ", $expected_parameter_names);
+    $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string}.";
+
+    $this->assertHelperMethodHasParametersSlice($parameters, '__construct', $message, 0);
+  }
+
+  /**
+   * Asserts a method of the parsed class has the given parameters.
+   *
+   * Helper for assertMethodHasParameters() and other assertions.
+   *
+   * @param $parameters
+   *   An array of parameters: keys are the parameter names, values are the
+   *   typehint, with NULL for no typehint.
+   * @param string $method_name
+   *   The method name.
+   * @param integer $offset
+   *   (optional) The array slice offset in the actual parameters.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  private function assertHelperMethodHasParametersSlice($parameters, $method_name, $message = NULL, $offset = 0) {
+    $expected_parameter_names = array_keys($parameters);
+
+    $parameter_names_string = implode(", ", $expected_parameter_names);
+    $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string} in positions ... TODO.";
+
+    //dump($this->parser_nodes['methods'][$method_name]);
+
+    // Get the actual parameter names.
+    $param_nodes_slice = array_slice($this->parser_nodes['methods'][$method_name]->params, $offset, count($parameters));
+
+    $actual_parameter_names_slice = [];
+    $actual_parameter_types_slice = [];
+    foreach ($param_nodes_slice as $param_node) {
+      $actual_parameter_names_slice[] = $param_node->name;
+
+      if (is_null($param_node->type)) {
+        $actual_parameter_types_slice[] = NULL;
+      }
+      elseif (is_string($param_node->type)) {
+        $actual_parameter_types_slice[] = $param_node->type;
+      }
+      else {
+        // TODO... class-like typehint. Not yet needed!
+      }
+    }
+
+    $this->assertEquals($expected_parameter_names, $actual_parameter_names_slice, $message);
+
+    $expected_parameter_typehints = array_values($parameters);
+    $this->assertEquals($expected_parameter_typehints, $actual_parameter_types_slice, $message);
+  }
+
+  /**
    * Assert the parsed code contains the given methods.
    *
    * @param string[] $method_name
