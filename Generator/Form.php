@@ -166,12 +166,9 @@ class Form extends PHPClassFile {
   }
 
   /**
-   * Return the body of the class's code.
+   * {@inheritdoc}
    */
-  protected function classCodeBody() {
-    // TODO: this code sets up class properties for the parent classCodeBody()
-    // to work with, as if they had been set by buildComponentContents().
-    // This should be refactored in due course.
+  protected function collectSectionBlocks() {
     // Injected services.
     // TODO: refactor this along with Plugin to a parent class.
     if (!empty($this->injectedServices)) {
@@ -194,8 +191,6 @@ class Form extends PHPClassFile {
       // Goes first in the functions.
       $this->functions = array_merge([$this->codeBodyClassMethodCreate()], $this->functions);
     }
-
-    return parent::classCodeBody();
   }
 
   /**

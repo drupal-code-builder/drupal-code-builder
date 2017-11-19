@@ -214,12 +214,9 @@ class Service extends PHPClassFile {
   }
 
   /**
-   * Return the body of the class's code.
+   * {@inheritdoc}
    */
-  function classCodeBody() {
-    // TODO: this code sets up class properties for the parent classCodeBody()
-    // to work with, as if they had been set by buildComponentContents().
-    // This should be refactored in due course.
+  protected function collectSectionBlocks() {
     // Injected services.
     if (!empty($this->injectedServices)) {
       foreach ($this->injectedServices as $service_info) {
@@ -244,8 +241,6 @@ class Service extends PHPClassFile {
       $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
       $this->createBlocksFromMethodData($service_type_interface_data);
     }
-
-    return parent::classCodeBody();
   }
 
   /**

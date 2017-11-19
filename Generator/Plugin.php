@@ -257,12 +257,9 @@ class Plugin extends PHPClassFile {
   }
 
   /**
-   * Return the body of the class's code.
+   * {@inheritdoc}
    */
-  function classCodeBody() {
-    // TODO: this code sets up class properties for the parent classCodeBody()
-    // to work with, as if they had been set by buildComponentContents().
-    // This should be refactored in due course.
+  protected function collectSectionBlocks() {
     // Injected services.
     // TODO: refactor this along with Plugin to a parent class.
     if (!empty($this->injectedServices)) {
@@ -286,8 +283,6 @@ class Plugin extends PHPClassFile {
 
     // TODO: move this to a component.
     $this->createBlocksFromMethodData($this->component_data['plugin_type_data']['plugin_interface_methods']);
-
-    return parent::classCodeBody();
   }
 
   /**

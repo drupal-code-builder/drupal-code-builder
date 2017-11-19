@@ -11,16 +11,10 @@ namespace DrupalCodeBuilder\Generator;
 class PluginTypeManager extends Service {
 
   /**
-   * Return the body of the class's code.
+   * {@inheritdoc}
    */
-  function classCodeBody() {
-    // TODO: this code sets up class properties for the parent classCodeBody()
-    // to work with, as if they had been set by buildComponentContents().
-    // This should be refactored in due course.
+  protected function collectSectionBlocks() {
     $this->constructor = $this->codeBodyClassMethodConstruct();
-
-    // Call the grandparent method... ugly.
-    return PHPClassFile::classCodeBody();
   }
 
   /**

@@ -105,7 +105,7 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected function classCodeBody() {
+  protected function collectSectionBlocks() {
     // Set up properties.
     foreach ($this->component_data['entity_properties'] as $schema_item) {
       // Just take the label as the description.
@@ -123,8 +123,6 @@ class ConfigEntityType extends EntityTypeBase {
         // TODO: default value?
       );
     }
-
-    return parent::classCodeBody();
   }
 
   /**

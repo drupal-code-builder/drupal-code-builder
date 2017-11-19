@@ -159,7 +159,7 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function classCodeBody() {
+  protected function collectSectionBlocks() {
     // Set up properties and methods.
     $this->properties[] = $this->createPropertyBlock(
       'modules',
@@ -181,8 +181,6 @@ class PHPUnitTest extends PHPClassFile {
     $test_method_lines[] = '}';
 
     $this->functions[] = $test_method_lines;
-
-    return parent::classCodeBody();
   }
 
 }

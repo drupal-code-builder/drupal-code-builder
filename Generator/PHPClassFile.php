@@ -239,6 +239,8 @@ class PHPClassFile extends PHPFile {
     // Class body always has at least one blank line.
     $code_body[] = '';
 
+    // Let the class collect its section blocks.
+    $this->collectSectionBlocks();
 
     $section_types = [
       // These are the names of class properties.
@@ -260,6 +262,16 @@ class PHPClassFile extends PHPFile {
     }, $code_body);
 
     return $code_body;
+  }
+
+  /**
+   * Collect the section blocks for the class code.
+   *
+   * This should set section blocks as class properties whose names are the
+   * section types defined in classCodeBody().
+   */
+  protected function collectSectionBlocks() {
+    // Child classes should override this.
   }
 
   /**
