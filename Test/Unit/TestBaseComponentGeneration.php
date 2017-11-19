@@ -510,6 +510,17 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
+   * Assert the parsed code contains no methods.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertHasNoMethods($message = NULL) {
+    $message = $message ?? "The file contains no methods.";
+    $this->assertArrayNotHasKey('methods', $this->parser_nodes, $message);
+  }
+
+  /**
    * Assert the parsed code implements the given hook.
    *
    * Also checks the hook implementation docblock has the correct text.
