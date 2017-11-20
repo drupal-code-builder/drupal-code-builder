@@ -438,6 +438,9 @@ abstract class TestBaseComponentGeneration extends TestBase {
       $this->assertEquals($injected_services[$index]['parameter_name'], $param->name);
     }
 
+    // TODO: should check that __construct() calls its parent, though this is
+    // not always the case!
+
     // Check the class property assignments in the constructor.
     $assign_index = 0;
     foreach ($construct_node->stmts as $stmt_node) {
