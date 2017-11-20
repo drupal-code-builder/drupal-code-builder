@@ -183,6 +183,9 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
       'plugin_id' => NULL,
       'plugin_definition' => NULL,
     ]);
+    // Check the construct() method calls the parent.
+    // (Not yet covered by PHP Parser assertions.)
+    $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition);');
 
     $expected_annotation_properties = [
       'id' => 'test_module_alpha',
@@ -191,30 +194,6 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
       'category' => NULL,
     ];
     $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
-
-    // Check the injected service.
-    $this->assertClassProperty('currentUser', $plugin_file, "The plugin class has a property for the injected service.");
-
-    $this->assertMethod('__construct', $plugin_file, "The plugin class has a constructor method.");
-    $parameters = [
-      'configuration',
-      'plugin_id',
-      'plugin_definition',
-      'current_user',
-    ];
-    $this->assertFunctionHasParameters('__construct', $parameters, $plugin_file);
-    $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition);');
-    $this->assertFunctionCode($plugin_file, '__construct', '$this->currentUser = $current_user;');
-
-    $this->assertMethod('create', $plugin_file, "The plugin class has a create method.");
-    $parameters = [
-      'container',
-      'configuration',
-      'plugin_id',
-      'plugin_definition',
-    ];
-    $this->assertFunctionHasParameters('create', $parameters, $plugin_file);
-    $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'current_user\')');
   }
 
   /**
