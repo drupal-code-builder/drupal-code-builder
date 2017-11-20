@@ -633,6 +633,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
    */
   private function assertHelperMethodHasParametersSlice($parameters, $method_name, $message = NULL, $offset = 0) {
     $expected_parameter_names = array_keys($parameters);
+    $expected_parameter_typehints = array_values($parameters);
 
     $parameter_names_string = implode(", ", $expected_parameter_names);
     $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string} in positions ... TODO.";
@@ -644,7 +645,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
     $actual_parameter_names_slice = [];
     $actual_parameter_types_slice = [];
-    foreach ($param_nodes_slice as $param_node) {
+    foreach ($param_nodes_slice as $index => $param_node) {
       $actual_parameter_names_slice[] = $param_node->name;
 
       if (is_null($param_node->type)) {
@@ -654,13 +655,23 @@ abstract class TestBaseComponentGeneration extends TestBase {
         $actual_parameter_types_slice[] = $param_node->type;
       }
       else {
-        // TODO... class-like typehint. Not yet needed!
+        // PHP CodeSniffer will have already caught a non-imported class, so
+        // safe to assume there is only one part to the class name.
+        $actual_parameter_types_slice[] = $param_node->type->parts[0];
+
+        $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
+
+        // Check the full expected typehint is imported.
+        $this->assertImportsClassLike($expected_typehint_parts, "The typehint for the {$index} parameter is imported.");
+
+        // Replace the fully-qualified name with the short name in the
+        // expectations array for comparison.
+        $expected_parameter_typehints[$index] = end($expected_typehint_parts);
       }
     }
 
     $this->assertEquals($expected_parameter_names, $actual_parameter_names_slice, $message);
 
-    $expected_parameter_typehints = array_values($parameters);
     $this->assertEquals($expected_parameter_typehints, $actual_parameter_types_slice, $message);
   }
 
