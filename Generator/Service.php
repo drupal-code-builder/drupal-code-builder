@@ -10,7 +10,7 @@ namespace DrupalCodeBuilder\Generator;
 /**
  * Generator for a service.
  */
-class Service extends PHPClassFile {
+class Service extends PHPClassFileWithInjection {
 
   use NameFormattingTrait;
 
@@ -217,22 +217,7 @@ class Service extends PHPClassFile {
    * {@inheritdoc}
    */
   protected function collectSectionBlocks() {
-    // Injected services.
-    if (!empty($this->injectedServices)) {
-      foreach ($this->injectedServices as $service_info) {
-        $property_code = $this->docBlock([
-          $service_info['description'] . '.',
-          '',
-          '@var ' . $service_info['typehint']
-        ]);
-        $property_code[] = 'protected $' . $service_info['property_name'] . ';';
-
-        $this->properties[] = $property_code;
-      }
-
-      // __construct() method
-      $this->constructor = $this->codeBodyClassMethodConstruct();
-    }
+    $this->collectSectionBlocksForDependencyInjection();
 
     // Add methods from the tag type interface.
     if (!empty($this->component_data['service_tag_type'])) {
@@ -241,37 +226,6 @@ class Service extends PHPClassFile {
       $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
       $this->createBlocksFromMethodData($service_type_interface_data);
     }
-  }
-
-  /**
-   * Creates the code lines for the __construct() method.
-   */
-  protected function codeBodyClassMethodConstruct() {
-    if (empty($this->injectedServices)) {
-      return [];
-    }
-
-    $parameters = [];
-    foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
-      $parameters[] = $service_parameter;
-    }
-
-    $code = $this->buildMethodHeader(
-      '__construct',
-      $parameters,
-      [
-        // TODO: make plain_class_name a shortcut property only, don't use it here.
-        'docblock_first_line' => "Constructs a new {$this->component_data['plain_class_name']}.",
-        'prefixes' => ['public'],
-      ]
-    );
-
-    foreach ($this->injectedServices as $service_info) {
-      $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
-    }
-    $code[] = '}';
-
-    return $code;
   }
 
 }
