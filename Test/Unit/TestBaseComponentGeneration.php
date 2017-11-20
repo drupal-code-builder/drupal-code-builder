@@ -282,11 +282,18 @@ abstract class TestBaseComponentGeneration extends TestBase {
    */
   protected function assertImportsClassLike($class_name_parts, $message = NULL) {
     // Find the matching import statement.
+    $seen = [];
     foreach ($this->parser_nodes['imports'] as $use_node) {
       if ($use_node->uses[0]->name->parts === $class_name_parts) {
         return;
       }
+
+      $seen[] = implode('\\', $use_node->uses[0]->name->parts);
     }
+
+    // Quick and dirty output of the imports that are there, for debugging
+    // test failures.
+    dump($seen);
 
     $class_name = implode('\\', $class_name_parts);
     $this->fail("The full class name for the parent class {$class_name} is imported.");
@@ -305,15 +312,15 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $class_short_name = end($class_name_parts);
     $namespace_parts = array_slice($class_name_parts, 0, -1);
 
-    $message = $message ?? "The file contains the class {$class_short_name}.";
+    $message = $message ?? "The file contains the class {$full_class_name}.";
 
     // All the class files we generate contain only one class.
     $this->assertCount(1, $this->parser_nodes['classes']);
-    $this->assertArrayHasKey($class_short_name, $this->parser_nodes['classes']);
+    $this->assertArrayHasKey($class_short_name, $this->parser_nodes['classes'], $message);
 
     // Check the namespace of the class.
     $this->assertCount(1, $this->parser_nodes['namespace']);
-    $this->assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts);
+    $this->assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts, $message);
   }
 
   /**
@@ -357,7 +364,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
     $parent_class_short_name = end($parent_class_name_parts);
 
-    $message = $message ?? "The class {$class_name} has inherits from parent class {$parent_class_short_name}.";
+    $message = $message ?? "The class {$class_name} has inherits from parent class {$parent_full_class_name}.";
 
     // Check the class is declared as extending the short parent name.
     $extends_node = $class_node->extends;
@@ -365,7 +372,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $this->assertEquals($parent_class_short_name, $extends_node->getLast(), $message);
 
     // Check the full parent name is imported.
-    $this->assertImportsClassLike($parent_class_name_parts);
+    $this->assertImportsClassLike($parent_class_name_parts, $message);
   }
 
   /**
