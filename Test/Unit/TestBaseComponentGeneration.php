@@ -492,9 +492,30 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
     // After the basic arguments, each one should match a service.
     foreach ($construct_service_args as $index => $arg) {
+      // The argument is a method call.
+      $this->assertInstanceOf(\PhpParser\Node\Expr\MethodCall::class, $arg->value,
+        "The create() method's new call's parameter {$index} is a method call.");
+      $method_call_node = $arg->value;
+
+      // Typically, container extraction is a single method call, e.g.
+      //   $container->get('foo')
+      // but sometimes the call gets something out of the service, e.g.
+      //   $container->get('logger.factory')->get('image')
+      // PHP Parser sees the final method call first, and the first part as
+      // being the var (the thing that is called on). In other words, it parses
+      // this right-to-left, unlike humans who (well I do!) parse it
+      // left-to-right.
+      // So recurse into the method call's var until we get a name.
+      $var_node = $method_call_node->var;
+      while (get_class($var_node) != \PhpParser\Node\Expr\Variable::class) {
+        $var_node = $var_node->var;
+      }
+
       // The argument is a container extraction.
-      $this->assertEquals('container', $arg->value->var->name);
-      $this->assertEquals('get', $arg->value->name);
+      $this->assertEquals('container', $var_node->name,
+        "The create() method's new call's parameter {$index} is a method call on the \$container variable.");
+      $this->assertEquals('get', $method_call_node->name,
+        "The create() method's new call's parameter {$index} is a method call to get().");
       $this->assertCount(1, $arg->value->args);
       $this->assertEquals($injected_services[$index]['parameter_name'], $arg->value->args[0]->value->value);
     }
