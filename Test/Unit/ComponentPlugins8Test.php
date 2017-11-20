@@ -234,30 +234,44 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
-    $this->assertClassImport(['Psr', 'Log', 'LoggerInterface'], $plugin_file);
+    $this->parseCode($plugin_file);
+    $this->assertHasClass('Drupal\test_module\Plugin\ImageEffect\Alpha');
+    $this->assertClassHasParent('Drupal\image\ImageEffectBase');
 
-    $this->assertMethod('__construct', $plugin_file, "The plugin class has a constructor method.");
-    $parameters = [
-      'configuration',
-      'plugin_id',
-      'plugin_definition',
-      'logger',
-      'current_user',
-    ];
-    $this->assertFunctionHasParameters('__construct', $parameters, $plugin_file);
+    // Check service injection.
+    $this->assertClassHasInterfaces([
+      'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
+    ]);
+    $this->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+    ]);
+    $this->assertConstructorBaseParameters([
+      'configuration' => 'array',
+      'plugin_id' => NULL,
+      'plugin_definition' => NULL,
+      'logger' => 'Psr\Log\LoggerInterface',
+      /*
+      // TODO: figure out how to assert this.
+      [
+        'typehint' => 'Psr\Log\LoggerInterface',
+        'service_name' => 'logger.factory',
+        'property_name' => 'logger',
+        'parameter_name' => 'logger',
+      ],
+      */
+    ]);
+    // Check the construct() method calls the parent.
+    // (Not yet covered by PHP Parser assertions.)
     $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);');
-    $this->assertFunctionCode($plugin_file, '__construct', '$this->currentUser = $current_user;');
-
-    $this->assertMethod('create', $plugin_file, "The plugin class has a create method.");
-    $parameters = [
-      'container',
-      'configuration',
-      'plugin_id',
-      'plugin_definition',
-    ];
-    $this->assertFunctionHasParameters('create', $parameters, $plugin_file);
+    // Check the create() method's return statement has an argument for the
+    // base class's service.
+    // (Not yet covered by PHP Parser assertions.)
     $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'logger.factory\')->get(\'image\'),');
-    $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'current_user\')');
   }
 
 }
