@@ -536,6 +536,8 @@ abstract class TestBaseComponentGeneration extends TestBase {
   protected function assertConstructorBaseParameters($parameters, $message = NULL) {
     $message = $message ?? "The constructor method has the expected base parameters.";
 
+    $expected_parameter_names = array_keys($parameters);
+
     $this->assertHasMethod('__construct');
     $this->assertHasMethod('create');
 
@@ -562,10 +564,22 @@ abstract class TestBaseComponentGeneration extends TestBase {
     // Slice the construct call arguments to the given parameters.
     $construct_base_args = array_slice($create_node->stmts[0]->expr->args, 0, count($parameters));
     $create_arg_names = [];
-    foreach ($construct_base_args as $arg) {
-      $create_arg_names[] = $arg->value->name;
+
+    foreach ($construct_base_args as $index => $arg) {
+      // Recurse into the arg until we get a name, to account for args which
+      // are a method call on the container.
+      $arg_value_node = $arg->value;
+
+      if (get_class($arg_value_node) == \PhpParser\Node\Expr\Variable::class) {
+        // Plain variable.
+        $this->assertEquals($expected_parameter_names[$index], $arg_value_node->name,
+          "The create() method's return statement's argument {$index} is the variable \${$arg_value_node->name}.");
+      }
+      else {
+        //dump($arg_value_node);
+        // TODO! check a constainer extraction.
+      }
     }
-    $this->assertEquals(array_keys($parameters), $create_arg_names, "The object creation call has the base parameters.");
   }
 
   /**
