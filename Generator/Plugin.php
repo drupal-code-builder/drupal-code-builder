@@ -12,7 +12,9 @@ use \DrupalCodeBuilder\Exception\InvalidInputException;
 /**
  * Generator for a plugin.
  */
-class Plugin extends PHPClassFile {
+class Plugin extends PHPClassFileWithInjection {
+
+  protected $hasStaticFactoryMethod = TRUE;
 
   /**
    * The unique name of this generator.
@@ -260,37 +262,18 @@ class Plugin extends PHPClassFile {
    * {@inheritdoc}
    */
   protected function collectSectionBlocks() {
-    // Injected services.
-    // TODO: refactor this along with Plugin to a parent class.
-    if (!empty($this->injectedServices)) {
-      foreach ($this->injectedServices as $service_info) {
-        $property_code = $this->docBlock([
-          $service_info['description'] . '.',
-          '',
-          '@var ' . $service_info['typehint']
-        ]);
-        $property_code[] = 'protected $' . $service_info['property_name'] . ';';
-
-        $this->properties[] = $property_code;
-      }
-
-      // __construct() method
-      $this->constructor = $this->codeBodyClassMethodConstruct();
-
-      // create() method.
-      $this->functions = array_merge([$this->codeBodyClassMethodCreate()], $this->functions);
-    }
+    $this->collectSectionBlocksForDependencyInjection();
 
     // TODO: move this to a component.
     $this->createBlocksFromMethodData($this->component_data['plugin_type_data']['plugin_interface_methods']);
   }
 
   /**
-   * Creates the code lines for the __construct() method.
+   * {@inheritdoc}
    */
-  protected function codeBodyClassMethodConstruct() {
-    // The common parameters to a plugin constructor.
+  protected function getConstructBaseParameters() {
     $parameters = [
+      // Incoming parameters to create() after the container.
       [
         'name' => 'configuration',
         'description' => 'A configuration array containing information about the plugin instance.',
@@ -307,7 +290,14 @@ class Plugin extends PHPClassFile {
         'typehint' => 'mixed',
       ]
     ];
+    return $parameters;
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getConstructParentInjectedServices() {
+    $parameters = [];
     // The parameters for the base class's constructor.
     if (isset($this->component_data['plugin_type_data']['construction'])) {
       foreach ($this->component_data['plugin_type_data']['construction'] as $construction_item) {
@@ -315,104 +305,11 @@ class Plugin extends PHPClassFile {
           'name' => $construction_item['name'],
           'description' => 'The ' . strtr($construction_item['name'], '_', ' ')  . '.',
           'typehint' => '\\' . $construction_item['type'],
+          'extraction' => $construction_item['extraction'],
         ];
       }
     }
-
-    // Parameters for this plugin's services.
-    foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
-      $parameters[] = $service_parameter;
-    }
-
-    $code = $this->buildMethodHeader(
-      '__construct',
-      $parameters,
-      [
-        'docblock_first_line' => "Creates a {$this->component_data['plain_class_name']} instance.",
-        'prefixes' => ['public'],
-      ]
-    );
-
-    if (isset($this->component_data['plugin_type_data']['construction'])) {
-      $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition, '
-        . implode(', ', array_map(function($item) {
-          return '$' . $item['name'];
-        }, $this->component_data['plugin_type_data']['construction']))
-        . ');';
-    }
-    else {
-      $code[] = '  ' . 'parent::__construct($configuration, $plugin_id, $plugin_definition);';
-    }
-
-    foreach ($this->injectedServices as $service_info) {
-      $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
-    }
-    $code[] = '}';
-
-    return $code;
-  }
-
-  /**
-   * Creates the code lines for the create() method.
-   */
-  protected function codeBodyClassMethodCreate() {
-    $parameters = [
-      [
-        'name' => 'container',
-        'typehint' => '\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
-      ],
-      [
-        'name' => 'configuration',
-        'typehint' => 'array',
-      ],
-      [
-        'name' => 'plugin_id',
-      ],
-      [
-        'name' => 'plugin_definition',
-      ],
-    ];
-
-    $code = $this->buildMethodHeader(
-      'create',
-      $parameters,
-      [
-        'inheritdoc' => TRUE,
-        'prefixes' => ['public', 'static'],
-      ]
-    );
-
-    // The common parameters to a plugin constructor.
-    $code[] = '  return new static(';
-    $code[] = '    $configuration,';
-    $code[] = '    $plugin_id,';
-    $code[] = '    $plugin_definition,';
-
-    // The parameters for the base class's constructor.
-    if (isset($this->component_data['plugin_type_data']['construction'])) {
-      foreach ($this->component_data['plugin_type_data']['construction'] as $construction_item) {
-        // We always want a comma, as if we're here it's because there are
-        // services specific to the generated plugin too.
-        $code[] = '    ' . $construction_item['extraction'] . ',';
-      }
-    }
-
-    // Parameters for this plugin's services.
-    $container_extraction_lines = [];
-    foreach ($this->childContentsGrouped['container_extraction'] as $container_extraction) {
-      $container_extraction_lines[] = '    ' . $container_extraction;
-    }
-
-    // Remove the last comma.
-    end($container_extraction_lines);
-    $last_line_key = key($container_extraction_lines);
-    $container_extraction_lines[$last_line_key] = rtrim($container_extraction_lines[$last_line_key], ',');
-    $code = array_merge($code, $container_extraction_lines);
-
-    $code[] = '  );';
-    $code[] = '}';
-
-    return $code;
+    return $parameters;
   }
 
   /**
