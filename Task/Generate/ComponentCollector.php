@@ -196,11 +196,15 @@ class ComponentCollector {
 
     // Prevent re-requesting an identical previous request.
     // TODO: use requestedComponentHandling() here?
-    if (isset($this->requested_data_record[$component_unique_id]) && $this->requested_data_record[$component_unique_id] == $component_data) {
-      $this->debug($chain, "bailing on name $name; type: $component_type; ID: $component_unique_id");
-      array_pop($chain);
+    if (isset($this->requested_data_record[$component_unique_id])) {
+      $this->debug($chain, "record has existing ID for name $name; type: $component_type; ID: $component_unique_id");
 
-      return;
+      if ($this->requested_data_record[$component_unique_id] == $component_data) {
+        $this->debug($chain, "bailing on name $name; type: $component_type; ID: $component_unique_id");
+        array_pop($chain);
+
+        return;
+      }
     }
     $this->requested_data_record[$component_unique_id] = $component_data;
 
