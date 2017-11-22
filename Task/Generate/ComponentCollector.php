@@ -143,6 +143,10 @@ class ComponentCollector {
    * Provided this data does not duplicate already created components, the
    * populates the $this->component_list property with:
    * - The component itself given by the component_type property.
+   * - Components that are specified by properties which themselves have
+   *   component_type set.
+   * - Components which the component itself requests in its
+   *   requiredComponents() method.
    *
    * @param $name
    *   The name of the component in a containing array.
