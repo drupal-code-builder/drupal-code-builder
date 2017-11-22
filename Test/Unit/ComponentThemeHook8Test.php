@@ -49,8 +49,8 @@ class ComponentThemeHook8Test extends TestBaseComponentGeneration {
 
     $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
 
-    $this->assertHookDocblock('hook_theme', $module_file, "The module file contains the docblock for hook_block_info().");
-    $this->assertHookImplementation($module_file, 'hook_theme', $module_name, "The module file contains a function declaration that implements hook_block_info().");
+    $this->assertHookDocblock('hook_theme', $module_file, "The module file contains the docblock for hook_theme().");
+    $this->assertHookImplementation($module_file, 'hook_theme', $module_name, "The module file contains a function declaration that implements hook_theme().");
 
     // Check that the hook_theme() implementation has the generated code.
     // This covers the specialized HookTheme hook generator class getting used.
