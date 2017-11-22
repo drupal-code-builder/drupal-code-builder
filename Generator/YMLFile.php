@@ -21,7 +21,7 @@ class YMLFile extends File {
     parent::mergeComponentData($additional_component_data);
 
     // The hacky yaml_inline_level property may not be an array!
-    if (is_array($this->component_data['yaml_inline_level'])) {
+    if (isset($this->component_data['yaml_inline_level']) && is_array($this->component_data['yaml_inline_level'])) {
       $this->component_data['yaml_inline_level'] = reset($this->component_data['yaml_inline_level']);
     }
   }
