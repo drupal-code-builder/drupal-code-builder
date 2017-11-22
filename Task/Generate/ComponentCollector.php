@@ -132,7 +132,7 @@ class ComponentCollector {
     // without needing to repeat the root name all the time?
     $this->root_component_name = $component_data['root_name'];
 
-    $this->getComponentsFromData($component_type, $component_data);
+    $this->getComponentsFromData($component_type, $component_data, NULL);
 
     return $this->component_list;
   }
@@ -153,8 +153,12 @@ class ComponentCollector {
    * @param $component_data
    *   The data array. This must contain at least a 'component_type' property
    *   the gives the type of the component.
+   * @param $requesting_component
+   *   The generator that is in scope when the components are requested, or
+   *   NULL if this is the first iteration and we are building the root
+   *   component.
    */
-  protected function getComponentsFromData($name, $component_data) {
+  protected function getComponentsFromData($name, $component_data, $requesting_component) {
     // Debugging: record the chain of how we get here each time.
     static $chain;
     $chain[] = $name;
@@ -253,7 +257,7 @@ class ComponentCollector {
 
             // Recurse to create the component (and any child components, and
             // any requests).
-            $this->getComponentsFromData($item_request_name, $item_data);
+            $this->getComponentsFromData($item_request_name, $item_data, $generator);
           }
           break;
         case 'boolean':
@@ -263,7 +267,7 @@ class ComponentCollector {
           $item_data = [
             'component_type' => $item_component_type,
           ];
-          $this->getComponentsFromData($item_request_name, $item_data);
+          $this->getComponentsFromData($item_request_name, $item_data, $generator);
           break;
         case 'array':
           foreach ($component_data[$property_name] as $item_value) {
@@ -273,7 +277,7 @@ class ComponentCollector {
             // Each value in the array is the name of the component.
             $item_request_name = $item_value;
 
-            $this->getComponentsFromData($item_request_name, $item_data);
+            $this->getComponentsFromData($item_request_name, $item_data, $generator);
           }
           break;
       }
@@ -294,7 +298,7 @@ class ComponentCollector {
         ];
       }
 
-      $this->getComponentsFromData($required_item_name, $required_item_data);
+      $this->getComponentsFromData($required_item_name, $required_item_data, $generator);
     }
 
     $this->debug($chain, "done");
