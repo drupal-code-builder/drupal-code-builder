@@ -41,7 +41,7 @@ class Profile extends RootComponent {
    *    other input.
    */
   public static function componentDataDefinition() {
-    $component_data_definition = array(
+    $component_data_definition = parent::componentDataDefinition() + [
       'root_name' => array(
         'label' => 'Profile machine name',
         'default' => 'myprofile',
@@ -59,7 +59,7 @@ class Profile extends RootComponent {
         'default' => 'TODO: Description of profile',
         'required' => FALSE,
       ),
-    );
+    ];
     return $component_data_definition;
   }
 

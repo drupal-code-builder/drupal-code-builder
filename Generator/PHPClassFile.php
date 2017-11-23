@@ -16,7 +16,7 @@ class PHPClassFile extends PHPFile {
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
-    return [
+    return parent::componentDataDefinition() + [
       'relative_class_name' => [
         // E.g. ['Form', 'MyFormClass']
         'label' => 'The qualifed classname pieces, relative to the module namespace.',

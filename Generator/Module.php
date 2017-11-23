@@ -93,7 +93,7 @@ class Module extends RootComponent {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    $component_data_definition = array(
+    $component_data_definition = parent::componentDataDefinition() + [
       'root_name' => array(
         'label' => 'Module machine name',
         'default' => 'my_module',
@@ -349,7 +349,7 @@ class Module extends RootComponent {
           return implode('', $pieces);
         },
       ),
-    );
+    ];
 
     return $component_data_definition;
   }

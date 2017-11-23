@@ -18,7 +18,7 @@ class PluginType extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
-    return array(
+    return parent::componentDataDefinition() + [
       'plugin_type' => array(
         'label' => 'Plugin type ID',
         'description' => "The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.",
@@ -84,7 +84,7 @@ class PluginType extends BaseGenerator {
         },
         'process_default' => TRUE,
       ],
-    );
+    ];
   }
 
   /**

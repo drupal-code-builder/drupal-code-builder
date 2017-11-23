@@ -40,7 +40,7 @@ class Permission extends BaseGenerator {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    return array(
+    return parent::componentDataDefinition() + array(
       'permission' => array(
         'label' => 'Permission machine-readable name',
         'default' => 'access my_module',
