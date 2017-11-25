@@ -31,6 +31,25 @@ abstract class RootComponent extends BaseGenerator {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    // Override the parent, root_component_name property.
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function providedPropertiesMapping() {
+    return [
+      // For a root component, the root name is a property with a different
+      // name.
+      'root_name' => 'root_component_name',
+    ];
+  }
+
+  /**
    * Filter the file info array to just the requested build list.
    *
    * @param &$files

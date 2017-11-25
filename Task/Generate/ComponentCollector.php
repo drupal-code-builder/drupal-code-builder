@@ -168,16 +168,38 @@ class ComponentCollector {
       throw new \Exception("Data for $name missing the 'component_type' property");
     }
 
-    // Add the root component name to the data, except for the root component
-    // itself.
-    if (isset($this->root_component)) {
-      $component_data['root_component_name'] = $this->root_component_name;
+    // Keep the original component data before we add things to it.
+    // This will be used to track duplicate requests.
+    $original_component_data = $component_data;
+
+    $component_type = $component_data['component_type'];
+    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
+
+    // Allow the new generator to acquire properties from the requester.
+    $property_name_conversion_map = NULL;
+    foreach ($component_data_info as $property_name => $property_info) {
+      if (!empty($property_info['acquired'])) {
+        if (!$requesting_component) {
+          throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
+        }
+
+        // Get the mapping from the requesting component, but only once.
+        if (is_null($property_name_conversion_map)) {
+          $property_name_conversion_map = array_flip($requesting_component->providedPropertiesMapping());
+        }
+
+        if (isset($property_name_conversion_map[$property_name])) {
+          $provider_property_name = $property_name_conversion_map[$property_name];
+          $component_data[$property_name] = $requesting_component->getComponentDataValue($provider_property_name);
+        }
+        else {
+          $component_data[$property_name] = $requesting_component->getComponentDataValue($property_name);
+        }
+      }
     }
 
     // Process the component's data.
     //dump($component_data);
-    $component_type = $component_data['component_type'];
-    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
     $this->processComponentData($component_data, $component_data_info);
 
     // Instantiate the generator in question.
@@ -199,18 +221,20 @@ class ComponentCollector {
     $this->debug($chain, "instantiated name $name; type: $component_type; ID: $component_unique_id");
 
     // Prevent re-requesting an identical previous request.
+    // We use the original component data this method received, without any
+    // of the additions we've made.
     // TODO: use requestedComponentHandling() here?
     if (isset($this->requested_data_record[$component_unique_id])) {
       $this->debug($chain, "record has existing ID for name $name; type: $component_type; ID: $component_unique_id");
 
-      if ($this->requested_data_record[$component_unique_id] == $component_data) {
+      if ($this->requested_data_record[$component_unique_id] == $original_component_data) {
         $this->debug($chain, "bailing on name $name; type: $component_type; ID: $component_unique_id");
         array_pop($chain);
 
         return;
       }
     }
-    $this->requested_data_record[$component_unique_id] = $component_data;
+    $this->requested_data_record[$component_unique_id] = $original_component_data;
 
     //dump($this->requested_data_record);
 

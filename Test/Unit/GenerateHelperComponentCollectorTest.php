@@ -692,6 +692,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
     $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->providedPropertiesMapping()->willReturn([
+      'root_name' => 'root_component_name',
+    ]);
+    $root_component->getComponentDataValue('root_name')->willReturn($root_data['root_name']);
 
     $class_handler->getGenerator(
       'my_root',
@@ -736,7 +740,12 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     )
     ->willReturn($compound_child_component_0->reveal());
 
-    $data_info_gatherer->getComponentDataInfo('compound', TRUE)->willReturn([]);
+    $data_info_gatherer->getComponentDataInfo('compound', TRUE)->willReturn([
+      'root_component_name' => [
+        'acquired' => TRUE,
+        'format' => 'string',
+      ],
+    ]);
     $class_handler->getRepeatComponentHandling('compound')->shouldNotBeCalled();
 
     // Compound child component 1.

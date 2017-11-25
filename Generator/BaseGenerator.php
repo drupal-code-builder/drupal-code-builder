@@ -260,7 +260,11 @@ abstract class BaseGenerator {
    * @see Generate::getComponentDataInfo()
    */
   public static function componentDataDefinition() {
-    return array();
+    return [
+      'root_component_name' => [
+        'acquired' => TRUE,
+      ],
+    ];
   }
 
   /**
@@ -274,6 +278,34 @@ abstract class BaseGenerator {
    */
   public function getUniqueID() {
     return $this->type . ':' . $this->name;
+  }
+
+  /**
+   * Get the value of a component property.
+   *
+   * @param string $name
+   *   The property name.
+   *
+   * @return mixed
+   *   The value.
+   */
+  public function getComponentDataValue($name) {
+    return $this->component_data[$name];
+  }
+
+  /**
+   * Define how other components acquire properties from this one.
+   *
+   * @see ComponentCollector::getComponentsFromData()
+   *
+   * @return array
+   *   An array where the key is the property name in this class's component
+   *   data, and the value is the property name provided to other components.
+   */
+  public function providedPropertiesMapping() {
+    return [
+      'root_component_name' => 'root_component_name',
+    ];
   }
 
   /**
