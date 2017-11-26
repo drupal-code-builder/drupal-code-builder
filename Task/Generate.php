@@ -293,6 +293,8 @@ class Generate extends Base {
     foreach ($components as $name => $component) {
       $parent_name = $component->containingComponent();
       if (!empty($parent_name)) {
+        assert(isset($components[$parent_name]), "Containing component '$parent_name' given by '$name' is not a component ID.");
+
         $tree[$parent_name][] = $name;
       }
     }
