@@ -112,7 +112,10 @@ class ComponentDataInfoGatherer {
     foreach ($properties as $property_name => $property_info) {
       // Skip computed and internal if not requested.
       if (!$include_internal) {
-        if (!empty($property_info['computed']) || !empty($property_info['internal'])) {
+        if (!empty($property_info['computed']) ||
+          !empty($property_info['internal']) ||
+          !empty($property_info['acquired'])
+        ) {
           continue;
         }
       }

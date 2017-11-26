@@ -44,6 +44,10 @@ class APIComponentDataInfoTest extends TestBase {
           'label' => 'Internal',
           'internal' => TRUE,
         ],
+        // Acquired.
+        'property_acquired' => [
+          'acquired' => TRUE,
+        ],
         // Compound using a component. Will get the properties from the Child
         // class mock.
         'property_compound_component' => [
@@ -105,6 +109,9 @@ class APIComponentDataInfoTest extends TestBase {
           'label' => 'Internal',
           'internal' => TRUE,
         ],
+        'property_child_acquired' => [
+          'acquired' => TRUE,
+        ],
       ],
     ]);
 
@@ -118,6 +125,7 @@ class APIComponentDataInfoTest extends TestBase {
     $this->assertArrayHasKey('property_compound_component', $info, "The compound property is returned.");
     $this->assertArrayNotHasKey('property_computed', $info, "The computed property is not returned.");
     $this->assertArrayNotHasKey('property_internal', $info, "The internal property is not returned.");
+    $this->assertArrayNotHasKey('property_acquired', $info, "The acquired property is not returned.");
 
     $this->assertEquals('string', $info['property_public']['format'], "The default format is filled in.");
     $this->assertEquals(FALSE, $info['property_public']['required'], "The default required is filled in.");
@@ -136,6 +144,7 @@ class APIComponentDataInfoTest extends TestBase {
     $this->assertArrayHasKey('property_child_required', $component_child_info, "The required property is returned.");
     $this->assertArrayNotHasKey('property_child_computed', $component_child_info, "The computed property is not returned.");
     $this->assertArrayNotHasKey('property_child_internal', $component_child_info, "The internal property is not returned.");
+    $this->assertArrayNotHasKey('property_child_acquired', $component_child_info, "The acquired property is not returned.");
 
     $this->assertEquals('string', $component_child_info['property_child_public']['format'], "The default format is filled in.");
     $this->assertEquals(FALSE, $component_child_info['property_child_public']['required'], "The default required is filled in.");
