@@ -87,7 +87,7 @@ class RouterItem extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'Routing:%module.routing.yml';
+    return $this->component_data['root_component_name'] . '/' . 'Routing:%module.routing.yml';
   }
 
   /**

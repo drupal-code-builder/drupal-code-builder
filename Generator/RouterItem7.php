@@ -86,7 +86,7 @@ class RouterItem7 extends RouterItem {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'HookMenu:hook_menu';
+    return $this->component_data['root_component_name'] . '/' . 'HookMenu:hook_menu';
   }
 
   /**

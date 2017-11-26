@@ -277,7 +277,10 @@ abstract class BaseGenerator {
    *  The unique ID
    */
   public function getUniqueID() {
-    return $this->type . ':' . $this->name;
+    return
+      $this->component_data['root_component_name'] . '/' .
+      $this->type . ':' .
+      $this->name;
   }
 
   /**
@@ -352,6 +355,10 @@ abstract class BaseGenerator {
    */
   public function mergeComponentData($additional_component_data) {
     $this->component_data = array_merge_recursive($this->component_data, $additional_component_data);
+
+    if (isset($this->component_data['root_component_name']) && is_array($this->component_data['root_component_name'])) {
+      $this->component_data['root_component_name'] = reset($this->component_data['root_component_name']);
+    }
   }
 
   /**

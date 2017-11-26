@@ -20,7 +20,9 @@ class PHPMethod extends PHPFunction {
    */
   public function getUniqueID() {
     // Include the code file, as method names are not unique.
-    return implode(':', [$this->type, $this->code_file, $this->name]);
+    return
+      $this->component_data['root_component_name'] . '/' .
+      implode(':', [$this->type, $this->code_file, $this->name]);
   }
 
 }

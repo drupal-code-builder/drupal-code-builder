@@ -51,7 +51,7 @@ class Form extends PHPClassFileWithInjection {
    *  The unique ID
    */
   public function getUniqueID() {
-    return $this->type . ':' . $this->component_data['form_id'];
+    return $this->component_data['root_component_name'] . '/' . $this->type . ':' . $this->component_data['form_id'];
   }
 
   /**

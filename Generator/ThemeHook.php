@@ -63,7 +63,7 @@ class ThemeHook extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return 'HookTheme:hook_theme';
+    return $this->component_data['root_component_name'] . '/' . 'HookTheme:hook_theme';
   }
 
   /**
