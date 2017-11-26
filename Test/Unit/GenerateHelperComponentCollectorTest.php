@@ -96,7 +96,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       $root_component_construction_data,
       NULL
     )->willReturn($root_component->reveal());
@@ -215,7 +215,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       Argument::that(function ($arg) use ($root_component_construction_data) {
         // Prophecy insists on the same array item order, so use a callback
         // so we don't have to care.
@@ -283,7 +283,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
       }),
@@ -367,7 +367,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
       }),
@@ -476,7 +476,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
@@ -575,7 +575,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
@@ -699,7 +699,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
@@ -892,7 +892,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_root',
+      'my_component',
       $root_component_construction_data,
       NULL
     )

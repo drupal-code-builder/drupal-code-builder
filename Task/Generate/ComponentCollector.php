@@ -132,7 +132,9 @@ class ComponentCollector {
     // without needing to repeat the root name all the time?
     $this->root_component_name = $component_data['root_name'];
 
-    $this->getComponentsFromData($component_type, $component_data, NULL);
+    // The name for the root component is its root name, which will be the
+    // name of the Drupal extension.
+    $this->getComponentsFromData($component_data['root_name'], $component_data, NULL);
 
     return $this->component_list;
   }
