@@ -111,7 +111,7 @@ class ComponentCollector {
    *  The requested component data.
    *
    * @return
-   *  The list of components.
+   *  The list of components, keyed by their unique IDs.
    */
   public function assembleComponentList($component_data) {
     // Reset all class properties. We don't normally run this twice, but

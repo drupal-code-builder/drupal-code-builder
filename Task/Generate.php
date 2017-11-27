@@ -232,7 +232,7 @@ class Generate extends Base {
    *  The root generator.
    *
    * @return
-   *  The list of components.
+   *  The list of components, keyed by component unique ID.
    */
   protected function assembleComponentList($root_component) {
     return $this->getHelper('ComponentCollector')->assembleComponentList($root_component);
