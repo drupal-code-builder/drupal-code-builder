@@ -340,8 +340,10 @@ class PHPClassFile extends PHPFile {
    * @param string $type
    *   The typehint. Classes and interfaces should be fully-qualified, with the
    *   initial '\'.
-   * @param string $description
-   *   A single-line description for the docblock.
+   * @param mixed $description
+   *   A single-line description for the docblock, as a string, or an array of
+   *   lines. If an array, the first item must be the single-line first docblock
+   *   line, and the second item must be an empty string.
    * @param array $modifiers
    *   An array of the modifiers. Defaults to 'protected'.
    * @param $default
@@ -351,11 +353,18 @@ class PHPClassFile extends PHPFile {
    *  An array suitable to be set for getSectionBlocks().
    */
   protected function createPropertyBlock($property_name, $type, $description, $modifiers = ['protected'], $default = NULL) {
-    $property_code = $this->docBlock([
-      $description,
-      '',
-      '@var ' . $type
-    ]);
+    $docblock_lines = [];
+    if (is_array($description)) {
+      $docblock_lines += $description;
+    }
+    else {
+      $docblock_lines[] = $description;
+    }
+
+    $docblock_lines[] = '';
+    $docblock_lines[] = '@var ' . $type;
+
+    $property_code = $this->docBlock($docblock_lines);
 
     $declaration_line = '';
 
