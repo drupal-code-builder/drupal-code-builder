@@ -281,6 +281,16 @@ abstract class TestBaseComponentGeneration extends TestBase {
    *   (optional) The assertion message.
    */
   protected function assertImportsClassLike($class_name_parts, $message = NULL) {
+    // If the given class is in the current namespace, skip this assertion, as
+    // it should not be imported.
+    // TODO: assert it's NOT imported!
+    if (!empty($this->parser_nodes['namespace'])) {
+      $expected_class_namespace = array_slice($class_name_parts, 0, -1);
+      if ($expected_class_namespace == $this->parser_nodes['namespace'][0]->name->parts) {
+        return;
+      }
+    }
+
     // Find the matching import statement.
     $seen = [];
     foreach ($this->parser_nodes['imports'] as $use_node) {
