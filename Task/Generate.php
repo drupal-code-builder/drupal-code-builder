@@ -366,7 +366,11 @@ class Generate extends Base {
 
       $child_component_file_data = $child_component->getFileInfo();
       if (is_array($child_component_file_data)) {
-        $file_info += $child_component_file_data;
+        foreach ($child_component_file_data as $file_id => $file_info_item) {
+          assert(!isset($file_info[$file_id]), "Duplicate file ID {$file_id} given by component ID {$child_component_name}.");
+
+          $file_info[$file_id] = $file_info_item;
+        }
       }
     }
 
