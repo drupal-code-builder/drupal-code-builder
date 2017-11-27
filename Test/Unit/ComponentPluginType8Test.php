@@ -91,4 +91,54 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
     */
   }
 
+  /**
+   * Test Plugin Type component with a nested plugin folder.
+   */
+  function testPluginTypeGenerationWithNestedFolder() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugin_types' => array(
+        0 => [
+          'plugin_type' => 'cat_feeder',
+          'plugin_subdirectory' => 'Animals/CatFeeder'
+        ]
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    // Check the plugin manager file, as it mentions the interface.
+    $plugin_manager_file = $files["src/CatFeederManager.php"];
+    $this->assertWellFormedPHP($plugin_manager_file);
+    $this->assertDrupalCodingStandards($plugin_manager_file);
+    $this->assertNoTrailingWhitespace($plugin_manager_file, "The plugin service class file contains no trailing whitespace.");
+    $this->assertClassFileFormatting($plugin_manager_file);
+
+    // Check the files that go in the nested folder.
+    // Check the plugin base class file.
+    $plugin_base_file = $files["src/Plugin/Animals/CatFeeder/CatFeederBase.php"];
+    $this->assertWellFormedPHP($plugin_base_file);
+    $this->assertDrupalCodingStandards($plugin_base_file);
+    $this->assertNoTrailingWhitespace($plugin_base_file);
+
+    $this->parseCode($plugin_base_file);
+    $this->assertHasClass('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederBase');
+    $this->assertClassHasInterfaces(['Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface']);
+
+    // Check the plugin interface file.
+    $plugin_interface_file = $files["src/Plugin/Animals/CatFeeder/CatFeederInterface.php"];
+    $this->assertWellFormedPHP($plugin_interface_file);
+    $this->assertDrupalCodingStandards($plugin_interface_file);
+    $this->assertNoTrailingWhitespace($plugin_interface_file);
+    $this->parseCode($plugin_interface_file);
+    $this->assertHasInterface('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface');
+  }
+
 }

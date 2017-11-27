@@ -68,8 +68,8 @@ class PluginType extends BaseGenerator {
             'Drupal',
             '%module',
             'Plugin',
-            // TODO: won't work if plugin subdir has nesting.
-            $component_data['plugin_subdirectory'],
+            // Allow for the plugin subfolder to be nested.
+            str_replace('/', '\\', $component_data['plugin_subdirectory']),
             $component_data['annotation_class'] . 'Interface',
           ]);
         },
@@ -141,24 +141,26 @@ class PluginType extends BaseGenerator {
       // TODO: Some annotation properties such as ID and label.
     ];
 
+    $plugin_relative_namespace = explode('/', $this->component_data['plugin_subdirectory']);
+
     $components["plugin_type_{$plugin_type}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
-      'relative_class_name' => [
-        'Plugin',
-        $this->component_data['plugin_subdirectory'],
-        $this->component_data['annotation_class'] . 'Interface',
-      ],
+      'relative_class_name' => array_merge(
+        ['Plugin'],
+        $plugin_relative_namespace,
+        [$this->component_data['annotation_class'] . 'Interface']
+      ),
       'docblock_first_line' => "Interface for {$this->component_data['plugin_label']} plugins.",
       // TODO: parent interfaces.
     ];
 
     $components["plugin_type_{$plugin_type}_base_class"] = [
       'component_type' => 'PHPClassFile',
-      'relative_class_name' => [
-        'Plugin',
-        $this->component_data['plugin_subdirectory'],
-        $this->component_data['annotation_class'] . 'Base',
-      ],
+      'relative_class_name' => array_merge(
+        ['Plugin'],
+        $plugin_relative_namespace,
+        [$this->component_data['annotation_class'] . 'Base']
+      ),
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
       'interfaces' => [
         $this->component_data['interface'],
