@@ -406,7 +406,8 @@ abstract class TestBaseComponentGeneration extends TestBase {
    * @param string $property_name
    *   The name of the property, without the initial '$'.
    * @param string $typehint
-   *   The typehint for the property, without the initial '\'.
+   *   The typehint for the property, without the initial '\' if a class or
+   *   interface.
    * @param string $message
    *   (optional) The assertion message.
    */
@@ -417,7 +418,15 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
     $property_node = $this->parser_nodes['properties'][$property_name];
     $property_docblock = $property_node->getAttribute('comments')[0]->getText();
-    $this->assertContains("@var \\{$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
+
+    if (ucfirst($typehint) == $typehint) {
+      // The typehint is a class, e.g. 'Drupal\foo', or 'Exception'.
+      $this->assertContains("@var \\{$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
+    }
+    else {
+      // The typehint is a primitive, e.g. 'string'.
+      $this->assertContains("@var {$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
+    }
   }
 
   /**
