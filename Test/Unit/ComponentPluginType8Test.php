@@ -51,8 +51,12 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
     $annotation_file = $files["src/Annotation/CatFeeder.php"];
     $this->assertWellFormedPHP($annotation_file);
     $this->assertDrupalCodingStandards($annotation_file);
-    $this->assertNoTrailingWhitespace($annotation_file, "The plugin service class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($annotation_file);
+    $this->parseCode($annotation_file);
+    $this->assertHasClass('Drupal\test_module\Annotation\CatFeeder');
+    $this->assertClassHasParent('Drupal\Component\Annotation\Plugin');
+    // TODO: assert public.
+    $this->assertClassHasProperty('id', 'string');
+    $this->assertClassHasProperty('label', 'Drupal\Core\Annotation\Translation');
 
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeederBase.php"];

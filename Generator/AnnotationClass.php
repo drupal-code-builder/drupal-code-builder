@@ -18,6 +18,30 @@ class AnnotationClass extends PHPClassFile {
     return $this->docBlock($docblock_code);
   }
 
-  // TODO: some sample properties.
+  /**
+   * {@inheritdoc}
+   */
+  protected function collectSectionBlocks() {
+    // Set up properties.
+    // TODO: these properties are only for plugin annotations, but so far
+    // nothing else uses this generator.
+    $this->properties[] = $this->createPropertyBlock(
+      'id',
+      'string',
+      'The plugin ID.',
+      ['public']
+    );
+
+    $this->properties[] = $this->createPropertyBlock(
+      'label',
+      '\Drupal\Core\Annotation\Translation',
+      'The human-readable name of the plugin.',
+      /*
+      // TODO: needs:
+      '@ingroup plugin_translatable',
+      */
+      ['public']
+    );
+  }
 
 }
