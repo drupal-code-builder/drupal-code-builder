@@ -401,6 +401,42 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
+   * Assert the parsed class has the given public property.
+   *
+   * @param string $property_name
+   *   The name of the property, without the initial '$'.
+   * @param string $typehint
+   *   The typehint for the property, without the initial '\' if a class or
+   *   interface.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertClassHasPublicProperty($property_name, $typehint, $message = NULL) {
+    $this->assertClassHasProperty($property_name, $typehint, $message);
+
+    $property_node = $this->parser_nodes['properties'][$property_name];
+    $this->assertTrue($property_node->isPublic(), $message);
+  }
+
+  /**
+   * Assert the parsed class has the given protected property.
+   *
+   * @param string $property_name
+   *   The name of the property, without the initial '$'.
+   * @param string $typehint
+   *   The typehint for the property, without the initial '\' if a class or
+   *   interface.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertClassHasProtectedProperty($property_name, $typehint, $message = NULL) {
+    $this->assertClassHasProperty($property_name, $typehint, $message);
+
+    $property_node = $this->parser_nodes['properties'][$property_name];
+    $this->assertTrue($property_node->isProtected(), $message);
+  }
+
+  /**
    * Assert the parsed class has the given property.
    *
    * @param string $property_name
@@ -470,7 +506,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
     // For each service, assert the property.
     foreach ($injected_services as $injected_service_details) {
-      $this->assertClassHasProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
+      $this->assertClassHasProtectedProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
     }
   }
 

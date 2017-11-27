@@ -54,9 +54,8 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
     $this->parseCode($annotation_file);
     $this->assertHasClass('Drupal\test_module\Annotation\CatFeeder');
     $this->assertClassHasParent('Drupal\Component\Annotation\Plugin');
-    // TODO: assert public.
-    $this->assertClassHasProperty('id', 'string');
-    $this->assertClassHasProperty('label', 'Drupal\Core\Annotation\Translation');
+    $this->assertClassHasPublicProperty('id', 'string');
+    $this->assertClassHasPublicProperty('label', 'Drupal\Core\Annotation\Translation');
 
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeederBase.php"];
