@@ -730,12 +730,26 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
         $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
 
-        // Check the full expected typehint is imported.
-        $this->assertImportsClassLike($expected_typehint_parts, "The typehint for the {$index} parameter is imported.");
+        if (count($expected_typehint_parts) == 1) {
+          // It's a class in the global namespace, e.g. '\Traversable'. This
+          // will have the '\' with it and not be imported. PHP Parser doesn't
+          // keep the initial '\' here. Rather, the param node will be a
+          // PhpParser\Node\Name\FullyQualified rather than a
+          // PhpParser\Node\Name.
+          $this->assertInstanceOf(\PhpParser\Node\Name\FullyQualified::class, $param_node->type,
+            "The typehint for the parameter is a full-qualified class name.");
 
-        // Replace the fully-qualified name with the short name in the
-        // expectations array for comparison.
-        $expected_parameter_typehints[$index] = end($expected_typehint_parts);
+          $expected_parameter_typehints[$index] = $expected_parameter_typehints[$index];
+        }
+        else {
+          // It's a namespaced class.
+          // Check the full expected typehint is imported.
+          $this->assertImportsClassLike($expected_typehint_parts, "The typehint for the {$index} parameter is imported.");
+
+          // Replace the fully-qualified name with the short name in the
+          // expectations array for comparison.
+          $expected_parameter_typehints[$index] = end($expected_typehint_parts);
+        }
       }
     }
 
