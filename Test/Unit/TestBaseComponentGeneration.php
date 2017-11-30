@@ -677,6 +677,8 @@ abstract class TestBaseComponentGeneration extends TestBase {
    *   (optional) The assertion message.
    */
   protected function assertMethodHasParameters($parameters, $method_name, $message = NULL) {
+    $this->assertHasMethod($method_name);
+
     $expected_parameter_names = array_keys($parameters);
 
     $parameter_names_string = implode(", ", $expected_parameter_names);
