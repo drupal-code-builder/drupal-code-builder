@@ -572,7 +572,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
       $this->assertEquals('get', $method_call_node->name,
         "The create() method's new call's parameter {$index} is a method call to get().");
       $this->assertCount(1, $arg->value->args);
-      $this->assertEquals($injected_services[$index]['parameter_name'], $arg->value->args[0]->value->value);
+      $this->assertEquals($injected_services[$index]['service_name'], $arg->value->args[0]->value->value, "The call to the container extracts the expected service.");
     }
 
     // Assert the constructor and the class properties.
