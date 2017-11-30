@@ -44,8 +44,40 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
     $plugin_manager_file = $files["src/CatFeederManager.php"];
     $this->assertWellFormedPHP($plugin_manager_file);
     $this->assertDrupalCodingStandards($plugin_manager_file);
-    $this->assertNoTrailingWhitespace($plugin_manager_file, "The plugin service class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($plugin_manager_file);
+    $this->parseCode($plugin_manager_file);
+    $this->assertHasClass('Drupal\test_module\CatFeederManager');
+    $this->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
+
+    // Check the __construct() method's parameters.
+    $this->assertMethodHasParameters([
+      'namespaces' => 'Traversable',
+      'cache_backend' => 'Drupal\Core\Cache\CacheBackendInterface',
+      'module_handler' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+    ], '__construct');
+
+    // Check the __construct() method's statements.
+    $this->assertStatementIsParentCall('__construct', 0);
+    $this->assertCallHasArgs([
+      'Plugin/CatFeeder' => 'string',
+      'namespaces' => 'var',
+      'module_handler' => 'var',
+      'Drupal\test_module\Plugin\CatFeeder\CatFeederInterface' => 'class',
+      'Drupal\test_module\Annotation\CatFeeder' => 'class',
+    ],
+    '__construct', 0);
+
+    $this->assertStatementIsLocalMethodCall('alterInfo', '__construct', 1);
+    $this->assertCallHasArgs([
+      'cat_feeder_info' => 'string',
+    ],
+    '__construct', 1);
+
+    $this->assertStatementIsLocalMethodCall('setCacheBackend', '__construct', 2);
+    $this->assertCallHasArgs([
+      'cache_backend' => 'var',
+      'cat_feeder_plugins' => 'string',
+    ],
+    '__construct', 2);
 
     // Check the annotation class file.
     $annotation_file = $files["src/Annotation/CatFeeder.php"];
