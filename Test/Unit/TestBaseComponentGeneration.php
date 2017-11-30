@@ -820,4 +820,50 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $this->assertHookDocblock($hook_name, $docblock_text, "The module file contains the docblock for hook_menu().");
   }
 
+  /**
+   * Asserts that a statement in a method is a call to the parent.
+   *
+   * @param string $method_name
+   *   The method name.
+   * @param int $statement_index
+   *   The index of the statement in the array of statements for the method,
+   *   starting at 0.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertStatementIsParentCall($method_name, $statement_index, $message = NULL) {
+    $message = $message ?? "The {$method_name} method's statement index {$statement_index} is a parent call.";
+
+    $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
+    $this->assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $statement_node, $message);
+    $this->assertCount(1, $statement_node->class->parts);
+    $this->assertEquals('parent', $statement_node->class->parts[0]);
+  }
+
+  /**
+   * Asserts that a statement in a method is a call to the given method.
+   *
+   * I.e., the ($statement_index)th statement in $method_name is a call to
+   * $this->$called_method_name().
+   *
+   * @param string $called_method_name
+   *   The expected method that is called.
+   * @param string $method_name
+   *   The name of the method which the statement is in.
+   * @param int $statement_index
+   *   The index of the statement in the array of statements for the method,
+   *   starting at 0.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertStatementIsLocalMethodCall($called_method_name, $method_name, $statement_index, $message = NULL) {
+    $message = $message ?? "The {$method_name} method's statement index {$statement_index} is a method call to {$called_method_name}.";
+
+    $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
+    $this->assertInstanceOf(\PhpParser\Node\Expr\MethodCall::class, $statement_node, $message);
+    $this->assertInstanceOf(\PhpParser\Node\Expr\Variable::class, $statement_node->var, $message);
+    $this->assertEquals('this', $statement_node->var->name);
+    $this->assertEquals($called_method_name, $statement_node->name, $message);
+  }
+
 }
