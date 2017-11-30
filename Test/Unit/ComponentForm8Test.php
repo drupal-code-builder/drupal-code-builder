@@ -71,6 +71,7 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
           'form_class_name' => 'MyForm',
           'injected_services' => [
             'current_user',
+            'entity_type.manager',
           ],
         ],
       ),
@@ -97,6 +98,12 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
         'service_name' => 'current_user',
         'property_name' => 'currentUser',
         'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
       ],
     ]);
   }
