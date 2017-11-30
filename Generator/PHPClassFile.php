@@ -348,17 +348,31 @@ class PHPClassFile extends PHPFile {
    *   An array of the modifiers. Defaults to 'protected'.
    * @param $default
    *   The default value, as the actual value. May be any type.
+   * @param $options
+   *  An array of options. May contain:
+   *  - 'docblock_first_line' The text for the first line of the docblock.
+   *  - 'docblock_lines' (optional) An array of further docblock lines.
+   *  - 'default': (optional) The default value, as the actual value. May be any
+   *    type.
+   *  - 'prefixes': (optional) An array of prefixes such as 'static', 'public'.
+   *    Defaults to 'protected'.
    *
    * @return
    *  An array suitable to be set for getSectionBlocks().
    */
-  protected function createPropertyBlock($property_name, $type, $description, $modifiers = ['protected'], $default = NULL) {
+  protected function createPropertyBlock($property_name, $type, $options) {
+    $options += [
+      'default' => NULL,
+      'prefixes' => ['protected'],
+    ];
+
     $docblock_lines = [];
-    if (is_array($description)) {
-      $docblock_lines += $description;
-    }
-    else {
-      $docblock_lines[] = $description;
+
+    $docblock_lines[] = $options['docblock_first_line'];
+
+    if (!empty($options['docblock_lines'])) {
+      $docblock_lines[] = '';
+      $docblock_lines = array_merge($docblock_lines, $options['docblock_lines']);
     }
 
     $docblock_lines[] = '';
@@ -368,29 +382,30 @@ class PHPClassFile extends PHPFile {
 
     $declaration_line = '';
 
-    if ($modifiers) {
-      $declaration_line .= implode(' ', $modifiers) . ' ';
+    if (!empty($options['prefixes'])) {
+      $declaration_line .= implode(' ', $options['prefixes']) . ' ';
     }
 
     $declaration_line .= '$' . $property_name;
 
-    if ($default) {
+    // Check for the actual key, as the value we want to place could be NULL.
+    if (array_key_exists('default', $options)) {
       $declaration_line .= ' = ';
 
-      if (is_array($default)) {
+      if (is_array($options['default'])) {
         // Quick hack, these are always strings so far!
         $declaration_line .= '[' . implode(', ', array_map(function ($value) {
           return "'$value'";
-        }, $default)) . ']';
+        }, $options['default'])) . ']';
       }
-      elseif (is_bool($default)) {
-        $declaration_line .= strtoupper((string) $default);
+      elseif (is_bool($options['default'])) {
+        $declaration_line .= strtoupper((string) $options['default']);
       }
-      elseif (is_numeric($default)) {
-        $declaration_line .= $default;
+      elseif (is_numeric($options['default'])) {
+        $declaration_line .= $options['default'];
       }
       else {
-        $declaration_line .= "'{$default}'";
+        $declaration_line .= "'{$options['default']}'";
       }
     }
 

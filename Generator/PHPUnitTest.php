@@ -176,9 +176,11 @@ class PHPUnitTest extends PHPClassFile {
     $this->properties[] = $this->createPropertyBlock(
       'modules',
       'array',
-      'The modules to enable.',
-      ['public', 'static'],
-      ['system', 'user']
+      [
+        'docblock_first_line' => 'The modules to enable.',
+        'prefixes' => ['public', 'static'],
+        'default' => ['system', 'user'],
+      ]
     );
 
     $setup_lines = $this->buildMethodHeader('setUp', [], ['inheritdoc' => TRUE, 'prefixes' => ['protected']]);

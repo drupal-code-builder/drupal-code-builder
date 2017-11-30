@@ -28,19 +28,23 @@ class AnnotationClass extends PHPClassFile {
     $this->properties[] = $this->createPropertyBlock(
       'id',
       'string',
-      'The plugin ID.',
-      ['public']
+      [
+        'docblock_first_line' => 'The plugin ID.',
+        'prefixes' => ['public'],
+      ]
     );
 
     $this->properties[] = $this->createPropertyBlock(
       'label',
       '\Drupal\Core\Annotation\Translation',
-      'The human-readable name of the plugin.',
+      [
+        'docblock_first_line' => 'The human-readable name of the plugin.',
+        'prefixes' => ['public'],
+      ]
       /*
       // TODO: needs:
       '@ingroup plugin_translatable',
       */
-      ['public']
     );
   }
 

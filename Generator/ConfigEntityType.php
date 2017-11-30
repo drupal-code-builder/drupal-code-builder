@@ -118,8 +118,9 @@ class ConfigEntityType extends EntityTypeBase {
       $this->properties[] = $this->createPropertyBlock(
         $schema_item['name'],
         $schema_item['type'], // TODO: config schema type not the same as PHP type!!!!!
-        $description,
-        ['protected']
+        [
+          'docblock_first_line' => 'The modules to enable.',
+        ]
         // TODO: default value?
       );
     }
