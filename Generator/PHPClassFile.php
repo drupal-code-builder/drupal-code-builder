@@ -462,6 +462,8 @@ class PHPClassFile extends PHPFile {
    *  - 'inheritdoc': If TRUE, indicates that the docblock is an @inheritdoc
    *    tag.
    *  - 'prefixes': (optional) An array of prefixes such as 'static', 'public'.
+   *  - 'break_declaration': (optional) If TRUE, the declaration parameters
+   *    are each on a single line.
    *
    * @return
    *  An array of code lines.
@@ -470,6 +472,7 @@ class PHPClassFile extends PHPFile {
     $options += [
       'inheritdoc' => FALSE,
       'prefixes' => [],
+      'break_declaration' => FALSE,
     ];
 
     $code = [];
@@ -522,10 +525,24 @@ class PHPClassFile extends PHPFile {
         $declaration_line_params[] = '$' . $parameter_info['name'];
       }
     }
-    $declaration_line .= implode(', ', $declaration_line_params);
-    $declaration_line .= ') {';
 
-    $code[] = $declaration_line;
+    if ($options['break_declaration']) {
+      // The function declaration up to the opening '(' is one line.
+      $code[] = $declaration_line;
+
+      $last_index = count($declaration_line_params) - 1;
+      foreach ($declaration_line_params as $index => $param) {
+        $code[] = '  ' . $param . ( $index == $last_index ? '' : ',' );
+      }
+
+      $code[] = ') {';
+    }
+    else {
+      $declaration_line .= implode(', ', $declaration_line_params);
+      $declaration_line .= ') {';
+
+      $code[] = $declaration_line;
+    }
 
     return $code;
   }

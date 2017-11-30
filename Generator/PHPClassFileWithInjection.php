@@ -154,6 +154,11 @@ class PHPClassFileWithInjection extends PHPClassFile {
       [
         'docblock_first_line' => "Creates a {$this->component_data['plain_class_name']} instance.",
         'prefixes' => ['public'],
+        // We want the __construct() method declaration's parameter to be
+        // broken over multiple lines for legibility.
+        // This is a Drupal coding standard still under discussion: see
+        // https://www.drupal.org/node/1539712.
+        'break_declaration' => TRUE,
       ]
     );
 
