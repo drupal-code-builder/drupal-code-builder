@@ -866,4 +866,56 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $this->assertEquals($called_method_name, $statement_node->name, $message);
   }
 
+  /**
+   * Asserts that a statement which is a call has the given arguments.
+   *
+   * @param array $expected_args
+   *   An array whose keys are the values of each argument and whose values
+   *   indicate the type.
+   * @param string $method_name
+   *   The name of the method which the statement is in.
+   * @param int $statement_index
+   *   The index of the statement in the array of statements for the method,
+   *   starting at 0.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertCallHasArgs($expected_args, $method_name, $statement_index, $message = NULL) {
+    $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
+
+    $this->assertEquals(count($expected_args), count($statement_node->args), "The call has the expected number of arguments.");
+
+    $index = 0;
+    foreach ($expected_args as $expected_arg_name => $expected_arg_type) {
+      $this->assertArrayHasKey($index, $statement_node->args, "The statement has an argument at index {$index}.");
+
+      $actual_arg = $statement_node->args[$index];
+
+      switch ($expected_arg_type) {
+        case 'variable':
+          $this->assertInstanceOf(\PhpParser\Node\Expr\Variable::class, $actual_arg->value);
+          $this->assertEquals($expected_arg_name, $actual_arg->value->value);
+          break;
+
+        case 'string':
+          $this->assertInstanceOf(\PhpParser\Node\Scalar\String_::class, $actual_arg->value);
+          $this->assertEquals($expected_arg_name, $actual_arg->value->value);
+          break;
+
+        case 'class':
+          $this->assertInstanceOf(\PhpParser\Node\Expr\ClassConstFetch::class, $actual_arg->value);
+          $this->assertEquals('class', $actual_arg->value->name);
+
+          $class_name_parts = explode('\\', $expected_arg_name);
+          $this->assertEquals(end($class_name_parts), $actual_arg->value->class->parts[0]);
+          $this->assertImportsClassLike($class_name_parts);
+          break;
+
+        // TODO: other types.
+      }
+
+      $index++;
+    }
+  }
+
 }
