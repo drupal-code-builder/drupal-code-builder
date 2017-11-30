@@ -106,14 +106,7 @@ class PluginType extends BaseGenerator {
       'parent' => 'default_plugin_manager',
       // TODO: a service should be able to detect the parent class name from
       // service definitions.... if we had all of them.
-      // TODO: passing all these in is tedious.
-      // We want the collector to magically pass these in?
       'parent_class_name' => '\Drupal\Core\Plugin\DefaultPluginManager',
-      'plugin_type' => $this->component_data['plugin_type'],
-      'plugin_subdirectory' => $this->component_data['plugin_subdirectory'],
-      'annotation_class' => $this->component_data['annotation_class'],
-      'info_alter_hook' => $this->component_data['info_alter_hook'],
-      'interface' => $this->component_data['interface'],
     );
 
     // TODO: remove the specialized PluginTypeManager generator, and instead

@@ -13,6 +13,29 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    // Properties acquired from the requesting PluginType component.
+    $plugin_type_properties = [
+      'plugin_type',
+      'plugin_subdirectory',
+      'annotation_class',
+      'info_alter_hook',
+      'interface',
+    ];
+    foreach ($plugin_type_properties as $property_name) {
+      $data_definition[$property_name] = [
+        'acquired' => TRUE,
+      ];
+    }
+
+    return $data_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function collectSectionBlocks() {
     $this->constructor = $this->codeBodyClassMethodConstruct();
   }
