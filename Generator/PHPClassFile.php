@@ -356,6 +356,8 @@ class PHPClassFile extends PHPFile {
    *    type.
    *  - 'prefixes': (optional) An array of prefixes such as 'static', 'public'.
    *    Defaults to 'protected'.
+   *  - 'break_array_value': (optional) If TRUE, the declaration parameters
+   *    are each on a single line.
    *
    * @return
    *  An array suitable to be set for getSectionBlocks().
@@ -364,6 +366,7 @@ class PHPClassFile extends PHPFile {
     $options += [
       'default' => NULL,
       'prefixes' => ['protected'],
+      'break_array_value' => FALSE,
     ];
 
     $docblock_lines = [];
@@ -378,40 +381,65 @@ class PHPClassFile extends PHPFile {
     $docblock_lines[] = '';
     $docblock_lines[] = '@var ' . $type;
 
-    $property_code = $this->docBlock($docblock_lines);
-
-    $declaration_line = '';
+    $declaration_lines = [];
+    $declaration_first_line = '';
 
     if (!empty($options['prefixes'])) {
-      $declaration_line .= implode(' ', $options['prefixes']) . ' ';
+      $declaration_first_line .= implode(' ', $options['prefixes']) . ' ';
     }
 
-    $declaration_line .= '$' . $property_name;
+    $declaration_first_line .= '$' . $property_name;
 
     // Check for the actual key, as the value we want to place could be NULL.
     if (array_key_exists('default', $options)) {
-      $declaration_line .= ' = ';
+      $declaration_first_line .= ' = ';
 
       if (is_array($options['default'])) {
-        // Quick hack, these are always strings so far!
-        $declaration_line .= '[' . implode(', ', array_map(function ($value) {
-          return "'$value'";
-        }, $options['default'])) . ']';
+        if ($options['break_array_value']) {
+          $declaration_first_line .= '[';
+          $declaration_lines[] = $declaration_first_line;
+
+          foreach ($options['default'] as $default_value_array_item) {
+            // TODO: assuming these are all strings for now!
+            $declaration_lines[] = '  ' . "'{$default_value_array_item}',";
+          }
+
+          $declaration_lines[] = '];';
+        }
+        else {
+          $declaration_first_line .= '[' . implode(', ', array_map(function ($value) {
+            return "'$value'";
+          }, $options['default'])) . ']';
+
+          $declaration_first_line .= ';';
+          $declaration_lines[] = $declaration_first_line;
+        }
       }
       elseif (is_bool($options['default'])) {
-        $declaration_line .= strtoupper((string) $options['default']);
+        $declaration_first_line .= strtoupper((string) $options['default']);
+
+        $declaration_first_line .= ';';
+        $declaration_lines[] = $declaration_first_line;
       }
       elseif (is_numeric($options['default'])) {
-        $declaration_line .= $options['default'];
+        $declaration_first_line .= $options['default'];
+
+        $declaration_first_line .= ';';
+        $declaration_lines[] = $declaration_first_line;
       }
       else {
-        $declaration_line .= "'{$options['default']}'";
+        $declaration_first_line .= "'{$options['default']}'";
+
+        $declaration_first_line .= ';';
+        $declaration_lines[] = $declaration_first_line;
       }
     }
 
-    $declaration_line .= ';';
 
-    $property_code[] = $declaration_line;
+    $property_code = array_merge(
+      $this->docBlock($docblock_lines),
+      $declaration_lines
+    );
 
     return $property_code;
   }

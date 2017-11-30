@@ -180,6 +180,7 @@ class PHPUnitTest extends PHPClassFile {
         'docblock_first_line' => 'The modules to enable.',
         'prefixes' => ['public', 'static'],
         'default' => ['system', 'user'],
+        'break_array_value' => TRUE,
       ]
     );
 
