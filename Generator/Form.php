@@ -99,7 +99,7 @@ class Form extends PHPClassFileWithInjection {
       'getFormId' => array(
         'component_type' => 'PHPMethod',
         'code_file' => $this->name,
-        'code_file_id' => $this->getUniqueId(),
+        'containing_component' => '%requester',
         'doxygen_first' => '{@inheritdoc}',
         'declaration' => 'public function getFormId()',
         'body' => array(
@@ -110,7 +110,7 @@ class Form extends PHPClassFileWithInjection {
       'buildForm' => array(
         'component_type' => 'PHPMethod',
         'code_file' => $this->name,
-        'code_file_id' => $this->getUniqueId(),
+        'containing_component' => '%requester',
         'doxygen_first' => 'Form constructor.',
         'declaration' => 'public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => array(
@@ -127,7 +127,7 @@ class Form extends PHPClassFileWithInjection {
       'submitForm' => array(
         'component_type' => 'PHPMethod',
         'code_file' => $this->name,
-        'code_file_id' => $this->getUniqueId(),
+        'containing_component' => '%requester',
         'doxygen_first' => 'Form submission handler.',
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',

@@ -36,7 +36,8 @@ class PHPFunction extends BaseGenerator {
    *    - 'code_file': The name of the file component for the file that this
    *       function should be placed into.
    *    - 'code_file_id': (optional) The unique ID of the file component.
-   *      Defaults to 'ModuleCodeFile:%module.module'.
+   *      Defaults to 'ModuleCodeFile:%module.module'. May be omitted if using
+   *      the 'containing_component' property instead.
    *    - 'doxygen_first': The text of the first line of doxygen.
    *    - 'declaration': The function declaration, including the function name
    *      and parameters, up to the closing parenthesis. Should not however
@@ -60,7 +61,6 @@ class PHPFunction extends BaseGenerator {
     $component_data += array(
       // TODO: Remove, unused.
       'code_file' => '%module.module',
-      'code_file_id' => 'ModuleCodeFile:%module.module',
       'doxygen_first' => 'TODO: write function documentation.',
       'body_indent' => 2,
     );
@@ -74,7 +74,11 @@ class PHPFunction extends BaseGenerator {
    * Return this component's parent in the component tree.
    */
   function containingComponent() {
-    return $this->component_data['code_file_id'];
+    if (isset($this->component_data['code_file_id'])) {
+      return $this->component_data['code_file_id'];
+    }
+
+    return parent::containingComponent();
   }
 
   /**

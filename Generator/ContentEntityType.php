@@ -196,7 +196,7 @@ class ContentEntityType extends EntityTypeBase {
 
     $components["baseFieldDefinitions"] = [
       'component_type' => 'PHPMethod',
-      'code_file_id' => $this->getUniqueID(),
+      'containing_component' => '%requester',
       'declaration' => 'public static function baseFieldDefinitions(EntityTypeInterface $entity_type)',
       'body' => $method_body,
     ];
