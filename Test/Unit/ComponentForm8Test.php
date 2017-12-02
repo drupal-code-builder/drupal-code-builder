@@ -42,16 +42,13 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
 
     $this->assertWellFormedPHP($form_file);
     $this->assertDrupalCodingStandards($form_file);
-    $this->assertNoTrailingWhitespace($form_file, "The form class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($form_file);
 
-    $this->assertNamespace(['Drupal', $module_name, 'Form'], $form_file, "The form class file contains contains the expected namespace.");
-    $this->assertClass('MyForm extends FormBase', $form_file, "The form file contains the form class.");
+    $this->parseCode($form_file);
+    $this->assertHasClass('Drupal\test_module\Form\MyForm');
+    $this->assertClassHasParent('Drupal\Core\Form\FormBase');
+    $this->assertHasMethods(['getFormId', 'buildForm', 'submitForm']);
 
-    foreach (['getFormId', 'buildForm', 'submitForm'] as $method) {
-      $this->assertMethod($method, $form_file, "The form file contains the $method method.");
-    }
-
+    // TODO: convert to PHP parser.
     $this->assertFunctionCode($form_file, 'getFormId', "return 'test_module_myform");
   }
 
