@@ -155,7 +155,7 @@ class Service extends PHPClassFileWithInjection {
       // TODO: UPDATE!
       $components[$this->name . '_' . $service_id] = array(
         'component_type' => 'InjectedService',
-        'container' => $this->getUniqueID(),
+        'containing_component' => '%requester',
         'service_id' => $service_id,
       );
 

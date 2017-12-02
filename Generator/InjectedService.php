@@ -17,13 +17,6 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  function containingComponent() {
-    return $this->component_data['container'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildComponentContents($children_contents) {
     $service_id = $this->component_data['service_id'];
     $id_pieces = preg_split('@[_.]@', $service_id);
