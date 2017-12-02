@@ -159,6 +159,11 @@ class ComponentCollector {
    *   The generator that is in scope when the components are requested, or
    *   NULL if this is the first iteration and we are building the root
    *   component.
+   *
+   * @return
+   *   The new generator that the top level of the data array is requesting, or
+   *   NULL if the data is a duplicate set. Note that nothing needs to be done
+   *   with the return; the generator gets added to $this->component_list.
    */
   protected function getComponentsFromData($name, $component_data, $requesting_component) {
     // Debugging: record the chain of how we get here each time.
@@ -283,7 +288,7 @@ class ComponentCollector {
 
             // Recurse to create the component (and any child components, and
             // any requests).
-            $this->getComponentsFromData($item_request_name, $item_data, $generator);
+            $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           }
           break;
         case 'boolean':
@@ -293,7 +298,7 @@ class ComponentCollector {
           $item_data = [
             'component_type' => $item_component_type,
           ];
-          $this->getComponentsFromData($item_request_name, $item_data, $generator);
+          $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           break;
         case 'array':
           foreach ($component_data[$property_name] as $item_value) {
@@ -303,7 +308,7 @@ class ComponentCollector {
             // Each value in the array is the name of the component.
             $item_request_name = $item_value;
 
-            $this->getComponentsFromData($item_request_name, $item_data, $generator);
+            $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           }
           break;
       }
@@ -311,6 +316,9 @@ class ComponentCollector {
 
     // Ask the generator for its required components.
     $item_required_subcomponent_list = $generator->requiredComponents();
+
+    // Collect the resulting components so we can set IDs for containment.
+    $required_components = [];
 
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
@@ -324,11 +332,28 @@ class ComponentCollector {
         ];
       }
 
-      $this->getComponentsFromData($required_item_name, $required_item_data, $generator);
+      // Convert tokens in the containing_component property.
+      if (isset($required_item_data['containing_component'])) {
+        if ($required_item_data['containing_component'] == '%requester') {
+          $required_item_data['containing_component'] = $generator->getUniqueID();
+        }
+        elseif (substr($required_item_data['containing_component'], 0, strlen('%sibling:')) == '%sibling:') {
+          $sibling_name = substr($required_item_data['containing_component'], strlen('%sibling:'));
+
+          assert(isset($required_components[$sibling_name]));
+
+          $required_item_data['containing_component'] = $required_components[$sibling_name]->getUniqueID();
+        }
+      }
+
+      $main_required_component = $this->getComponentsFromData($required_item_name, $required_item_data, $generator);
+      $required_components[$required_item_name] = $main_required_component;
     }
 
     $this->debug($chain, "done");
     array_pop($chain);
+
+    return $generator;
   }
 
   /**
