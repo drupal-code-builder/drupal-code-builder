@@ -117,7 +117,7 @@ class PluginType extends BaseGenerator {
       'code_file' => $this->component_data['annotation_class'] . 'Manager',
       // TODO: brittle. Find a better way!
       // Use references to the array?
-      'code_file_id' => "PluginTypeManager:" . "plugin_type_{$plugin_type}_service",
+      'containing_component' => "PluginTypeManager:" . "plugin_type_{$plugin_type}_service",
       'doxygen_first' => "Constructs a new {$this->component_data['annotation_class']}Manager object.",
       'declaration' => 'public function __construct()',
       'body' => array(

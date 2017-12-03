@@ -45,7 +45,7 @@ class AdminSettingsForm7 extends Form7 {
 
     // Override the form builder's location and code.
     $components[$form_builder]['code_file'] = '%module.admin.inc';
-    $components[$form_builder]['code_file_id'] = $this->component_data['root_component_name'] . '/ModuleCodeFile:%module.admin.inc';
+    $components[$form_builder]['containing_component'] = $this->component_data['root_component_name'] . '/ModuleCodeFile:%module.admin.inc';
     $components[$form_builder]['body'] = array(
       "£form['%module_variable_foo'] = array(",
       "  '#type' => 'textfield',",
