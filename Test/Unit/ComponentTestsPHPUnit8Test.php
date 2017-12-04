@@ -60,6 +60,7 @@ class ComponentTestsPHPUnit8Test extends TestBaseComponentGeneration {
     $this->parseCode($test_file);
     $this->assertHasClass('Drupal\Tests\test_module\MyTest');
     $this->assertHasMethods(['setUp', 'testMyTest']);
+    $this->assertClassHasPublicProperty('modules', 'array', ['system', 'user']);
   }
 
   /**
