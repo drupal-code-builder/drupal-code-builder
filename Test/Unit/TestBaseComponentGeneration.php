@@ -424,6 +424,8 @@ abstract class TestBaseComponentGeneration extends TestBase {
    *   (optional) The assertion message.
    */
   protected function assertClassHasPublicProperty($property_name, $typehint, $default = NULL, $message = NULL) {
+    $message = $message ?? "The class defines the public property \${$property_name}";
+
     $this->assertClassHasProperty($property_name, $typehint, $default, $message);
 
     $property_node = $this->parser_nodes['properties'][$property_name];
@@ -444,6 +446,8 @@ abstract class TestBaseComponentGeneration extends TestBase {
    *   (optional) The assertion message.
    */
   protected function assertClassHasProtectedProperty($property_name, $typehint, $default = NULL, $message = NULL) {
+    $message = $message ?? "The class defines the protected property \${$property_name}";
+
     $this->assertClassHasProperty($property_name, $typehint, $default, $message);
 
     $property_node = $this->parser_nodes['properties'][$property_name];
