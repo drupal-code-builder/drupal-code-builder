@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Tests the PHPUnit test class generator.
  */
-class ComponentTestsPHPUnitTest8 extends TestBaseComponentGeneration {
+class ComponentTestsPHPUnit8Test extends TestBaseComponentGeneration {
 
   /**
    * The Drupal core major version to set up for this test.
