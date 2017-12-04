@@ -98,6 +98,9 @@ class PHPUnitTest extends PHPClassFile {
         'description' => "The short class name of the test.",
         'process_default' => TRUE,
       ],
+      'module_dependencies' => [
+        'acquired' => TRUE,
+      ],
     ];
 
     // Put the parent definitions after ours.
@@ -173,17 +176,29 @@ class PHPUnitTest extends PHPClassFile {
    */
   protected function collectSectionBlocks() {
     // Set up properties and methods.
+
+    // Create the array of modules to install in the test.
+    $test_install_modules = array_merge(
+      // Some general defaults.
+      [
+        'system',
+        'user',
+      ],
+      // The generated module's dependencies.
+      $this->component_data['module_dependencies'],
+      // The generated module itself.
+      [
+        '%module',
+      ]
+    );
+
     $this->properties[] = $this->createPropertyBlock(
       'modules',
       'array',
       [
         'docblock_first_line' => 'The modules to enable.',
         'prefixes' => ['public', 'static'],
-        'default' => [
-          'system',
-          'user',
-          '%module',
-        ],
+        'default' => $test_install_modules,
         'break_array_value' => TRUE,
       ]
     );

@@ -122,6 +122,8 @@ class Module extends RootComponent {
         'description' => 'The machine names of the modules this module should have as dependencies.',
         'default' => array(),
         'required' => FALSE,
+        // We need a value for this, as other generators acquire it.
+        'process_default' => TRUE,
         'format' => 'array',
       ),
       // If this is given, then hook_help() is automatically added to the list
