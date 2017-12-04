@@ -34,6 +34,7 @@ class Readme extends File {
       // We are returning single lines, so they need to be joined with line
       // breaks.
       'join_string' => "\n",
+      'build_list_tags' => ['readme'],
     );
     return $files;
   }

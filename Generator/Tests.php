@@ -41,6 +41,7 @@ class Tests extends PHPFile {
       'body' => $this->fileContents(),
       'join_string' => "\n",
       'contains_classes' => TRUE,
+      'build_list_tags' => ['code', 'tests'],
     );
     return $files;
   }

@@ -45,6 +45,7 @@ class API extends PHPFile {
       'filename' => $this->filename,
       'body' => $this->fileContents(),
       'join_string' => "\n",
+      'build_list_tags' => ['code', 'api'],
     );
     return $files;
   }

@@ -36,6 +36,19 @@ class ModuleCodeFile extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
+    // Create a build list tag from the filename.
+    $filename_pieces = explode('.', $this->filename);
+    if ($filename_pieces[0] == '%module') {
+      // Take off the module name from the front.
+      array_shift($filename_pieces);
+    }
+    if (in_array(end($filename_pieces), ['php', 'inc'])) {
+      // Take off a file extenstion.
+      array_pop($filename_pieces);
+    }
+    // Implode whatever's left.
+    $file_key_tag = implode('.', $filename_pieces);
+
     $files[$this->filename] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
@@ -43,6 +56,7 @@ class ModuleCodeFile extends PHPFile {
       // We join code files up on a single newline. This means that each
       // component is responsible for ending its own lines.
       'join_string' => "\n",
+      'build_list_tags' => ['code', $file_key_tag],
     );
     return $files;
   }

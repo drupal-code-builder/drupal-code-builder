@@ -409,32 +409,11 @@ class Module extends RootComponent {
       return;
     }
 
-    // Case 2: 'code' means all PHP files.
-    if (isset($build_list['code'])) {
-      // TODO: make this smarter.
-      // Remove the .info file.
-      unset($files['info']);
-      // Remove the readme.
-      unset($files['readme']);
-      // Remove the API.php file.
-      unset($files['api']);
-      return;
-    }
+    $build_list = array_keys($build_list);
 
-    // Case 3: Anything else in the build list is specific filenames, with the
-    // module name and the extensions trimmed.
-    // Some daft special cases which should probably be removed.
-    if (isset($build_list['tests'])) {
-      $build_list['test'] = TRUE;
-    }
-
-    foreach ($files as $file_key => $file_info) {
-      $stripped_file_key = str_replace('%module.', '', $file_key);
-      // ARGH TODO REMOVE EXTENSIOn.
-      $stripped_file_key = str_replace('.inc', '', $stripped_file_key);
-      $stripped_file_key = str_replace('.php', '', $stripped_file_key);
-      if (!isset($build_list[$stripped_file_key])) {
-        unset($files[$file_key]);
+    foreach ($files as $key => $file_info) {
+      if (!array_intersect($file_info['build_list_tags'], $build_list)) {
+        unset($files[$key]);
       }
     }
   }

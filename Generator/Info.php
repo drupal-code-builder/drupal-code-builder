@@ -39,6 +39,7 @@ class Info extends File {
       // come with their own lineends.
       // TODO: fix this!
       'join_string' => "\n",
+      'build_list_tags' => ['info'],
     );
     return $files;
   }
