@@ -418,11 +418,13 @@ abstract class TestBaseComponentGeneration extends TestBase {
    * @param string $typehint
    *   The typehint for the property, without the initial '\' if a class or
    *   interface.
+   * @param mixed $default
+   *   (optional) The expected default value of the property, as a PHP value.
    * @param string $message
    *   (optional) The assertion message.
    */
-  protected function assertClassHasPublicProperty($property_name, $typehint, $message = NULL) {
-    $this->assertClassHasProperty($property_name, $typehint, $message);
+  protected function assertClassHasPublicProperty($property_name, $typehint, $default = NULL, $message = NULL) {
+    $this->assertClassHasProperty($property_name, $typehint, $default, $message);
 
     $property_node = $this->parser_nodes['properties'][$property_name];
     $this->assertTrue($property_node->isPublic(), $message);
@@ -436,11 +438,13 @@ abstract class TestBaseComponentGeneration extends TestBase {
    * @param string $typehint
    *   The typehint for the property, without the initial '\' if a class or
    *   interface.
+   * @param mixed $default
+   *   (optional) The expected default value of the property, as a PHP value.
    * @param string $message
    *   (optional) The assertion message.
    */
-  protected function assertClassHasProtectedProperty($property_name, $typehint, $message = NULL) {
-    $this->assertClassHasProperty($property_name, $typehint, $message);
+  protected function assertClassHasProtectedProperty($property_name, $typehint, $default = NULL, $message = NULL) {
+    $this->assertClassHasProperty($property_name, $typehint, $default, $message);
 
     $property_node = $this->parser_nodes['properties'][$property_name];
     $this->assertTrue($property_node->isProtected(), $message);
@@ -454,15 +458,39 @@ abstract class TestBaseComponentGeneration extends TestBase {
    * @param string $typehint
    *   The typehint for the property, without the initial '\' if a class or
    *   interface.
+   * @param mixed $default
+   *   (optional) The expected default value of the property, as a PHP value.
    * @param string $message
    *   (optional) The assertion message.
    */
-  protected function assertClassHasProperty($property_name, $typehint, $message = NULL) {
+  protected function assertClassHasProperty($property_name, $typehint, $default, $message = NULL) {
     $message = $message ?? "The class defines the property \${$property_name}";
 
     $this->assertArrayHasKey($property_name, $this->parser_nodes['properties'], $message);
 
     $property_node = $this->parser_nodes['properties'][$property_name];
+
+    // TODO: this doesn't allow for an actual default value of NULL.
+    if (!is_null($default)) {
+      // Use PHP Parser's PrettyPrinter to output the code of the default value
+      // and then compare it, as this is far simpler than trying to compare
+      // the whole of the property's default value parser node.
+      $pretty_printer = new \PhpParser\PrettyPrinter\Standard;
+      $property_default_php = $pretty_printer->prettyPrintFile([$property_node->props[0]->default]);
+
+      // The first two lines will be a PHP open tag and a blank line: ditch.
+      $property_default_php_lines = explode("\n", $property_default_php);
+      $property_default_php = end($property_default_php_lines);
+
+      // Prepend a return to the value so eval() returns it.
+      $property_default_php = 'return ' . $property_default_php;
+
+      // Get the actual value.
+      $property_default_value = eval($property_default_php);
+
+      $this->assertEquals($default, $property_default_value, "The default value for the {$property_name} property is as expected.");
+    }
+
     $property_docblock = $property_node->getAttribute('comments')[0]->getText();
 
     if (ucfirst($typehint) == $typehint) {
