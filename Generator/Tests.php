@@ -34,8 +34,7 @@ class Tests extends PHPFile {
     $module_root_name = $this->root_component->component_data['camel_case_name'];
     $test_file_name = $module_root_name . "Test.php";
 
-    // The key is arbitrary (at least so far!).
-    $files['%module.test'] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => 'src/Tests',
       'filename' => $test_file_name,
       'body' => $this->fileContents(),

@@ -32,7 +32,7 @@ class Info8 extends Info {
   public function getFileInfo() {
     $files = parent::getFileInfo();
 
-    $files['info']['filename'] = '%module.info.yml';
+    $files[$this->getUniqueID()]['filename'] = '%module.info.yml';
 
     return $files;
   }

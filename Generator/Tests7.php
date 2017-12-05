@@ -35,8 +35,8 @@ class Tests7 extends Tests {
     $module_root_name = $this->root_component->component_data['root_name'];
 
     // Change the file location for D7.
-    $files['%module.test']['path'] = 'tests';
-    $files['%module.test']['filename'] = "%module.test";
+    $files[$this->getUniqueID()]['path'] = 'tests';
+    $files[$this->getUniqueID()]['filename'] = "%module.test";
 
     return $files;
   }

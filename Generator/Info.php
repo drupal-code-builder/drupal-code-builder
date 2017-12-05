@@ -31,7 +31,7 @@ class Info extends File {
    * Build the code files.
    */
   public function getFileInfo() {
-    $files['info'] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => '',
       'filename' => '%module.info',
       'body' => $this->file_body(),

@@ -39,8 +39,7 @@ class API extends PHPFile {
 
     $this->filename = "$module_root_name.api.php";
 
-    // The key is arbitrary (at least so far!).
-    $files['module.api.php'] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->fileContents(),

@@ -16,7 +16,7 @@ class TwigFile extends File {
    * Return the data for the file this component provides.
    */
   public function getFileInfo() {
-    $files['templates/' . $this->name] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => 'templates',
       'filename' => $this->name,
       'body' => [

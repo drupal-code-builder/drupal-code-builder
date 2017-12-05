@@ -53,7 +53,7 @@ class YMLFile extends File {
     // replaced by assembleFiles().
     $this->filename = $this->name;
 
-    $files[$this->filename] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->getYamlBody($this->component_data['yaml_data']),

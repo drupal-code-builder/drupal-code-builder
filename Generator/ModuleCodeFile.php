@@ -49,7 +49,7 @@ class ModuleCodeFile extends PHPFile {
     // Implode whatever's left.
     $file_key_tag = implode('.', $filename_pieces);
 
-    $files[$this->filename] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->fileContents(),

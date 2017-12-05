@@ -25,7 +25,7 @@ class Readme extends File {
    * Collect the code files.
    */
   public function getFileInfo() {
-    $files['readme'] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => '', // Means the base folder.
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.

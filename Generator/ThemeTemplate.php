@@ -52,7 +52,7 @@ class ThemeTemplate extends BaseGenerator {
       $file_path = '';
     }
 
-    $files['info'] = array(
+    $files[$this->getUniqueID()] = array(
       'path' => $file_path,
       'filename' => $this->name . '.tpl.php',
       'body' => array(
