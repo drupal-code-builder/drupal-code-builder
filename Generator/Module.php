@@ -93,7 +93,14 @@ class Module extends RootComponent {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition() + [
+    $component_data_definition = parent::componentDataDefinition();
+
+    $component_data_definition['root_name'] = [
+      'label' => 'Module machine name',
+      'default' => 'my_module',
+    ] + $component_data_definition['root_name'];
+
+    $component_data_definition += [
       'root_name' => array(
         'label' => 'Module machine name',
         'default' => 'my_module',

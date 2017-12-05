@@ -34,8 +34,14 @@ abstract class RootComponent extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
-    // Override the parent, root_component_name property.
-    return [];
+    // Don't call the parent, as we don't want the root_component_name property.
+    return [
+      // Define this here for completeness; child classes should specialize it.
+      'root_name' => [
+        'label' => 'Extension machine name',
+        'required' => TRUE,
+      ],
+    ];
   }
 
   /**

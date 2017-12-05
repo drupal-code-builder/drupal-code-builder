@@ -41,12 +41,14 @@ class Profile extends RootComponent {
    *    other input.
    */
   public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition() + [
-      'root_name' => array(
-        'label' => 'Profile machine name',
-        'default' => 'myprofile',
-        'required' => TRUE,
-      ),
+    $component_data_definition = parent::componentDataDefinition();
+
+    $component_data_definition['root_name'] = [
+      'label' => 'Profile machine name',
+      'default' => 'myprofile',
+    ] + $component_data_definition['root_name'];
+
+    $component_data_definition += [
       'readable_name' => array(
         'label' => 'Profile readable name',
         'default' => function($component_data) {
