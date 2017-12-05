@@ -369,6 +369,18 @@ class Generate extends Base {
         foreach ($child_component_file_data as $file_id => $file_info_item) {
           assert(!isset($file_info[$file_id]), "Duplicate file ID {$file_id} given by component ID {$child_component_name}.");
 
+          // Prepend the component_base_path to the path.
+          if (!empty($child_component->component_data['component_base_path'])) {
+            if (empty($file_info_item['path'])) {
+              $file_info_item['path'] = $child_component->component_data['component_base_path'];
+            }
+            else {
+              $file_info_item['path'] = $child_component->component_data['component_base_path']
+                . '/'
+                . $file_info_item['path'];
+            }
+          }
+
           $file_info[$file_id] = $file_info_item;
         }
       }
