@@ -52,8 +52,9 @@ class File extends BaseGenerator {
    * Subclasses should override this.
    *
    * @return
-   *  An array keyed by an arbitrary ID for the file, whose value is an array
-   *  of file info. Values in this array are:
+   *  An array of file info. Keys are arbitrary, but must be unique across
+   *  all components, so using the unique ID is recommended. Values are themselves
+   *  arrays of file into, which have the following properties:
    *  - path: The path to the file, relative to the future component folder,
    *    without the trailing slash. An empty string means the base folder of the
    *    component.
