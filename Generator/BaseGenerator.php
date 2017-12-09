@@ -267,6 +267,9 @@ abstract class BaseGenerator {
       'containing_component' => [
         'internal' => TRUE,
       ],
+      'component_base_path' => [
+        'acquired' => TRUE,
+      ],
     ];
   }
 

@@ -34,14 +34,28 @@ abstract class RootComponent extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
-    // Don't call the parent, as we don't want the root_component_name property.
-    return [
-      // Define this here for completeness; child classes should specialize it.
-      'root_name' => [
-        'label' => 'Extension machine name',
-        'required' => TRUE,
-      ],
+    $component_data_definition = parent::componentDataDefinition();
+
+    // Define this here for completeness; child classes should specialize it.
+    $component_data_definition['root_name'] = [
+      'label' => 'Extension machine name',
+      'required' => TRUE,
     ];
+
+    // Remove the root_component_name property that's come from the parent
+    // class.
+    unset($component_data_definition['root_component_name']);
+
+    // Override the component_base_path property to be computed rather than
+    // inherited.
+    $component_data_definition['component_base_path'] = [
+      'computed' => TRUE,
+      'default' => function($component_data) {
+        return '';
+      },
+    ];
+
+    return $component_data_definition;
   }
 
   /**
