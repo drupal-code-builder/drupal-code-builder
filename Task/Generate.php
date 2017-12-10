@@ -193,24 +193,11 @@ class Generate extends Base {
     $tree = $this->assembleComponentTree($this->component_list);
     \DrupalCodeBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
-    // Let each file component in the tree gather data from its own children.
-    $this->collectFileContents($this->component_list, $tree);
-
-    //drush_print_r($generator->components);
-
-    // Build files.
-    // Get info on files. All components that wish to provide a file should have
-    // registered themselves as first-level children of the root component.
-    $files = $this->collectFiles($this->component_list, $tree);
-
-    // Filter files according to the requested build list.
-    if (isset($component_data['requested_build'])) {
-      $this->root_generator->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
-    }
-
-    // Then we assemble the files into a simple array of full filename and
-    // contents.
-    $files_assembled = $this->assembleFiles($files);
+    $files_assembled = $this->component_list = $this->getHelper('FileAssembler')->generateFiles(
+      $component_data,
+      $this->component_list,
+      $tree
+    );
 
     return $files_assembled;
   }
@@ -278,128 +265,6 @@ class Generate extends Base {
     }
 
     return $tree;
-  }
-
-  /**
-   * Allow file components to gather data from their child components.
-   *
-   * @param $components
-   *  The array of components.
-   * @param $tree
-   *  The tree array.
-   */
-  protected function collectFileContents($components, $tree) {
-    // Iterate over all file-providing components, i.e. one level below the root
-    // of the tree.
-    $root_component_name = $this->root_generator->getUniqueID();
-    foreach ($tree[$root_component_name] as $file_component_name) {
-      // Skip files with no children in the tree.
-      if (empty($tree[$file_component_name])) {
-        continue;
-      }
-
-      // Let the file component run over its children iteratively.
-      // (Not literally ;)
-      $components[$file_component_name]->buildComponentContentsIterative($components, $tree);
-    }
-  }
-
-  /**
-   * Collect file data from components.
-   *
-   * This assembles an array, keyed by an arbitrary ID for the file, whose
-   * values are arrays with the following properties:
-   *  - 'body': An array of lines of content for the file.
-   *  - 'path': The path for the file, relative to the module folder.
-   *  - 'filename': The filename for the file.
-   *  - 'join_string': The string with which to join the items in the body
-   *    array. (TODO: remove this!)
-   *
-   * @param $component_list
-   *  The component list.
-   * @param $tree
-   *  An array of parentage data about components, as given by
-   *  assembleComponentTree().
-   *
-   * @return
-   *  An array of file info, keyed by arbitrary file ID.
-   */
-  protected function collectFiles($component_list, $tree) {
-    $file_info = array();
-
-    // Components which provide a file should have registered themselves as
-    // children of the root component.
-    $root_component_name = $this->root_generator->getUniqueID();
-    foreach ($tree[$root_component_name] as $child_component_name) {
-      $child_component = $component_list[$child_component_name];
-
-      // Don't get files for existing components.
-      // TODO! This is quick and dirty! It's a lot more complicated than this,
-      // for instance with components that affect other files.
-      // Currently the only component that will set this is Info, to make
-      // adding code to existing modules look like it works!
-      if ($child_component->exists) {
-        continue;
-      }
-
-      $child_component_file_data = $child_component->getFileInfo();
-      if (is_array($child_component_file_data)) {
-        foreach ($child_component_file_data as $file_id => $file_info_item) {
-          assert(!isset($file_info[$file_id]), "Duplicate file ID {$file_id} given by component ID {$child_component_name}.");
-
-          // Prepend the component_base_path to the path.
-          if (!empty($child_component->component_data['component_base_path'])) {
-            if (empty($file_info_item['path'])) {
-              $file_info_item['path'] = $child_component->component_data['component_base_path'];
-            }
-            else {
-              $file_info_item['path'] = $child_component->component_data['component_base_path']
-                . '/'
-                . $file_info_item['path'];
-            }
-          }
-
-          $file_info[$file_id] = $file_info_item;
-        }
-      }
-    }
-
-    return $file_info;
-  }
-
-  /**
-   * Assemble file info into filename and code.
-   *
-   * @param $files
-   *  An array of file info, as compiled by collectFiles().
-   *
-   * @return
-   *  An array of files ready for output. Keys are the filepath and filename
-   *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
-   *  values are strings of the contents for each file.
-   */
-  protected function assembleFiles($files) {
-    $return = array();
-
-    foreach ($files as $file_id => $file_info) {
-      if (!empty($file_info['path'])) {
-        $filepath = $file_info['path'] . '/' . $file_info['filename'];
-      }
-      else {
-        $filepath = $file_info['filename'];
-      }
-
-      $code = implode($file_info['join_string'], $file_info['body']);
-
-      // Replace tokens in file contents and file path.
-      $variables = $this->root_generator->getReplacements();
-      $code = strtr($code, $variables);
-      $filepath = strtr($filepath, $variables);
-
-      $return[$filepath] = $code;
-    }
-
-    return $return;
   }
 
   /**
