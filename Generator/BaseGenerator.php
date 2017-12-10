@@ -362,8 +362,13 @@ abstract class BaseGenerator {
   public function mergeComponentData($additional_component_data) {
     $this->component_data = array_merge_recursive($this->component_data, $additional_component_data);
 
+    // Properties that shouldn't be deep merged.
+    // TODO: look at data info to determine how to handle a property!
     if (isset($this->component_data['root_component_name']) && is_array($this->component_data['root_component_name'])) {
       $this->component_data['root_component_name'] = reset($this->component_data['root_component_name']);
+    }
+    if (isset($this->component_data['component_base_path']) && is_array($this->component_data['component_base_path'])) {
+      $this->component_data['component_base_path'] = reset($this->component_data['component_base_path']);
     }
   }
 
