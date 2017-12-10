@@ -205,6 +205,13 @@ class ComponentCollector {
       }
     }
 
+    // Set the requesting component ID in the data.
+    // This has to be a special case, as components can't have their own ID
+    // in their data.
+    if ($requesting_component) {
+      $component_data['requester_id'] = $requesting_component->getUniqueID();
+    }
+
     // Process the component's data.
     //dump($component_data);
     $this->processComponentData($component_data, $component_data_info);

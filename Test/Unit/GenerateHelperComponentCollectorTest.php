@@ -735,6 +735,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         "child_property_string" => "child_string_value_0",
         "component_type" => "compound",
         "root_component_name" => "my_component",
+        "requester_id" => "root:root",
       ],
       $root_component
     )
@@ -763,6 +764,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         "child_property_string" => "child_string_value_1",
         "component_type" => "compound",
         "root_component_name" => "my_component",
+        "requester_id" => "root:root",
       ],
       $root_component
     )
