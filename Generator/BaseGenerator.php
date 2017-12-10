@@ -360,15 +360,26 @@ abstract class BaseGenerator {
    * Merge data from additional requests of a component.
    */
   public function mergeComponentData($additional_component_data) {
+    // Get the property info for just this component: we don't care about
+    // going into compound properties.
+    $component_property_info = static::componentDataDefinition();
+
     $this->component_data = array_merge_recursive($this->component_data, $additional_component_data);
 
-    // Properties that shouldn't be deep merged.
-    // TODO: look at data info to determine how to handle a property!
-    if (isset($this->component_data['root_component_name']) && is_array($this->component_data['root_component_name'])) {
-      $this->component_data['root_component_name'] = reset($this->component_data['root_component_name']);
-    }
-    if (isset($this->component_data['component_base_path']) && is_array($this->component_data['component_base_path'])) {
-      $this->component_data['component_base_path'] = reset($this->component_data['component_base_path']);
+    // Unmerge any properties that aren't arrays.
+    // TODO: figure out how to do the merge properly rather than having to do
+    // this reversal.
+    foreach ($component_property_info as $property_name => $property_info) {
+      // We're getting the component data direct, so it won't have default
+      // attributes filled in.
+      if (!isset($property_info['format']) || $property_info['format'] != 'array') {
+        if (isset($this->component_data[$property_name]) && is_array($this->component_data[$property_name])) {
+          $this->component_data[$property_name] = reset($this->component_data[$property_name]);
+
+          // We shouldn't have thrown any data away!
+          assert($this->component_data[$property_name] == $additional_component_data[$property_name]);
+        }
+      }
     }
   }
 
