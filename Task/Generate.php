@@ -177,7 +177,7 @@ class Generate extends Base {
     $component_name = $component_type;
 
     // Assemble the component list from the request data.
-    $this->component_list = $this->assembleComponentList($component_data);
+    $this->component_list = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
     // The root generator is the first component in the list.
     $this->root_generator = reset($this->component_list);
 
@@ -216,29 +216,6 @@ class Generate extends Base {
   }
 
   /**
-   * Get the list of required components for the root generator.
-   *
-   * This iterates down the tree of component requests: starting with the root
-   * component, each component may request further components, and then those
-   * components may request more, and so on.
-   *
-   * Generator classes should implement requiredComponents() to return the list
-   * of component types they require, possibly depending on incoming data.
-   *
-   * Obviously, it's important that eventually this process terminate with
-   * generators that return an empty array for requiredComponents().
-   *
-   * @param $root_component
-   *  The root generator.
-   *
-   * @return
-   *  The list of components, keyed by component unique ID.
-   */
-  protected function assembleComponentList($root_component) {
-    return $this->getHelper('ComponentCollector')->assembleComponentList($root_component);
-  }
-
-  /**
    * Lets each component determine whether it is already in existing files.
    *
    * Existence is determined at the component level, rather than the file level,
@@ -265,7 +242,7 @@ class Generate extends Base {
    * contains the handler functions.
    *
    * This iterates over the flat list of components assembled by
-   * assembleComponentList(), and re-assembles it as a tree.
+   * ComponentCollector, and re-assembles it as a tree.
    *
    * The tree is an array of parentage data, where keys are the names of
    * components that are parents, and values are flat arrays of component names.
@@ -280,7 +257,8 @@ class Generate extends Base {
    * tree, but this means that they will not participate in file assembly.
    *
    * @param $components
-   *  The list of components, as assembled by assembleComponentList().
+   *  The list of components, as assembled by
+   *  ComponentCollector::assembleComponentList().
    *
    * @return
    *  A tree of parentage data for components, as an array keyed by the parent
