@@ -135,6 +135,9 @@ class FileAssembler {
             }
           }
 
+          // Add the source component ID.
+          $file_info_item['source_component_id'] = $child_component_name;
+
           $file_info[$file_id] = $file_info_item;
         }
       }
