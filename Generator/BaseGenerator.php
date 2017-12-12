@@ -417,11 +417,19 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Return this component's parent in the component tree.
+   * Returns this component's parent in the component tree.
    *
    * @return
-   *  The name of this component's parent in the tree, or NULL if this component
-   *  is either the base, or does not participate in the tree.
+   *  One of the following:
+   *   - The ID of this component's parent in the tree.
+   *   - One of the following tokens to represent a parent component:
+   *     - '%requester': Represents the component that requested this component
+   *        via requiredComponents().
+   *     - '%sibling:NAME': Represents one of the sibling components in a list
+   *       returned from requiredComponents(), where NAME is the key in the
+   *       returned value from requiredComponents().
+   *   - NULL if this component is either the base, or does not participate in
+   *     the tree.
    *
    * @see assembleComponentTree()
    */
