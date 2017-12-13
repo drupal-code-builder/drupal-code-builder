@@ -57,7 +57,7 @@ class ComponentCollector {
   /**
    * The components collected by the process.
    */
-  protected $component_list = [];
+  protected $component_collection;
 
   /**
    * The root component generator.
@@ -118,7 +118,8 @@ class ComponentCollector {
     // probably needed for tests.
     $this->root_component = NULL;
     $this->requested_data_record = [];
-    $this->component_list = [];
+
+    $this->component_collection = new \DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 
     // Fiddly different handling for the type in the root component...
     $component_type = $component_data['base'];
@@ -136,14 +137,14 @@ class ComponentCollector {
     // name of the Drupal extension.
     $this->getComponentsFromData($component_data['root_name'], $component_data, NULL);
 
-    return $this->component_list;
+    return $this->component_collection->getComponents();
   }
 
   /**
    * Create components from a data array.
    *
    * Provided this data does not duplicate already created components, the
-   * populates the $this->component_list property with:
+   * populates the $this->component_collection property with:
    * - The component itself given by the component_type property.
    * - Components that are specified by properties which themselves have
    *   component_type set.
@@ -163,7 +164,7 @@ class ComponentCollector {
    * @return
    *   The new generator that the top level of the data array is requesting, or
    *   NULL if the data is a duplicate set. Note that nothing needs to be done
-   *   with the return; the generator gets added to $this->component_list.
+   *   with the return; the generator gets added to $this->component_collection.
    */
   protected function getComponentsFromData($name, $component_data, $requesting_component) {
     // Debugging: record the chain of how we get here each time.
@@ -246,10 +247,10 @@ class ComponentCollector {
     //dump($this->requested_data_record);
 
     // A requested subcomponent may already exist in our tree.
-    if (isset($this->component_list[$component_unique_id])) {
+    if ($this->component_collection->hasComponent($component_unique_id)) {
       // If it already exists, we merge the received data in with the
       // existing component, and use the existing generator instead.
-      $generator = $this->component_list[$component_unique_id];
+      $generator = $this->component_collection->getComponent($component_unique_id);
       //dump("merging $component_unique_id");
       $generator->mergeComponentData($component_data);
 
@@ -258,8 +259,8 @@ class ComponentCollector {
       // been given.
     }
     else {
-      // Add the new component to the complete array of components.
-      $this->component_list[$component_unique_id] = $generator;
+      // Add the new component to the collection of components.
+      $this->component_collection->addComponent($generator);
     }
 
     // Pick out any data properties which are components themselves, and create the
