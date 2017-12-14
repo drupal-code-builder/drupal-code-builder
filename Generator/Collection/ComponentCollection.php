@@ -23,6 +23,16 @@ class ComponentCollection implements \IteratorAggregate {
   private $components = [];
 
   /**
+   * The requesters tree.
+   *
+   * A tree where each key is a component ID, and each value is the ID of the
+   * component that first requested it.
+   *
+   * @var array
+   */
+  private $requesters = [];
+
+  /**
    * The containment tree.
    *
    * A tree of parentage data for components, as an array keyed by the parent
@@ -47,11 +57,16 @@ class ComponentCollection implements \IteratorAggregate {
    * @param $component
    *   The component to add.
    */
-  public function addComponent(BaseGenerator $component) {
+  public function addComponent(BaseGenerator $component, $requesting_component) {
     $key = $component->getUniqueID();
 
     if (isset($this->items[$key])) {
       throw new \Exception("Key $key already in use.");
+    }
+
+    if ($requesting_component && !isset($this->requesters[$key])) {
+      // TODO: store multiple requesters?
+      $this->requesters[$key] = $requesting_component->getUniqueID();
     }
 
     $this->components[$key] = $component;
@@ -146,6 +161,34 @@ class ComponentCollection implements \IteratorAggregate {
     // TODO: throw if no tree yet.
 
     return $this->tree;
+  }
+
+  /**
+   * Gets the closest requester that is a root component.
+   *
+   * This may be called before the collection is complete.
+   *
+   * @param $component_id
+   *   The ID of the component.
+   *
+   * @return
+   *   The root component.
+   */
+  public function getClosestRequestingRootComponent($component_id) {
+    // We're ascending a tree whose root is a root component, so we have to
+    // find a root eventually.
+    while (TRUE) {
+      $requesting_component_id = $this->requesters[$component_id];
+      $requesting_component = $this->component_list[$containing_component_id];
+
+      if ($requesting_component instanceof \DrupalCodeBuilder\Generator\RootComponent) {
+        break;
+      }
+
+      $component = $requesting_component;
+    }
+
+    return $requesting_component;
   }
 
 }

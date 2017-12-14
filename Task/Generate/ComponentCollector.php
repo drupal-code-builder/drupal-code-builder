@@ -260,7 +260,7 @@ class ComponentCollector {
     }
     else {
       // Add the new component to the collection of components.
-      $this->component_collection->addComponent($generator);
+      $this->component_collection->addComponent($generator, $requesting_component);
     }
 
     // Pick out any data properties which are components themselves, and create the
