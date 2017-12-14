@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Generator\RootComponent;
 
 /**
@@ -15,17 +16,18 @@ class FileAssembler {
    *
    * @param $component_data
    *   The component data from the initial request.
-   * @param $component_list
-   *   The list of instantiated components.
-   * @param $tree
-   *   The tree of component parentage data.
+   * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
+   *   The component collection.
    *
    * @return
    *  An array of files ready for output. Keys are the filepath and filename
    *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
    *  values are strings of the contents for each file.
    */
-  public function generateFiles($component_data, $component_list, $tree) {
+  public function generateFiles($component_data, ComponentCollection $component_collection) {
+    $component_list = $component_collection->getComponents();
+    $tree = $component_collection->getContainmentTree();
+
     // The root generator is the first component in the list.
     // TODO: change this to use parameters.
     $this->root_generator = reset($component_list);

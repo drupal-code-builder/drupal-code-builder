@@ -201,8 +201,7 @@ class Generate extends Base {
 
     $files_assembled = $this->component_list = $this->getHelper('FileAssembler')->generateFiles(
       $component_data,
-      $this->component_list,
-      $tree
+      $component_collection
     );
 
     return $files_assembled;
