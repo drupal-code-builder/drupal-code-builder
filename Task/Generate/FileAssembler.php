@@ -33,7 +33,7 @@ class FileAssembler {
     $this->root_generator = reset($component_list);
 
     // Let each file component in the tree gather data from its own children.
-    $this->collectFileContents($component_list, $tree);
+    $this->collectFileContents($component_collection);
 
     //drush_print_r($generator->components);
 
@@ -57,16 +57,17 @@ class FileAssembler {
   /**
    * Allow file components to gather data from their child components.
    *
-   * @param $component_list
-   *  The array of components.
-   * @param $tree
-   *  The tree array.
+   * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
+   *   The component collection.
    */
-  protected function collectFileContents($component_list, $tree) {
+  protected function collectFileContents(ComponentCollection $component_collection) {
+    $component_list = $component_collection->getComponents();
+    $tree = $component_collection->getContainmentTree();
+
     // Iterate over all file-providing components, i.e. one level below the root
     // of the tree.
-    $root_component_name = $this->root_generator->getUniqueID();
-    foreach ($tree[$root_component_name] as $file_component_name) {
+    $file_component_ids = $component_collection->getContainmentTreeChildrenIds($component_collection->getRootComponentId());
+    foreach ($file_component_ids as $file_component_name) {
       // Skip files with no children in the tree.
       if (empty($tree[$file_component_name])) {
         continue;
@@ -74,7 +75,8 @@ class FileAssembler {
 
       // Let the file component run over its children iteratively.
       // (Not literally ;)
-      $component_list[$file_component_name]->buildComponentContentsIterative($component_list, $tree);
+      $component_collection->getComponent($file_component_name)
+        ->buildComponentContentsIterative($component_list, $tree);
     }
   }
 
