@@ -45,7 +45,7 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * @var array
    */
-  private $tree = [];
+  private $tree = NULL;
 
   /**
    * Indicates the the collection is locked and no more components may be added.
@@ -174,7 +174,9 @@ class ComponentCollection implements \IteratorAggregate {
    *   The tree assembled by assembleContainmentTree().
    */
   public function getContainmentTree() {
-    // TODO: throw if no tree yet.
+    if (is_null($this->tree)) {
+      throw new \LogicException("Tree has not yet been assembled.");
+    }
 
     return $this->tree;
   }
