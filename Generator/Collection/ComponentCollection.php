@@ -26,6 +26,13 @@ class ComponentCollection implements \IteratorAggregate {
   private $components = [];
 
   /**
+   * The ID of the root generator.
+   *
+   * @var string
+   */
+  private $rootGeneratorId;
+
+  /**
    * The requesters tree.
    *
    * A tree where each key is a component ID, and each value is the ID of the
@@ -75,6 +82,11 @@ class ComponentCollection implements \IteratorAggregate {
 
     $key = $component->getUniqueID();
 
+    // If this is the first component, it's the root.
+    if (!isset($this->rootGeneratorId)) {
+      $this->rootGeneratorId = $key;
+    }
+
     if (isset($this->items[$key])) {
       throw new \Exception("Key $key already in use.");
     }
@@ -108,6 +120,16 @@ class ComponentCollection implements \IteratorAggregate {
    */
   public function getComponents() {
     return $this->components;
+  }
+
+  /**
+   * Gets the root component.
+   *
+   * @return
+   *   The root component.
+   */
+  public function getRootComponent() {
+    return $this->components[$this->rootGeneratorId];
   }
 
   /**
