@@ -7,9 +7,12 @@ use DrupalCodeBuilder\Generator\BaseGenerator;
 /**
  * The collection of components for a generate request.
  *
- * This holds several structures:
+ * This holds the instantiated components, in several different structures:
  * - The linear list of components, which this class can iterate over.
- * - The tree of components arranged by containment.
+ * - The tree of components arranged by request.
+ * - The tree of components arranged by containment. This is only available
+ *   once assembleContainmentTree() has been called. After this, no more
+ *   components may be added.
  */
 class ComponentCollection implements \IteratorAggregate {
 
