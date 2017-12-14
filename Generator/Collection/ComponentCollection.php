@@ -48,6 +48,13 @@ class ComponentCollection implements \IteratorAggregate {
   private $tree = [];
 
   /**
+   * Indicates the the collection is locked and no more components may be added.
+   *
+   * @var bool
+   */
+  private $locked = FALSE;
+
+  /**
    * Returns the iterator for this object.
    */
   public function getIterator() {
@@ -61,6 +68,11 @@ class ComponentCollection implements \IteratorAggregate {
    *   The component to add.
    */
   public function addComponent(BaseGenerator $component, $requesting_component) {
+    // Components may not be added once the collection is locked.
+    if ($this->locked) {
+      throw new \LogicException("Attempt to add component to locked collection.");
+    }
+
     $key = $component->getUniqueID();
 
     if (isset($this->items[$key])) {
@@ -139,7 +151,8 @@ class ComponentCollection implements \IteratorAggregate {
    *  given by $tree['foo'].
    */
   public function assembleContainmentTree() {
-    // TODO: lock the collection once this is called.
+    // Lock the collection.
+    $this->locked = TRUE;
 
     $this->tree = [];
     foreach ($this->components as $id => $component) {
