@@ -194,7 +194,9 @@ class Generate extends Base {
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
     // of parent => [children].
-    $tree = $this->assembleComponentTree($this->component_list);
+    // TODO: replace use of $tree with accessor on the collection.
+    $tree = $component_collection->assembleContainmentTree();
+
     \DrupalCodeBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
     $files_assembled = $this->component_list = $this->getHelper('FileAssembler')->generateFiles(
@@ -224,51 +226,6 @@ class Generate extends Base {
     foreach ($component_list as $name => $component) {
       $component->detectExistence($existing_module_files);
     }
-  }
-
-  /**
-   * Assemble a tree of components, grouped by what they contain.
-   *
-   * For example, a code file contains its functions; a form component
-   * contains the handler functions.
-   *
-   * This iterates over the flat list of components assembled by
-   * ComponentCollector, and re-assembles it as a tree.
-   *
-   * The tree is an array of parentage data, where keys are the names of
-   * components that are parents, and values are flat arrays of component names.
-   * The top level of the tree is the root component, whose name is its type,
-   * e.g. 'module'.
-   * To traverse the tree:
-   *  - access the base component name
-   *  - iterate over its children
-   *  - recursively do the same thing to each child component.
-   *
-   * Not all components in the component list need to place themselves into the
-   * tree, but this means that they will not participate in file assembly.
-   *
-   * @param $components
-   *  The list of components, as assembled by
-   *  ComponentCollector::assembleComponentList().
-   *
-   * @return
-   *  A tree of parentage data for components, as an array keyed by the parent
-   *  component name, where each value is an array of the names of the child
-   *  components. So for example, the list of children of component 'foo' is
-   *  given by $tree['foo'].
-   */
-  protected function assembleComponentTree($components) {
-    $tree = array();
-    foreach ($components as $name => $component) {
-      $parent_name = $component->containingComponent();
-      if (!empty($parent_name)) {
-        assert(isset($components[$parent_name]), "Containing component '$parent_name' given by '$name' is not a component ID.");
-
-        $tree[$parent_name][] = $name;
-      }
-    }
-
-    return $tree;
   }
 
   /**
