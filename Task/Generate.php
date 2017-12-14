@@ -177,7 +177,11 @@ class Generate extends Base {
     $component_name = $component_type;
 
     // Assemble the component list from the request data.
-    $this->component_list = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
+    $component_collection = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
+    // Backward-compatiblity.
+    // TODO: replace this.
+    $this->component_list = $component_collection->getComponents();
+
     // The root generator is the first component in the list.
     $this->root_generator = reset($this->component_list);
 

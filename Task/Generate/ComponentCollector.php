@@ -110,8 +110,8 @@ class ComponentCollector {
    * @param $component_data
    *  The requested component data.
    *
-   * @return
-   *  The list of components, keyed by their unique IDs.
+   * @return \DrupalCodeBuilder\Generator\Collection\ComponentCollection
+   *  The collection of components.
    */
   public function assembleComponentList($component_data) {
     // Reset all class properties. We don't normally run this twice, but
@@ -137,7 +137,7 @@ class ComponentCollector {
     // name of the Drupal extension.
     $this->getComponentsFromData($component_data['root_name'], $component_data, NULL);
 
-    return $this->component_collection->getComponents();
+    return $this->component_collection;
   }
 
   /**

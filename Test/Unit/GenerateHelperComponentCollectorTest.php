@@ -111,7 +111,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(1, $component_list, "The expected number of components is returned.");
     $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
@@ -238,7 +238,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
   }
 
 
@@ -319,7 +319,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(2, $component_list, "The expected number of components is returned.");
     $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
@@ -429,7 +429,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(3, $component_list, "The expected number of components is returned.");
     $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
@@ -526,7 +526,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(2, $component_list, "The expected number of components is returned.");
     $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
@@ -641,7 +641,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(3, $component_list, "The expected number of components is returned.");
     $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
@@ -775,7 +775,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(3, $component_list, "The expected number of components is returned.");
 
@@ -911,7 +911,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data);
+    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
 
     $this->assertCount(1, $component_list, "The expected number of components is returned.");
 
