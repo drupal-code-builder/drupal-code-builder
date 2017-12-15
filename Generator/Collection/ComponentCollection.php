@@ -243,13 +243,13 @@ class ComponentCollection implements \IteratorAggregate {
     // find a root eventually.
     while (TRUE) {
       $requesting_component_id = $this->requesters[$component_id];
-      $requesting_component = $this->component_list[$containing_component_id];
+      $requesting_component = $this->components[$requesting_component_id];
 
       if ($requesting_component instanceof \DrupalCodeBuilder\Generator\RootComponent) {
         break;
       }
 
-      $component = $requesting_component;
+      $component_id = $requesting_component->getUniqueID();
     }
 
     return $requesting_component;
