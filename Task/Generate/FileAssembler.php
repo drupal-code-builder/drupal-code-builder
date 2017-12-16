@@ -49,7 +49,7 @@ class FileAssembler {
 
     // Then we assemble the files into a simple array of full filename and
     // contents.
-    $files_assembled = $this->assembleFiles($files);
+    $files_assembled = $this->assembleFiles($component_collection, $files);
 
     return $files_assembled;
   }
@@ -149,6 +149,8 @@ class FileAssembler {
   /**
    * Assemble file info into filename and code.
    *
+   * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
+   *   The component collection.
    * @param $files
    *  An array of file info, as compiled by collectFiles().
    *
@@ -157,7 +159,7 @@ class FileAssembler {
    *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
    *  values are strings of the contents for each file.
    */
-  protected function assembleFiles($files) {
+  protected function assembleFiles(ComponentCollection $component_collection, $files) {
     $return = array();
 
     foreach ($files as $file_id => $file_info) {
@@ -171,7 +173,13 @@ class FileAssembler {
       $code = implode($file_info['join_string'], $file_info['body']);
 
       // Replace tokens in file contents and file path.
-      $variables = $this->root_generator->getReplacements();
+      // We get the tokens from the root component that was the nearest
+      // requester.
+      // TODO: consider changing this to be nearest root component; though
+      // would require a change to File::containingComponent() among other
+      // things.
+      $closest_requesting_root = $component_collection->getClosestRequestingRootComponent($file_info['source_component_id']);
+      $variables = $closest_requesting_root->getReplacements();
       $code = strtr($code, $variables);
       $filepath = strtr($filepath, $variables);
 
