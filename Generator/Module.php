@@ -112,6 +112,7 @@ class Module extends RootComponent {
           return ucwords(str_replace('_', ' ', $component_data['root_name']));
         },
         'required' => FALSE,
+        'process_default' => TRUE,
       ),
       'short_description' => array(
         'label' => 'Module .info file description',
