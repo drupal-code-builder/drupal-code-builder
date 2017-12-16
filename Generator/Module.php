@@ -121,8 +121,9 @@ class Module extends RootComponent {
       ),
       'module_package' => array(
         'label' => 'Module .info file package',
-        'default' => NULL,
+        'default' => '',
         'required' => FALSE,
+        'process_default' => TRUE,
       ),
       'module_dependencies' => array(
         'label' => 'Module dependencies',
