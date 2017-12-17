@@ -101,6 +101,11 @@ class Module extends RootComponent {
     ] + $component_data_definition['root_name'];
 
     $component_data_definition += [
+      'base' => [
+        'internal' => TRUE,
+        'default' => 'module',
+        'process_default' => TRUE,
+      ],
       'root_name' => array(
         'label' => 'Module machine name',
         'default' => 'my_module',
