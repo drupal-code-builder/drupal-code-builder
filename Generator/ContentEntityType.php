@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use CaseConverter\CaseString;
 
 /**
  * Generator for a content entity type.
@@ -299,7 +300,7 @@ class ContentEntityType extends EntityTypeBase {
           '%module',
           'Entity',
           'Handler',
-          $this->component_data['entity_class_name'] . static::snakeToCamel($key),
+          $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
         ]);
       }
 

@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Generator for router item on Drupal 8.
  *
@@ -31,7 +33,7 @@ class RouterItem extends BaseGenerator {
   function __construct($component_name, $component_data, $root_generator) {
     // Create a controller name from the route path.
     $snake = str_replace(['/', '-'], '_', $component_name);
-    $controller_class_name = self::snakeToCamel($snake) . 'Controller';
+    $controller_class_name = CaseString::snake($snake)->pascal() . 'Controller';
     // TODO: clean up, use helper.
     $controller_qualified_class_name = implode('\\', [
       'Drupal',

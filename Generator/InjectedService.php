@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Generator for a service injection into a class.
  */
@@ -72,7 +74,7 @@ class InjectedService extends BaseGenerator {
 
     // Derive further information.
     $service_info['variable_name'] = implode('_', $id_pieces);
-    $service_info['property_name'] = lcfirst(self::snakeToCamel($service_info['variable_name']));
+    $service_info['property_name'] = CaseString::snake($service_info['variable_name'])->camel();
 
     // If the service has no interface, typehint on the class.
     $service_info['typehint'] = $service_info['interface'] ?? $service_info['class'];

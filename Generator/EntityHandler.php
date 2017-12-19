@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Generator for entity handler classes.
  */
@@ -38,7 +40,7 @@ class EntityHandler extends PHPClassFile {
         'Entity',
         'Handler',
         // Class name is entity type + handler type, e.g. CatListBuilder.
-        $component_data['entity_class_name'] . static::snakeToCamel($component_data['handler_type']),
+        $component_data['entity_class_name'] . CaseString::snake($component_data['handler_type'])->pascal(),
       ];
     };
     $data_definition['docblock_first_line']['default'] = function ($component_data) {

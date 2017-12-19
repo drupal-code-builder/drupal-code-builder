@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use CaseConverter\CaseString;
 
 /**
  * Base generator entity types.
@@ -42,7 +43,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'process_default' => TRUE,
         'default' => function($component_data) {
           $entity_type_id = $component_data['entity_type_id'];
-          return self::snakeToCamel($entity_type_id);
+          return CaseString::snake($entity_type_id)->pascal();
         },
       ],
       'interface_parents' => [

@@ -8,6 +8,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
+use CaseConverter\CaseString;
 
 /**
  * Generator for a plugin.
@@ -112,7 +113,7 @@ class Plugin extends PHPClassFileWithInjection {
             self::pathToNamespacePieces($plugin_data['subdir']),
             // Plugin ID.
             [
-              self::snakeToCamel($component_data['plugin_name']),
+              CaseString::snake($component_data['plugin_name'])->pascal(),
             ]
           );
         },

@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Generator for a plugin type.
  */
@@ -44,7 +46,7 @@ class PluginType extends BaseGenerator {
 
           // Convert the plugin type to camel case. E.g., 'my_plugin' becomes
           // 'MyPlugin'.
-          return self::snakeToCamel($plugin_type);
+          return CaseString::snake($plugin_type)->pascal();
         },
         'process_default' => TRUE,
       ),
@@ -56,7 +58,7 @@ class PluginType extends BaseGenerator {
 
           // Convert the plugin type to camel case. E.g., 'my_plugin' becomes
           // 'MyPlugin'.
-          return self::snakeToCamel($plugin_type);
+          return CaseString::snake($plugin_type)->pascal();
         },
         'process_default' => TRUE,
       ),
