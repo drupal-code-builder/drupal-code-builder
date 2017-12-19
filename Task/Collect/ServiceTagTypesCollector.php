@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use CaseConverter\CaseString;
 
 /**
  *  Task helper for collecting data on tagged services.
@@ -104,10 +105,11 @@ class ServiceTagTypesCollector {
         }
 
         // Make a label from the interface name: take the short interface name,
-        // and remove an 'Interface' suffix.
+        // and remove an 'Interface' suffix, convert to title case.
         $interface_pieces = explode('\\', $type);
         $label = array_pop($interface_pieces);
         $label = preg_replace('@Interface$@', '', $label);
+        $label = CaseString::pascal($label)->title();
 
         $type_hint_methods = $this->methodCollector->collectMethods($type);
 
