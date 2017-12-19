@@ -16,4 +16,5 @@ return array(
     'DrupalCodeBuilder\\' => array($baseDir . '/'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'CaseConverter\\' => array($vendorDir . '/joachim-n/case-converter'),
 );

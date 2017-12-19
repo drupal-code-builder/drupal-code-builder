@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CaseConverter\\CaseString' => $vendorDir . '/joachim-n/case-converter/CaseString.php',
+    'CaseConverter\\StringAssembler' => $vendorDir . '/joachim-n/case-converter/StringAssembler.php',
+    'CaseConverter\\Test\\CaseConverterTest' => $vendorDir . '/joachim-n/case-converter/Test/CaseConverterTest.php',
     'DeepCopy\\DeepCopy' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
     'DeepCopy\\Exception\\CloneException' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
     'DeepCopy\\Exception\\PropertyException' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
@@ -58,6 +61,7 @@ return array(
     'DrupalCodeBuilder\\Generator\\AdminSettingsForm7' => $baseDir . '/Generator/AdminSettingsForm7.php',
     'DrupalCodeBuilder\\Generator\\AnnotationClass' => $baseDir . '/Generator/AnnotationClass.php',
     'DrupalCodeBuilder\\Generator\\BaseGenerator' => $baseDir . '/Generator/BaseGenerator.php',
+    'DrupalCodeBuilder\\Generator\\Collection\\ComponentCollection' => $baseDir . '/Generator/Collection/ComponentCollection.php',
     'DrupalCodeBuilder\\Generator\\ConfigEntityType' => $baseDir . '/Generator/ConfigEntityType.php',
     'DrupalCodeBuilder\\Generator\\Configuration' => $baseDir . '/Generator/Configuration.php',
     'DrupalCodeBuilder\\Generator\\ContentEntityType' => $baseDir . '/Generator/ContentEntityType.php',
@@ -88,6 +92,7 @@ return array(
     'DrupalCodeBuilder\\Generator\\ModuleCodeFile' => $baseDir . '/Generator/ModuleCodeFile.php',
     'DrupalCodeBuilder\\Generator\\NameFormattingTrait' => $baseDir . '/Generator/NameFormattingTrait.php',
     'DrupalCodeBuilder\\Generator\\PHPClassFile' => $baseDir . '/Generator/PHPClassFile.php',
+    'DrupalCodeBuilder\\Generator\\PHPClassFileWithInjection' => $baseDir . '/Generator/PHPClassFileWithInjection.php',
     'DrupalCodeBuilder\\Generator\\PHPFile' => $baseDir . '/Generator/PHPFile.php',
     'DrupalCodeBuilder\\Generator\\PHPFormattingTrait' => $baseDir . '/Generator/PHPFormattingTrait.php',
     'DrupalCodeBuilder\\Generator\\PHPFunction' => $baseDir . '/Generator/PHPFunction.php',
@@ -138,6 +143,7 @@ return array(
     'DrupalCodeBuilder\\Task\\Generate\\ComponentCollector' => $baseDir . '/Task/Generate/ComponentCollector.php',
     'DrupalCodeBuilder\\Task\\Generate\\ComponentDataInfoGatherer' => $baseDir . '/Task/Generate/ComponentDataInfoGatherer.php',
     'DrupalCodeBuilder\\Task\\Generate\\ComponentPropertyPreparer' => $baseDir . '/Task/Generate/ComponentPropertyPreparer.php',
+    'DrupalCodeBuilder\\Task\\Generate\\FileAssembler' => $baseDir . '/Task/Generate/FileAssembler.php',
     'DrupalCodeBuilder\\Task\\ReportDataTypes' => $baseDir . '/Task/ReportDataTypes.php',
     'DrupalCodeBuilder\\Task\\ReportFieldTypes' => $baseDir . '/Task/ReportFieldTypes.php',
     'DrupalCodeBuilder\\Task\\ReportHookData' => $baseDir . '/Task/ReportHookData.php',
@@ -172,7 +178,7 @@ return array(
     'DrupalCodeBuilder\\Test\\Unit\\ComponentRouterItem8Test' => $baseDir . '/Test/Unit/ComponentRouterItem8Test.php',
     'DrupalCodeBuilder\\Test\\Unit\\ComponentService8Test' => $baseDir . '/Test/Unit/ComponentService8Test.php',
     'DrupalCodeBuilder\\Test\\Unit\\ComponentTests7Test' => $baseDir . '/Test/Unit/ComponentTests7Test.php',
-    'DrupalCodeBuilder\\Test\\Unit\\ComponentTestsPHPUnitTest8' => $baseDir . '/Test/Unit/ComponentTestsPHPUnitTest8.php',
+    'DrupalCodeBuilder\\Test\\Unit\\ComponentTestsPHPUnit8Test' => $baseDir . '/Test/Unit/ComponentTestsPHPUnit8Test.php',
     'DrupalCodeBuilder\\Test\\Unit\\ComponentThemeHook8Test' => $baseDir . '/Test/Unit/ComponentThemeHook8Test.php',
     'DrupalCodeBuilder\\Test\\Unit\\DrupalCodeBuilderAssertionsTest' => $baseDir . '/Test/Unit/DrupalCodeBuilderAssertionsTest.php',
     'DrupalCodeBuilder\\Test\\Unit\\FFsPhpUnit' => $baseDir . '/Test/Unit/FFsPhpUnit.php',

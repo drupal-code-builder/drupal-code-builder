@@ -42,6 +42,10 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
         ),
+        'C' => 
+        array (
+            'CaseConverter\\' => 14,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -87,6 +91,10 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'CaseConverter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/joachim-n/case-converter',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -107,6 +115,9 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
     );
 
     public static $classMap = array (
+        'CaseConverter\\CaseString' => __DIR__ . '/..' . '/joachim-n/case-converter/CaseString.php',
+        'CaseConverter\\StringAssembler' => __DIR__ . '/..' . '/joachim-n/case-converter/StringAssembler.php',
+        'CaseConverter\\Test\\CaseConverterTest' => __DIR__ . '/..' . '/joachim-n/case-converter/Test/CaseConverterTest.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
@@ -159,6 +170,7 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
         'DrupalCodeBuilder\\Generator\\AdminSettingsForm7' => __DIR__ . '/../..' . '/Generator/AdminSettingsForm7.php',
         'DrupalCodeBuilder\\Generator\\AnnotationClass' => __DIR__ . '/../..' . '/Generator/AnnotationClass.php',
         'DrupalCodeBuilder\\Generator\\BaseGenerator' => __DIR__ . '/../..' . '/Generator/BaseGenerator.php',
+        'DrupalCodeBuilder\\Generator\\Collection\\ComponentCollection' => __DIR__ . '/../..' . '/Generator/Collection/ComponentCollection.php',
         'DrupalCodeBuilder\\Generator\\ConfigEntityType' => __DIR__ . '/../..' . '/Generator/ConfigEntityType.php',
         'DrupalCodeBuilder\\Generator\\Configuration' => __DIR__ . '/../..' . '/Generator/Configuration.php',
         'DrupalCodeBuilder\\Generator\\ContentEntityType' => __DIR__ . '/../..' . '/Generator/ContentEntityType.php',
@@ -189,6 +201,7 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
         'DrupalCodeBuilder\\Generator\\ModuleCodeFile' => __DIR__ . '/../..' . '/Generator/ModuleCodeFile.php',
         'DrupalCodeBuilder\\Generator\\NameFormattingTrait' => __DIR__ . '/../..' . '/Generator/NameFormattingTrait.php',
         'DrupalCodeBuilder\\Generator\\PHPClassFile' => __DIR__ . '/../..' . '/Generator/PHPClassFile.php',
+        'DrupalCodeBuilder\\Generator\\PHPClassFileWithInjection' => __DIR__ . '/../..' . '/Generator/PHPClassFileWithInjection.php',
         'DrupalCodeBuilder\\Generator\\PHPFile' => __DIR__ . '/../..' . '/Generator/PHPFile.php',
         'DrupalCodeBuilder\\Generator\\PHPFormattingTrait' => __DIR__ . '/../..' . '/Generator/PHPFormattingTrait.php',
         'DrupalCodeBuilder\\Generator\\PHPFunction' => __DIR__ . '/../..' . '/Generator/PHPFunction.php',
@@ -239,6 +252,7 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
         'DrupalCodeBuilder\\Task\\Generate\\ComponentCollector' => __DIR__ . '/../..' . '/Task/Generate/ComponentCollector.php',
         'DrupalCodeBuilder\\Task\\Generate\\ComponentDataInfoGatherer' => __DIR__ . '/../..' . '/Task/Generate/ComponentDataInfoGatherer.php',
         'DrupalCodeBuilder\\Task\\Generate\\ComponentPropertyPreparer' => __DIR__ . '/../..' . '/Task/Generate/ComponentPropertyPreparer.php',
+        'DrupalCodeBuilder\\Task\\Generate\\FileAssembler' => __DIR__ . '/../..' . '/Task/Generate/FileAssembler.php',
         'DrupalCodeBuilder\\Task\\ReportDataTypes' => __DIR__ . '/../..' . '/Task/ReportDataTypes.php',
         'DrupalCodeBuilder\\Task\\ReportFieldTypes' => __DIR__ . '/../..' . '/Task/ReportFieldTypes.php',
         'DrupalCodeBuilder\\Task\\ReportHookData' => __DIR__ . '/../..' . '/Task/ReportHookData.php',
@@ -273,7 +287,7 @@ class ComposerStaticInit38a0a3f4582b8b353abaa8f408362f43
         'DrupalCodeBuilder\\Test\\Unit\\ComponentRouterItem8Test' => __DIR__ . '/../..' . '/Test/Unit/ComponentRouterItem8Test.php',
         'DrupalCodeBuilder\\Test\\Unit\\ComponentService8Test' => __DIR__ . '/../..' . '/Test/Unit/ComponentService8Test.php',
         'DrupalCodeBuilder\\Test\\Unit\\ComponentTests7Test' => __DIR__ . '/../..' . '/Test/Unit/ComponentTests7Test.php',
-        'DrupalCodeBuilder\\Test\\Unit\\ComponentTestsPHPUnitTest8' => __DIR__ . '/../..' . '/Test/Unit/ComponentTestsPHPUnitTest8.php',
+        'DrupalCodeBuilder\\Test\\Unit\\ComponentTestsPHPUnit8Test' => __DIR__ . '/../..' . '/Test/Unit/ComponentTestsPHPUnit8Test.php',
         'DrupalCodeBuilder\\Test\\Unit\\ComponentThemeHook8Test' => __DIR__ . '/../..' . '/Test/Unit/ComponentThemeHook8Test.php',
         'DrupalCodeBuilder\\Test\\Unit\\DrupalCodeBuilderAssertionsTest' => __DIR__ . '/../..' . '/Test/Unit/DrupalCodeBuilderAssertionsTest.php',
         'DrupalCodeBuilder\\Test\\Unit\\FFsPhpUnit' => __DIR__ . '/../..' . '/Test/Unit/FFsPhpUnit.php',
