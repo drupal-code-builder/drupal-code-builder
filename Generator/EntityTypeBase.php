@@ -34,7 +34,7 @@ abstract class EntityTypeBase extends PHPClassFile {
 
           // Convert the entity type to camel case. E.g., 'my_entity_type'
           //  becomes 'My Entity Type'.
-          return self::snakeToTitle($entity_type_id);
+          return CaseString::snake($entity_type_id)->title();
         },
       ],
       'entity_class_name' => [

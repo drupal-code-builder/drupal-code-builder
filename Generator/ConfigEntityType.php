@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use CaseConverter\CaseString;
 
 /**
  * Generator for a config entity type.
@@ -29,7 +30,7 @@ class ConfigEntityType extends EntityTypeBase {
             'label' => 'Property label',
             'default' => function($component_data) {
               $entity_type_id = $component_data['name'];
-              return self::snakeToTitle($entity_type_id);
+              return CaseString::snake($entity_type_id)->title();
             },
             'process_default' => TRUE,
           ],

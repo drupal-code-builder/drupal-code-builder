@@ -57,7 +57,7 @@ class ContentEntityType extends EntityTypeBase {
             'label' => 'Field label',
             'default' => function($component_data) {
               $entity_type_id = $component_data['name'];
-              return self::snakeToTitle($entity_type_id);
+              return CaseString::snake($entity_type_id)->title();
             },
             'process_default' => TRUE,
           ],
