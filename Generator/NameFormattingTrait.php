@@ -13,42 +13,6 @@ namespace DrupalCodeBuilder\Generator;
 trait NameFormattingTrait {
 
   /**
-   * Helper to convert a snake case string to camel case.
-   *
-   * @param $snake_case_string
-   *  A string in the format 'convert_this'.
-   *
-   * @return
-   *  The converted string, e.g. 'ConvertThis'.
-   */
-  public static function snakeToCamel($snake_case_string) {
-    // TODO: support split on '.' if needed?
-    $pieces = explode('_', $snake_case_string);
-
-    $camel = implode('', array_map('ucfirst', $pieces));
-
-    return $camel;
-  }
-
-  /**
-   * Helper to convert a snake case string to title case.
-   *
-   * @param $snake_case_string
-   *  A string in the format 'convert_this'.
-   *
-   * @return
-   *  The converted string, e.g. 'Convert This'.
-   */
-  public static function snakeToTitle($snake_case_string) {
-    // TODO: support split on '.' if needed?
-    $pieces = explode('_', $snake_case_string);
-
-    $camel = implode(' ', array_map('ucfirst', $pieces));
-
-    return $camel;
-  }
-
-  /**
    * Helper to make a fully-qualified class name.
    *
    * @param array $class_name_pieces
