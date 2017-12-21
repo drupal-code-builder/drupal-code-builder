@@ -119,7 +119,7 @@ class ComponentTestsPHPUnit8Test extends TestBaseComponentGeneration {
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
-      'readable_name' => 'Test module',
+      'readable_name' => 'Generated module',
       'phpunit_tests' => [
         0 => [
           'test_type' => 'kernel',
@@ -146,6 +146,96 @@ class ComponentTestsPHPUnit8Test extends TestBaseComponentGeneration {
     $this->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $this->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
     $this->assertHasMethods(['setUp', 'testMyTest']);
+  }
+
+  /**
+   * Create a test class with a test module.
+   *
+   * @group test
+   */
+  function testModuleGenerationTestsWithTestModule() {
+    // Create a module.
+    $module_name = 'generated_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Generated module',
+      'phpunit_tests' => [
+        0 => [
+          'test_class_name' => 'MyTest',
+          'test_modules' => [
+            0 => [
+              'root_name' => 'test_module',
+              // A plugin inside the test module.
+              'plugins' => [
+                0 => [
+                  'plugin_type' => 'block',
+                  'plugin_name' => 'alpha',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+      // A plugin outside of the test module, to differentiate.
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $this->assertCount(5, $files, "The expected number of files is returned.");
+
+    $this->assertArrayHasKey("generated_module.info.yml", $files, "The main module has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The main module has a plugin file.");
+    $this->assertArrayHasKey("tests/src/MyTest.php", $files, "The files list has a test class file.");
+    $this->assertArrayHasKey("tests/modules/test_module/test_module.info.yml", $files, "The test module has a .info.yml file.");
+    $this->assertArrayHasKey("tests/modules/test_module/src/Plugin/Block/Alpha.php", $files, "The test module has a plugin file.");
+
+    // Check the main module .info file.
+    $info_file = $files["generated_module.info.yml"];
+    $this->assertYamlProperty($info_file, 'name', "Generated module", "The info file declares the module name.");
+    $this->assertYamlProperty($info_file, 'core', "8.x", "The info file declares the core version.");
+
+    // Check the test module .info file.
+    $test_module_info_file = $files['tests/modules/test_module/test_module.info.yml'];
+    $this->assertYamlProperty($test_module_info_file, 'name', "Test Module", "The info file declares the module name.");
+    $this->assertYamlProperty($test_module_info_file, 'package', "Testing", "The info file declares the package as 'Testing'.");
+    $this->assertYamlProperty($test_module_info_file, 'core', "8.x", "The info file declares the core version.");
+
+    // Check the main module plugin file.
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $this->assertWellFormedPHP($plugin_file);
+    $this->assertDrupalCodingStandards($plugin_file);
+
+    $this->parseCode($plugin_file);
+    $this->assertHasClass('Drupal\generated_module\Plugin\Block\Alpha');
+    $this->assertClassHasParent('Drupal\Core\Block\BlockBase');
+
+    // Check the test module plugin file.
+    $test_plugin_file = $files["tests/modules/test_module/src/Plugin/Block/Alpha.php"];
+    $this->assertWellFormedPHP($test_plugin_file);
+    $this->assertDrupalCodingStandards($test_plugin_file);
+
+    $this->parseCode($test_plugin_file);
+    $this->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $this->assertClassHasParent('Drupal\Core\Block\BlockBase');
+
+    $test_file = $files["tests/src/MyTest.php"];
+
+    $this->parseCode($test_file);
+    $this->assertHasClass('Drupal\Tests\generated_module\MyTest');
+    $expected_modules_property_value = [
+      'system',
+      'user',
+      'generated_module',
+      'test_module',
+    ];
+    $this->assertClassHasPublicProperty('modules', 'array', $expected_modules_property_value);
   }
 
 }

@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Component generator: PHPUnit test class.
  */
@@ -101,6 +103,19 @@ class PHPUnitTest extends PHPClassFile {
       'module_dependencies' => [
         'acquired' => TRUE,
       ],
+      'test_modules' => [
+        'label' => 'Test modules',
+        'format' => 'compound',
+        'component' => 'TestModule',
+        'default' => function($component_data) {
+          return [
+            0 => [
+              // Create a default module name from the requesting test class name.
+              'root_name' => CaseString::pascal($component_data['test_class_name'])->snake(),
+            ],
+          ];
+        },
+      ],
     ];
 
     // Put the parent definitions after ours.
@@ -191,6 +206,12 @@ class PHPUnitTest extends PHPClassFile {
         '%module',
       ]
     );
+    // Any test modules.
+    if (!empty($this->component_data['test_modules'])) {
+      foreach ($this->component_data['test_modules'] as $data) {
+        $test_install_modules[] = $data['root_name'];
+      }
+    }
 
     $this->properties[] = $this->createPropertyBlock(
       'modules',
