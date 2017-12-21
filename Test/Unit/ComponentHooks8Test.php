@@ -58,10 +58,10 @@ class ComponentHooks8Test extends TestBaseComponentGeneration {
 
     $file_names = array_keys($files);
 
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info file.");
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
-    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.tokens.inc", $files, "The files list has a .tokens.inc file.");
+    $this->assertArrayHasKey("$module_name.install", $files, "The files list has a .install file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

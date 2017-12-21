@@ -37,8 +37,8 @@ class ComponentPermissions8Test extends TestBaseComponentGeneration {
     $file_names = array_keys($files);
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("$module_name.permissions.yml", $file_names, "The files list has a .permissions.yml file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The files list has a .permissions.yml file.");
 
     // Check the .permissions.yml file.
     $permissions_file = $files["$module_name.permissions.yml"];

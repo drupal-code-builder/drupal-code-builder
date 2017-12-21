@@ -35,9 +35,9 @@ class ComponentThemeHook8Test extends TestBaseComponentGeneration {
     $file_names = array_keys($files);
 
     $this->assertCount(3, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("templates/my-themeable.html.twig", $file_names, "The files list has a twig file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("templates/my-themeable.html.twig", $files, "The files list has a twig file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

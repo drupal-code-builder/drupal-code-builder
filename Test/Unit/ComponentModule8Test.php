@@ -34,7 +34,7 @@ class ComponentModule8Test extends TestBaseComponentGeneration {
 
     $this->assertCount(1, $files, "One file is returned.");
 
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
   }
 
   /**
@@ -59,8 +59,8 @@ class ComponentModule8Test extends TestBaseComponentGeneration {
 
     $this->assertCount(2, $files, "Two files are returned.");
 
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];

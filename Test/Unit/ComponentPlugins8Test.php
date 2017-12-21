@@ -38,8 +38,8 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $file_names = array_keys($files);
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("src/Plugin/Block/Alpha.php", $file_names, "The files list has a plugin file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
@@ -98,9 +98,9 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $file_names = array_keys($files);
 
     $this->assertCount(3, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("src/Plugin/Field/FieldFormatter/Alpha.php", $file_names, "The files list has a plugin file.");
-    $this->assertContains("src/Plugin/Field/FieldFormatter/Beta.php", $file_names, "The files list has a plugin file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Field/FieldFormatter/Alpha.php", $files, "The files list has a plugin file.");
+    $this->assertArrayHasKey("src/Plugin/Field/FieldFormatter/Beta.php", $files, "The files list has a plugin file.");
   }
 
   /**
@@ -158,8 +158,8 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $file_names = array_keys($files);
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("src/Plugin/Block/Alpha.php", $file_names, "The files list has a plugin file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
@@ -230,8 +230,8 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $file_names = array_keys($files);
 
     $this->assertCount(2, $files, "Expected number of files is returned.");
-    $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
-    $this->assertContains("src/Plugin/ImageEffect/Alpha.php", $file_names, "The files list has a plugin file.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/ImageEffect/Alpha.php", $files, "The files list has a plugin file.");
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/ImageEffect/Alpha.php"];

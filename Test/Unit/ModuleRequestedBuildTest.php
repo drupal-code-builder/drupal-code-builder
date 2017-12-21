@@ -48,13 +48,13 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(7, $files, "Expected number of files are returned.");
-    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
-    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
-    $this->assertContains("$module_name.api.php", $file_names, "The files list has a .api.php file.");
-    $this->assertContains("tests/$module_name.test", $file_names, "The files list has a tests file.");
-    $this->assertContains("README.txt", $file_names, "The files list has a README file.");
+    $this->assertArrayHasKey("$module_name.info", $files, "The files list has a .info file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.install", $files, "The files list has a .install file.");
+    $this->assertArrayHasKey("$module_name.tokens.inc", $files, "The files list has a .tokens.inc file.");
+    $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has a .api.php file.");
+    $this->assertArrayHasKey("tests/$module_name.test", $files, "The files list has a tests file.");
+    $this->assertArrayHasKey("README.txt", $files, "The files list has a README file.");
 
     // Test the 'code' build list setting.
     $module_data = $module_data_base;
@@ -66,11 +66,11 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(5, $files, "Expected number of files are returned.");
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
-    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
-    $this->assertContains("tests/$module_name.test", $file_names, "The files list has a tests file.");
-    $this->assertContains("$module_name.api.php", $file_names, "The files list has a .api.php file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.install", $files, "The files list has a .install file.");
+    $this->assertArrayHasKey("$module_name.tokens.inc", $files, "The files list has a .tokens.inc file.");
+    $this->assertArrayHasKey("tests/$module_name.test", $files, "The files list has a tests file.");
+    $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has a .api.php file.");
 
     // Test specific file requests.
     $module_data = $module_data_base;
@@ -82,7 +82,7 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(1, $files, "Only one file is returned.");
-    $this->assertContains("$module_name.install", $file_names, "The files list has a .install file.");
+    $this->assertArrayHasKey("$module_name.install", $files, "The files list has a .install file.");
 
     $module_data = $module_data_base;
     $module_data['requested_build'] = array(
@@ -93,7 +93,7 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(1, $files, "Only one file is returned.");
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
 
     $module_data = $module_data_base;
     $module_data['requested_build'] = array(
@@ -104,7 +104,7 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(1, $files, "Only one file is returned.");
-    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
+    $this->assertArrayHasKey("$module_name.info", $files, "The files list has a .info file.");
 
     $module_data = $module_data_base;
     $module_data['requested_build'] = array(
@@ -115,7 +115,7 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(1, $files, "Only one file is returned.");
-    $this->assertContains("$module_name.tokens.inc", $file_names, "The files list has a .tokens.inc file.");
+    $this->assertArrayHasKey("$module_name.tokens.inc", $files, "The files list has a .tokens.inc file.");
 
     $module_data = $module_data_base;
     $module_data['requested_build'] = array(
@@ -126,7 +126,7 @@ class ModuleRequestedBuildTest extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(1, $files, "Only one file is returned.");
-    $this->assertContains("tests/$module_name.test", $file_names, "The files list has a tests file.");
+    $this->assertArrayHasKey("tests/$module_name.test", $files, "The files list has a tests file.");
   }
 
 }

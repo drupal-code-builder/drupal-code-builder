@@ -31,8 +31,8 @@ class ComponentModule7Test extends TestBaseComponentGeneration {
 
     $this->assertCount(2, $files, "Two files are returned.");
 
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.info", $files, "The files list has a .info file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
@@ -61,8 +61,8 @@ class ComponentModule7Test extends TestBaseComponentGeneration {
 
     $this->assertCount(2, $files, "Two files are returned.");
 
-    $this->assertContains("$module_name.module", $file_names, "The files list has a .module file.");
-    $this->assertContains("$module_name.info", $file_names, "The files list has a .info file.");
+    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
+    $this->assertArrayHasKey("$module_name.info", $files, "The files list has a .info file.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
