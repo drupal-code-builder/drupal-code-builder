@@ -18,6 +18,7 @@ class Tests7 extends Tests {
   public function requiredComponents() {
     $components = array();
 
+    // Declare the class file in the module's .info file.
     $components['info_class'] = array(
       'component_type' => 'InfoProperty',
       'property_name' => 'files[]',
