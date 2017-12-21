@@ -88,6 +88,9 @@ class Plugin extends PHPClassFileWithInjection {
             $plugin_data = $plugin_types_data[$value];
           }
           else {
+            // Convert a namespace separator into a directory separator.
+            $value = str_replace('\\', '/', $value);
+
             $plugin_types_data_by_subdirectory = $task_report_plugins->listPluginDataBySubdirectory();
             if (isset($plugin_types_data_by_subdirectory[$value])) {
               $plugin_data = $plugin_types_data_by_subdirectory[$value];

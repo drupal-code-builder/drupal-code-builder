@@ -85,16 +85,22 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
           // Specify the folder name rather than the plugin ID.
           'plugin_type' => 'Field/FieldFormatter',
           'plugin_name' => 'alpha',
-        ]
+        ],
+        1 => [
+          // Specify the namespace slice rather than the plugin ID.
+          'plugin_type' => 'Field\FieldFormatter',
+          'plugin_name' => 'beta',
+        ],
       ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
-    $this->assertCount(2, $files, "Expected number of files is returned.");
+    $this->assertCount(3, $files, "Expected number of files is returned.");
     $this->assertContains("$module_name.info.yml", $file_names, "The files list has a .info.yml file.");
     $this->assertContains("src/Plugin/Field/FieldFormatter/Alpha.php", $file_names, "The files list has a plugin file.");
+    $this->assertContains("src/Plugin/Field/FieldFormatter/Beta.php", $file_names, "The files list has a plugin file.");
   }
 
   /**
