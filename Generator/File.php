@@ -69,8 +69,6 @@ class File extends BaseGenerator {
    *    array of single lines, you probably want to use "\n". If you have chunks
    *    it makes more sense for each chunk to contain its own linebreaks
    *    including the terminal one.
-   *  - contains_classes: A boolean indicating that this file contains one or
-   *    more classes, and thus should be declared in the component's .info file.
    */
   public function getFileInfo() {
     // Subclasses should override this.
