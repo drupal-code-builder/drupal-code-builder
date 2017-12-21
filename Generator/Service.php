@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\StringAssembler;
+
 /**
  * Generator for a service.
  */
@@ -116,8 +118,8 @@ class Service extends PHPClassFileWithInjection {
           // implode and ucfirst()
           $service_id = $component_data['service_name'];
           $service_id_pieces = preg_split('/[\._]/', $service_id);
-          // Create an unqualified class name by turning this into camel case.
-          $plain_class_name = implode('', array_map('ucfirst', $service_id_pieces));
+          // Create an unqualified class name by turning this into pascal case.
+          $plain_class_name = (new \CaseConverter\StringAssembler($service_id_pieces))->pascal();
 
           return $plain_class_name;
         },
