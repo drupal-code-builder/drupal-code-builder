@@ -326,19 +326,6 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Get the root component's data.
-   *
-   * This can be used in circumstances where it's not known whether the current
-   * component is the base or not.
-   *
-   * @return
-   *  The base component.
-   */
-  function getRootComponentData() {
-    return $this->root_component->component_data;
-  }
-
-  /**
    * Get this component's required components.
    *
    * For example, a module component requires hooks, an info file, and a readme
