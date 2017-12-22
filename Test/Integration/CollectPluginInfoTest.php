@@ -11,8 +11,6 @@ use Drupal\KernelTests\KernelTestBase;
  * @code
  *  [drupal]/core $ ../vendor/bin/phpunit ../vendor/drupal-code-builder/drupal-code-builder/Test/Integration/CollectPluginInfoTest.php
  * @endcode
- *
- * @todo move these under /Test once the unit tests are moved into a subfolder.
  */
 class CollectPluginInfoTest extends KernelTestBase {
 
