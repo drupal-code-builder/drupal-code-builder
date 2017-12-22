@@ -20,32 +20,51 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    $data_definition['service_id'] = [
+      'label' => 'Service name',
+      'required' => TRUE,
+      'processing' => function($value, &$component_data, $property_name, &$property_info) {
+        // Validate the service name.
+        $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+        $services_data = $task_handler_report_services->listServiceData();
+
+        if (!isset($services_data[$value])) {
+          throw new InvalidInputException("Service {$value} not found.");
+        }
+
+        // Build up the service info.
+        $service_info = [];
+        $service_info['id'] = $service_id = $value;
+
+        // Copy these explicitly for maintainability and readability.
+        $service_info['description']  = $services_data[$service_id]['description'];
+        $service_info['interface']    = $services_data[$service_id]['interface'];
+
+        // Derive further information.
+        $id_pieces = preg_split('@[_.]@', $value);
+        $service_info['variable_name'] = implode('_', $id_pieces);
+        $service_info['property_name'] = CaseString::snake($service_info['variable_name'])->camel();
+
+        // If the service has no interface, typehint on the class.
+        $service_info['typehint'] = $service_info['interface'] ?? $service_info['class'];
+
+        // Set the service info.
+        // Bit of a cheat, as undeclared data property!
+        $component_data['service_info'] = $service_info;
+      }
+    ];
+
+    return $data_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildComponentContents($children_contents) {
-    $service_id = $this->component_data['service_id'];
-    $id_pieces = preg_split('@[_.]@', $service_id);
-
-    // Find the info for the requested service in our stored data.
-    $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-    $services_data = $task_handler_report_services->listServiceData();
-
-    $service_info = [];
-    $service_info['id'] = $service_id;
-
-    if (isset($services_data[$service_id])) {
-      // Copy these explicitly for maintainability and readability.
-      $service_info['description']  = $services_data[$service_id]['description'];
-      $service_info['interface']    = $services_data[$service_id]['interface'];
-    }
-    else {
-      throw new InvalidInputException("Service {$service_id} not found.");
-    }
-
-    // Derive further information.
-    $service_info['variable_name'] = implode('_', $id_pieces);
-    $service_info['property_name'] = CaseString::snake($service_info['variable_name'])->camel();
-
-    // If the service has no interface, typehint on the class.
-    $service_info['typehint'] = $service_info['interface'] ?? $service_info['class'];
+    $service_info = $this->component_data['service_info'];
 
     return [
       'service' => [
