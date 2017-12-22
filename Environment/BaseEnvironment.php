@@ -1,8 +1,9 @@
 <?php
 
+namespace DrupalCodeBuilder\Environment;
+
 /**
- * @file
- * Contains DrupalCodeBuilder\Environment\BaseEnvironment.
+ * Base class for environments.
  *
  * The environment system provides an abstraction layer between Drupal Code
  * Builder and its current environment, e.g., whether we are running as a Drush
@@ -18,12 +19,6 @@
  * execution environment to be orthogonal to the major version. All methods on
  * the helper core version object should be access via a wrapper on the main
  * environment class.
- */
-
-namespace DrupalCodeBuilder\Environment;
-
-/**
- * Base class for environments.
  */
 abstract class BaseEnvironment implements EnvironmentInterface {
 

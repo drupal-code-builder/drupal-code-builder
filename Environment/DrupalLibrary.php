@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Environment\DrupalLibrary.
- */
-
 namespace DrupalCodeBuilder\Environment;
 
 /**

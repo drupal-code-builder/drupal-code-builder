@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Environment\Drush.
- */
-
 namespace DrupalCodeBuilder\Environment;
 
 /**

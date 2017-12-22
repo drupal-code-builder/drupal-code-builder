@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\BaseEnvironment\VersionHelperTests.
- */
-
 namespace DrupalCodeBuilder\Environment;
 
 /**
