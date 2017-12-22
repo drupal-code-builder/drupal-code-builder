@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use \DrupalCodeBuilder\Exception\InvalidInputException;
+
 /**
  * Tests for Service component.
  */
@@ -203,6 +205,34 @@ class ComponentService8Test extends TestBaseComponentGeneration {
         'parameter_name' => 'entity_type_manager',
       ],
     ]);
+  }
+
+  /**
+   * Test a service with with a non-existent injected service.
+   */
+  function testServiceGenerationWithBadService() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_name' => 'my_service',
+          'injected_services' => [
+            'entity_type.manager',
+            'made_up',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $this->expectException(InvalidInputException::class);
+
+    $files = $this->generateModuleFiles($module_data);
   }
 
   /**
