@@ -8,7 +8,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Exception\InvalidInputException;
-use CaseConverter\CaseString;
+use CaseConverter\StringAssembler;
 
 /**
  * Generator for a service injection into a class.
@@ -44,9 +44,9 @@ class InjectedService extends BaseGenerator {
         $service_info['interface']    = $services_data[$service_id]['interface'];
 
         // Derive further information.
-        $id_pieces = preg_split('@[_.]@', $value);
-        $service_info['variable_name'] = implode('_', $id_pieces);
-        $service_info['property_name'] = CaseString::snake($service_info['variable_name'])->camel();
+        $service_id_pieces = preg_split('@[_.]@', $value);
+        $service_info['variable_name'] = (new StringAssembler($service_id_pieces))->snake();
+        $service_info['property_name'] = (new StringAssembler($service_id_pieces))->camel();
 
         // If the service has no interface, typehint on the class.
         $service_info['typehint'] = $service_info['interface'] ?? $service_info['class'];
