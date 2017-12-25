@@ -32,6 +32,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
           'interface_parents' => [
             'EntityOwnerInterface',
           ],
+          'handler_list_builder' => 'core',
           'base_fields' => [
             0 => [
               'name' => 'breed',
