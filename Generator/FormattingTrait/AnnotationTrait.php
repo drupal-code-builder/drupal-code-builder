@@ -33,11 +33,12 @@ trait AnnotationTrait {
 
     foreach ($annotation_data['#data'] as $key => $value) {
       if (is_array($value) && isset($value['#class'])) {
+        // Nested annotation with a class.
         if (is_array($value['#data'])) {
           // Child array: recurse.
           $child_docblock_lines = $this->renderAnnnotation($value, $indent + 1);
 
-          // Tack the class at the front with an indent.
+          // Tack the key at the front with an indent.
           $child_docblock_lines[0] = str_repeat('  ', $indent) . "$key = " . $child_docblock_lines[0];
 
           // Redo the last line to be intended and have a comma.
@@ -55,6 +56,7 @@ trait AnnotationTrait {
         }
       }
       else {
+        // Nested array values.
         $this->annotationLineProcessor($key, $value, $indent, $docblock_lines);
       }
     }
