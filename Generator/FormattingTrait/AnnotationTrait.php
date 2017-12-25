@@ -79,6 +79,12 @@ trait AnnotationTrait {
    *   The array of docblock lines being built up.
    */
   function annotationLineProcessor($key, $value, $indent, &$docblock_lines) {
+    // Only top-level keys are bare; after that, they must be quoted as
+    // strings.
+    if ($indent > 1) {
+      $key = '"' . $key . '"';
+    }
+
     if (is_array($value)) {
       $docblock_lines[] = str_repeat('  ', $indent) . "{$key} = {";
 
