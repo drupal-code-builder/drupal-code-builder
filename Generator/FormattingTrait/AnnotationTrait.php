@@ -51,7 +51,7 @@ trait AnnotationTrait {
           $docblock_lines[] = str_repeat('  ', $indent)
             . $key
             . ' = '
-            . "@{$value['#class']}(\"" . $value['#data'] . '")';
+            . "@{$value['#class']}(\"" . $value['#data'] . '"),';
         }
       }
       else {
