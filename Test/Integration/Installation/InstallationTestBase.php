@@ -69,7 +69,7 @@ class InstallationTestBase extends KernelTestBase {
     $test_site_path = \Drupal::service('site.path');
 
     // Uncomment when developing to see the written code.
-    $test_site_path = \Drupal::root();
+    //$test_site_path = \Drupal::root();
 
     $module_folder = $test_site_path . '/modules/tmp/' . $module_name;
 
