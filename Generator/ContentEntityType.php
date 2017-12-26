@@ -198,7 +198,7 @@ class ContentEntityType extends EntityTypeBase {
     $components["baseFieldDefinitions"] = [
       'component_type' => 'PHPMethod',
       'containing_component' => '%requester',
-      'declaration' => 'public static function baseFieldDefinitions(EntityTypeInterface $entity_type)',
+      'declaration' => 'public static function baseFieldDefinitions(\Drupal\Core\Entity\EntityTypeInterface $entity_type)',
       'body' => $method_body,
     ];
 
