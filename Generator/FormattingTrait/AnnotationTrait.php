@@ -57,7 +57,9 @@ trait AnnotationTrait {
       }
       else {
         // Nested array values.
-        $this->annotationLineProcessor($key, $value, $indent, $docblock_lines);
+        // On the first call to these, the keys are properties of the annotation
+        // class, and do not get quoted.
+        $this->annotationLineProcessor($key, $value, $indent, $docblock_lines, FALSE);
       }
     }
 
@@ -77,11 +79,14 @@ trait AnnotationTrait {
    *   The current indent value, as a multiplier of two spaces.
    * @param &$docblock_lines
    *   The array of docblock lines being built up.
+   * @param $nesting
+   *   (optional) Whether this method is being called recursively. This is used
+   *   to determine whether the key is the top level of an annotation class.
    */
-  function annotationLineProcessor($key, $value, $indent, &$docblock_lines) {
-    // Only top-level keys are bare; after that, they must be quoted as
-    // strings.
-    if ($indent > 1) {
+  function annotationLineProcessor($key, $value, $indent, &$docblock_lines, $nesting) {
+    // Only top level keys of an annotation class are bare; after that, they
+    // must be quoted as strings.
+    if ($nesting) {
       $key = '"' . $key . '"';
     }
 
@@ -89,7 +94,7 @@ trait AnnotationTrait {
       $docblock_lines[] = str_repeat('  ', $indent) . "{$key} = {";
 
       foreach ($value as $inner_key => $inner_value) {
-        $this->annotationLineProcessor($inner_key, $inner_value, $indent + 1, $docblock_lines);
+        $this->annotationLineProcessor($inner_key, $inner_value, $indent + 1, $docblock_lines, TRUE);
       }
 
       $docblock_lines[] = str_repeat('  ', $indent) . "},";
