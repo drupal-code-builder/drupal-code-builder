@@ -47,9 +47,8 @@ class File extends BaseGenerator {
    * Subclasses should override this.
    *
    * @return
-   *  An array of file info. Keys are arbitrary, but must be unique across
-   *  all components, so using the unique ID is recommended. Values are themselves
-   *  arrays of file into, which have the following properties:
+   *  An array of file info, or NULL to provide no file. The file info array
+   *  should have the following properties:
    *  - path: The path to the file, relative to the future component folder,
    *    without the trailing slash. An empty string means the base folder of the
    *    component.
@@ -70,7 +69,7 @@ class File extends BaseGenerator {
 
     /*
     // Example:
-    $files[$this->name] = array(
+    return array(
       'path' => '', // Means base folder.
       'filename' => $this->root_component->component_data['root_name'] . '.info',
       'body' => $this->code_body(),
@@ -81,7 +80,7 @@ class File extends BaseGenerator {
     );
     */
 
-    return array();
+    return NULL;
   }
 
 }

@@ -11,7 +11,7 @@ class TwigFile extends File {
    * Return the data for the file this component provides.
    */
   public function getFileInfo() {
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => 'templates',
       'filename' => $this->name,
       'body' => [
@@ -19,7 +19,6 @@ class TwigFile extends File {
       ],
       'join_string' => "\n",
     );
-    return $files;
   }
 
   protected function getTwigContents() {

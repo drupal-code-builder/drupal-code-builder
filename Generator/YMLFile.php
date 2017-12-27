@@ -48,7 +48,7 @@ class YMLFile extends File {
     // replaced by assembleFiles().
     $this->filename = $this->name;
 
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->getYamlBody($this->component_data['yaml_data']),
@@ -56,7 +56,6 @@ class YMLFile extends File {
       // component is responsible for ending its own lines.
       'join_string' => "\n",
     );
-    return $files;
   }
 
   /**

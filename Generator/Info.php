@@ -50,7 +50,7 @@ class Info extends File {
    * Build the code files.
    */
   public function getFileInfo() {
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => '',
       'filename' => '%module.info',
       'body' => $this->file_body(),
@@ -60,7 +60,6 @@ class Info extends File {
       'join_string' => "\n",
       'build_list_tags' => ['info'],
     );
-    return $files;
   }
 
 }

@@ -49,7 +49,7 @@ class ModuleCodeFile extends PHPFile {
     // Implode whatever's left.
     $file_key_tag = implode('.', $filename_pieces);
 
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->fileContents(),
@@ -58,7 +58,6 @@ class ModuleCodeFile extends PHPFile {
       'join_string' => "\n",
       'build_list_tags' => ['code', $file_key_tag],
     );
-    return $files;
   }
 
   /**

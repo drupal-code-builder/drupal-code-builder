@@ -29,14 +29,13 @@ class Tests extends PHPFile {
     $module_root_name = $this->root_component->component_data['camel_case_name'];
     $test_file_name = $module_root_name . "Test.php";
 
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => 'src/Tests',
       'filename' => $test_file_name,
       'body' => $this->fileContents(),
       'join_string' => "\n",
       'build_list_tags' => ['code', 'tests'],
     );
-    return $files;
   }
 
   /**

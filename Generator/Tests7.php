@@ -26,15 +26,15 @@ class Tests7 extends Tests {
    * Build the code files.
    */
   public function getFileInfo() {
-    $files = parent::getFileInfo();
+    $file = parent::getFileInfo();
 
     $module_root_name = $this->root_component->component_data['root_name'];
 
     // Change the file location for D7.
-    $files[$this->getUniqueID()]['path'] = 'tests';
-    $files[$this->getUniqueID()]['filename'] = "%module.test";
+    $file['path'] = 'tests';
+    $file['filename'] = "%module.test";
 
-    return $files;
+    return $file;
   }
 
 }

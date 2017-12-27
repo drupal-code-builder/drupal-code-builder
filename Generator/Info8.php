@@ -25,11 +25,11 @@ class Info8 extends Info {
    * Build the code files.
    */
   public function getFileInfo() {
-    $files = parent::getFileInfo();
+    $file = parent::getFileInfo();
 
-    $files[$this->getUniqueID()]['filename'] = '%module.info.yml';
+    $file['filename'] = '%module.info.yml';
 
-    return $files;
+    return $file;
   }
 
   /**

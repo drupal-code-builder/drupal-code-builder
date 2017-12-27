@@ -34,14 +34,13 @@ class API extends PHPFile {
 
     $this->filename = "$module_root_name.api.php";
 
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->fileContents(),
       'join_string' => "\n",
       'build_list_tags' => ['code', 'api'],
     );
-    return $files;
   }
 
   /**

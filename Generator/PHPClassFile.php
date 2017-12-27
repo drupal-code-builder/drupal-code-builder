@@ -116,14 +116,13 @@ class PHPClassFile extends PHPFile {
    * Subclasses should override this to add their file data to the list.
    */
   public function getFileInfo() {
-    $files[$this->getUniqueID()] = array(
+    return array(
       'path' => $this->component_data['path'],
       'filename' => $this->component_data['plain_class_name'] . '.php',
       'body' => $this->fileContents(),
       'join_string' => "\n",
       'build_list_tags' => ['code'],
     );
-    return $files;
   }
 
   /**

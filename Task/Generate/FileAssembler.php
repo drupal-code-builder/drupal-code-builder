@@ -118,28 +118,24 @@ class FileAssembler {
         continue;
       }
 
-      $child_component_file_data = $child_component->getFileInfo();
-      if (is_array($child_component_file_data)) {
-        foreach ($child_component_file_data as $file_id => $file_info_item) {
-          assert(!isset($file_info[$file_id]), "Duplicate file ID {$file_id} given by component ID {$child_component_name}.");
-
-          // Prepend the component_base_path to the path.
-          if (!empty($child_component->component_data['component_base_path'])) {
-            if (empty($file_info_item['path'])) {
-              $file_info_item['path'] = $child_component->component_data['component_base_path'];
-            }
-            else {
-              $file_info_item['path'] = $child_component->component_data['component_base_path']
-                . '/'
-                . $file_info_item['path'];
-            }
+      $file_info_item = $child_component->getFileInfo();
+      if (is_array($file_info_item)) {
+        // Prepend the component_base_path to the path.
+        if (!empty($child_component->component_data['component_base_path'])) {
+          if (empty($file_info_item['path'])) {
+            $file_info_item['path'] = $child_component->component_data['component_base_path'];
           }
-
-          // Add the source component ID.
-          $file_info_item['source_component_id'] = $child_component_name;
-
-          $file_info[$file_id] = $file_info_item;
+          else {
+            $file_info_item['path'] = $child_component->component_data['component_base_path']
+              . '/'
+              . $file_info_item['path'];
+          }
         }
+
+        // Add the source component ID.
+        $file_info_item['source_component_id'] = $child_component_name;
+
+        $file_info[$child_component_name] = $file_info_item;
       }
     }
 
