@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\PHPMethod.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\NameFormattingTrait.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

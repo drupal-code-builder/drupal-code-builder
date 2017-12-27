@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\Info5.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

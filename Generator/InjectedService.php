@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\InjectedService.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Exception\InvalidInputException;

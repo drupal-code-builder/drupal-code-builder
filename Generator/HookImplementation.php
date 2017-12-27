@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\HookImplementation.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

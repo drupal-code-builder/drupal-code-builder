@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\RouterItem.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

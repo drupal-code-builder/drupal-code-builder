@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\Service.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\StringAssembler;

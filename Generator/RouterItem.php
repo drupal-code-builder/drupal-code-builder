@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\RouterItem8.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;

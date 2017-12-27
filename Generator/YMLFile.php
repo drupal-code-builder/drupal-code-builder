@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\YMLFile.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

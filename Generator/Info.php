@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains generator classes for .info files.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

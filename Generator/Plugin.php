@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\Plugin.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;

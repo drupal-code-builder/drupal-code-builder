@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\PHPFunction.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

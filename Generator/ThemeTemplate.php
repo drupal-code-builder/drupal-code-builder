@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\ThemeTemplate.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

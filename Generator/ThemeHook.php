@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\ThemeHook.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

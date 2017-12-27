@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\Tests6.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

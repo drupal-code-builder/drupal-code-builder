@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\AdminSettingsForm7.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**

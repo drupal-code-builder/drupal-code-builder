@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Generator\Permission7.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**
