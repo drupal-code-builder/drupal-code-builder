@@ -244,8 +244,7 @@ abstract class BaseGenerator {
    *    ComponentCollector::processComponentData().
    *  - 'component': (optional) The name of a generator class, relative to the
    *    namespace. If present, this results in child components of this class
-   *    being added to the component tree. The handling of this is determined
-   *    by the component class's requestedComponentHandling() method.
+   *    being added to the component tree.
    *  - 'computed': (optional) If TRUE, indicates that this property is computed
    *    by the component, and should not be obtained from the user.
    *  - 'internal': (optional) If TRUE, indicates that this property should not
@@ -371,25 +370,6 @@ abstract class BaseGenerator {
         }
       }
     }
-  }
-
-  /**
-   * Defines how this component should be handled when requested directly.
-   *
-   * @return
-   *  A string which defines how this component should be instantiated when
-   *  it's requested in incoming component data. One of:
-   *  - 'singleton': The component may exist only once, and should be created
-   *    with its name set to the component type.
-   *  - 'repeat': The component may exist in multiple copies, and one should be
-   *    created for each value in the component data.
-   *  - 'group': The component should be instantiated once, with all the values
-   *    set in its data.
-   *
-   * @see RootComponent::processComponentData()
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
   }
 
   /**

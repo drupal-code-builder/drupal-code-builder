@@ -8,13 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class Permission7 extends Permission {
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
-  }
-
-  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {

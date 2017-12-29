@@ -20,13 +20,6 @@ class AdminSettingsForm7 extends Form7 {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'singleton';
-  }
-
-  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {

@@ -12,13 +12,6 @@ namespace DrupalCodeBuilder\Generator;
 class API extends PHPFile {
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'singleton';
-  }
-
-  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {

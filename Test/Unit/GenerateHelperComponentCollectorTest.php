@@ -517,7 +517,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     ->willReturn($simple_child_component->reveal());
 
     $data_info_gatherer->getComponentDataInfo('simple', TRUE)->willReturn([]);
-    $class_handler->getRepeatComponentHandling('simple')->willReturn('singleton');
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
@@ -632,7 +631,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // properties of their own, since they get created with just the single
     // array value as their name.
     $data_info_gatherer->getComponentDataInfo('array', TRUE)->willReturn([]);
-    $class_handler->getRepeatComponentHandling('array')->willReturn('repeat');
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
@@ -746,7 +744,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'format' => 'string',
       ],
     ]);
-    $class_handler->getRepeatComponentHandling('compound')->shouldNotBeCalled();
 
     // Compound child component 1.
     $compound_child_component_1 = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);

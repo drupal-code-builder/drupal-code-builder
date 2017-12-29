@@ -231,7 +231,6 @@ class ComponentCollector {
     // Prevent re-requesting an identical previous request.
     // We use the original component data this method received, without any
     // of the additions we've made.
-    // TODO: use requestedComponentHandling() here?
     if (isset($this->requested_data_record[$component_unique_id])) {
       $this->debug($chain, "record has existing ID for name $name; type: $component_type; ID: $component_unique_id");
 

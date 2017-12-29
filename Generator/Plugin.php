@@ -157,13 +157,6 @@ class Plugin extends PHPClassFileWithInjection {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
-  }
-
-  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {

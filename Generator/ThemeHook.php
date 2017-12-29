@@ -26,13 +26,6 @@ class ThemeHook extends BaseGenerator {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
-  }
-
-  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {

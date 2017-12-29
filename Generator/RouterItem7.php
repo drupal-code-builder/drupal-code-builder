@@ -52,13 +52,6 @@ class RouterItem7 extends RouterItem {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function requestedComponentHandling() {
-    return 'repeat';
-  }
-
-  /**
    * Declares the subcomponents for this component.
    *
    * @return
