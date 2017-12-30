@@ -75,7 +75,7 @@ class Form extends PHPClassFileWithInjection {
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    // Take the class name from the service name.
+    // Put the class in the 'Form' relative namespace.
     $data_definition['relative_class_name']['default'] = function($component_data) {
       return ['Form', $component_data['form_class_name']];
     };
