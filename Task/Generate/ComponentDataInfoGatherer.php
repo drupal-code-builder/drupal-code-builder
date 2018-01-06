@@ -85,9 +85,7 @@ class ComponentDataInfoGatherer {
    * @see BaseGenerator::processComponentData()
    */
   public function getComponentDataInfo($component_type, $include_internal = FALSE) {
-    $class = $this->classHandler->getGeneratorClass($component_type);
-
-    $properties = $class::componentDataDefinition();
+    $properties = $this->classHandler->getComponentDataDefinition($component_type);
 
     $properties_processed = $this->processPropertyList($properties, $include_internal);
 
