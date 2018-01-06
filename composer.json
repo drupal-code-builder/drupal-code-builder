@@ -10,7 +10,6 @@
     "drupal/coder": "^8.2",
     "squizlabs/php_codesniffer": "~2.0",
     "nikic/php-parser": "^3.1.2",
-    "mockery/mockery": "dev-master",
     "symfony/yaml": "^3.2",
     "symfony/var-dumper": "^3.2",
     "morrislaptop/var-dumper-with-context": "^0.1.0"
