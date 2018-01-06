@@ -16,9 +16,16 @@ class ComponentClassHandler {
    */
   protected $classes = [];
 
-  // TODO: this is not yet in use!
-  // Basically a wrapper around the static call, so we can mock this helper
-  // in tests.
+  /**
+   * Gets the data definition from a component.
+   *
+   * @param $component_type
+   *   The type of the component. This is use to build the class name: see
+   *   getGeneratorClass().
+   *
+   * @return
+   *   The component generator's raw data definition.
+   */
   public function getComponentDataDefinition($component_type) {
     $class = $this->getGeneratorClass($component_type);
 
