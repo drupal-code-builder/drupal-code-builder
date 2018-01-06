@@ -3,11 +3,10 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 /**
- * Tests the retrieval of component data from component classes.
+ * Tests the preparation of component data from component classes.
  *
  * This tests data definitions from BaseGenerator::componentDataDefinition()
- * are properly prepared for consumption by UIs when
- * Generate::getRootComponentDataInfo() is called.
+ * are properly prepared for consumption by UIs by ComponentDataInfoGatherer.
  */
 class APIComponentDataInfoTest extends TestBase {
 
@@ -16,109 +15,109 @@ class APIComponentDataInfoTest extends TestBase {
   }
 
   public function testComponentDataInfo() {
-    // Mock a Generator class.
-    $mock_root = \Mockery::mock('alias:' . \DrupalCodeBuilder\Generator\Root::class)->makePartial();
-    $mock_root->allows([
-      'componentDataDefinition' => [
-        // Specifies only label, receives defaults.
-        'property_public' => [
-          'label' => 'Public',
-        ],
-        // Specifies its format.
-        'property_public_format' => [
-          'label' => 'Public',
-          'format' => 'boolean',
-        ],
-        // Specifies required.
-        'property_public_required' => [
-          'label' => 'Public',
-          'required' => TRUE,
-        ],
-        // Computed.
-        'property_computed' => [
-          'label' => 'Computed',
-          'computed' => TRUE,
-        ],
-        // Internal.
-        'property_internal' => [
-          'label' => 'Internal',
-          'internal' => TRUE,
-        ],
-        // Acquired.
-        'property_acquired' => [
-          'acquired' => TRUE,
-        ],
-        // Compound using a component. Will get the properties from the Child
-        // class mock.
-        'property_compound_component' => [
-          'label' => 'Compound component',
-          'format' => 'compound',
-          'component' => 'Child',
-        ],
-        // Compound with child properties.
-        'property_compound_child' => [
-          'label' => 'Compound child',
-          'format' => 'compound',
-          'properties' => [
-            'property_child_public' => [
-              'label' => 'Public',
-            ],
-            'property_child_format' => [
-              'label' => 'Public',
-              'format' => 'boolean',
-            ],
-            'property_child_required' => [
-              'label' => 'Public',
-              'required' => TRUE,
-            ],
-            'property_child_computed' => [
-              'label' => 'Computed',
-              'computed' => TRUE,
-            ],
-            'property_child_internal' => [
-              'label' => 'Internal',
-              'internal' => TRUE,
-            ],
+    // Mocked component data info.
+    $root_component_data_info = [
+      // Specifies only label, receives defaults.
+      'property_public' => [
+        'label' => 'Public',
+      ],
+      // Specifies its format.
+      'property_public_format' => [
+        'label' => 'Public',
+        'format' => 'boolean',
+      ],
+      // Specifies required.
+      'property_public_required' => [
+        'label' => 'Public',
+        'required' => TRUE,
+      ],
+      // Computed.
+      'property_computed' => [
+        'label' => 'Computed',
+        'computed' => TRUE,
+      ],
+      // Internal.
+      'property_internal' => [
+        'label' => 'Internal',
+        'internal' => TRUE,
+      ],
+      // Acquired.
+      'property_acquired' => [
+        'acquired' => TRUE,
+      ],
+      // Compound using a component. Will get the properties from the Child
+      // class mock.
+      'property_compound_component' => [
+        'label' => 'Compound component',
+        'format' => 'compound',
+        'component' => 'Child',
+      ],
+      // Compound with child properties.
+      'property_compound_child' => [
+        'label' => 'Compound child',
+        'format' => 'compound',
+        'properties' => [
+          'property_child_public' => [
+            'label' => 'Public',
+          ],
+          'property_child_format' => [
+            'label' => 'Public',
+            'format' => 'boolean',
+          ],
+          'property_child_required' => [
+            'label' => 'Public',
+            'required' => TRUE,
+          ],
+          'property_child_computed' => [
+            'label' => 'Computed',
+            'computed' => TRUE,
+          ],
+          'property_child_internal' => [
+            'label' => 'Internal',
+            'internal' => TRUE,
           ],
         ],
       ],
-    ]);
-    $mock_root->allows([
-      'getSanityLevel' => ['none'],
-    ]);
+    ];
 
-    $mock_child = \Mockery::mock('alias:' . \DrupalCodeBuilder\Generator\Child::class)->makePartial();
-    $mock_child->allows([
-      'componentDataDefinition' => [
-        'property_child_public' => [
-          'label' => 'Public',
-        ],
-        'property_child_format' => [
-          'label' => 'Public',
-          'format' => 'boolean',
-        ],
-        'property_child_required' => [
-          'label' => 'Public',
-          'required' => TRUE,
-        ],
-        'property_child_computed' => [
-          'label' => 'Computed',
-          'computed' => TRUE,
-        ],
-        'property_child_internal' => [
-          'label' => 'Internal',
-          'internal' => TRUE,
-        ],
-        'property_child_acquired' => [
-          'acquired' => TRUE,
-        ],
+    $child_component_data_info = [
+      'property_child_public' => [
+        'label' => 'Public',
       ],
-    ]);
+      'property_child_format' => [
+        'label' => 'Public',
+        'format' => 'boolean',
+      ],
+      'property_child_required' => [
+        'label' => 'Public',
+        'required' => TRUE,
+      ],
+      'property_child_computed' => [
+        'label' => 'Computed',
+        'computed' => TRUE,
+      ],
+      'property_child_internal' => [
+        'label' => 'Internal',
+        'internal' => TRUE,
+      ],
+      'property_child_acquired' => [
+        'acquired' => TRUE,
+      ],
+    ];
 
-    // Get the Generate task, with our mock as the root component.
-    $generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'root');
+    // Mock the class handler to return the data info for the root and child
+    // components.
+    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
+    $class_handler->getComponentDataDefinition('Root')->willReturn($root_component_data_info);
+    $class_handler->getComponentDataDefinition('Child')->willReturn($child_component_data_info);
 
-    $info = $generate->getRootComponentDataInfo();
+    // Create the helper, with mocks passed in.
+    $data_info_gatherer = new \DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer(
+      $class_handler->reveal()
+    );
+
+    // Get the prepared data info from the gatherer.
+    $info = $data_info_gatherer->getComponentDataInfo('Root');
 
     $this->assertArrayHasKey('property_public', $info, "The public property is returned.");
     $this->assertArrayHasKey('property_public_format', $info, "The public property is returned.");
@@ -165,10 +164,6 @@ class APIComponentDataInfoTest extends TestBase {
 
     $this->assertEquals('boolean', $child_property_info['property_child_format']['format'], "The specified format is preserved.");
     $this->assertEquals(TRUE, $child_property_info['property_child_required']['required'], "The specified required is preserved.");
-  }
-
-  public function tearDown() {
-    \Mockery::close();
   }
 
 }
