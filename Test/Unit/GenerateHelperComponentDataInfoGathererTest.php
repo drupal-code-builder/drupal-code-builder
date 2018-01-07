@@ -8,7 +8,7 @@ namespace DrupalCodeBuilder\Test\Unit;
  * This tests data definitions from BaseGenerator::componentDataDefinition()
  * are properly prepared for consumption by UIs by ComponentDataInfoGatherer.
  */
-class APIComponentDataInfoTest extends TestBase {
+class GenerateHelperComponentDataInfoGathererTest extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);
