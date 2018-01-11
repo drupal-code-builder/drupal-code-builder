@@ -8,7 +8,7 @@ namespace DrupalCodeBuilder\Test\Unit;
  * This tests that when UIs call prepareComponentDataProperty() on component
  * data info, options and defaults are properly set up.
  */
-class APIComponentDataPrepareTest extends TestBase {
+class GenerateHelperComponentPropertyPreparerTest extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(8);
