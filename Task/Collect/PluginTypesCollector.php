@@ -141,6 +141,15 @@ class PluginTypesCollector {
       $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
 
       // Get the class name for the service.
+      // Babysit modules that don't define services properly!
+      // (I'm looking at Physical.)
+      try {
+        $service = \Drupal::service($plugin_manager_service_id);
+      }
+      catch (\Throwable $ex) {
+        continue;
+      }
+
       $service = \Drupal::service($plugin_manager_service_id);
       $service_class_name = get_class($service);
       $service_component_namespace = $this->getClassComponentNamespace($service_class_name);
