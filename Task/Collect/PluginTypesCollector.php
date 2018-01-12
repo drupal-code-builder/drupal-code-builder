@@ -380,6 +380,14 @@ class PluginTypesCollector {
         return;
       }
 
+      // Babysit modules that have a broken plugin class. This can be caused
+      // if the namespace is incorrect for the file location, and so prevents
+      // the class from being autoloaded.
+      if (!class_exists($definition['class'])) {
+        // Skip just this plugin.
+        continue;
+      }
+
       $plugin_component_namespace = $this->getClassComponentNamespace($definition['class']);
 
       // Get the full ancestry of the plugin's class.
