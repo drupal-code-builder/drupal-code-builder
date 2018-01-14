@@ -162,26 +162,28 @@ class PluginTypesCollector {
         // Plugin module may replace this if present.
         'type_label' => $plugin_type_id,
       ];
+
+      // Add data from the plugin type manager service.
+      // This gets us the subdirectory, interface, and annotation name.
+      $this->addPluginTypeServiceData($plugin_type_data[$plugin_type_id]);
+
+      // Add data from the plugin annotation class.
+      $this->addPluginAnnotationData($plugin_type_data[$plugin_type_id]);
+
+      // Try to detect a base class for plugins
+      $this->addPluginBaseClass($plugin_type_data[$plugin_type_id]);
+
+      // Add data from the plugin interface (which the manager service gave us).
+      $this->addPluginMethods($plugin_type_data[$plugin_type_id]);
+
+      // Add data about the factory method of the base class, if any.
+      $this->addBaseClassCreationData($plugin_type_data[$plugin_type_id]);
     }
 
     // Get plugin type information if Plugin module is present.
+    // We get data on all plugin types in one go, so this handles the whole
+    // data.
     $this->addPluginModuleData($plugin_type_data);
-
-    // Add data from the plugin type manager service.
-    // This gets us the subdirectory, interface, and annotation name.
-    $this->addPluginTypeServiceData($plugin_type_data);
-
-    // Add data from the plugin annotation class.
-    $this->addPluginAnnotationData($plugin_type_data);
-
-    // Try to detect a base class for plugins
-    $this->addPluginBaseClass($plugin_type_data);
-
-    // Add data from the plugin interface (which the manager service gave us).
-    $this->addPluginMethods($plugin_type_data);
-
-    // Add data about the factory method of the base class, if any.
-    $this->addBaseClassCreationData($plugin_type_data);
 
     // Sort by ID.
     ksort($plugin_type_data);
@@ -192,124 +194,67 @@ class PluginTypesCollector {
   }
 
   /**
-   * Adds plugin type information from Plugin module if present.
-   *
-   * @param &$plugin_type_data
-   *  The array of plugin data.
-   */
-  protected function addPluginModuleData(&$plugin_type_data) {
-    // Bail if Plugin module isn't present.
-    if (!\Drupal::hasService('plugin.plugin_type_manager')) {
-      return;
-    }
-
-    // This gets us labels for the plugin types which are declared to Plugin
-    // module.
-    $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
-
-    // We need to re-key these by the service ID, as Plugin module uses IDs for
-    // plugin types which don't always the ID we use for them based on the
-    // plugin manager service ID, , e.g. views_access vs views.access.
-    // Unfortunately, there's no accessor for this, so some reflection hackery
-    // is required until https://www.drupal.org/node/2907862 is fixed.
-    $reflection = new \ReflectionProperty(\Drupal\plugin\PluginType\PluginType::class, 'pluginManagerServiceId');
-    $reflection->setAccessible(TRUE);
-
-    foreach ($plugin_types as $plugin_type) {
-      // Get the service ID from the reflection, and then our ID.
-      $plugin_manager_service_id = $reflection->getValue($plugin_type);
-      $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
-
-      if (!isset($plugin_type_data[$plugin_type_id])) {
-        return;
-      }
-
-      // Replace the default label with the one from Plugin module, casting it
-      // to a string so we don't have to deal with TranslatableMarkup objects.
-      $plugin_type_data[$plugin_type_id]['type_label'] = (string) $plugin_type->getLabel();
-    }
-  }
-
-  /**
-   * Adds plugin type information from each plugin type manager service.
+   * Adds plugin type information from the plugin type manager service.
    *
    * This adds:
    *  - subdir
    *  - pluginInterface
    *  - pluginDefinitionAnnotationName
    *
-   * @param &$plugin_type_data
-   *  The array of plugin data.
+   * @param &$data
+   *  The data for a single plugin type.
    */
-  protected function addPluginTypeServiceData(&$plugin_type_data) {
-    foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Get the service, and then get the properties that the plugin manager
-      // constructor sets.
-      // E.g., most plugin managers pass this to the parent:
-      //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
-      // See Drupal\Core\Plugin\DefaultPluginManager
-      $service = \Drupal::service($data['service_id']);
-      $reflection = new \ReflectionClass($service);
+  protected function addPluginTypeServiceData(&$data) {
+    // Get the service, and then get the properties that the plugin manager
+    // constructor sets.
+    // E.g., most plugin managers pass this to the parent:
+    //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+    // See Drupal\Core\Plugin\DefaultPluginManager
+    $service = \Drupal::service($data['service_id']);
+    $reflection = new \ReflectionClass($service);
 
-      // The list of properties we want to grab out of the plugin manager
-      //  => the key in the plugin type data array we want to set this into.
-      $plugin_manager_properties = [
-        'subdir' => 'subdir',
-        'pluginInterface' => 'plugin_interface',
-        'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
-      ];
-      foreach ($plugin_manager_properties as $property_name => $data_key) {
-        if (!$reflection->hasProperty($property_name)) {
-          // plugin.manager.menu.link is different.
-          $data[$data_key] = '';
-          continue;
-        }
-
-        $property = $reflection->getProperty($property_name);
-        $property->setAccessible(TRUE);
-        $data[$data_key] = $property->getValue($service);
+    // The list of properties we want to grab out of the plugin manager
+    //  => the key in the plugin type data array we want to set this into.
+    $plugin_manager_properties = [
+      'subdir' => 'subdir',
+      'pluginInterface' => 'plugin_interface',
+      'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
+    ];
+    foreach ($plugin_manager_properties as $property_name => $data_key) {
+      if (!$reflection->hasProperty($property_name)) {
+        // plugin.manager.menu.link is different.
+        $data[$data_key] = '';
+        continue;
       }
+
+      $property = $reflection->getProperty($property_name);
+      $property->setAccessible(TRUE);
+      $data[$data_key] = $property->getValue($service);
     }
   }
 
   /**
-   * Adds plugin type information from the plugin annotation class.
+   * Adds a list of properties from the plugin annotation class.
    *
-   * @param &$plugin_type_data
-   *  The array of plugin data.
+   * @param &$data
+   *  The data for a single plugin type.
    */
-  protected function addPluginAnnotationData(&$plugin_type_data) {
-    foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      if (isset($data['plugin_definition_annotation_name']) && class_exists($data['plugin_definition_annotation_name'])) {
-        $data['plugin_properties'] = $this->collectPluginAnnotationProperties($data['plugin_definition_annotation_name']);
-      }
-      else {
-        $data['plugin_properties'] = [];
-      }
-    }
-  }
+  protected function addPluginAnnotationData(&$data) {
+    $data['plugin_properties'] = [];
 
-  /**
-   * Get the list of properties from an annotation class.
-   *
-   * Helper for addPluginAnnotationData().
-   *
-   * @param $plugin_annotation_class
-   *  The fully-qualified name of the plugin annotation class.
-   *
-   * @return
-   *  An array keyed by property name, where each value is an array containing:
-   *  - 'name: The name of the property.
-   *  - 'description': The description from the property's docblock first line.
-   */
-  protected function collectPluginAnnotationProperties($plugin_annotation_class) {
+    if (!isset($data['plugin_definition_annotation_name'])) {
+      return;
+    }
+    if (!class_exists($data['plugin_definition_annotation_name'])) {
+      return;
+    }
+
     // Get a reflection class for the annotation class.
     // Each property of the annotation class describes a property for the
     // plugin annotation.
-    $annotation_reflection = new \ReflectionClass($plugin_annotation_class);
+    $annotation_reflection = new \ReflectionClass($data['plugin_definition_annotation_name']);
     $properties_reflection = $annotation_reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
 
-    $plugin_properties = [];
     foreach ($properties_reflection as $property_reflection) {
       // Assemble data about this annotation property.
       $annotation_property_data = array();
@@ -336,24 +281,20 @@ class PluginTypesCollector {
         }
       }
 
-      $plugin_properties[$property_reflection->name] = $annotation_property_data;
+      $data['plugin_properties'][$property_reflection->name] = $annotation_property_data;
     }
-
-    return $plugin_properties;
   }
 
   /**
    * Determines the base class that plugins should use.
    *
-   * @param &$plugin_type_data
-   *  The array of plugin data.
+   * @param &$data
+   *  The data for a single plugin type.
    */
-  protected function addPluginBaseClass(&$plugin_type_data) {
-    foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      $base_class = $this->analysePluginTypeBaseClass($data);
-      if ($base_class) {
-        $data['base_class'] = $base_class;
-      }
+  protected function addPluginBaseClass(&$data) {
+    $base_class = $this->analysePluginTypeBaseClass($data);
+    if ($base_class) {
+      $data['base_class'] = $base_class;
     }
   }
 
@@ -545,62 +486,60 @@ class PluginTypesCollector {
   /**
    * Adds list of methods for the plugin based on the plugin interface.
    *
-   * @param &$plugin_type_data
-   *  The array of plugin data.
+   * @param &$data
+   *  The data for a single plugin type.
    */
-  protected function addPluginMethods(&$plugin_type_data) {
-    foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      // Set an empty array at the least.
-      $data['plugin_interface_methods'] = [];
+  protected function addPluginMethods(&$data) {
+    // Set an empty array at the least.
+    $data['plugin_interface_methods'] = [];
 
-      if (empty($data['plugin_interface'])) {
-        // If we didn't find an interface for the plugin, we can't do anything
-        // here.
-        continue;
+    if (empty($data['plugin_interface'])) {
+      // If we didn't find an interface for the plugin, we can't do anything
+      // here.
+      return;
+    }
+
+    // Analyze the interface, if there is one.
+    $reflection = new \ReflectionClass($data['plugin_interface']);
+    $methods = $reflection->getMethods();
+
+    $data['plugin_interface_methods'] = [];
+
+    // Check each method from the plugin interface for suitability.
+    foreach ($methods as $method_reflection) {
+      // Start by assuming we won't include it.
+      $include_method = FALSE;
+
+      // Get the actual class/interface that declares the method, as the
+      // plugin interface will in most cases inherit from one or more
+      // interfaces.
+      $declaring_class = $method_reflection->getDeclaringClass()->getName();
+      // Get the namespace of the component the class belongs to.
+      $declaring_class_component_namespace = $this->getClassComponentNamespace($declaring_class);
+
+      if ($declaring_class_component_namespace == $data['service_component_namespace']) {
+        // The plugin interface method is declared in the same component as
+        // the plugin manager service.
+        // Add it to the list of methods a plugin should implement.
+        $include_method = TRUE;
       }
+      else {
+        // The plugin interface method is declared in a namespace other
+        // than the plugin manager. Therefore it's something from a base
+        // interface, e.g. from PluginInspectionInterface, and we shouldn't
+        // add it to the list of methods a plugin should implement...
+        // except for a few special cases.
 
-      // Analyze the interface, if there is one.
-      $reflection = new \ReflectionClass($data['plugin_interface']);
-      $methods = $reflection->getMethods();
-
-      $data['plugin_interface_methods'] = [];
-
-      // Check each method from the plugin interface for suitability.
-      foreach ($methods as $method_reflection) {
-        // Start by assuming we won't include it.
-        $include_method = FALSE;
-
-        // Get the actual class/interface that declares the method, as the
-        // plugin interface will in most cases inherit from one or more
-        // interfaces.
-        $declaring_class = $method_reflection->getDeclaringClass()->getName();
-        // Get the namespace of the component the class belongs to.
-        $declaring_class_component_namespace = $this->getClassComponentNamespace($declaring_class);
-
-        if ($declaring_class_component_namespace == $data['service_component_namespace']) {
-          // The plugin interface method is declared in the same component as
-          // the plugin manager service.
-          // Add it to the list of methods a plugin should implement.
+        if ($declaring_class == 'Drupal\Core\Plugin\PluginFormInterface') {
           $include_method = TRUE;
         }
-        else {
-          // The plugin interface method is declared in a namespace other
-          // than the plugin manager. Therefore it's something from a base
-          // interface, e.g. from PluginInspectionInterface, and we shouldn't
-          // add it to the list of methods a plugin should implement...
-          // except for a few special cases.
-
-          if ($declaring_class == 'Drupal\Core\Plugin\PluginFormInterface') {
-            $include_method = TRUE;
-          }
-          if ($declaring_class == 'Drupal\Core\Cache\CacheableDependencyInterface') {
-            $include_method = TRUE;
-          }
+        if ($declaring_class == 'Drupal\Core\Cache\CacheableDependencyInterface') {
+          $include_method = TRUE;
         }
+      }
 
-        if ($include_method) {
-          $data['plugin_interface_methods'][$method_reflection->getName()] = $this->methodCollector->getMethodData($method_reflection);
-        }
+      if ($include_method) {
+        $data['plugin_interface_methods'][$method_reflection->getName()] = $this->methodCollector->getMethodData($method_reflection);
       }
     }
   }
@@ -612,65 +551,102 @@ class PluginTypesCollector {
    * call the parent constructor, and pass the injected services to the base
    * class.
    *
-   * @param &$plugin_type_data
-   *   The array of data for all plugin types.
+   * @param &$data
+   *  The data for a single plugin type.
    */
-  protected function addBaseClassCreationData(&$plugin_type_data) {
-    foreach ($plugin_type_data as $plugin_type_id => &$data) {
-      if (!isset($data['base_class'])) {
-        // Can't do anything if we didn't find a base class.
-        continue;
+  protected function addBaseClassCreationData(&$data) {
+    if (!isset($data['base_class'])) {
+      // Can't do anything if we didn't find a base class.
+      return;
+    }
+
+    if (!method_exists($data['base_class'], 'create')) {
+      // Nothing to do if the base class has no static creator.
+      return;
+    }
+
+    // Analyze the params to the __construct() method to get the typehints
+    // and parameter names.
+    $construct_R = new \ReflectionMethod($data['base_class'], '__construct');
+    $construct_params_R = $construct_R->getParameters();
+
+    if (count($construct_params_R) < 4) {
+      // The first 3 params are the basic plugin constructor params, so there
+      // is nothing to do if it's only those.
+      return;
+    }
+
+    $construct_parameters = [];
+    foreach (array_slice($construct_params_R, 3) as $i => $parameter) {
+      $name = $parameter->getName();
+      $type = (string) $parameter->getType();
+      // TODO: Get description from the docblock.
+
+      $construct_parameters[] = [
+        'type' => $type,
+        'name' => $parameter->getName(),
+      ];
+    }
+
+    // Get the call from the body of the create() method.
+    $create_R = new \ReflectionMethod($data['base_class'], 'create');
+
+    // Get the source code of the create() method.
+    $start_line = $create_R->getStartLine() - 1;
+    $end_line = $create_R->getEndLine();
+
+    $file_source = file($create_R->getFileName());
+    $create_method_body = implode("", array_slice($file_source, $start_line, $end_line - $start_line));
+
+    $matches = [];
+    preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
+
+    $parameters = explode(',', $matches[1]);
+
+    $create_container_extractions = [];
+    foreach (array_slice($parameters, 3) as $i => $parameter) {
+      $construct_parameters[$i]['extraction'] = trim($parameter);
+    }
+
+    $data['construction'] = $construct_parameters;
+  }
+
+  /**
+   * Adds plugin type information from Plugin module if present.
+   *
+   * @param &$plugin_type_data
+   *  The array of data for all plugin types.
+   */
+  protected function addPluginModuleData(&$plugin_type_data) {
+    // Bail if Plugin module isn't present.
+    if (!\Drupal::hasService('plugin.plugin_type_manager')) {
+      return;
+    }
+
+    // This gets us labels for the plugin types which are declared to Plugin
+    // module.
+    $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
+
+    // We need to re-key these by the service ID, as Plugin module uses IDs for
+    // plugin types which don't always the ID we use for them based on the
+    // plugin manager service ID, , e.g. views_access vs views.access.
+    // Unfortunately, there's no accessor for this, so some reflection hackery
+    // is required until https://www.drupal.org/node/2907862 is fixed.
+    $reflection = new \ReflectionProperty(\Drupal\plugin\PluginType\PluginType::class, 'pluginManagerServiceId');
+    $reflection->setAccessible(TRUE);
+
+    foreach ($plugin_types as $plugin_type) {
+      // Get the service ID from the reflection, and then our ID.
+      $plugin_manager_service_id = $reflection->getValue($plugin_type);
+      $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
+
+      if (!isset($plugin_type_data[$plugin_type_id])) {
+        return;
       }
 
-      if (!method_exists($data['base_class'], 'create')) {
-        // Nothing to do if the base class has no static creator.
-        continue;
-      }
-
-      // Analyze the params to the __construct() method to get the typehints
-      // and parameter names.
-      $construct_R = new \ReflectionMethod($data['base_class'], '__construct');
-      $construct_params_R = $construct_R->getParameters();
-
-      if (count($construct_params_R) < 4) {
-        // The first 3 params are the basic plugin constructor params, so there
-        // is nothing to do if it's only those.
-        continue;
-      }
-
-      $construct_parameters = [];
-      foreach (array_slice($construct_params_R, 3) as $i => $parameter) {
-        $name = $parameter->getName();
-        $type = (string) $parameter->getType();
-        // TODO: Get description from the docblock.
-
-        $construct_parameters[] = [
-          'type' => $type,
-          'name' => $parameter->getName(),
-        ];
-      }
-
-      // Get the call from the body of the create() method.
-      $create_R = new \ReflectionMethod($data['base_class'], 'create');
-
-      // Get the source code of the create() method.
-      $start_line = $create_R->getStartLine() - 1;
-      $end_line = $create_R->getEndLine();
-
-      $file_source = file($create_R->getFileName());
-      $create_method_body = implode("", array_slice($file_source, $start_line, $end_line - $start_line));
-
-      $matches = [];
-      preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
-
-      $parameters = explode(',', $matches[1]);
-
-      $create_container_extractions = [];
-      foreach (array_slice($parameters, 3) as $i => $parameter) {
-        $construct_parameters[$i]['extraction'] = trim($parameter);
-      }
-
-      $data['construction'] = $construct_parameters;
+      // Replace the default label with the one from Plugin module, casting it
+      // to a string so we don't have to deal with TranslatableMarkup objects.
+      $plugin_type_data[$plugin_type_id]['type_label'] = (string) $plugin_type->getLabel();
     }
   }
 
