@@ -590,13 +590,7 @@ class PluginTypesCollector {
 
     // Get the call from the body of the create() method.
     $create_R = new \ReflectionMethod($data['base_class'], 'create');
-
-    // Get the source code of the create() method.
-    $start_line = $create_R->getStartLine() - 1;
-    $end_line = $create_R->getEndLine();
-
-    $file_source = file($create_R->getFileName());
-    $create_method_body = implode("", array_slice($file_source, $start_line, $end_line - $start_line));
+    $create_method_body = $this->getMethodBody($create_R);
 
     $matches = [];
     preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
@@ -673,6 +667,30 @@ class PluginTypesCollector {
     else {
       return implode('\\', array_slice($pieces, 0, 2));
     }
+  }
+
+  /**
+   * Gets the body code of a method.
+   *
+   * @param \ReflectionMethod $method_reflection
+   *   The reflection class for the method.
+   *
+   * @return string
+   *   The body of the method's code.
+   */
+  protected function getMethodBody(\ReflectionMethod $method_reflection) {
+    // Get the method's body code.
+    // We could use the PHP parser library here rather than sniff with regexes,
+    // but it would probably end up being just as much work poking around in
+    // the syntax tree.
+    $filename = $method_reflection->getFileName();
+    $start_line = $method_reflection->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
+    $end_line = $method_reflection->getEndLine();
+    $length = $end_line - $start_line;
+    $file_source = file($filename);
+    $body = implode("", array_slice($file_source, $start_line, $length));
+
+    return $body;
   }
 
 }
