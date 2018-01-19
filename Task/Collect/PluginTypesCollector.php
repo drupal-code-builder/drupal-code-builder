@@ -167,17 +167,19 @@ class PluginTypesCollector {
       // This gets us the subdirectory, interface, and annotation name.
       $this->addPluginTypeServiceData($plugin_type_data[$plugin_type_id]);
 
-      // Add data from the plugin annotation class.
-      $this->addPluginAnnotationData($plugin_type_data[$plugin_type_id]);
-
       // Try to detect a base class for plugins
       $this->addPluginBaseClass($plugin_type_data[$plugin_type_id]);
 
-      // Add data from the plugin interface (which the manager service gave us).
-      $this->addPluginMethods($plugin_type_data[$plugin_type_id]);
-
       // Add data about the factory method of the base class, if any.
       $this->addBaseClassCreationData($plugin_type_data[$plugin_type_id]);
+
+      // Do the large arrays last, so they are last in the stored data so it's
+      // easier to read.
+      // Add data from the plugin annotation class.
+      $this->addPluginAnnotationData($plugin_type_data[$plugin_type_id]);
+
+      // Add data from the plugin interface (which the manager service gave us).
+      $this->addPluginMethods($plugin_type_data[$plugin_type_id]);
     }
 
     // Get plugin type information if Plugin module is present.
