@@ -127,6 +127,18 @@ class PluginTypesCollector {
    *      - 'description': The description, taken from the docblock of the class
    *        property on the annotation class.
    *      - 'type': The data type.
+   *    - 'construction': An array of injected service parameters for the plugin
+   *      base class. Each item has:
+   *      - 'type': The typehint.
+   *      - 'name': The parameter name, without the $.
+   *      - 'extraction': The code for getting the service from the container.
+   *    - 'constructor_fixed_parameters': An array of the fixed parameters for
+   *      plugin base class __construct(). This is only set if they differ from
+   *      the standard ones.
+   *      - 'type': The typehint.
+   *      - 'name': The parameter name, without the $.
+   *      - 'extraction': The code for getting the value to pass in from the
+   *        parameters passed to create().
    *
    *  Due to the difficult nature of analysing the code for plugin types, some
    *  of these properties may be empty if they could not be deduced.
@@ -171,7 +183,7 @@ class PluginTypesCollector {
       $this->addPluginBaseClass($plugin_type_data[$plugin_type_id]);
 
       // Add data about the factory method of the base class, if any.
-      $this->addBaseClassCreationData($plugin_type_data[$plugin_type_id]);
+      $this->addConstructionData($plugin_type_data[$plugin_type_id]);
 
       // Do the large arrays last, so they are last in the stored data so it's
       // easier to read.
@@ -547,7 +559,36 @@ class PluginTypesCollector {
   }
 
   /**
-   * Adds data about the base class's create() method.
+   * Adds data about the __construct() and create() methods for the plugins.
+   *
+   * The norm for plugins is to have three paramters for the constructor:
+   *   $configuration, $plugin_id, $plugin_definition
+   * A plugin that implements ContainerFactoryPluginInterface adds its injected
+   * service parameters after these, and its create() method receives them and
+   * passes them in. We thus have fixed parameters, and injection parameters.
+   *
+   * However, there are two ways in which a plugin type can deviate from this,
+   * and which affect a plugin that injects services of its own:
+   *  - The plugin base class already has injected services. In this case:
+   *    - The create() method must extract the base class services and pass them
+   *      in to the creation call.
+   *    - The __construct() method must receive them as parameters after the
+   *      basic parameters, and pass them up to the parent call.
+   *  - The plugin manager service passes fixed parameters to the plugin base
+   *    class which deviate from the basic parameters. In this case:
+   *    - The create() method must pass these different parameters in the
+   *      creation call. All the examples of this in core either pass a subset
+   *      of the basic parameters, or pass extra parameters which are values in
+   *      the $configuration array.
+   *    - The __construct() method must receive the fixed parameters and pass
+   *      them up to the parent call.
+   *  - Fortunately, so far there are no known plugin types that combine
+   *    both cases!
+   *
+   * To handle these cases, we detect the following:
+   *  - parameters of the plugin base class's __construct() method.
+   *  - values passed 'new static' call in the plugin base class's create()
+   *    method.
    *
    * This allows generated plugins that have injected services to correctly
    * call the parent constructor, and pass the injected services to the base
@@ -556,14 +597,113 @@ class PluginTypesCollector {
    * @param &$data
    *  The data for a single plugin type.
    */
-  protected function addBaseClassCreationData(&$data) {
+  protected function addConstructionData(&$data) {
     if (!isset($data['base_class'])) {
       // Can't do anything if we didn't find a base class.
       return;
     }
 
-    if (!method_exists($data['base_class'], 'create')) {
-      // Nothing to do if the base class has no static creator.
+    // First see if the fixed parameters are non-standard.
+    $fixed_parameters = $this->getFixedParametersFromManager($data['service_class_name']);
+    if ($fixed_parameters) {
+      // TODO: there is an unlikely (and not yet encountered) case where the
+      // plugin manager implements createInstance() for other reasons, and
+      // passes in the standard fixed parameters.
+
+      foreach ($fixed_parameters as $i => $extraction) {
+        $data['constructor_fixed_parameters'][$i]['extraction'] = $extraction;
+      }
+    }
+
+    if (isset($data['constructor_fixed_parameters'])) {
+      $fixed_parameter_count = count($data['constructor_fixed_parameters']);
+    }
+    else {
+      $fixed_parameter_count = 3;
+    }
+
+    $base_class_construct_params_data = $this->getBaseClassConstructParameters($data, $fixed_parameter_count);
+    if ($base_class_construct_params_data) {
+      //dump($base_class_construct_params_data);
+      foreach ($base_class_construct_params_data['fixed'] as $i => $param) {
+        //dump($param);
+        $data['constructor_fixed_parameters'][$i] += $param;
+      }
+
+      if ($base_class_construct_params_data['injection']) {
+        $data['construction'] = $base_class_construct_params_data['injection'];
+      }
+    }
+
+    $base_class_injected_params_extraction = $this->getBaseClassInjectedParamExtraction($data, $fixed_parameter_count);
+    if ($base_class_injected_params_extraction) {
+      foreach ($base_class_injected_params_extraction as $i => $extraction) {
+        $data['construction'][$i]['extraction'] = $extraction;
+      }
+    }
+  }
+
+  /**
+   * Get fixed parameters for plugin class __construct().
+   *
+   * Some plugin types have a constructor for the plugin classes with
+   * non-standard parameters. In this case, the plugin manager will override
+   * createInstance() to take care of passing them in. We need to be aware of
+   * this because when generating a plugin with injected services, we implement
+   * create() and __construct():
+   * - create() needs to repeat the work of the plugin manager's
+   *   createInstance() to get the right parameters to pass. Note that this can
+   *   not be 100% accurate, as we can't detect whether createInstance() has any
+   *   lines of code that prepare the variables to be passed to the constructor
+   *   call.
+   * - construct() needs to know the parameters that come before the injected
+   *   services.
+   *
+   * @param [type] $plugin_type_data [description]
+   */
+  protected function getFixedParametersFromManager($service_class_name) {
+    $method_ref = new \ReflectionMethod($service_class_name, 'createInstance');
+    if ($method_ref->getDeclaringClass()->getName() != $service_class_name) {
+      // The plugin manager does not override createInstance(), therefore the
+      // plugin class construct() method must have the normal parameters.
+      return;
+    }
+
+    // Get the method's body code.
+    // We could use the PHP parser library here rather than sniff with regexes,
+    // but it would probably end up being just as much work poking around in
+    // the syntax tree.
+    $body = $this->getMethodBody($method_ref);
+
+    if (strpos($body, 'return new') === FALSE) {
+      // The method doesn't construct an object: therefore the paramters for
+      // the plugin constructor are the standard ones.
+      return;
+    }
+
+    $matches = [];
+    preg_match('@return new .+\((.+)\)@', $body, $matches);
+    $construction_params = $matches[1];
+
+    // Use preg_split() rather than explode() in case the code has formatting
+    // errors or uses linebreaks.
+    $construction_params = preg_split('@\s*,\s*@', $construction_params);
+
+    //dump($construction_params);
+    return $construction_params;
+  }
+
+  /**
+   * Helper for addConstructionData().
+   *
+   * @param array $data
+   *   The data for the plugin type.
+   * @param int $fixed_parameter_count
+   *   The number of fixed parameters for the __construct() method of plugin
+   *   classes for this plugin type.
+   */
+  protected function getBaseClassConstructParameters($data, $fixed_parameter_count) {
+    if (!method_exists($data['base_class'], '__construct')) {
       return;
     }
 
@@ -571,15 +711,26 @@ class PluginTypesCollector {
     // and parameter names.
     $construct_R = new \ReflectionMethod($data['base_class'], '__construct');
     $construct_params_R = $construct_R->getParameters();
+    $construct_fixed_params_ref = array_slice($construct_params_R, 0, $fixed_parameter_count);
+    $construct_injection_params_ref = array_slice($construct_params_R, $fixed_parameter_count);
 
-    if (count($construct_params_R) < 4) {
-      // The first 3 params are the basic plugin constructor params, so there
-      // is nothing to do if it's only those.
-      return;
+    // Only analyze the fixed parameters if we know that they are non-standard.
+    $fixed_parameters = [];
+    if (isset($data['constructor_fixed_parameters'])) {
+      foreach ($construct_fixed_params_ref as $i => $parameter) {
+        $name = $parameter->getName();
+        $type = (string) $parameter->getType();
+        // TODO: Get description from the docblock.
+
+        $fixed_parameters[] = [
+          'type' => $type,
+          'name' => $parameter->getName(),
+        ];
+      }
     }
 
     $construct_parameters = [];
-    foreach (array_slice($construct_params_R, 3) as $i => $parameter) {
+    foreach ($construct_injection_params_ref as $i => $parameter) {
       $name = $parameter->getName();
       $type = (string) $parameter->getType();
       // TODO: Get description from the docblock.
@@ -588,6 +739,17 @@ class PluginTypesCollector {
         'type' => $type,
         'name' => $parameter->getName(),
       ];
+    }
+
+    return [
+      'fixed' => $fixed_parameters,
+      'injection' => $construct_parameters,
+    ];
+  }
+
+  protected function getBaseClassInjectedParamExtraction($data, $fixed_parameter_count) {
+    if (!method_exists($data['base_class'], 'create')) {
+      return;
     }
 
     // Get the call from the body of the create() method.
@@ -601,10 +763,10 @@ class PluginTypesCollector {
 
     $create_container_extractions = [];
     foreach (array_slice($parameters, 3) as $i => $parameter) {
-      $construct_parameters[$i]['extraction'] = trim($parameter);
+      $create_container_extractions[$i] = trim($parameter);
     }
 
-    $data['construction'] = $construct_parameters;
+    return $create_container_extractions;
   }
 
   /**
