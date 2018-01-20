@@ -2,7 +2,7 @@
 array (
   'breadcrumb_builder' => 
   array (
-    'label' => 'BreadcrumbBuilder',
+    'label' => 'Breadcrumb Builder',
     'interface' => 'Drupal\\Core\\Breadcrumb\\BreadcrumbBuilderInterface',
     'methods' => 
     array (

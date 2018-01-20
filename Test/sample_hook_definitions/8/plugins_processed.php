@@ -10,6 +10,7 @@ array (
     'subdir' => 'Plugin/Block',
     'plugin_interface' => 'Drupal\\Core\\Block\\BlockPluginInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
+    'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'plugin_properties' => 
     array (
       'id' => 
@@ -31,7 +32,6 @@ array (
         'type' => '\\Drupal\\Core\\Annotation\\Translation',
       ),
     ),
-    'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'plugin_interface_methods' => 
     array (
       'label' => 
@@ -130,6 +130,52 @@ array (
     'subdir' => 'Plugin/Field/FieldFormatter',
     'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
+    'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
+    'constructor_fixed_parameters' => 
+    array (
+      0 => 
+      array (
+        'extraction' => '$plugin_id',
+        'type' => '',
+        'name' => 'plugin_id',
+      ),
+      1 => 
+      array (
+        'extraction' => '$plugin_definition',
+        'type' => '',
+        'name' => 'plugin_definition',
+      ),
+      2 => 
+      array (
+        'extraction' => '$configuration[\'field_definition\']',
+        'type' => 'Drupal\\Core\\Field\\FieldDefinitionInterface',
+        'name' => 'field_definition',
+      ),
+      3 => 
+      array (
+        'extraction' => '$configuration[\'settings\']',
+        'type' => 'array',
+        'name' => 'settings',
+      ),
+      4 => 
+      array (
+        'extraction' => '$configuration[\'label\']',
+        'type' => '',
+        'name' => 'label',
+      ),
+      5 => 
+      array (
+        'extraction' => '$configuration[\'view_mode\']',
+        'type' => '',
+        'name' => 'view_mode',
+      ),
+      6 => 
+      array (
+        'extraction' => '$configuration[\'third_party_settings\']',
+        'type' => 'array',
+        'name' => 'third_party_settings',
+      ),
+    ),
     'plugin_properties' => 
     array (
       'id' => 
@@ -169,7 +215,6 @@ array (
         'type' => 'int optional',
       ),
     ),
-    'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
     'plugin_interface_methods' => 
     array (
       'settingsForm' => 
@@ -256,6 +301,16 @@ array (
     'subdir' => 'Plugin/ImageEffect',
     'plugin_interface' => 'Drupal\\image\\ImageEffectInterface',
     'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
+    'base_class' => 'Drupal\\image\\ImageEffectBase',
+    'construction' => 
+    array (
+      0 => 
+      array (
+        'type' => 'Psr\\Log\\LoggerInterface',
+        'name' => 'logger',
+        'extraction' => '$container->get(\'logger.factory\')->get(\'image\')',
+      ),
+    ),
     'plugin_properties' => 
     array (
       'id' => 
@@ -277,7 +332,6 @@ array (
         'type' => '\\Drupal\\Core\\Annotation\\Translation (optional)',
       ),
     ),
-    'base_class' => 'Drupal\\image\\ImageEffectBase',
     'plugin_interface_methods' => 
     array (
       'applyEffect' => 
@@ -296,7 +350,7 @@ array (
       array (
         'name' => 'getDerivativeExtension',
         'declaration' => 'public function getDerivativeExtension($extension);',
-        'description' => 'Returns the extension the derivative would have have after applying this',
+        'description' => 'Returns the extension of the derivative after applying this image effect.',
       ),
       'getSummary' => 
       array (
@@ -327,15 +381,6 @@ array (
         'name' => 'setWeight',
         'declaration' => 'public function setWeight($weight);',
         'description' => 'Sets the weight for this image effect.',
-      ),
-    ),
-    'construction' => 
-    array (
-      0 => 
-      array (
-        'type' => 'Psr\\Log\\LoggerInterface',
-        'name' => 'logger',
-        'extraction' => '$container->get(\'logger.factory\')->get(\'image\')',
       ),
     ),
   ),
