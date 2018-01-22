@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Generator for PHP class files.
  */
@@ -531,6 +533,12 @@ class PHPClassFile extends PHPFile {
               : $parameter_info['typehint'] . ' '
             )
             . '$' . $parameter_info['name'];
+
+          // Generate a parameter description from the name if none was given.
+          if (empty($parameter_info['description'])) {
+            // TODO: add a 'lower' case to case converter.
+            $parameter_info['description'] = CaseString::snake('The_' . $parameter_info['name'])->sentence() . '.';
+          }
 
           // Wrap the description to 80 characters minus the indentation.
           $indent_count =
