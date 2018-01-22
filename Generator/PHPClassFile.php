@@ -487,8 +487,8 @@ class PHPClassFile extends PHPFile {
    *  (optional) An array of data about the parameters. The key is immaterial;
    *  each value is an array with these properties:
    *  - 'name': The name of the parameter, without the initial $.
-   *  - 'typehint': The typehint of the parameter. If this is a class or
-   *    interface, use the fully-qualified form: this will produce import
+   *  - 'typehint': (optional) The typehint of the parameter. If this is a class
+   *    or interface, use the fully-qualified form: this will produce import
    *    statements for the file automatically.
    *  - 'description': (optional) The description of the parameter. This may be
    *    omitted if 'inheritdoc' is passed into the options.
@@ -525,7 +525,13 @@ class PHPClassFile extends PHPFile {
       if (!empty($parameters)) {
         $docblock_content_lines[] = '';
         foreach ($parameters as $parameter_info) {
-          $docblock_content_lines[] = "@param " . $parameter_info['typehint'] . ' $' . $parameter_info['name'];
+          $docblock_content_lines[] = "@param "
+            . (
+              empty($parameter_info['typehint'])
+              ? ''
+              : $parameter_info['typehint'] . ' '
+            )
+            . '$' . $parameter_info['name'];
 
           // Wrap the description to 80 characters minus the indentation.
           $indent_count =
@@ -552,11 +558,11 @@ class PHPClassFile extends PHPFile {
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
     foreach ($parameters as $parameter_info) {
-      if (isset($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
+      if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
         // Don't type hint scalar types.
         $declaration_line_params[] = '$' . $parameter_info['name'];
       }
-      elseif (isset($parameter_info['typehint'])) {
+      elseif (!empty($parameter_info['typehint'])) {
         $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['name'];
       }
       else {
