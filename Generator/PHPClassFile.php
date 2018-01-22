@@ -492,7 +492,6 @@ class PHPClassFile extends PHPFile {
    *    statements for the file automatically.
    *  - 'description': (optional) The description of the parameter. This may be
    *    omitted if 'inheritdoc' is passed into the options.
-   *    (Single line only supported for now.)
    * @param $options
    *  An array of options. May contain:
    *  - 'docblock_first_line' (optional): The text for the first line of the
