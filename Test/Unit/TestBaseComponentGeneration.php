@@ -771,7 +771,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
           // PhpParser\Node\Name\FullyQualified rather than a
           // PhpParser\Node\Name.
           $this->assertInstanceOf(\PhpParser\Node\Name\FullyQualified::class, $param_node->type,
-            "The typehint for the parameter is a full-qualified class name.");
+            "The typehint for the parameter \${$param_node->name} is a fully-qualified class name.");
 
           $expected_parameter_typehints[$index] = $expected_parameter_typehints[$index];
         }
