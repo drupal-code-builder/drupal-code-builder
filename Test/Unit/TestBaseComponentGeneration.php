@@ -716,7 +716,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $parameter_names_string = implode(", ", $expected_parameter_names);
     $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string}.";
 
-    $this->assertHelperMethodHasParametersSlice($parameters, '__construct', $message, 0);
+    $this->assertHelperMethodHasParametersSlice($parameters, $method_name, $message, 0);
   }
 
   /**
