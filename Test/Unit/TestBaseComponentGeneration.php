@@ -630,7 +630,7 @@ abstract class TestBaseComponentGeneration extends TestBase {
 
     // Check that the __construct() method has the base parameters before the
     // services.
-    $this->assertHelperMethodHasParametersSlice($parameters, '__construct', $message, 0);
+    $this->assertHelperMethodHasParametersSlice($parameters, '__construct', $message, 0, count($parameters));
 
     // The first statement in the __construct() should be parent call, with
     // the base parameters.
@@ -716,11 +716,11 @@ abstract class TestBaseComponentGeneration extends TestBase {
     $parameter_names_string = implode(", ", $expected_parameter_names);
     $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string}.";
 
-    $this->assertHelperMethodHasParametersSlice($parameters, $method_name, $message, 0);
+    $this->assertHelperMethodHasParametersSlice($parameters, $method_name, $message);
   }
 
   /**
-   * Asserts a method of the parsed class has the given parameters.
+   * Asserts a subset of the parameters of a method of the parsed class.
    *
    * Helper for assertMethodHasParameters() and other assertions.
    *
@@ -730,11 +730,17 @@ abstract class TestBaseComponentGeneration extends TestBase {
    * @param string $method_name
    *   The method name.
    * @param integer $offset
-   *   (optional) The array slice offset in the actual parameters.
+   *   (optional) The array slice offset in the actual parameters to compare
+   *   with.
+   * @param integer $length
+   *   (optional) The array slice length in the actual parameters to compare
+   *   with. If omitted, all the actual parameters from the offset are
+   *   considered. This means that omitting both values will compare the given
+   *   parameters with all of the method's parameters for an exact match.
    * @param string $message
    *   (optional) The assertion message.
    */
-  private function assertHelperMethodHasParametersSlice($parameters, $method_name, $message = NULL, $offset = 0) {
+  private function assertHelperMethodHasParametersSlice($parameters, $method_name, $message = NULL, $offset = 0, $length = NULL) {
     $expected_parameter_names = array_keys($parameters);
     $expected_parameter_typehints = array_values($parameters);
 
@@ -744,7 +750,16 @@ abstract class TestBaseComponentGeneration extends TestBase {
     //dump($this->parser_nodes['methods'][$method_name]);
 
     // Get the actual parameter names.
-    $param_nodes_slice = array_slice($this->parser_nodes['methods'][$method_name]->params, $offset, count($parameters));
+    $param_nodes = $this->parser_nodes['methods'][$method_name]->params;
+    if (empty($length)) {
+      $param_nodes_slice = array_slice($param_nodes, $offset);
+    }
+    else {
+      $param_nodes_slice = array_slice($param_nodes, $offset, $length);
+    }
+
+    // Sanity check.
+    $this->assertEquals(count($parameters), count($param_nodes_slice), "The length of the expected parameters list for {$method_name} matches the found ones.");
 
     $actual_parameter_names_slice = [];
     $actual_parameter_types_slice = [];
