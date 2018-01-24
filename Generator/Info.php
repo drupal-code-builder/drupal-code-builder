@@ -13,7 +13,7 @@ class Info extends File {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    // Properties acquired from the requesting PluginType component.
+    // Properties acquired from the requesting root component.
     $plugin_type_properties = [
       'readable_name',
       // Only needed for D8 info files.
