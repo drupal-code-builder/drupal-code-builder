@@ -280,4 +280,74 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $this->assertFunctionCode($plugin_file, 'create', '$container->get(\'logger.factory\')->get(\'image\'),');
   }
 
+  /**
+   * Tests a plugin base class with nonstandard fixed constructor parameters.
+   */
+  function testPluginsGenerationWithNonstandardFixedParameters() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          'plugin_type' => 'field.formatter',
+          'plugin_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    // Check the plugin file.
+    $plugin_file = $files["src/Plugin/Field/FieldFormatter/Alpha.php"];
+    $this->assertWellFormedPHP($plugin_file);
+    $this->assertDrupalCodingStandards($plugin_file);
+    $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
+    $this->assertClassFileFormatting($plugin_file);
+
+    $this->parseCode($plugin_file);
+    $this->assertHasClass('Drupal\test_module\Plugin\Field\FieldFormatter\Alpha');
+    $this->assertClassHasParent('Drupal\Core\Field\FormatterBase');
+
+    // Check service injection.
+    $this->assertClassHasInterfaces([
+      'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
+    ]);
+
+    $this->assertMethodHasParameters([
+      'container' => 'Symfony\Component\DependencyInjection\ContainerInterface',
+      'configuration' => 'array',
+      'plugin_id' => NULL,
+      'plugin_definition' => NULL,
+    ], 'create');
+
+    $this->assertConstructorBaseParameters([
+      'plugin_id' => NULL,
+      'plugin_definition' => NULL,
+      'field_definition' => 'Drupal\Core\Field\FieldDefinitionInterface',
+      'settings' => 'array',
+      'label' => NULL,
+      'view_mode' => NULL,
+      'third_party_settings' => 'array',
+    ]);
+
+    $this->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+    ]);
+  }
+
 }

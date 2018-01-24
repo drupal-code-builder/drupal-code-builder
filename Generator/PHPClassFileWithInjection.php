@@ -36,6 +36,15 @@ class PHPClassFileWithInjection extends PHPClassFile {
   }
 
   /**
+   * The parameters for the create() method.
+   *
+   * @return array
+   */
+  protected function getCreateParameters() {
+    return [];
+  }
+
+  /**
    * Helper for collectSectionBlocks().
    */
   protected function collectSectionBlocksForDependencyInjection() {
@@ -75,8 +84,8 @@ class PHPClassFileWithInjection extends PHPClassFile {
       ],
     ];
 
-    $base_parameters = $this->getConstructBaseParameters();
-    $parameters = array_merge($parameters, $base_parameters);
+    $base_create_parameters = $this->getCreateParameters();
+    $parameters = array_merge($parameters, $base_create_parameters);
 
     $code = $this->buildMethodHeader(
       'create',
@@ -99,8 +108,17 @@ class PHPClassFileWithInjection extends PHPClassFile {
     // - services requested by the component data for this class.
     $static_call_lines = [];
 
-    foreach ($base_parameters as $parameter) {
-      $static_call_lines[] = '    ' . '$' . $parameter['name'] . ',';
+    $construct_base_arguments = $this->getConstructBaseParameters();
+    foreach ($construct_base_arguments as $parameter) {
+      if (isset($parameter['extraction'])) {
+        // Some fixed parameters have an extraction of sorts, as they are values
+        // from the plugin $configuration array, therefore an expression is
+        // passed to the call rather than a variable.
+        $static_call_lines[] = '    ' . $parameter['extraction'] . ',';
+      }
+      else {
+        $static_call_lines[] = '    ' . '$' . $parameter['name'] . ',';
+      }
     }
 
     $parent_injected_services = $this->getConstructParentInjectedServices();

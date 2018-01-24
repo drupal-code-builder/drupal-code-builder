@@ -13,6 +13,32 @@ class Plugin extends PHPClassFileWithInjection {
   protected $hasStaticFactoryMethod = TRUE;
 
   /**
+   * The standard fixed create() parameters.
+   *
+   * These are the parameters to create() that come after the $container
+   * parameter.
+   *
+   * @var array
+   */
+  const STANDARD_FIXED_PARAMS = [
+    [
+      'name' => 'configuration',
+      'description' => 'A configuration array containing information about the plugin instance.',
+      'typehint' => 'array',
+    ],
+    [
+      'name' => 'plugin_id',
+      'description' => 'The plugin_id for the plugin instance.',
+      'typehint' => 'string',
+    ],
+    [
+      'name' => 'plugin_definition',
+      'description' => 'The plugin implementation definition.',
+      'typehint' => 'mixed',
+    ]
+  ];
+
+  /**
    * The unique name of this generator.
    */
   public $name;
@@ -264,25 +290,42 @@ class Plugin extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   protected function getConstructBaseParameters() {
-    $parameters = [
-      // Incoming parameters to create() after the container.
-      [
-        'name' => 'configuration',
-        'description' => 'A configuration array containing information about the plugin instance.',
-        'typehint' => 'array',
-      ],
-      [
-        'name' => 'plugin_id',
-        'description' => 'The plugin_id for the plugin instance.',
-        'typehint' => 'string',
-      ],
-      [
-        'name' => 'plugin_definition',
-        'description' => 'The plugin implementation definition.',
-        'typehint' => 'mixed',
-      ]
-    ];
+    if (isset($this->component_data['plugin_type_data']['constructor_fixed_parameters'])) {
+      // Plugin type has non-standard constructor fixed parameters.
+      // Argh, the data for this is in a different format: type / typehint.
+      // TODO: clean up this WTF.
+      $parameters = [];
+      foreach ($this->component_data['plugin_type_data']['constructor_fixed_parameters'] as $i => $param) {
+        $typehint = $param['type'];
+        if (!empty($typehint) && !in_array($typehint, ['array', 'string', 'bool', 'mixed', 'int'])) {
+          // Class typehints need an initial '\'.
+          // TODO: clean up and standardize.
+          $typehint = '\\' . $typehint;
+        }
+
+        $parameters[$i] = [
+          'name' => $param['name'],
+          // buildMethodHeader() will fill in a description.
+          // TODO: get this from the docblock in analysis.
+          'description' => '',
+          'typehint' => $typehint,
+          'extraction' => $param['extraction'],
+        ];
+      }
+    }
+    else {
+      // Plugin type has standard fixed parameters.
+      $parameters = self::STANDARD_FIXED_PARAMS;
+    }
+
     return $parameters;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getCreateParameters() {
+    return self::STANDARD_FIXED_PARAMS;
   }
 
   /**
