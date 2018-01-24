@@ -29,6 +29,8 @@ class ServicesCollector {
    *   The environment object.
    * @param ContainerBuilderGetter $method_collector
    *   The container builder helper.
+   * @param \DrupalCodeBuilder\Task\Collect\CodeAnalyser $code_analyser
+   *   The code analyser helper.
    */
   public function __construct(
     EnvironmentInterface $environment,
