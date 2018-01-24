@@ -136,13 +136,13 @@ array (
       0 => 
       array (
         'extraction' => '$plugin_id',
-        'type' => '',
+        'type' => 'string',
         'name' => 'plugin_id',
       ),
       1 => 
       array (
         'extraction' => '$plugin_definition',
-        'type' => '',
+        'type' => 'mixed',
         'name' => 'plugin_definition',
       ),
       2 => 
@@ -160,13 +160,13 @@ array (
       4 => 
       array (
         'extraction' => '$configuration[\'label\']',
-        'type' => '',
+        'type' => 'string',
         'name' => 'label',
       ),
       5 => 
       array (
         'extraction' => '$configuration[\'view_mode\']',
-        'type' => '',
+        'type' => 'string',
         'name' => 'view_mode',
       ),
       6 => 
