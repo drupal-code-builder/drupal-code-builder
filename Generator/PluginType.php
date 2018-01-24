@@ -50,6 +50,14 @@ class PluginType extends BaseGenerator {
         },
         'process_default' => TRUE,
       ),
+      // TODO: change code in this class to use this property.
+      'plugin_relative_namespace' => [
+        'label' => 'Plugin relative namespace',
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return str_replace('/', '\\', $component_data['plugin_subdirectory']);
+        },
+      ],
       'annotation_class' => array(
         'label' => 'Annotation class name',
         'required' => TRUE,

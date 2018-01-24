@@ -7,12 +7,28 @@ namespace DrupalCodeBuilder\Generator;
  */
 class AnnotationClass extends PHPClassFile {
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      // TODO: this is specific to plugins.
+      'plugin_relative_namespace' => [
+        'acquired' => TRUE,
+      ],
+    ];
+  }
+
   protected function class_doc_block() {
     $docblock_code = [];
 
-    // TODO
     $docblock_code[] = $this->component_data['docblock_first_line'];
     $docblock_code[] = "";
+    // TODO: this is specific to plugins. Cleaning this up will require being
+    // able to pass more class docs in than the first line.
+    $docblock_code[] = "Plugin namespace: {$this->component_data['plugin_relative_namespace']}.";
+    $docblock_code[] = "";
+
     $docblock_code[] = "@Annotation";
 
     return $this->docBlock($docblock_code);
