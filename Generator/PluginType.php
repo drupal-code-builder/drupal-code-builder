@@ -50,11 +50,11 @@ class PluginType extends BaseGenerator {
         },
         'process_default' => TRUE,
       ),
-      // TODO: change code in this class to use this property.
       'plugin_relative_namespace' => [
         'label' => 'Plugin relative namespace',
         'computed' => TRUE,
         'default' => function($component_data) {
+          // The plugin subdirectory may be nested.
           return str_replace('/', '\\', $component_data['plugin_subdirectory']);
         },
       ],
@@ -78,8 +78,7 @@ class PluginType extends BaseGenerator {
             'Drupal',
             '%module',
             'Plugin',
-            // Allow for the plugin subfolder to be nested.
-            str_replace('/', '\\', $component_data['plugin_subdirectory']),
+            $component_data['plugin_relative_namespace'],
             $component_data['annotation_class'] . 'Interface',
           ]);
         },
@@ -144,13 +143,13 @@ class PluginType extends BaseGenerator {
       // TODO: Some annotation properties such as ID and label.
     ];
 
-    $plugin_relative_namespace = explode('/', $this->component_data['plugin_subdirectory']);
+    $plugin_relative_namespace_pieces = explode('\\', $this->component_data['plugin_relative_namespace']);
 
     $components["plugin_type_{$plugin_type}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
       'relative_class_name' => array_merge(
         ['Plugin'],
-        $plugin_relative_namespace,
+        $plugin_relative_namespace_pieces,
         [$this->component_data['annotation_class'] . 'Interface']
       ),
       'docblock_first_line' => "Interface for {$this->component_data['plugin_label']} plugins.",
@@ -161,7 +160,7 @@ class PluginType extends BaseGenerator {
       'component_type' => 'PHPClassFile',
       'relative_class_name' => array_merge(
         ['Plugin'],
-        $plugin_relative_namespace,
+        $plugin_relative_namespace_pieces,
         [$this->component_data['annotation_class'] . 'Base']
       ),
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
