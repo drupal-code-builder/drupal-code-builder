@@ -94,4 +94,30 @@ class CodeAnalyser {
     return $body;
   }
 
+  /**
+   * Extract parameter types from a method's docblock.
+   *
+   * @param \ReflectionMethod $method_reflection
+   *   The reflection object for the method.
+   *
+   * @return
+   *   An array keyed by the parameter name (without the initial $), whose
+   *   values are the type in the docblock, such as 'mixed', 'int', or an
+   *   interface. (Although note that interface typehints which are also used
+   *   in the actual code are best detected with reflection).
+   */
+  public function getMethodDocblockParams(\ReflectionMethod $method_reflection) {
+    $docblock = $method_reflection->getDocComment();
+
+    $matches = [];
+    preg_match_all('/\* @param (?P<type>\S+) \$(?P<name>\w+)/', $docblock, $matches, PREG_SET_ORDER);
+
+    $param_data = [];
+    foreach ($matches as $match_set) {
+      $param_data[$match_set['name']] = $match_set['type'];
+    }
+
+    return $param_data;
+  }
+
 }

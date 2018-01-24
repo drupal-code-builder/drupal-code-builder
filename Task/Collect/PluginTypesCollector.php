@@ -721,10 +721,20 @@ class PluginTypesCollector {
     // Only analyze the fixed parameters if we know that they are non-standard.
     $fixed_parameters = [];
     if (isset($data['constructor_fixed_parameters'])) {
+      $docblock_types = $this->codeAnalyser->getMethodDocblockParams($construct_R);
+
       foreach ($construct_fixed_params_ref as $i => $parameter) {
         $name = $parameter->getName();
+
+        // Get the typehint. We try the reflection first, which gives us class
+        // and interface typehints and 'array'. If that gets nothing, we scrape
+        // it from the docblock so that we have something to generate docblocks
+        // with.
         $type = (string) $parameter->getType();
-        // TODO: Get description from the docblock.
+
+        if (empty($type)) {
+          $type = $docblock_types[$name];
+        }
 
         $fixed_parameters[] = [
           'type' => $type,
