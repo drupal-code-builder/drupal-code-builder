@@ -11,6 +11,7 @@ array (
     'plugin_interface' => 'Drupal\\Core\\Block\\BlockPluginInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
+    'config_schema_prefix' => 'block.settings.',
     'plugin_properties' => 
     array (
       'id' => 
@@ -131,6 +132,7 @@ array (
     'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
     'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
+    'config_schema_prefix' => 'field.formatter.settings.',
     'constructor_fixed_parameters' => 
     array (
       0 => 
@@ -302,6 +304,7 @@ array (
     'plugin_interface' => 'Drupal\\image\\ImageEffectInterface',
     'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
     'base_class' => 'Drupal\\image\\ImageEffectBase',
+    'config_schema_prefix' => 'image.effect.',
     'construction' => 
     array (
       0 => 
