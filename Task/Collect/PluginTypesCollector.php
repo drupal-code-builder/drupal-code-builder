@@ -143,6 +143,9 @@ class PluginTypesCollector {
    *      - 'name': The parameter name, without the $.
    *      - 'extraction': The code for getting the value to pass in from the
    *        parameters passed to create().
+   *    - 'config_schema_prefix': The prefix to use for creating a config schema
+   *      ID for plugins of this type. The ID should be formed by appending the
+   *      plugin ID with a '.'.
    *
    *  Due to the difficult nature of analysing the code for plugin types, some
    *  of these properties may be empty if they could not be deduced.
@@ -504,6 +507,12 @@ class PluginTypesCollector {
     return $base_class;
   }
 
+  /**
+   * Deduces the config schema ID prefix for configurable plugin types.
+   *
+   * @param array $data
+   *   The array of data for the plugin type.
+   */
   protected function addConfigSchemaPrefix(&$data) {
     if (!is_subclass_of($data['plugin_interface'], \Drupal\Core\Field\PluginSettingsInterface::class)
       && !is_subclass_of($data['plugin_interface'], \Drupal\Component\Plugin\ConfigurablePluginInterface::class)
