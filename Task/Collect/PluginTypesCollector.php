@@ -186,6 +186,9 @@ class PluginTypesCollector {
       // Try to detect a base class for plugins
       $this->addPluginBaseClass($plugin_type_data[$plugin_type_id]);
 
+      // Try to detect a config schema prefix.
+      $this->addConfigSchemaPrefix($plugin_type_data[$plugin_type_id]);
+
       // Add data about the factory method of the base class, if any.
       $this->addConstructionData($plugin_type_data[$plugin_type_id]);
 
@@ -499,6 +502,77 @@ class PluginTypesCollector {
     $base_class = end($set);
 
     return $base_class;
+  }
+
+  protected function addConfigSchemaPrefix(&$data) {
+    if (!is_subclass_of($data['plugin_interface'], \Drupal\Core\Field\PluginSettingsInterface::class)
+      && !is_subclass_of($data['plugin_interface'], \Drupal\Component\Plugin\ConfigurablePluginInterface::class)
+    ) {
+      // Only look at configurable plugins, whose interface inherits from
+      // ConfigurablePluginInterface.
+      // (Field module uses the equivalent, deprecated PluginSettingsInterface.)
+      return;
+    }
+
+    $service = \Drupal::service($data['service_id']);
+    $plugin_definitions = $service->getDefinitions();
+    $plugin_ids = array_keys($plugin_definitions);
+
+    // Use the last piece of the service name to filter potential config schema
+    // keys by. This is to prevent false positives from a plugin with the same
+    // ID but of a different type. E.g., there is a config schema item
+    // 'views.field.file_size' and a field.formatter plugin 'file_size'. By
+    // expecting 'formatter' in config keys we filter this out.
+    $service_pieces = explode('.', $data['service_id']);
+    $last_service_piece = end($service_pieces);
+
+    $typed_config_manager = \Drupal::service('config.typed');
+    $config_schema_definitions = $typed_config_manager->getDefinitions();
+    $config_schema_ids = array_keys($config_schema_definitions);
+
+    $plugin_schema_roots = [];
+
+    // Try to find a key for each plugin.
+    foreach ($plugin_ids as $plugin_id) {
+      // Get all schema IDs that end with the plugin ID.
+      $candidate_schema_ids = preg_grep("@\.{$plugin_id}\$@", $config_schema_ids);
+
+      // Further filter by the last piece of the plugin manager service ID.
+      // E.g. for 'plugin.manager.field.formatter' we filter by 'formatter'.
+      // Force a boundary before (rather than a '.'), as condition plugins have
+      // schema of the form 'condition.plugin.request_path',
+      // Don't force a '.' after, as filter plugins have schema of the form
+      // 'filter_settings.filter_html'.
+      $candidate_schema_ids = preg_grep("@\b{$last_service_piece}@", $candidate_schema_ids);
+
+      if (count($candidate_schema_ids) != 1) {
+        // Skip this plugin if we found no potential schema IDs, or if we found
+        // more than one, so we don't deal with an ambiguous result.
+        continue;
+      }
+
+      $plugin_schema_id = reset($candidate_schema_ids);
+
+      // We are interested in the schema ID prefix, which we expect to find
+      // before the plugin ID.
+      $plugin_schema_root = preg_replace("@{$plugin_id}\$@", '', $plugin_schema_id);
+
+      $plugin_schema_roots[] = $plugin_schema_root;
+    }
+
+    // We found no schema IDs for the plugins: nothing to do.
+    if (empty($plugin_schema_roots)) {
+      return;
+    }
+
+    // There's no common prefix: bail.
+    if (count(array_unique($plugin_schema_roots)) != 1) {
+      return;
+    }
+
+    $common_schema_prefix = reset($plugin_schema_roots);
+
+    $data['config_schema_prefix'] = $common_schema_prefix;
   }
 
   /**
