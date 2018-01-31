@@ -66,7 +66,6 @@ class Plugin extends PHPClassFileWithInjection {
     );
 
     // Prefix the plugin name with the module name.
-    $component_data['original_plugin_name'] = $component_data['plugin_name'];
     $component_data['plugin_name'] = $component_data['root_component_name'] . '_' . $component_data['plugin_name'];
 
     $plugin_type = $component_data['plugin_type'];
