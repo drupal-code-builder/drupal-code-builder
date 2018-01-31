@@ -58,7 +58,13 @@ class CodeAnalyser {
 
     // Find the full class name for this from the import statements.
     $matches = [];
+    // TODO: handle aliased imports.
     preg_match("@use ([\\\\\\w]+\\\\{$parent_short_classname});@", $class_code, $matches);
+
+    if (empty($matches)) {
+      // TODO: use the namespace of the file!
+      return FALSE;
+    }
 
     $parent_qualified_classname = $matches[1];
 
