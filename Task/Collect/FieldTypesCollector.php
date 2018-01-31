@@ -56,8 +56,9 @@ class FieldTypesCollector {
         'description' => $plugin_definition['description'] ?
           (string) $plugin_definition['description'] :
           (string) $plugin_definition['label'],
-        'default_widget' => $plugin_definition['default_widget'],
-        'default_formatter' => $plugin_definition['default_formatter'],
+        // Some of the weirder plugins don't have these.
+        'default_widget' => $plugin_definition['default_widget'] ?? '',
+        'default_formatter' => $plugin_definition['default_formatter'] ?? '',
       ];
     }
 
