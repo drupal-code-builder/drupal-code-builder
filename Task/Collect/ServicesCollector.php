@@ -209,6 +209,11 @@ class ServicesCollector {
     // to only name one interface in its declaration!
     $matches = [];
     preg_match("@implements (\w+)@", $service_declaration_line, $matches);
+
+    if (!isset($matches[1])) {
+      return '';
+    }
+
     $interface_short_name = $matches[1];
 
     // Find the fully-qualified interface name in the array of interfaces
