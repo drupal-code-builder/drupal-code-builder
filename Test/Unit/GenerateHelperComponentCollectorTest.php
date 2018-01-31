@@ -9,9 +9,12 @@ use Prophecy\Argument;
  */
 class GenerateHelperComponentCollectorTest extends TestBase {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(8);
-  }
+  /**
+   * The Drupal core major version to set up for this test.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion = 8;
 
   /**
    * Request with only the root generator, which itself has no requirements.

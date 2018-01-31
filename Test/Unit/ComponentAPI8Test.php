@@ -7,9 +7,12 @@ namespace DrupalCodeBuilder\Test\Unit;
  */
 class ComponentAPI8Test extends TestBaseComponentGeneration {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(8);
-  }
+  /**
+   * The Drupal core major version to set up for this test.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion = 8;
 
   /**
    * Test generating a module with an api.php file.

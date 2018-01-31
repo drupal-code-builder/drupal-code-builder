@@ -10,9 +10,12 @@ namespace DrupalCodeBuilder\Test\Unit;
  */
 class GenerateHelperComponentDataInfoGathererTest extends TestBase {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(8);
-  }
+  /**
+   * The Drupal core major version to set up for this test.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion = 8;
 
   public function testComponentDataInfo() {
     // Mocked component data info.
