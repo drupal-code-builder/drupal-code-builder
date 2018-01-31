@@ -359,4 +359,57 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     ]);
   }
 
+  /**
+   * Test Plugins component with schema for other components.
+   *
+   * Tests schema for the plugin and for a config entity type are both merged
+   * in the config YAML file.
+   */
+  function testPluginsGenerationWithOtherSchema() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+      'config_entity_types' => [
+        0 => [
+          'entity_type_id' => 'cake',
+          'entity_properties' => [
+            0 => [
+              'name' => 'filling',
+              'type' => 'string',
+            ],
+            1 => [
+              'name' => 'colour',
+              'type' => 'string',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(5, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
+    $this->assertArrayHasKey("src/Entity/Cake.php", $files);
+    $this->assertArrayHasKey("src/Entity/CakeInterface.php", $files);
+
+    // Check the config yml file.
+    $config_yaml_file = $files["config/schema/test_module.schema.yml"];
+    $this->assertYamlProperty($config_yaml_file, 'block.settings.test_module_alpha');
+    $this->assertYamlProperty($config_yaml_file, 'test_module.cake');
+    // TODO: assert deeper into the YAML once the assertion can do this.
+  }
+
 }
