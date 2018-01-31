@@ -196,6 +196,24 @@ class Plugin extends PHPClassFileWithInjection {
       );
     }
 
+    if (!empty($this->component_data['plugin_type_data']['config_schema_prefix'])) {
+      $schema_id = $this->component_data['plugin_type_data']['config_schema_prefix']
+        . $this->component_data['plugin_name'];
+
+      $components["config/schema/%module.schema.yml"] = [
+        'component_type' => 'YMLFile',
+        'yaml_data' => [
+           $schema_id => [
+            'type' => 'mapping',
+            'label' => $this->component_data['plugin_name'],
+            'mapping' => [
+
+            ],
+          ],
+        ],
+      ];
+    }
+
     return $components;
   }
 
