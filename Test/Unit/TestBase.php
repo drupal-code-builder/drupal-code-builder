@@ -736,6 +736,10 @@ abstract class TestBase extends TestCase {
    *  The assertion message.
    */
   function assertYamlProperty($string, $property, $value = NULL, $message = NULL) {
+    if (!isset($message)) {
+      $message = "YAML contains the {$property} property.";
+    }
+
     // Quote the given strings, as they may contain regex characters.
     $property = preg_quote($property);
 
