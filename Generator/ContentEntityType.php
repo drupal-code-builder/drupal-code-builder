@@ -45,7 +45,7 @@ class ContentEntityType extends EntityTypeBase {
     $base_fields_property = [
       'base_fields' => [
         'label' => 'Base fields',
-        'description' => "The machine name of the field.",
+        'description' => "The base fields for this content entity.",
         'format' => 'compound',
         // TODO: default, populated by things such as interface choice!
         'properties' => [
