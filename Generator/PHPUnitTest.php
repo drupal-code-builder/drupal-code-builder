@@ -27,7 +27,7 @@ class PHPUnitTest extends PHPClassFile {
               'value' => 'Unit',
             ],
             'parent_class_name' => [
-              'value' => '\Drupal\KernelTests\UnitTestCase',
+              'value' => '\Drupal\Tests\UnitTestCase',
             ],
           ],
         ],
