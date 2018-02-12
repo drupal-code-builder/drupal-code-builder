@@ -85,6 +85,12 @@ class PluginTypesCollector {
       }
     });
 
+    // Filter out a blacklist of known broken plugin types.
+    $plugin_manager_service_ids = array_diff($plugin_manager_service_ids, [
+      // https://www.drupal.org/project/ctools/issues/2938586
+      'plugin.manager.ctools.relationship',
+    ]);
+
     //drush_print_r($plugin_manager_service_ids);
 
     // Developer trapdoor: just process the block plugin type, to make terminal
