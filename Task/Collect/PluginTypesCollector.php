@@ -816,7 +816,13 @@ class PluginTypesCollector {
         $type = (string) $parameter->getType();
 
         if (empty($type)) {
-          $type = $docblock_types[$name];
+          if (isset($docblock_types[$name])) {
+            $type = $docblock_types[$name];
+          }
+          else {
+            // Account for badly-written docs where we couldn't extract a type.
+            $type = '';
+          }
         }
 
         $fixed_parameters[] = [
