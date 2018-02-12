@@ -862,6 +862,12 @@ class PluginTypesCollector {
     $matches = [];
     preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
 
+    // Bail if we didn't find the call.
+    if (empty($matches[1])) {
+      // TODO: some classes call parent::create()!
+      return;
+    }
+
     $parameters = explode(',', $matches[1]);
 
     $create_container_extractions = [];
