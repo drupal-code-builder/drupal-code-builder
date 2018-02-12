@@ -917,10 +917,15 @@ class PluginTypesCollector {
    *  The class name.
    *
    * @return string
-   *  The namespace.
+   *  The namespace, or an empty string if nothing found.
    */
   protected function getClassComponentNamespace($class_name) {
     $pieces = explode('\\', $class_name);
+
+    if (!isset($pieces[1])) {
+      // We don't know about something that is in the global namespace.
+      return '';
+    }
 
     if ($pieces[1] == 'Core' || $pieces[1] == 'Component') {
       return implode('\\', array_slice($pieces, 0, 3));
