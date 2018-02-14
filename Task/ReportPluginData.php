@@ -38,6 +38,12 @@ class ReportPluginData extends ReportHookDataFolder {
     }
 
     $plugin_data = $this->environment->getStorage()->retrieve('plugins');
+
+    // For now, only return plugin types that use AnnotatedClassDiscovery.
+    $plugin_data = array_filter($plugin_data, function($item) {
+      return ($item['discovery'] == 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery');
+    });
+
     return $plugin_data;
   }
 
