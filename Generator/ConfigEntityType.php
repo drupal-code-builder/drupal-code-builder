@@ -120,7 +120,7 @@ class ConfigEntityType extends EntityTypeBase {
         $schema_item['name'],
         $schema_item['type'], // TODO: config schema type not the same as PHP type!!!!!
         [
-          'docblock_first_line' => 'The modules to enable.',
+          'docblock_first_line' => $schema_item['label'] . '.',
         ]
         // TODO: default value?
       );
