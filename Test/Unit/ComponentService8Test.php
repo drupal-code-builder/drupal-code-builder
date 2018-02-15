@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Service component.
@@ -49,9 +50,10 @@ class ComponentService8Test extends TestBaseComponentGeneration {
 
     $services_file = $files["$module_name.services.yml"];
 
-    $this->assertYamlProperty($services_file, 'services', NULL, "The services file has the services property.");
-    $this->assertYamlProperty($services_file, "$module_name.my_service", NULL, "The services file declares the service name.");
-    $this->assertYamlProperty($services_file, 'class', "Drupal\\$module_name\\MyService", "The services file declares the service class.");
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
 
     $service_class_file = $files["src/MyService.php"];
 
@@ -90,10 +92,10 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
     $services_file = $files["$module_name.services.yml"];
 
-    // TODO: assertYamlProperty() is not powerful enough for this.
-    //$this->assertYamlProperty($services_file, 'tags', [], "The services file declares the service class.");
-    // Quick hack in the meantime.
-    $this->assertContains('name: breadcrumb_builder', $services_file);
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "$module_name.breadcrumb_builder"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.breadcrumb_builder", 'tags', 0, 'name'], 'breadcrumb_builder');
 
     $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
@@ -132,10 +134,14 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
     $services_file = $files["$module_name.services.yml"];
 
-    // TODO: assertYamlProperty() is not powerful enough for this.
-    //$this->assertYamlProperty($services_file, 'tags', [], "The services file declares the service class.");
-    // Quick hack in the meantime.
-    $this->assertContains('name: event_subscriber', $services_file);
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', 'test_module.event_subscriber']);
+    $yaml_tester->assertPropertyHasValue(['services', 'test_module.event_subscriber', 'class'], 'Drupal\test_module\EventSubscriber\EventSubscriber');
+    $yaml_tester->assertHasProperty(['services', 'test_module.event_subscriber', 'tags']);
+    $yaml_tester->assertHasProperty(['services', 'test_module.event_subscriber', 'tags', 0]);
+    $yaml_tester->assertPropertyHasValue(['services', 'test_module.event_subscriber', 'tags', 0, 'name'], 'event_subscriber');
+    $yaml_tester->assertPropertyHasValue(['services', 'test_module.event_subscriber', 'tags', 0, 'priority'], 0);
 
     $this->assertArrayHasKey("src/EventSubscriber/EventSubscriber.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
@@ -180,10 +186,12 @@ class ComponentService8Test extends TestBaseComponentGeneration {
 
     $services_file = $files["$module_name.services.yml"];
 
-    $this->assertYamlProperty($services_file, 'services', NULL, "The services file has the services property.");
-    $this->assertYamlProperty($services_file, "$module_name.my_service", NULL, "The services file declares the service name.");
-    $this->assertYamlProperty($services_file, 'class', "Drupal\\$module_name\\MyService", "The services file declares the service class.");
-    // TODO: check service argument is present.
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 0], '@current_user');
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 1], '@entity_type.manager');
 
     $service_class_file = $files["src/MyService.php"];
 
@@ -268,9 +276,10 @@ class ComponentService8Test extends TestBaseComponentGeneration {
 
     $services_file = $files["$module_name.services.yml"];
 
-    $this->assertYamlProperty($services_file, 'services', NULL, "The services file has the services property.");
-    $this->assertYamlProperty($services_file, "my_prefix.my_service", NULL, "The services file declares the specified service name.");
-    $this->assertYamlProperty($services_file, 'class', "Drupal\\$module_name\\MyServiceClass", "The services file declares the service class.");
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "my_prefix.my_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "my_prefix.my_service", 'class'], "Drupal\\$module_name\\MyServiceClass");
 
     $service_class_file = $files["src/MyServiceClass.php"];
 
