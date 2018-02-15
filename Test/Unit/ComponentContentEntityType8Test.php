@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+
 /**
  * Tests the entity type generator class.
  */
@@ -166,9 +168,12 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $this->assertHasNoMethods();
 
     $config_yaml_file = $files['config/schema/test_module.schema.yml'];
-    $this->assertYamlProperty($config_yaml_file, 'test_module.kitty_cat_type');
-    $this->assertYamlProperty($config_yaml_file, 'type', 'config_entity');
-    $this->assertYamlProperty($config_yaml_file, 'label', 'Kitty Cat Type');
+    $yaml_tester = new YamlTester($config_yaml_file);
+    $yaml_tester->assertHasProperty('test_module.kitty_cat_type');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type', 'type'], 'config_entity');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type', 'label'], 'Kitty Cat Type');
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'foo']);
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'colour']);
   }
 
 }
