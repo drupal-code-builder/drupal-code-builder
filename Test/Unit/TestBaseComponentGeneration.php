@@ -16,6 +16,8 @@ use PhpParser\NodeVisitorAbstract;
 
 /**
  * Base class for unit tests that generate code and test the result.
+ *
+ * TODO: move PHP code analysis to a parsing test helper.
  */
 abstract class TestBaseComponentGeneration extends TestBase {
 
