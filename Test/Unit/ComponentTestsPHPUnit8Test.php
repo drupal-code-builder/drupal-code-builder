@@ -188,7 +188,7 @@ class ComponentTestsPHPUnit8Test extends TestBaseComponentGeneration {
     );
 
     $files = $this->generateModuleFiles($module_data);
-    $this->assertCount(5, $files, "The expected number of files is returned.");
+    $this->assertCount(7, $files, "The expected number of files is returned.");
 
     $this->assertArrayHasKey("generated_module.info.yml", $files, "The main module has a .info.yml file.");
     $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The main module has a plugin file.");
