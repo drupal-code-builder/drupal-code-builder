@@ -140,11 +140,16 @@ class PHPFile extends File {
     $current_namespace_pieces = explode('\\', $current_namespace);
 
     foreach ($class_code as &$line) {
-      // Skip lines which are a comment.
+      // Skip lines which are part of a comment block.
       if (preg_match('@^\s*\*@', $line)) {
         continue;
       }
+      // Skip lines which are a single comment.
       if (preg_match('@^\s*//@', $line)) {
+        continue;
+      }
+      // Skip PHPStorm variable typehints.
+      if (preg_match('@^\s*/\*\*@', $line)) {
         continue;
       }
 

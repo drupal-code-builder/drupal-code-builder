@@ -66,6 +66,12 @@ class ComponentPHPFile8Test extends TestBaseComponentGeneration {
         NULL,
         NULL,
       ],
+      'PHPStorm type' => [
+        // E.g. seen in hook_entity_type_build().
+        ' /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */',
+        NULL,
+        NULL,
+      ],
       'parameter typehint' => [
         'function myfunc(\Foo\Bar $param) {',
         'function myfunc(Bar $param) {',
