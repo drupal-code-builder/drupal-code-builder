@@ -91,6 +91,7 @@ class ConfigEntityType extends EntityTypeBase {
 
     $components["config/schema/%module.schema.yml"] = [
       'component_type' => 'YMLFile',
+      'line_break_between_blocks' => TRUE,
       'yaml_data' => [
         "%module.{$entity_config_key}"=> [
           'type' => 'config_entity',
