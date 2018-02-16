@@ -20,6 +20,12 @@ class YMLFile extends File {
         'default' => 6,
         'internal' => TRUE,
       ],
+      'line_break_between_blocks' => [
+        'label' => 'Whether to add line breaks between the top-level properties.',
+        'format' => 'boolean',
+        'default' => FALSE,
+        'internal' => TRUE,
+      ],
     ];
   }
 
@@ -74,11 +80,24 @@ class YMLFile extends File {
 
     $yaml_parser_inline_switch_level = $this->component_data['yaml_inline_level'];
 
-    $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, 2);
-    //drush_print_r($yaml);
+    if ($this->component_data['line_break_between_blocks']) {
+      $body = [];
 
-    // Because the yaml is all built for us, this is just a singleton array.
-    $body = array($yaml);
+      foreach (range(0, count($yaml_data_array) -1 ) as $index) {
+        $yaml_slice = array_slice($yaml_data_array, $index, 1);
+
+        // Each YAML piece comes with a terminal newline, so when these are
+        // joined there will be the desired blank line between each section.
+        $body[] = $yaml_parser->dump($yaml_slice, $yaml_parser_inline_switch_level, 2);
+      }
+    }
+    else {
+      $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, 2);
+
+      // Because the yaml is all built for us, this is just a singleton array.
+      $body = array($yaml);
+    }
+    //drush_print_r($yaml);
 
     return $body;
   }
