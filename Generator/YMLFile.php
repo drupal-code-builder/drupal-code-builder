@@ -12,13 +12,15 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
-  public function mergeComponentData($additional_component_data) {
-    parent::mergeComponentData($additional_component_data);
-
-    // The hacky yaml_inline_level property may not be an array!
-    if (isset($this->component_data['yaml_inline_level']) && is_array($this->component_data['yaml_inline_level'])) {
-      $this->component_data['yaml_inline_level'] = reset($this->component_data['yaml_inline_level']);
-    }
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'yaml_inline_level' => [
+        'label' => 'The level at which to switch YAML properties to inline formatting.',
+        'format' => 'string',
+        'default' => 6,
+        'internal' => TRUE,
+      ],
+    ];
   }
 
   /**
@@ -70,9 +72,7 @@ class YMLFile extends File {
   protected function getYamlBody($yaml_data_array) {
     $yaml_parser = new \Symfony\Component\Yaml\Yaml;
 
-    // TODO: document and declare this property.
-    $yaml_parser_inline_switch_level = $this->component_data['yaml_inline_level']
-      ?? 6;
+    $yaml_parser_inline_switch_level = $this->component_data['yaml_inline_level'];
 
     $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, 2);
     //drush_print_r($yaml);
