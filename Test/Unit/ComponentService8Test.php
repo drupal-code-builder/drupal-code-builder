@@ -97,6 +97,11 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $yaml_tester->assertHasProperty(['services', "$module_name.breadcrumb_builder"]);
     $yaml_tester->assertPropertyHasValue(['services', "$module_name.breadcrumb_builder", 'tags', 0, 'name'], 'breadcrumb_builder');
 
+    // The tags property is inlined.
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.breadcrumb_builder", 'tags']);
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.breadcrumb_builder", 'tags', 0]);
+    $yaml_tester->assertPropertyIsInlined(['services', "$module_name.breadcrumb_builder", 'tags', 0, 'name']);
+
     $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
 
