@@ -200,8 +200,7 @@ class Plugin extends PHPClassFileWithInjection {
         . $this->component_data['plugin_name'];
 
       $components["config/schema/%module.schema.yml"] = [
-        'component_type' => 'YMLFile',
-        'line_break_between_blocks' => TRUE,
+        'component_type' => 'ConfigSchema',
         'yaml_data' => [
            $schema_id => [
             'type' => 'mapping',
