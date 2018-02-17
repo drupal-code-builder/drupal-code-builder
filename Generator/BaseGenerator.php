@@ -353,22 +353,24 @@ abstract class BaseGenerator {
     // going into compound properties.
     $component_property_info = static::componentDataDefinition();
 
-    $this->component_data = array_merge_recursive($this->component_data, $additional_component_data);
-
-    // Unmerge any properties that aren't arrays.
-    // TODO: figure out how to do the merge properly rather than having to do
-    // this reversal.
+    // Only merge array properties.
     foreach ($component_property_info as $property_name => $property_info) {
-      // We're getting the component data direct, so it won't have default
-      // attributes filled in.
-      if (!isset($property_info['format']) || $property_info['format'] != 'array') {
-        if (isset($this->component_data[$property_name]) && is_array($this->component_data[$property_name])) {
-          $this->component_data[$property_name] = reset($this->component_data[$property_name]);
-
-          // We shouldn't have thrown any data away!
-          assert($this->component_data[$property_name] == $additional_component_data[$property_name]);
-        }
+      // Skip this property if there's nothing here.
+      if (!isset($this->component_data[$property_name]) && !isset($additional_component_data[$property_name])) {
+        continue;
       }
+
+      // We're getting the component data direct, so it won't have default
+      // attributes filled in: 'format' might not be set.
+      if (!isset($property_info['format']) || $property_info['format'] != 'array') {
+        // Don't merge this property, but check that we're not throwing away
+        // data from the additional data.
+        assert($this->component_data[$property_name] == $additional_component_data[$property_name]);
+
+        continue;
+      }
+
+      $this->component_data[$property_name] = array_merge_recursive($this->component_data[$property_name], $additional_component_data[$property_name]);
     }
   }
 
