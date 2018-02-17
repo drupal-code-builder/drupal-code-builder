@@ -6,6 +6,10 @@ namespace DrupalCodeBuilder\Generator;
  * Generator for general YML files.
  *
  * Expects an array of data to output as YAML in the 'yaml_data' property.
+ *
+ * Note that replacement tokens should be avoided in YAML properties, as the
+ * initial '%' causes the property to be quoted by the Symfony YAML dumper,
+ * apparently  unnecessarily once the token is replaced.
  */
 class YMLFile extends File {
 

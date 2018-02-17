@@ -80,6 +80,7 @@ class ConfigEntityType extends EntityTypeBase {
     $components = parent::requiredComponents();
 
     $entity_config_key = $this->component_data['entity_type_id'];
+    $module = $this->component_data['root_component_name'];
 
     $schema_properties_yml = [];
     foreach ($this->component_data['entity_properties'] as $schema_item) {
@@ -92,7 +93,7 @@ class ConfigEntityType extends EntityTypeBase {
     $components["config/schema/%module.schema.yml"] = [
       'component_type' => 'ConfigSchema',
       'yaml_data' => [
-        "%module.{$entity_config_key}"=> [
+        "{$module}.{$entity_config_key}"=> [
           'type' => 'config_entity',
           'label' => $this->component_data['entity_type_label'],
           'mapping' => $schema_properties_yml,

@@ -171,12 +171,13 @@ class PluginType extends BaseGenerator {
       'docblock_first_line' => "Base class for {$this->component_data['plugin_label']} plugins.",
     ];
 
+    $module = $this->component_data['root_component_name'];
     $components["%module.plugin_type.yml"] = [
       'component_type' => 'YMLFile',
       'yaml_data' => [
-        "%module.{$plugin_type}"=> [
+        "{$module}.{$plugin_type}"=> [
           'label' => $this->component_data['plugin_label'],
-          'provider' => '%module',
+          'provider' => $module,
           'plugin_manager_service_id' => "plugin.manager.{$plugin_type}",
           'plugin_definition_decorator_class' => 'Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator',
         ],
