@@ -36,6 +36,19 @@ class Hooks extends BaseGenerator {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'hooks' => [
+        'label' => 'Hook implementations',
+        'required' => FALSE,
+        'format' => 'array',
+      ],
+    ];
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.
