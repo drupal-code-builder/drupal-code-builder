@@ -95,4 +95,44 @@ class ComponentConfigEntityType8Test extends TestBaseComponentGeneration {
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'colour', 'label'], 'Colour');
   }
 
+  /**
+   * Test the formatting of the schema for multiple entity types.
+   */
+  public function testConfigEntityTypeSchemaFormatting() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'config_entity_types' => [
+        0 => [
+          'entity_type_id' => 'alpha',
+          'entity_properties' => [
+            0 => [
+              'name' => 'breed',
+              'type' => 'string',
+            ],
+          ],
+        ],
+        1 => [
+          'entity_type_id' => 'beta',
+          'entity_properties' => [
+            0 => [
+              'name' => 'colour',
+              'type' => 'string',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+    $schema_file = $files['config/schema/test_module.schema.yml'];
+
+    $yaml_tester = new YamlTester($schema_file);
+    $yaml_tester->assertPropertyHasBlankLineBefore(['test_module.beta']);
+  }
+
 }
