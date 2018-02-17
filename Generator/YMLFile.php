@@ -14,6 +14,13 @@ namespace DrupalCodeBuilder\Generator;
 class YMLFile extends File {
 
   /**
+   * The value of the indent parameter to pass to the YAML dumper.
+   *
+   * @var int
+   */
+  const YAML_INDENT = 2;
+
+  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
@@ -97,11 +104,11 @@ class YMLFile extends File {
 
         // Each YAML piece comes with a terminal newline, so when these are
         // joined there will be the desired blank line between each section.
-        $body[] = $yaml_parser->dump($yaml_slice, $yaml_parser_inline_switch_level, 2);
+        $body[] = $yaml_parser->dump($yaml_slice, $yaml_parser_inline_switch_level, static::YAML_INDENT);
       }
     }
     else {
-      $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, 2);
+      $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, static::YAML_INDENT);
 
       // Because the yaml is all built for us, this is just a singleton array.
       $body = array($yaml);
