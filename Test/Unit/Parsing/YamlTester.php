@@ -67,11 +67,12 @@ class YamlTester {
    *   (optional) The assertion message.
    */
   public function assertHasProperty($property_address, $message = NULL) {
-    $message = $message ?? 'The YAML file has the expected property.';
-
     if (!is_array($property_address)) {
       $property_address = [$property_address];
     }
+
+    $property_string = $this->getPropertyString($property_address);
+    $message = $message ?? "The YAML file has the expected property $property_string.";
 
     Assert::assertTrue($this->keyExists($this->parsedYamlData, $property_address), $message);
   }
@@ -86,11 +87,12 @@ class YamlTester {
    *   (optional) The assertion message.
    */
   public function assertPropertyHasBlankLineBefore($property_address, $message = NULL) {
-    $message = $message ?? 'The property has a blank line before it.';
-
     if (!is_array($property_address)) {
       $property_address = [$property_address];
     }
+
+    $property_string = $this->getPropertyString($property_address);
+    $message = $message ?? "The property $property_string has a blank line before it.";
 
     $this->assertHasProperty($property_address);
 
@@ -113,11 +115,12 @@ class YamlTester {
    *   (optional) The assertion message.
    */
   public function assertPropertyHasValue($property_address, $expected_value, $message = NULL) {
-    $message = $message ?? 'The YAML file property has the expected value';
-
     if (!is_array($property_address)) {
       $property_address = [$property_address];
     }
+
+    $property_string = $this->getPropertyString($property_address);
+    $message = $message ?? "The YAML file property $property_string has the expected value";
 
     $actual_value = $this->getValue($this->parsedYamlData, $property_address);
 
@@ -292,4 +295,9 @@ class YamlTester {
     $key_exists = TRUE;
     return $ref;
   }
+
+  protected function getPropertyString($property_address) {
+    return implode(':', $property_address);
+  }
+
 }
