@@ -19,6 +19,13 @@ class YamlTester {
   protected $originalYaml;
 
   /**
+   * The YAML string as an array of lines.
+   *
+   * @var string[]
+   */
+  protected $originalYamlLines;
+
+  /**
    * The data array parsed from the given YAML.
    *
    * @var array
@@ -43,6 +50,7 @@ class YamlTester {
     // Now that parsing has worked, store the original and the parsed data
     // for subsequent assertions.
     $this->originalYaml = $yaml_code;
+    $this->originalYamlLines = explode("\n", $this->originalYaml);
     $this->parsedYamlData = $value;
 
     // dump($this->originalYaml);
@@ -66,6 +74,31 @@ class YamlTester {
     }
 
     Assert::assertTrue($this->keyExists($this->parsedYamlData, $property_address), $message);
+  }
+
+  /**
+   * Asserts the YAML property is formatted with a blank line before it.
+   *
+   * @param mixed $property_address
+   *   The address of the property. An array address for the property; may be
+   *   a scalar string for a top-level property.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertPropertyHasBlankLineBefore($property_address, $message = NULL) {
+    $message = $message ?? 'The property has a blank line before it.';
+
+    if (!is_array($property_address)) {
+      $property_address = [$property_address];
+    }
+
+    $this->assertHasProperty($property_address);
+
+    $line_index = $this->findYamlLine($property_address);
+
+    $previous_line = $this->originalYamlLines[$line_index - 1];
+
+    Assert::assertEmpty($previous_line, $message);
   }
 
   /**
@@ -149,7 +182,7 @@ class YamlTester {
     // Get an array of the original YAML lines, using string keys so that
     // we can use array_slice() on it without losing the line numbers.
     $yaml_string_lines = [];
-    foreach (explode("\n", $this->originalYaml) as $index => $line) {
+    foreach ($this->originalYamlLines as $index => $line) {
       $yaml_string_lines["line_{$index}"] = $line;
     }
 
