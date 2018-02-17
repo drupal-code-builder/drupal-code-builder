@@ -20,7 +20,7 @@ class ComponentService8Test extends TestBaseComponentGeneration {
   /**
    * Test generating a module with a service.
    */
-  public function testServiceGeneration() {
+  public function testBasicServiceGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = array(
