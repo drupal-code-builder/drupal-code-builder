@@ -295,4 +295,61 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $this->assertClass('MyServiceClass', $service_class_file, "The service file contains the service class.");
   }
 
+  /**
+   * Tests the right levels of YAML are inlined.
+   */
+  public function testServiceYamlFormatting() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          // We want both tags and services, as they need to be inlined at
+          // different levels.
+          'service_tag_type' => 'breadcrumb_builder',
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+        1 => [
+          'service_tag_type' => 'breadcrumb_builder',
+          'service_name' => 'beta',
+          'injected_services' => [
+            'entity_type.manager',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
+    $services_file = $files["$module_name.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "$module_name.alpha"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.alpha", 'tags', 0, 'name'], 'breadcrumb_builder');
+
+    // The arguments property is expanded, and items beneath that are inlined.
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.alpha", 'arguments']);
+    $yaml_tester->assertPropertyIsInlined(['services', "$module_name.alpha", 'arguments', 0]);
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.beta", 'arguments']);
+    $yaml_tester->assertPropertyIsInlined(['services', "$module_name.beta", 'arguments', 0]);
+
+    // Each tag is expanded, and properties of a tag are inlined.
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.alpha", 'tags']);
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.alpha", 'tags', 0]);
+    $yaml_tester->assertPropertyIsInlined(['services', "$module_name.alpha", 'tags', 0, 'name']);
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.beta", 'tags']);
+    $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.beta", 'tags', 0]);
+    $yaml_tester->assertPropertyIsInlined(['services', "$module_name.beta", 'tags', 0, 'name']);
+  }
+
 }
