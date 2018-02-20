@@ -41,7 +41,7 @@ class HookPermission extends HookImplementation {
    * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
-    // If we have no children, i.e. no RouterItem components, then hand over to
+    // If we have no children, i.e. no Permission components, then hand over to
     // the parent, which will output the default hook code.
     if (empty($children_contents)) {
       return parent::buildComponentContents($children_contents);
