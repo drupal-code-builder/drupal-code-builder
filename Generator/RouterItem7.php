@@ -13,12 +13,7 @@ class RouterItem7 extends BaseGenerator {
   /**
    * The unique name of this generator.
    *
-   * A generator's name is used as the key in the $components array.
-   *
-   * A RouterItem generator should use as its name its path.
-   *
-   * TODO: at what point do names start to clash and we need prefixes based on
-   * type???!!
+   * A D7 RouterItem generator should use as its name its path.
    */
   public $name;
 
