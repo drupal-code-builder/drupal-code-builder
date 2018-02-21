@@ -7,10 +7,8 @@ namespace DrupalCodeBuilder\Generator;
  *
  * This class covers Drupal 6 and 7, where it is purely an intermediary which
  * adds a HookMenu component.
- *
- * @see RouterItem
  */
-class RouterItem7 extends RouterItem {
+class RouterItem7 extends BaseGenerator {
 
   /**
    * The unique name of this generator.
@@ -42,6 +40,9 @@ class RouterItem7 extends RouterItem {
     // access, and get default strings in place that they can replace in
     // generated module code.
     $component_data += array(
+      // Use a default that can be selected with a single double-click, to make
+      // it easy to replace.
+      'title' => 'myPage',
       'page callback' => 'example_page',
       // These have to be a code string, not an actual array!
       'page arguments' => "array()",
