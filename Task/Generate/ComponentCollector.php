@@ -367,10 +367,11 @@ class ComponentCollector {
    *
    * @param &$component_data
    *  The component data array.
-   * @param $component_data_info
-   *  The component data info for the data being processed.
+   * @param &$component_data_info
+   *  The component data info for the data being processed. Passed by reference,
+   *  to allow property processing callbacks to make changes.
    */
-  protected function processComponentData(&$component_data, $component_data_info) {
+  protected function processComponentData(&$component_data, &$component_data_info) {
     // Set values forced by a preset.
     foreach ($component_data_info as $property_name => $property_info) {
       if (!isset($property_info['presets'])) {
@@ -414,14 +415,17 @@ class ComponentCollector {
     }
 
     // Set defaults and apply processing callbacks.
-    foreach ($component_data_info as $property_name => $property_info) {
+    foreach ($component_data_info as $property_name => &$property_info) {
       // Set defaults for properties that don't have a value yet.
       $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
 
       // Allow each property to apply its processing callback. Note that this
-      // may set or alter other properties in the component data array.
+      // may set or alter other properties in the component data array, and may
+      // also make changes to the property info.
       $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
     }
+    // Clear the loop reference, otherwise PHP does Bad Things.
+    unset($property_info);
 
     // Recurse into compound properties.
     // We do this last to allow the parent property to have default and
@@ -514,14 +518,15 @@ class ComponentCollector {
    * @param $property_name
    *  The name of the property. For child properties, this is the name of just
    *  the child property.
-   * @param $property_info
-   *  The property info array for the property.
+   * @param &$property_info
+   *  The property info array for the property. Passed by reference, as
+   *  the processing callback takes this by reference and may make changes.
    * @param &$component_data_local
    *  The array of component data, or for child properties, the item array that
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
    */
-  protected function applyComponentDataPropertyProcessing($property_name, $property_info, &$component_data_local) {
+  protected function applyComponentDataPropertyProcessing($property_name, &$property_info, &$component_data_local) {
     if (!isset($property_info['processing'])) {
       // No processing: nothing to do.
       return;
