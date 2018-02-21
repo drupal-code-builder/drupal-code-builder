@@ -306,13 +306,9 @@ class Module extends RootComponent {
         'component' => 'ThemeHook',
       ),
       'router_items' => array(
-        'label' => "Router paths",
-        'description' => "Router paths, eg 'path/foo'",
+        'label' => "Routes",
         'required' => FALSE,
-        'format' => 'array',
-        // This tells the system that this is a request for generator
-        // components, and the input data should be placed in a nested array in
-        // the module data.
+        'format' => 'compound',
         'component' => 'RouterItem',
       ),
       'api' => array(

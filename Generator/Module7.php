@@ -25,6 +25,14 @@ class Module7 extends Module {
     unset($component_data_definition['theme_hooks']);
     unset($component_data_definition['forms']);
 
+    $component_data_definition['router_items'] = [
+      'label' => "Menu paths",
+      'description' => "Paths for hook_menu(), eg 'path/foo'",
+      'required' => FALSE,
+      'format' => 'array',
+      'component' => 'RouterItem',
+    ];
+
     return $component_data_definition;
   }
 

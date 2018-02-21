@@ -56,7 +56,7 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'path'], '/admin/config/TODO-SECTION/testmodule', "The routing file declares the route path.");
     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_form'], '\Drupal\testmodule\Form\AdminSettingsForm', "The routing file declares the route form.");
     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_title'], 'Administer Test module', "The routing file declares the route title.");
-    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'TODO: set permission machine name', "The routing file declares the route permission.");
+    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'administer testmodule', "The routing file declares the route permission.");
 
     // Check the .permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
@@ -130,7 +130,9 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
        ),
        'settings_form' => TRUE,
        'router_items' => array(
-          'requested/route/path',
+          0 => [
+            'path' => 'requested/route/path',
+          ],
        ),
        'readme' => FALSE,
      );
@@ -145,7 +147,7 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
      $yaml_tester->assertPropertyHasValue([$expected_route_name, 'path'], '/admin/config/TODO-SECTION/testmodule', "The routing file declares the route path.");
      $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_form'], '\Drupal\testmodule\Form\AdminSettingsForm', "The routing file declares the route form.");
      $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_title'], 'Administer Test module', "The routing file declares the route title.");
-     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'TODO: set permission machine name', "The routing file declares the route permission.");
+     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'administer testmodule', "The routing file declares the route permission.");
 
      $yaml_tester->assertPropertyHasValue(['testmodule.requested.route.path', 'path'], "/requested/route/path", "The routing file declares the requested path.");
   }

@@ -27,10 +27,18 @@ class ComponentRouterItem8Test extends TestBaseComponentGeneration {
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'router_items' => array(
-        0 => 'my/path',
-        1 => 'my/other-path',
-      ),
+      'router_items' => [
+        0 => [
+          'path' => 'my/path',
+          'controller_type' => '_controller',
+          'access_type' => '_permission',
+        ],
+        1 => [
+          'path' => 'my/other-path',
+          'controller_type' => '_controller',
+          'access_type' => '_permission',
+        ],
+      ],
       'readme' => FALSE,
     );
 

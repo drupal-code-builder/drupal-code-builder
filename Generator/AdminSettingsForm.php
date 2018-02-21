@@ -28,14 +28,16 @@ class AdminSettingsForm extends Form {
     $form_name = $this->getFormName();
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
+      // OK to use a token here, as the YAML value for this will be quoted
+      // anyway.
+      'path' => 'admin/config/TODO-SECTION/%module',
       'title' => 'Administer %readable',
+      'controller_type' => '_form',
+      // TODO: this needs a menu link!
       'description' => 'Configure settings for %readable.',
-      // Suppress the router item producing a controller, as we have a form.
-      // TODO: pass the form details here.
-      'controller' => [
-        'controller_property' => '_form',
-        'controller_value' => '\\' . $this->component_data['qualified_class_name'],
-      ],
+      'controller_type_value' => '\\' . $this->component_data['qualified_class_name'],
+      'access_type' => '_permission',
+      'access_type_value' => 'administer %module',
     );
 
     $components['administer %module'] = array(

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
 
 /**
@@ -14,41 +15,105 @@ class RouterItem extends BaseGenerator {
   use NameFormattingTrait;
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * Properties in $component_data:
-   *  - controller: (optional) An array specifying the source for the route's
-   *    content. May contain:
-   *    - controller_property: (optional) The name of the property in the route
-   *      defaults that sets the controler. E.g, '_controller', '_entity_view'.
-   *    - controller_value: (optional) The corresponding value.
-   *    These default to the plain '_controller' with a controller class of
-   *   {ROUTE}Controller.
+   * {@inheritdoc}
    */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Create a controller name from the route path.
-    $snake = str_replace(['/', '-'], '_', $component_name);
-    $controller_class_name = CaseString::snake($snake)->pascal() . 'Controller';
-    // TODO: clean up, use helper.
-    $controller_qualified_class_name = implode('\\', [
-      'Drupal',
-      '%module',
-      'Controller',
-      $controller_class_name
-    ]);
-
-    $component_data += [
-      // Use a default that can be selected with a single double-click, to make
-      // it easy to replace.
-      'title' => 'myPage',
-      'controller' => [
-        'controller_property' => '_controller',
-        'controller_value' => '\\' . "$controller_qualified_class_name::content",
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'path' => [
+        'label' => "Route path",
+        'description' => "The path of the route. Do not include the initial '/'.",
+        'required' => TRUE,
       ],
-      'controller_relative_class' => ['Controller', $controller_class_name],
+      'title' => [
+        'label' => "The page title for the route.",
+        'default' => 'myPage',
+        'process_default' => TRUE,
+      ],
+      'controller_plain_class_name' => [
+        'internal' => TRUE,
+        'process_default' => TRUE,
+        'default' => function($component_data) {
+          // Create a controller name from the route path.
+          $snake = str_replace(['/', '-'], '_', $component_data['path']);
+          $controller_class_name = CaseString::snake($snake)->pascal() . 'Controller';
+          return $controller_class_name;
+        },
+      ],
+      'controller_relative_class_name_pieces' => [
+        'internal' => TRUE,
+        'process_default' => TRUE,
+        'default' => function($component_data) {
+          return ['Controller', $component_data['controller_plain_class_name']];
+        },
+      ],
+      'controller_qualified_class_name' => [
+        'internal' => TRUE,
+        'process_default' => TRUE,
+        'default' => function($component_data) {
+          return implode('\\', [
+            'Drupal',
+            '%module',
+            'Controller',
+            $component_data['controller_plain_class_name'],
+          ]);
+        },
+      ],
+      'controller_type' => [
+        'label' => "Controller type",
+        'options' => [
+          '_controller' => 'Controller class',
+          '_form' => 'Form',
+          '_entity_view' => 'Entity view mode',
+          '_entity_form' => 'Entity form',
+          '_entity_list' => 'Entity list',
+        ],
+        'yaml_address' => ['defaults'],
+      ],
+      // The value for the YAML property that's set in controller_type.
+      // This is a bit fiddly, but there's no UI for a key-value pair.
+      'controller_type_value' => [
+        'internal' => TRUE,
+        'default' => function ($component_data) {
+          $lookup = [
+            // This will contain a placeholder token, but it's ok to use here as
+            // the value will be quoted in the rendered YAML anyway.
+            '_controller' => '\\' . $component_data['controller_qualified_class_name'] . '::content',
+            '_form' => 'Drupal\%module\Form\MyFormClass',
+            '_entity_view' => 'ENTITY_TYPE.VIEW_MODE',
+            '_entity_form' => 'ENTITY_TYPE.FORM_MODE',
+            '_entity_list' => 'ENTITY_TYPE',
+          ];
+          if (isset($component_data['controller_type'])) {
+            return $lookup[$component_data['controller_type']];
+          }
+        },
+      ],
+      'access_type' => [
+        'label' => "Access type",
+        'options' => [
+          '_accesss' => 'No access control',
+          '_permission' => 'Permission',
+          'role' => 'Role',
+          '_entity_access' => 'Entity access',
+        ],
+        'yaml_address' => ['requirements'],
+      ],
+      // The value for the YAML property that's set in access_type.
+      'access_type_value' => [
+        'internal' => TRUE,
+        'default' => function ($component_data) {
+          $lookup = [
+            '_accesss' => 'TRUE',
+            '_permission' => 'TODO: set permission machine name',
+            'role' => 'authenticated',
+            '_entity_access' => 'ENTITY_TYPE.OPERATION',
+          ];
+          if (isset($component_data['access_type'])) {
+            return $lookup[$component_data['access_type']];
+          }
+        },
+      ],
     ];
-
-    parent::__construct($component_name, $component_data, $root_generator);
   }
 
   /**
@@ -66,11 +131,10 @@ class RouterItem extends BaseGenerator {
       'component_type' => 'Routing',
     );
 
-    $controller_relative_class = $this->component_data['controller_relative_class'];
+    $controller_relative_class = $this->component_data['controller_relative_class_name_pieces'];
 
     // Add a controller class if needed.
-    if (!empty($this->component_data['controller']['controller_property'])
-        && $this->component_data['controller']['controller_property'] == '_controller') {
+    if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == '_controller') {
       $components[implode('\\', $controller_relative_class)] = array(
         'component_type' => 'PHPClassFile',
         'relative_class_name' => $controller_relative_class,
@@ -91,23 +155,43 @@ class RouterItem extends BaseGenerator {
    * {@inheritdoc}
    */
   public function buildComponentContents($children_contents) {
-    $path = $this->name;
-    $route_name = str_replace('/', '.', $path);
+    $path = $this->component_data['path'];
 
-    $route_defaults = [];
-    if (!empty($this->component_data['controller']['controller_property'])) {
-      $route_defaults[$this->component_data['controller']['controller_property']] = $this->component_data['controller']['controller_value'];
+    $route_yaml = [];
+
+    // Prepend a slash to the path for D8.
+    $route_yaml['path'] = '/' . $path;
+    $route_yaml['defaults']['_title'] = $this->component_data['title'];
+
+    // Set the YAML values that come from component data with an address.
+    $yaml_data_component_properties = [
+      'controller_type',
+      'access_type',
+    ];
+    foreach ($yaml_data_component_properties as $component_property_name) {
+      if (empty($this->component_data[$component_property_name])) {
+        continue;
+      }
+
+      // The value for the property is the YAML key; the YAML value is given in
+      // a companion property called PROPERTY_value; the 'yaml_address'
+      // attribute in the property's info defines where in the YAML structure
+      // the key and value should be inserted.
+      $yaml_key = $this->component_data[$component_property_name];
+
+      $yaml_value = $this->component_data["{$component_property_name}_value"];
+
+      // Bit of a hack: instantiated generators don't have access to their
+      // processed data info.
+      $property_info = static::componentDataDefinition()[$component_property_name];
+      $property_address = $property_info['yaml_address'];
+      $property_address[] = $yaml_key;
+
+      NestedArray::setValue($route_yaml, $property_address, $yaml_value);
     }
-    $route_defaults['_title'] = $this->component_data['title'];
 
-    $routing_data['%module.' . $route_name] = array(
-      // Prepend a slash to the path for D8.
-      'path' => '/' . $path,
-      'defaults' => $route_defaults,
-      'requirements' => array(
-        '_permission' => 'TODO: set permission machine name',
-      ),
-    );
+    $route_name = str_replace('/', '.', $path);
+    $routing_data['%module.' . $route_name] = $route_yaml;
 
     return [
       'route' => [
