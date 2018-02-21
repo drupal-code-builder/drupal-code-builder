@@ -190,8 +190,11 @@ class RouterItem extends BaseGenerator {
       NestedArray::setValue($route_yaml, $property_address, $yaml_value);
     }
 
-    $route_name = str_replace('/', '.', $path);
-    $routing_data['%module.' . $route_name] = $route_yaml;
+    // Get the module name rather than using the token, to avoid the property
+    // name getting quoted.
+    $module = $this->component_data['root_component_name'];
+    $route_name = $module . '.' . str_replace('/', '.', $path);
+    $routing_data[$route_name] = $route_yaml;
 
     return [
       'route' => [
