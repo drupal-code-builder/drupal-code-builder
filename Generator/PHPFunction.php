@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
+
 /**
  * Generator base class for functions.
  *

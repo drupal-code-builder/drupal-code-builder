@@ -1,6 +1,6 @@
 <?php
 
-namespace DrupalCodeBuilder\Generator;
+namespace DrupalCodeBuilder\Generator\FormattingTrait;
 
 /**
  * Trait for PHP formatting.
