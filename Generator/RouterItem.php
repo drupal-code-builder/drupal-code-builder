@@ -61,11 +61,13 @@ class RouterItem extends BaseGenerator {
       'controller_type' => [
         'label' => "Controller type",
         'options' => [
-          '_controller' => 'Controller class',
-          '_form' => 'Form',
-          '_entity_view' => 'Entity view mode',
-          '_entity_form' => 'Entity form',
-          '_entity_list' => 'Entity list',
+          // These are all YAML keys that take an initial '_', but having that
+          // in the option key makes it harder to enter in the Drush UI.
+          'controller' => 'Controller class',
+          'form' => 'Form',
+          'entity_view' => 'Entity view mode',
+          'entity_form' => 'Entity form',
+          'entity_list' => 'Entity list',
         ],
         'yaml_address' => ['defaults'],
       ],
@@ -77,11 +79,11 @@ class RouterItem extends BaseGenerator {
           $lookup = [
             // This will contain a placeholder token, but it's ok to use here as
             // the value will be quoted in the rendered YAML anyway.
-            '_controller' => '\\' . $component_data['controller_qualified_class_name'] . '::content',
-            '_form' => 'Drupal\%module\Form\MyFormClass',
-            '_entity_view' => 'ENTITY_TYPE.VIEW_MODE',
-            '_entity_form' => 'ENTITY_TYPE.FORM_MODE',
-            '_entity_list' => 'ENTITY_TYPE',
+            'controller' => '\\' . $component_data['controller_qualified_class_name'] . '::content',
+            'form' => 'Drupal\%module\Form\MyFormClass',
+            'entity_view' => 'ENTITY_TYPE.VIEW_MODE',
+            'entity_form' => 'ENTITY_TYPE.FORM_MODE',
+            'entity_list' => 'ENTITY_TYPE',
           ];
           if (isset($component_data['controller_type'])) {
             return $lookup[$component_data['controller_type']];
@@ -91,10 +93,10 @@ class RouterItem extends BaseGenerator {
       'access_type' => [
         'label' => "Access type",
         'options' => [
-          '_accesss' => 'No access control',
-          '_permission' => 'Permission',
+          'accesss' => 'No access control',
+          'permission' => 'Permission',
           'role' => 'Role',
-          '_entity_access' => 'Entity access',
+          'entity_access' => 'Entity access',
         ],
         'yaml_address' => ['requirements'],
       ],
@@ -103,10 +105,10 @@ class RouterItem extends BaseGenerator {
         'internal' => TRUE,
         'default' => function ($component_data) {
           $lookup = [
-            '_accesss' => 'TRUE',
-            '_permission' => 'TODO: set permission machine name',
+            'accesss' => 'TRUE',
+            'permission' => 'TODO: set permission machine name',
             'role' => 'authenticated',
-            '_entity_access' => 'ENTITY_TYPE.OPERATION',
+            'entity_access' => 'ENTITY_TYPE.OPERATION',
           ];
           if (isset($component_data['access_type'])) {
             return $lookup[$component_data['access_type']];
@@ -134,7 +136,7 @@ class RouterItem extends BaseGenerator {
     $controller_relative_class = $this->component_data['controller_relative_class_name_pieces'];
 
     // Add a controller class if needed.
-    if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == '_controller') {
+    if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == 'controller') {
       $components[implode('\\', $controller_relative_class)] = array(
         'component_type' => 'PHPClassFile',
         'relative_class_name' => $controller_relative_class,
@@ -173,11 +175,11 @@ class RouterItem extends BaseGenerator {
         continue;
       }
 
-      // The value for the property is the YAML key; the YAML value is given in
-      // a companion property called PROPERTY_value; the 'yaml_address'
-      // attribute in the property's info defines where in the YAML structure
-      // the key and value should be inserted.
-      $yaml_key = $this->component_data[$component_property_name];
+      // The value for the property is the YAML key without the initial '_'; the
+      // YAML value is given in a companion property called PROPERTY_value; the
+      // 'yaml_address' attribute in the property's info defines where in the
+      // YAML structure the key and value should be inserted.
+      $yaml_key = '_' . $this->component_data[$component_property_name];
 
       $yaml_value = $this->component_data["{$component_property_name}_value"];
 

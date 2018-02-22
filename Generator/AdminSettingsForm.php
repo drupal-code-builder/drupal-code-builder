@@ -32,11 +32,11 @@ class AdminSettingsForm extends Form {
       // anyway.
       'path' => 'admin/config/TODO-SECTION/%module',
       'title' => 'Administer %readable',
-      'controller_type' => '_form',
+      'controller_type' => 'form',
       // TODO: this needs a menu link!
       'description' => 'Configure settings for %readable.',
       'controller_type_value' => '\\' . $this->component_data['qualified_class_name'],
-      'access_type' => '_permission',
+      'access_type' => 'permission',
       'access_type_value' => 'administer %module',
     );
 

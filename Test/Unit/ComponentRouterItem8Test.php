@@ -30,13 +30,13 @@ class ComponentRouterItem8Test extends TestBaseComponentGeneration {
       'router_items' => [
         0 => [
           'path' => 'my/path',
-          'controller_type' => '_controller',
-          'access_type' => '_permission',
+          'controller_type' => 'controller',
+          'access_type' => 'permission',
         ],
         1 => [
           'path' => 'my/other-path',
-          'controller_type' => '_controller',
-          'access_type' => '_permission',
+          'controller_type' => 'controller',
+          'access_type' => 'permission',
         ],
       ],
       'readme' => FALSE,
