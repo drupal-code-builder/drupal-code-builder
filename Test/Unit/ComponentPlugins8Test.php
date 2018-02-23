@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the Plugins generator class.
@@ -70,8 +71,11 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
-    $this->assertYamlProperty($config_yaml_file, 'block.settings.test_module_alpha');
-    // TODO: assert deeper into the YAML once the assertion can do this.
+    $yaml_tester = new YamlTester($config_yaml_file);
+    $yaml_tester->assertHasProperty('block.settings.test_module_alpha');
+    $yaml_tester->assertPropertyHasValue(['block.settings.test_module_alpha', 'type'], 'mapping');
+    $yaml_tester->assertPropertyHasValue(['block.settings.test_module_alpha', 'label'], 'test_module_alpha');
+    $yaml_tester->assertPropertyHasValue(['block.settings.test_module_alpha', 'mapping'], []);
   }
 
   /**
