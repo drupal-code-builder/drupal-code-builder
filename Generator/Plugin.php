@@ -65,9 +65,6 @@ class Plugin extends PHPClassFileWithInjection {
       'injected_services' => [],
     );
 
-    // Prefix the plugin name with the module name.
-    $component_data['plugin_name'] = $component_data['root_component_name'] . '_' . $component_data['plugin_name'];
-
     $plugin_type = $component_data['plugin_type'];
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
@@ -158,6 +155,9 @@ class Plugin extends PHPClassFileWithInjection {
           $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
 
           return $component_data['plugin_type'] . '_' . $formatter->format($counters[$plugin_type]);
+        },
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          $component_data['plugin_name'] = $component_data['root_component_name'] . '_' . $component_data['plugin_name'];
         },
       ),
       'injected_services' => array(
