@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the Plugins generator class.
@@ -47,14 +48,12 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
-    $this->assertWellFormedPHP($plugin_file);
-    $this->assertDrupalCodingStandards($plugin_file);
 
-    $this->parseCode($plugin_file);
-    $this->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
-    $this->assertClassHasParent('Drupal\Core\Block\BlockBase');
+    $php_tester = new PHPTester($plugin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
 
-    $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
     $this->assertClassFileFormatting($plugin_file);
 
     $expected_annotation_properties = [
