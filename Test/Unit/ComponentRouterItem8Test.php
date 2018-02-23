@@ -75,6 +75,7 @@ class ComponentRouterItem8Test extends TestBaseComponentGeneration {
 
     $this->parseCode($controller_file);
     $this->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
+    $this->assertHasMethod('content');
   }
 
 }
