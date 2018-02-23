@@ -24,6 +24,16 @@ class RouterItem extends BaseGenerator {
         'description' => "The path of the route. Do not include the initial '/'.",
         'required' => TRUE,
       ],
+      'route_name' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          // Get the module name rather than using the token, to avoid the
+          // property name getting quoted.
+          $module = $component_data['root_component_name'];
+          $route_name = $module . '.' . str_replace('/', '.', $component_data['path']);
+          return $route_name;
+        },
+      ],
       'title' => [
         'label' => "The page title for the route.",
         'default' => 'myPage',
@@ -192,10 +202,7 @@ class RouterItem extends BaseGenerator {
       NestedArray::setValue($route_yaml, $property_address, $yaml_value);
     }
 
-    // Get the module name rather than using the token, to avoid the property
-    // name getting quoted.
-    $module = $this->component_data['root_component_name'];
-    $route_name = $module . '.' . str_replace('/', '.', $path);
+    $route_name = $this->component_data['route_name'];
     $routing_data[$route_name] = $route_yaml;
 
     return [
