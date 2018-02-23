@@ -82,8 +82,7 @@ class PHPClassFile extends PHPFile {
       ],
       'docblock_first_line' => [
         'format' => 'string',
-        // May be set by requesters, but not by UIs.
-        'computed' => TRUE,
+        'internal' => TRUE,
         'default' => function($component_data) {
           return 'TODO: class docs.';
         },
