@@ -17,7 +17,7 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
   /**
    * Test Plugin Type component.
    */
-  function testPluginTypeGeneration() {
+  function testBasicPluginTypeGeneration() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
