@@ -139,7 +139,10 @@ class PluginType extends BaseGenerator {
       'component_type' => 'AnnotationClass',
       'relative_class_name' => ['Annotation', $this->component_data['annotation_class']],
       'parent_class_name' => '\Drupal\Component\Annotation\Plugin',
-      'docblock_first_line' => "Defines the {$this->component_data['plugin_label']} plugin annotation object.",
+      'class_docblock_lines' => [
+        "Defines the {$this->component_data['plugin_label']} plugin annotation object.",
+        "Plugin namespace: {$this->component_data['plugin_relative_namespace']}.",
+      ],
       // TODO: Some annotation properties such as ID and label.
     ];
 

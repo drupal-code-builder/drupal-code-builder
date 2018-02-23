@@ -19,19 +19,16 @@ class AnnotationClass extends PHPClassFile {
     ];
   }
 
-  protected function class_doc_block() {
-    $docblock_code = [];
+  /**
+   * {@inheritdoc}
+   */
+  protected function getClassDocBlockLines() {
+    $lines = parent::getClassDocBlockLines();
 
-    $docblock_code[] = $this->component_data['docblock_first_line'];
-    $docblock_code[] = "";
-    // TODO: this is specific to plugins. Cleaning this up will require being
-    // able to pass more class docs in than the first line.
-    $docblock_code[] = "Plugin namespace: {$this->component_data['plugin_relative_namespace']}.";
-    $docblock_code[] = "";
+    $lines[] = "";
+    $lines[] = "@Annotation";
 
-    $docblock_code[] = "@Annotation";
-
-    return $this->docBlock($docblock_code);
+    return $lines;
   }
 
   /**
