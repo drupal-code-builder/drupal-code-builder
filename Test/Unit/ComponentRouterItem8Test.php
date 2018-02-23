@@ -73,8 +73,8 @@ class ComponentRouterItem8Test extends TestBaseComponentGeneration {
     $this->assertNoTrailingWhitespace($controller_file, "The controller file contains no trailing whitespace.");
     $this->assertClassFileFormatting($controller_file);
 
-    $this->assertNamespace(['Drupal', $module_name, 'Controller'], $controller_file, "The controller file contains contains the expected namespace.");
-    $this->assertClass('MyPathController', $controller_file, "The controller file contains the controller class.");
+    $this->parseCode($controller_file);
+    $this->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
   }
 
 }
