@@ -53,6 +53,10 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
+    // Interface methods.
+    $php_tester->assertHasMethod('blockForm');
+    $php_tester->assertHasMethod('blockValidate');
+    $php_tester->assertHasMethod('blockForm');
 
     $this->assertClassFileFormatting($plugin_file);
 
@@ -63,11 +67,6 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
       'category' => NULL,
     ];
     $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
-
-    // Interface methods.
-    $this->assertMethod('blockForm', $plugin_file);
-    $this->assertMethod('blockValidate  ', $plugin_file);
-    $this->assertMethod('blockForm', $plugin_file);
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
