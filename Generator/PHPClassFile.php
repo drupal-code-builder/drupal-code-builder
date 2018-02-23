@@ -80,12 +80,21 @@ class PHPClassFile extends PHPFile {
           return implode('/', $path_pieces);
         },
       ],
+      // Deprecated: use class_docblock_lines instead.
       'docblock_first_line' => [
         'format' => 'string',
         'internal' => TRUE,
         'default' => function($component_data) {
           return 'TODO: class docs.';
         },
+      ],
+      // Lines for the class docblock.
+      // If there is more than one line, a blank link is inserted automatically
+      // after the first one.
+      'class_docblock_lines' => [
+        'format' => 'array',
+        'internal' => TRUE,
+        // No default, as most generators don't use this yet.
       ],
       'abstract' => [
         'label' => 'Abstract',
@@ -196,10 +205,41 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Procudes the docblock for the class.
+   * Gets the bare lines to format as the docblock.
+   *
+   * @return string[]
+   *   An array of lines.
+   */
+  protected function getClassDocBlockLines() {
+    if (!empty($this->component_data['class_docblock_lines'])) {
+      $lines = $this->component_data['class_docblock_lines'];
+
+      if (count($lines) > 1) {
+        // If there is more than one line, splice in a blank line after the
+        // first one.
+        array_splice($lines, 1, 0, '');
+      }
+    }
+    elseif (!empty($this->component_data['docblock_first_line'])) {
+      $lines = $this->component_data['docblock_first_line'];
+    }
+
+    return $lines;
+  }
+
+  /**
+   * Produces the formatted docblock lines for the class.
+   *
+   * TODO: change all overrides of this to getClassDocBlockLines() instead,
+   * then fold this into the caller.
+   *
+   * @return string[]
+   *   An array of docblock formatted lines.
    */
   protected function class_doc_block() {
-    return $this->docBlock($this->component_data['docblock_first_line']);
+    $lines = $this->getClassDocBlockLines();
+
+    return $this->docBlock($lines);
   }
 
   /**
