@@ -336,6 +336,31 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
+   * Asserts that the class's docblock contains the given line.
+   *
+   * @param string $line
+   *   The line to search for, without the docblock formatting, i.e. without
+   *   the '*' or margin space. Indented lines will need to include their
+   *   indentation, however.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertClassDocBlockHasLine($line, $message = NULL) {
+    // All the class files we generate contain only one class.
+    $this->assertCount(1, $this->parser_nodes['classes']);
+    $class_node = reset($this->parser_nodes['classes']);
+    $docblock_text = $class_node->getAttribute('comments')[0]->getText();
+    $docblock_lines = explode("\n", $docblock_text);
+
+    // Trim off the docblock formatting.
+    array_walk($docblock_lines, function(&$line) {
+      $line = str_replace(" * ", '', $line);
+    });
+
+    $this->assertContains($line, $docblock_lines, $message);
+  }
+
+  /**
    * Asserts the parsed code defines the interface.
    *
    * @param string $full_interface_name
