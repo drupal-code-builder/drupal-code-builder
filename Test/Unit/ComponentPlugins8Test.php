@@ -19,7 +19,7 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
   /**
    * Test Plugins component.
    */
-  function testPluginsGeneration() {
+  function testBasicPluginsGeneration() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
