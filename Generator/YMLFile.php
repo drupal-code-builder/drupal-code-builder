@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Utility\NestedArray;
+
 /**
  * Generator for general YML files.
  *
@@ -207,7 +209,7 @@ class YMLFile extends File {
 
       foreach ($properties_to_expand as $property) {
         // Get the value for the property.
-        $value = $this->getValue($yaml_data_array, $property);
+        $value = NestedArray::getValue($yaml_data_array, $property);
         // Create a YAML subarray that has the key for the value.
         $key = end($property);
         $yaml_data_sub_array = [
@@ -238,30 +240,6 @@ class YMLFile extends File {
         $yaml = str_replace($original, $replacement, $yaml);
       }
     }
-  }
-
-  /**
-   * Copy of Drupal's NestedArray::getValue().
-   *
-   * We want to be able to run unit tests without Drupal present, and the
-   * component that NestedArray is a part of has loads of stuff we don't need.
-   * Also, I have no idea whether Composer would try to install the Drupal
-   * component on Drupa, and how Drupal would feel about that if so.
-   */
-  protected function &getValue(array &$array, array $parents, &$key_exists = NULL) {
-    $ref =& $array;
-    foreach ($parents as $parent) {
-      if (is_array($ref) && array_key_exists($parent, $ref)) {
-        $ref =& $ref[$parent];
-      }
-      else {
-        $key_exists = FALSE;
-        $null = NULL;
-        return $null;
-      }
-    }
-    $key_exists = TRUE;
-    return $ref;
   }
 
 }
