@@ -10,11 +10,6 @@ class Form extends PHPClassFileWithInjection {
   protected $hasStaticFactoryMethod = TRUE;
 
   /**
-   * An array of data about injected services.
-   */
-  protected $injectedServices = [];
-
-  /**
    * Return a unique ID for this component.
    *
    * @return

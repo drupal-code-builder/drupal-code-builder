@@ -44,11 +44,6 @@ class Plugin extends PHPClassFileWithInjection {
   public $name;
 
   /**
-   * An array of data about injected services.
-   */
-  protected $injectedServices = [];
-
-  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name

@@ -15,6 +15,11 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected $hasStaticFactoryMethod = FALSE;
 
   /**
+   * An array of data about injected services.
+   */
+  protected $injectedServices = [];
+
+  /**
    * The parameters for the base class.
    *
    * These parameters are passed to create() after the container, and then
