@@ -7,6 +7,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Service component.
+ *
+ * @group yaml
  */
 class ComponentService8Test extends TestBaseComponentGeneration {
 

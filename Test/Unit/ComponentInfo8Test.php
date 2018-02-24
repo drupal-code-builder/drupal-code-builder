@@ -6,6 +6,8 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests for Info component.
+ *
+ * @group yaml
  */
 class ComponentInfo8Test extends TestBaseComponentGeneration {
 

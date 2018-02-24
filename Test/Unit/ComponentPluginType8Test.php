@@ -4,6 +4,8 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the Plugin Type generator class.
+ *
+ * @group yaml
  */
 class ComponentPluginType8Test extends TestBaseComponentGeneration {
 

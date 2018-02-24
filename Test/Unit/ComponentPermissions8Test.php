@@ -4,6 +4,8 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Tests the Permissions generator class.
+ *
+ * @group yaml
  */
 class ComponentPermissions8Test extends TestBaseComponentGeneration {
 
