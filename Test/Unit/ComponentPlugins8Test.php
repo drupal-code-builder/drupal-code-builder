@@ -411,9 +411,12 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
-    $this->assertYamlProperty($config_yaml_file, 'block.settings.test_module_alpha');
-    $this->assertYamlProperty($config_yaml_file, 'test_module.cake');
-    // TODO: assert deeper into the YAML once the assertion can do this.
+
+    $yaml_tester = new YamlTester($config_yaml_file);
+    $yaml_tester->assertHasProperty('block.settings.test_module_alpha');
+    $yaml_tester->assertHasProperty('test_module.cake');
+    $yaml_tester->assertPropertyHasBlankLineBefore(['block.settings.test_module_alpha']);
+    // TODO: assert deeper into the YAML.
   }
 
 }
