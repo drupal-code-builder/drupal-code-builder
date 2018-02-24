@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+
 /**
  * Tests for Hooks component.
  */
@@ -112,10 +114,10 @@ class ComponentHooks8Test extends TestBaseComponentGeneration {
     // Check the .info file.
     $info_file = $files["$module_name.info.yml"];
 
-    $this->assertNoTrailingWhitespace($info_file, "The info file contains no trailing whitespace.");
-    $this->assertYamlProperty($info_file, 'name', $module_data['readable_name'], "The info file declares the module name.");
-    $this->assertYamlProperty($info_file, 'description', $module_data['short_description'], "The info file declares the module description.");
-    $this->assertYamlProperty($info_file, 'core', "8.x", "The info file declares the core version.");
+    $yaml_tester = new YamlTester($info_file);
+    $yaml_tester->assertPropertyHasValue('name', $module_data['readable_name']);
+    $yaml_tester->assertPropertyHasValue('description', $module_data['short_description']);
+    $yaml_tester->assertPropertyHasValue('core', '8.x');
   }
 
 }
