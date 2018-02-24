@@ -23,7 +23,7 @@ class Permission extends BaseGenerator {
   function __construct($component_name, $component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
-      // TEMPORARY. Will change when repeat component handling changes in
+      // The array property value is set at the component name by
       // processComponentData().
       'permission' => $component_name,
     );
