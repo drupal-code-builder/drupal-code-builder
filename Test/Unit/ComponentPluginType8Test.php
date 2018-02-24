@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+
 /**
  * Tests the Plugin Type generator class.
  *
@@ -116,19 +118,24 @@ class ComponentPluginType8Test extends TestBaseComponentGeneration {
     $this->parseCode($plugin_interface_file);
     $this->assertHasInterface('Drupal\test_module\Plugin\CatFeeder\CatFeederInterface');
 
-    // TODO! test further file contents!
+    // Check the services file.
+    $services_file = $files["$module_name.services.yml"];
 
-    /*
-    $file_names = array_keys($files);
-    dump($file_names);
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_cat_feeder"]);
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'class'], 'Drupal\test_module\CatFeederManager');
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'parent'], "default_plugin_manager");
 
-    dump($files['src/CatFeederManager.php']);
-    dump($files['src/Annotation/CatFeeder.php']);
-    dump($files['src/Plugin/CatFeeder/CatFeederBase.php']);
-    dump($files['src/Plugin/CatFeeder/CatFeederInterface.php']);
-    dump($files['test_module.services.yml']);
-    dump($files['test_module.plugin_type.yml']);
-    */
+    // Check the plugin type file.
+    $plugin_type_file = $files['test_module.plugin_type.yml'];
+
+    $yaml_tester = new YamlTester($plugin_type_file);
+    $yaml_tester->assertHasProperty('test_module.cat_feeder');
+    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'label'], 'Cat Feeder');
+    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'provider'], 'test_module');
+    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'plugin_manager_service_id'], 'plugin.manager.test_module_cat_feeder');
+    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'plugin_definition_decorator_class'], 'Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator');
   }
 
   /**
