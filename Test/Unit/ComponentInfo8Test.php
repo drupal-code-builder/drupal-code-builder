@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use Symfony\Component\Yaml\Yaml;
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Info component.
@@ -40,11 +40,11 @@ class ComponentInfo8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .module file.");
 
     $info_file = $files["$module_name.info.yml"];
-    $this->assertNoTrailingWhitespace($info_file);
 
-    $this->assertYamlProperty($info_file, 'name', 'Test Module');
-    $this->assertYamlProperty($info_file, 'type', 'module');
-    $this->assertYamlProperty($info_file, 'core', '8.x');
+    $yaml_tester = new YamlTester($info_file);
+    $yaml_tester->assertPropertyHasValue('name', 'Test Module');
+    $yaml_tester->assertPropertyHasValue('type', 'module');
+    $yaml_tester->assertPropertyHasValue('core', '8.x');
 
     // Test optional info properties.
     $module_data = array(
@@ -64,14 +64,12 @@ class ComponentInfo8Test extends TestBaseComponentGeneration {
 
     $info_file = $files["$module_name.info.yml"];
 
-    $this->assertYamlProperty($info_file, 'name', 'Test Module');
-    $this->assertYamlProperty($info_file, 'type', 'module');
-    $this->assertYamlProperty($info_file, 'description', 'Test Module description');
-    $this->assertYamlProperty($info_file, 'package', 'Test Package');
-
-    // Array property is too complex for assertYamlProperty().
-    $info_array = Yaml::parse($info_file);
-    $this->assertArraySubset(['dependencies' => ['node', 'block']], $info_array, "The info file has the correct dependencies.");
+    $yaml_tester = new YamlTester($info_file);
+    $yaml_tester->assertPropertyHasValue('name', 'Test Module');
+    $yaml_tester->assertPropertyHasValue('type', 'module');
+    $yaml_tester->assertPropertyHasValue('description', 'Test Module description');
+    $yaml_tester->assertPropertyHasValue('package', 'Test Package');
+    $yaml_tester->assertPropertyHasValue('dependencies', ['node', 'block']);
   }
 
 }
