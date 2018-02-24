@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains generator classes for module PHP files.
- */
-
 namespace DrupalCodeBuilder\Generator;
 
 /**
