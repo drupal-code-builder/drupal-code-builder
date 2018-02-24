@@ -721,37 +721,4 @@ abstract class TestBase extends TestCase {
     $this->assertRegExp($expected_regex, $string, $message);
   }
 
-  /**
-   * Assert a string contains a YAML property.
-   *
-   * @param $string
-   *  The text to check.
-   * @param $property
-   *  The property name, e.g. 'core'.
-   * @param $value
-   *  (optional) The value to check, e.g., '7.x'. If NULL or omitted, the value
-   *  is not checked for and the property name is expected to be the only thing
-   *  on its line.
-   * @param $message = NULL
-   *  The assertion message.
-   */
-  function assertYamlProperty($string, $property, $value = NULL, $message = NULL) {
-    if (!isset($message)) {
-      $message = "YAML contains the {$property} property.";
-    }
-
-    // Quote the given strings, as they may contain regex characters.
-    $property = preg_quote($property);
-
-    if (isset($value)) {
-      $value    = preg_quote($value);
-      $expected_regex = "@^\s*'?{$property}'?: '?{$value}'?$@m";
-    }
-    else {
-      $expected_regex = "@^\s*'?{$property}'?:$@m";
-    }
-
-    $this->assertRegExp($expected_regex, $string, $message);
-  }
-
 }
