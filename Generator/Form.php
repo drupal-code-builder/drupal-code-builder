@@ -29,9 +29,6 @@ class Form extends PHPClassFileWithInjection {
       'injected_services' => [],
     );
 
-    // TODO: this should be done in a property processing callback.
-    $component_data['form_class_name'] = ucfirst($component_data['form_class_name']);
-
     //ddpr($component_data);
 
     parent::__construct($component_name, $component_data, $root_generator);
@@ -55,6 +52,9 @@ class Form extends PHPClassFileWithInjection {
       'form_class_name' => array(
         'label' => 'Form class name',
         'required' => TRUE,
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          $component_data['form_class_name'] = ucfirst($value);
+        },
       ),
       'form_id' => [
         'computed' => TRUE,
