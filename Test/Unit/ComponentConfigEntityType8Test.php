@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the config entity type generator class.
+ *
+ * @group yaml
  */
 class ComponentConfigEntityType8Test extends TestBaseComponentGeneration {
 

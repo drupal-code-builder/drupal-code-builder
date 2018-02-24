@@ -8,6 +8,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the Plugins generator class.
+ *
+ * @group yaml
  */
 class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
