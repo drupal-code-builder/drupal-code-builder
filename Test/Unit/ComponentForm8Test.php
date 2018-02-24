@@ -17,7 +17,7 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
   /**
    * Test generating a module with form.
    */
-  public function testFormGeneration() {
+  public function testBasicFormGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = array(
