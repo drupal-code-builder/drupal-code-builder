@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+
 /**
  * Tests the PHPUnit test class generator.
  */
@@ -198,14 +200,20 @@ class ComponentTestsPHPUnit8Test extends TestBaseComponentGeneration {
 
     // Check the main module .info file.
     $info_file = $files["generated_module.info.yml"];
-    $this->assertYamlProperty($info_file, 'name', "Generated module", "The info file declares the module name.");
-    $this->assertYamlProperty($info_file, 'core', "8.x", "The info file declares the core version.");
+
+    $yaml_tester = new YamlTester($info_file);
+    $yaml_tester->assertPropertyHasValue('name', 'Generated module');
+    $yaml_tester->assertPropertyHasValue('type', 'module');
+    $yaml_tester->assertPropertyHasValue('core', '8.x');
 
     // Check the test module .info file.
     $test_module_info_file = $files['tests/modules/test_module/test_module.info.yml'];
-    $this->assertYamlProperty($test_module_info_file, 'name', "Test Module", "The info file declares the module name.");
-    $this->assertYamlProperty($test_module_info_file, 'package', "Testing", "The info file declares the package as 'Testing'.");
-    $this->assertYamlProperty($test_module_info_file, 'core', "8.x", "The info file declares the core version.");
+
+    $yaml_tester = new YamlTester($test_module_info_file);
+    $yaml_tester->assertPropertyHasValue('name', 'Test Module');
+    $yaml_tester->assertPropertyHasValue('type', 'module');
+    $yaml_tester->assertPropertyHasValue('package', 'Testing');
+    $yaml_tester->assertPropertyHasValue('core', '8.x');
 
     // Check the main module plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
