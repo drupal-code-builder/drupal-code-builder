@@ -15,26 +15,6 @@ class Form extends PHPClassFileWithInjection {
   protected $injectedServices = [];
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'injected_services' => [],
-    );
-
-    //ddpr($component_data);
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * Return a unique ID for this component.
    *
    * @return
