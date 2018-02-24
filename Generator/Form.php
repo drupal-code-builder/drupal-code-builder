@@ -27,8 +27,6 @@ class Form extends PHPClassFileWithInjection {
     // Set some default properties.
     $component_data += array(
       'injected_services' => [],
-      // TODO: should be in default value callback.
-      'form_id' => $component_data['root_component_name'] . '_' . strtolower($component_data['form_class_name']),
     );
 
     // TODO: this should be done in a property processing callback.
@@ -58,6 +56,12 @@ class Form extends PHPClassFileWithInjection {
         'label' => 'Form class name',
         'required' => TRUE,
       ),
+      'form_id' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return $component_data['root_component_name'] . '_' . strtolower($component_data['form_class_name']);
+        },
+      ],
       'injected_services' => array(
         'label' => 'Injected services',
         'format' => 'array',
