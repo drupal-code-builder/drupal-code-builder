@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
+use DrupalCodeBuilder\Utility\NestedArray;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -74,7 +75,7 @@ class YamlTester {
     $property_string = $this->getPropertyString($property_address);
     $message = $message ?? "The YAML file has the expected property $property_string.";
 
-    Assert::assertTrue($this->keyExists($this->parsedYamlData, $property_address), $message);
+    Assert::assertTrue(NestedArray::keyExists($this->parsedYamlData, $property_address), $message);
   }
 
   /**
@@ -122,7 +123,7 @@ class YamlTester {
     $property_string = $this->getPropertyString($property_address);
     $message = $message ?? "The YAML file property $property_string has the expected value";
 
-    $actual_value = $this->getValue($this->parsedYamlData, $property_address);
+    $actual_value = NestedArray::getValue($this->parsedYamlData, $property_address);
 
     Assert::assertEquals($expected_value, $actual_value, $message);
   }
@@ -264,36 +265,6 @@ class YamlTester {
     } // foreach property
 
     return $found_line_index;
-  }
-
-  /**
-   * Copy of Drupal's NestedArray::keyExists().
-   */
-  protected function keyExists(array $array, array $parents) {
-    // Although this function is similar to PHP's array_key_exists(), its
-    // arguments should be consistent with getValue().
-    $key_exists = NULL;
-    $this->getValue($array, $parents, $key_exists);
-    return $key_exists;
-  }
-
-  /**
-   * Copy of Drupal's NestedArray::getValue().
-   */
-  protected function &getValue(array &$array, array $parents, &$key_exists = NULL) {
-    $ref =& $array;
-    foreach ($parents as $parent) {
-      if (is_array($ref) && array_key_exists($parent, $ref)) {
-        $ref =& $ref[$parent];
-      }
-      else {
-        $key_exists = FALSE;
-        $null = NULL;
-        return $null;
-      }
-    }
-    $key_exists = TRUE;
-    return $ref;
   }
 
   protected function getPropertyString($property_address) {
