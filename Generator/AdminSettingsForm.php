@@ -25,7 +25,6 @@ class AdminSettingsForm extends Form {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    $form_name = $this->getFormName();
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
       // OK to use a token here, as the YAML value for this will be quoted
