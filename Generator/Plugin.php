@@ -10,6 +10,9 @@ use CaseConverter\CaseString;
  */
 class Plugin extends PHPClassFileWithInjection {
 
+  /**
+   * {@inheritdoc}
+   */
   protected $hasStaticFactoryMethod = TRUE;
 
   /**

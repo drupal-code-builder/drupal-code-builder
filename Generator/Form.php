@@ -10,17 +10,14 @@ class Form extends PHPClassFileWithInjection {
   protected $hasStaticFactoryMethod = TRUE;
 
   /**
-   * Return a unique ID for this component.
-   *
-   * @return
-   *  The unique ID
+   * {@inheritdoc}
    */
   public function getUniqueID() {
     return $this->component_data['root_component_name'] . '/' . $this->type . ':' . $this->component_data['form_id'];
   }
 
   /**
-   * Define the component data this component needs to function.
+   * {@inheritdoc}
    */
   public static function componentDataDefinition() {
     $data_definition = array(
