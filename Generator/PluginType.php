@@ -83,6 +83,16 @@ class PluginType extends BaseGenerator {
           ]);
         },
       ),
+      'plugin_manager_service_id' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          // Namespace the service name after the prefix.
+          return 'plugin.manager.'
+            . $component_data['root_component_name']
+            . '_'
+            . $component_data['plugin_type'];
+        },
+      ],
       'info_alter_hook' => [
         'label' => 'Alter hook name',
         'description' => "The name of the hook used to alter plugin info, without the 'hook_' prefix.",
@@ -106,8 +116,7 @@ class PluginType extends BaseGenerator {
 
     $components["plugin_type_{$plugin_type}_service"] = array(
       'component_type' => 'PluginTypeManager',
-      // Namespace the service name after the prefix.
-      'prefixed_service_name' => 'plugin.manager.' . $this->component_data['root_component_name'] . '_' . $this->component_data['plugin_type'],
+      'prefixed_service_name' => $this->component_data['plugin_manager_service_id'],
       // Use the annotation class name as the basis for the manager class name.
       'service_class_name' => $this->component_data['annotation_class'] . 'Manager',
       'injected_services' => [],
@@ -181,7 +190,7 @@ class PluginType extends BaseGenerator {
         "{$module}.{$plugin_type}"=> [
           'label' => $this->component_data['plugin_label'],
           'provider' => $module,
-          'plugin_manager_service_id' => "plugin.manager.{$plugin_type}",
+          'plugin_manager_service_id' => $this->component_data['plugin_manager_service_id'],
           'plugin_definition_decorator_class' => 'Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator',
         ],
       ],
