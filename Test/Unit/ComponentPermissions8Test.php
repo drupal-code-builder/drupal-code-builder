@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+
 /**
  * Tests the Permissions generator class.
  *
@@ -47,7 +49,10 @@ class ComponentPermissions8Test extends TestBaseComponentGeneration {
 
     // Check the .permissions.yml file.
     $permissions_file = $files["$module_name.permissions.yml"];
-    $this->assertYamlProperty($permissions_file, 'title', $permission_name, "The permissions file declares the requested permission.");
+
+    $yaml_tester = new YamlTester($permissions_file);
+    $yaml_tester->assertPropertyHasValue([$permission_name, 'title'], 'my permission name', "The permissions file declares the permission name.");
+    $yaml_tester->assertPropertyHasValue([$permission_name, 'description'], 'My permission name', "The permissions file declares the permission description.");
   }
 
 }
