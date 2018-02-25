@@ -50,6 +50,18 @@ class AdminSettingsForm extends Form {
       'property_value' => 'admin/config/TODO-SECTION/%module',
     );
 
+    $components["config/schema/%module.schema.yml"] = [
+      'component_type' => 'ConfigSchema',
+      'yaml_data' => [
+         $this->component_data['root_component_name'] . '.settings' => [
+           'type' => 'config_object',
+           'label' => '%Module settings',
+          'mapping' => [
+          ],
+        ],
+      ],
+    ];
+
     return $components;
   }
 

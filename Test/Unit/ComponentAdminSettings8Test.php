@@ -34,7 +34,7 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "The expected number of files are returned.");
+    $this->assertCount(5, $files, "The expected number of files are returned.");
 
     // Check the form class code.
     $form_file = $files['src/Form/AdminSettingsForm.php'];
@@ -46,6 +46,15 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
     $this->assertNamespace(['Drupal', $module_name, 'Form'], $form_file, "The form class file contains contains the expected namespace.");
     $this->assertClass('AdminSettingsForm', $form_file, "The form class file contains contains the expected class.");
     // TODO: check the methods.
+
+    // Check the schema file.
+    $config_schema_file = $files['config/schema/testmodule.schema.yml'];
+    $yaml_tester = new YamlTester($config_schema_file);
+
+    $yaml_tester->assertHasProperty('testmodule.settings', "The schema file has the property for the settings.");
+    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'type'], 'config_object');
+    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'label'], 'Test module settings');
+    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'mapping'], []);
 
     // Check the .routing file.
     $routing_file = $files["$module_name.routing.yml"];
