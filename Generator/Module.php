@@ -438,7 +438,7 @@ class Module extends RootComponent {
 
     return array(
       '%module'       => $module_data['root_name'],
-      '%Module'       => ucfirst($module_data['root_name']),
+      '%Module'       => ucfirst($module_data['readable_name']),
       '%description'  => str_replace("'", "\'", $module_data['short_description']),
       '%name'         => !empty($module_data['readable_name']) ? str_replace("'", "\'", $module_data['readable_name']) : $module_data['root_name'],
       '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : 'TODO: Create admin help text.',
