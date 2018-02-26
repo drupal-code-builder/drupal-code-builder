@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
@@ -38,13 +39,14 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
 
     // Check the form class code.
     $form_file = $files['src/Form/AdminSettingsForm.php'];
-    $this->assertWellFormedPHP($form_file);
-    $this->assertDrupalCodingStandards($form_file);
-    $this->assertNoTrailingWhitespace($form_file, "The form class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($form_file);
 
-    $this->assertNamespace(['Drupal', $module_name, 'Form'], $form_file, "The form class file contains contains the expected namespace.");
-    $this->assertClass('AdminSettingsForm', $form_file, "The form class file contains contains the expected class.");
+    $php_tester = new PHPTester($form_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\testmodule\Form\AdminSettingsForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
+    $php_tester->assertHasMethod('getFormId');
+    $php_tester->assertHasMethod('buildForm');
+    $php_tester->assertHasMethod('submitForm');
     // TODO: check the methods.
 
     // Check the schema file.
