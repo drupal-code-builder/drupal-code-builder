@@ -3,9 +3,13 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the entity type generator class.
+ *
+ * @group yaml
+ * @group annotation
  */
 class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
@@ -59,6 +63,9 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
+    $php_tester = new PHPTester($entity_class_file);
+
+    // TODO - convert rest of this to use PHP tester.
     $this->assertWellFormedPHP($entity_class_file);
     $this->assertDrupalCodingStandards($entity_class_file);
     $this->assertNoTrailingWhitespace($entity_class_file);
@@ -69,9 +76,25 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $this->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
     $this->assertHasMethods(['baseFieldDefinitions']);
 
-    // TODO: the annotation assertion doens't handle arrays or nested
-    // annotations.
-    //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
+    // Test the entity annotation.
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ContentEntityType');
+    $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
+    $annotation_tester->assertPropertyHasTranslation('label');
+    $annotation_tester->assertPropertyHasValue('label_collection', 'Kitty Cats');
+    $annotation_tester->assertPropertyHasTranslation('label_collection');
+    $annotation_tester->assertPropertyHasValue('label_singular', 'kitty cat');
+    $annotation_tester->assertPropertyHasTranslation('label_singular');
+    $annotation_tester->assertPropertyHasValue('label_plural', 'kitty cats');
+    $annotation_tester->assertPropertyHasTranslation('label_plural');
+    $annotation_tester->assertPropertyHasAnnotationClass('label_count', 'PluralTranslation');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
+    $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue(['handlers', 'list_builder'], 'Drupal\Core\Entity\EntityListBuilder');
+    $annotation_tester->assertPropertyHasValue('fieldable', 'TRUE');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
