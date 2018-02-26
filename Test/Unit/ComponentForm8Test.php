@@ -50,8 +50,9 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
     $php_tester->assertHasClass('Drupal\test_module\Form\MyForm');
     $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
 
-    // TODO: convert to PHP parser.
-    $this->assertFunctionCode($form_file, 'getFormId', "return 'test_module_myform");
+    $method_tester = $php_tester->getMethodTester('getFormId');
+    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->assertReturnsString('test_module_myform');
   }
 
   /**
