@@ -351,6 +351,21 @@ class PHPTester {
   }
 
   /**
+   * Gets an annotation tester for the class annotation.
+   *
+   * @return \DrupalCodeBuilder\Test\Unit\Parsing\AnnotationTester
+   *   The annotation tester.
+   */
+  public function getAnnotationTesterForClass() {
+    Assert::assertCount(1, $this->parser_nodes['classes']);
+    $class_node = reset($this->parser_nodes['classes']);
+    $docblock_text = $class_node->getAttribute('comments')[0]->getText();
+
+    $annotation_tester = new AnnotationTester($docblock_text);
+    return $annotation_tester;
+  }
+
+  /**
    * Asserts the parsed code defines the interface.
    *
    * @param string $full_interface_name
