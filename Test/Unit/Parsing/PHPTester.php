@@ -702,6 +702,20 @@ class PHPTester {
   }
 
   /**
+   * Gets a method tester for a class method in the parsed code.
+   *
+   * @param string $method_name
+   *   The method name to check for.
+   *
+   * @return \DrupalCodeBuilder\Test\Unit\Parsing\PHPMethodTester
+   */
+  public function getMethodTester($method_name) {
+    $this->assertHasMethod($method_name);
+
+    return new PHPMethodTester($this->parser_nodes['methods'][$method_name]);
+  }
+
+  /**
    * Assert the parsed code contains the given function.
    *
    * @param string $function_name
