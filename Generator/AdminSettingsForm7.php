@@ -20,13 +20,26 @@ class AdminSettingsForm7 extends Form7 {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    $data_definition['form_id']['default'] = function($component_data) {
+      return $component_data['root_component_name'] . '_settings_form';
+    };
+
+    return $data_definition;
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
     // Change the body of the form builder.
-    $form_name = $this->getFormName();
+    $form_name = $this->component_data['form_id'];
     $form_builder = $form_name;
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';
@@ -51,7 +64,6 @@ class AdminSettingsForm7 extends Form7 {
     unset($components[$form_submit]);
 
     // This takes care of adding hook_menu() and so on.
-    $form_name = $this->getFormName();
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
       'title' => 'Administer %readable',
@@ -74,14 +86,6 @@ class AdminSettingsForm7 extends Form7 {
     );
 
     return $components;
-  }
-
-  /**
-   * The name of the form.
-   */
-  protected function getFormName() {
-    $base_component_name = $this->component_data['root_component_name'];
-    return "{$base_component_name}_settings_form";
   }
 
 }

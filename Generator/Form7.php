@@ -40,10 +40,24 @@ class Form7 extends BaseGenerator {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'form_id' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return $this->name;
+        },
+      ],
+    ];
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
-    $form_name = $this->getFormName();
+    $form_name = $this->component_data['form_id'];
     $form_builder   = $form_name;
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';
@@ -91,18 +105,6 @@ class Form7 extends BaseGenerator {
     );
 
     return $components;
-  }
-
-  /**
-   * The name of the form.
-   *
-   * This allows subclasses to change this easily.
-   *
-   * @return
-   *  The machine name of the form, i.e., the name of the form builder function.
-   */
-  protected function getFormName() {
-    return $this->name;
   }
 
 }
