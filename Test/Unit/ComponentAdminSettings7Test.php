@@ -7,9 +7,12 @@ namespace DrupalCodeBuilder\Test\Unit;
  */
 class ComponentAdminSettings7Test extends TestBaseComponentGeneration {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(7);
-  }
+  /**
+   * The Drupal core major version to set up for this test.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion = 7;
 
   /**
    * Test Admin Settings component.
