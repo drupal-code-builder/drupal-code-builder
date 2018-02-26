@@ -47,8 +47,7 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
 
     $method_tester = $php_tester->getMethodTester('getFormId');
     $method_tester->assertMethodDocblockHasInheritdoc();
-    // TODO: test fails.
-    //$method_tester->assertReturnsString('testmodule_settings_form');
+    $method_tester->assertReturnsString('testmodule_settings_form');
 
     $php_tester->assertHasMethod('buildForm');
     $php_tester->assertHasMethod('submitForm');

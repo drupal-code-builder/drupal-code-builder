@@ -16,6 +16,10 @@ class AdminSettingsForm extends Form {
     $data_definition['form_class_name']['default'] = 'AdminSettingsForm';
     $data_definition['form_class_name']['process_default'] = TRUE;
 
+    $data_definition['form_id']['default'] = function($component_data) {
+      return $component_data['root_component_name'] . '_settings_form';
+    };
+
     return $data_definition;
   }
 
@@ -63,14 +67,6 @@ class AdminSettingsForm extends Form {
     ];
 
     return $components;
-  }
-
-  /**
-   * The name of the form.
-   */
-  protected function getFormName() {
-    $base_component_name = $this->component_data['root_component_name'];
-    return "{$base_component_name}_settings_form";
   }
 
 }
