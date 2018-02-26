@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests for Form component.
  */
@@ -43,13 +45,10 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
 
     $form_file = $files["src/Form/MyForm.php"];
 
-    $this->assertWellFormedPHP($form_file);
-    $this->assertDrupalCodingStandards($form_file);
-
-    $this->parseCode($form_file);
-    $this->assertHasClass('Drupal\test_module\Form\MyForm');
-    $this->assertClassHasParent('Drupal\Core\Form\FormBase');
-    $this->assertHasMethods(['getFormId', 'buildForm', 'submitForm']);
+    $php_tester = new PHPTester($form_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Form\MyForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
 
     // TODO: convert to PHP parser.
     $this->assertFunctionCode($form_file, 'getFormId', "return 'test_module_myform");
