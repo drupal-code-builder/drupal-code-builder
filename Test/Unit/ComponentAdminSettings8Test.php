@@ -44,7 +44,12 @@ class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\testmodule\Form\AdminSettingsForm');
     $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
-    $php_tester->assertHasMethod('getFormId');
+
+    $method_tester = $php_tester->getMethodTester('getFormId');
+    $method_tester->assertMethodDocblockHasInheritdoc();
+    // TODO: test fails.
+    //$method_tester->assertReturnsString('testmodule_settings_form');
+
     $php_tester->assertHasMethod('buildForm');
     $php_tester->assertHasMethod('submitForm');
     // TODO: check the methods.
