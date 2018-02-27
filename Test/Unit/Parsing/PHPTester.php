@@ -867,6 +867,20 @@ class PHPTester {
   }
 
   /**
+   * Assert the parsed code does not contain the given function.
+   *
+   * @param string $function_name
+   *   The function name to check for.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasNotFunction($function_name, $message = NULL) {
+    $message = $message ?? "The file does not contain the function {$function_name}.";
+
+    Assert::assertArrayNotHasKey($function_name, $this->parser_nodes['functions'], $message);
+  }
+
+  /**
    * Assert the parsed code contains no methods.
    *
    * @param string $message
@@ -914,6 +928,25 @@ class PHPTester {
     $expected_line = "Implements {$hook_name}().";
 
     $this->assertDocblockHasLine($expected_line, $docblock_text, "The module file contains the docblock for hook_menu().");
+  }
+
+  /**
+   * Assert the parsed code does not implement the given hook.
+   *
+   * @param string $hook_name
+   *   The full name of the hook to check for, e.g. 'hook_help'.
+   * @param $module_name
+   *  The name of the implementing module.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasNotHookImplementation($hook_name, $module_name, $message = NULL) {
+    $message = $message ?? "The code does not have a function that implements the hook $hook_name for module $module_name.";
+
+    $hook_short_name = substr($hook_name, 5);
+    $function_name = $module_name . '_' . $hook_short_name;
+
+    $this->assertHasNotFunction($function_name, $message);
   }
 
   /**
