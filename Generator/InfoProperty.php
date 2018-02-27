@@ -8,19 +8,18 @@ namespace DrupalCodeBuilder\Generator;
 class InfoProperty extends BaseGenerator {
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   An array of data for the component.
-   *   Valid properties are:
-   *      - 'property_name': The name of the property.
-   *      - 'property_value': The value of the property. Note that arrays are
-   *        not supported.
+   * {@inheritdoc}
    */
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'property_name' => [
+        'label' => 'The name of the property',
+      ],
+      // Note that array values are not supported.
+      'property_value' =>  [
+        'label' => 'The value of the property',
+      ],
+    ];
   }
 
   /**
