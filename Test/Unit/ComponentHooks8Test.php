@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
@@ -70,46 +71,40 @@ class ComponentHooks8Test extends TestBaseComponentGeneration {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    //debug($module_file);
 
-    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
-
-    $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
-    $this->assertDrupalCodingStandards($module_file);
-
-    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
-
-    $this->assertHookDocblock('hook_help', $module_file, "The module file contains the docblock for hook_block_info().");
-    $this->assertHookImplementation($module_file, 'hook_help', $module_name, "The module file contains a function declaration that implements hook_block_info().");
-
-    $this->assertHookDocblock('hook_form_alter', $module_file, "The module file contains the docblock for hook_menu().");
-    $this->assertHookImplementation($module_file, 'hook_form_alter', $module_name, "The module file contains a function declaration that implements hook_menu().");
-
-    $this->assertNoHookDocblock('hook_install', $module_file, "The module file does not contain the docblock for hook_install().");
+    $php_tester = new PHPTester($module_file);
+    $phpcs_excluded_sniffs = [
+      // Temporarily exclude the sniff for comment lines being too long, as a
+      // comment in hook_form_alter() violates this.
+      // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
+      // is fixed.
+      'Drupal.Files.LineLength.TooLong',
+    ];
+    $php_tester->assertDrupalCodingStandards($phpcs_excluded_sniffs);
+    $php_tester->assertHasHookImplementation('hook_help', $module_name);
+    $php_tester->assertHasHookImplementation('hook_form_alter', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];
 
-    $this->assertWellFormedPHP($install_file);
-    $this->assertNoTrailingWhitespace($install_file, "The install file contains no trailing whitespace.");
-
-    $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
-
-    $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
-
-    $this->assertHookDocblock('hook_install', $install_file, "The install file contains the docblock for hook_install().");
-    $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
-
-    $this->assertNoHookDocblock('hook_help', $install_file, "The install file does not contain the docblock for hook_menu().");
-    $this->assertNoHookDocblock('hook_form_alter', $install_file, "The install file does not contain the docblock for hook_block_info().");
+    $php_tester = new PHPTester($install_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasHookImplementation('hook_install', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_form_alter', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
 
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
-    $this->assertWellFormedPHP($tokens_file);
-    $this->assertNoTrailingWhitespace($tokens_file, "The tokens file contains no trailing whitespace.");
-    $this->assertHookDocblock('hook_tokens', $tokens_file, "The tokens file contains the docblock for hook_tokens().");
-    $this->assertHookImplementation($tokens_file, 'hook_tokens', $module_name, "The tokens file contains a function declaration that implements hook_tokens().");
+    $php_tester = new PHPTester($tokens_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasHookImplementation('hook_tokens', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_form_alter', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
 
     // Check the .info file.
     $info_file = $files["$module_name.info.yml"];
