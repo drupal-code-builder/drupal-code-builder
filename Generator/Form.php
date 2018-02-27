@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Generator class for forms on Drupal 8.
  */
@@ -31,7 +33,10 @@ class Form extends PHPClassFileWithInjection {
       'form_id' => [
         'computed' => TRUE,
         'default' => function($component_data) {
-          return $component_data['root_component_name'] . '_' . strtolower($component_data['form_class_name']);
+          return
+            $component_data['root_component_name']
+            . '_'
+            . CaseString::pascal($component_data['form_class_name'])->snake();
         },
       ],
       'injected_services' => array(
