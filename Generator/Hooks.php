@@ -108,7 +108,17 @@ class Hooks extends BaseGenerator {
           'has_wrapping_newlines' => TRUE,
         );
         if (isset($hook['template'])) {
-          $components[$hook['name']]['template'] = $hook['template'];
+          // Strip out INFO: comments for advanced users.
+          // This has to be done before we split this into lines.
+          if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
+            // Used to strip INFO messages out of generated file for advanced users.
+            $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
+            $hook['template'] = preg_replace($pattern, '', $hook['template']);
+          }
+
+          // This needs to be split into an array of lines for things such as
+          // PHPFile::extractFullyQualifiedClasses() to work.
+          $components[$hook['name']]['template'] = explode("\n", $hook['template']);
         }
       }
     }

@@ -73,7 +73,7 @@ class PHPFunction extends BaseGenerator {
       // Argh. WTF. Newline drama. Hook definitions have newlines at start and
       // end. But when we define code ourselves, it's a pain to have to put
       // those in.
-      $this->component_data['body'] = trim($this->component_data['body'], "\n");
+      $this->component_data['body'] = array_slice($this->component_data['body'], 1, -1);
     }
 
     $function_code = array();

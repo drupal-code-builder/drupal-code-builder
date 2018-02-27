@@ -67,14 +67,7 @@ class HookImplementation extends PHPFunction {
 
     // Replace the function body with template code if it exists.
     if (empty($children_contents) && isset($this->component_data['template'])) {
-      // Strip out INFO: comments for advanced users
-      if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
-        // Used to strip INFO messages out of generated file for advanced users.
-        $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
-        $hook['template'] = preg_replace($pattern, '', $this->component_data['template']);
-      }
-
-      $this->component_data['body'] = $hook['template'];
+      $this->component_data['body'] = $this->component_data['template'];
 
       // The code is a single string, already indented. Tell
       // buildComponentContents() not to indent it again.
