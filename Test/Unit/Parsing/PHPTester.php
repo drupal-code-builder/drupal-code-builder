@@ -884,6 +884,8 @@ class PHPTester {
    *
    * @param string $hook_name
    *   The full name of the hook to check for, e.g. 'hook_help'.
+   * @param $module_name
+   *  The name of the implementing module.
    * @param string $message
    *   (optional) The assertion message.
    */
