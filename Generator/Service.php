@@ -12,21 +12,6 @@ class Service extends PHPClassFileWithInjection {
   use NameFormattingTrait;
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * The component name is taken to be the service ID. KILL
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    // TODO: use computed properties for these.
-    if (empty($component_data['prefixed_service_name'])) {
-      // Prefix the service name with the module name.
-      $component_data['prefixed_service_name'] = $component_data['root_component_name'] . '.' . $component_data['service_name'];
-    }
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
@@ -93,6 +78,12 @@ class Service extends PHPClassFileWithInjection {
         'description' => "The name of the service, without the module name prefix.",
         'required' => TRUE,
       ),
+      'prefixed_service_name' => [
+        'internal' => TRUE,
+        'default' => function($component_data) {
+          return $component_data['root_component_name'] . '.' . $component_data['service_name'];
+        },
+      ],
       'injected_services' => array(
         'label' => 'Injected services',
         'format' => 'array',
