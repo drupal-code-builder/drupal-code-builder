@@ -198,7 +198,7 @@ class PHPTester {
       $ast = $parser->parse($this->phpCode);
     }
     catch (Error $error) {
-      $this->fail("Parse error: {$error->getMessage()}");
+      Assert::fail("Parse error: {$error->getMessage()}");
     }
 
     //dump($ast);
