@@ -102,6 +102,8 @@ class Hooks extends BaseGenerator {
           'code_file' => $hook['destination'],
           'hook_name' => $hook['name'],
           'declaration' => $hook['definition'],
+          // TODO: this is not used, apparently -- getTemplates() fills in
+          // the 'template' array key in all cases?
           'body' => $hook['body'],
           'has_wrapping_newlines' => TRUE,
         );
