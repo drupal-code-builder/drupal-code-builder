@@ -273,6 +273,9 @@ class PHPTester {
    *   (optional) The assertion message.
    */
   public function assertImportsClassLike($class_name_parts, $message = NULL) {
+    $class_name = implode('\\', $class_name_parts);
+    $message = $message ?? "The full class name for the parent class {$class_name} is imported.";
+
     // If the given class is in the current namespace, skip this assertion, as
     // it should not be imported.
     // TODO: assert it's NOT imported!
@@ -293,12 +296,7 @@ class PHPTester {
       $seen[] = implode('\\', $use_node->uses[0]->name->parts);
     }
 
-    // Quick and dirty output of the imports that are there, for debugging
-    // test failures.
-    dump($seen);
-
-    $class_name = implode('\\', $class_name_parts);
-    $this->fail("The full class name for the parent class {$class_name} is imported.");
+    Assert::assertContains($class_name, $seen, $message);
   }
 
   /**
