@@ -66,9 +66,17 @@ class ComponentPHPFile8Test extends TestBaseComponentGeneration {
         NULL,
         NULL,
       ],
-      'PHPStorm type' => [
+      // Both forms of this exist in core. No idea which one is correct.
+      // See https://www.drupal.org/project/coding_standards/issues/2948521
+      'PHPStorm type var first' => [
         // E.g. seen in hook_entity_type_build().
         ' /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */',
+        NULL,
+        NULL,
+      ],
+      'PHPStorm type class first' => [
+        // E.g. seen in hook_entity_type_build().
+        ' /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */',
         NULL,
         NULL,
       ],
