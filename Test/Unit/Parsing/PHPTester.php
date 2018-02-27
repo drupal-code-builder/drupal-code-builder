@@ -895,8 +895,6 @@ class PHPTester {
 
     $this->assertHasFunction($function_name, $message);
 
-    // Use the older assertHookDocblock() assertion, but pass it just the
-    // docblock contents rather than the whole file!
     $function_node = $this->parser_nodes['functions'][$function_name];
     $comments = $function_node->getAttribute('comments');
 
@@ -908,7 +906,36 @@ class PHPTester {
     // @see https://github.com/nikic/PHP-Parser/issues/445
     $function_docblock = end($comments);
     $docblock_text = $function_docblock->getReformattedText();
-    $this->assertHookDocblock($hook_name, $docblock_text, "The module file contains the docblock for hook_menu().");
+
+    // TODO: this will need to switch on major version when we use this to test
+    // D7 hooks.
+    $expected_line = "Implements {$hook_name}().";
+
+    $this->assertDocblockHasLine($expected_line, $docblock_text, "The module file contains the docblock for hook_menu().");
+  }
+
+  /**
+   * Assert the given docblock contains a line.
+   *
+   * @param string $line
+   *   The expected line.
+   * @param $docblock
+   *   The docblock text.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertDocblockHasLine($line, $docblock, $message = NULL) {
+    $message = $message ?? "The method docblock contains the line {$line}.";
+
+    $docblock_lines = explode("\n", $docblock);
+
+    // Slice off first and last lines, which are the '/**' and '*/'.
+    $docblock_lines = array_slice($docblock_lines, 1, -1);
+    $docblock_lines = array_map(function($line) {
+      return preg_replace('/^ \* /', '', $line);
+    }, $docblock_lines);
+
+    Assert::assertContains($line, $docblock_lines);
   }
 
   /**
