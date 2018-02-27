@@ -61,6 +61,9 @@ class Form extends PHPClassFileWithInjection {
       return ['Form', $component_data['form_class_name']];
     };
 
+    // Set the parent class.
+    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Form\FormBase';
+
     return $data_definition;
   }
 
@@ -132,15 +135,6 @@ class Form extends PHPClassFileWithInjection {
     $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
 
     return array();
-  }
-
-  /**
-   * Produces the class declaration.
-   */
-  function class_declaration() {
-    $this->component_data['parent_class_name'] = '\Drupal\Core\Form\FormBase';
-
-    return parent::class_declaration();
   }
 
   /**
