@@ -177,13 +177,12 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function class_doc_block() {
-    $docblock_lines = [];
-    $docblock_lines[] = $this->component_data['docblock_first_line'];
+  protected function getClassDocBlockLines() {
+    $docblock_lines = parent::getClassDocBlockLines();
     $docblock_lines[] = '';
     $docblock_lines[] = '@group %module';
 
-    return $this->docBlock($docblock_lines);
+    return $docblock_lines;
   }
 
   /**

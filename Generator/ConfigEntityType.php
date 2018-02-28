@@ -131,10 +131,9 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected function class_doc_block() {
+  protected function getClassDocBlockLines() {
     //dump($this->component_data);
-    $docblock_lines = [];
-    $docblock_lines[] = $this->component_data['docblock_first_line'];
+    $docblock_lines = parent::getClassDocBlockLines();
     $docblock_lines[] = '';
 
     $annotation = [
@@ -168,7 +167,7 @@ class ConfigEntityType extends EntityTypeBase {
 
     $docblock_lines = array_merge($docblock_lines, $this->renderAnnnotation($annotation));
 
-    return $this->docBlock($docblock_lines);
+    return $docblock_lines;
   }
 
 

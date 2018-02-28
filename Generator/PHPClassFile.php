@@ -211,6 +211,8 @@ class PHPClassFile extends PHPFile {
    *   An array of lines.
    */
   protected function getClassDocBlockLines() {
+    $lines = [];
+
     if (!empty($this->component_data['class_docblock_lines'])) {
       $lines = $this->component_data['class_docblock_lines'];
 
@@ -221,7 +223,7 @@ class PHPClassFile extends PHPFile {
       }
     }
     elseif (!empty($this->component_data['docblock_first_line'])) {
-      $lines = $this->component_data['docblock_first_line'];
+      $lines[] = $this->component_data['docblock_first_line'];
     }
 
     return $lines;
@@ -230,8 +232,7 @@ class PHPClassFile extends PHPFile {
   /**
    * Produces the formatted docblock lines for the class.
    *
-   * TODO: change all overrides of this to getClassDocBlockLines() instead,
-   * then fold this into the caller.
+   * TODO: Fold this into the caller.
    *
    * @return string[]
    *   An array of docblock formatted lines.

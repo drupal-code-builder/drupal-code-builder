@@ -229,13 +229,13 @@ class Plugin extends PHPClassFileWithInjection {
   /**
    * Procudes the docblock for the class.
    */
-  protected function class_doc_block() {
-    $docblock_code[] = $this->component_data['docblock_first_line'];
-    $docblock_code[] = '';
+  protected function getClassDocBlockLines() {
+    $docblock_lines = parent::getClassDocBlockLines();
+    $docblock_lines[] = '';
 
-    $docblock_code = array_merge($docblock_code, $this->classAnnotation());
+    $docblock_lines = array_merge($docblock_lines, $this->classAnnotation());
 
-    return $this->docBlock($docblock_code);
+    return $docblock_lines;
   }
 
   /**
