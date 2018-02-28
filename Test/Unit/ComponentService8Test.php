@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
@@ -10,7 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentService8Test extends TestBaseComponentGeneration {
+class ComponentService8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -59,13 +60,9 @@ class ComponentService8Test extends TestBaseComponentGeneration {
 
     $service_class_file = $files["src/MyService.php"];
 
-    $this->assertWellFormedPHP($service_class_file);
-    $this->assertDrupalCodingStandards($service_class_file);
-    $this->assertNoTrailingWhitespace($service_class_file, "The service class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($service_class_file);
-
-    $this->assertNamespace(['Drupal', $module_name], $service_class_file, "The service class file contains contains the expected namespace.");
-    $this->assertClass('MyService', $service_class_file, "The service file contains the service class.");
+    $php_tester = new PHPTester($service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\MyService');
   }
 
   /**
@@ -107,12 +104,14 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
 
-    $this->assertWellFormedPHP($service_class_file);
-    $this->assertDrupalCodingStandards($service_class_file);
+    $php_tester = new PHPTester($service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\BreadcrumbBuilder');
+    $php_tester->assertClassHasInterfaces(['Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface']);
 
     // Interface methods.
-    $this->assertMethod('applies', $service_class_file);
-    $this->assertMethod('build', $service_class_file);
+    $php_tester->assertHasMethod('applies');
+    $php_tester->assertHasMethod('build');
   }
 
   /**
@@ -153,11 +152,13 @@ class ComponentService8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("src/EventSubscriber/EventSubscriber.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
 
-    $this->assertWellFormedPHP($service_class_file);
-    $this->assertDrupalCodingStandards($service_class_file);
+    $php_tester = new PHPTester($service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\EventSubscriber\EventSubscriber');
+    $php_tester->assertClassHasInterfaces(['Symfony\Component\EventDispatcher\EventSubscriberInterface']);
 
     // Interface methods.
-    $this->assertMethod('getSubscribedEvents', $service_class_file);
+    $php_tester->assertHasMethod('getSubscribedEvents');
   }
 
   /**
@@ -202,14 +203,12 @@ class ComponentService8Test extends TestBaseComponentGeneration {
 
     $service_class_file = $files["src/MyService.php"];
 
-    $this->assertWellFormedPHP($service_class_file);
-    $this->assertDrupalCodingStandards($service_class_file);
-
-    $this->parseCode($service_class_file);
-    $this->assertHasClass('Drupal\test_module\MyService');
+    $php_tester = new PHPTester($service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\MyService');
 
     // Check service injection.
-    $this->assertInjectedServices([
+    $php_tester->assertInjectedServices([
       [
         'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
         'service_name' => 'current_user',
@@ -267,7 +266,7 @@ class ComponentService8Test extends TestBaseComponentGeneration {
       'services' => array(
         0 => [
           'service_name' => 'my_service',
-          // Non-declared properties (for now!) that requesters can specify.
+          // Properties that requesters can specify.
           'prefixed_service_name' => 'my_prefix.my_service',
           'relative_class_name' => ['MyServiceClass'],
         ],
@@ -290,11 +289,9 @@ class ComponentService8Test extends TestBaseComponentGeneration {
 
     $service_class_file = $files["src/MyServiceClass.php"];
 
-    $this->assertWellFormedPHP($service_class_file);
-    $this->assertDrupalCodingStandards($service_class_file);
-
-    $this->assertNamespace(['Drupal', $module_name], $service_class_file, "The service class file contains contains the expected namespace.");
-    $this->assertClass('MyServiceClass', $service_class_file, "The service file contains the service class.");
+    $php_tester = new PHPTester($service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\MyServiceClass');
   }
 
   /**
