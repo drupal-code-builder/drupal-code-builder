@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
@@ -9,7 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentConfigEntityType8Test extends TestBaseComponentGeneration {
+class ComponentConfigEntityType8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -58,29 +59,27 @@ class ComponentConfigEntityType8Test extends TestBaseComponentGeneration {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $this->assertWellFormedPHP($entity_class_file);
-    $this->assertDrupalCodingStandards($entity_class_file);
-    $this->assertNoTrailingWhitespace($entity_class_file);
-    $this->assertClassFileFormatting($entity_class_file);
+    $php_tester = new PHPTester($entity_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $php_tester->assertHasNoMethods();
+    $php_tester->assertClassHasProtectedProperty('breed', 'string', '');
+    $php_tester->assertClassHasProtectedProperty('colour', 'string', '');
 
-    $this->parseCode($entity_class_file);
-    $this->assertHasClass('Drupal\test_module\Entity\KittyCat');
-    $this->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
-    $this->assertClassHasProtectedProperty('breed', 'string', '');
-    $this->assertClassHasProtectedProperty('colour', 'string', '');
-
-    // TODO: the annotation assertion doens't handle arrays or nested
-    // annotations.
-    //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ConfigEntityType');
+    $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
+    $annotation_tester->assertPropertyHasTranslation('label');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertPropertyHasValue('config_export', ['breed', 'colour']);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
-    $this->assertWellFormedPHP($entity_interface_file);
-    $this->assertDrupalCodingStandards($entity_interface_file);
-    $this->assertNoTrailingWhitespace($entity_interface_file);
-
-    $this->parseCode($entity_interface_file);
-    $this->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+    $php_tester = new PHPTester($entity_interface_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
 
     $schema_file = $files['config/schema/test_module.schema.yml'];
     $yaml_tester = new YamlTester($schema_file);
