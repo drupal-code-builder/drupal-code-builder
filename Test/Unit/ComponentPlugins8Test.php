@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentPlugins8Test extends TestBaseComponentGeneration {
+class ComponentPlugins8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -61,15 +61,11 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     $php_tester->assertHasMethod('blockValidate');
     $php_tester->assertHasMethod('blockForm');
 
-    $this->assertClassFileFormatting($plugin_file);
-
-    $expected_annotation_properties = [
-      'id' => 'test_module_alpha',
-      // A value of NULL here means we don't test the value, only the key.
-      'admin_label' => NULL,
-      'category' => NULL,
-    ];
-    $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('Block');
+    $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
+    $annotation_tester->assertHasProperty('admin_label');
+    $annotation_tester->assertHasProperty('category');
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
@@ -176,20 +172,17 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
-    $this->assertWellFormedPHP($plugin_file);
-    $this->assertDrupalCodingStandards($plugin_file);
-    $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($plugin_file);
 
-    $this->parseCode($plugin_file);
-    $this->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
-    $this->assertClassHasParent('Drupal\Core\Block\BlockBase');
+    $php_tester = new PHPTester($plugin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
 
     // Check service injection.
-    $this->assertClassHasInterfaces([
+    $php_tester->assertClassHasInterfaces([
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
     ]);
-    $this->assertInjectedServicesWithFactory([
+    $php_tester->assertInjectedServicesWithFactory([
       [
         'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
         'service_name' => 'current_user',
@@ -197,7 +190,7 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
         'parameter_name' => 'current_user',
       ],
     ]);
-    $this->assertConstructorBaseParameters([
+    $php_tester->assertConstructorBaseParameters([
       'configuration' => 'array',
       'plugin_id' => NULL,
       'plugin_definition' => NULL,
@@ -206,13 +199,11 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
     // (Not yet covered by PHP Parser assertions.)
     $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition);');
 
-    $expected_annotation_properties = [
-      'id' => 'test_module_alpha',
-      // A value of NULL here means we don't test the value, only the key.
-      'admin_label' => NULL,
-      'category' => NULL,
-    ];
-    $this->assertClassAnnotation('Block', $expected_annotation_properties, $plugin_file, "The plugin class has the correct annotation.");
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('Block');
+    $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
+    $annotation_tester->assertHasProperty('admin_label');
+    $annotation_tester->assertHasProperty('category');
   }
 
   /**
@@ -248,20 +239,17 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/ImageEffect/Alpha.php"];
-    $this->assertWellFormedPHP($plugin_file);
-    $this->assertDrupalCodingStandards($plugin_file);
-    $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($plugin_file);
 
-    $this->parseCode($plugin_file);
-    $this->assertHasClass('Drupal\test_module\Plugin\ImageEffect\Alpha');
-    $this->assertClassHasParent('Drupal\image\ImageEffectBase');
+    $php_tester = new PHPTester($plugin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\ImageEffect\Alpha');
+    $php_tester->assertClassHasParent('Drupal\image\ImageEffectBase');
 
     // Check service injection.
-    $this->assertClassHasInterfaces([
+    $php_tester->assertClassHasInterfaces([
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
     ]);
-    $this->assertInjectedServicesWithFactory([
+    $php_tester->assertInjectedServicesWithFactory([
       [
         'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
         'service_name' => 'current_user',
@@ -269,7 +257,7 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
         'parameter_name' => 'current_user',
       ],
     ]);
-    $this->assertConstructorBaseParameters([
+    $php_tester->assertConstructorBaseParameters([
       'configuration' => 'array',
       'plugin_id' => NULL,
       'plugin_definition' => NULL,
@@ -322,28 +310,25 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
 
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Field/FieldFormatter/Alpha.php"];
-    $this->assertWellFormedPHP($plugin_file);
-    $this->assertDrupalCodingStandards($plugin_file);
-    $this->assertNoTrailingWhitespace($plugin_file, "The plugin class file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($plugin_file);
 
-    $this->parseCode($plugin_file);
-    $this->assertHasClass('Drupal\test_module\Plugin\Field\FieldFormatter\Alpha');
-    $this->assertClassHasParent('Drupal\Core\Field\FormatterBase');
+    $php_tester = new PHPTester($plugin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Field\FieldFormatter\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Field\FormatterBase');
 
     // Check service injection.
-    $this->assertClassHasInterfaces([
+    $php_tester->assertClassHasInterfaces([
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
     ]);
 
-    $this->assertMethodHasParameters([
+    $php_tester->assertMethodHasParameters([
       'container' => 'Symfony\Component\DependencyInjection\ContainerInterface',
       'configuration' => 'array',
       'plugin_id' => NULL,
       'plugin_definition' => NULL,
     ], 'create');
 
-    $this->assertConstructorBaseParameters([
+    $php_tester->assertConstructorBaseParameters([
       'plugin_id' => NULL,
       'plugin_definition' => NULL,
       'field_definition' => 'Drupal\Core\Field\FieldDefinitionInterface',
@@ -353,7 +338,7 @@ class ComponentPlugins8Test extends TestBaseComponentGeneration {
       'third_party_settings' => 'array',
     ]);
 
-    $this->assertInjectedServicesWithFactory([
+    $php_tester->assertInjectedServicesWithFactory([
       [
         'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
         'service_name' => 'current_user',
