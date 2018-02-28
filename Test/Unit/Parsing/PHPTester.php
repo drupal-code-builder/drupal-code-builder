@@ -863,7 +863,7 @@ class PHPTester {
     $method_names_string = implode(", ", $method_names);
     $message = $message ?? "The file contains the methods {$method_names_string}.";
 
-    $this->assertArraySubset($method_names, array_keys($this->parser_nodes['methods']), $message);
+    Assert::assertArraySubset($method_names, array_keys($this->parser_nodes['methods']), $message);
   }
 
   /**
