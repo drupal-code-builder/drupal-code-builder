@@ -64,17 +64,10 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
     $php_tester = new PHPTester($entity_class_file);
-
-    // TODO - convert rest of this to use PHP tester.
-    $this->assertWellFormedPHP($entity_class_file);
-    $this->assertDrupalCodingStandards($entity_class_file);
-    $this->assertNoTrailingWhitespace($entity_class_file);
-    $this->assertClassFileFormatting($entity_class_file);
-
-    $this->parseCode($entity_class_file);
-    $this->assertHasClass('Drupal\test_module\Entity\KittyCat');
-    $this->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
-    $this->assertHasMethods(['baseFieldDefinitions']);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+    $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
@@ -98,12 +91,9 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
-    $this->assertWellFormedPHP($entity_interface_file);
-    $this->assertDrupalCodingStandards($entity_interface_file);
-    $this->assertNoTrailingWhitespace($entity_interface_file);
-
-    $this->parseCode($entity_interface_file);
-    $this->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+    $php_tester = new PHPTester($entity_interface_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
   }
 
   /**
@@ -166,29 +156,24 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $this->assertWellFormedPHP($entity_class_file);
-    $this->assertNoTrailingWhitespace($entity_class_file);
-    $this->assertClassFileFormatting($entity_class_file);
+    $php_tester = new PHPTester($entity_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
-    $this->parseCode($entity_class_file);
-    $this->assertHasClass('Drupal\test_module\Entity\KittyCat');
-    $this->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
-    $this->assertHasMethods(['baseFieldDefinitions']);
-
-    // TODO: the annotation assertion doens't handle arrays or nested
-    // annotations.
-    //$this->assertClassAnnotation('ContentEntityType', [], $entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ContentEntityType');
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
-    $this->assertWellFormedPHP($bundle_entity_class_file);
-    $this->assertNoTrailingWhitespace($bundle_entity_class_file);
-    $this->assertClassFileFormatting($bundle_entity_class_file);
+    $php_tester = new PHPTester($bundle_entity_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCatType');
+    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $php_tester->assertHasNoMethods();
 
-    $this->parseCode($bundle_entity_class_file);
-    $this->assertHasClass('Drupal\test_module\Entity\KittyCatType');
-    $this->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
-    $this->assertHasNoMethods();
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ConfigEntityType');
 
     $config_yaml_file = $files['config/schema/test_module.schema.yml'];
     $yaml_tester = new YamlTester($config_yaml_file);
