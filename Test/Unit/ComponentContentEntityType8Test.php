@@ -184,4 +184,76 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'colour']);
   }
 
+  /**
+   * Test creating a content entity type with handlers.
+   */
+  public function testEntityTypeWithHandlers() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'handler_access' => TRUE,
+          'handler_storage' => TRUE,
+          'handler_view_builder' => TRUE,
+          'handler_list_builder' => 'custom',
+          'handler_views_data' => 'custom',
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorage.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatAccess.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatViewBuilder.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatViewsData.php", $files, "The files list has an list builder class file.");
+
+    $storage_class_file = $files['src/Entity/Handler/KittyCatStorage.php'];
+
+    $php_tester = new PHPTester($storage_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorage');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\Sql\SqlContentEntityStorage');
+    $php_tester->assertClassDocBlockHasLine("Provides the storage handler for the Kitty Cat entity.");
+
+    $access_class_file = $files['src/Entity/Handler/KittyCatAccess.php'];
+
+    $php_tester = new PHPTester($access_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatAccess');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityAccessControlHandler');
+    $php_tester->assertClassDocBlockHasLine("Provides the access handler for the Kitty Cat entity.");
+
+    $view_builder_class_file = $files['src/Entity/Handler/KittyCatViewBuilder.php'];
+
+    $php_tester = new PHPTester($view_builder_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatViewBuilder');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityViewBuilder');
+    $php_tester->assertClassDocBlockHasLine("Provides the view builder handler for the Kitty Cat entity.");
+
+    $list_builder_class_file = $files['src/Entity/Handler/KittyCatListBuilder.php'];
+
+    $php_tester = new PHPTester($list_builder_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatListBuilder');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityListBuilder');
+    $php_tester->assertClassDocBlockHasLine("Provides the list builder handler for the Kitty Cat entity.");
+
+    $views_data_class_file = $files['src/Entity/Handler/KittyCatViewsData.php'];
+
+    $php_tester = new PHPTester($views_data_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatViewsData');
+    $php_tester->assertClassHasParent('Drupal\views\EntityViewsData');
+    $php_tester->assertClassDocBlockHasLine("Provides the Views data handler for the Kitty Cat entity.");
+  }
+
 }
