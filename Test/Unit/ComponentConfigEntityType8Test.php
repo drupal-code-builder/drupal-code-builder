@@ -69,6 +69,12 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'entity_keys',
+      'config_export',
+    ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
     $annotation_tester->assertPropertyHasTranslation('label');

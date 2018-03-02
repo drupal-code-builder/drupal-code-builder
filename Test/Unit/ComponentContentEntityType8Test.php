@@ -72,6 +72,18 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ContentEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'base_table',
+      'handlers',
+      'fieldable',
+      'entity_keys',
+    ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
     $annotation_tester->assertPropertyHasTranslation('label');
