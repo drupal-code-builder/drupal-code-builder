@@ -191,6 +191,20 @@ class AnnotationTester {
   }
 
   /**
+   * Asserts the annotation's root properties, in the given order.
+   *
+   * @param string[] $property_names
+   *   An array of property names.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasRootProperties($property_names, $message = NULL) {
+    $message = $message ?? "The annotation has the expected properties: " . implode(', ', $property_names);
+
+    Assert::assertSame($property_names, array_keys($this->data));
+  }
+
+  /**
    * Assert the annotation has the given property.
    *
    * @param mixed $property_address
