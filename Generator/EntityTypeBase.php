@@ -127,7 +127,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       else {
         $handler_property = $handler_property_defaults_core_empty;
 
-        $handler_property['label'] = "{$handler_type_info['label']} handler";
+        $handler_property['label'] = ucfirst("{$handler_type_info['label']} handler");
       }
 
       $handler_property['handler_label'] = $handler_type_info['label'];
