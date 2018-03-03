@@ -76,6 +76,13 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
+  protected static function getHandlerTypes() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents() {
     $components = parent::requiredComponents();
 

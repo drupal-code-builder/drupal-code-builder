@@ -101,6 +101,41 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
     ];
 
+    // Default property values for a handler that core fills in if not
+    // specified, e.g. the access handler.
+    $handler_property_defaults_core_default = [
+      'format' => 'boolean',
+    ];
+
+    // Default property values for a handler that core leaves empty if not
+    // specified, e.g. the list builder handler.
+    $handler_property_defaults_core_empty = [
+      'format' => 'string',
+      'options' => [
+        'none' => 'Do not use a handler',
+        'core' => 'Use the core handler class',
+        'custom' => 'Provide a custom handler class',
+      ],
+    ];
+
+    foreach (static::getHandlerTypes() as $key => $handler_type_info) {
+      if ($handler_type_info['mode'] == 'core_default') {
+        $handler_property = $handler_property_defaults_core_default;
+
+        $handler_property['label'] = "Custom {$handler_type_info['label']} handler";
+      }
+      else {
+        $handler_property = $handler_property_defaults_core_empty;
+
+        $handler_property['label'] = "{$handler_type_info['label']} handler";
+      }
+
+      $handler_property['handler_label'] = $handler_type_info['label'];
+      $handler_property['parent_class_name'] = $handler_type_info['base_class'];
+
+      $data_definition["handler_{$key}"] = $handler_property;
+    }
+
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
@@ -136,6 +171,21 @@ abstract class EntityTypeBase extends PHPClassFile {
   abstract protected function interfaceBasicParent();
 
   /**
+   * Lists the available handler types.
+   *
+   * @return array
+   *   An array whose keys are the handler type, e.g. 'access', and whose values
+   *   are arrays containing:
+   *   - 'label': The label of the handler type, in lowercase.
+   *   - 'base_class': The base class for handlers of this type.
+   *   - 'mode': Defines how the core entity system handles an entity not
+   *     defining a handler of this type. One of:
+   *      - 'core_default': A default handler is provided.
+   *      - 'core_none': No handler is provided.
+   */
+  abstract protected static function getHandlerTypes();
+
+  /**
    * {@inheritdoc}
    */
   public function requiredComponents() {
@@ -156,6 +206,33 @@ abstract class EntityTypeBase extends PHPClassFile {
         $this->component_data['interface_parents']
       ),
     ];
+
+    // Handlers.
+    foreach (static::getHandlerTypes() as $key => $handler_type_info) {
+      $data_key = "handler_{$key}";
+
+      // Skip if nothing in the data.
+      if (empty($this->component_data[$data_key])) {
+        continue;
+      }
+
+      // For handlers that core doesn't fill in, only provide a class if
+      // for the 'custom' option.
+      if ($handler_type_info['mode'] == 'core_none') {
+        if ($this->component_data[$data_key] != 'custom') {
+          continue;
+        }
+      }
+
+      $components[$data_key] = [
+        'component_type' => 'EntityHandler',
+        'entity_class_name' => $this->component_data['entity_class_name'],
+        'entity_type_label' => $this->component_data['entity_type_label'],
+        'handler_type' => $key,
+        'handler_label' => $handler_type_info['label'],
+        'parent_class_name' => $handler_type_info['base_class'],
+      ];
+    }
 
     return $components;
   }
@@ -196,6 +273,36 @@ abstract class EntityTypeBase extends PHPClassFile {
     $annotation['#data'] += [
       'entity_keys' => $this->component_data['entity_keys'],
     ];
+
+    // Handlers.
+    $handler_data = [];
+    foreach (static::getHandlerTypes() as $key => $handler_type_info) {
+      $data_key = "handler_{$key}";
+
+      // Skip if nothing in the data.
+      if (empty($this->component_data[$data_key])) {
+        continue;
+      }
+
+      if ($handler_type_info['mode'] == 'core_none' && $this->component_data[$data_key] == 'core') {
+        $handler_class = substr($handler_type_info['base_class'], 1);
+      }
+      else {
+        $handler_class = static::makeQualifiedClassName([
+          // TODO: DRY, with EntityHandler class.
+          'Drupal',
+          '%module',
+          'Entity',
+          'Handler',
+          $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
+        ]);
+      }
+
+      $handler_data[$key] = $handler_class;
+    }
+    if ($handler_data) {
+      $annotation['#data']['handlers'] = $handler_data;
+    }
 
     return $annotation;
   }
