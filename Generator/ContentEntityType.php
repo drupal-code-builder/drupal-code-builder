@@ -18,6 +18,12 @@ class ContentEntityType extends EntityTypeBase {
     $data_definition = parent::componentDataDefinition();
 
     $bundle_entity_properties = [
+      'fieldable' => [
+        'label' => 'Fieldable',
+        'description' => "Whether this entity type allows custom fields.",
+        'format' => 'boolean',
+        'default' => TRUE,
+      ],
       'bundle_entity' => [
         'label' => 'Bundle config entity type',
         'description' => "Creates a config entity type which provides the bundles for this entity type. "
@@ -39,6 +45,24 @@ class ContentEntityType extends EntityTypeBase {
           // Bit faffy, but needed for non-progressive UIs.
           if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
             $component_data['bundle_entity'][0]['bundle_of_entity'] = $component_data['entity_type_id'];
+          }
+        },
+      ],
+      'field_ui_base_route' => [
+        'label' => 'Field UI base route',
+        // TODO: expose to UI in 3.3 when we have dynamic defaults.
+        // This will then be dependent on the 'fieldable' property.
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          if (empty($component_data['fieldable'])) {
+            return NULL;
+          }
+
+          if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
+            return 'entity.' . $component_data['bundle_entity'][0]['entity_type_id'] . '.edit_form';
+          }
+          else {
+            return 'entity.' . $component_data['entity_type_id'] . '.admin_form';
           }
         },
       ],
@@ -185,9 +209,9 @@ class ContentEntityType extends EntityTypeBase {
       'bundle_label',
       'base_table',
       'handlers',
-      'fieldable',
       'entity_keys',
       'bundle_entity_type',
+      'field_ui_base_route',
     ];
     $annotation_data = array_fill_keys($annotation_keys, NULL);
 
@@ -228,7 +252,9 @@ class ContentEntityType extends EntityTypeBase {
       $annotation_data['bundle_label'] = $this->component_data['entity_type_label'];
     }
 
-    $annotation_data['fieldable'] = TRUE;
+    if (!empty($this->component_data['field_ui_base_route'])) {
+      $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
+    }
 
     // Filter the annotation data to remove any keys which are NULL; that is,
     // which are still in the state that the array fill put them in and that

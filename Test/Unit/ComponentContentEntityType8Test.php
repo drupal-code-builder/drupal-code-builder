@@ -36,6 +36,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
           // Use an ID string with an underscore to test class names and labels
           // correctly have it removed.
           'entity_type_id' => 'kitty_cat',
+          'fieldable' => TRUE,
           'interface_parents' => [
             'EntityOwnerInterface',
           ],
@@ -82,8 +83,8 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
       'label_count',
       'base_table',
       'handlers',
-      'fieldable',
       'entity_keys',
+      'field_ui_base_route',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -99,7 +100,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue(['handlers', 'list_builder'], 'Drupal\Core\Entity\EntityListBuilder');
-    $annotation_tester->assertPropertyHasValue('fieldable', 'TRUE');
+    $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
@@ -124,6 +125,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
           // Use an ID string with an underscore to test class names and labels
           // correctly have it removed.
           'entity_type_id' => 'kitty_cat',
+          'fieldable' => TRUE,
           'interface_parents' => [
             'EntityOwnerInterface',
           ],
@@ -186,9 +188,9 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
       'label_count',
       'bundle_label',
       'base_table',
-      'fieldable',
       'entity_keys',
       'bundle_entity_type',
+      'field_ui_base_route',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -205,9 +207,9 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     // TODO: this is incorrect!
     // $annotation_tester->assertPropertyHasValue('bundle_label', 'Kitty Cat type');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
-    $annotation_tester->assertPropertyHasValue('fieldable', 'TRUE');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue('bundle_entity_type', 'kitty_cat_type');
+    $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat_type.edit_form');
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
