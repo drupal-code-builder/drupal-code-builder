@@ -10,6 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  *
  * @group yaml
  * @group annotation
+ * @group entity
  */
 class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
