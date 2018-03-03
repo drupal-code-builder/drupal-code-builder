@@ -152,6 +152,10 @@ class ConfigEntityType extends EntityTypeBase {
     $annotation_keys = [
       'id',
       'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
       'handlers',
       'entity_keys',
       'config_export',

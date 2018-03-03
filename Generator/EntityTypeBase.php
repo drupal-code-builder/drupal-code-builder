@@ -292,6 +292,28 @@ abstract class EntityTypeBase extends PHPClassFile {
       'entity_keys' => $this->component_data['entity_keys'],
     ];
 
+    $annotation_data['label_collection'] = [
+      '#class' => 'Translation',
+      '#data' => $this->component_data['entity_type_label'] . 's',
+    ];
+    $annotation_data['label_singular'] = [
+      '#class' => 'Translation',
+      '#data' => strtolower($this->component_data['entity_type_label']),
+    ];
+    $annotation_data['label_plural'] = [
+      '#class' => 'Translation',
+      '#data' => strtolower($this->component_data['entity_type_label']) . 's',
+    ];
+    $annotation_data['label_count'] = [
+      '#class' => 'PluralTranslation',
+      '#data' => [
+        'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
+        'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
+      ],
+    ];
+    // TODO: clean up this array assignment!
+    $annotation['#data'] += $annotation_data;
+
     // Handlers.
     $handler_data = [];
     foreach (static::getHandlerTypes() as $key => $handler_type_info) {

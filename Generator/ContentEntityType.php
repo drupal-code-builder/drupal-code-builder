@@ -232,26 +232,6 @@ class ContentEntityType extends EntityTypeBase {
     }
 
     // Add further annotation properties.
-    $annotation_data['label_collection'] = [
-      '#class' => 'Translation',
-      '#data' => $this->component_data['entity_type_label'] . 's',
-    ];
-    $annotation_data['label_singular'] = [
-      '#class' => 'Translation',
-      '#data' => strtolower($this->component_data['entity_type_label']),
-    ];
-    $annotation_data['label_plural'] = [
-      '#class' => 'Translation',
-      '#data' => strtolower($this->component_data['entity_type_label']) . 's',
-    ];
-    $annotation_data['label_count'] = [
-      '#class' => 'PluralTranslation',
-      '#data' => [
-        'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
-        'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
-      ],
-    ];
-
     // Use the entity type ID as the base table.
     $annotation_data['base_table'] = $this->component_data['entity_type_id'];
 

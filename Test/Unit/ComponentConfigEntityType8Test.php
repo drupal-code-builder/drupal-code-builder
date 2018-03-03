@@ -73,6 +73,10 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester->assertHasRootProperties([
       'id',
       'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
       'entity_keys',
       'config_export',
     ]);
@@ -93,6 +97,15 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty('test_module.kitty_cat');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'type'], 'config_entity');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'label'], 'Kitty Cat');
+    $annotation_tester->assertPropertyHasValue('label_collection', 'Kitty Cats');
+    $annotation_tester->assertPropertyHasTranslation('label_collection');
+    $annotation_tester->assertPropertyHasValue('label_singular', 'kitty cat');
+    $annotation_tester->assertPropertyHasTranslation('label_singular');
+    $annotation_tester->assertPropertyHasValue('label_plural', 'kitty cats');
+    $annotation_tester->assertPropertyHasTranslation('label_plural');
+    $annotation_tester->assertPropertyHasAnnotationClass('label_count', 'PluralTranslation');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
 
     $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'breed']);
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'breed', 'type'], 'string');
@@ -185,6 +198,10 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester->assertHasRootProperties([
       'id',
       'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
       'handlers',
       'entity_keys',
     ]);
