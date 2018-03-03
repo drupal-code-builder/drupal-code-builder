@@ -19,7 +19,9 @@ class ContentEntityType extends EntityTypeBase {
 
     $bundle_entity_properties = [
       'bundle_entity' => [
-        'label' => 'Bundle config entity',
+        'label' => 'Bundle config entity type',
+        'description' => "Creates a config entity type which provides the bundles for this entity type. "
+          . "This is analogous to the Node Type entity type providing bundles for the Node entity type.",
         'format' => 'compound',
         'cardinality' => 1,
         'component' => 'ConfigEntityType',
