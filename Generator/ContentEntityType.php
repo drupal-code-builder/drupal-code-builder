@@ -48,6 +48,16 @@ class ContentEntityType extends EntityTypeBase {
           }
         },
       ],
+      'bundle_label' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
+            // TODO: get the actual value of the entity_type_label property from
+            // the bundle entity -- but this is proving rather labyrinthine...
+            return CaseString::snake($component_data['bundle_entity'][0]['entity_type_id'])->title();
+          }
+        },
+      ],
       'field_ui_base_route' => [
         'label' => 'Field UI base route',
         // TODO: expose to UI in 3.3 when we have dynamic defaults.
@@ -249,7 +259,7 @@ class ContentEntityType extends EntityTypeBase {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type'];
       // This gets set into the child component data when the compound property
       // gets prepared and defaults set.
-      $annotation_data['bundle_label'] = $this->component_data['entity_type_label'];
+      $annotation_data['bundle_label'] = $this->component_data['bundle_label'];
     }
 
     if (!empty($this->component_data['field_ui_base_route'])) {
