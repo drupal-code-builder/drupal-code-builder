@@ -200,7 +200,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
   /**
    * Test creating a content entity type with handlers.
    */
-  public function testEntityTypeWithHandlers() {
+  public function testContentEntityTypeWithHandlers() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(

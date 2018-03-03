@@ -183,7 +183,15 @@ abstract class EntityTypeBase extends PHPClassFile {
    *      - 'core_default': A default handler is provided.
    *      - 'core_none': No handler is provided.
    */
-  abstract protected static function getHandlerTypes();
+  protected static function getHandlerTypes() {
+    return [
+      'access' => [
+        'label' => 'access',
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\Core\Entity\EntityAccessControlHandler',
+      ],
+    ];
+  }
 
   /**
    * {@inheritdoc}

@@ -143,4 +143,56 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasBlankLineBefore(['test_module.beta']);
   }
 
+  /**
+   * Test creating a config entity type with handlers.
+   */
+  public function testConfigEntityTypeWithHandlers() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'config_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'handler_access' => TRUE,
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(5, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
+    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatAccess.php", $files, "The files list has an list builder class file.");
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+
+    $php_tester = new PHPTester($entity_class_file);
+
+    // Test the entity annotation.
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ConfigEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'handlers',
+      'entity_keys',
+    ]);
+    $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Entity\Handler\KittyCatAccess');
+
+    $access_class_file = $files['src/Entity/Handler/KittyCatAccess.php'];
+
+    $php_tester = new PHPTester($access_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatAccess');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityAccessControlHandler');
+    $php_tester->assertClassDocBlockHasLine("Provides the access handler for the Kitty Cat entity.");
+  }
+
 }

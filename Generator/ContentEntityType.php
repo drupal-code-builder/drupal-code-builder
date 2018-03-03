@@ -89,7 +89,7 @@ class ContentEntityType extends EntityTypeBase {
    * {@inheritdoc}
    */
   protected static function getHandlerTypes() {
-    return [
+    return parent::getHandlerTypes() + [
       'storage' => [
         'label' => 'storage',
         // Core fills this in if entity type doesn't specify.
@@ -111,12 +111,6 @@ class ContentEntityType extends EntityTypeBase {
         // Core leaves empty if not specified.
         'mode' => 'core_none',
         'base_class' => '\Drupal\views\EntityViewsData',
-      ],
-      // TODO: this belongs in the base entity type; config have them too.
-      'access' => [
-        'label' => 'access',
-        'mode' => 'core_default',
-        'base_class' => '\Drupal\Core\Entity\EntityAccessControlHandler',
       ],
       // routing: several options...
     ];

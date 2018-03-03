@@ -76,13 +76,6 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected static function getHandlerTypes() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
@@ -147,6 +140,7 @@ class ConfigEntityType extends EntityTypeBase {
     $annotation_keys = [
       'id',
       'label',
+      'handlers',
       'entity_keys',
       'config_export',
     ];
