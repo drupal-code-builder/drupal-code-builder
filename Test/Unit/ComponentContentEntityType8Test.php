@@ -174,8 +174,40 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
     $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
+    // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ContentEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'bundle_label',
+      'base_table',
+      'fieldable',
+      'entity_keys',
+      'bundle_entity_type',
+    ]);
+    $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
+    $annotation_tester->assertPropertyHasTranslation('label');
+    $annotation_tester->assertPropertyHasValue('label_collection', 'Kitty Cats');
+    $annotation_tester->assertPropertyHasTranslation('label_collection');
+    $annotation_tester->assertPropertyHasValue('label_singular', 'kitty cat');
+    $annotation_tester->assertPropertyHasTranslation('label_singular');
+    $annotation_tester->assertPropertyHasValue('label_plural', 'kitty cats');
+    $annotation_tester->assertPropertyHasTranslation('label_plural');
+    $annotation_tester->assertPropertyHasAnnotationClass('label_count', 'PluralTranslation');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
+    // TODO: this is incorrect!
+    // $annotation_tester->assertPropertyHasValue('bundle_label', 'Kitty Cat type');
+    $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue('fieldable', 'TRUE');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertPropertyHasValue('bundle_entity_type', 'kitty_cat_type');
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
