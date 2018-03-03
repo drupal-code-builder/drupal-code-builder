@@ -257,9 +257,10 @@ class ContentEntityType extends EntityTypeBase {
 
     if (isset($this->component_data['bundle_entity_type'])) {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type'];
-      // This gets set into the child component data when the compound property
-      // gets prepared and defaults set.
-      $annotation_data['bundle_label'] = $this->component_data['bundle_label'];
+      $annotation_data['bundle_label'] = [
+        '#class' => 'Translation',
+        '#data' => $this->component_data['bundle_label'],
+      ];
     }
 
     if (!empty($this->component_data['field_ui_base_route'])) {

@@ -205,6 +205,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue('bundle_label', 'Kitty Cat Type');
+    $annotation_tester->assertPropertyHasTranslation('bundle_label');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue('bundle_entity_type', 'kitty_cat_type');
