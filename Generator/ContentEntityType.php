@@ -238,50 +238,67 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected function getClassDocBlockLines() {
-    $docblock_lines = parent::getClassDocBlockLines();
-    $docblock_lines[] = '';
+  protected function getAnnotationData() {
+    $annotation = parent::getAnnotationData();
 
-    $annotation = [
-      '#class' => 'ContentEntityType',
+    $annotation['#class'] = 'ContentEntityType';
+
+    // Standard ordering for our annotation keys.
+    $annotation_keys = [
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'bundle_label',
+      'base_table',
+      'handlers',
+      'fieldable',
+      'entity_keys',
+      'bundle_entity_type',
+    ];
+    $annotation_data = array_fill_keys($annotation_keys, NULL);
+
+    // Re-create the annotation #data array, with the properties in our set
+    // order.
+    foreach ($annotation['#data'] as $key => $data) {
+      $annotation_data[$key] = $data;
+    }
+
+    // Add further annotation properties.
+    $annotation_data['label_collection'] = [
+      '#class' => 'Translation',
+      '#data' => $this->component_data['entity_type_label'] . 's',
+    ];
+    $annotation_data['label_singular'] = [
+      '#class' => 'Translation',
+      '#data' => strtolower($this->component_data['entity_type_label']),
+    ];
+    $annotation_data['label_plural'] = [
+      '#class' => 'Translation',
+      '#data' => strtolower($this->component_data['entity_type_label']) . 's',
+    ];
+    $annotation_data['label_count'] = [
+      '#class' => 'PluralTranslation',
       '#data' => [
-        'id' => $this->component_data['entity_type_id'],
-        'label' => [
-          '#class' => 'Translation',
-          '#data' => $this->component_data['entity_type_label'],
-        ],
-        'label_collection' => [
-          '#class' => 'Translation',
-          '#data' => $this->component_data['entity_type_label'] . 's',
-        ],
-        'label_singular' => [
-          '#class' => 'Translation',
-          '#data' => strtolower($this->component_data['entity_type_label']),
-        ],
-        'label_plural' => [
-          '#class' => 'Translation',
-          '#data' => strtolower($this->component_data['entity_type_label']) . 's',
-        ],
-        'label_count' => [
-          '#class' => 'PluralTranslation',
-          '#data' => [
-            'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
-            'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
-          ],
-        ],
-        // Use the entity type ID as the base table.
-        'base_table' => $this->component_data['entity_type_id'],
+        'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
+        'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
       ],
     ];
 
+    // Use the entity type ID as the base table.
+    $annotation_data['base_table'] = $this->component_data['entity_type_id'];
+
     if (isset($this->component_data['bundle_entity_type'])) {
-      $annotation['#data']['bundle_entity_type'] = $this->component_data['bundle_entity_type'];
+      $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type'];
       // This gets set into the child component data when the compound property
       // gets prepared and defaults set.
-      $annotation['#data']['bundle_label'] = $this->component_data['entity_type_label'];
+      $annotation_data['bundle_label'] = $this->component_data['entity_type_label'];
     }
 
     // Handlers.
+    $handler_data = [];
     foreach (static::getHandlerTypes() as $key => $handler_type_info) {
       $data_key = "handler_{$key}";
 
@@ -304,17 +321,26 @@ class ContentEntityType extends EntityTypeBase {
         ]);
       }
 
-      $annotation['#data']['handlers'][$key] = $handler_class;
+      $handler_data[$key] = $handler_class;
+    }
+    if ($handler_data) {
+      $annotation_data['handlers'] = $handler_data;
     }
 
-    $annotation['#data'] += [
-      'fieldable' => TRUE,
-      'entity_keys' => $this->component_data['entity_keys'],
-    ];
+    $annotation_data['fieldable'] = TRUE;
 
-    $docblock_lines = array_merge($docblock_lines, $this->renderAnnnotation($annotation));
+    // Filter the annotation data to remove any keys which are NULL; that is,
+    // which are still in the state that the array fill put them in and that
+    // have not had any actual data in. AFAIK annotation values are never
+    // actually NULL, so this is ok.
+    $annotation_data = array_filter($annotation_data, function($item) {
+      return !is_null($item);
+    });
 
-    return $docblock_lines;
+    // Put our data into the annotation array.
+    $annotation['#data'] = $annotation_data;
+
+    return $annotation;
   }
 
 }

@@ -131,29 +131,14 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected function getClassDocBlockLines() {
-    //dump($this->component_data);
-    $docblock_lines = parent::getClassDocBlockLines();
-    $docblock_lines[] = '';
+  protected function getAnnotationData() {
+    $annotation = parent::getAnnotationData();
 
-    $annotation = [
-      '#class' => 'ConfigEntityType',
-      '#data' => [
-        'id' => $this->component_data['entity_type_id'],
-        'label' => [
-          '#class' => 'Translation',
-          '#data' => $this->component_data['entity_type_label'],
-        ],
-      ],
-    ];
+    $annotation['#class'] = 'ConfigEntityType';
 
     if (isset($this->component_data['bundle_of_entity'])) {
       $annotation['#data']['bundle_of'] = $this->component_data['bundle_of_entity'];
     }
-
-    $annotation['#data'] += [
-      'entity_keys' => $this->component_data['entity_keys'],
-    ];
 
     $config_export_values = [];
     foreach ($this->component_data['entity_properties'] as $schema_item) {
@@ -165,9 +150,7 @@ class ConfigEntityType extends EntityTypeBase {
       ];
     }
 
-    $docblock_lines = array_merge($docblock_lines, $this->renderAnnnotation($annotation));
-
-    return $docblock_lines;
+    return $annotation;
   }
 
 

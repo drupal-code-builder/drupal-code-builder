@@ -160,6 +160,46 @@ abstract class EntityTypeBase extends PHPClassFile {
     return $components;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getClassDocBlockLines() {
+    //dump($this->component_data);
+    $docblock_lines = parent::getClassDocBlockLines();
+    $docblock_lines[] = '';
+
+    $annotation = $this->getAnnotationData();
+
+    $docblock_lines = array_merge($docblock_lines, $this->renderAnnnotation($annotation));
+
+    return $docblock_lines;
+  }
+
+  /**
+   * Gets the data for the annotation.
+   *
+   * @return array
+   *   A data array suitable for renderAnnnotation().
+   */
+  protected function getAnnotationData() {
+    $annotation = [
+      '#class' => 'CHILD CLASS SETS THIS',
+      '#data' => [
+        'id' => $this->component_data['entity_type_id'],
+        'label' => [
+          '#class' => 'Translation',
+          '#data' => $this->component_data['entity_type_label'],
+        ],
+      ],
+    ];
+
+    $annotation['#data'] += [
+      'entity_keys' => $this->component_data['entity_keys'],
+    ];
+
+    return $annotation;
+  }
+
   // helper. code from https://www.drupal.org/node/66183
   public static function insert(&$array, $key, $insert_array, $before = FALSE) {
     $done = FALSE;
