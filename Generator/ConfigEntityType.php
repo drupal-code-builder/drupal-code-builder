@@ -76,6 +76,17 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
+  protected static function getHandlerTypes() {
+    $handler_types = parent::getHandlerTypes();
+
+    $handler_types['storage']['base_class'] = '\Drupal\Core\Config\Entity\ConfigEntityStorage';
+
+    return $handler_types;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents() {
     $components = parent::requiredComponents();
 

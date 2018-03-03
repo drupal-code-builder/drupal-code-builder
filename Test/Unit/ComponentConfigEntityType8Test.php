@@ -157,6 +157,7 @@ class ComponentConfigEntityType8Test extends TestBase {
         0 => [
           'entity_type_id' => 'kitty_cat',
           'handler_access' => TRUE,
+          'handler_storage' => TRUE,
         ],
       ],
       'readme' => FALSE,
@@ -164,12 +165,13 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(5, $files, "Expected number of files is returned.");
+    $this->assertCount(6, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatAccess.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorage.php", $files, "The files list has an list builder class file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -185,6 +187,7 @@ class ComponentConfigEntityType8Test extends TestBase {
       'entity_keys',
     ]);
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Entity\Handler\KittyCatAccess');
+    $annotation_tester->assertPropertyHasValue(['handlers', 'storage'], 'Drupal\test_module\Entity\Handler\KittyCatStorage');
 
     $access_class_file = $files['src/Entity/Handler/KittyCatAccess.php'];
 
@@ -193,6 +196,14 @@ class ComponentConfigEntityType8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatAccess');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityAccessControlHandler');
     $php_tester->assertClassDocBlockHasLine("Provides the access handler for the Kitty Cat entity.");
+
+    $storage_class_file = $files['src/Entity/Handler/KittyCatStorage.php'];
+
+    $php_tester = new PHPTester($storage_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorage');
+    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityStorage');
+    $php_tester->assertClassDocBlockHasLine("Provides the storage handler for the Kitty Cat entity.");
   }
 
 }

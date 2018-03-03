@@ -190,6 +190,11 @@ abstract class EntityTypeBase extends PHPClassFile {
         'mode' => 'core_default',
         'base_class' => '\Drupal\Core\Entity\EntityAccessControlHandler',
       ],
+      'storage' => [
+        'label' => 'storage',
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\Core\Entity\EntityStorageBase',
+      ],
     ];
   }
 

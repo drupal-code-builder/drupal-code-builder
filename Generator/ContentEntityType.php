@@ -89,13 +89,7 @@ class ContentEntityType extends EntityTypeBase {
    * {@inheritdoc}
    */
   protected static function getHandlerTypes() {
-    return parent::getHandlerTypes() + [
-      'storage' => [
-        'label' => 'storage',
-        // Core fills this in if entity type doesn't specify.
-        'mode' => 'core_default',
-        'base_class' => '\Drupal\Core\Entity\Sql\SqlContentEntityStorage',
-      ],
+    $handler_types = parent::getHandlerTypes() + [
       'view_builder' => [
         'label' => 'view builder',
         'mode' => 'core_default',
@@ -114,6 +108,10 @@ class ContentEntityType extends EntityTypeBase {
       ],
       // routing: several options...
     ];
+
+    $handler_types['storage']['base_class'] = '\Drupal\Core\Entity\Sql\SqlContentEntityStorage';
+
+    return $handler_types;
   }
 
   /**
