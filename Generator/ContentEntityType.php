@@ -95,11 +95,6 @@ class ContentEntityType extends EntityTypeBase {
         'mode' => 'core_default',
         'base_class' => '\Drupal\Core\Entity\EntityViewBuilder',
       ],
-      'list_builder' => [
-        'label' => 'list builder',
-        'mode' => 'core_none',
-        'base_class' => '\Drupal\Core\Entity\EntityListBuilder',
-      ],
       "views_data" => [
         'label' => 'Views data',
         // Core leaves empty if not specified.
