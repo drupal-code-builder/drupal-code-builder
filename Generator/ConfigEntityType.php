@@ -136,8 +136,24 @@ class ConfigEntityType extends EntityTypeBase {
 
     $annotation['#class'] = 'ConfigEntityType';
 
+    // Standard ordering for our annotation keys.
+    $annotation_keys = [
+      'id',
+      'label',
+      'entity_keys',
+      'config_export',
+    ];
+    $annotation_data = array_fill_keys($annotation_keys, NULL);
+
+    // Re-create the annotation #data array, with the properties in our set
+    // order.
+    foreach ($annotation['#data'] as $key => $data) {
+      $annotation_data[$key] = $data;
+    }
+
+    // Add further annotation properties.
     if (isset($this->component_data['bundle_of_entity'])) {
-      $annotation['#data']['bundle_of'] = $this->component_data['bundle_of_entity'];
+      $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
     }
 
     $config_export_values = [];
@@ -145,10 +161,19 @@ class ConfigEntityType extends EntityTypeBase {
       $config_export_values[] = $schema_item['name'];
     }
     if ($config_export_values) {
-      $annotation['#data'] += [
-        'config_export' => $config_export_values,
-      ];
+      $annotation_data['config_export'] = $config_export_values;
     }
+
+    // Filter the annotation data to remove any keys which are NULL; that is,
+    // which are still in the state that the array fill put them in and that
+    // have not had any actual data in. AFAIK annotation values are never
+    // actually NULL, so this is ok.
+    $annotation_data = array_filter($annotation_data, function($item) {
+      return !is_null($item);
+    });
+
+    // Put our data into the annotation array.
+    $annotation['#data'] = $annotation_data;
 
     return $annotation;
   }
