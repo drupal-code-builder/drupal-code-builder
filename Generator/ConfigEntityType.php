@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
 
 /**
@@ -42,7 +43,7 @@ class ConfigEntityType extends EntityTypeBase {
         ],
       ],
     ];
-    self::insert($data_definition, 'interface_parents', $config_schema_property);
+    InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
 
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Config\Entity\ConfigEntityBase';
 
@@ -52,7 +53,7 @@ class ConfigEntityType extends EntityTypeBase {
         'internal' => TRUE,
       ],
     ];
-    self::insert($data_definition, 'entity_class_name', $bundle_of_entity_properties);
+    InsertArray::insertAfter($data_definition, 'entity_class_name', $bundle_of_entity_properties);
 
     return $data_definition;
   }

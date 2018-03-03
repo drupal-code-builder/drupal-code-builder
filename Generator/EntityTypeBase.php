@@ -325,28 +325,4 @@ abstract class EntityTypeBase extends PHPClassFile {
     return $annotation;
   }
 
-  // helper. code from https://www.drupal.org/node/66183
-  public static function insert(&$array, $key, $insert_array, $before = FALSE) {
-    $done = FALSE;
-    foreach ($array as $array_key => $array_val) {
-      if (!$before) {
-        $new_array[$array_key] = $array_val;
-      }
-      if (!$done && ($array_key == $key)) {
-        foreach ($insert_array as $insert_array_key => $insert_array_val) {
-          $new_array[$insert_array_key] = $insert_array_val;
-        }
-        $done = TRUE;
-      }
-      if ($before) {
-        $new_array[$array_key] = $array_val;
-      }
-    }
-    if (!$done) {
-      $new_array = array_merge($array, $insert_array);
-    }
-    // Put the new array in the place of the original.
-    $array = $new_array;
-  }
-
 }

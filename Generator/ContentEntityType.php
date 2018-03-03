@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
 
 /**
@@ -40,7 +41,7 @@ class ContentEntityType extends EntityTypeBase {
         },
       ],
     ];
-    self::insert($data_definition, 'entity_class_name', $bundle_entity_properties);
+    InsertArray::insertAfter($data_definition, 'entity_class_name', $bundle_entity_properties);
 
     $base_fields_property = [
       'base_fields' => [
@@ -69,7 +70,7 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
     ];
-    self::insert($data_definition, 'interface_parents', $base_fields_property);
+    InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_property);
 
     $data_definition['bundle_entity_type'] = [
       'label' => 'Bundle entity type',
