@@ -50,10 +50,6 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
         'format' => 'array',
-        // TODO should an array format property always get an empty array as a
-        // minimum in process?
-        'process_default' => TRUE,
-        'default' => [],
         // Data for the options and processing callbacks.
         // Bit of a hack, as we need full class names internally, but they're
         // unwieldy in the UI.
