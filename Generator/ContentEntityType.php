@@ -143,6 +143,15 @@ class ContentEntityType extends EntityTypeBase {
 
     $handler_types['storage']['base_class'] = '\Drupal\Core\Entity\Sql\SqlContentEntityStorage';
 
+    $storage_schema_type = [
+      'storage_schema' => [
+        'label' => 'storage schema',
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema',
+      ],
+    ];
+    InsertArray::insertAfter($handler_types, 'storage', $storage_schema_type);
+
     return $handler_types;
   }
 

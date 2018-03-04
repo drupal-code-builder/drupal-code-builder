@@ -246,6 +246,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
           'entity_type_id' => 'kitty_cat',
           'handler_access' => TRUE,
           'handler_storage' => TRUE,
+          'handler_storage_schema' => TRUE,
           'handler_view_builder' => TRUE,
           'handler_list_builder' => 'custom',
           'handler_views_data' => 'custom',
@@ -257,6 +258,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorage.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorageSchema.php", $files, "The files list has a storage schema class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatAccess.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatViewBuilder.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has an list builder class file.");
@@ -269,6 +271,14 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorage');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\Sql\SqlContentEntityStorage');
     $php_tester->assertClassDocBlockHasLine("Provides the storage handler for the Kitty Cat entity.");
+
+    $storage_schema_class_file = $files['src/Entity/Handler/KittyCatStorageSchema.php'];
+
+    $php_tester = new PHPTester($storage_schema_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorageSchema');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema');
+    $php_tester->assertClassDocBlockHasLine("Provides the storage schema handler for the Kitty Cat entity.");
 
     $access_class_file = $files['src/Entity/Handler/KittyCatAccess.php'];
 
