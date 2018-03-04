@@ -138,6 +138,13 @@ class ContentEntityType extends EntityTypeBase {
         'mode' => 'core_none',
         'base_class' => '\Drupal\views\EntityViewsData',
       ],
+      'translation' => [
+        'label' => 'translation',
+        // Technically, the content_translation module does this rather than the
+        // entity system.
+        'mode' => 'core_default',
+        'base_class' => '\Drupal\content_translation\ContentTranslationHandler',
+      ],
       // routing: several options...
     ];
 

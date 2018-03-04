@@ -250,6 +250,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
           'handler_view_builder' => TRUE,
           'handler_list_builder' => 'custom',
           'handler_views_data' => 'custom',
+          'handler_translation' => TRUE,
         ],
       ],
       'readme' => FALSE,
@@ -263,6 +264,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatViewBuilder.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatViewsData.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatTranslation.php", $files, "The files list has a translation class file.");
 
     $storage_class_file = $files['src/Entity/Handler/KittyCatStorage.php'];
 
@@ -311,6 +313,14 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatViewsData');
     $php_tester->assertClassHasParent('Drupal\views\EntityViewsData');
     $php_tester->assertClassDocBlockHasLine("Provides the Views data handler for the Kitty Cat entity.");
+
+    $translation_class_file = $files['src/Entity/Handler/KittyCatTranslation.php'];
+
+    $php_tester = new PHPTester($translation_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatTranslation');
+    $php_tester->assertClassHasParent('Drupal\content_translation\ContentTranslationHandler');
+    $php_tester->assertClassDocBlockHasLine("Provides the translation handler for the Kitty Cat entity.");
   }
 
 }
