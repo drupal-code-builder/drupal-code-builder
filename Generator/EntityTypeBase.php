@@ -136,6 +136,24 @@ abstract class EntityTypeBase extends PHPClassFile {
       $data_definition["handler_{$key}"] = $handler_property;
     }
 
+    // Admin permission.
+    $data_definition['admin_permission'] = [
+      'label' => 'Admin permission',
+      'description' => "Whether to provide an admin permission.",
+      'format' => 'boolean',
+    ];
+    $data_definition['admin_permission_name'] = [
+      'label' => 'Admin permission name',
+      'computed' => TRUE,
+      'default' => function ($component_data) {
+        if (!empty($component_data['admin_permission'])) {
+          $entity_type_id = $component_data['entity_type_id'];
+          // TODO: add a lower() to case converter!
+          return 'administer ' . strtolower(CaseString::snake($entity_type_id)->sentence()) . 's';
+        }
+      },
+    ];
+
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
@@ -252,6 +270,16 @@ abstract class EntityTypeBase extends PHPClassFile {
       ];
     }
 
+    // Admin permission.
+    if ($this->component_data['admin_permission_name']) {
+      $admin_permission_name = $this->component_data['admin_permission_name'];
+
+      $components[$admin_permission_name] = array(
+        'component_type' => 'Permission',
+        'permission' => $admin_permission_name,
+      );
+    }
+
     return $components;
   }
 
@@ -342,6 +370,10 @@ abstract class EntityTypeBase extends PHPClassFile {
     }
     if ($handler_data) {
       $annotation['#data']['handlers'] = $handler_data;
+    }
+
+    if ($this->component_data['admin_permission_name']) {
+      $annotation['#data']['admin_permission'] = $this->component_data['admin_permission_name'];
     }
 
     return $annotation;

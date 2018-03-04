@@ -157,6 +157,7 @@ class ConfigEntityType extends EntityTypeBase {
       'label_plural',
       'label_count',
       'handlers',
+      'admin_permission',
       'entity_keys',
       'config_export',
     ];

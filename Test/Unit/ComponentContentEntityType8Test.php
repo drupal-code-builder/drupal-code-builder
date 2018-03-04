@@ -37,6 +37,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
           // correctly have it removed.
           'entity_type_id' => 'kitty_cat',
           'fieldable' => TRUE,
+          'admin_permission' => TRUE,
           'interface_parents' => [
             'EntityOwnerInterface',
           ],
@@ -58,8 +59,9 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(3, $files, "Expected number of files is returned.");
+    $this->assertCount(4, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
 
@@ -83,6 +85,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
       'label_count',
       'base_table',
       'handlers',
+      'admin_permission',
       'entity_keys',
       'field_ui_base_route',
     ]);
@@ -100,6 +103,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue(['handlers', 'list_builder'], 'Drupal\Core\Entity\EntityListBuilder');
+    $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty cats');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
 
@@ -108,6 +112,14 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $php_tester = new PHPTester($entity_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+
+    // Check the .permissions file.
+    $permissions_file = $files["$module_name.permissions.yml"];
+    $yaml_tester = new YamlTester($permissions_file);
+
+    $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'administer kitty cats', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
   }
 
   /**

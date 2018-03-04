@@ -235,6 +235,7 @@ class ContentEntityType extends EntityTypeBase {
       'bundle_label',
       'base_table',
       'handlers',
+      'admin_permission',
       'entity_keys',
       'bundle_entity_type',
       'field_ui_base_route',
