@@ -51,7 +51,7 @@ class ComponentPermissions8Test extends TestBaseComponentGeneration {
     $permissions_file = $files["$module_name.permissions.yml"];
 
     $yaml_tester = new YamlTester($permissions_file);
-    $yaml_tester->assertPropertyHasValue([$permission_name, 'title'], 'my permission name', "The permissions file declares the permission name.");
+    $yaml_tester->assertPropertyHasValue([$permission_name, 'title'], 'My permission name', "The permissions file declares the permission name.");
     $yaml_tester->assertPropertyHasValue([$permission_name, 'description'], 'My permission name', "The permissions file declares the permission description.");
   }
 

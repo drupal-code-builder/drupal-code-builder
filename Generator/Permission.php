@@ -86,7 +86,7 @@ class Permission extends BaseGenerator {
     $permission_name = $this->component_data['permission'];
 
     $permission_info = array(
-      'title' => $permission_name,
+      'title' => ucfirst($permission_name),
       'description' => $this->component_data['description'],
     );
     if (!empty($this->component_data['restrict_access'])) {

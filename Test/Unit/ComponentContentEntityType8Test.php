@@ -118,7 +118,7 @@ class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
     $yaml_tester = new YamlTester($permissions_file);
 
     $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'administer kitty cats', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
   }
 
