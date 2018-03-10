@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 /**
  * Tests for Hooks component.
  */
-class ComponentHooks8Test extends TestBaseComponentGeneration {
+class ComponentHooks8Test extends TestBase {
 
   /**
    * The PHP CodeSniffer snifs to exclude for this test.

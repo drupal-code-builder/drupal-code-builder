@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentPermissions8Test extends TestBaseComponentGeneration {
+class ComponentPermissions8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

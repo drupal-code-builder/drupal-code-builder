@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 /**
  * Tests the AdminSettingsForm generator class.
  */
-class ComponentAdminSettings8Test extends TestBaseComponentGeneration {
+class ComponentAdminSettings8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

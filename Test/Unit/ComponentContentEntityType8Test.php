@@ -12,7 +12,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  * @group annotation
  * @group entity
  */
-class ComponentContentEntityType8Test extends TestBaseComponentGeneration {
+class ComponentContentEntityType8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
