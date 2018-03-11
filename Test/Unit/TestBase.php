@@ -323,6 +323,9 @@ abstract class TestBase extends TestCase {
   /**
    * Assert a string contains the correct file header.
    *
+   * TODO: Remove this; it's completely covered by PHPCS sniff
+   * Drupal.Commenting.FileComment.FileTag.
+   *
    * @param $string
    *  The text to check for a docblock.
    * @param $message = NULL
