@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests for Form component.
  */
-class ComponentForm8Test extends TestBaseComponentGeneration {
+class ComponentForm8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -84,15 +84,13 @@ class ComponentForm8Test extends TestBaseComponentGeneration {
 
     $form_file = $files["src/Form/MyForm.php"];
 
-    $this->assertWellFormedPHP($form_file);
-    $this->assertDrupalCodingStandards($form_file);
-
-    $this->parseCode($form_file);
-    $this->assertHasClass('Drupal\test_module\Form\MyForm');
-    $this->assertClassHasParent('Drupal\Core\Form\FormBase');
+    $php_tester = new PHPTester($form_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Form\MyForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
 
     // Check service injection.
-    $this->assertInjectedServicesWithFactory([
+    $php_tester->assertInjectedServicesWithFactory([
       [
         'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
         'service_name' => 'current_user',
