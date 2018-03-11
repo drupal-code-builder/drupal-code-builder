@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
@@ -9,7 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentRouterItem8Test extends TestBaseComponentGeneration {
+class ComponentRouterItem8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -70,14 +71,10 @@ class ComponentRouterItem8Test extends TestBaseComponentGeneration {
 
     $controller_file = $files["src/Controller/MyPathController.php"];
 
-    $this->assertWellFormedPHP($controller_file);
-    $this->assertDrupalCodingStandards($controller_file);
-    $this->assertNoTrailingWhitespace($controller_file, "The controller file contains no trailing whitespace.");
-    $this->assertClassFileFormatting($controller_file);
-
-    $this->parseCode($controller_file);
-    $this->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
-    $this->assertHasMethod('content');
+    $php_tester = new PHPTester($controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
+    $php_tester->assertHasMethod('content');
   }
 
 }
