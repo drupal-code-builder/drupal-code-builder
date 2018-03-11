@@ -69,7 +69,7 @@ class PHPTester {
    * @param string[] $excluded_sniffs
    *   (optional) An array of names of PHPCS sniffs to exclude from testing.
    */
-  public function assertDrupalCodingStandards($excluded_sniffs = []) {
+  public function assertDrupalCodingStandards(array $excluded_sniffs = []) {
     $phpcs = $this->setUpPHPCS($excluded_sniffs);
 
     // Process the file with PHPCS.
