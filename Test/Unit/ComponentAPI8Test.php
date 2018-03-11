@@ -2,10 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests the API documentation file component.
  */
-class ComponentAPI8Test extends TestBaseComponentGeneration {
+class ComponentAPI8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -42,10 +44,9 @@ class ComponentAPI8Test extends TestBaseComponentGeneration {
     $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has an api.php file.");
 
     $api_file = $files["$module_name.api.php"];
-    $this->assertWellFormedPHP($api_file);
-    $this->assertDrupalCodingStandards($api_file);
-    $this->assertNoTrailingWhitespace($api_file);
-    $this->assertFileHeader($api_file);
+
+    $php_tester = new PHPTester($api_file);
+    $php_tester->assertDrupalCodingStandards();
 
     // TODO: expand the docblock assertion for these.
     $this->assertContains("Hooks provided by the Test Module module.", $api_file, 'The API file contains the correct docblock header.');
