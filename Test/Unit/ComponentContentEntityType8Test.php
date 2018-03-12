@@ -123,6 +123,93 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
+   * Test creating a translatable content entity type.
+   */
+  public function testEntityTypeWithTranslation() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          // Use an ID string with an underscore to test class names and labels
+          // correctly have it removed.
+          'entity_type_id' => 'kitty_cat',
+          'fieldable' => TRUE,
+          'translatable' => TRUE,
+          'admin_permission' => TRUE,
+          'interface_parents' => [
+            'EntityOwnerInterface',
+          ],
+          'handler_list_builder' => 'core',
+          'base_fields' => [
+            0 => [
+              'name' => 'breed',
+              'type' => 'string',
+            ],
+            1 => [
+              'name' => 'colour',
+              'type' => 'string',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(4, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+
+    $php_tester = new PHPTester($entity_class_file);
+
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+    $php_tester->assertHasMethods(['baseFieldDefinitions']);
+
+    $expected_method_calls = [
+      "setLabel",
+      "setDescription",
+      "setTranslatable",
+    ];
+    // The first statement is the call to the parent; subsequent statements
+    // should all be field creation.
+    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 1);
+    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 2);
+
+    // Test the entity annotation.
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ContentEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'base_table',
+      'data_table',
+      'translatable',
+      'handlers',
+      'admin_permission',
+      'entity_keys',
+      'field_ui_base_route',
+    ]);
+    $annotation_tester->assertPropertyHasValue('translatable', 'TRUE');
+    $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue('data_table', 'kitty_cat_field_data');
+  }
+
+  /**
    * Test creating a content entity type with a bundle entity.
    */
   public function testEntityTypeWithBundleEntity() {

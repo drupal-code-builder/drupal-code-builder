@@ -24,6 +24,12 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'boolean',
         'default' => TRUE,
       ],
+      'translatable' => [
+        'label' => 'Translatable',
+        'description' => "Whether this entity type allows translation.",
+        'format' => 'boolean',
+        'default' => TRUE,
+      ],
       'bundle_entity' => [
         'label' => 'Bundle config entity type',
         'description' => "Creates a config entity type which provides the bundles for this entity type. "
@@ -195,8 +201,17 @@ class ContentEntityType extends EntityTypeBase {
     $method_body[] = '';
     foreach ($this->component_data['base_fields'] as $base_field_data) {
       $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
-      $method_body[] = "  ->setLabel(t('{$base_field_data['label']}'))";
-      $method_body[] = "  ->setDescription(t('TODO: description of field.'));";
+
+      $fluent_calls = [];
+      $fluent_calls[] = "  ->setLabel(t('{$base_field_data['label']}'))";
+      $fluent_calls[] = "  ->setDescription(t('TODO: description of field.'))";
+      if (!empty($this->component_data['translatable'])) {
+        $fluent_calls[] = "  ->setTranslatable(TRUE)";
+      }
+      // Add a terminal ';' to the last of the fluent method calls.
+      $fluent_calls[count($fluent_calls) - 1] .= ';';
+
+      $method_body = array_merge($method_body, $fluent_calls);
 
       $method_body[] = '';
     }
@@ -234,6 +249,8 @@ class ContentEntityType extends EntityTypeBase {
       'label_count',
       'bundle_label',
       'base_table',
+      'data_table',
+      'translatable',
       'handlers',
       'admin_permission',
       'entity_keys',
@@ -262,6 +279,11 @@ class ContentEntityType extends EntityTypeBase {
 
     if (!empty($this->component_data['field_ui_base_route'])) {
       $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
+    }
+
+    if (!empty($this->component_data['translatable'])) {
+      $annotation_data['translatable'] = 'TRUE';
+      $annotation_data['data_table'] = "{$annotation_data['base_table']}_field_data";
     }
 
     // Filter the annotation data to remove any keys which are NULL; that is,
