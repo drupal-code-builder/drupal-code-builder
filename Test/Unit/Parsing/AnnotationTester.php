@@ -225,6 +225,26 @@ class AnnotationTester {
   }
 
   /**
+   * Assert the annotation does not have the given property.
+   *
+   * @param mixed $property_address
+   *   The address of the property. An array address for the property; may be
+   *   a scalar string for a top-level property.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertNotHasProperty($property_address, $message = NULL) {
+    if (!is_array($property_address)) {
+      $property_address = [$property_address];
+    }
+
+    $property_string = $this->getPropertyString($property_address);
+    $message = $message ?? "The annotation does not have the property $property_string.";
+
+    Assert::assertFalse(NestedArray::keyExists($this->data, $property_address), $message);
+  }
+
+  /**
    * Assert the annotation property has the given value.
    *
    * @param mixed $property_address
