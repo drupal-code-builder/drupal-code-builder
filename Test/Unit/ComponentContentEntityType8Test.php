@@ -24,7 +24,7 @@ class ComponentContentEntityType8Test extends TestBase {
   /**
    * Test creating a content entity type.
    */
-  public function testEntityTypeWithoutBundleEntity() {
+  public function testBasicContentEntityType() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -106,6 +106,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty cats');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertNotHasProperty(['entity_keys', 'langcode']);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
@@ -207,6 +208,8 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue('translatable', 'TRUE');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('data_table', 'kitty_cat_field_data');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'langcode'], 'langcode');
   }
 
   /**
