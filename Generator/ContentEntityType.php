@@ -24,6 +24,12 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'boolean',
         'default' => TRUE,
       ],
+      'revisionable' =>  [
+        'label' => 'Revisionable',
+        'description' => "Whether this entity type allows multiple revisions of a single entity.",
+        'format' => 'boolean',
+        'default' => TRUE,
+      ],
       'translatable' => [
         'label' => 'Translatable',
         'description' => "Whether this entity type allows translation.",
@@ -109,6 +115,8 @@ class ContentEntityType extends EntityTypeBase {
             'required' => TRUE,
             'options' => 'ReportFieldTypes:listFieldTypesOptions',
           ],
+          // TODO: options for revisionable and translatable in 3.3.x once
+          // we have conditional properties.
         ],
       ],
     ];
@@ -130,6 +138,10 @@ class ContentEntityType extends EntityTypeBase {
       $keys = [
         'id' => $component_data['entity_type_id'] . '_id',
       ];
+
+      if (!empty($component_data['revisionable'])) {
+        $keys['revision'] = 'revision_id';
+      }
 
       if (!empty($component_data['translatable'])) {
         $keys['langcode'] = 'langcode';
@@ -218,9 +230,13 @@ class ContentEntityType extends EntityTypeBase {
       $fluent_calls = [];
       $fluent_calls[] = "  ->setLabel(t('{$base_field_data['label']}'))";
       $fluent_calls[] = "  ->setDescription(t('TODO: description of field.'))";
+      if (!empty($this->component_data['revisionable'])) {
+        $fluent_calls[] = "  ->setRevisionable(TRUE)";
+      }
       if (!empty($this->component_data['translatable'])) {
         $fluent_calls[] = "  ->setTranslatable(TRUE)";
       }
+
       // Add a terminal ';' to the last of the fluent method calls.
       $fluent_calls[count($fluent_calls) - 1] .= ';';
 
@@ -263,6 +279,8 @@ class ContentEntityType extends EntityTypeBase {
       'bundle_label',
       'base_table',
       'data_table',
+      'revision_table',
+      'revision_data_table',
       'translatable',
       'handlers',
       'admin_permission',
@@ -294,9 +312,17 @@ class ContentEntityType extends EntityTypeBase {
       $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
     }
 
+    if (!empty($this->component_data['revisionable'])) {
+      $annotation_data['revision_table'] = "{$annotation_data['base_table']}_revision";
+    }
+
     if (!empty($this->component_data['translatable'])) {
       $annotation_data['translatable'] = 'TRUE';
       $annotation_data['data_table'] = "{$annotation_data['base_table']}_field_data";
+    }
+
+    if (!empty($this->component_data['translatable']) && !empty($this->component_data['revisionable'])) {
+      $annotation_data['revision_data_table'] = "{$annotation_data['base_table']}_field_revision";
     }
 
     // Filter the annotation data to remove any keys which are NULL; that is,
