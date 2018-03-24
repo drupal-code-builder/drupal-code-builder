@@ -233,40 +233,15 @@ class PluginTypesCollector {
    *
    * This adds:
    *  - subdir
-   *  - plugin_interface
-   *  - plugin_definition_annotation_name
-   *  - discovery
+   *  - ... further properties specific to different discovery types.
    *
    * @param &$data
    *  The data for a single plugin type.
    */
   protected function addPluginTypeServiceData(&$data) {
-    // Get the service, and then get the properties that the plugin manager
-    // constructor sets.
-    // E.g., most plugin managers pass this to the parent:
-    //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
-    // See Drupal\Core\Plugin\DefaultPluginManager
+    // Get a reflection for the plugin manager service.
     $service = \Drupal::service($data['service_id']);
     $reflection = new \ReflectionClass($service);
-
-    // The list of properties we want to grab out of the plugin manager
-    //  => the key in the plugin type data array we want to set this into.
-    $plugin_manager_properties = [
-      'subdir' => 'subdir',
-      'pluginInterface' => 'plugin_interface',
-      'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
-    ];
-    foreach ($plugin_manager_properties as $property_name => $data_key) {
-      if (!$reflection->hasProperty($property_name)) {
-        // plugin.manager.menu.link is different.
-        $data[$data_key] = '';
-        continue;
-      }
-
-      $property = $reflection->getProperty($property_name);
-      $property->setAccessible(TRUE);
-      $data[$data_key] = $property->getValue($service);
-    }
 
     // Determine the plugin discovery type.
     // Get the discovery object from the plugin manager.
@@ -286,6 +261,71 @@ class PluginTypesCollector {
     }
 
     $data['discovery'] = get_class($discovery);
+
+    // Get more data from the service, depending on the discovery type of the
+    // plugin.
+    $discovery_pieces = explode('\\', $data['discovery']);
+    $discovery_short_name = array_pop($discovery_pieces);
+
+    // Add in empty properties from the different discovery types analyses so
+    // they are always present.
+    $discovery_dependent_properties = [
+      'subdir',
+      'plugin_interface',
+      'plugin_definition_annotation_name',
+    ];
+    foreach ($discovery_dependent_properties as $property) {
+      $data[$property] = NULL;
+    }
+
+    switch ($discovery_short_name) {
+      case 'AnnotatedClassDiscovery':
+        $this->addPluginTypeServiceDataAnnotated($data, $service);
+        break;
+      case 'YamlDiscovery':
+        // TODO.
+        break;
+    }
+  }
+
+  /**
+   * Analyse the plugin type manager service for annotated plugins.
+   *
+   * This adds:
+   *  - subdir
+   *  - plugin_interface
+   *  - plugin_definition_annotation_name
+   *
+   * @param &$data
+   *  The data for a single plugin type.
+   * @param $service
+   *  The plugin manager service.
+   */
+  protected function addPluginTypeServiceDataAnnotated(&$data, $service) {
+    $reflection = new \ReflectionClass($service);
+
+    // Get the properties that the plugin manager constructor sets.
+    // E.g., most plugin managers pass this to the parent:
+    //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+    // See Drupal\Core\Plugin\DefaultPluginManager
+    // The list of properties we want to grab out of the plugin manager
+    //  => the key in the plugin type data array we want to set this into.
+    $plugin_manager_properties = [
+      'subdir' => 'subdir',
+      'pluginInterface' => 'plugin_interface',
+      'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
+    ];
+    foreach ($plugin_manager_properties as $property_name => $data_key) {
+      if (!$reflection->hasProperty($property_name)) {
+        // plugin.manager.menu.link is different.
+        $data[$data_key] = '';
+        continue;
+      }
+
+      $property = $reflection->getProperty($property_name);
+      $property->setAccessible(TRUE);
+      $data[$data_key] = $property->getValue($service);
+    }
   }
 
   /**
