@@ -44,9 +44,11 @@ class PluginTypesCollector {
   }
 
   /**
-   * Get definitions of services.
+   * Get definitions of plugin types.
    *
    * @return array
+   *   An array of data about plugin types. See gatherPluginTypeInfo() for the
+   *   details.
    */
   public function collect() {
     $plugin_manager_service_ids = $this->getPluginManagerServices();
@@ -78,7 +80,8 @@ class PluginTypesCollector {
 
     // Filter them down to the ones that are plugin managers.
     // TODO: this omits some that don't conform to this pattern! Deal with
-    // these! See https://www.drupal.org/node/2086181
+    // these!
+    // See https://github.com/drupal-code-builder/drupal-code-builder/issues/24
     $plugin_manager_service_ids = array_filter($service_ids, function($element) {
       if (strpos($element, 'plugin.manager.') === 0) {
         return TRUE;
@@ -101,22 +104,24 @@ class PluginTypesCollector {
   }
 
   /**
-   * Detects information about plugin types from the plugin manager services
+   * Detects information about plugin types from the plugin manager services.
    *
    * @param $plugin_manager_service_ids
    *  An array of service IDs.
    *
    * @return
-   *  The assembled plugin type data. This is an array keyed by plugin type ID
-   *  (where we take this to be the name of the plugin manager service for that
-   *  type, with the 'plugin.manager.' prefix removed). Values are arrays with
-   *  the following properties:
-   *    - 'type_id': The plugin type ID.
+   *  The assembled plugin type data. This is an array keyed by plugin type ID.
+   *  Values are arrays with the following properties:
+   *    - 'type_id': The plugin type ID. We take this to be the name of the
+   *      plugin manager service for that type, with the 'plugin.manager.'
+   *      prefix removed.
    *    - 'type_label': A label for the plugin type. If Plugin module is present
    *      then this is the label from the definition there, if found. Otherwise,
-   *      this duplicates the ID.
+   *      this duplicates the plugin type ID.
    *    - 'service_id': The ID of the service for the plugin type's manager.
-   *    - 'subdir: The subdirectory of /src that plugin classes must go in.
+   *    - 'discovery': The plugin's discovery class, as a fully-qualified
+   *       class name (without the initial '\').
+   *    - 'subdir': The subdirectory of /src that plugin classes must go in.
    *      E.g., 'Plugin/Filter'.
    *    - 'plugin_interface': The interface that plugin classes must implement,
    *      as a qualified name (but without initial '\').
@@ -228,8 +233,8 @@ class PluginTypesCollector {
    *
    * This adds:
    *  - subdir
-   *  - pluginInterface
-   *  - pluginDefinitionAnnotationName
+   *  - plugin_interface
+   *  - plugin_definition_annotation_name
    *  - discovery
    *
    * @param &$data
