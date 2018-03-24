@@ -18,9 +18,12 @@ class PluginTypesCollector {
    * The names of plugin type managers to collect for testing sample data.
    */
   protected $testingPluginManagerServiceIds = [
+    // Annotation plugins.
     'plugin.manager.block',
     'plugin.manager.field.formatter',
     'plugin.manager.image.effect',
+    // YAML plugin.
+    'plugin.manager.menu.link',
   ];
 
   /**
