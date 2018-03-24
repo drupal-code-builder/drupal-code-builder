@@ -157,6 +157,8 @@ class PluginTypesCollector {
    *    - 'config_schema_prefix': The prefix to use for creating a config schema
    *      ID for plugins of this type. The ID should be formed by appending the
    *      plugin ID with a '.'.
+   *    - 'yaml_file_suffix': The suffix for YAML plugin files.
+   *    - 'yaml_properties': The properties for plugins declared in YAML files.
    *
    *  Due to the difficult nature of analysing the code for plugin types, some
    *  of these properties may be empty if they could not be deduced.
@@ -273,6 +275,8 @@ class PluginTypesCollector {
       'subdir',
       'plugin_interface',
       'plugin_definition_annotation_name',
+      'yaml_file_suffix',
+      'yaml_properties',
     ];
     foreach ($discovery_dependent_properties as $property) {
       $data[$property] = NULL;
@@ -280,10 +284,10 @@ class PluginTypesCollector {
 
     switch ($discovery_short_name) {
       case 'AnnotatedClassDiscovery':
-        $this->addPluginTypeServiceDataAnnotated($data, $service);
+        $this->addPluginTypeServiceDataAnnotated($data, $service, $discovery);
         break;
       case 'YamlDiscovery':
-        // TODO.
+        $this->addPluginTypeServiceDataYaml($data, $service, $discovery);
         break;
     }
   }
@@ -300,8 +304,10 @@ class PluginTypesCollector {
    *  The data for a single plugin type.
    * @param $service
    *  The plugin manager service.
+   * @param $discovery
+   *  The plugin discovery object.
    */
-  protected function addPluginTypeServiceDataAnnotated(&$data, $service) {
+  protected function addPluginTypeServiceDataAnnotated(&$data, $service, $discovery) {
     $reflection = new \ReflectionClass($service);
 
     // Get the properties that the plugin manager constructor sets.
@@ -326,6 +332,46 @@ class PluginTypesCollector {
       $property->setAccessible(TRUE);
       $data[$data_key] = $property->getValue($service);
     }
+  }
+
+  /**
+   * Analyse the plugin type manager service for YAML plugins.
+   *
+   * This adds:
+   *  - yaml_file_suffix
+   *  - yaml_properties
+   *
+   * @param &$data
+   *  The data for a single plugin type.
+   * @param $service
+   *  The plugin manager service.
+   * @param $discovery
+   *  The plugin discovery object.
+   */
+  protected function addPluginTypeServiceDataYaml(&$data, $service, $discovery) {
+    $service_reflection = new \ReflectionClass($service);
+    $property = $service_reflection->getProperty('defaults');
+    $property->setAccessible(TRUE);
+    $defaults = $property->getValue($service);
+
+    // YAML plugins don't specify their ID; it's generated automatically.
+    unset($defaults['id']);
+
+    $property_names = array_keys($defaults);
+    $data['yaml_properties'] = $property_names;
+
+    // The YAML discovery wraps another discovery object.
+    $discovery_reflection = new \ReflectionClass($discovery);
+    $property = $discovery_reflection->getProperty('discovery');
+    $property->setAccessible(TRUE);
+    $wrapped_discovery = $property->getValue($discovery);
+
+    $wrapped_discovery_reflection = new \ReflectionClass($wrapped_discovery);
+    $property = $wrapped_discovery_reflection->getProperty('name');
+    $property->setAccessible(TRUE);
+    $name = $property->getValue($wrapped_discovery);
+
+    $data['yaml_file_suffix'] = $name;
   }
 
   /**
