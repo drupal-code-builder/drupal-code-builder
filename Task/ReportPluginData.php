@@ -23,39 +23,52 @@ class ReportPluginData extends ReportHookDataFolder {
   /**
    * Get the list of plugin data.
    *
+   * @param $discovery_type
+   *   (optional) The short name of a discovery class to limit the plugin list
+   *   by. Possible values include:
+   *    - AnnotatedClassDiscovery
+   *    - YamlDiscovery
+   *
    * @return
    *  The processed plugin data.
    *
    * @see \DrupalCodeBuilder\Task\Collect8::gatherPluginTypeInfo()
    */
-  function listPluginData() {
+  function listPluginData($discovery_type = NULL) {
     // We may come here several times, so cache this.
     // TODO: look into finer-grained caching higher up.
-    static $plugin_data;
+    static $cache;
 
-    if (isset($plugin_data)) {
-      return $plugin_data;
+    if (isset($cache[$discovery_type])) {
+      return $cache[$discovery_type];
     }
 
     $plugin_data = $this->environment->getStorage()->retrieve('plugins');
 
-    // For now, only return plugin types that use AnnotatedClassDiscovery.
-    $plugin_data = array_filter($plugin_data, function($item) {
-      return ($item['discovery'] == 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery');
-    });
+    // Filter the plugins by the discovery type.
+    if ($discovery_type) {
+      $plugin_data = array_filter($plugin_data, function($item) use ($discovery_type) {
+        $discovery_pieces = explode('\\', $item['discovery']);
+        $discovery_short_name = array_pop($discovery_pieces);
+
+        return ($discovery_short_name == $discovery_type);
+      });
+    }
+
+    $cache[$discovery_type] = $plugin_data;
 
     return $plugin_data;
   }
 
   /**
-   * Returns a list of plugin types, keyed by subdirectory.
+   * Returns a list of annotated plugin types, keyed by subdirectory.
    *
    * @return
    *  A list of all plugin types that use annotation discovery, keyed by the
    *  subdirectory the plugin files go in, for example, 'Block', 'QueueWorker'.
    */
   public function listPluginDataBySubdirectory() {
-    $plugin_types_data = $this->listPluginData();
+    $plugin_types_data = $this->listPluginData('AnnotatedClassDiscovery');
     $plugin_types_data_by_subdirectory = [];
     foreach ($plugin_types_data as $plugin_id => $plugin_definition) {
       if (!empty($plugin_definition['subdir'])) {
