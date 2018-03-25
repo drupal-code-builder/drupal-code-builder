@@ -410,21 +410,27 @@ array (
     'yaml_file_suffix' => 'links.menu',
     'yaml_properties' => 
     array (
-      0 => 'menu_name',
-      1 => 'route_name',
-      2 => 'route_parameters',
-      3 => 'url',
-      4 => 'title',
-      5 => 'description',
-      6 => 'parent',
-      7 => 'weight',
-      8 => 'options',
-      9 => 'expanded',
-      10 => 'enabled',
-      11 => 'provider',
-      12 => 'metadata',
-      13 => 'class',
-      14 => 'form_class',
+      'menu_name' => 'tools',
+      'route_name' => '',
+      'route_parameters' => 
+      array (
+      ),
+      'url' => '',
+      'title' => '',
+      'description' => '',
+      'parent' => '',
+      'weight' => 0,
+      'options' => 
+      array (
+      ),
+      'expanded' => 0,
+      'enabled' => 1,
+      'provider' => '',
+      'metadata' => 
+      array (
+      ),
+      'class' => 'Drupal\\Core\\Menu\\MenuLinkDefault',
+      'form_class' => 'Drupal\\Core\\Menu\\Form\\MenuLinkDefaultForm',
     ),
     'base_class' => 'Drupal\\Core\\Menu\\MenuLinkBase',
     'plugin_properties' => 

@@ -161,7 +161,9 @@ class PluginTypesCollector {
    *      ID for plugins of this type. The ID should be formed by appending the
    *      plugin ID with a '.'.
    *    - 'yaml_file_suffix': The suffix for YAML plugin files.
-   *    - 'yaml_properties': The properties for plugins declared in YAML files.
+   *    - 'yaml_properties': The default properties for plugins declared in YAML
+   *      files. An array whose keys are property names and values are the
+   *      default values.
    *
    *  Due to the difficult nature of analysing the code for plugin types, some
    *  of these properties may be empty if they could not be deduced.
@@ -360,8 +362,7 @@ class PluginTypesCollector {
     // YAML plugins don't specify their ID; it's generated automatically.
     unset($defaults['id']);
 
-    $property_names = array_keys($defaults);
-    $data['yaml_properties'] = $property_names;
+    $data['yaml_properties'] = $defaults;
 
     // The YAML discovery wraps another discovery object.
     $discovery_reflection = new \ReflectionClass($discovery);
