@@ -83,11 +83,14 @@ class ReportPluginData extends ReportHookDataFolder {
   /**
    * Get plugin types as a list of options.
    *
+   * @param $discovery_type
+   *   (optional) The short name of a discovery class to limit the plugin list
+   *
    * @return
    *   An array of plugin types as options suitable for FormAPI.
    */
-  function listPluginNamesOptions() {
-    $data = $this->listPluginData();
+  function listPluginNamesOptions($discovery_type = NULL) {
+    $data = $this->listPluginData($discovery_type);
 
     $return = array();
     foreach ($data as $plugin_type_name => $plugin_type_info) {
