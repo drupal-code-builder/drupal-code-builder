@@ -10,10 +10,19 @@ use CaseConverter\CaseString;
  */
 class Plugin extends PHPClassFileWithInjection {
 
+  use PluginTrait;
+
   /**
    * {@inheritdoc}
    */
   protected $hasStaticFactoryMethod = TRUE;
+
+  /**
+   * The plugin discovery type used by the plugins this generates.
+   *
+   * @var string
+   */
+  protected static $discoveryType = 'AnnotatedClassDiscovery';
 
   /**
    * The standard fixed create() parameters.
@@ -80,62 +89,7 @@ class Plugin extends PHPClassFileWithInjection {
    */
   public static function componentDataDefinition() {
     $data_definition = array(
-      'plugin_type' => array(
-        'label' => 'Plugin type',
-        'description' => "The identifier of the plugin type. This can be either the manager service name with the 'plugin.manager.' prefix removed, " .
-          ' or the subdirectory name.',
-        'required' => TRUE,
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-
-          $options = $mb_task_handler_report_plugins->listPluginNamesOptions();
-
-          return $options;
-        },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          // Validate the plugin type, and find it if given a folder rather than
-          // a type.
-          $task_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-          $plugin_types_data = $task_report_plugins->listPluginData();
-
-          // Try to find the intended plugin type.
-          if (isset($plugin_types_data[$value])) {
-            $plugin_data = $plugin_types_data[$value];
-          }
-          else {
-            // Convert a namespace separator into a directory separator.
-            $value = str_replace('\\', '/', $value);
-
-            $plugin_types_data_by_subdirectory = $task_report_plugins->listPluginDataBySubdirectory();
-            if (isset($plugin_types_data_by_subdirectory[$value])) {
-              $plugin_data = $plugin_types_data_by_subdirectory[$value];
-
-              // Set the plugin ID in the the property.
-              $component_data[$property_name] = $plugin_data['type_id'];
-            }
-            else {
-              // Nothing found. Throw exception.
-              throw new InvalidInputException("Plugin type {$value} not found.");
-            }
-          }
-
-          // Set the plugin type data.
-          // Bit of a cheat, as undeclared data property!
-          $component_data['plugin_type_data'] = $plugin_data;
-
-          // Set the relative qualified class name.
-          // The full class name will be of the form:
-          //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
-          $component_data['relative_class_name'] = array_merge(
-            // Plugin subdirectory.
-            self::pathToNamespacePieces($plugin_data['subdir']),
-            // Plugin ID.
-            [
-              CaseString::snake($component_data['plugin_name'])->pascal(),
-            ]
-          );
-        },
-      ),
+      'plugin_type' => static::getPluginTypePropertyDefinition(),
       'plugin_name' => array(
         'label' => 'Plugin name',
         // TODO: say in help text that the module name will be prepended for you!
@@ -360,13 +314,6 @@ class Plugin extends PHPClassFileWithInjection {
       }
     }
     return $parameters;
-  }
-
-  /**
-   * TODO: is there a core function for this?
-   */
-  static function pathToNamespacePieces($path) {
-    return explode('/', $path);
   }
 
 }
