@@ -14,6 +14,7 @@ class Module7 extends Module {
     $component_data_definition = parent::componentDataDefinition();
 
     unset($component_data_definition['plugins']);
+    unset($component_data_definition['plugins_yaml']);
     unset($component_data_definition['plugin_types']);
     unset($component_data_definition['services']);
     unset($component_data_definition['phpunit_tests']);

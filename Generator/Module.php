@@ -283,8 +283,11 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component' => 'ConfigEntityType',
       ),
+      // TODO: come up with a way to generalize this if more plugin discovery
+      // types become common.
+      // TODO: rename this to 'plugins_annotated'.
       'plugins' => array(
-        'label' => 'Plugins',
+        'label' => 'Plugins (annotated class)',
         'required' => FALSE,
         'format' => 'compound',
         // This tells the system that this is a request for generator
@@ -292,6 +295,12 @@ class Module extends RootComponent {
         // the module data.
         'component' => 'Plugin',
       ),
+      'plugins_yaml' => [
+        'label' => 'Plugins (YAML)',
+        'required' => FALSE,
+        'format' => 'compound',
+        'component' => 'PluginYAML',
+      ],
       'plugin_types' => array(
         'label' => 'Plugin types',
         'required' => FALSE,
