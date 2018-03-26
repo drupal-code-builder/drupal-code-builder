@@ -25,7 +25,8 @@ class RouterItem extends BaseGenerator {
         'required' => TRUE,
       ],
       'route_name' => [
-        'computed' => TRUE,
+        'internal' => TRUE,
+        'process_default' => TRUE,
         'default' => function($component_data) {
           // Get the module name rather than using the token, to avoid the
           // property name getting quoted.
