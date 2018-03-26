@@ -31,6 +31,8 @@ class AdminSettingsForm extends Form {
 
     $components['admin/config/TODO-SECTION/%module'] = array(
       'component_type' => 'RouterItem',
+      // Specify this so we can refer to it in the menu link.
+      'route_name' => '%module.settings',
       // OK to use a token here, as the YAML value for this will be quoted
       // anyway.
       'path' => 'admin/config/TODO-SECTION/%module',
@@ -42,6 +44,18 @@ class AdminSettingsForm extends Form {
       'access_type' => 'permission',
       'access_type_value' => 'administer %module',
     );
+
+    $components['menu_link'] = [
+      'component_type' => 'PluginYAML',
+      'plugin_type' => 'menu.link',
+      'plugin_name' => 'settings',
+      'plugin_properties' => [
+        'title' => '%Module',
+        'description' => 'Configure the settings for %Module.',
+        'route_name' => '%module.settings',
+        'parent' => 'system.admin_config_system',
+      ],
+    ];
 
     $components['administer %module'] = array(
       'component_type' => 'Permission',
