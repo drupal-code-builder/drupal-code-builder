@@ -38,6 +38,7 @@ class ComponentRouterItem8Test extends TestBase {
         ],
         1 => [
           'path' => 'my/other-path',
+          'title' => 'My Other Page',
           'controller_type' => 'controller',
           'access_type' => 'permission',
         ],
@@ -66,7 +67,7 @@ class ComponentRouterItem8Test extends TestBase {
     $yaml_tester->assertHasProperty('test_module.my.other-path', "The routing file has the property for the route.");
     $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'path'], '/my/other-path', "The routing file declares the route path.");
     $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyOtherPathController::content', "The routing file declares the route controller.");
-    $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'defaults', '_title'], 'myPage', "The routing file declares the route title.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'defaults', '_title'], 'My Other Page', "The routing file declares the route title.");
     $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'requirements', '_permission'], 'TODO: set permission machine name', "The routing file declares the route permission.");
 
     $controller_file = $files["src/Controller/MyPathController.php"];
