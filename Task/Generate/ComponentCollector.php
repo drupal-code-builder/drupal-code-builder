@@ -477,10 +477,16 @@ class ComponentCollector {
       return;
     }
 
+    // If the user has provided a default, don't clobber that.
     if (!empty($component_data_local[$property_name])) {
-      // User has provided a default: don't clobber that.
       return;
     }
+    // For boolean properties, the value might be FALSE, and this counts as
+    // being specified.
+    if ($property_info['format'] == 'boolean' && isset($component_data_local[$property_name])) {
+      return;
+    }
+
     if (empty($property_info['process_default']) &&
       empty($property_info['computed']) &&
       empty($property_info['internal'])
