@@ -38,13 +38,20 @@ class PluginYAML extends BaseGenerator {
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
       'plugin_type' => static::getPluginTypePropertyDefinition(),
+      'prefix_name' => [
+        'internal' => TRUE,
+        'format' => 'boolean',
+        'default' => TRUE,
+      ],
       'plugin_name' => [
         'label' => 'Plugin name',
         'description' => 'The plugin name. A module name prefix is added automatically.',
         'required' => TRUE,
         'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          // YAML plugin names use dots as glue.
-          $component_data['plugin_name'] = $component_data['root_component_name'] . '.' . $component_data['plugin_name'];
+          if ($component_data['prefix_name']) {
+            // YAML plugin names use dots as glue.
+            $component_data['plugin_name'] = $component_data['root_component_name'] . '.' . $component_data['plugin_name'];
+          }
         },
       ],
       // These are different for each plugin type, so internal for now.
