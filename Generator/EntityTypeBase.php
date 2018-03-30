@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Utility\InsertArray;
+use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
 
 /**
@@ -126,6 +128,13 @@ abstract class EntityTypeBase extends PHPClassFile {
         $handler_property['label'] = ucfirst("{$handler_type_info['label']} handler");
       }
 
+      if (isset($handler_type_info['options'])) {
+        $handler_property['format'] = 'string';
+
+        InsertArray::insertAfter($handler_property['options'], 'core', $handler_type_info['options']);
+        unset($handler_property['options']['core']);
+      }
+
       $handler_property['handler_label'] = $handler_type_info['label'];
       $handler_property['parent_class_name'] = $handler_type_info['base_class'];
 
@@ -203,6 +212,20 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'access',
         'mode' => 'core_default',
         'base_class' => '\Drupal\Core\Entity\EntityAccessControlHandler',
+      ],
+      'route_provider' => [
+        'label' => 'route provider',
+        'inner_keys' => ['html'],
+        'mode' => 'core_none',
+        'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+        'options' => [
+          'default' => 'Default core route provider',
+          'admin' => 'Admin route provider',
+        ],
+        'options_classes' => [
+          'default' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+          'admin' => '\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider',
+        ],
       ],
       'storage' => [
         'label' => 'storage',
@@ -348,21 +371,54 @@ abstract class EntityTypeBase extends PHPClassFile {
         continue;
       }
 
-      if ($handler_type_info['mode'] == 'core_none' && $this->component_data[$data_key] == 'core') {
-        $handler_class = substr($handler_type_info['base_class'], 1);
-      }
-      else {
-        $handler_class = static::makeQualifiedClassName([
-          // TODO: DRY, with EntityHandler class.
-          'Drupal',
-          '%module',
-          'Entity',
-          'Handler',
-          $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
-        ]);
+      // Strict comparison, as could be TRUE.
+      if ($this->component_data[$data_key] === 'none') {
+        continue;
       }
 
-      $handler_data[$key] = $handler_class;
+      $option_value = $this->component_data[$data_key];
+
+      switch ($handler_type_info['mode']) {
+        case 'core_default':
+          // The FALSE case has been eliminated already, so must be TRUE.
+          $handler_class = static::makeQualifiedClassName([
+            // TODO: DRY, with EntityHandler class.
+            'Drupal',
+            '%module',
+            'Entity',
+            'Handler',
+            $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
+          ]);
+          break;
+
+        case 'core_none':
+          if ($option_value == 'core') {
+            $handler_class = substr($handler_type_info['base_class'], 1);
+          }
+          elseif ($option_value == 'custom') {
+            $handler_class = static::makeQualifiedClassName([
+              // TODO: DRY, with EntityHandler class.
+              'Drupal',
+              '%module',
+              'Entity',
+              'Handler',
+              $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
+            ]);
+          }
+          else {
+            // Another option, specific to the handler type.
+            $handler_class = substr($handler_type_info['options_classes'][$option_value], 1);
+          }
+          break;
+      }
+
+      if (isset($handler_type_info['inner_keys'])) {
+        $keys = array_merge([$key], $handler_type_info['inner_keys']);
+        NestedArray::setValue($handler_data, $keys, $handler_class);
+      }
+      else {
+        $handler_data[$key] = $handler_class;
+      }
     }
     if ($handler_data) {
       $annotation['#data']['handlers'] = $handler_data;
@@ -370,6 +426,7 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     if ($this->component_data['admin_permission_name']) {
       $annotation['#data']['admin_permission'] = $this->component_data['admin_permission_name'];
+      $handler_class = substr($handler_class, 1);
     }
 
     return $annotation;
