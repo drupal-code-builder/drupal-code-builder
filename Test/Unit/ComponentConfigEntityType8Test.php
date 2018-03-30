@@ -52,11 +52,12 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "Expected number of files is returned.");
+    $this->assertCount(5, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
+    $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -114,6 +115,16 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'colour']);
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'colour', 'type'], 'string');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'colour', 'label'], 'Colour');
+
+    // Check the menu links file.
+    $menu_links_file = $files["test_module.links.menu.yml"];
+
+    $yaml_tester = new YamlTester($menu_links_file);
+    $yaml_tester->assertHasProperty('entity.kitty_cat.collection');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'title'], 'Kitty Cats');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'description'], 'Create and manage fields, forms, and display settings for Kitty Cats.');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'route_name'], 'entity.kitty_cat.collection');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'parent'], 'system.admin_structure');
   }
 
   /**
@@ -179,7 +190,7 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(7, $files, "Expected number of files is returned.");
+    $this->assertCount(8, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
@@ -187,6 +198,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatAccess.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorage.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has an list builder class file.");
+    $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 

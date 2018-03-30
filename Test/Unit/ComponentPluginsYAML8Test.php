@@ -97,4 +97,47 @@ class ComponentPluginsYAML8Test extends TestBase {
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a schema file.");
   }
 
+  /**
+   * Test a menu link plugin with another coming from elsewhere.
+   *
+   * Tests the requested plugin and the plugin from a config entity type are
+   * merged.
+   */
+  function testPluginsGenerationWithOtherPlugin() {
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [],
+      'plugins_yaml' => [
+        0 => [
+          'plugin_type' => 'menu.link',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+      'config_entity_types' => [
+        0 => [
+          'entity_type_id' => 'alpha',
+          'entity_properties' => [
+            0 => [
+              'name' => 'breed',
+              'type' => 'string',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    // Check the plugin file.
+    $plugin_file = $files["$module_name.links.menu.yml"];
+
+    $yaml_tester = new YamlTester($plugin_file);
+    $yaml_tester->assertHasProperty('entity.alpha.collection');
+    $yaml_tester->assertHasProperty('test_module.alpha');
+  }
+
 }

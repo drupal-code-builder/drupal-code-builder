@@ -388,11 +388,12 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
-    $this->assertCount(5, $files, "Expected number of files is returned.");
+    $this->assertCount(6, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
     $this->assertArrayHasKey("src/Entity/Cake.php", $files);
     $this->assertArrayHasKey("src/Entity/CakeInterface.php", $files);
+    $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
