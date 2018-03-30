@@ -40,6 +40,17 @@ class RouterItem extends BaseGenerator {
         'default' => 'myPage',
         'process_default' => TRUE,
       ],
+      'menu_link' => [
+        'label' => "Menu link",
+        'format' => 'compound',
+        'cardinality' => 1,
+        'properties' => [
+          'title' => [
+            'label' => "The title for the menu link.",
+            'default' => 'My Page',
+          ],
+        ],
+      ],
       'controller_plain_class_name' => [
         'internal' => TRUE,
         'process_default' => TRUE,
@@ -159,6 +170,23 @@ class RouterItem extends BaseGenerator {
         'declaration' => 'public function content()',
         'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
       ];
+    }
+
+    if (!empty($this->component_data['menu_link'][0])) {
+      // Strip off the module name prefix from the route name to make the plugin
+      // name, as the plugin generator will add it back again.
+      $plugin_name = $this->component_data['route_name'];
+      $plugin_name = substr($plugin_name, strlen($this->component_data['root_component_name']) + 1);
+
+      $components['menu_link'] = array(
+        'component_type' => 'PluginYAML',
+        'plugin_type' => 'menu.link',
+        'plugin_name' => $plugin_name,
+        'plugin_properties' => [
+          'title' => $this->component_data['menu_link'][0]['title'],
+          'route_name' => $this->component_data['route_name'],
+        ],
+      );
     }
 
     return $components;

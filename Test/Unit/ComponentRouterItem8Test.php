@@ -78,4 +78,54 @@ class ComponentRouterItem8Test extends TestBase {
     $php_tester->assertHasMethod('content');
   }
 
+  /**
+   * Test generating a route with a menu link.
+   */
+  public function testRouteGenerationWithMenuLink() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        0 => [
+          'path' => 'my/path',
+          'controller_type' => 'controller',
+          'access_type' => 'permission',
+          'title' => 'My Page',
+          'menu_link' => [
+            0 => [
+              'title' => 'My link',
+            ],
+          ],
+        ],
+        1 => [
+          'path' => 'my/other-path',
+          'controller_type' => 'controller',
+          'access_type' => 'permission',
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(5, $files, "The expected number of files is returned.");
+
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
+    $this->assertArrayHasKey("$module_name.routing.yml", $files, "The files list has a routing file.");
+    $this->assertArrayHasKey("src/Controller/MyPathController.php", $files, "The files list has a controller class file.");
+    $this->assertArrayHasKey("src/Controller/MyOtherPathController.php", $files, "The files list has a controller class file.");
+    $this->assertArrayHasKey("$module_name.links.menu.yml", $files, "The files list has a menu links file.");
+
+    $menu_links_file = $files["$module_name.links.menu.yml"];
+    $yaml_tester = new YamlTester($menu_links_file);
+
+    $yaml_tester->assertHasProperty('test_module.my.path', "The menu links file has the property for the menu link.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'title'], 'My link', "The menu links file declares the link title.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'route_name'], 'test_module.my.path', "The menu links file declares the link route.");
+  }
+
 }
