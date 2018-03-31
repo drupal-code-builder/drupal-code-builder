@@ -110,7 +110,8 @@ class AnnotationTester {
       // Only root keys of an annotation class are not quoted; deeper ones
       // are.
       $matches = [];
-      $matched = preg_match('/^(?P<indent_spaces> +)"?(?P<key>\w+)"? = (?P<value>.*)$/', $line, $matches);
+      // Keys may contain word characters and hyphens.
+      $matched = preg_match('/^(?P<indent_spaces> +)"?(?P<key>[\w-]+)"? = (?P<value>.*)$/', $line, $matches);
       if (!$matched) {
         throw new \Exception("Unable to match annotation line: $line");
       }
