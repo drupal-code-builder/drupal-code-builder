@@ -88,6 +88,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'field_ui_base_route',
+      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -204,6 +205,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'field_ui_base_route',
+      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('translatable', 'TRUE');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
@@ -292,6 +294,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'field_ui_base_route',
+      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('revision_table', 'kitty_cat_revision');
@@ -380,6 +383,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'entity_keys',
       'bundle_entity_type',
       'field_ui_base_route',
+      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');

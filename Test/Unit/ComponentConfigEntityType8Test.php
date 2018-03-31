@@ -79,6 +79,7 @@ class ComponentConfigEntityType8Test extends TestBase {
       'label_count',
       'entity_keys',
       'config_export',
+      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -204,6 +205,7 @@ class ComponentConfigEntityType8Test extends TestBase {
       'label_count',
       'handlers',
       'entity_keys',
+      'links',
     ]);
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Entity\Handler\KittyCatAccess');
     $annotation_tester->assertPropertyHasValue(['handlers', 'storage'], 'Drupal\test_module\Entity\Handler\KittyCatStorage');
