@@ -122,14 +122,19 @@ class ContentEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_property);
 
-    $data_definition['bundle_entity_type'] = [
-      'label' => 'Bundle entity type',
-      'format' => 'string',
-      'internal' => TRUE,
-      'default' => function($component_data) {
-        return $component_data['bundle_entity'][0]['entity_type_id'] ?? NULL;
-      },
+    $bundle_entity_type_property = [
+      'bundle_entity_type' => [
+        'label' => 'Bundle entity type',
+        'format' => 'string',
+        'internal' => TRUE,
+        'default' => function($component_data) {
+          return $component_data['bundle_entity'][0]['entity_type_id'] ?? NULL;
+        },
+      ],
     ];
+    // Bundle entity type must go before entity_keys, as we change the default
+    // of that to depend on this.
+    InsertArray::insertBefore($data_definition, 'entity_keys', $bundle_entity_type_property);
 
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
 
@@ -138,6 +143,10 @@ class ContentEntityType extends EntityTypeBase {
       $keys = [
         'id' => $component_data['entity_type_id'] . '_id',
       ];
+
+      if (!empty($component_data['bundle_entity_type'])) {
+        $keys['bundle'] = 'type';
+      }
 
       if (!empty($component_data['revisionable'])) {
         $keys['revision'] = 'revision_id';
