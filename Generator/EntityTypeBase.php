@@ -117,15 +117,50 @@ abstract class EntityTypeBase extends PHPClassFile {
     ];
 
     foreach (static::getHandlerTypes() as $key => $handler_type_info) {
-      if ($handler_type_info['mode'] == 'core_default') {
-        $handler_property = $handler_property_defaults_core_default;
+      $handler_type_property_name = "handler_{$key}";
 
-        $handler_property['label'] = "Custom {$handler_type_info['label']} handler";
-      }
-      else {
-        $handler_property = $handler_property_defaults_core_empty;
+      switch ($handler_type_info['mode']) {
+        case 'core_default':
+          $handler_property = $handler_property_defaults_core_default;
 
-        $handler_property['label'] = ucfirst("{$handler_type_info['label']} handler");
+          $handler_property['label'] = "Custom {$handler_type_info['label']} handler";
+          break;
+
+        case 'core_none':
+          $handler_property = $handler_property_defaults_core_empty;
+
+          $handler_property['label'] = ucfirst("{$handler_type_info['label']} handler");
+          break;
+
+        case 'custom_default':
+          $default_handler_type = $handler_type_info['default_type'];
+          $handler_property = [
+            'label' => ucfirst("{$handler_type_info['label']} handler"),
+            'format' => 'string',
+            'options' => [
+              'none' => 'Do not use a handler',
+              'default' => "Use the '{$default_handler_type}' handler class (forces '{$default_handler_type}' to use the default if not set)",
+              'custom' => "Provide a custom handler class (forces '{$default_handler_type}' to use the default if not set)",
+            ],
+            // Force the default type to at least be specified if it isn't
+            // already.
+            // TODO: this assumes the mode of the default handler type is
+            // 'core_none'.
+            'processing' => function($value, &$component_data, $property_name, &$property_info) use ($default_handler_type) {
+              if (empty($component_data[$property_name]) || $component_data[$property_name] == 'none') {
+                // Nothing to do; this isn't set to use anything.
+                return;
+              }
+
+              $default_handler_key = "handler_{$default_handler_type}";
+
+              if (empty($component_data[$default_handler_key]) || $component_data[$default_handler_key] == 'none') {
+                $component_data[$default_handler_key] = 'core';
+              }
+            },
+          ];
+
+          break;
       }
 
       if (isset($handler_type_info['options'])) {
@@ -138,15 +173,20 @@ abstract class EntityTypeBase extends PHPClassFile {
       $handler_property['handler_label'] = $handler_type_info['label'];
       $handler_property['parent_class_name'] = $handler_type_info['base_class'];
 
-      $data_definition["handler_{$key}"] = $handler_property;
+      $data_definition[$handler_type_property_name] = $handler_property;
     }
 
-    // Force the admin_permission property if there is a routing provider
-    // handler. This can't be done in the processing callback for that property,
-    // as processing callback is not applied to an empty property.
+    // Force the admin_permission property and default form handler if there is
+    // a routing provider handler. This can't be done in the processing callback
+    // for that property, as processing callback is not applied to an empty
+    // property.
     $data_definition['handler_route_provider']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       if (!empty($component_data['handler_route_provider']) && $component_data['handler_route_provider'] != 'none') {
         $component_data['admin_permission'] = TRUE;
+
+        if (empty($component_data['handler_form_default']) || $component_data['handler_form_default'] == 'none') {
+          $component_data['handler_form_default'] = 'core';
+        }
       }
     };
 
@@ -212,8 +252,19 @@ abstract class EntityTypeBase extends PHPClassFile {
    *   - 'base_class': The base class for handlers of this type.
    *   - 'mode': Defines how the core entity system handles an entity not
    *     defining a handler of this type. One of:
-   *      - 'core_default': A default handler is provided.
-   *      - 'core_none': No handler is provided.
+   *      - 'core_default': Core fills in a default handler: the option is
+   *        whether to specify nothing (and get the default), or create a custom
+   *        handler.
+   *      - 'core_none': No handler is provided: the option is whether to have
+   *        nothing, specify a generic core handler, or create a custom handler.
+   *      - 'custom_default': No handler is provided, but handler for another
+   *        type can be used. The option is whether to use that, or create a
+   *        custom handler. The 'default_type' property must also be given.
+   *   - 'property_path': (optional) The path to set this into the annotation
+   *      beneath the 'handlers' key. Only required if this is not simply the
+   *      handler type key.
+   *   - 'class_name_suffix': (optional) Specifies the suffix to be added to the
+   *     entity type when forming the class name for this handler type.
    */
   protected static function getHandlerTypes() {
     return [
@@ -224,6 +275,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'route_provider' => [
         'label' => 'route provider',
+        // TODO: replace this with property_path and remove this attribute.
         'inner_keys' => ['html'],
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
@@ -235,6 +287,33 @@ abstract class EntityTypeBase extends PHPClassFile {
           'default' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
           'admin' => '\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider',
         ],
+      ],
+      'form_default' => [
+        'label' => 'default form',
+        'property_path' => ['form', 'default'],
+        'class_name_suffix' => 'Form',
+        'mode' => 'core_none',
+        // base_class for all form handlers is set by child classes.
+      ],
+      'form_add' => [
+        'label' => 'add form',
+        'property_path' => ['form', 'add'],
+        'class_name_suffix' => 'AddForm',
+        'mode' => 'custom_default',
+        'default_type' => 'form_default',
+      ],
+      'form_edit' => [
+        'label' => 'edit form',
+        'property_path' => ['form', 'edit'],
+        'class_name_suffix' => 'EditForm',
+        'mode' => 'custom_default',
+        'default_type' => 'form_default',
+      ],
+      'form_delete' => [
+        'label' => 'delete form',
+        'class_name_suffix' => 'DeleteForm',
+        'property_path' => ['form', 'delete'],
+        'mode' => 'core_none',
       ],
       'storage' => [
         'label' => 'storage',
@@ -287,6 +366,11 @@ abstract class EntityTypeBase extends PHPClassFile {
           continue;
         }
       }
+      if ($handler_type_info['mode'] == 'custom_default') {
+        if ($this->component_data[$data_key] != 'custom') {
+          continue;
+        }
+      }
 
       $components[$data_key] = [
         'component_type' => 'EntityHandler',
@@ -294,7 +378,15 @@ abstract class EntityTypeBase extends PHPClassFile {
         'entity_type_label' => $this->component_data['entity_type_label'],
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
+        // TODO: when the handler type has a default_type set, the parent
+        // class should be whatever that is set to. Which we don't know at
+        // this point.
         'parent_class_name' => $handler_type_info['base_class'],
+        'relative_class_name' => [
+          'Entity',
+          'Handler',
+          $this->makeShortHandlerClassName($key, $handler_type_info),
+        ],
       ];
     }
 
@@ -372,6 +464,10 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     // Handlers.
     $handler_data = [];
+    // Keep track of all the handler classes in a flat array keyed by the type
+    // key so we don't have to work with the nested array for references to
+    // other handlers.
+    $handler_classes = [];
     foreach (static::getHandlerTypes() as $key => $handler_type_info) {
       $data_key = "handler_{$key}";
 
@@ -390,14 +486,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       switch ($handler_type_info['mode']) {
         case 'core_default':
           // The FALSE case has been eliminated already, so must be TRUE.
-          $handler_class = static::makeQualifiedClassName([
-            // TODO: DRY, with EntityHandler class.
-            'Drupal',
-            '%module',
-            'Entity',
-            'Handler',
-            $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
-          ]);
+          $handler_class = $this->makeQualifiedHandlerClassName($key, $handler_type_info);
           break;
 
         case 'core_none':
@@ -405,23 +494,31 @@ abstract class EntityTypeBase extends PHPClassFile {
             $handler_class = substr($handler_type_info['base_class'], 1);
           }
           elseif ($option_value == 'custom') {
-            $handler_class = static::makeQualifiedClassName([
-              // TODO: DRY, with EntityHandler class.
-              'Drupal',
-              '%module',
-              'Entity',
-              'Handler',
-              $this->component_data['entity_class_name'] .  CaseString::snake($key)->pascal(),
-            ]);
+            $handler_class = $this->makeQualifiedHandlerClassName($key, $handler_type_info);
           }
           else {
             // Another option, specific to the handler type.
             $handler_class = substr($handler_type_info['options_classes'][$option_value], 1);
           }
           break;
+
+        case 'custom_default':
+          if ($option_value == 'default') {
+            // Use a handler that's from another type.
+            $handler_class = $handler_classes[$handler_type_info['default_type']];
+          }
+          else {
+            $handler_class = $this->makeQualifiedHandlerClassName($key, $handler_type_info);
+          }
+          break;
       }
 
-      if (isset($handler_type_info['inner_keys'])) {
+      $handler_classes[$key] = $handler_class;
+
+      if (isset($handler_type_info['property_path'])) {
+        NestedArray::setValue($handler_data, $handler_type_info['property_path'], $handler_class);
+      }
+      elseif (isset($handler_type_info['inner_keys'])) {
         $keys = array_merge([$key], $handler_type_info['inner_keys']);
         NestedArray::setValue($handler_data, $keys, $handler_class);
       }
@@ -439,6 +536,52 @@ abstract class EntityTypeBase extends PHPClassFile {
     }
 
     return $annotation;
+  }
+
+  /**
+   * Helper to create the short class name for a handler.
+   *
+   * @param string $key
+   *   The handler type key as defined by getHandlerTypes().
+   * @param array $handler_type_info
+   *   The handler type info as defined by getHandlerTypes().
+   *
+   * @return string
+   *   The fully-qualified handler class name.
+   */
+  protected function makeShortHandlerClassName($handler_type_key, $handler_type_info) {
+    if (isset($handler_type_info['class_name_suffix'])) {
+      $short_class_name = $this->component_data['entity_class_name'] .  $handler_type_info['class_name_suffix'];
+    }
+    else {
+      $short_class_name = $this->component_data['entity_class_name'] .  CaseString::snake($handler_type_key)->pascal();
+    }
+
+    return $short_class_name;
+  }
+
+  /**
+   * Helper to create the full class name for a handler.
+   *
+   * @param string $key
+   *   The handler type key as defined by getHandlerTypes().
+   * @param array $handler_type_info
+   *   The handler type info as defined by getHandlerTypes().
+   *
+   * @return string
+   *   The fully-qualified handler class name.
+   */
+  protected function makeQualifiedHandlerClassName($handler_type_key, $handler_type_info) {
+    $handler_class_name = static::makeQualifiedClassName([
+      // TODO: DRY, with EntityHandler class.
+      'Drupal',
+      '%module',
+      'Entity',
+      'Handler',
+      $this->makeShortHandlerClassName($handler_type_key, $handler_type_info),
+    ]);
+
+    return $handler_class_name;
   }
 
 }

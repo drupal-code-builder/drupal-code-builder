@@ -35,6 +35,7 @@ class EntityHandler extends PHPClassFile {
     ];
 
     // Override some parent definitions to provide computed defaults.
+    // TODO: remove, always given by entity type generator.
     $data_definition['relative_class_name']['default'] = function ($component_data) {
       return [
         'Entity',

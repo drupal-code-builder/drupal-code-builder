@@ -600,7 +600,11 @@ class ComponentContentEntityType8Test extends TestBase {
         [
           'route_provider' => [
             'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
-          ]
+          ],
+          // Forces the default form handler.
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
         ],
         [],
       ],
@@ -611,7 +615,11 @@ class ComponentContentEntityType8Test extends TestBase {
         [
           'route_provider' => [
             'html' => 'Drupal\Core\Entity\Routing\AdminHtmlRouteProvider',
-          ]
+          ],
+          // Forces the default form handler.
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
         ],
         [],
       ],
@@ -622,10 +630,186 @@ class ComponentContentEntityType8Test extends TestBase {
         [
           'route_provider' => [
             'html' => 'Drupal\test_module\Entity\Handler\KittyCatRouteProvider',
-          ]
+          ],
+          // Forces the default form handler.
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
         ],
         [
           'src/Entity/Handler/KittyCatRouteProvider.php' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+        ],
+      ],
+      'default core route provider with custom default form' => [
+        // Tests the the route handler forcing the form doesn't kick in when
+        // the form is specified.
+        [
+          'handler_route_provider' => 'default',
+          'handler_form_default' => 'custom',
+        ],
+        [
+          'route_provider' => [
+            'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+          ],
+          'form' => [
+            'default' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'no default form' => [
+        [
+          'handler_form_default' => 'none',
+        ],
+        NULL,
+        // No custom handler classes are generated.
+        [],
+      ],
+      'core default form' => [
+        [
+          'handler_form_default' => 'core',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
+        ],
+        // No custom handler classes are generated.
+        [],
+      ],
+      'custom default form' => [
+        [
+          'handler_form_default' => 'custom',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'no add form' => [
+        [
+          'handler_form_add' => 'none',
+        ],
+        NULL,
+        [],
+      ],
+      'default add form overriding default form set to empty' => [
+        [
+          'handler_form_add' => 'default',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+            'add' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
+        ],
+        [],
+      ],
+      'default add form overriding default form set to none' => [
+        [
+          'handler_form_default' => 'none',
+          'handler_form_add' => 'default',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+            'add' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
+        ],
+        [],
+      ],
+      'default add form with default form set to core' => [
+        [
+          'handler_form_default' => 'core',
+          'handler_form_add' => 'default',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+            'add' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
+        ],
+        [],
+      ],
+      'default add form with default form set to custom' => [
+        [
+          'handler_form_default' => 'custom',
+          'handler_form_add' => 'default',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
+            'add' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'custom add form overriding default form set to empty' => [
+        [
+          'handler_form_add' => 'custom',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+            'add' => 'Drupal\test_module\Entity\Handler\KittyCatAddForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatAddForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'custom add form overriding default form set to none' => [
+        [
+          'handler_form_default' => 'none',
+          'handler_form_add' => 'custom',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+            'add' => 'Drupal\test_module\Entity\Handler\KittyCatAddForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatAddForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'custom add form with default form set to core' => [
+        [
+          'handler_form_default' => 'core',
+          'handler_form_add' => 'custom',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+            'add' => 'Drupal\test_module\Entity\Handler\KittyCatAddForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatAddForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'custom add form with default form set to custom' => [
+        [
+          'handler_form_default' => 'custom',
+          'handler_form_add' => 'custom',
+        ],
+        [
+          'form' => [
+            'default' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
+            'add' => 'Drupal\test_module\Entity\Handler\KittyCatAddForm',
+          ],
+        ],
+        [
+          'src/Entity/Handler/KittyCatForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+          'src/Entity/Handler/KittyCatAddForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
         ],
       ],
     ];

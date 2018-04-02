@@ -82,6 +82,14 @@ class ConfigEntityType extends EntityTypeBase {
 
     $handler_types['storage']['base_class'] = '\Drupal\Core\Config\Entity\ConfigEntityStorage';
 
+    // These get overridden in requiredComponents() if this is a bundle config
+    // entity.
+    $handler_types['form_default']['base_class'] = '\Drupal\Core\Entity\EntityForm';
+    $handler_types['form_add']['base_class'] = '\Drupal\Core\Entity\EntityForm';
+    $handler_types['form_edit']['base_class'] = '\Drupal\Core\Entity\EntityForm';
+
+    $handler_types['form_delete']['base_class'] = '\Drupal\Core\Entity\EntityDeleteForm';
+
     return $handler_types;
   }
 
@@ -90,6 +98,16 @@ class ConfigEntityType extends EntityTypeBase {
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
+
+    // Override the base class of any form handlers if this is a bundle entity.
+    // TODO: clean this up!
+    if (isset($this->component_data['bundle_of_entity'])) {
+      foreach ($components as $component_key => $component_data) {
+        if (isset($component_data['parent_class_name']) && $component_data['parent_class_name'] == '\Drupal\Core\Entity\EntityForm') {
+          $components[$component_key]['parent_class_name'] = 'Drupal\Core\Entity\BundleEntityFormBase';
+        }
+      }
+    }
 
     $entity_config_key = $this->component_data['entity_type_id'];
     $module = $this->component_data['root_component_name'];

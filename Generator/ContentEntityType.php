@@ -190,6 +190,12 @@ class ContentEntityType extends EntityTypeBase {
 
     $handler_types['storage']['base_class'] = '\Drupal\Core\Entity\Sql\SqlContentEntityStorage';
 
+    $handler_types['form_default']['base_class'] = '\Drupal\Core\Entity\ContentEntityForm';
+    $handler_types['form_add']['base_class'] = '\Drupal\Core\Entity\ContentEntityForm';
+    $handler_types['form_edit']['base_class'] = '\Drupal\Core\Entity\ContentEntityForm';
+
+    $handler_types['form_delete']['base_class'] = '\Drupal\Core\Entity\ContentEntityDeleteForm';
+
     $storage_schema_type = [
       'storage_schema' => [
         'label' => 'storage schema',
