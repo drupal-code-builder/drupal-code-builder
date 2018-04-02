@@ -10,6 +10,8 @@
 #     where 'ClassName' must be a title case string.
 #   - runtests.sh methodName - run the matching test methods (PHPUnit uses a
 #     regex), where 'methodName' must start with a lower case letter.
+#   - runtests.sh methodName data_set_name - run the matching test methods,
+#     with the specified data set.
 
 FILE="Test/Unit";
 GROUP=""
@@ -24,6 +26,11 @@ elif [[ $1 =~ ^[a-z]+$ ]]; then
 elif [[ $1 =~ ^[a-z] ]]; then
   # First letter lowercase is a method name to filter by.
   FILTER="--filter=$1"
+
+  # A 2nd parameter is a dataset name.
+  if [[ $2 != "" ]]; then
+    FILTER="$FILTER .+ \"$2\""
+  fi
 else
   # Anything else is a class name.
   FILE="Test/Unit/$1.php";
