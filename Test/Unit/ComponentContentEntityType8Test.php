@@ -427,9 +427,171 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
-   * Test creating a content entity type with handlers.
+   * Tests creating a content entity type with handlers.
+   *
+   * This covers the different combinations of options.
+   *
+   * @dataProvider providerHandlers
    */
-  public function testContentEntityTypeWithHandlers() {
+  public function testContentEntityTypeHandlers($handler_properties, $expected_handlers_annotation, $expected_files_base_classes) {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+        ]
+        + $handler_properties,
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    // Use array_values() as preg_grep() will keep original numeric keys.
+    $handler_filenames = array_values(preg_grep('@^src/Entity/Handler@', array_keys($files)));
+    $expected_filenames = array_keys($expected_files_base_classes);
+    $this->assertEquals($expected_filenames, $handler_filenames);
+
+    // Test the entity annotation.
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+    $php_tester = new PHPTester($entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertPropertyHasValue(['handlers'], $expected_handlers_annotation);
+
+    // Test the base classes.
+    foreach ($expected_files_base_classes as $filename => $base_class) {
+      $handler_class_file = $files[$filename];
+      $php_tester = new PHPTester($handler_class_file);
+      $php_tester->assertClassHasParent($base_class);
+    }
+  }
+
+  /**
+   * Data provider for testContentEntityTypeHandlers()
+   */
+  public function providerHandlers() {
+    return [
+      'custom access' => [
+        // Handler properties.
+        [
+          'handler_access' => TRUE,
+        ],
+        // Anotation.
+        [
+          'access' => 'Drupal\test_module\Entity\Handler\KittyCatAccess',
+        ],
+        // Expected handler files and base classes.
+        [
+          'src/Entity/Handler/KittyCatAccess.php' => 'Drupal\Core\Entity\EntityAccessControlHandler',
+        ],
+      ],
+      'custom storage' => [
+        [
+          'handler_storage' => TRUE,
+        ],
+        [
+          'storage' => 'Drupal\test_module\Entity\Handler\KittyCatStorage',
+        ],
+        [
+          'src/Entity/Handler/KittyCatStorage.php' => 'Drupal\Core\Entity\Sql\SqlContentEntityStorage',
+        ],
+      ],
+      'custom storage schema' => [
+        [
+          'handler_storage_schema' => TRUE,
+        ],
+        [
+          'storage_schema' => 'Drupal\test_module\Entity\Handler\KittyCatStorageSchema',
+        ],
+        [
+          'src/Entity/Handler/KittyCatStorageSchema.php' => 'Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema',
+        ],
+      ],
+      'custom view builder' => [
+        [
+          'handler_view_builder' => TRUE,
+        ],
+        [
+          'view_builder' => 'Drupal\test_module\Entity\Handler\KittyCatViewBuilder',
+        ],
+        [
+          'src/Entity/Handler/KittyCatViewBuilder.php' => 'Drupal\Core\Entity\EntityViewBuilder',
+        ],
+      ],
+      'custom translation' => [
+        [
+          'handler_translation' => TRUE,
+        ],
+        [
+          'translation' => 'Drupal\test_module\Entity\Handler\KittyCatTranslation',
+        ],
+        [
+          'src/Entity/Handler/KittyCatTranslation.php' => 'Drupal\content_translation\ContentTranslationHandler',
+        ],
+      ],
+      // Tests the 'none' option for handlers that aren't filled in by core.
+      'no list builder' => [
+        [
+          'handler_list_builder' => 'none',
+        ],
+        // No handler annotations.
+        NULL,
+        // No custom handler classes are generated.
+        [],
+      ],
+      'core list builder' => [
+        [
+          'handler_list_builder' => 'core',
+        ],
+        [
+          'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
+        ],
+        // No custom handler classes are generated.
+        [],
+      ],
+      'custom list builder' => [
+        [
+          'handler_list_builder' => 'custom',
+        ],
+        [
+          'list_builder' => 'Drupal\test_module\Entity\Handler\KittyCatListBuilder',
+        ],
+        [
+          'src/Entity/Handler/KittyCatListBuilder.php' => 'Drupal\Core\Entity\EntityListBuilder',
+        ],
+      ],
+      'core views data' => [
+        [
+          'handler_views_data' => 'core',
+        ],
+        [
+          'views_data' => 'Drupal\views\EntityViewsData',
+        ],
+        // No custom handler classes are generated.
+        [],
+      ],
+      'custom views data' => [
+        [
+          'handler_views_data' => 'custom',
+        ],
+        [
+          'views_data' => 'Drupal\test_module\Entity\Handler\KittyCatViewsData',
+        ],
+        [
+          'src/Entity/Handler/KittyCatViewsData.php' => 'Drupal\views\EntityViewsData',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Tests generating of custom handler classes.
+   */
+  public function testContentEntityTypeCustomHandlers() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
