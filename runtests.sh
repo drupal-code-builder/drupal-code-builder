@@ -8,8 +8,8 @@
 #     group, where 'group' is a lower case string.
 #   - runtests.sh ClassName - run unit tests in the specified short class name,
 #     where 'ClassName' must be a title case string.
-#   - runtests.sh methodName - run unit tests in the specified short class name,
-#     where 'methodName' must start with a lower case letter.
+#   - runtests.sh methodName - run the matching test methods (PHPUnit uses a
+#     regex), where 'methodName' must start with a lower case letter.
 
 FILE="Test/Unit";
 GROUP=""
