@@ -141,10 +141,19 @@ abstract class EntityTypeBase extends PHPClassFile {
       $data_definition["handler_{$key}"] = $handler_property;
     }
 
+    // Force the admin_permission property if there is a routing provider
+    // handler. This can't be done in the processing callback for that property,
+    // as processing callback is not applied to an empty property.
+    $data_definition['handler_route_provider']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+      if (!empty($component_data['handler_route_provider']) && $component_data['handler_route_provider'] != 'none') {
+        $component_data['admin_permission'] = TRUE;
+      }
+    };
+
     // Admin permission.
     $data_definition['admin_permission'] = [
       'label' => 'Admin permission',
-      'description' => "Whether to provide an admin permission.",
+      'description' => "Whether to provide an admin permission. (Always set if a route provider handler is used.)",
       'format' => 'boolean',
     ];
     $data_definition['admin_permission_name'] = [

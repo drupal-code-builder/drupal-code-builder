@@ -644,6 +644,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'content_entity_types' => [
         0 => [
           'entity_type_id' => 'kitty_cat',
+          'admin_permission' => FALSE,
           'handler_access' => TRUE,
           'handler_storage' => TRUE,
           'handler_storage_schema' => TRUE,
@@ -658,6 +659,8 @@ class ComponentContentEntityType8Test extends TestBase {
     );
 
     $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The admin permission property was overridden.");
 
     $handler_filenames = preg_grep('@^src/Entity/Handler@', array_keys($files));
     $this->assertCount(8, $handler_filenames, "Expected number of handler files is returned.");
@@ -734,6 +737,38 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatRouteProvider');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider');
     $php_tester->assertClassDocBlockHasLine("Provides the route provider handler for the Kitty Cat entity.");
+  }
+
+  /**
+   * Tests that requesting a routing handler forces the admin permission.
+   */
+  public function testContentEntityTypePermissionWithRoutingHandler() {
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'admin_permission' => FALSE,
+          'handler_route_provider' => 'default',
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The admin permission property was overridden.");
+
+    // Check the .permissions file.
+    $permissions_file = $files["$module_name.permissions.yml"];
+    $yaml_tester = new YamlTester($permissions_file);
+
+    $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
   }
 
 }
