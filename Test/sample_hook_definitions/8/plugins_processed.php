@@ -440,4 +440,84 @@ array (
     array (
     ),
   ),
+  'menu.local_action' => 
+  array (
+    'type_id' => 'menu.local_action',
+    'service_id' => 'plugin.manager.menu.local_action',
+    'service_class_name' => 'Drupal\\Core\\Menu\\LocalActionManager',
+    'service_component_namespace' => 'Drupal\\Core\\Menu',
+    'type_label' => 'menu.local_action',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery',
+    'subdir' => NULL,
+    'plugin_interface' => NULL,
+    'plugin_definition_annotation_name' => NULL,
+    'yaml_file_suffix' => 'links.action',
+    'yaml_properties' => 
+    array (
+      'title' => '',
+      'weight' => NULL,
+      'route_name' => NULL,
+      'route_parameters' => 
+      array (
+      ),
+      'options' => 
+      array (
+      ),
+      'appears_on' => 
+      array (
+      ),
+      'class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
+    ),
+    'base_class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
+    'construction' => 
+    array (
+      0 => 
+      array (
+        'type' => 'Drupal\\Core\\Routing\\RouteProviderInterface',
+        'name' => 'route_provider',
+        'extraction' => '$container->get(\'router.route_provider\')',
+      ),
+    ),
+    'plugin_properties' => 
+    array (
+    ),
+    'plugin_interface_methods' => 
+    array (
+    ),
+  ),
+  'menu.local_task' => 
+  array (
+    'type_id' => 'menu.local_task',
+    'service_id' => 'plugin.manager.menu.local_task',
+    'service_class_name' => 'Drupal\\Core\\Menu\\LocalTaskManager',
+    'service_component_namespace' => 'Drupal\\Core\\Menu',
+    'type_label' => 'menu.local_task',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery',
+    'subdir' => NULL,
+    'plugin_interface' => NULL,
+    'plugin_definition_annotation_name' => NULL,
+    'yaml_file_suffix' => 'links.task',
+    'yaml_properties' => 
+    array (
+      'route_name' => '',
+      'route_parameters' => 
+      array (
+      ),
+      'title' => '',
+      'base_route' => '',
+      'parent_id' => NULL,
+      'weight' => NULL,
+      'options' => 
+      array (
+      ),
+      'class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
+    ),
+    'base_class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
+    'plugin_properties' => 
+    array (
+    ),
+    'plugin_interface_methods' => 
+    array (
+    ),
+  ),
 );

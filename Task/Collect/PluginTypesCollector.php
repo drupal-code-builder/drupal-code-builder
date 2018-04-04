@@ -22,8 +22,10 @@ class PluginTypesCollector {
     'plugin.manager.block',
     'plugin.manager.field.formatter',
     'plugin.manager.image.effect',
-    // YAML plugin.
+    // YAML plugins. Need all of these for entity type generators.
     'plugin.manager.menu.link',
+    'plugin.manager.menu.local_task',
+    'plugin.manager.menu.local_action',
   ];
 
   /**
