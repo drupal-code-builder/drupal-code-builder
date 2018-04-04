@@ -275,8 +275,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'route_provider' => [
         'label' => 'route provider',
-        // TODO: replace this with property_path and remove this attribute.
-        'inner_keys' => ['html'],
+        'property_path' => ['route_provider', 'html'],
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
         'options' => [
@@ -517,10 +516,6 @@ abstract class EntityTypeBase extends PHPClassFile {
 
       if (isset($handler_type_info['property_path'])) {
         NestedArray::setValue($handler_data, $handler_type_info['property_path'], $handler_class);
-      }
-      elseif (isset($handler_type_info['inner_keys'])) {
-        $keys = array_merge([$key], $handler_type_info['inner_keys']);
-        NestedArray::setValue($handler_data, $keys, $handler_class);
       }
       else {
         $handler_data[$key] = $handler_class;
