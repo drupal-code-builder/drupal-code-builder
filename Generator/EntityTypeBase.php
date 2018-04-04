@@ -99,37 +99,32 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
     ];
 
-    // Default property values for a handler that core fills in if not
-    // specified, e.g. the access handler.
-    $handler_property_defaults_core_default = [
-      'format' => 'boolean',
-    ];
-
-    // Default property values for a handler that core leaves empty if not
-    // specified, e.g. the list builder handler.
-    $handler_property_defaults_core_empty = [
-      'format' => 'string',
-      'options' => [
-        'none' => 'Do not use a handler',
-        'core' => 'Use the core handler class',
-        'custom' => 'Provide a custom handler class',
-      ],
-    ];
-
+    // Create the property for the handler.
     foreach (static::getHandlerTypes() as $key => $handler_type_info) {
       $handler_type_property_name = "handler_{$key}";
 
       switch ($handler_type_info['mode']) {
         case 'core_default':
-          $handler_property = $handler_property_defaults_core_default;
-
-          $handler_property['label'] = "Custom {$handler_type_info['label']} handler";
+          // Handler that core fills in if not specified, e.g. the access
+          // handler.
+          $handler_property = [
+            'format' => 'boolean',
+            'label' => "Custom {$handler_type_info['label']} handler",
+          ];
           break;
 
         case 'core_none':
-          $handler_property = $handler_property_defaults_core_empty;
-
-          $handler_property['label'] = ucfirst("{$handler_type_info['label']} handler");
+          // Handler that core leaves empty if not specified, e.g. the list
+          // builder handler.
+          $handler_property = [
+            'format' => 'string',
+            'label' => ucfirst("{$handler_type_info['label']} handler"),
+            'options' => [
+              'none' => 'Do not use a handler',
+              'core' => 'Use the core handler class',
+              'custom' => 'Provide a custom handler class',
+            ],
+          ];
           break;
 
         case 'custom_default':
