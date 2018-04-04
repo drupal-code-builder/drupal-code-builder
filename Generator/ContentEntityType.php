@@ -272,6 +272,29 @@ class ContentEntityType extends EntityTypeBase {
 
     // TODO: other methods!
 
+    // Add a menu task if there is a route provider handler.
+    // Content entities don't get a menu item, but rather a task (i.e. a tab)
+    // alongside the content admin for nodes.
+    // TODO: Change this when https://www.drupal.org/project/drupal/issues/2862859
+    // is fixed.
+    // TODO: consider only adding this if it's the admin or custom route
+    // provider.
+    if (isset($this->component_data['handler_route_provider']) && $this->component_data['handler_route_provider'] != 'none') {
+      $components['collection_menu_task' . $this->component_data['entity_type_id']] = [
+        'component_type' => 'PluginYAML',
+        'plugin_type' => 'menu.local_task',
+        'prefix_name' => FALSE,
+        'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+        'plugin_properties' => [
+          'title' => $this->component_data['entity_type_label'] . 's',
+          'route_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+          'base_route' => 'system.admin_content',
+          // Media module sets 10 for its tab; go further along.
+          'weight' => 15,
+        ],
+      ];
+    }
+
     return $components;
   }
 

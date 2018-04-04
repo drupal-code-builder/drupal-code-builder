@@ -946,7 +946,7 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
-   * Tests that requesting a routing handler forces the admin permission.
+   * Tests that requesting a routing handler forces other UI components.
    */
   public function testContentEntityTypePermissionWithRoutingHandler() {
     $module_name = 'test_module';
@@ -967,6 +967,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The admin permission property was overridden.");
+    $this->assertArrayHasKey("$module_name.links.task.yml", $files, "The admin permission property was overridden.");
 
     // Check the .permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
@@ -975,6 +976,15 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
+
+    // Check the tasks plugin file.
+    $tasks_file = $files["$module_name.links.task.yml"];
+    $yaml_tester = new YamlTester($tasks_file);
+
+    $yaml_tester->assertHasProperty('entity.kitty_cat.collection', "The tasks file defines the task for the collection.");
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'title'], 'Kitty Cats');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'route_name'], 'entity.kitty_cat.collection');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'base_route'], 'system.admin_content');
   }
 
 }
