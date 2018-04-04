@@ -23,7 +23,7 @@ class ComponentConfigEntityType8Test extends TestBase {
   /**
    * Test creating a config entity type.
    */
-  public function testConfigEntityType() {
+  public function testBasicConfigEntityType() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
