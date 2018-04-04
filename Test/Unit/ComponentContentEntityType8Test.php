@@ -325,6 +325,8 @@ class ComponentContentEntityType8Test extends TestBase {
           'bundle_entity' => [
             0 => [
               'entity_type_id' => 'kitty_cat_type',
+              // Request a route provider so UI features are generated.
+              'handler_route_provider' => 'admin',
               'entity_properties' => [
                 0 => [
                   'name' => 'foo',
@@ -354,13 +356,14 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(7, $files, "Expected number of files is returned.");
+    $this->assertCount(8, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
     $this->assertArrayHasKey("src/Entity/KittyCatType.php", $files, "The files list has a bundle entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatTypeInterface.php", $files, "The files list has a bundle entity interface file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
+    $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
     $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
@@ -425,6 +428,14 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type', 'label'], 'Kitty Cat Type');
     $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'foo']);
     $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'colour']);
+
+    // Check the permissions file.
+    $permissions_file = $files["$module_name.permissions.yml"];
+    $yaml_tester = new YamlTester($permissions_file);
+
+    $yaml_tester->assertHasProperty('administer kitty cat types', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'title'], 'Administer kitty cat types', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'description'], 'Administer kitty cat types', "The permission has the expected description.");
 
     // Check the menu links file.
     $menu_links_file = $files["test_module.links.menu.yml"];

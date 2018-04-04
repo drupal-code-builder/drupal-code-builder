@@ -131,19 +131,24 @@ class ConfigEntityType extends EntityTypeBase {
       ],
     ];
 
-    // Name must be unique among the component type.
-    $components['collection_menu_link_' . $this->component_data['entity_type_id']] = [
-      'component_type' => 'PluginYAML',
-      'plugin_type' => 'menu.link',
-      'prefix_name' => FALSE,
-      'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
-      'plugin_properties' => [
-        'title' => $this->component_data['entity_type_label'] . 's',
-        'description' => "Create and manage fields, forms, and display settings for {$this->component_data['entity_type_label']}s.",
-        'route_name' => "entity.{$this->component_data['entity_type_id']}.collection",
-        'parent' => 'system.admin_structure',
-      ],
-    ];
+    // Add a menu link if there is a route provider handler.
+    // TODO: consider only adding this if it's the admin or custom route
+    // provider.
+    if (isset($this->component_data['handler_route_provider']) && $this->component_data['handler_route_provider'] != 'none') {
+      // Name must be unique among the component type.
+      $components['collection_menu_link_' . $this->component_data['entity_type_id']] = [
+        'component_type' => 'PluginYAML',
+        'plugin_type' => 'menu.link',
+        'prefix_name' => FALSE,
+        'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+        'plugin_properties' => [
+          'title' => $this->component_data['entity_type_label'] . 's',
+          'description' => "Create and manage fields, forms, and display settings for {$this->component_data['entity_type_label']}s.",
+          'route_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+          'parent' => 'system.admin_structure',
+        ],
+      ];
+    }
 
     return $components;
   }

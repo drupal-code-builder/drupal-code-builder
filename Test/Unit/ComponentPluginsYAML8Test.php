@@ -120,12 +120,8 @@ class ComponentPluginsYAML8Test extends TestBase {
       'config_entity_types' => [
         0 => [
           'entity_type_id' => 'alpha',
-          'entity_properties' => [
-            0 => [
-              'name' => 'breed',
-              'type' => 'string',
-            ],
-          ],
+          // Request a route provider so UI features are generated.
+          'handler_route_provider' => 'admin',
         ],
       ],
       'readme' => FALSE,
