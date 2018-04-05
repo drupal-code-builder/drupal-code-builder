@@ -356,7 +356,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(8, $files, "Expected number of files is returned.");
+    $this->assertCount(9, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
@@ -365,6 +365,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
     $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
+    $this->assertArrayHasKey("test_module.links.action.yml", $files, "The files list has an action links file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -623,10 +624,11 @@ class ComponentContentEntityType8Test extends TestBase {
           'route_provider' => [
             'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
           ],
-          // Forces the default form handler.
+          // Forces the default form and list handlers.
           'form' => [
             'default' => 'Drupal\Core\Entity\ContentEntityForm',
           ],
+          'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
         ],
         [],
       ],
@@ -638,10 +640,11 @@ class ComponentContentEntityType8Test extends TestBase {
           'route_provider' => [
             'html' => 'Drupal\Core\Entity\Routing\AdminHtmlRouteProvider',
           ],
-          // Forces the default form handler.
+          // Forces the default form and list handlers.
           'form' => [
             'default' => 'Drupal\Core\Entity\ContentEntityForm',
           ],
+          'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
         ],
         [],
       ],
@@ -653,10 +656,11 @@ class ComponentContentEntityType8Test extends TestBase {
           'route_provider' => [
             'html' => 'Drupal\test_module\Entity\Handler\KittyCatRouteProvider',
           ],
-          // Forces the default form handler.
+          // Forces the default form and list handlers.
           'form' => [
             'default' => 'Drupal\Core\Entity\ContentEntityForm',
           ],
+          'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
         ],
         [
           'src/Entity/Handler/KittyCatRouteProvider.php' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
@@ -676,9 +680,30 @@ class ComponentContentEntityType8Test extends TestBase {
           'form' => [
             'default' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
           ],
+          'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
         ],
         [
           'src/Entity/Handler/KittyCatForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+        ],
+      ],
+      'default core route provider with custom list builder' => [
+        // Tests the the route handler forcing the form doesn't kick in when
+        // the list builder is specified.
+        [
+          'handler_route_provider' => 'default',
+          'handler_list_builder' => 'custom',
+        ],
+        [
+          'route_provider' => [
+            'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+          ],
+          'form' => [
+            'default' => 'Drupal\Core\Entity\ContentEntityForm',
+          ],
+          'list_builder' => 'Drupal\test_module\Entity\Handler\KittyCatListBuilder',
+        ],
+        [
+          'src/Entity/Handler/KittyCatListBuilder.php' => 'Drupal\Core\Entity\EntityListBuilder',
         ],
       ],
       'no default form' => [

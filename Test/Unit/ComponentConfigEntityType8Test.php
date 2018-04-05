@@ -259,13 +259,14 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(6, $files, "Expected number of files is returned.");
+    $this->assertCount(7, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
     $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
+    $this->assertArrayHasKey("test_module.links.action.yml", $files, "The files list has an action links file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
     $php_tester = new PHPTester($entity_class_file);
@@ -293,6 +294,15 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'description'], 'Create and manage fields, forms, and display settings for Kitty Cats.');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'route_name'], 'entity.kitty_cat.collection');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'parent'], 'system.admin_structure');
+
+    // Check the action links file.
+    $action_links_file = $files["test_module.links.action.yml"];
+
+    $yaml_tester = new YamlTester($action_links_file);
+    $yaml_tester->assertHasProperty('entity.kitty_cat.add', 'The entity type has an add action link.');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_form');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
   }
 
 }
