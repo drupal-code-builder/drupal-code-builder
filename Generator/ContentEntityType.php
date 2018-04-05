@@ -89,7 +89,7 @@ class ContentEntityType extends EntityTypeBase {
         },
       ],
     ];
-    InsertArray::insertAfter($data_definition, 'entity_class_name', $bundle_entity_properties);
+    InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);
 
     $base_fields_property = [
       'base_fields' => [
