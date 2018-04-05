@@ -177,16 +177,20 @@ abstract class EntityTypeBase extends PHPClassFile {
       $data_definition[$handler_type_property_name] = $handler_property;
     }
 
-    // Force the admin_permission property and default form handler if there is
-    // a routing provider handler. This can't be done in the processing callback
-    // for that property, as processing callback is not applied to an empty
-    // property.
+    // Force the admin_permission property, default form handler, and list
+    // builder if there is a routing provider handler. This can't be done in the
+    // processing callback for that property, as processing callback is not
+    // applied to an empty property.
     $data_definition['handler_route_provider']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       if (!empty($component_data['handler_route_provider']) && $component_data['handler_route_provider'] != 'none') {
         $component_data['admin_permission'] = TRUE;
 
         if (empty($component_data['handler_form_default']) || $component_data['handler_form_default'] == 'none') {
           $component_data['handler_form_default'] = 'core';
+        }
+
+        if (empty($component_data['handler_list_builder']) || $component_data['handler_list_builder'] == 'none') {
+          $component_data['handler_list_builder'] = 'core';
         }
       }
     };
@@ -279,7 +283,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'route_provider' => [
         'label' => 'route provider',
-        'description' => 'Provides a UI for the entity type. If set, forces the admin permission and a default form handler.',
+        'description' => 'Provides a UI for the entity type. If set, forces the admin permission, list builer, and default form handler.',
         'property_path' => ['route_provider', 'html'],
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
