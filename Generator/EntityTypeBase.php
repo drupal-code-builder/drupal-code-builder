@@ -441,10 +441,8 @@ abstract class EntityTypeBase extends PHPClassFile {
       );
     }
 
-    // Add menu plugins for the entity type if there is a route provider.
-    // TODO: consider only adding these if it's the admin or custom route
-    // provider.
-    if (isset($this->component_data['handler_route_provider']) && $this->component_data['handler_route_provider'] != 'none') {
+    // Add menu plugins for the entity type if the UI option is set.
+    if (!empty($this->component_data['entity_ui'])) {
       // Add the 'add' button to appear on the collection route.
       $components['collection_menu_action' . $this->component_data['entity_type_id']] = [
         'component_type' => 'PluginYAML',

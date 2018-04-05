@@ -272,10 +272,8 @@ class ContentEntityType extends EntityTypeBase {
 
     // TODO: other methods!
 
-    // Add menu plugins for the entity type if there is a route provider.
-    // TODO: consider only adding these if it's the admin or custom route
-    // provider.
-    if (isset($this->component_data['handler_route_provider']) && $this->component_data['handler_route_provider'] != 'none') {
+    // Add menu plugins for the entity type if the UI option is set.
+    if (!empty($this->component_data['entity_ui'])) {
       // Add a menu task if there is a route provider handler.
       // Content entities don't get a menu item, but rather a task (i.e. a tab)
       // alongside the content admin for nodes.

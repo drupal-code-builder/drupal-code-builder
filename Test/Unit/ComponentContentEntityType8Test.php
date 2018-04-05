@@ -353,7 +353,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(9, $files, "Expected number of files is returned.");
+    $this->assertCount(7, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
@@ -361,8 +361,6 @@ class ComponentContentEntityType8Test extends TestBase {
     $this->assertArrayHasKey("src/Entity/KittyCatTypeInterface.php", $files, "The files list has a bundle entity interface file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
-    $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
-    $this->assertArrayHasKey("test_module.links.action.yml", $files, "The files list has an action links file.");
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -433,16 +431,6 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty('administer kitty cat types', "The permissions file declares the entity admin permission.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'title'], 'Administer kitty cat types', "The permission has the expected title.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'description'], 'Administer kitty cat types', "The permission has the expected description.");
-
-    // Check the menu links file.
-    $menu_links_file = $files["test_module.links.menu.yml"];
-
-    $yaml_tester = new YamlTester($menu_links_file);
-    $yaml_tester->assertHasProperty('entity.kitty_cat_type.collection');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'title'], 'Kitty Cat Types');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'description'], 'Create and manage fields, forms, and display settings for Kitty Cat Types.');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'route_name'], 'entity.kitty_cat_type.collection');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'parent'], 'system.admin_structure');
   }
 
   /**
@@ -1033,6 +1021,108 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'title'], 'Kitty Cats');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'route_name'], 'entity.kitty_cat.collection');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'base_route'], 'system.admin_content');
+  }
+
+  /**
+   * Test creating a content entity type with a bundle entity and UI.
+   *
+   * @group entity_ui
+   */
+  public function testEntityTypeWithUIAndBundleEntity() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'entity_ui' => 'admin',
+          'bundle_entity' => [
+            0 => [
+              'entity_type_id' => 'kitty_cat_type',
+              'entity_ui' => 'admin',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(10, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatType.php", $files, "The files list has a bundle entity class file.");
+    $this->assertArrayHasKey("src/Entity/KittyCatTypeInterface.php", $files, "The files list has a bundle entity interface file.");
+    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
+    $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
+    $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
+    $this->assertArrayHasKey("test_module.links.action.yml", $files, "The files list has an action links file.");
+    $this->assertArrayHasKey("test_module.links.task.yml", $files, "The files list has an task links file.");
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+
+    $php_tester = new PHPTester($entity_class_file);
+
+    // Test the entity annotation.
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ContentEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'bundle_label',
+      'base_table',
+      'handlers',
+      'admin_permission',
+      'entity_keys',
+      'bundle_entity_type',
+      'links',
+    ]);
+
+    $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
+
+    $php_tester = new PHPTester($bundle_entity_class_file);
+
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'handlers',
+      'admin_permission',
+      'entity_keys',
+      'links',
+      'bundle_of',
+    ]);
+
+    // Check the permissions file.
+    $permissions_file = $files["$module_name.permissions.yml"];
+    $yaml_tester = new YamlTester($permissions_file);
+
+    $yaml_tester->assertHasProperty('administer kitty cat types', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'title'], 'Administer kitty cat types', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'description'], 'Administer kitty cat types', "The permission has the expected description.");
+
+    // Check the menu links file.
+    $menu_links_file = $files["test_module.links.menu.yml"];
+
+    $yaml_tester = new YamlTester($menu_links_file);
+    $yaml_tester->assertHasProperty('entity.kitty_cat_type.collection');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'title'], 'Kitty Cat Types');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'description'], 'Create and manage fields, forms, and display settings for Kitty Cat Types.');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'route_name'], 'entity.kitty_cat_type.collection');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'parent'], 'system.admin_structure');
   }
 
 }

@@ -120,8 +120,8 @@ class ComponentPluginsYAML8Test extends TestBase {
       'config_entity_types' => [
         0 => [
           'entity_type_id' => 'alpha',
-          // Request a route provider so UI features are generated.
-          'handler_route_provider' => 'admin',
+          // Request en entity UI so menu plugins are generated.
+          'entity_ui' => 'admin',
         ],
       ],
       'readme' => FALSE,
