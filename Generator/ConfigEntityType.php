@@ -216,9 +216,9 @@ class ConfigEntityType extends EntityTypeBase {
     $entity_path_component = $this->component_data['entity_type_id'];
     $annotation_data['links']["add-form"] = "/admin/structure/{$entity_path_component}/add";
     $annotation_data['links']["canonical"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}";
-    $annotation_data['links']["collection"] = "/admin/content/{$entity_path_component}";
-    $annotation_data['links']["edit-form"] = "/admin/content/{$entity_path_component}/{{$entity_path_component}}/edit";
-    $annotation_data['links']["delete-form"] = "/admin/content/{$entity_path_component}/{{$entity_path_component}}/delete";
+    $annotation_data['links']["collection"] = "/admin/structure/{$entity_path_component}";
+    $annotation_data['links']["edit-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/edit";
+    $annotation_data['links']["delete-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/delete";
 
     $config_export_values = [];
     foreach ($this->component_data['entity_properties'] as $schema_item) {
