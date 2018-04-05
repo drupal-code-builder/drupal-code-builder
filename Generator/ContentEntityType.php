@@ -299,6 +299,26 @@ class ContentEntityType extends EntityTypeBase {
       if (!empty($this->component_data['bundle_entity_type'])) {
         $components['collection_menu_action' . $this->component_data['entity_type_id']]['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
       }
+
+      // Make local tasks (aka tabs) for the view, edit, and delete routes.
+      $entity_tabs = [
+        'canonical' => 'View',
+        'edit_form' => 'Edit',
+        'delete_form' => 'Delete',
+      ];
+      foreach ($entity_tabs as $route_suffix => $title) {
+        $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
+          'component_type' => 'PluginYAML',
+          'plugin_type' => 'menu.local_task',
+          'prefix_name' => FALSE,
+          'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+          'plugin_properties' => [
+            'title' => $title,
+            'route_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+            'base_route' => "entity.{$this->component_data['entity_type_id']}.canonical",
+          ],
+        ];
+      }
     }
 
     return $components;

@@ -1021,6 +1021,11 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'title'], 'Kitty Cats');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'route_name'], 'entity.kitty_cat.collection');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.collection', 'base_route'], 'system.admin_content');
+
+    // TODO: expand these.
+    $yaml_tester->assertHasProperty('entity.kitty_cat.canonical', "The tasks file defines the task for the view route.");
+    $yaml_tester->assertHasProperty('entity.kitty_cat.edit_form', "The tasks file defines the task for the edit form.");
+    $yaml_tester->assertHasProperty('entity.kitty_cat.delete_form', "The tasks file defines the task for the delete form.");
   }
 
   /**
