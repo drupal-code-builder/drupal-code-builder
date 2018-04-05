@@ -19,6 +19,11 @@ class ComponentDataInfoGatherer {
   protected $classHandler;
 
   /**
+   * Cache of processed properties, keyed by component type.
+   */
+  protected $infoCache;
+
+  /**
    * Creates a new ComponentDataInfoGatherer.
    *
    * @param ComponentClassHandler $class_handler
@@ -85,9 +90,15 @@ class ComponentDataInfoGatherer {
    * @see BaseGenerator::processComponentData()
    */
   public function getComponentDataInfo($component_type, $include_internal = FALSE) {
+    if (isset($this->infoCache[$component_type])) {
+      return $this->infoCache[$component_type];
+    }
+
     $properties = $this->classHandler->getComponentDataDefinition($component_type);
 
     $properties_processed = $this->processPropertyList($properties, $include_internal);
+
+    $this->infoCache[$component_type] = $properties_processed;
 
     return $properties_processed;
   }
