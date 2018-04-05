@@ -351,10 +351,21 @@ class ContentEntityType extends EntityTypeBase {
       $annotation_data['links'] = [];
       $entity_path_component = $this->component_data['entity_type_id'];
       $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type'];
+
+      // The structure of the add UI depends on whether there is a bundle
+      // entity.
       if (isset($this->component_data['bundle_entity_type'])) {
+        // If there's a bundle entity, the add UI is made up of first a page to
+        // select the bundle, and then a form with a bundle parameter.
         $annotation_data['links']["add-page"] = "/$entity_path_component/add";
         $annotation_data['links']["add-form"] = "/$entity_path_component/add/{{$bundle_entity_type_path_argument}}";
       }
+      else {
+        // If there's no bundle entity, it's just an add form with no
+        // parameter.
+        $annotation_data['links']["add-form"] = "/$entity_path_component/add";
+      }
+
       $annotation_data['links']["canonical"] = "/$entity_path_component/{{$entity_path_component}}";
       $annotation_data['links']["collection"] = "/admin/content/$entity_path_component";
       $annotation_data['links']["delete-form"] = "/$entity_path_component/{{$entity_path_component}}/delete";

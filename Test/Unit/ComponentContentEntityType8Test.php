@@ -1011,6 +1011,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'entity_keys',
       'links',
     ]);
+    $annotation_tester->assertPropertyHasValue(['links', 'add-form'], "/kitty_cat/add");
     $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/kitty_cat/{kitty_cat}");
     $annotation_tester->assertPropertyHasValue(['links', 'collection'], "/admin/content/kitty_cat");
     $annotation_tester->assertPropertyHasValue(['links', 'delete-form'], "/kitty_cat/{kitty_cat}/delete");
