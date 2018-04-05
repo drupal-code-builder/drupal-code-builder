@@ -236,6 +236,8 @@ class ComponentConfigEntityType8Test extends TestBase {
 
   /**
    * Test creating a config entity type with a UI.
+   *
+   * @group entity_ui
    */
   public function testConfigEntityTypeWithUI() {
     // Create a module.
@@ -247,11 +249,14 @@ class ComponentConfigEntityType8Test extends TestBase {
       'config_entity_types' => [
         0 => [
           'entity_type_id' => 'kitty_cat',
-          // Requesting a route provider should trigger various other things:
+          // Requesting an entity UI should trigger various other things:
           // - default form handler
           // - admin permission
           // - menu link plugin
-          'handler_route_provider' => 'admin',
+          'entity_ui' => 'admin',
+          // Check these get overridden.
+          'handler_route_provider' => 'none',
+          'admin_permission' => FALSE,
         ],
       ],
       'readme' => FALSE,

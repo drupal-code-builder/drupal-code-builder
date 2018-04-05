@@ -971,9 +971,11 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
-   * Tests that requesting a routing handler forces other UI components.
+   * Tests creating a content entity with a UI.
+   *
+   * @group entity_ui
    */
-  public function testContentEntityTypePermissionWithRoutingHandler() {
+  public function testContentEntityTypeWithUI() {
     $module_name = 'test_module';
     $module_data = array(
       'base' => 'module',
@@ -982,8 +984,10 @@ class ComponentContentEntityType8Test extends TestBase {
       'content_entity_types' => [
         0 => [
           'entity_type_id' => 'kitty_cat',
+          'entity_ui' => 'admin',
+          // Check these get overridden.
+          'handler_route_provider' => 'none',
           'admin_permission' => FALSE,
-          'handler_route_provider' => 'default',
         ],
       ],
       'readme' => FALSE,

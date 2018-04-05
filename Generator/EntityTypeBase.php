@@ -48,6 +48,28 @@ abstract class EntityTypeBase extends PHPClassFile {
           return CaseString::snake($entity_type_id)->pascal();
         },
       ],
+      // UI property. This forces the route provider which in turn forces other
+      // things, and also sets:
+      // - the links annotation properties
+      // - the menu links
+      // - the menu actions
+      // - TODO: the menu tasks
+      'entity_ui' => [
+        'label' => 'Provide UI',
+        'description' => "Whether this entity has a UI. If selected, this will override the route provider, default form, list builder, and admin permission options if they are left empty.",
+        'options' => [
+          // An empty value means processing won't be called.
+          '' => 'No UI',
+          'default' => 'Default UI',
+          'admin' => 'Admin UI',
+        ],
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          if (!isset($component_data['handler_route_provider']) ||
+            $component_data['handler_route_provider'] != $value) {
+            $component_data['handler_route_provider'] = $value;
+          }
+        },
+      ],
       'interface_parents' => [
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
@@ -177,10 +199,15 @@ abstract class EntityTypeBase extends PHPClassFile {
       $data_definition[$handler_type_property_name] = $handler_property;
     }
 
-    // Force the admin_permission property, default form handler, and list
-    // builder if there is a routing provider handler. This can't be done in the
-    // processing callback for that property, as processing callback is not
-    // applied to an empty property.
+    // If there is a route provider, force the following:
+    // - admin_permission, because
+    //  DefaultHtmlRouteProvider::getCollectionRoute() checks for it.
+    // - list builder handler, because
+    //  DefaultHtmlRouteProvider::getCollectionRoute() checks for it.
+    // - default form handler, because all the form routes assume that form
+    //   handlers exist and crash without one.
+    // This can't be done in the processing callback for those properties, as
+    // processing callback is not applied to an empty property.
     $data_definition['handler_route_provider']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       if (!empty($component_data['handler_route_provider']) && $component_data['handler_route_provider'] != 'none') {
         $component_data['admin_permission'] = TRUE;
