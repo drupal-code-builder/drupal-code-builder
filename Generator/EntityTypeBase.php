@@ -310,7 +310,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'route_provider' => [
         'label' => 'route provider',
-        'description' => 'Provides a UI for the entity type. If set, forces the admin permission, list builer, and default form handler.',
+        'description' => 'Provides a UI for the entity type. If set, forces the admin permission, list builder, and default form handler.',
         'property_path' => ['route_provider', 'html'],
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
