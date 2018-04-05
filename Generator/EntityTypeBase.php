@@ -273,12 +273,13 @@ abstract class EntityTypeBase extends PHPClassFile {
     return [
       'access' => [
         'label' => 'access',
+        'description' => "Controls access to entities of this type.",
         'mode' => 'core_default',
         'base_class' => '\Drupal\Core\Entity\EntityAccessControlHandler',
       ],
       'route_provider' => [
         'label' => 'route provider',
-        'description' => 'If set, forces the admin permission and default form handler.',
+        'description' => 'Provides a UI for the entity type. If set, forces the admin permission and a default form handler.',
         'property_path' => ['route_provider', 'html'],
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
@@ -293,6 +294,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'form_default' => [
         'label' => 'default form',
+        'description' => 'The entity form class to use if no form class is specified for an operation. Always set if a route provider handler is used.',
         'property_path' => ['form', 'default'],
         'class_name_suffix' => 'Form',
         'mode' => 'core_none',
@@ -300,6 +302,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'form_add' => [
         'label' => 'add form',
+        'description' => "The entity form class for the 'add' operation.",
         'property_path' => ['form', 'add'],
         'class_name_suffix' => 'AddForm',
         'mode' => 'custom_default',
@@ -307,6 +310,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'form_edit' => [
         'label' => 'edit form',
+        'description' => "The entity form class for the 'edit' operation.",
         'property_path' => ['form', 'edit'],
         'class_name_suffix' => 'EditForm',
         'mode' => 'custom_default',
@@ -314,17 +318,20 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'form_delete' => [
         'label' => 'delete form',
+        'description' => "The entity form class for the 'delete' operation.",
         'class_name_suffix' => 'DeleteForm',
         'property_path' => ['form', 'delete'],
         'mode' => 'core_none',
       ],
       'storage' => [
         'label' => 'storage',
+        'description' => "Defines how the entities are stored. This is typically customised to provide methods with custom queries for entities.",
         'mode' => 'core_default',
         'base_class' => '\Drupal\Core\Entity\EntityStorageBase',
       ],
       'list_builder' => [
         'label' => 'list builder',
+        'description' => "Provides the admin listing of entities of this type.",
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\EntityListBuilder',
       ],
