@@ -20,7 +20,7 @@ FILTER=""
 if [[ $1 = "" ]]; then
   # Run all tests.
   :
-elif [[ $1 =~ ^[a-z]+$ ]]; then
+elif [[ $1 =~ ^[a-z_]+$ ]]; then
   # All lowercase implies a group.
   GROUP="--group=$1";
 elif [[ $1 =~ ^[a-z] ]]; then
