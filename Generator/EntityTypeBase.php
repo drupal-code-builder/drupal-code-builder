@@ -53,7 +53,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       // - the links annotation properties
       // - the menu links
       // - the menu actions
-      // - TODO: the menu tasks
+      // - the menu tasks
       'entity_ui' => [
         'label' => 'Provide UI',
         'description' => "Whether this entity has a UI. If selected, this will override the route provider, default form, list builder, and admin permission options if they are left empty.",
