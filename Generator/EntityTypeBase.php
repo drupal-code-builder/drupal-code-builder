@@ -158,6 +158,12 @@ abstract class EntityTypeBase extends PHPClassFile {
           break;
       }
 
+      // Allow the handler type to provide a UI description.
+      if (isset($handler_type_info['description'])) {
+        $handler_property['description'] = $handler_type_info['description'];
+      }
+
+      // Add extra options specific to the handler type.
       if (isset($handler_type_info['options'])) {
         $handler_property['format'] = 'string';
 
@@ -244,6 +250,8 @@ abstract class EntityTypeBase extends PHPClassFile {
    *   An array whose keys are the handler type, e.g. 'access', and whose values
    *   are arrays containing:
    *   - 'label': The label of the handler type, in lowercase.
+   *   - 'description': (optional) The description text for the component
+   *     property.
    *   - 'base_class': The base class for handlers of this type.
    *   - 'mode': Defines how the core entity system handles an entity not
    *     defining a handler of this type. One of:
@@ -270,6 +278,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'route_provider' => [
         'label' => 'route provider',
+        'description' => 'If set, forces the admin permission and default form handler.',
         'property_path' => ['route_provider', 'html'],
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
