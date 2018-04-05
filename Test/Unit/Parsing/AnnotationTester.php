@@ -16,6 +16,11 @@ use PHPUnit\Framework\Assert;
 class AnnotationTester {
 
   /**
+   * The original docblock text.
+   */
+  protected $docblockText;
+
+  /**
    * The class of the whole annotation.
    *
    * @var string.
@@ -46,7 +51,16 @@ class AnnotationTester {
    *   The docblock text that should be tested.
    */
   public function __construct($docblock_text) {
+    $this->docblockText = $docblock_text;
+
     $this->parseAnnotation($docblock_text);
+  }
+
+  /**
+   * Does a debug dump() of the annotation text.
+   */
+  public function dump() {
+    dump($this->docblockText);
   }
 
   /**
