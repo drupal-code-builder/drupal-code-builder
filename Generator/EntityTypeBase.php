@@ -414,6 +414,28 @@ abstract class EntityTypeBase extends PHPClassFile {
       );
     }
 
+    // Add menu plugins for the entity type if there is a route provider.
+    // TODO: consider only adding these if it's the admin or custom route
+    // provider.
+    if (isset($this->component_data['handler_route_provider']) && $this->component_data['handler_route_provider'] != 'none') {
+      // Add the 'add' button to appear on the collection route.
+      $components['collection_menu_action' . $this->component_data['entity_type_id']] = [
+        'component_type' => 'PluginYAML',
+        'plugin_type' => 'menu.local_action',
+        'prefix_name' => FALSE,
+        'plugin_name' => "entity.{$this->component_data['entity_type_id']}.add",
+        'plugin_properties' => [
+          'title' => 'Add ' . $this->component_data['entity_type_label'],
+          'route_name' => "entity.{$this->component_data['entity_type_id']}.add_form",
+          // Media module sets 10 for its tab; go further along.
+          'weight' => 15,
+          'appears_on' => [
+             "entity.{$this->component_data['entity_type_id']}.collection",
+          ],
+        ],
+      ];
+    }
+
     return $components;
   }
 

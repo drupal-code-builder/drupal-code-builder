@@ -272,14 +272,15 @@ class ContentEntityType extends EntityTypeBase {
 
     // TODO: other methods!
 
-    // Add a menu task if there is a route provider handler.
-    // Content entities don't get a menu item, but rather a task (i.e. a tab)
-    // alongside the content admin for nodes.
-    // TODO: Change this when https://www.drupal.org/project/drupal/issues/2862859
-    // is fixed.
-    // TODO: consider only adding this if it's the admin or custom route
+    // Add menu plugins for the entity type if there is a route provider.
+    // TODO: consider only adding these if it's the admin or custom route
     // provider.
     if (isset($this->component_data['handler_route_provider']) && $this->component_data['handler_route_provider'] != 'none') {
+      // Add a menu task if there is a route provider handler.
+      // Content entities don't get a menu item, but rather a task (i.e. a tab)
+      // alongside the content admin for nodes.
+      // is fixed.
+      // TODO: Change this when https://www.drupal.org/project/drupal/issues/2862859
       $components['collection_menu_task' . $this->component_data['entity_type_id']] = [
         'component_type' => 'PluginYAML',
         'plugin_type' => 'menu.local_task',
@@ -293,6 +294,13 @@ class ContentEntityType extends EntityTypeBase {
           'weight' => 15,
         ],
       ];
+
+      // If there is a bundle entity, change the 'add' local action to go to
+      // the add page route, where a bundle can be selected, rather than the
+      // add form.
+      if (!empty($this->component_data['bundle_entity_type'])) {
+        $components['collection_menu_action' . $this->component_data['entity_type_id']]['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
+      }
     }
 
     return $components;
