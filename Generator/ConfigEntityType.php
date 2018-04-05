@@ -20,7 +20,7 @@ class ConfigEntityType extends EntityTypeBase {
     $config_schema_property = [
       'entity_properties' => [
         'label' => 'Entity properties',
-        'description' => "The config properties that are stored for each entity of this type",
+        'description' => "The config properties that are stored for each entity of this type.",
         'format' => 'compound',
         'properties' => [
           'name' => [
