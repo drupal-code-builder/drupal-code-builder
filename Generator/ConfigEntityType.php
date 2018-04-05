@@ -212,13 +212,15 @@ class ConfigEntityType extends EntityTypeBase {
       $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
     }
 
-    $annotation_data['links'] = [];
-    $entity_path_component = $this->component_data['entity_type_id'];
-    $annotation_data['links']["add-form"] = "/admin/structure/{$entity_path_component}/add";
-    $annotation_data['links']["canonical"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}";
-    $annotation_data['links']["collection"] = "/admin/structure/{$entity_path_component}";
-    $annotation_data['links']["edit-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/edit";
-    $annotation_data['links']["delete-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/delete";
+    if (!empty($this->component_data['entity_ui'])) {
+      $annotation_data['links'] = [];
+      $entity_path_component = $this->component_data['entity_type_id'];
+      $annotation_data['links']["add-form"] = "/admin/structure/{$entity_path_component}/add";
+      $annotation_data['links']["canonical"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}";
+      $annotation_data['links']["collection"] = "/admin/structure/{$entity_path_component}";
+      $annotation_data['links']["edit-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/edit";
+      $annotation_data['links']["delete-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/delete";
+    }
 
     $config_export_values = [];
     foreach ($this->component_data['entity_properties'] as $schema_item) {

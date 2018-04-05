@@ -347,19 +347,21 @@ class ContentEntityType extends EntityTypeBase {
     // Use the entity type ID as the base table.
     $annotation_data['base_table'] = $this->component_data['entity_type_id'];
 
-    $annotation_data['links'] = [];
-    $entity_path_component = $this->component_data['entity_type_id'];
-    $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type'];
-    if (isset($this->component_data['bundle_entity_type'])) {
-      $annotation_data['links']["add-page"] = "/$entity_path_component/add";
-      $annotation_data['links']["add-form"] = "/$entity_path_component/add/{{$bundle_entity_type_path_argument}}";
+    if (!empty($this->component_data['entity_ui'])) {
+      $annotation_data['links'] = [];
+      $entity_path_component = $this->component_data['entity_type_id'];
+      $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type'];
+      if (isset($this->component_data['bundle_entity_type'])) {
+        $annotation_data['links']["add-page"] = "/$entity_path_component/add";
+        $annotation_data['links']["add-form"] = "/$entity_path_component/add/{{$bundle_entity_type_path_argument}}";
+      }
+      $annotation_data['links']["canonical"] = "/$entity_path_component/{{$entity_path_component}}";
+      $annotation_data['links']["collection"] = "/admin/content/$entity_path_component";
+      $annotation_data['links']["delete-form"] = "/$entity_path_component/{{$entity_path_component}}/delete";
+      $annotation_data['links']["edit-form"] = "/$entity_path_component/{{$entity_path_component}}/edit";
+      // TODO: revision link template.
+      // $annotation_data['links']["revision"] = "/$entity_path_component/{}/revisions/{media_revision}/view";
     }
-    $annotation_data['links']["canonical"] = "/$entity_path_component/{{$entity_path_component}}";
-    $annotation_data['links']["collection"] = "/admin/content/$entity_path_component";
-    $annotation_data['links']["delete-form"] = "/$entity_path_component/{{$entity_path_component}}/delete";
-    $annotation_data['links']["edit-form"] = "/$entity_path_component/{{$entity_path_component}}/edit";
-    // TODO: revision link template.
-    // $annotation_data['links']["revision"] = "/$entity_path_component/{}/revisions/{media_revision}/view";
 
     if (isset($this->component_data['bundle_entity_type'])) {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type'];

@@ -88,7 +88,6 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'field_ui_base_route',
-      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -206,7 +205,6 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'field_ui_base_route',
-      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('translatable', 'TRUE');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
@@ -295,7 +293,6 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'field_ui_base_route',
-      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('revision_table', 'kitty_cat_revision');
@@ -389,7 +386,6 @@ class ComponentContentEntityType8Test extends TestBase {
       'entity_keys',
       'bundle_entity_type',
       'field_ui_base_route',
-      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -997,6 +993,28 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The admin permission property was overridden.");
     $this->assertArrayHasKey("$module_name.links.task.yml", $files, "The admin permission property was overridden.");
+
+    // Check the links are declared.
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+    $php_tester = new PHPTester($entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'base_table',
+      'handlers',
+      'admin_permission',
+      'entity_keys',
+      'links',
+    ]);
+    $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/kitty_cat/{kitty_cat}");
+    $annotation_tester->assertPropertyHasValue(['links', 'collection'], "/admin/content/kitty_cat");
+    $annotation_tester->assertPropertyHasValue(['links', 'delete-form'], "/kitty_cat/{kitty_cat}/delete");
+    $annotation_tester->assertPropertyHasValue(['links', 'edit-form'], "/kitty_cat/{kitty_cat}/edit");
 
     // Check the .permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];

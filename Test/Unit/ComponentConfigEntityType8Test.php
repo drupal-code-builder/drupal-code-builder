@@ -79,7 +79,6 @@ class ComponentConfigEntityType8Test extends TestBase {
       'label_count',
       'entity_keys',
       'config_export',
-      'links',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
@@ -204,7 +203,6 @@ class ComponentConfigEntityType8Test extends TestBase {
       'label_count',
       'handlers',
       'entity_keys',
-      'links',
     ]);
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Entity\Handler\KittyCatAccess');
     $annotation_tester->assertPropertyHasValue(['handlers', 'storage'], 'Drupal\test_module\Entity\Handler\KittyCatStorage');
@@ -281,6 +279,27 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
     $annotation_tester->assertPropertyHasValue(['handlers', 'route_provider', 'html'], 'Drupal\Core\Entity\Routing\AdminHtmlRouteProvider');
     $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\Core\Entity\EntityForm', 'The entity type has a default form handler.');
+
+    // Check the links are declared.
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'handlers',
+      'admin_permission',
+      'entity_keys',
+      'links',
+    ]);
+    $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/admin/structure/kitty_cat/{kitty_cat}");
+    $annotation_tester->assertPropertyHasValue(['links', 'collection'], "/admin/structure/kitty_cat");
+    $annotation_tester->assertPropertyHasValue(['links', 'add-form'], "/admin/structure/kitty_cat/add");
+    $annotation_tester->assertPropertyHasValue(['links', 'edit-form'], "/admin/structure/kitty_cat/{kitty_cat}/edit");
+    $annotation_tester->assertPropertyHasValue(['links', 'delete-form'], "/admin/structure/kitty_cat/{kitty_cat}/delete");
 
     // Check the permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
