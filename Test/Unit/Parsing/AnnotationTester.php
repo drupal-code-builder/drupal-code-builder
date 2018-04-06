@@ -202,6 +202,8 @@ class AnnotationTester {
    *   (optional) The assertion message.
    */
   public function assertAnnotationClass($class_name, $message = NULL) {
+    $message = $message ?? "The annotation has the expected class {$class_name}.";
+
     Assert::assertEquals($class_name, $this->annotationClass, $message);
   }
 

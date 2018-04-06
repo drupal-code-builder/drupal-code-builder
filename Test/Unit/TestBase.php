@@ -76,6 +76,8 @@ abstract class TestBase extends TestCase {
    *  The assertion message.
    */
   protected function assertNoTrailingWhitespace($code, $message = NULL) {
+    $message = $message ?? "The code has no trailing whitespace.";
+
     $whitespace_regex = "[( +)$]m";
 
     $this->assertNotRegExp($whitespace_regex, $code, $message);
