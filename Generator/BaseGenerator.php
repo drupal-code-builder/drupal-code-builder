@@ -242,6 +242,9 @@ abstract class BaseGenerator {
    *    final format for the component data array. Any changes values should be
    *    placed into the data array. This is called by
    *    ComponentCollector::processComponentData().
+   *  - 'process_empty': (optional) Boolean to indicate whether the processing
+   *    callback should be applied if the property value is empty. Defaults to
+   *    FALSE.
    *  - 'component': (optional) The name of a generator class, relative to the
    *    namespace. If present, this results in child components of this class
    *    being added to the component tree.

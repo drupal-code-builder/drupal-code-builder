@@ -538,8 +538,8 @@ class ComponentCollector {
       return;
     }
 
-    if (empty($component_data_local[$property_name])) {
-      // Don't apply to an empty property.
+    if (empty($component_data_local[$property_name]) && empty($property_info['process_empty'])) {
+      // Don't apply to an empty property, unless forced to.
       return;
     }
 
