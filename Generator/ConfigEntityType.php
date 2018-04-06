@@ -72,6 +72,16 @@ class ConfigEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'entity_class_name', $bundle_of_entity_properties);
 
+    // Change the computed value for entity keys.
+    $data_definition['entity_keys']['default'] = function($component_data) {
+      $keys = [
+        'id' => 'id',
+        'label' => 'label',
+      ];
+
+      return $keys;
+    };
+
     return $data_definition;
   }
 

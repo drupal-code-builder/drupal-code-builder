@@ -103,13 +103,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'entity_keys' => [
         'label' => 'Entity keys',
         'computed' => TRUE,
-        'default' => function($component_data) {
-          $value = [
-            'id' => $component_data['entity_type_id'] . '_id',
-            // TOD: further keys.
-          ];
-          return $value;
-        },
+        // Child classes set the default callback.
       ],
       'entity_interface_name' => [
         'label' => 'Interface',

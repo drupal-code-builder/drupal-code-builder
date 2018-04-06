@@ -92,7 +92,8 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasAnnotationClass('label_count', 'PluralTranslation');
     $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
-    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'id');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'label');
     $annotation_tester->assertPropertyHasValue('config_export', ['id', 'label', 'breed', 'colour']);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
