@@ -100,7 +100,6 @@ abstract class EntityTypeBase extends PHPClassFile {
         // TODO: methods from this in the entity class!
         // TODO: use corresponding traits, eg EntityChangedTrait;
       ],
-      // TODO: schema properties for config entities.
       'entity_keys' => [
         'label' => 'Entity keys',
         'computed' => TRUE,
