@@ -1107,6 +1107,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'handlers',
       'admin_permission',
       'entity_keys',
+      'config_export',
       'links',
       'bundle_of',
     ]);

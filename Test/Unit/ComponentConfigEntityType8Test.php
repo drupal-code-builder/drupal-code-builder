@@ -93,7 +93,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
-    $annotation_tester->assertPropertyHasValue('config_export', ['breed', 'colour']);
+    $annotation_tester->assertPropertyHasValue('config_export', ['id', 'label', 'breed', 'colour']);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
@@ -106,6 +106,10 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty('test_module.kitty_cat');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'type'], 'config_entity');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'label'], 'Kitty Cat');
+
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'id']);
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'label']);
+
     $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'breed']);
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'breed', 'type'], 'string');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'breed', 'label'], 'Breed');
@@ -203,6 +207,7 @@ class ComponentConfigEntityType8Test extends TestBase {
       'label_count',
       'handlers',
       'entity_keys',
+      'config_export',
     ]);
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Entity\Handler\KittyCatAccess');
     $annotation_tester->assertPropertyHasValue(['handlers', 'storage'], 'Drupal\test_module\Entity\Handler\KittyCatStorage');
@@ -293,6 +298,7 @@ class ComponentConfigEntityType8Test extends TestBase {
       'handlers',
       'admin_permission',
       'entity_keys',
+      'config_export',
       'links',
     ]);
     $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/admin/structure/kitty_cat/{kitty_cat}");

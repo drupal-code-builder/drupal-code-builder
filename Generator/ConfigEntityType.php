@@ -20,7 +20,7 @@ class ConfigEntityType extends EntityTypeBase {
     $config_schema_property = [
       'entity_properties' => [
         'label' => 'Entity properties',
-        'description' => "The config properties that are stored for each entity of this type.",
+        'description' => "The config properties that are stored for each entity of this type. An ID and label property are provided automatically.",
         'format' => 'compound',
         'properties' => [
           'name' => [
@@ -41,6 +41,23 @@ class ConfigEntityType extends EntityTypeBase {
             'options' => 'ReportDataTypes:listDataTypesOptions',
           ],
         ],
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          $id_name_entity_properties = [
+            0 => [
+              'name' => 'id',
+              'label' => 'Machine name',
+              'type' => 'string',
+            ],
+            1 => [
+              'name' => 'label',
+              'label' => 'Name',
+              'type' => 'label',
+            ],
+          ];
+
+          $component_data[$property_name] = array_merge($id_name_entity_properties, $value);
+        },
+        'process_empty' => TRUE,
       ],
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
