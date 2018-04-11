@@ -125,14 +125,6 @@ class ComponentCollector {
     $component_type = $component_data['base'];
     $component_data['component_type'] = $component_type;
 
-    // All generators assume that the root component has this property and
-    // that it's required.
-    // TODO: clean this up? Allow root generators to specify which properties
-    // are passed along to requested components?
-    // Or remove this when we are able to specify containment in requests
-    // without needing to repeat the root name all the time?
-    $this->root_component_name = $component_data['root_name'];
-
     // The name for the root component is its root name, which will be the
     // name of the Drupal extension.
     $this->getComponentsFromData($component_data['root_name'], $component_data, NULL);
