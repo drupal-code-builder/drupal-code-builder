@@ -1,3 +1,4 @@
+# See https://github.com/nipy/dipy/blob/master/.travis.yml for linting.
 language: php
 php:
   # No PHP 5, as phpunit does not support it.
