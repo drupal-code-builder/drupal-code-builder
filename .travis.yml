@@ -20,4 +20,4 @@ script:
   # install.
   - if [ "$TESTTYPE" = "dcb" ]; then vendor/phpunit/phpunit/phpunit Test/Unit; fi
   # Run the integration tests with Drupal's PHPUnit.
-  - if [ "$TESTTYPE" = "drupal" ]; then ../vendor/bin/phpunit ../vendor/drupal-code-builder/drupal-code-builder/Test/Integration/CollectPluginInfoTest.php; fi
+  - if [ "$TESTTYPE" = "drupal" ]; then ./vendor/bin/phpunit -c core vendor/drupal-code-builder/drupal-code-builder/Test/Integration/CollectPluginInfoTest.php; fi
