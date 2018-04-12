@@ -48,7 +48,8 @@ class CollectPluginInfoTest extends KernelTestBase {
   public function testPluginTypesInfoCollection() {
     $plugin_types_collector = new \DrupalCodeBuilder\Task\Collect\PluginTypesCollector(
       \DrupalCodeBuilder\Factory::getEnvironment(),
-      new \DrupalCodeBuilder\Task\Collect\MethodCollector
+      new \DrupalCodeBuilder\Task\Collect\MethodCollector,
+      new \DrupalCodeBuilder\Task\Collect\CodeAnalyser
     );
 
     // Hack the task handler so we can call the processing method with a subset
