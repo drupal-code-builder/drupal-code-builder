@@ -16,6 +16,8 @@ install:
   - phpenv config-rm xdebug.ini || true
   # Separate script because multiple commands in the YAML are fiddly and buggy.
   - sh -c "./travis-install.sh"
+  - ls
+  - ls drupal
 
 script:
   # Only run the unit tests; for the integration tests we need a Drupal
