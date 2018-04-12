@@ -10,7 +10,6 @@ if [ "$TESTTYPE" = "drupal" ]; then
   # Download Drupal 8 core.
   travis_retry git clone --branch 8.5.x --depth 1 http://git.drupal.org/project/drupal.git
   cd drupal
-  composer self-update
   composer install -n
 
   composer require joachim-n/case-converter
