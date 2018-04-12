@@ -12,6 +12,8 @@ env:
   - TESTTYPE=drupal
 
 install:
+  # Remove xdebug. We aren't generating code coverage, and it slows down Composer.
+  - phpenv config-rm xdebug.ini || true
   # Separate script because multiple commands in the YAML are fiddly and buggy.
   - sh -c "./travis-install.sh"
 

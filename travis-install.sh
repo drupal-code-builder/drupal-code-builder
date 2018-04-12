@@ -4,9 +4,6 @@ if [ "$TESTTYPE" = "dcb" ]; then
   composer install;
 fi
 if [ "$TESTTYPE" = "drupal" ]; then
-  # Remove xdebug. We aren't generating code coverage, and it slows down Composer.
-  phpenv config-rm xdebug.ini || true
-
   mysql -e 'create database entity'
   # Export database variable for kernel tests.
   export SIMPLETEST_DB=mysql://root:@127.0.0.1/entity
