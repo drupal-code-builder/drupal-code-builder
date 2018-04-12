@@ -8,7 +8,7 @@ if [ "$TESTTYPE" = "drupal" ]; then
   # Export database variable for kernel tests.
   export SIMPLETEST_DB=mysql://root:@127.0.0.1/dcb
   # Download Drupal 8 core.
-  travis_retry git clone --branch 8.5.x --depth 1 http://git.drupal.org/project/drupal.git
+  git clone --branch 8.5.x --depth 1 http://git.drupal.org/project/drupal.git
   cd drupal
   composer install -n
 
