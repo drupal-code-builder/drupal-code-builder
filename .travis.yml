@@ -6,6 +6,7 @@ php:
 env:
   # Whether to run DCB's internal tests, or integration tests that require a
   # Drupal build.
+  # See https://gist.github.com/jamesarosen/e29076bd81a099f0f72e
   - TESTTYPE=dcb
   - TESTTYPE=drupal
 
