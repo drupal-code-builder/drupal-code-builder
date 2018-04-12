@@ -1,7 +1,7 @@
 language: php
 php:
   # No PHP 5, as phpunit does not support it.
-  - 7.0
+  - 7.1
 install: composer install
 # Only run the unit tests; for the integration tests we need a Drupal install.
 script: vendor/phpunit/phpunit/phpunit Test/Unit
