@@ -4,7 +4,9 @@ if [ "$TESTTYPE" = "dcb" ]; then
   composer install;
 fi
 if [ "$TESTTYPE" = "drupal" ]; then
-  cd
+  # Install Drupal alongside DCB rather than inside it.
+  # WARNING: This depends on where travis chooses to clone DCB!
+  cd /home/travis/build
   pwd
   ls
 
