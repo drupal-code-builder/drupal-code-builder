@@ -18,6 +18,11 @@ install:
   # Separate script because multiple commands in the YAML are fiddly and buggy.
   - sh -c "./travis-install.sh"
 
+  # Export database variable for kernel tests.
+  # Only needed for Drupal tests; won't affect DCB tests.
+  # Doesn't work within the shell script.
+  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/dcb
+
 script:
   # Only run the unit tests; for the integration tests we need a Drupal
   # install.

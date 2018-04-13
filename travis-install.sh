@@ -17,8 +17,7 @@ if [ "$TESTTYPE" = "drupal" ]; then
   ls
 
   mysql -e 'create database dcb'
-  # Export database variable for kernel tests.
-  export SIMPLETEST_DB=mysql://root:@127.0.0.1/dcb
+
   # Download Drupal 8 core.
   git clone --branch 8.5.x --depth 1 http://git.drupal.org/project/drupal.git
   cd drupal
