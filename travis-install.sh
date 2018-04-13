@@ -16,5 +16,5 @@ if [ "$TESTTYPE" = "drupal" ]; then
 
   # Reference DCB in build site.
   # Do this lasts as it hacks Composer's vendor folder.
-  ln -s $TESTDIR vendor/drupal-code-builder
+  # ln -s $TESTDIR vendor/drupal-code-builder
 fi
