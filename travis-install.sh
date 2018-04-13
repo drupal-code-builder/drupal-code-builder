@@ -4,6 +4,9 @@ if [ "$TESTTYPE" = "dcb" ]; then
   composer install;
 fi
 if [ "$TESTTYPE" = "drupal" ]; then
+  pwd
+  ls
+
   mysql -e 'create database dcb'
   # Export database variable for kernel tests.
   export SIMPLETEST_DB=mysql://root:@127.0.0.1/dcb
