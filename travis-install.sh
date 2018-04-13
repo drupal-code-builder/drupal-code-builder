@@ -4,6 +4,7 @@ if [ "$TESTTYPE" = "dcb" ]; then
   composer install;
 fi
 if [ "$TESTTYPE" = "drupal" ]; then
+  cd
   pwd
   ls
 
