@@ -17,8 +17,6 @@ if [ "$TESTTYPE" = "drupal" ]; then
   # Install Drupal alongside DCB rather than inside it.
   # WARNING: This depends on where travis chooses to clone DCB!
   cd /home/travis/build
-  pwd
-  ls
 
   mysql -e 'create database dcb'
 
