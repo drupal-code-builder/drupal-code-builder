@@ -77,6 +77,42 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   }
 
   /**
+   * Tests special handling for a derivative plugin ID.
+   */
+  public function testPluginsGenerationDerivativeID() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'system_menu_block:alpha',
+        ]
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(3, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
+    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a schema file.");
+
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $php_tester = new PHPTester($plugin_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('Block');
+    $annotation_tester->assertPropertyHasValue('id', 'system_menu_block:alpha', "The plugin ID has the derivative prefix but no module prefix.");
+  }
+
+  /**
    * Test Plugins component using the plugin folder name.
    */
   function testPluginsGenerationFromPluginFolder() {
