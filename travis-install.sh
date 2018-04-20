@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Installation script for TravisCI.
+# This is a workaround for multiline conditionals not working properly inside
+# the .travis.yml file.
+
 if [ "$TESTTYPE" = "dcb" ]; then
   composer install;
 fi
