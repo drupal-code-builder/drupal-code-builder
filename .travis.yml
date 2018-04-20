@@ -1,7 +1,35 @@
+# See https://github.com/travis-ci/travis.rb for linting.
 language: php
 php:
   # No PHP 5, as phpunit does not support it.
   - 7.1
-install: composer install
-# Only run the unit tests; for the integration tests we need a Drupal install.
-script: vendor/phpunit/phpunit/phpunit Test/Unit
+
+env:
+  # Whether to run DCB's internal tests, or integration tests that require a
+  # Drupal build.
+  # See https://gist.github.com/jamesarosen/e29076bd81a099f0f72e
+  - TESTTYPE=dcb
+  - TESTTYPE=drupal
+
+install:
+  # Remove xdebug. We aren't generating code coverage, and it slows down Composer.
+  - phpenv config-rm xdebug.ini || true
+
+  # Separate script because multiple commands in the YAML are fiddly and buggy.
+  - sh -c "./travis-install.sh"
+
+  # Export database variable for kernel tests.
+  # Only needed for Drupal tests; won't affect DCB tests.
+  # Doesn't work within the shell script.
+  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/dcb
+
+script:
+  # Run the unit tests.
+  - if [ "$TESTTYPE" = "dcb" ]; then vendor/phpunit/phpunit/phpunit Test/Unit; fi
+
+  # Run the integration tests with Drupal's PHPUnit.
+  # First, drop back to the build directory and go into drupal.
+  - if [ "$TESTTYPE" = "drupal" ]; then cd ../..; ls; cd drupal; fi
+  # Only run the collection test for now; the installation tests have been
+  # broken by changes in Drupal core.
+  - if [ "$TESTTYPE" = "drupal" ]; then ./vendor/bin/phpunit -c core ../drupal-code-builder/drupal-code-builder/Test/Integration/CollectPluginInfoTest.php; fi
