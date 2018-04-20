@@ -28,8 +28,4 @@ if [ "$TESTTYPE" = "drupal" ]; then
   composer install -n
 
   composer require joachim-n/case-converter
-
-  # Reference DCB in build site.
-  # Do this lasts as it hacks Composer's vendor folder.
-  # ln -s $TESTDIR vendor/drupal-code-builder
 fi
