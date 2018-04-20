@@ -92,7 +92,7 @@ class Plugin extends PHPClassFileWithInjection {
       'plugin_type' => static::getPluginTypePropertyDefinition(),
       'plugin_name' => array(
         'label' => 'Plugin name',
-        // TODO: say in help text that the module name will be prepended for you!
+        'description' => 'The module name will be prepended, unless the ID is a derivative.',
         'required' => TRUE,
         'default' => function($component_data) {
           // Keep a running count of the plugins of each type, so we can offer
@@ -109,6 +109,12 @@ class Plugin extends PHPClassFileWithInjection {
           return $component_data['plugin_type'] . '_' . $formatter->format($counters[$plugin_type]);
         },
         'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          // Prepend the module name.
+          if (strpos($value, ':') !== FALSE) {
+            // Don't if the plugin ID is a derivative.
+            return;
+          }
+
           $component_data['plugin_name'] = $component_data['root_component_name'] . '_' . $component_data['plugin_name'];
         },
       ),
