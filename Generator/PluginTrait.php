@@ -66,13 +66,23 @@ trait PluginTrait {
         // Set the relative qualified class name.
         // The full class name will be of the form:
         //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{PLUGINNAME}
+        // where PLUGINNAME has any derivative prefix stripped.
+        if (strpos($component_data['plugin_name'], ':') === FALSE) {
+          $plugin_id = $component_data['plugin_name'];
+        }
+        else {
+          list (, $plugin_id) = explode(':', $component_data['plugin_name']);
+        }
+        $plugin_id_pascal = CaseString::snake($plugin_id)->pascal();
+
+        $component_data['plugin_name'];
+        $plugin_id_without_prefix = $component_data['plugin_name'];
+
         $component_data['relative_class_name'] = array_merge(
           // Plugin subdirectory.
           self::pathToNamespacePieces($plugin_data['subdir']),
           // Plugin ID.
-          [
-            CaseString::snake($component_data['plugin_name'])->pascal(),
-          ]
+          [ $plugin_id_pascal ]
         );
       },
     ];
