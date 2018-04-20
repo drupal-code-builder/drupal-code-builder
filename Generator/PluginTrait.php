@@ -65,7 +65,7 @@ trait PluginTrait {
 
         // Set the relative qualified class name.
         // The full class name will be of the form:
-        //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{MODULE}{PLUGINNAME}
+        //  \Drupal\{MODULE}\Plugin\{PLUGINTYPE}\{PLUGINNAME}
         $component_data['relative_class_name'] = array_merge(
           // Plugin subdirectory.
           self::pathToNamespacePieces($plugin_data['subdir']),
