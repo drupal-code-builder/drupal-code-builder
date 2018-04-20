@@ -91,7 +91,7 @@ class Plugin extends PHPClassFileWithInjection {
     $data_definition = array(
       'plugin_type' => static::getPluginTypePropertyDefinition(),
       'plugin_name' => array(
-        'label' => 'Plugin name',
+        'label' => 'Plugin ID',
         'description' => 'The module name will be prepended, unless the ID is a derivative.',
         'required' => TRUE,
         'default' => function($component_data) {
