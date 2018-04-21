@@ -22,6 +22,8 @@ class PluginTypesCollector {
     'plugin.manager.block',
     'plugin.manager.field.formatter',
     'plugin.manager.image.effect',
+    // Annotation plugin using only the plugin ID in its annotation.
+    'plugin.manager.element_info',
     // YAML plugins. Need all of these for entity type generators.
     'plugin.manager.menu.link',
     'plugin.manager.menu.local_task',

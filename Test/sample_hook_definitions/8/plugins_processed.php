@@ -13,6 +13,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
+    'annotation_id_only' => false,
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'config_schema_prefix' => 'block.settings.',
     'plugin_properties' => 
@@ -124,6 +125,52 @@ array (
       ),
     ),
   ),
+  'element_info' => 
+  array (
+    'type_id' => 'element_info',
+    'service_id' => 'plugin.manager.element_info',
+    'service_class_name' => 'Drupal\\Core\\Render\\ElementInfoManager',
+    'service_component_namespace' => 'Drupal\\Core\\Render',
+    'type_label' => 'element_info',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'subdir' => 'Element',
+    'plugin_interface' => 'Drupal\\Core\\Render\\Element\\ElementInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\Core\\Render\\Annotation\\RenderElement',
+    'yaml_file_suffix' => NULL,
+    'yaml_properties' => NULL,
+    'annotation_id_only' => true,
+    'base_class' => 'Drupal\\Core\\Render\\Element\\RenderElement',
+    'plugin_properties' => 
+    array (
+      'value' => 
+      array (
+        'name' => 'value',
+        'description' => 'The plugin ID.',
+        'type' => 'string',
+      ),
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The annotated class ID.',
+        'type' => 'string',
+      ),
+    ),
+    'plugin_interface_methods' => 
+    array (
+      'getInfo' => 
+      array (
+        'name' => 'getInfo',
+        'declaration' => 'public function getInfo();',
+        'description' => 'Returns the element properties for this element.',
+      ),
+      'setAttributes' => 
+      array (
+        'name' => 'setAttributes',
+        'declaration' => 'public static function setAttributes(&$element, $class = []);',
+        'description' => 'Sets a form element\'s class attribute.',
+      ),
+    ),
+  ),
   'field.formatter' => 
   array (
     'type_id' => 'field.formatter',
@@ -137,6 +184,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
+    'annotation_id_only' => false,
     'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
     'config_schema_prefix' => 'field.formatter.settings.',
     'constructor_fixed_parameters' => 
@@ -312,6 +360,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
+    'annotation_id_only' => false,
     'base_class' => 'Drupal\\image\\ImageEffectBase',
     'config_schema_prefix' => 'image.effect.',
     'construction' => 
@@ -432,6 +481,7 @@ array (
       'class' => 'Drupal\\Core\\Menu\\MenuLinkDefault',
       'form_class' => 'Drupal\\Core\\Menu\\Form\\MenuLinkDefaultForm',
     ),
+    'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\MenuLinkBase',
     'plugin_properties' => 
     array (
@@ -468,6 +518,7 @@ array (
       ),
       'class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
     ),
+    'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
     'construction' => 
     array (
@@ -512,6 +563,7 @@ array (
       ),
       'class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
     ),
+    'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
     'plugin_properties' => 
     array (
