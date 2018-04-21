@@ -147,6 +147,8 @@ class PluginTypesCollector {
    *      - 'description': The description, taken from the docblock of the class
    *        property on the annotation class.
    *      - 'type': The data type.
+   *    - 'annotation_id_only': Boolean indicating whether the annotation
+   *      consists of only the plugin ID.
    *    - 'construction': An array of injected service parameters for the plugin
    *      base class. Each item has:
    *      - 'type': The typehint.
@@ -284,6 +286,7 @@ class PluginTypesCollector {
       'plugin_definition_annotation_name',
       'yaml_file_suffix',
       'yaml_properties',
+      'annotation_id_only',
     ];
     foreach ($discovery_dependent_properties as $property) {
       $data[$property] = NULL;
@@ -381,7 +384,12 @@ class PluginTypesCollector {
   }
 
   /**
-   * Adds a list of properties from the plugin annotation class.
+   * Analyse the plugin annotation class.
+   *
+   * This adds:
+   *  - 'plugin_properties': The properties from the annotation class.
+   *  - 'annotation_id_only': Boolean indicating whether the annotation consists
+   *    of only the plugin ID.
    *
    * @param &$data
    *  The data for a single plugin type.
@@ -394,6 +402,14 @@ class PluginTypesCollector {
     }
     if (!class_exists($data['plugin_definition_annotation_name'])) {
       return;
+    }
+
+    // Detect whether the annotation is just an ID.
+    if (is_a($data['plugin_definition_annotation_name'], \Drupal\Component\Annotation\PluginID::class, TRUE)) {
+      $data['annotation_id_only'] = TRUE;
+    }
+    else {
+      $data['annotation_id_only'] = FALSE;
     }
 
     // Get a reflection class for the annotation class.
