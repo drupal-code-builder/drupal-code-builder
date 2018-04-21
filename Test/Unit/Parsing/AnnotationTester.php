@@ -35,6 +35,11 @@ class AnnotationTester {
   protected $data;
 
   /**
+   * The text contents of the annotation, for an ID-only annotation.
+   */
+  protected $contents;
+
+  /**
    * The classes used within the annotation.
    *
    * An array whose keys are addresses in the $data array (separated with a ':')
@@ -80,6 +85,11 @@ class AnnotationTester {
 
     // Find the start and end of the annotation.
     foreach ($lines as $index => $line) {
+      if (preg_match('/^ \* @\w+\(.+\)$/', $line)) {
+        $only_line = $line;
+        break;
+      }
+
       if (preg_match('/^ \* @\w+\($/', $line)) {
         $start_index = $index;
       }
@@ -88,6 +98,19 @@ class AnnotationTester {
         break;
       }
     }
+
+    // Handle the single-line case.
+    if (isset($only_line)) {
+      // Special case: single-line, plugin ID only annotation.
+      $matches = [];
+      if (preg_match('/^ \* @(?P<class>\w+)\("(?P<contents>\w+)"\)$/', $only_line, $matches)) {
+        $this->annotationClass = $matches['class'];
+        $this->contents = $matches['contents'];
+
+        return;
+      }
+    }
+
     // Discard everything around the annotation.
     $lines = array_slice($lines, $start_index, $end_index - $start_index + 1);
 
@@ -205,6 +228,20 @@ class AnnotationTester {
     $message = $message ?? "The annotation has the expected class {$class_name}.";
 
     Assert::assertEquals($class_name, $this->annotationClass, $message);
+  }
+
+  /**
+   * Assert the content of a text-only annotation.
+   *
+   * @param string $content
+   *   The expected content.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertAnnotationTextContent($content, $message = NULL) {
+    $message = $message ?? "The annotation has the expected content {$content}.";
+
+    Assert::assertEquals($content, $this->contents, $message);
   }
 
   /**

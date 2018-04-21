@@ -113,6 +113,40 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   }
 
   /**
+   * Tests a plugin type where the annotation is just the ID.
+   */
+  function testPluginWithOnlyId() {
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          'plugin_type' => 'element_info',
+          'plugin_name' => 'alpha',
+        ]
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(2, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Element/Alpha.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
+
+    $plugin_file = $files["src/Element/Alpha.php"];
+    $php_tester = new PHPTester($plugin_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('RenderElement');
+    $annotation_tester->assertAnnotationTextContent('test_module_alpha');
+  }
+
+  /**
    * Test Plugins component using the plugin folder name.
    */
   function testPluginsGenerationFromPluginFolder() {
