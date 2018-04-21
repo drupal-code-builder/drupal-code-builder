@@ -205,15 +205,24 @@ class Plugin extends PHPClassFileWithInjection {
    *   An array of lines suitable for docBlock().
    */
   function classAnnotation() {
-    $annotation_variables = $this->component_data['plugin_type_data']['plugin_properties'];
-    //ddpr($class_variables);
-
-    // Drupal\Core\Block\Annotation\Block
+    $docblock_code = [];
 
     $annotation_class_path = explode('\\', $this->component_data['plugin_type_data']['plugin_definition_annotation_name']);
     $annotation_class = array_pop($annotation_class_path);
 
-    $docblock_code = array();
+    // Special case: annotation that's just the plugin ID.
+    if (!empty($this->component_data['plugin_type_data']['annotation_id_only'])) {
+      $docblock_code[] = '@'
+        . $annotation_class
+        . '("'
+        . $this->component_data['plugin_name']
+        . '")';
+
+      return $docblock_code;
+    }
+
+    $annotation_variables = $this->component_data['plugin_type_data']['plugin_properties'];
+
     $docblock_code[] = '@' . $annotation_class . '(';
 
     foreach ($annotation_variables as $annotation_variable => $annotation_variable_info) {
