@@ -26,7 +26,7 @@ class Collect8 extends Collect {
    */
   public function collectComponentData() {
     $result = $this->collectHooks();
-    $result += $this->collectPlugins();
+    $result += $this->collectPluginTypes();
     $result += $this->collectServices();
     $result += $this->collectServiceTagTypes();
     $result += $this->collectFieldTypes();
@@ -41,7 +41,7 @@ class Collect8 extends Collect {
    * @return
    *  A summary in the same format as returned by collectComponentData().
    */
-  protected function collectPlugins() {
+  protected function collectPluginTypes() {
     $plugin_type_data = $this->getHelper('PluginTypesCollector')->collect();
 
     // Save the data.
