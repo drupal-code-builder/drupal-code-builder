@@ -56,6 +56,10 @@ EOT;
         ['Plain'],
         TRUE,
       ],
+      'single plain interface bad class' => [
+        ['NotHere'],
+        FALSE,
+      ],
       'single namespaced interface' => [
         ['Some\Space\Namespaced'],
         TRUE,
@@ -64,13 +68,21 @@ EOT;
         ['Some\Space\NotHere'],
         FALSE,
       ],
-      'single namespaced interface bad interface' => [
+      'single namespaced interface bad namespace' => [
         ['Some\WrongSpace\Namespaced'],
         FALSE,
       ],
       'multiple namespaced interfaces' => [
         ['Some\Space\Namespaced', 'Some\Other\Space\NamespacedOther'],
         TRUE,
+      ],
+      'multiple namespaced interfaces with bad class' => [
+        ['Some\Space\Namespaced', 'Some\Other\Space\NotHere'],
+        FALSE,
+      ],
+      'multiple namespaced interfaces with bad namespace' => [
+        ['Some\Space\Namespaced', 'Some\Other\WrongSpace\NamespacedOther'],
+        FALSE,
       ],
     ];
   }
