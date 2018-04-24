@@ -445,7 +445,29 @@ class PHPTester {
 
       $this->assertImportsClassLike($interface_parts);
     }
+  }
 
+  /**
+   * Asserts that the parsed class does not implement the given interfaces.
+   *
+   * @param string[] $not_expected_interface_names
+   *   An array of fully-qualified interface names, without the leading '\'.
+   */
+  public function assertClassHasNotInterfaces($not_expected_interface_names) {
+    // There will be only one class.
+    $class_node = reset($this->parser_nodes['classes']);
+
+    $class_node_interfaces = [];
+    foreach ($class_node->implements as $implements) {
+      Assert::assertCount(1, $implements->parts);
+      $class_node_interfaces[] = $implements->parts[0];
+    }
+
+    foreach ($not_expected_interface_names as $interface_full_name) {
+      $interface_parts = explode('\\', $interface_full_name);
+
+      Assert::assertNotContains(end($interface_parts), $class_node_interfaces);
+    }
   }
 
   /**
