@@ -316,9 +316,9 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\image\ImageEffectBase');
 
     // Check service injection.
-    $php_tester->assertClassHasInterfaces([
+    $php_tester->assertClassHasNotInterfaces([
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
-    ]);
+    ], "The plugin doesn't implement ContainerFactoryPluginInterface, because the parent class already does.");
     $php_tester->assertInjectedServicesWithFactory([
       [
         'typehint' => 'Drupal\Core\Session\AccountProxyInterface',

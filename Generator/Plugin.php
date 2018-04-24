@@ -253,7 +253,9 @@ class Plugin extends PHPClassFileWithInjection {
       $this->component_data['parent_class_name'] = '\\' . $this->component_data['plugin_type_data']['base_class'];
     }
 
-    if (!empty($this->injectedServices)) {
+    // Set the DI interface, unless the parent class has injected services, in
+    // which case there's no need as the parent class will have it.
+    if (!empty($this->injectedServices) && empty($this->component_data['plugin_type_data']['construction'])) {
       $this->component_data['interfaces'][] = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
     }
 
