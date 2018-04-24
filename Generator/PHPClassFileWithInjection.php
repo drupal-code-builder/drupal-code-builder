@@ -32,9 +32,26 @@ class PHPClassFileWithInjection extends PHPClassFile {
   }
 
   /**
-   * The services injected into the parent class.
+   * Returns the services injected into the parent class.
+   *
+   * In a class which injects its own services, services for the parent class
+   * need to be extracted in the overridden create() method, and received by the
+   * __construct() method, then passed to the parent implementation of
+   * __construct(). They do not however need to be declared as class properties,
+   * or set on the class, as that happens in the parent class.
    *
    * @return array
+   *   A numeric array of the parameters for injected services that need to be passed up to
+   *   the parent class. Each item is an array of data for one parameter, and
+   *   contains:
+   *   - 'name': The name for the variable, without the initial '$'.
+   *   - 'description': The description for the parameter documentation; used
+   *     for the __construct() method documentation.
+   *   - 'typehint': The typehint, with the leading '\'.
+   *   - 'extraction': The code that create() needs to use to get the service.
+   *     Typically, this will be a call to $container->get(), but in some cases
+   *     this has a chained call, e.g. to get a storage handler from the entity
+   *     type manager service.
    */
   protected function getConstructParentInjectedServices() {
     return [];
