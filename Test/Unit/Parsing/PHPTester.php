@@ -296,6 +296,10 @@ class PHPTester {
       $seen[] = implode('\\', $use_node->uses[0]->name->parts);
     }
 
+    // Add the seen array, as PHPUnit doesn't output the searched array when
+    // assertContains() fails.
+    $message .= "\n" . print_r($seen, TRUE);
+
     Assert::assertContains($class_name, $seen, $message);
   }
 
@@ -466,7 +470,11 @@ class PHPTester {
     foreach ($not_expected_interface_names as $interface_full_name) {
       $interface_parts = explode('\\', $interface_full_name);
 
-      Assert::assertNotContains(end($interface_parts), $class_node_interfaces);
+      // Add the array, as PHPUnit doesn't output the searched array when
+      // assertContains() fails.
+      $message = "\n" . print_r($class_node_interfaces, TRUE);
+
+      Assert::assertNotContains(end($interface_parts), $class_node_interfaces, $message);
     }
   }
 
