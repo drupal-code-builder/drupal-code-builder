@@ -437,6 +437,12 @@ class PHPTester {
       $interface_parts = explode('\\', $interface_full_name);
 
       Assert::assertContains(end($interface_parts), $class_node_interfaces);
+
+      // An interface with no namespace won't have an import statement.
+      if (count($interface_parts) == 1) {
+        continue;
+      }
+
       $this->assertImportsClassLike($interface_parts);
     }
 

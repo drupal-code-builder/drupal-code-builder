@@ -52,13 +52,10 @@ EOT;
    */
   public function providerAssertClassInterfaces() {
     return [
-      /*
-      // TODO: fails!
       'single plain interface' => [
         ['Plain'],
         TRUE,
       ],
-      */
       'single namespaced interface' => [
         ['Some\Space\Namespaced'],
         TRUE,
