@@ -947,7 +947,7 @@ class PluginTypesCollector {
 
     // Analyze the params to the __construct() method to get the typehints
     // and parameter names.
-    $construct_R = new \ReflectionMethod($data['base_class'], '__construct');
+    $construct_R = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($data['base_class'], '__construct');
     $construct_params_R = $construct_R->getParameters();
     $construct_fixed_params_ref = array_slice($construct_params_R, 0, $fixed_parameter_count);
     $construct_injection_params_ref = array_slice($construct_params_R, $fixed_parameter_count);
@@ -955,7 +955,7 @@ class PluginTypesCollector {
     // Only analyze the fixed parameters if we know that they are non-standard.
     $fixed_parameters = [];
     if (isset($data['constructor_fixed_parameters'])) {
-      $docblock_types = $this->codeAnalyser->getMethodDocblockParams($construct_R);
+      $docblock_types = $construct_R->getDocblockParams($construct_R);
 
       foreach ($construct_fixed_params_ref as $i => $parameter) {
         $name = $parameter->getName();
