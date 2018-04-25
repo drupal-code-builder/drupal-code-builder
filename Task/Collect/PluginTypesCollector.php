@@ -922,6 +922,8 @@ class PluginTypesCollector {
   }
 
   /**
+   * Analyses the plugin base class's __construct() method parameters.
+   *
    * Helper for addConstructionData().
    *
    * @param array $data
@@ -929,6 +931,14 @@ class PluginTypesCollector {
    * @param int $fixed_parameter_count
    *   The number of fixed parameters for the __construct() method of plugin
    *   classes for this plugin type.
+   *
+   * @return
+   *   An array containing data about the parameters, grouped into two arrays:
+   *    - 'fixed': An array of the fixed parameters.
+   *    - 'injection': An array of the injection parameters.
+   *   Each item is itself a numerically indexed array where each item contains:
+   *    - 'type': The typehint for the parameter.
+   *    - 'name': The name of the parameter.
    */
   protected function getBaseClassConstructParameters($data, $fixed_parameter_count) {
     if (!method_exists($data['base_class'], '__construct')) {
