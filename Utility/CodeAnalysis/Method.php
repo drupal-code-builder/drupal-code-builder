@@ -12,6 +12,51 @@ use ReflectionMethod as PHPReflectionMethod;
 class Method extends PHPReflectionMethod {
 
   /**
+   * Returns an array of parameter names and types.
+   *
+   * Types are deduced from reflection, with a fallback to the documented type
+   * for native types (e.g. 'int') which Drupal doesn't yet typehint for.
+   *
+   * @return array
+   *  A numeric array where each item is an array containing:
+   *    - 'type': The typehint for the parameter.
+   *    - 'name': The name of the parameter without the leading '$'.
+   */
+  public function getParamData() {
+    $data = [];
+
+    $parameter_reflections = $this->getParameters();
+    $docblock_types = $this->getDocblockParams();
+
+    foreach ($parameter_reflections as $parameter_reflection) {
+      $name = $parameter_reflection->getName();
+
+      // Get the typehint. We try the reflection first, which gives us class
+      // and interface typehints and 'array'. If that gets nothing, we scrape
+      // it from the docblock so that we have something to generate docblocks
+      // with.
+      $type = (string) $parameter_reflection->getType();
+
+      if (empty($type)) {
+        if (isset($docblock_types[$name])) {
+          $type = $docblock_types[$name];
+        }
+        else {
+          // Account for badly-written docs where we couldn't extract a type.
+          $type = '';
+        }
+      }
+
+      $data[] = [
+        'type' => $type,
+        'name' => $name,
+      ];
+    }
+
+    return $data;
+  }
+
+  /**
    * Extract parameter types from the docblock.
    *
    * @return
