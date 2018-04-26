@@ -946,60 +946,23 @@ class PluginTypesCollector {
       return;
     }
 
-    // Analyze the params to the __construct() method to get the typehints
-    // and parameter names.
+    // Get the parameter data from our reflection helper, then slice it into
+    // two arrays, for fixed and injection.
     $construct_R = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($data['base_class'], '__construct');
-    $construct_params_R = $construct_R->getParameters();
-    $construct_fixed_params_ref = array_slice($construct_params_R, 0, $fixed_parameter_count);
-    $construct_injection_params_ref = array_slice($construct_params_R, $fixed_parameter_count);
+    $parameter_data = $construct_R->getParamData();
 
-    // Only analyze the fixed parameters if we know that they are non-standard.
+    // Only set the fixed parameters if we know that they are non-standard.
     $fixed_parameters = [];
     if (isset($data['constructor_fixed_parameters'])) {
-      $docblock_types = $construct_R->getDocblockParams($construct_R);
-
-      foreach ($construct_fixed_params_ref as $i => $parameter) {
-        $name = $parameter->getName();
-
-        // Get the typehint. We try the reflection first, which gives us class
-        // and interface typehints and 'array'. If that gets nothing, we scrape
-        // it from the docblock so that we have something to generate docblocks
-        // with.
-        $type = (string) $parameter->getType();
-
-        if (empty($type)) {
-          if (isset($docblock_types[$name])) {
-            $type = $docblock_types[$name];
-          }
-          else {
-            // Account for badly-written docs where we couldn't extract a type.
-            $type = '';
-          }
-        }
-
-        $fixed_parameters[] = [
-          'type' => $type,
-          'name' => $parameter->getName(),
-        ];
-      }
+      $fixed_parameters = array_slice($parameter_data, 0, $fixed_parameter_count);
     }
 
-    $construct_parameters = [];
-    foreach ($construct_injection_params_ref as $i => $parameter) {
-      $name = $parameter->getName();
-      $type = (string) $parameter->getType();
-      // TODO: Get description from the docblock.
-
-      $construct_parameters[] = [
-        'type' => $type,
-        'name' => $parameter->getName(),
-      ];
-    }
-
-    return [
+    $return = [
       'fixed' => $fixed_parameters,
-      'injection' => $construct_parameters,
+      'injection' => array_slice($parameter_data, $fixed_parameter_count),
     ];
+
+    return $return;
   }
 
   protected function getBaseClassInjectedParamExtraction($data, $fixed_parameter_count) {
