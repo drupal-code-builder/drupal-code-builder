@@ -6,10 +6,25 @@ use ReflectionMethod as PHPReflectionMethod;
 
 /**
  * Analyses a method using reflection.
- *
- * TODO: move code analysis methods from \Task\Collect\CodeAnalyser to here.
  */
 class Method extends PHPReflectionMethod {
+
+  /**
+   * Gets the body code of the method.
+   *
+   * @return string
+   *   The body of the method's code.
+   */
+  public function getBody() {
+    $filename = $this->getFileName();
+    $start_line = $this->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
+    $end_line = $this->getEndLine();
+    $length = $end_line - $start_line;
+    $file_source = file($filename);
+    $body = implode("", array_slice($file_source, $start_line, $length));
+
+    return $body;
+  }
 
   /**
    * Returns an array of parameter names and types.

@@ -76,28 +76,4 @@ class CodeAnalyser {
     }
   }
 
-  /**
-   * Gets the body code of a method.
-   *
-   * @param \ReflectionMethod $method_reflection
-   *   The reflection class for the method.
-   *
-   * @return string
-   *   The body of the method's code.
-   */
-  public function getMethodBody(\ReflectionMethod $method_reflection) {
-    // Get the method's body code.
-    // We could use the PHP parser library here rather than sniff with regexes,
-    // but it would probably end up being just as much work poking around in
-    // the syntax tree.
-    $filename = $method_reflection->getFileName();
-    $start_line = $method_reflection->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
-    $end_line = $method_reflection->getEndLine();
-    $length = $end_line - $start_line;
-    $file_source = file($filename);
-    $body = implode("", array_slice($file_source, $start_line, $length));
-
-    return $body;
-  }
-
 }

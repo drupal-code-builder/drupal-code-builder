@@ -890,7 +890,7 @@ class PluginTypesCollector {
    * @param [type] $plugin_type_data [description]
    */
   protected function getFixedParametersFromManager($service_class_name) {
-    $method_ref = new \ReflectionMethod($service_class_name, 'createInstance');
+    $method_ref = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($service_class_name, 'createInstance');
     if ($method_ref->getDeclaringClass()->getName() != $service_class_name) {
       // The plugin manager does not override createInstance(), therefore the
       // plugin class construct() method must have the normal parameters.
@@ -901,7 +901,7 @@ class PluginTypesCollector {
     // We could use the PHP parser library here rather than sniff with regexes,
     // but it would probably end up being just as much work poking around in
     // the syntax tree.
-    $body = $this->codeAnalyser->getMethodBody($method_ref);
+    $body = $method_ref->getBody();
 
     if (strpos($body, 'return new') === FALSE) {
       // The method doesn't construct an object: therefore the paramters for
@@ -971,8 +971,8 @@ class PluginTypesCollector {
     }
 
     // Get the call from the body of the create() method.
-    $create_R = new \ReflectionMethod($data['base_class'], 'create');
-    $create_method_body = $this->codeAnalyser->getMethodBody($create_R);
+    $create_R = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($data['base_class'], 'create');
+    $create_method_body = $create_R->getBody();
 
     $matches = [];
     preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
