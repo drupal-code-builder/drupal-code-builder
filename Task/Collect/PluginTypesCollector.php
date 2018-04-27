@@ -934,7 +934,8 @@ class PluginTypesCollector {
    *
    * @return
    *   An array containing data about the parameters, grouped into two arrays:
-   *    - 'fixed': An array of the fixed parameters.
+   *    - 'fixed': An array of the fixed parameters. This is left empty if the
+   *      plugin type has the standard fixed parameters.
    *    - 'injection': An array of the injection parameters.
    *   Each item is itself a numerically indexed array where each item contains:
    *    - 'type': The typehint for the parameter.
