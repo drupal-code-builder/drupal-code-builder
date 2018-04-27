@@ -857,17 +857,11 @@ class PluginTypesCollector {
         //dump($param);
         $data['constructor_fixed_parameters'][$i] += $param;
       }
-
-      if ($base_class_construct_params_data['injection']) {
-        $data['construction'] = $base_class_construct_params_data['injection'];
-      }
     }
 
-    $base_class_injected_params_extraction = $this->getBaseClassInjectedParamExtraction($data, $fixed_parameter_count);
-    if ($base_class_injected_params_extraction) {
-      foreach ($base_class_injected_params_extraction as $i => $extraction) {
-        $data['construction'][$i]['extraction'] = $extraction;
-      }
+    $injected_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($data['base_class'], $fixed_parameter_count);
+    if ($injected_parameters) {
+      $data['construction'] = $injected_parameters;
     }
   }
 
@@ -963,34 +957,6 @@ class PluginTypesCollector {
     ];
 
     return $return;
-  }
-
-  protected function getBaseClassInjectedParamExtraction($data, $fixed_parameter_count) {
-    if (!method_exists($data['base_class'], 'create')) {
-      return;
-    }
-
-    // Get the call from the body of the create() method.
-    $create_R = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($data['base_class'], 'create');
-    $create_method_body = $create_R->getBody();
-
-    $matches = [];
-    preg_match('@ new \s+ static \( ( [^;]+ ) \) ; @x', $create_method_body, $matches);
-
-    // Bail if we didn't find the call.
-    if (empty($matches[1])) {
-      // TODO: some classes call parent::create()!
-      return;
-    }
-
-    $parameters = explode(',', $matches[1]);
-
-    $create_container_extractions = [];
-    foreach (array_slice($parameters, 3) as $i => $parameter) {
-      $create_container_extractions[$i] = trim($parameter);
-    }
-
-    return $create_container_extractions;
   }
 
   /**
