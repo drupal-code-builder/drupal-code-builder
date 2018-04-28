@@ -32,17 +32,19 @@ EOT;
 
     $php_tester = new PHPTester($php);
 
+    $expected_interfaces_string = implode(', ', $expected_interfaces);
+
     try {
       $php_tester->assertClassHasInterfaces($expected_interfaces);
       // Assertion passed.
       if (!$pass_has) {
-        $this->fail("assertClassHasInterfaces() should fail");
+        $this->fail("assertClassHasInterfaces() should fail with " . $expected_interfaces_string);
       }
     }
     catch (ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass_has) {
-        $this->fail("assertClassHasInterfaces() should pass.");
+        $this->fail("assertClassHasInterfaces() should pass with " . $expected_interfaces_string);
       }
     }
 
@@ -50,13 +52,13 @@ EOT;
       $php_tester->assertClassHasNotInterfaces($expected_interfaces);
       // Assertion passed.
       if (!$pass_has_not) {
-        $this->fail("assertClassHasNotInterfaces() should fail");
+        $this->fail("assertClassHasNotInterfaces() should fail with " . $expected_interfaces_string);
       }
     }
     catch (ExpectationFailedException $e) {
       // Assertion failed.
       if ($pass_has_not) {
-        $this->fail("assertClassHasNotInterfaces() should pass.");
+        $this->fail("assertClassHasNotInterfaces() should pass with " . $expected_interfaces_string);
       }
     }
   }
