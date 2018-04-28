@@ -128,6 +128,8 @@ class PluginTypesCollector {
    *    - 'service_id': The ID of the service for the plugin type's manager.
    *    - 'discovery': The plugin's discovery class, as a fully-qualified
    *       class name (without the initial '\').
+   *    - 'alter_hook_name': The short name of the alter hook for this plugin
+   *      type.
    *    - 'subdir': The subdirectory of /src that plugin classes must go in.
    *      E.g., 'Plugin/Filter'.
    *    - 'plugin_interface': The interface that plugin classes must implement,
@@ -246,6 +248,7 @@ class PluginTypesCollector {
    *
    * This adds:
    *  - subdir
+   *  - alter_hook_name
    *  - ... further properties specific to different discovery types.
    *
    * @param &$data
@@ -255,6 +258,16 @@ class PluginTypesCollector {
     // Get a reflection for the plugin manager service.
     $service = \Drupal::service($data['service_id']);
     $reflection = new \ReflectionClass($service);
+
+    // Determine the alter hook name.
+    if ($reflection->hasProperty('alterHook')) {
+      $property_alter_hook = $reflection->getProperty('alterHook');
+      $property_alter_hook->setAccessible(TRUE);
+      $alter_hook_name = $property_alter_hook->getValue($service);
+      if (!empty($alter_hook_name)) {
+        $data['alter_hook_name'] = $alter_hook_name . '_alter';
+      }
+    }
 
     // Determine the plugin discovery type.
     // Get the discovery object from the plugin manager.
