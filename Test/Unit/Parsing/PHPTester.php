@@ -454,6 +454,10 @@ class PHPTester {
   /**
    * Asserts that the parsed class does not implement the given interfaces.
    *
+   * TODO: Does not work for the case where the class name matches but the
+   * namespace does not. Basically because we don't need to test for this yet,
+   * so YAGNI.
+   *
    * @param string[] $not_expected_interface_names
    *   An array of fully-qualified interface names, without the leading '\'.
    */
