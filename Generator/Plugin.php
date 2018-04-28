@@ -131,6 +131,21 @@ class Plugin extends PHPClassFileWithInjection {
         // TODO: allow this to be a callback.
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
+      'parent_plugin_id' => [
+        'label' => 'Parent class plugin ID',
+        'description' => "Use another plugin's class as the parent class for this plugin.",
+      ],
+      'parent_plugin_class' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          if (isset($component_data['parent_plugin_id'])) {
+            // TODO: go via the environment for testing!
+            $parent_plugin = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->createInstance($component_data['parent_plugin_id']);
+
+            return get_class($parent_plugin);
+          }
+        },
+      ],
     );
 
     // Put the parent definitions after ours.
@@ -249,13 +264,33 @@ class Plugin extends PHPClassFileWithInjection {
    * Produces the class declaration.
    */
   function class_declaration() {
-    if (isset($this->component_data['plugin_type_data']['base_class'])) {
+    if (isset($this->component_data['parent_plugin_class'])) {
+      $this->component_data['parent_class_name'] = '\\' . $this->component_data['parent_plugin_class'];
+    }
+    elseif (isset($this->component_data['plugin_type_data']['base_class'])) {
       $this->component_data['parent_class_name'] = '\\' . $this->component_data['plugin_type_data']['base_class'];
     }
 
-    // Set the DI interface, unless the parent class has injected services, in
-    // which case there's no need as the parent class will have it.
-    if (!empty($this->injectedServices) && empty($this->component_data['plugin_type_data']['construction'])) {
+    // Set the DI interface if needed.
+    $use_di_interface = FALSE;
+    // We need the DI interface if this class injects services, unless a parent
+    // class also does so.
+    if (!empty($this->injectedServices)) {
+      $use_di_interface = TRUE;
+
+      if (isset($this->component_data['parent_plugin_class'])) {
+        // TODO: violates DRY; we call this twice.
+        $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
+        if (!empty($parent_construction_parameters)) {
+          $use_di_interface = FALSE;
+        }
+      }
+      elseif (!empty($this->component_data['plugin_type_data']['construction'])) {
+        $use_di_interface = FALSE;
+      }
+    }
+
+    if ($use_di_interface) {
       $this->component_data['interfaces'][] = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
     }
 
@@ -319,9 +354,17 @@ class Plugin extends PHPClassFileWithInjection {
    */
   protected function getConstructParentInjectedServices() {
     $parameters = [];
+
+    if (isset($this->component_data['parent_plugin_class'])) {
+      $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
+    }
+    elseif (isset($this->component_data['plugin_type_data']['construction'])) {
+      $parent_construction_parameters = $this->component_data['plugin_type_data']['construction'];
+    }
+
     // The parameters for the base class's constructor.
-    if (isset($this->component_data['plugin_type_data']['construction'])) {
-      foreach ($this->component_data['plugin_type_data']['construction'] as $construction_item) {
+    if (!empty($parent_construction_parameters)) {
+      foreach ($parent_construction_parameters as $construction_item) {
         $parameters[] = [
           'name' => $construction_item['name'],
           'description' => 'The ' . strtr($construction_item['name'], '_', ' ')  . '.',
