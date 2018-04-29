@@ -73,6 +73,9 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * @param $component
    *   The component to add.
+   * @param $requesting_component
+   *   The component that requested the component being added. May be NULL if
+   *   the component being added is the root component.
    */
   public function addComponent(BaseGenerator $component, $requesting_component) {
     // Components may not be added once the collection is locked.
