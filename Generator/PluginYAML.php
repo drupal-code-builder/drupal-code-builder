@@ -108,7 +108,7 @@ class PluginYAML extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     $plugin_name = $this->component_data['plugin_name'];
 
     $yaml_data[$plugin_name] = $this->component_data['plugin_properties'];

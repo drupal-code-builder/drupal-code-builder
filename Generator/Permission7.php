@@ -33,7 +33,7 @@ class Permission7 extends Permission {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // Return code for a single permission item for the hook.
     $code = array();
 

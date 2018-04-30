@@ -202,7 +202,7 @@ class RouterItem extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     $path = $this->component_data['path'];
 
     $route_yaml = [];

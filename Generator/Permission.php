@@ -82,7 +82,7 @@ class Permission extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     $permission_name = $this->component_data['permission'];
 
     $permission_info = array(

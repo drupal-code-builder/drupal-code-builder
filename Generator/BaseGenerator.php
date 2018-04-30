@@ -467,7 +467,7 @@ abstract class BaseGenerator {
    *    expects an array of code lines whereas YMLFile expects an array of data
    *    to be rendered into Yaml.
    */
-  function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // Base does nothing.
     return array();
   }

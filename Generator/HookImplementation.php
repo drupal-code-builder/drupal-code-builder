@@ -61,7 +61,7 @@ class HookImplementation extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // Replace the 'hook_' part of the function declaration.
     $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
 

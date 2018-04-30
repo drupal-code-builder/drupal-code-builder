@@ -58,7 +58,7 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     $service_info = $this->component_data['service_info'];
 
     return [

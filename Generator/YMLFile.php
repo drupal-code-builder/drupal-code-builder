@@ -54,7 +54,7 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
-  function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     $yaml_data = array();
     foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {
       $yaml_data += $component_yaml_data;

@@ -40,7 +40,7 @@ class HookPermission extends HookImplementation {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // If we have no children, i.e. no Permission components, then hand over to
     // the parent, which will output the default hook code.
     if (empty($children_contents)) {

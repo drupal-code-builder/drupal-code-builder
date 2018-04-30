@@ -76,7 +76,7 @@ class RouterItem7 extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // Return code for a single menu item. Our parent in the component tree,
     // HookMenu, will merge it in its own buildComponentContents().
     $code = array();

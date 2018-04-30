@@ -67,7 +67,7 @@ class PHPFunction extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // Trim newlines from start and end of body if requested.
     if (!empty($this->component_data['has_wrapping_newlines'])) {
       // Argh. WTF. Newline drama. Hook definitions have newlines at start and

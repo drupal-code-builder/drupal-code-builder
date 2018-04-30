@@ -34,7 +34,7 @@ class Info extends File {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     $lines = array();
     foreach ($this->filterComponentContentsForRole($children_contents, 'infoline') as $component_name => $component_lines) {
       // Assume that children components don't tread on each others' toes and

@@ -57,7 +57,7 @@ class ThemeHook extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     // Return code for a single hook_theme() item.
     $theme_hook_name = $this->component_data['theme_hook_name'];
 

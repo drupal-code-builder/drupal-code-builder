@@ -197,7 +197,7 @@ class Service extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  function buildComponentContents($children_contents) {
+  protected function buildComponentContents($children_contents) {
     parent::buildComponentContents($children_contents);
 
     // TEMPORARY, until Generate task handles returned contents.
