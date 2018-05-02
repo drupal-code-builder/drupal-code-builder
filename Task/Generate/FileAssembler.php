@@ -28,10 +28,6 @@ class FileAssembler {
     $component_list = $component_collection->getComponents();
     $tree = $component_collection->getContainmentTree();
 
-    // The root generator is the first component in the list.
-    // TODO: change this to use parameters.
-    $this->root_generator = reset($component_list);
-
     // Let each file component in the tree gather data from its own children.
     $this->collectFileContents($component_collection);
 
@@ -44,7 +40,7 @@ class FileAssembler {
 
     // Filter files according to the requested build list.
     if (isset($component_data['requested_build'])) {
-      $this->root_generator->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
+      $component_collection->getRootComponent()->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
     }
 
     // Then we assemble the files into a simple array of full filename and
