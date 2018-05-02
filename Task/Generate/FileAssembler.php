@@ -40,7 +40,7 @@ class FileAssembler {
     // Build files.
     // Get info on files. All components that wish to provide a file should have
     // registered themselves as first-level children of the root component.
-    $files = $this->collectFiles($component_list, $tree);
+    $files = $this->collectFiles($component_collection);
 
     // Filter files according to the requested build list.
     if (isset($component_data['requested_build'])) {
@@ -100,14 +100,14 @@ class FileAssembler {
    * @return
    *  An array of file info, keyed by arbitrary file ID.
    */
-  protected function collectFiles($component_list, $tree) {
+  protected function collectFiles(ComponentCollection $component_collection) {
     $file_info = array();
 
     // Components which provide a file should have registered themselves as
     // children of the root component.
-    $root_component_name = $this->root_generator->getUniqueID();
-    foreach ($tree[$root_component_name] as $child_component_name) {
-      $child_component = $component_list[$child_component_name];
+    $root_component_name = $component_collection->getRootComponentId();
+    foreach ($component_collection->getContainmentTreeChildrenIds($root_component_name) as $child_component_name) {
+      $child_component = $component_collection->getComponent($child_component_name);
 
       // Don't get files for existing components.
       // TODO! This is quick and dirty! It's a lot more complicated than this,
