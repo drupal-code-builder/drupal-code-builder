@@ -425,25 +425,21 @@ abstract class BaseGenerator {
    *
    * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
    *   The component collection.
-   * @param $tree
-   *  The tree array.
    *
    * @return
    *  An array of data for this component's content, in the same form as the
    *  return of buildComponentContents().
    */
-  function buildComponentContentsIterative(ComponentCollection $component_collection, $tree) {
+  function buildComponentContentsIterative(ComponentCollection $component_collection) {
     $children_contents = array();
 
     // Allow each of our children to do the same as this to collect its own
     // children.
-    if (!empty($tree[$this->getUniqueID()])) {
-      foreach ($component_collection->getContainmentTreeChildrenIds($this->getUniqueID()) as $child_name) {
-        $child_component = $component_collection->getComponent($child_name);
-        $child_contents = $child_component->buildComponentContentsIterative($component_collection, $tree);
-        foreach ($child_contents as $key => $contents) {
-          $children_contents[$child_name . ':' . $key] = $contents;
-        }
+    foreach ($component_collection->getContainmentTreeChildrenIds($this->getUniqueID()) as $child_name) {
+      $child_component = $component_collection->getComponent($child_name);
+      $child_contents = $child_component->buildComponentContentsIterative($component_collection);
+      foreach ($child_contents as $key => $contents) {
+        $children_contents[$child_name . ':' . $key] = $contents;
       }
     }
 

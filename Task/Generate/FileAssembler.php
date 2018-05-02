@@ -76,7 +76,7 @@ class FileAssembler {
       // Let the file component run over its children iteratively.
       // (Not literally ;)
       $component_collection->getComponent($file_component_name)
-        ->buildComponentContentsIterative($component_collection, $tree);
+        ->buildComponentContentsIterative($component_collection);
     }
   }
 
