@@ -227,7 +227,7 @@ class ComponentCollection implements \IteratorAggregate {
    */
   public function getContainmentTreeChildrenIds($component_id) {
     $tree = $this->getContainmentTree();
-    return $tree[$component_id];
+    return $tree[$component_id] ?? [];
   }
 
   /**
