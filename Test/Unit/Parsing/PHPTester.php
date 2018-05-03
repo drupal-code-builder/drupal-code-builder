@@ -1012,7 +1012,9 @@ class PHPTester {
       return preg_replace('/^ \* /', '', $line);
     }, $docblock_lines);
 
-    Assert::assertContains($line, $docblock_lines);
+    // Work around assertContains() not outputting the array on failure by
+    // putting it in the message.
+    Assert::assertContains($line, $docblock_lines, "The line '{$line}' was found in the docblock lines: " . print_r($docblock_lines, TRUE));
   }
 
   /**
