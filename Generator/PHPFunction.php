@@ -45,8 +45,6 @@ class PHPFunction extends BaseGenerator {
    *        Hooks::getTemplates() always returns an array of lines in 'template'
    *        even if that's just the analysis body code.
    *      - an array of lines of code. These should not have their newlines.
-   *    - 'has_wrapping_newlines': (optional) If the 'body' is a string, this
-   *      indicates whether the string has first and closing newlines.
    *    - 'body_indent': (optional) The number of spaces to add to the start of
    *      each line, if 'body' is an array. This is relative to the indentation
    *      of the function as a whole; that is, it does not need to be increased
@@ -81,9 +79,6 @@ class PHPFunction extends BaseGenerator {
       'body' => [
         'internal' => TRUE,
       ],
-      'has_wrapping_newlines' => [
-        'internal' => TRUE,
-      ],
       // The number of spaces to add to the start of each line, if 'body' is an
       // array. This is relative to the indentation of the function as a whole;
       // that is, it does not need to be increased for a class method. Defaults
@@ -99,14 +94,6 @@ class PHPFunction extends BaseGenerator {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    // Trim newlines from start and end of body if requested.
-    if (!empty($this->component_data['has_wrapping_newlines'])) {
-      // Argh. WTF. Newline drama. Hook definitions have newlines at start and
-      // end. But when we define code ourselves, it's a pain to have to put
-      // those in.
-      $this->component_data['body'] = array_slice($this->component_data['body'], 1, -1);
-    }
-
     $function_code = array();
     $function_code = array_merge($function_code, $this->docBlock($this->component_data['doxygen_first']));
 

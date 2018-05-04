@@ -31,6 +31,15 @@ class HookImplementation extends PHPFunction {
       return "Implements {$component_data['hook_name']}().";
     };
 
+    // Indicates that the body includes the first and closing newlines. This is
+    // because the hook sample code we get from code analysis have these, but
+    // it's a pain to put them in ourselves when providing hook body code.
+    $properties['has_wrapping_newlines'] = [
+      'format' => 'boolean',
+      'internal' => TRUE,
+      'default' => TRUE,
+    ];
+
     return $properties;
   }
 
@@ -76,6 +85,13 @@ class HookImplementation extends PHPFunction {
       // The code is a single string, already indented. Tell
       // buildComponentContents() not to indent it again.
       $this->component_data['body_indent'] = 0;
+    }
+
+    // Trim newlines from start and end of body if requested. Hook definitions
+    // have newlines at start and end. But when we define code ourselves, it's a
+    // pain to have to put those in.
+    if (!empty($this->component_data['has_wrapping_newlines'])) {
+      $this->component_data['body'] = array_slice($this->component_data['body'], 1, -1);
     }
 
     return parent::buildComponentContents($children_contents);
