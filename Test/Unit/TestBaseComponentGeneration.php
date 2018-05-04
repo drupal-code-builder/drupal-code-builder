@@ -861,40 +861,6 @@ abstract class TestBaseComponentGeneration extends TestBase {
   }
 
   /**
-   * Assert the parsed code implements the given hook.
-   *
-   * Also checks the hook implementation docblock has the correct text.
-   *
-   * @param string $hook_name
-   *   The full name of the hook to check for, e.g. 'hook_help'.
-   * @param string $message
-   *   (optional) The assertion message.
-   */
-  function assertHasHookImplementation($hook_name, $module_name, $message = NULL) {
-    $message = $message ?? "The code has a function that implements the hook $hook_name for module $module_name.";
-
-    $hook_short_name = substr($hook_name, 5);
-    $function_name = $module_name . '_' . $hook_short_name;
-
-    $this->assertHasFunction($function_name, $message);
-
-    // Use the older assertHookDocblock() assertion, but pass it just the
-    // docblock contents rather than the whole file!
-    $function_node = $this->parser_nodes['functions'][$function_name];
-    $comments = $function_node->getAttribute('comments');
-
-    // Workaround for issue with PHP Parser: if the function is the first in the
-    // file, and there are no import statements, then the @file docblock will
-    // be treated as one of the function's comments. Therefore, we need to take
-    // the last comment in the array to be sure of having the actual function
-    // docblock.
-    // @see https://github.com/nikic/PHP-Parser/issues/445
-    $function_docblock = end($comments);
-    $docblock_text = $function_docblock->getReformattedText();
-    $this->assertHookDocblock($hook_name, $docblock_text, "The module file contains the docblock for hook_menu().");
-  }
-
-  /**
    * Asserts that a statement in a method is a call to the parent.
    *
    * @param string $method_name

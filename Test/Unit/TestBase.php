@@ -348,41 +348,6 @@ abstract class TestBase extends TestCase {
   }
 
   /**
-   * Assert a string contains a PHP docblock for a hook.
-   *
-   * @param $expected_hook_name
-   *  The full name of the hook, e.g. 'hook_menu'.
-   * @param $string
-   *  The text to check for a docblock.
-   * @param $message = NULL
-   *  The assertion message.
-   */
-  function assertHookDocblock($expected_hook_name, $string, $message = NULL) {
-    $lines = [
-      "Implements {$expected_hook_name}().",
-    ];
-    $this->assertDocBlock($lines, $string, $message);
-  }
-
-  /**
-   * Assert a string does not contain a PHP docblock for a hook.
-   *
-   * @param $hook_name
-   *  The full name of the hook, e.g. 'hook_menu'.
-   * @param $string
-   *  The text to check for a docblock.
-   * @param $message = NULL
-   *  The assertion message.
-   */
-  function assertNoHookDocblock($hook_name, $string, $message = NULL) {
-    $docblock =
-      "/**\n" .
-      " * Implements {$hook_name}().\n" .
-      " */";
-    $this->assertNotContains($docblock, $string, $message);
-  }
-
-  /**
    * Assert a string contains a class declaration.
    *
    * TODO: add checking of inheritance, interfaces, namespace.
