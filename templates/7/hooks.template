@@ -17,7 +17,9 @@
   switch ($path) {
     case 'admin/help#%module':
       return t("%help");
-    // OPTIONAL: Add additional cases for other paths that should display help text.
+
+    // OPTIONAL: Add additional cases for other paths that should display
+    // help text.
   }
 == END ==
 
