@@ -40,17 +40,25 @@
     'title' => 'TODO: Enter menu item title',
     'description' => 'TODO: Enter description',
     'page callback' => 'TODO: Enter callback function',
-    'page arguments' => array(), // An array of arguments to pass to the page callback function. Integer values pass the corresponding URL component.
-    'access callback' => '', // defaults to user_access()
+    // An array of arguments to pass to the page callback function. Integer
+    // values pass the corresponding URL component.
+    'page arguments' => array(),
+    // Defaults to user_access() if not set.
+    'access callback' => '',
     'access arguments' => array('TODO: Enter user permissions'),
     'weight' => 0,
-    'type' => MENU_NORMAL_ITEM, // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM / MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK
+    // One of MENU_NORMAL_ITEM / MENU_CALLBACK / MENU_SUGGESTED_ITEM /
+    // MENU_LOCAL_TASK / MENU_DEFAULT_LOCAL_TASK.
+    'type' => MENU_NORMAL_ITEM,
     'file' => '%module.admin.inc',
-    'menu_name' => '', // Menu to place this item in.
-    'title callback' => '', // Function to generate the title, defaults to t().
-    'title arguments' => array(), // Arguments to send to t() or your custom callback.
+    // Menu to place this item in.
+    'menu_name' => '',
+    // Function to generate the title, defaults to t().
+    'title callback' => '',
+    // Arguments to send to t() or your custom callback.
+    'title arguments' => array(),
   );
-  // OPTIONAL: Fill in additional menu items
+  // OPTIONAL: Fill in additional menu items.
 
   return $items;
 == END ==
