@@ -17,7 +17,7 @@ class PHPMethod extends PHPFunction {
     // Include the code file, as method names are not unique.
     return
       $this->component_data['root_component_name'] . '/' .
-      implode(':', [$this->type, $this->code_file, $this->name]);
+      implode(':', [$this->type, $this->component_data['code_file'], $this->name]);
   }
 
 }
