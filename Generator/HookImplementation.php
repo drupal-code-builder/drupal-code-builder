@@ -69,6 +69,7 @@ class HookImplementation extends PHPFunction {
     $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
 
     // Replace the function body with template code if it exists.
+    // TODO: 'template' is in fact always set by Hooks::getTemplates()!
     if (empty($children_contents) && isset($this->component_data['template'])) {
       $this->component_data['body'] = $this->component_data['template'];
 
