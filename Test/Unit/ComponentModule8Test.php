@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests basic module generation.
  */
@@ -65,16 +67,10 @@ class ComponentModule8Test extends TestBaseComponentGeneration {
     // Check the .module file.
     $module_file = $files["$module_name.module"];
 
-    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertDrupalCodingStandards();
 
-    $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
-    $this->assertDrupalCodingStandards($module_file);
-
-    $this->parseCode($module_file);
-    $this->assertIsProcedural();
-    $this->assertHasHookImplementation('hook_help', $module_name);
-
-    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
+    $php_tester->assertHasHookImplementation('hook_help', $module_name);
 
     $this->assertFunctionCode($module_file, $module_name . '_help', $help_text, "The hook_help() implementation contains the requested help text.");
   }

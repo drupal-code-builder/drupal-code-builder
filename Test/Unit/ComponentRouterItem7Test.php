@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests for Router item component.
  */
@@ -38,9 +40,10 @@ class ComponentRouterItem7Test extends TestBaseComponentGeneration {
 
     $module_file = $files["$module_name.module"];
 
-    $this->assertWellFormedPHP($module_file);
-    $this->assertHookImplementation($module_file, 'hook_menu', $module_name);
-    $this->assertHookDocblock('hook_menu', $module_file, "The module file contains a hook_menu() implementation");
+    $php_tester = new PHPTester($module_file);
+
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasHookImplementation('hook_menu', $module_name);
 
     $this->assertFunctionCode($module_file, 'test_module_menu', "return \$items;");
     $this->assertFunctionCode($module_file, 'test_module_menu', "\$items['my/path']");

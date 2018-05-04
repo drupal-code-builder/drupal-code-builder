@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests the theme hook generator class.
  */
@@ -44,16 +46,11 @@ class ComponentThemeHook8Test extends TestBaseComponentGeneration {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
+    $php_tester = new PHPTester($module_file);
 
-    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
+    $php_tester->assertDrupalCodingStandards();
 
-    $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
-    $this->assertDrupalCodingStandards($module_file);
-
-    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
-
-    $this->assertHookDocblock('hook_theme', $module_file, "The module file contains the docblock for hook_theme().");
-    $this->assertHookImplementation($module_file, 'hook_theme', $module_name, "The module file contains a function declaration that implements hook_theme().");
+    $php_tester->assertHasHookImplementation('hook_theme', $module_name);
 
     // Check that the hook_theme() implementation has the generated code.
     // This covers the specialized HookTheme hook generator class getting used.

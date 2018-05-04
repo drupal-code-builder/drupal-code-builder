@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests for Hooks component.
  */
@@ -52,42 +54,39 @@ class ComponentHooks7Test extends TestBaseComponentGeneration {
     $module_file = $files["$module_name.module"];
     //debug($module_file);
 
-    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
+    $php_tester = new PHPTester($module_file);
+    // Exclude the sniff for blank lines after a comment, as we intentionally
+    // have one in our template for hook_menu().
+    $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.InlineComment.SpacingAfter']);
 
-    $this->assertWellFormedPHP($module_file, "Module file parses as well-formed PHP.");
+    $php_tester->assertHasHookImplementation('hook_menu', $module_name);
+    $php_tester->assertHasHookImplementation('hook_block_info', $module_name);
 
-    $this->assertFileHeader($module_file, "The module file contains the correct PHP open tag and file doc header");
-
-    $this->assertHookDocblock('hook_menu', $module_file, "The module file contains the docblock for hook_menu().");
-    $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_menu().");
-
-    $this->assertHookDocblock('hook_block_info', $module_file, "The module file contains the docblock for hook_block_info().");
-    $this->assertHookImplementation($module_file, 'hook_block_info', $module_name, "The module file contains a function declaration that implements hook_block_info().");
-
-    $this->assertNoHookDocblock('hook_install', $module_file, "The module file does not contain the docblock for hook_install().");
+    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];
+    $php_tester = new PHPTester($install_file);
+    $php_tester->assertDrupalCodingStandards();
 
-    $this->assertNoTrailingWhitespace($install_file, "The install file contains no trailing whitespace.");
+    $php_tester->assertHasHookImplementation('hook_install', $module_name);
 
-    $this->assertWellFormedPHP($install_file, "Install file parses as well-formed PHP.");
-
-    $this->assertFileHeader($install_file, "The install file contains the correct PHP open tag and file doc header");
-
-    $this->assertHookDocblock('hook_install', $install_file, "The install file contains the docblock for hook_install().");
-    $this->assertHookImplementation($install_file, 'hook_install', $module_name, "The instal file contains a function declaration that implements hook_install().");
-
-    $this->assertNoHookDocblock('hook_menu', $install_file, "The install file does not contain the docblock for hook_menu().");
-    $this->assertNoHookDocblock('hook_block_info', $install_file, "The install file does not contain the docblock for hook_block_info().");
+    $php_tester->assertHasNotHookImplementation('hook_menu', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_block_info', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
 
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
-    $this->assertWellFormedPHP($tokens_file);
-    $this->assertNoTrailingWhitespace($tokens_file, "The tokens file contains no trailing whitespace.");
-    $this->assertHookDocblock('hook_tokens', $tokens_file, "The tokens file contains the docblock for hook_tokens().");
-    $this->assertHookImplementation($tokens_file, 'hook_tokens', $module_name, "The tokens file contains a function declaration that implements hook_tokens().");
+    $php_tester = new PHPTester($tokens_file);
+    $php_tester->assertDrupalCodingStandards();
+
+    $php_tester->assertHasHookImplementation('hook_tokens', $module_name);
+
+    $php_tester->assertHasNotHookImplementation('hook_menu', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_block_info', $module_name);
+    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];
