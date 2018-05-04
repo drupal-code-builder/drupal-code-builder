@@ -12,6 +12,8 @@ class HookImplementation extends PHPFunction {
   /**
    * Constructor.
    *
+   * TODO: remove this once the data properties are properly declared.
+   *
    * @param $component_name
    *  The name of a function component should be its function (or method) name.
    * @param $component_data
@@ -22,14 +24,21 @@ class HookImplementation extends PHPFunction {
    *        tokens.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    // Set defaults.
-    $component_data += array(
-      'doxygen_first' => $this->hook_doxygen_text($component_data['hook_name']),
-    );
-
     parent::__construct($component_name, $component_data, $root_generator);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    $properties = parent::componentDataDefinition();
+
+    $properties['doxygen_first']['default'] = function($component_data) {
+      return "Implements {$component_data['hook_name']}().";
+    };
+
+    return $properties;
+  }
 
   /**
    * Declares the subcomponents for this component.
@@ -75,16 +84,6 @@ class HookImplementation extends PHPFunction {
     }
 
     return parent::buildComponentContents($children_contents);
-  }
-
-  /**
-   * Make the doxygen first line for a given hook.
-   *
-   * @param
-   *   The long hook name, eg 'hook_menu'.
-   */
-  function hook_doxygen_text($hook_name) {
-    return "Implements $hook_name().";
   }
 
 }

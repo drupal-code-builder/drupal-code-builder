@@ -51,17 +51,32 @@ class PHPFunction extends BaseGenerator {
    *      for a class method. Defaults to 2.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    // Set defaults.
-    $component_data += array(
-      // TODO: Remove, unused.
-      'code_file' => '%module.module',
-      'doxygen_first' => 'TODO: write function documentation.',
-      'body_indent' => 2,
-    );
-
     $this->code_file = $component_data['code_file'];
 
     parent::__construct($component_name, $component_data, $root_generator);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      // Deprecated. Use containing component instead.
+      // TODO: remove this!
+      'code_file' => [
+        'internal' => TRUE,
+        'default' => '%module.module',
+      ],
+      // TODO: deprecate and add a docblock_lines property instead.
+      'doxygen_first' => [
+        'internal' => TRUE,
+        'default' => 'TODO: write function documentation.',
+      ],
+      'body_indent' => [
+        'internal' => TRUE,
+        'default' => 2,
+      ],
+    ];
   }
 
   /**

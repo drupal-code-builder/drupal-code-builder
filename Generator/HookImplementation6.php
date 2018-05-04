@@ -8,13 +8,16 @@ namespace DrupalCodeBuilder\Generator;
 class HookImplementation6 extends HookImplementation {
 
   /**
-   * Make the doxygen first line for a given hook with the Drupal 6 format.
-   *
-   * @param
-   *   The long hook name, eg 'hook_menu'.
+   * {@inheritdoc}
    */
-  function hook_doxygen_text($hook_name) {
-    return "Implementation of $hook_name().";
+  public static function componentDataDefinition() {
+    $properties = parent::componentDataDefinition();
+
+    $properties['doxygen_first']['default'] = function($component_data) {
+      return "Implementation of {$component_data['hook_name']}().";
+    };
+
+    return $properties;
   }
 
 }
