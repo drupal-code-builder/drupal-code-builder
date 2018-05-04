@@ -59,17 +59,33 @@ class PHPFunction extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
+      // The name of the file component for the file that this function should
+      // be placed into.
       // Deprecated. Use containing component instead.
       // TODO: remove this!
       'code_file' => [
         'internal' => TRUE,
         'default' => '%module.module',
       ],
+      // The text of the first line of doxygen.
       // TODO: deprecate and add a docblock_lines property instead.
       'doxygen_first' => [
         'internal' => TRUE,
         'default' => 'TODO: write function documentation.',
       ],
+      'declaration' => [
+        'internal' => TRUE,
+      ],
+      'body' => [
+        'internal' => TRUE,
+      ],
+      'has_wrapping_newlines' => [
+        'internal' => TRUE,
+      ],
+      // The number of spaces to add to the start of each line, if 'body' is an
+      // array. This is relative to the indentation of the function as a whole;
+      // that is, it does not need to be increased for a class method. Defaults
+      // to 2.
       'body_indent' => [
         'internal' => TRUE,
         'default' => 2,
