@@ -51,8 +51,6 @@ class PHPFunction extends BaseGenerator {
    *      for a class method. Defaults to 2.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    $this->code_file = $component_data['code_file'];
-
     parent::__construct($component_name, $component_data, $root_generator);
   }
 
