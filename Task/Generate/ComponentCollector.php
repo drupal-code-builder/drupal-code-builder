@@ -251,7 +251,7 @@ class ComponentCollector {
     }
     else {
       // Add the new component to the collection of components.
-      $this->component_collection->addComponent($generator, $requesting_component);
+      $this->component_collection->addComponent($name, $generator, $requesting_component);
     }
 
     // We're now ready to look at components which the current component

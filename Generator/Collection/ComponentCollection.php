@@ -15,6 +15,8 @@ use DrupalCodeBuilder\Generator\BaseGenerator;
  *   are arranged according to which component contains which. This is only
  *   available once assembleContainmentTree() has been called. After this, no
  *   more components may be added.
+ * - The list of local names which each component uses when it spawns further
+ *   components.
  */
 class ComponentCollection implements \IteratorAggregate {
 
@@ -45,6 +47,17 @@ class ComponentCollection implements \IteratorAggregate {
   private $requesters = [];
 
   /**
+   * The list of local names.
+   *
+   * An array whose keys are component unique IDs. Each item is itself an array
+   * whose keys are local names, and whose values are the unique ID of that
+   * component.
+   *
+   * @var array
+   */
+  private $localNames = [];
+
+  /**
    * The containment tree.
    *
    * A tree of parentage data for components, as an array keyed by the parent
@@ -73,13 +86,17 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Adds a component to the collection.
    *
+   * @param $local_name
+   *   The local name for the component, that is, the name used within the
+   *   requesting components list of components to spawn, whether from
+   *   properties or from requests.
    * @param $component
    *   The component to add.
    * @param $requesting_component
    *   The component that requested the component being added. May be NULL if
    *   the component being added is the root component.
    */
-  public function addComponent(BaseGenerator $component, $requesting_component) {
+  public function addComponent($local_name, BaseGenerator $component, $requesting_component) {
     // Components may not be added once the collection is locked.
     if ($this->locked) {
       throw new \LogicException("Attempt to add component to locked collection.");
@@ -99,6 +116,10 @@ class ComponentCollection implements \IteratorAggregate {
     if ($requesting_component && !isset($this->requesters[$key])) {
       // TODO: store multiple requesters?
       $this->requesters[$key] = $requesting_component->getUniqueID();
+    }
+
+    if ($requesting_component) {
+      $this->localNames[$requesting_component->getUniqueID()][$local_name] = $key;
     }
 
     $this->components[$key] = $component;
