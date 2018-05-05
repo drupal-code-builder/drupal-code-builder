@@ -104,21 +104,23 @@ class ComponentCollection implements \IteratorAggregate {
 
     $key = $component->getUniqueID();
 
+    if (isset($this->items[$key])) {
+      throw new \Exception("Unique ID $key already in use.");
+    }
+
     // If this is the first component, it's the root.
     if (!isset($this->rootGeneratorId)) {
       $this->rootGeneratorId = $key;
     }
 
-    if (isset($this->items[$key])) {
-      throw new \Exception("Key $key already in use.");
-    }
-
-    if ($requesting_component && !isset($this->requesters[$key])) {
-      // TODO: store multiple requesters?
-      $this->requesters[$key] = $requesting_component->getUniqueID();
-    }
-
     if ($requesting_component) {
+      // Add to the array of requesters.
+      if (!isset($this->requesters[$key])) {
+        // TODO: store multiple requesters?
+        $this->requesters[$key] = $requesting_component->getUniqueID();
+      }
+
+      // Add to the array of local names.
       $this->localNames[$requesting_component->getUniqueID()][$local_name] = $key;
     }
 
@@ -216,6 +218,10 @@ class ComponentCollection implements \IteratorAggregate {
     foreach ($this->components as $id => $component) {
       $parent_name = $component->containingComponent();
 
+      if (empty($parent_name)) {
+        continue;
+      }
+
       // Handle tokens.
       if ($parent_name == '%requester') {
         // TODO: consider whether this might go wrong when a component is
@@ -232,11 +238,9 @@ class ComponentCollection implements \IteratorAggregate {
         $parent_name = $this->localNames[$requester_id][$sibling_local_name];
       }
 
-      if (!empty($parent_name)) {
-        assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
+      assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
 
-        $this->tree[$parent_name][] = $id;
-      }
+      $this->tree[$parent_name][] = $id;
     }
 
     return $this->tree;
