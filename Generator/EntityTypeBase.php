@@ -276,6 +276,8 @@ abstract class EntityTypeBase extends PHPClassFile {
    *   - 'label': The label of the handler type, in lowercase.
    *   - 'description': (optional) The description text for the component
    *     property.
+   *   - 'component_type': (optional) The component type to use. Defaults to
+   *      EntityHandler.
    *   - 'base_class': The base class for handlers of this type.
    *   - 'mode': Defines how the core entity system handles an entity not
    *     defining a handler of this type. One of:
@@ -407,7 +409,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       }
 
       $components[$data_key] = [
-        'component_type' => 'EntityHandler',
+        'component_type' => $handler_type_info['component_type'] ?? 'EntityHandler',
         'entity_class_name' => $this->component_data['entity_class_name'],
         'entity_type_label' => $this->component_data['entity_type_label'],
         'handler_type' => $key,
