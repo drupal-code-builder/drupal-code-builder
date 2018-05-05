@@ -333,9 +333,13 @@ abstract class BaseGenerator {
    *
    * @return
    *  An array of subcomponents which the current generator requires.
-   *  Each item's key is a name for the component. The name of a component that
-   *  has already been requested by another generator may be present: the data
-   *  array if present will be merged with that of the existing component.
+   *  Each item's key is the local name for the component, which must be unique
+   *  within both this array and the components that this component spawns from
+   *  properties (note that this is not quite the same as the property names,
+   *  as properties with multiple cardinality receive a delta).
+   *  If the local name of a component is such that the component's unique ID
+   *  (which usually includes the local name) is a duplicate, then the data will
+   *  be merged into the existing component.
    *  Each value is either:
    *    - the type for the component, suitable for passing to
    *      Generate::getGenerator() to get the generator class.
@@ -402,9 +406,10 @@ abstract class BaseGenerator {
    *   - One of the following tokens to represent a parent component:
    *     - '%requester': Represents the component that requested this component
    *        via requiredComponents().
-   *     - '%sibling:NAME': Represents one of the sibling components in a list
-   *       returned from requiredComponents(), where NAME is the key in the
-   *       returned value from requiredComponents().
+   *     - '%sibling:NAME': Represents one of the sibling components, that is,
+   *       a component that is also spawned by this component's requester. The
+   *       NAME value is the local name, used by the requester in the list of
+   *       components it spawns from both properties and requests.
    *   - NULL if this component is either the base, or does not participate in
    *     the tree.
    *

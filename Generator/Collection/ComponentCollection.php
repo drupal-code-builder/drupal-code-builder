@@ -215,6 +215,23 @@ class ComponentCollection implements \IteratorAggregate {
     $this->tree = [];
     foreach ($this->components as $id => $component) {
       $parent_name = $component->containingComponent();
+
+      // Handle tokens.
+      if ($parent_name == '%requester') {
+        // TODO: consider whether this might go wrong when a component is
+        // requested multiple times. Unlikely, as it tends to be containers
+        // that are re-requested.
+        $parent_name = $this->requesters[$id];
+      }
+      elseif (substr($parent_name, 0, strlen('%sibling:')) == '%sibling:') {
+        $requester_id = $this->requesters[$id];
+        $sibling_local_name = substr($parent_name, strlen('%sibling:'));
+
+        assert(isset($this->localNames[$requester_id][$sibling_local_name]));
+
+        $parent_name = $this->localNames[$requester_id][$sibling_local_name];
+      }
+
       if (!empty($parent_name)) {
         assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
 

@@ -346,20 +346,6 @@ class ComponentCollector {
 
       $local_names[$required_item_name] = TRUE;
 
-      // Convert tokens in the containing_component property.
-      if (isset($required_item_data['containing_component'])) {
-        if ($required_item_data['containing_component'] == '%requester') {
-          $required_item_data['containing_component'] = $generator->getUniqueID();
-        }
-        elseif (substr($required_item_data['containing_component'], 0, strlen('%sibling:')) == '%sibling:') {
-          $sibling_name = substr($required_item_data['containing_component'], strlen('%sibling:'));
-
-          assert(isset($required_components[$sibling_name]));
-
-          $required_item_data['containing_component'] = $required_components[$sibling_name]->getUniqueID();
-        }
-      }
-
       $main_required_component = $this->getComponentsFromData($required_item_name, $required_item_data, $generator);
       $required_components[$required_item_name] = $main_required_component;
     }
