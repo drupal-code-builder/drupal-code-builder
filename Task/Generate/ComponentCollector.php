@@ -254,6 +254,11 @@ class ComponentCollector {
       $this->component_collection->addComponent($generator, $requesting_component);
     }
 
+    // We're now ready to look at components which the current component
+    // spawns.
+    // Assemble a list of all the local names to guard against clashes.
+    $local_names = [];
+
     // Pick out any data properties which are components themselves, and create the
     // child components.
     foreach ($component_data_info as $property_name => $property_info) {
@@ -278,6 +283,8 @@ class ComponentCollector {
             // Form an item request name with the delta.
             $item_request_name = "{$item_component_type}_{$delta}";
 
+            $local_names[$item_request_name] = TRUE;
+
             // Recurse to create the component (and any child components, and
             // any requests).
             $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
@@ -290,6 +297,9 @@ class ComponentCollector {
           $item_data = [
             'component_type' => $item_component_type,
           ];
+
+          $local_names[$item_request_name] = TRUE;
+
           $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           break;
         case 'array':
@@ -299,6 +309,9 @@ class ComponentCollector {
             ];
             // Each value in the array is the name of the component.
             $item_request_name = $item_value;
+
+            $local_names[$item_request_name] = TRUE;
+
 
             $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           }
@@ -323,6 +336,15 @@ class ComponentCollector {
           'component_type' => $required_item_data,
         ];
       }
+
+      // Guard against a clash of required item key.
+      // In other words, a key in requiredComponents() can't be the same as a
+      // property name.
+      if (isset($local_names[$required_item_name])) {
+        throw new \Exception("$required_item_name already used as a required item key.");
+      }
+
+      $local_names[$required_item_name] = TRUE;
 
       // Convert tokens in the containing_component property.
       if (isset($required_item_data['containing_component'])) {
