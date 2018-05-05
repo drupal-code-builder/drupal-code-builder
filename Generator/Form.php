@@ -51,6 +51,12 @@ class Form extends PHPClassFileWithInjection {
         },
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
+      'form_elements' => [
+        // Internal for now. TODO: expose to the UI.
+        'internal' => TRUE,
+        'format' => 'compound',
+        'component' => 'FormElement',
+      ],
     );
 
     // Put the parent definitions after ours.
@@ -87,7 +93,7 @@ class Form extends PHPClassFileWithInjection {
         'body_indent' => 2,
       ),
       'buildForm' => array(
-        'component_type' => 'PHPMethod',
+        'component_type' => 'FormBuilder',
         'code_file' => $this->name,
         'containing_component' => '%requester',
         'doxygen_first' => 'Form constructor.',
