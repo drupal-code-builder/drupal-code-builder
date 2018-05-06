@@ -338,8 +338,6 @@ class PHPTester {
    *   (optional) The assertion message.
    */
   public function assertClassDocBlockHasLine($line, $message = NULL) {
-    $message = $message ?? "The docblock has the line '{$line}'.";
-
     // All the class files we generate contain only one class.
     Assert::assertCount(1, $this->parser_nodes['classes']);
     $class_node = reset($this->parser_nodes['classes']);
@@ -350,6 +348,8 @@ class PHPTester {
     array_walk($docblock_lines, function(&$line) {
       $line = str_replace(" * ", '', $line);
     });
+
+    $message = $message ?? "The docblock has the line '{$line}': " . print_r($docblock_lines, TRUE);
 
     Assert::assertContains($line, $docblock_lines, $message);
   }
