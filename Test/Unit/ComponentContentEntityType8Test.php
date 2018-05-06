@@ -865,6 +865,7 @@ class ComponentContentEntityType8Test extends TestBase {
           'handler_storage_schema' => TRUE,
           'handler_view_builder' => TRUE,
           'handler_list_builder' => 'custom',
+          'handler_form_default' => 'custom',
           'handler_views_data' => 'custom',
           'handler_translation' => TRUE,
           'handler_route_provider' => 'custom',
@@ -878,7 +879,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $this->assertArrayHasKey("$module_name.permissions.yml", $files, "The admin permission property was overridden.");
 
     $handler_filenames = preg_grep('@^src/Entity/Handler@', array_keys($files));
-    $this->assertCount(8, $handler_filenames, "Expected number of handler files is returned.");
+    $this->assertCount(9, $handler_filenames, "Expected number of handler files is returned.");
 
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorage.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorageSchema.php", $files, "The files list has a storage schema class file.");
@@ -888,6 +889,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatViewsData.php", $files, "The files list has an list builder class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatTranslation.php", $files, "The files list has a translation class file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatRouteProvider.php", $files, "The files list has a route provider class file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatForm.php", $files, "The files list has a form class file.");
 
     $storage_class_file = $files['src/Entity/Handler/KittyCatStorage.php'];
 
@@ -952,6 +954,14 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatRouteProvider');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider');
     $php_tester->assertClassDocBlockHasLine("Provides the route provider handler for the Kitty Cat entity.");
+
+    $form_class_file = $files["src/Entity/Handler/KittyCatForm.php"];
+
+    $php_tester = new PHPTester($form_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
+    $php_tester->assertClassDocBlockHasLine("Provides the default form handler for the Kitty Cat entity.");
   }
 
   /**
