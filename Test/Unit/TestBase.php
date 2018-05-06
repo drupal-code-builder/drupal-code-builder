@@ -68,6 +68,26 @@ abstract class TestBase extends TestCase {
   }
 
   /**
+   * Asserts the count of generated files.
+   *
+   * This is just a wrapper around assertCount() that outputs the list of
+   * filenames if the assertion fails.
+   *
+   * @param int $expected_count
+   *   The expected number of files.
+   * @param array $actual_files_array
+   *   The array of generated files
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertFileCount($expected_count, $actual_files_array, $message = NULL) {
+    $message = $message ?? "Expected number of files is returned:";
+    $message .= ' ' . print_r(array_keys($actual_files_array), TRUE);
+
+    $this->assertCount($expected_count, $actual_files_array, $message);
+  }
+
+  /**
    * Assert a string has no whitespace at line ends.
    *
    * @param $string
