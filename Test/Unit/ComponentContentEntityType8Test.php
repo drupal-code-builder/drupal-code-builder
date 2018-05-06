@@ -840,7 +840,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
         [
           'src/Entity/Handler/KittyCatForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
-          'src/Entity/Handler/KittyCatAddForm.php' => 'Drupal\Core\Entity\ContentEntityForm',
+          'src/Entity/Handler/KittyCatAddForm.php' => 'Drupal\test_module\Entity\Handler\KittyCatForm',
         ],
       ],
     ];

@@ -417,9 +417,6 @@ abstract class EntityTypeBase extends PHPClassFile {
         'entity_type_label' => $this->component_data['entity_type_label'],
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
-        // TODO: when the handler type has a default_type set, the parent
-        // class should be whatever that is set to. Which we don't know at
-        // this point.
         'parent_class_name' => $handler_type_info['base_class'],
         'relative_class_name' => [
           'Entity',
@@ -427,6 +424,24 @@ abstract class EntityTypeBase extends PHPClassFile {
           $this->makeShortHandlerClassName($key, $handler_type_info),
         ],
       ];
+    }
+
+    // Atrocious hack!
+    // The 'add' and 'edit' form handlers should inherit from the 'default'
+    // form handler if that is present.
+    if (isset($components['handler_form_default'])) {
+      // Hackily make the full class name here.
+      $class_name_pieces = array_merge([
+        'Drupal',
+        '%module',
+      ], $components['handler_form_default']['relative_class_name']);
+      $class_name = '\\' . self::makeQualifiedClassName($class_name_pieces);
+
+      foreach (['handler_form_add', 'handler_form_edit'] as $key) {
+        if (isset($components[$key])) {
+          $components[$key]['parent_class_name'] = $class_name;
+        }
+      }
     }
 
     // Admin permission.
