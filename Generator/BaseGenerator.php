@@ -374,7 +374,12 @@ abstract class BaseGenerator {
       if (!isset($property_info['format']) || $property_info['format'] != 'array') {
         // Don't merge this property, but check that we're not throwing away
         // data from the additional data.
-        assert($this->component_data[$property_name] == $additional_component_data[$property_name]);
+        assert($this->component_data[$property_name] == $additional_component_data[$property_name],
+          "Attempted to discard request for new component, but failed on property $property_name with existing data "
+           . print_r($this->component_data, TRUE)
+           . " and new data "
+           . print_r($additional_component_data, TRUE)
+         );
 
         continue;
       }
