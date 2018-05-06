@@ -321,6 +321,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'form_default' => [
         'label' => 'default form',
         'description' => 'The entity form class to use if no form class is specified for an operation. Always set if a route provider handler is used.',
+        'component_type' => 'EntityForm',
         'property_path' => ['form', 'default'],
         'class_name_suffix' => 'Form',
         'mode' => 'core_none',
@@ -329,6 +330,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'form_add' => [
         'label' => 'add form',
         'description' => "The entity form class for the 'add' operation.",
+        'component_type' => 'EntityForm',
         'property_path' => ['form', 'add'],
         'class_name_suffix' => 'AddForm',
         'mode' => 'custom_default',
@@ -337,6 +339,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'form_edit' => [
         'label' => 'edit form',
         'description' => "The entity form class for the 'edit' operation.",
+        'component_type' => 'EntityForm',
         'property_path' => ['form', 'edit'],
         'class_name_suffix' => 'EditForm',
         'mode' => 'custom_default',
