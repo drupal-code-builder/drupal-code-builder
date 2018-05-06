@@ -405,11 +405,18 @@ abstract class BaseGenerator {
    *   - The ID of this component's parent in the tree.
    *   - One of the following tokens to represent a parent component:
    *     - '%requester': Represents the component that requested this component
-   *        via requiredComponents().
-   *     - '%sibling:NAME': Represents one of the sibling components, that is,
-   *       a component that is also spawned by this component's requester. The
-   *       NAME value is the local name, used by the requester in the list of
-   *       components it spawns from both properties and requests.
+   *        either via properties or requiredComponents().
+   *     - '%requester:PATH': Represents a path of local names from the
+   *       component that requested this component. The PATH may consist of a
+   *       single local name, or a series of local names separated by a ':'.
+   *       For example, '%requester:foo' gets the component 'foo' that was also
+   *       spawned by this component's spawner. '%requester:foo:bar' gets the
+   *       component spawned by the 'foo' component.
+   *     - '%sibling:NAME': (deprecated) Represents one of the sibling
+   *       components, that is, a component that is also spawned by this
+   *       component's requester. The NAME value is the local name, used by the
+   *       requester in the list of components it spawns from both properties
+   *       and requests.
    *   - NULL if this component is either the base, or does not participate in
    *     the tree.
    *
