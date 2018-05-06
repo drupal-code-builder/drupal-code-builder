@@ -8,9 +8,7 @@ namespace DrupalCodeBuilder\Generator;
 class File extends BaseGenerator {
 
   /**
-   * The unique name of this generator.
-   *
-   * A generator's name is used as the key in the $components array.
+   * The request name of this generator.
    *
    * A File generator should use as its name the generic form of its eventual
    * file name, that is, the filename with the token '%module' in place of the

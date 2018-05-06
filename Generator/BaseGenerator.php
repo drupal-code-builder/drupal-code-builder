@@ -80,7 +80,11 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 abstract class BaseGenerator {
 
   /**
-   * The name of this generator.
+   * The request name of this generator.
+   *
+   * This is unique within the list of components spawned by this component's
+   * requester, but it might not be unique across all components. It's up to
+   * component classes to add to this in getUniqueID() to produce a unique ID.
    *
    * @see getUniqueID().
    */
