@@ -415,8 +415,6 @@ abstract class EntityTypeBase extends PHPClassFile {
 
       $components[$data_key] = [
         'component_type' => $handler_type_info['component_type'] ?? 'EntityHandler',
-        'entity_class_name' => $this->component_data['entity_class_name'],
-        'entity_type_label' => $this->component_data['entity_type_label'],
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
         'parent_class_name' => $handler_type_info['base_class'],
