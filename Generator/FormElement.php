@@ -66,7 +66,7 @@ class FormElement extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     $form_api_array = [
       '#type' => $this->component_data['element_type'],
-      '#title' => '"' . $this->component_data['element_title'] . '"',
+      '#title' => '£this->t("' . $this->component_data['element_title'] . '")',
     ];
     foreach ($this->component_data['element_array'] as $attribute => $value) {
       if (is_string($value)) {
