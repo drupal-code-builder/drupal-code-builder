@@ -32,6 +32,10 @@ class FormElement extends BaseGenerator {
         'internal' => TRUE,
         'required' => TRUE,
       ],
+      'element_description' => [
+        'internal' => TRUE,
+        'required' => TRUE,
+      ],
       // Further FormAPI attributes, without the initial '#'.
       'element_array' => [
         'internal' => TRUE,
@@ -67,6 +71,7 @@ class FormElement extends BaseGenerator {
     $form_api_array = [
       '#type' => $this->component_data['element_type'],
       '#title' => '£this->t("' . $this->component_data['element_title'] . '")',
+      '#description' => '£this->t("' . $this->component_data['element_description'] . '")',
     ];
     foreach ($this->component_data['element_array'] as $attribute => $value) {
       if (is_string($value)) {
