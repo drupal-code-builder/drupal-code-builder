@@ -32,6 +32,11 @@ class FormElement extends BaseGenerator {
         'internal' => TRUE,
         'required' => TRUE,
       ],
+      // Further FormAPI attributes, without the initial '#'.
+      'element_array' => [
+        'internal' => TRUE,
+        'format' => 'array',
+      ],
     ];
 
     return $data_definition;
@@ -54,16 +59,28 @@ class FormElement extends BaseGenerator {
     return '%sibling:buildForm';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function buildComponentContents($children_contents) {
+    $form_api_array = [
+      '#type' => $this->component_data['element_type'],
+      '#title' => '"' . $this->component_data['element_title'] . '"',
+    ];
+    foreach ($this->component_data['element_array'] as $attribute => $value) {
+      if (is_string($value)) {
+        $value = '"' . $value . '"';
+      }
+
+      $form_api_array['#' . $attribute] = $value;
+    }
+
     return [
       'element' => [
         'role' => 'element',
         'content' => [
           'key' => $this->component_data['form_key'],
-          'array' => [
-            '#type' => $this->component_data['element_type'],
-            '#title' => '"' . $this->component_data['element_title'] . '"',
-          ],
+          'array' => $form_api_array,
         ],
       ],
     ];
