@@ -1067,12 +1067,14 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(10, $files, "Expected number of files is returned.");
+    $this->assertCount(12, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatForm.php", $files, "The files list has a form handler file.");
     $this->assertArrayHasKey("src/Entity/KittyCatType.php", $files, "The files list has a bundle entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatTypeInterface.php", $files, "The files list has a bundle entity interface file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatTypeForm.php", $files, "The files list has a form handler file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
     $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");

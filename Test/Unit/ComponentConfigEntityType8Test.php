@@ -268,10 +268,11 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(7, $files, "Expected number of files is returned.");
+    $this->assertFileCount(8, $files);
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatForm.php", $files, "The files list has a form handler file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
     $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
@@ -284,7 +285,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
     $annotation_tester->assertPropertyHasValue(['handlers', 'route_provider', 'html'], 'Drupal\Core\Entity\Routing\AdminHtmlRouteProvider');
-    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\Core\Entity\EntityForm', 'The entity type has a default form handler.');
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\test_module\Entity\Handler\KittyCatForm', 'The entity type has a default form handler.');
 
     // Check the links are declared.
     $entity_class_file = $files['src/Entity/KittyCat.php'];

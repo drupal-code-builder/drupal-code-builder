@@ -68,6 +68,8 @@ abstract class EntityTypeBase extends PHPClassFile {
             $component_data['handler_route_provider'] != $value) {
             $component_data['handler_route_provider'] = $value;
           }
+
+          $component_data['handler_form_default'] = 'custom';
         },
       ],
       'interface_parents' => [
