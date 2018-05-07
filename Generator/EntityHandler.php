@@ -14,17 +14,19 @@ class EntityHandler extends PHPClassFile {
    */
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition() + [
-      'entity_class_name' => [
+      'entity_type_id' => [
         'internal' => TRUE,
         // Means the ComponentCollector should copy in the property from the
         // requesting component.
-        'inherit' => TRUE,
+        'acquired' => TRUE,
+      ],
+      'entity_class_name' => [
+        'internal' => TRUE,
+        'acquired' => TRUE,
       ],
       'entity_type_label' => [
         'internal' => TRUE,
-        // Means the ComponentCollector should copy in the property from the
-        // requesting component.
-        'inherit' => TRUE,
+        'acquired' => TRUE,
       ],
       'handler_type' => [
         'internal' => TRUE,
@@ -49,6 +51,14 @@ class EntityHandler extends PHPClassFile {
     };
 
     return $data_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUniqueID() {
+    // Ensure this is unique across entity types.
+    return $this->component_data['root_component_name'] . '/' . $this->component_data['entity_type_id'] . ':' . $this->component_data['handler_type'];
   }
 
 }
