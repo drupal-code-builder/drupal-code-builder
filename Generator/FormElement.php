@@ -36,6 +36,7 @@ class FormElement extends BaseGenerator {
       'element_array' => [
         'internal' => TRUE,
         'format' => 'array',
+        'default' => [],
       ],
     ];
 
