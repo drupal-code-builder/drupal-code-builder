@@ -74,10 +74,6 @@ class FormElement extends BaseGenerator {
       '#description' => '£this->t("' . $this->component_data['element_description'] . '")',
     ];
     foreach ($this->component_data['element_array'] as $attribute => $value) {
-      if (is_string($value)) {
-        $value = '"' . $value . '"';
-      }
-
       $form_api_array['#' . $attribute] = $value;
     }
 
