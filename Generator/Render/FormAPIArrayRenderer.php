@@ -29,9 +29,12 @@ class FormAPIArrayRenderer {
    * @param array $data
    *   An array of attributes and values for a FormAPI element. May contain
    *   nested attributes such as '#machine_name'. Attributes should have their
-   *   initial '#'. Neither keys not values should be quoted; values which are
-   *   expressions starting with a variable (using the '£' sugar) will be
-   *   handled.
+   *   initial '#'. Neither keys not values should be quoted, as they will
+   *   receive quotes (single for keys, double for values), with the exception
+   *   of the following cases:
+   *    - values which begin with '£' are taken to be an expression
+   *    - values with begin with '\' are taken to be a qualified class name or
+   *      a class constant.
    */
   public function __construct($data) {
     $this->data = $data;
@@ -84,7 +87,7 @@ class FormAPIArrayRenderer {
       else {
         // Quote the value if it's not an expression.
         // WTF, '£' is unicode???
-        if (mb_substr($value, 0, 1) != '£') {
+        if (mb_substr($value, 0, 1) != '£' && substr($value, 0, 1) != '\\') {
           $value = '"' . $value . '"';
         }
 
