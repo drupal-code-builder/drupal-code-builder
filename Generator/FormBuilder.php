@@ -31,9 +31,11 @@ class FormBuilder extends PHPMethod {
 
       $function_code[] = "  £form['{$content['key']}'] = [";
 
-      foreach ($content['array'] as $attribute_name => $form_attribute_value) {
-        $function_code[] = "    '{$attribute_name}' => {$form_attribute_value},";
-      }
+      // Render the FormAPI element recursively.
+      $form_renderer = new \DrupalCodeBuilder\Generator\Render\FormAPIArrayRenderer($content['array']);
+      $element_lines = $form_renderer->render();
+      $element_lines = $this->indentCodeLines($element_lines, 2);
+      $function_code = array_merge($function_code, $element_lines);
 
       $function_code[] = '  ];';
     }
