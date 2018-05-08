@@ -32,7 +32,9 @@ class EntityForm extends EntityHandler {
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
-        'body' => [],
+        'body' => [
+          'parent::submitForm($form, $form_state);'
+        ],
       ),
     );
 
