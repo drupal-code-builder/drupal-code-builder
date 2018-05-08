@@ -67,6 +67,15 @@ class PHPFunction extends BaseGenerator {
         'internal' => TRUE,
         'default' => '%module.module',
       ],
+      'docblock_inherit' => [
+        'internal' => TRUE,
+        'default' => FALSE,
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          if ($value) {
+            $component_data['doxygen_first'] = '{@inheritdoc}';
+          }
+        },
+      ],
       // The text of the first line of doxygen.
       // TODO: deprecate and add a docblock_lines property instead.
       'doxygen_first' => [
