@@ -30,7 +30,7 @@ class FormElement extends BaseGenerator {
       ],
       'element_title' => [
         'internal' => TRUE,
-        'required' => TRUE,
+        // Not required; elements such as #machine_name don't use it.
       ],
       'element_description' => [
         'internal' => TRUE,
@@ -70,9 +70,15 @@ class FormElement extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     $form_api_array = [
       '#type' => $this->component_data['element_type'],
-      '#title' => '£this->t("' . $this->component_data['element_title'] . '")',
-      '#description' => '£this->t("' . $this->component_data['element_description'] . '")',
     ];
+
+    if (!empty($this->component_data['element_title'])) {
+      $form_api_array['#title'] = '£this->t("' . $this->component_data['element_title'] . '")';
+    }
+    if (!empty($this->component_data['element_description'])) {
+      $form_api_array['#description'] = '£this->t("' . $this->component_data['element_description'] . '")';
+    }
+
     foreach ($this->component_data['element_array'] as $attribute => $value) {
       $form_api_array['#' . $attribute] = $value;
     }
