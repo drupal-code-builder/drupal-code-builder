@@ -90,7 +90,7 @@ class FormAPIArrayRenderer {
 
         $render[] = "$indent'$key' => $value,";
 
-        if (!$recursive_iter_iter->hasNext()) {
+        if (!$recursive_iter_iter->hasNext() && $depth) {
           $indent = $depth ? str_repeat('  ', $recursive_iter_iter->getDepth() - 1) : '';
 
           $render[] = "$indent],";
