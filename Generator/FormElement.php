@@ -77,7 +77,9 @@ class FormElement extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return '%sibling:buildForm';
+    // Allow this to be overriden by incoming data, for entity form handlers
+    // where the request chain is different.
+    return $this->component_data['containing_component'] ?? '%sibling:buildForm';
   }
 
   /**
