@@ -33,8 +33,9 @@ class FormAPIArrayRenderer {
    *   receive quotes (single for keys, double for values), with the exception
    *   of the following cases:
    *    - values which begin with '£' are taken to be an expression
-   *    - values with begin with '\' are taken to be a qualified class name or
+   *    - values which begin with '\' are taken to be a qualified class name or
    *      a class constant.
+   *    - values which begin with '[' are taken to be an inline array.
    */
   public function __construct($data) {
     $this->data = $data;
@@ -87,7 +88,8 @@ class FormAPIArrayRenderer {
       else {
         // Quote the value if it's not an expression.
         // WTF, '£' is unicode???
-        if (mb_substr($value, 0, 1) != '£' && substr($value, 0, 1) != '\\') {
+        $first_char = mb_substr($value, 0, 1);
+        if (!in_array($first_char, ['£', '\\', '['])) {
           $value = '"' . $value . '"';
         }
 
