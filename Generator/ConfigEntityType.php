@@ -131,7 +131,7 @@ class ConfigEntityType extends EntityTypeBase {
     if (isset($this->component_data['bundle_of_entity'])) {
       foreach ($components as $component_key => $component_data) {
         if (isset($component_data['parent_class_name']) && $component_data['parent_class_name'] == '\Drupal\Core\Entity\EntityForm') {
-          $components[$component_key]['parent_class_name'] = 'Drupal\Core\Entity\BundleEntityFormBase';
+          $components[$component_key]['parent_class_name'] = '\Drupal\Core\Entity\BundleEntityFormBase';
         }
       }
     }
