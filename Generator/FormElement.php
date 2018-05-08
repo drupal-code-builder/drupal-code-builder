@@ -12,13 +12,24 @@ class FormElement extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition() + [
+      // This is supplied when this component is requested by a Form
+      // component.
+      // TODO: temporarily removed, as the acquiring system expects to always
+      // find this, and entity types don't have it. We have to either make the
+      // acquiring system more flexible, which seems like a rabbithole, or
+      // figure out a better way to do this!
+      /*
       'form_id' => [
         'internal' => TRUE,
-        // Means the ComponentCollector should copy in the property from the
-        // requesting component.
-        // TODO: ComponentCollector will need changing so it doesn't clobber
-        // a value already here?
         'acquired' => TRUE,
+      ],
+      */
+      // This is supplied when this component is requested by an entity type
+      // component. These cannot know their actual form ID, because that is
+      // determined dynamically by Drupal's form system when the form is
+      // actually used, as it depends on the entity bundle.
+      'pseudo_form_id' => [
+        'internal' => TRUE,
       ],
       'form_key' => [
         'internal' => TRUE,
@@ -54,7 +65,12 @@ class FormElement extends BaseGenerator {
     // Include the form ID, as element names are not unique.
     return
       $this->component_data['root_component_name'] . '/' .
-      implode(':', [$this->type, $this->component_data['form_id'], $this->name]);
+      implode(':', [
+        $this->type,
+        // TODO: change this to an elvis when form_id property is restored.
+        $this->component_data['form_id'] ?? $this->component_data['pseudo_form_id'],
+        $this->name,
+      ]);
   }
 
   /**
