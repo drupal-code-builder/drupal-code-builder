@@ -23,14 +23,14 @@ class EntityForm extends EntityHandler {
       'form' => array(
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
-        'doxygen_first' => 'Form constructor.',
+        'docblock_inherit' => TRUE,
         'declaration' => 'public function form(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [],
       ),
       'submitForm' => array(
         'component_type' => 'PHPMethod',
         'containing_component' => '%requester',
-        'doxygen_first' => 'Form submission handler.',
+        'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [],
       ),
