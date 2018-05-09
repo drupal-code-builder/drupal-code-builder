@@ -352,9 +352,9 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
 
     // Check the form file.
-    $entity_class_file = $files['src/Entity/Handler/KittyCatForm.php'];
+    $entity_form_file = $files['src/Entity/Handler/KittyCatForm.php'];
 
-    $php_tester = new PHPTester($entity_class_file);
+    $php_tester = new PHPTester($entity_form_file);
     // We override formSubmit() empty so it's there for the developer to add to,
     // so disable the sniff for empty overrides.
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
