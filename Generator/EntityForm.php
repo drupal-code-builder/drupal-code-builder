@@ -25,7 +25,9 @@ class EntityForm extends EntityHandler {
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function form(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
-        'body' => [],
+        'body' => [
+          'parent::form($form, $form_state);'
+        ],
       ),
       'submitForm' => array(
         'component_type' => 'PHPMethod',
