@@ -261,6 +261,12 @@ class ComponentConfigEntityType8Test extends TestBase {
           // Check these get overridden.
           'handler_route_provider' => 'none',
           'admin_permission' => FALSE,
+          'entity_properties' => [
+            0 => [
+              'name' => 'breed',
+              'type' => 'string',
+            ],
+          ],
         ],
       ],
       'readme' => FALSE,
@@ -335,6 +341,18 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_form');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
+
+    // Check the form file.
+    $entity_class_file = $files['src/Entity/Handler/KittyCatForm.php'];
+
+    $php_tester = new PHPTester($entity_class_file);
+    // We override formSubmit() empty so it's there for the developer to add to,
+    // so disable the sniff for empty overrides.
+    $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityForm');
+    $php_tester->assertHasMethods(['form', 'submitForm']);
+    // TODO: test the FormAPI elements.
   }
 
 }
