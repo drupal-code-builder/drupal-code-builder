@@ -297,7 +297,7 @@ class ContentEntityType extends EntityTypeBase {
       // the add page route, where a bundle can be selected, rather than the
       // add form.
       if (!empty($this->component_data['bundle_entity_type'])) {
-        $components['collection_menu_action' . $this->component_data['entity_type_id']]['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
+        $components['collection_menu_action' . $this->component_data['entity_type_id']]['plugin_properties']['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
       }
 
       // Make local tasks (aka tabs) for the view, edit, and delete routes.

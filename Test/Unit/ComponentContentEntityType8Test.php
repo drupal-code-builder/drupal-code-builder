@@ -1036,6 +1036,15 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty('entity.kitty_cat.canonical', "The tasks file defines the task for the view route.");
     $yaml_tester->assertHasProperty('entity.kitty_cat.edit_form', "The tasks file defines the task for the edit form.");
     $yaml_tester->assertHasProperty('entity.kitty_cat.delete_form', "The tasks file defines the task for the delete form.");
+
+    // Check the action links file.
+    $action_links_file = $files["test_module.links.action.yml"];
+
+    $yaml_tester = new YamlTester($action_links_file);
+    $yaml_tester->assertHasProperty('entity.kitty_cat.add', 'The content entity type has an add action link.');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_form', "The route for adding a content entity is for the add form.");
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
   }
 
   /**
@@ -1141,6 +1150,19 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'description'], 'Create and manage fields, forms, and display settings for Kitty Cat Types.');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'route_name'], 'entity.kitty_cat_type.collection');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.collection', 'parent'], 'system.admin_structure');
+
+    // Check the action links file.
+    $action_links_file = $files["test_module.links.action.yml"];
+
+    $yaml_tester = new YamlTester($action_links_file);
+    $yaml_tester->assertHasProperty('entity.kitty_cat_type.add', 'The bundle entity type has an add action link.');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'title'], 'Add Kitty Cat Type');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'route_name'], 'entity.kitty_cat_type.add_form');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'appears_on'], ['entity.kitty_cat_type.collection']);
+    $yaml_tester->assertHasProperty('entity.kitty_cat.add', 'The content entity type has an add action link.');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_page', "The route for adding a content entity is for the add page, rather than the add form.");
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
 
     // Check the content entity form file.
     $entity_form_file = $files['src/Entity/Handler/KittyCatForm.php'];
