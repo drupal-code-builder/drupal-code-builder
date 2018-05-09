@@ -15,6 +15,19 @@ class EntityForm extends EntityHandler {
   /**
    * {@inheritdoc}
    */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition() + [
+      // The entity link template that the form save() method redirects to.
+      'redirect_link_template' => [
+        'internal' => TRUE,
+      ],
+    ];
+    return $data_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents() {
     $components = array(
       // Request the form functions.
@@ -45,6 +58,21 @@ class EntityForm extends EntityHandler {
           'parent::submitForm($form, $form_state);'
         ],
       ),
+      'save' => [
+        'component_type' => 'PHPMethod',
+        'containing_component' => '%requester',
+        // Quick hack! This needs to be set so that another form builder for a
+        // different entity type will not clash!
+        'code_file' => $this->component_data['entity_type_id'],
+        'docblock_inherit' => TRUE,
+        'declaration' => 'public function save(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
+        'body' => [
+          '$saved = parent::save($form, $form_state);',
+          "£form_state->setRedirectUrl(£this->entity->toUrl('{$this->component_data['redirect_link_template']}'));",
+          '',
+          'return $saved;',
+        ],
+      ],
     );
 
     return $components;

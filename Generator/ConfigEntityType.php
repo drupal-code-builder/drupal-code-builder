@@ -109,11 +109,16 @@ class ConfigEntityType extends EntityTypeBase {
 
     $handler_types['storage']['base_class'] = '\Drupal\Core\Config\Entity\ConfigEntityStorage';
 
-    // These get overridden in requiredComponents() if this is a bundle config
-    // entity.
-    $handler_types['form_default']['base_class'] = '\Drupal\Core\Entity\EntityForm';
-    $handler_types['form_add']['base_class'] = '\Drupal\Core\Entity\EntityForm';
-    $handler_types['form_edit']['base_class'] = '\Drupal\Core\Entity\EntityForm';
+    foreach (['form_default', 'form_add', 'form_edit'] as $form_handler_type) {
+      // These get overridden in requiredComponents() if this is a bundle config
+      // entity.
+      $handler_types[$form_handler_type]['base_class'] = '\Drupal\Core\Entity\EntityForm';
+
+      $handler_types[$form_handler_type]['handler_properties'] = [
+        // Config entity formss redirect to the collection page.
+        'redirect_link_template' => 'collection',
+      ];
+    }
 
     $handler_types['form_delete']['base_class'] = '\Drupal\Core\Entity\EntityDeleteForm';
 
