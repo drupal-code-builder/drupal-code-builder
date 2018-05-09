@@ -280,6 +280,8 @@ abstract class EntityTypeBase extends PHPClassFile {
    *     property.
    *   - 'component_type': (optional) The component type to use. Defaults to
    *      EntityHandler.
+   *   - 'handler_properties': (optional) An array of property names and values
+   *      to be set verbatim on the requested component.
    *   - 'base_class': The base class for handlers of this type.
    *   - 'mode': Defines how the core entity system handles an entity not
    *     defining a handler of this type. One of:
@@ -424,6 +426,10 @@ abstract class EntityTypeBase extends PHPClassFile {
           $this->makeShortHandlerClassName($key, $handler_type_info),
         ],
       ];
+
+      if (isset($handler_type_info['handler_properties'])) {
+        $components[$data_key] += $handler_type_info['handler_properties'];
+      }
     }
 
     // Atrocious hack!
