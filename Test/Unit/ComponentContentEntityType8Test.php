@@ -958,7 +958,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $form_class_file = $files["src/Entity/Handler/KittyCatForm.php"];
 
     $php_tester = new PHPTester($form_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    // The form class has overridden methods that only call the parent for
+    // developers to start working with, so ignore the sniff for this.
+    $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
     $php_tester->assertClassDocBlockHasLine("Provides the default form handler for the Kitty Cat entity.");
