@@ -250,6 +250,26 @@ class ConfigEntityType extends EntityTypeBase {
           'parent' => 'system.admin_structure',
         ],
       ];
+
+      // Make a local task (aka tab) for the edit route (so that Field UI
+      // tabs can hang off it).
+      $entity_tabs = [
+        'edit_form' => 'Edit',
+      ];
+      foreach ($entity_tabs as $route_suffix => $title) {
+        $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
+          'component_type' => 'PluginYAML',
+          'plugin_type' => 'menu.local_task',
+          'prefix_name' => FALSE,
+          'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+          'plugin_properties' => [
+            'title' => $title,
+            'route_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+            // Unlike content entities, the base route is the same as the tab.
+            'base_route' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+          ],
+        ];
+      }
     }
 
     return $components;
