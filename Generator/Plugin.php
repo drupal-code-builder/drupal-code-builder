@@ -115,7 +115,14 @@ class Plugin extends PHPClassFileWithInjection {
             return;
           }
 
-          $component_data['plugin_name'] = $component_data['root_component_name'] . '_' . $component_data['plugin_name'];
+          $module_name = $component_data['root_component_name'];
+
+          if (strpos($value, $module_name . '_') === 0) {
+            // Don't if the plugin ID already has the module name as a prefix.
+            return;
+          }
+
+          $component_data['plugin_name'] = $module_name . '_' . $component_data['plugin_name'];
         },
       ),
       'injected_services' => array(
