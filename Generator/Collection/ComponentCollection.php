@@ -47,6 +47,24 @@ class ComponentCollection implements \IteratorAggregate {
   private $requesters = [];
 
   /**
+   * The IDs of components which are roots.
+   *
+   * An array whose keys are IDs and values are TRUE.
+   *
+   * @var array
+   */
+  private $roots = [];
+
+  /**
+   * List of each component's closest requesting root.
+   *
+   * An array whose keys are IDs and values are the closest requesting root ID.
+   *
+   * @var arrray
+   */
+  private $requestRoots = [];
+
+  /**
    * The list of local names.
    *
    * An array whose keys are component unique IDs. Each item is itself an array
@@ -113,6 +131,11 @@ class ComponentCollection implements \IteratorAggregate {
       $this->rootGeneratorId = $key;
     }
 
+    // If this is *a* root, keep track of it.
+    if ($component instanceof \DrupalCodeBuilder\Generator\RootComponent) {
+      $this->roots[$key] = TRUE;
+    }
+
     if ($requesting_component) {
       // Add to the array of requesters.
       if (!isset($this->requesters[$key])) {
@@ -120,11 +143,39 @@ class ComponentCollection implements \IteratorAggregate {
         $this->requesters[$key] = $requesting_component->getUniqueID();
       }
 
+      // Keep track of the nearest requesting root component.
+      $this->requestRoots[$key] = $this->determineNearestRequestingRoot($key);
+
       // Add to the array of local names.
       $this->localNames[$requesting_component->getUniqueID()][$local_name] = $key;
     }
 
     $this->components[$key] = $component;
+  }
+
+  /**
+   * Determines the closest requester that is a root component.
+   *
+   * @param $key
+   *   The ID of the component.
+   *
+   * @return
+   *   The ID of the closest component in the request chain that is a root
+   *   component.
+   */
+  private function determineNearestRequestingRoot($key) {
+    // We're ascending a tree whose root is a root component, so we have to
+    // find a root eventually.
+    // Note that the nearest requesting root of a root component is not itself.
+    // E.g. with this chain:
+    //   root -> requested -> inner_root
+    // the nearest root of inner_root is root.
+    do {
+      $key = $this->requesters[$key];
+    }
+    while (!isset($this->roots[$key]));
+
+    return $key;
   }
 
   /**
@@ -293,7 +344,7 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
-   * Gets the closest requester that is a root component.
+   * Returns the closest requester that is a root component.
    *
    * This may be called before the collection is complete.
    *
@@ -304,20 +355,8 @@ class ComponentCollection implements \IteratorAggregate {
    *   The root component.
    */
   public function getClosestRequestingRootComponent($component_id) {
-    // We're ascending a tree whose root is a root component, so we have to
-    // find a root eventually.
-    while (TRUE) {
-      $requesting_component_id = $this->requesters[$component_id];
-      $requesting_component = $this->components[$requesting_component_id];
-
-      if ($requesting_component instanceof \DrupalCodeBuilder\Generator\RootComponent) {
-        break;
-      }
-
-      $component_id = $requesting_component->getUniqueID();
-    }
-
-    return $requesting_component;
+    $closest_requesting_root_id = $this->requestRoots[$component_id];
+    return $this->components[$closest_requesting_root_id];
   }
 
 }
