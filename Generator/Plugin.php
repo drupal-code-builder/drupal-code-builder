@@ -138,7 +138,7 @@ class Plugin extends PHPClassFileWithInjection {
       'parent_plugin_class' => [
         'computed' => TRUE,
         'default' => function($component_data) {
-          if (isset($component_data['parent_plugin_id'])) {
+          if (!empty($component_data['parent_plugin_id'])) {
             // TODO: go via the environment for testing!
             $parent_plugin = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->createInstance($component_data['parent_plugin_id']);
 
