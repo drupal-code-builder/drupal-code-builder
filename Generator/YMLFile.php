@@ -54,6 +54,14 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
+  public function getMergeTag() {
+    // This is the filename.
+    return $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildComponentContents($children_contents) {
     $yaml_data = array();
     foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {

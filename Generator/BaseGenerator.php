@@ -293,6 +293,36 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Gets the type of the component.
+   *
+   * @return string
+   *   The type of the component. This is the same value that is used in
+   *   request data, that is, the short class name without any Drupal core
+   *   version suffix.
+   */
+  public function getType() {
+    return $this->type;
+  }
+
+  /**
+   * Provides the merge tag for the component.
+   *
+   * This is an arbitrary string which marks components of this type for
+   * merging. When a new component is under the same root, has the same type,
+   * and the same merge tag as an existing component, it is merged in rather
+   * added.
+   *
+   * @see ComponentCollector::getComponentsFromData()
+   * @see ComponentCollection::getMatchingComponent()
+   *
+   * @return string
+   *   The merge tag.
+   */
+  public function getMergeTag() {
+    return NULL;
+  }
+
+  /**
    * Get the value of a component property.
    *
    * @param string $name

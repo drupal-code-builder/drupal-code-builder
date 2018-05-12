@@ -28,6 +28,13 @@ class ModuleCodeFile extends PHPFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMergeTag() {
+    return $this->filename;
+  }
+
+  /**
    * Build the code files.
    */
   public function getFileInfo() {

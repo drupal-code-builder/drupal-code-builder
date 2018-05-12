@@ -220,38 +220,34 @@ class ComponentCollector {
     $component_unique_id = $generator->getUniqueID();
     $this->debug($chain, "instantiated name $name; type: $component_type; ID: $component_unique_id");
 
-    // Prevent re-requesting an identical previous request.
-    // We use the original component data this method received, without any
-    // of the additions we've made.
-    if (isset($this->requested_data_record[$component_unique_id])) {
-      $this->debug($chain, "record has existing ID for name $name; type: $component_type; ID: $component_unique_id");
+    $existing_matching_component = $this->component_collection->getMatchingComponent($generator, $requesting_component);
+    if ($existing_matching_component) {
+      // There is a matching component already in the collection.
+      // We determine whether our data needs to be merged in with it.
+      $this->debug($chain, "record has matching existing component name $name; type: $component_type; ID: $component_unique_id");
 
-      if ($this->requested_data_record[$component_unique_id] == $original_component_data) {
+      $differences_merged = $existing_matching_component->mergeComponentData($component_data);
+
+      if (!$differences_merged) {
+        // There was nothing new in our component's data that needed to be
+        // merged into the existing one. We give up on this current component,
+        // as it's identical to one already in the collection.
         $this->debug($chain, "bailing on name $name; type: $component_type; ID: $component_unique_id");
         array_pop($chain);
 
-        $this->component_collection->addAliasedComponent($name, $generator, $requesting_component);
+        $this->component_collection->addAliasedComponent($name, $existing_matching_component, $requesting_component);
 
         return;
       }
-    }
-    $this->requested_data_record[$component_unique_id] = $original_component_data;
 
-    //dump($this->requested_data_record);
-
-    // A requested subcomponent may already exist in our tree.
-    if ($this->component_collection->hasComponent($component_unique_id)) {
-      // If it already exists, we merge the received data in with the
-      // existing component, and use the existing generator instead.
-      $generator = $this->component_collection->getComponent($component_unique_id);
-      //dump("merging $component_unique_id");
-      $generator->mergeComponentData($component_data);
+      // If it already exists, we merge the received data in with the existing
+      // component, and use the existing generator instead. We now carry on with
+      // the existing component, getting required components  from it again, as
+      // it may need further components based on the data it has just been
+      // given.
+      $generator = $existing_matching_component;
 
       $this->component_collection->addAliasedComponent($name, $generator, $requesting_component);
-
-      // We get required components from this even though we've already seen
-      // it, as it may need further components based on the data its just
-      // been given.
     }
     else {
       // Add the new component to the collection of components.

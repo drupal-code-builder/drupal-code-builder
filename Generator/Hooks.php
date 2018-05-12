@@ -49,6 +49,13 @@ class Hooks extends BaseGenerator {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMergeTag() {
+    return 'hooks';
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.

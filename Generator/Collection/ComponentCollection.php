@@ -17,6 +17,8 @@ use DrupalCodeBuilder\Generator\BaseGenerator;
  *   more components may be added.
  * - The list of local names which each component uses when it spawns further
  *   components.
+ * - The list of merge tags for components, grouped by closest requesting root,
+ *   then type.
  */
 class ComponentCollection implements \IteratorAggregate {
 
@@ -99,6 +101,17 @@ class ComponentCollection implements \IteratorAggregate {
   private $tree = NULL;
 
   /**
+   * The merge tags.
+   *
+   * An lookup array of component unique IDs, whose successive levels of nesting
+   * are:
+   *  - the ID of the closest root requester
+   *  - the component type
+   *  - the component merge tag
+   */
+  private $mergeTags = [];
+
+  /**
    * Indicates the the collection is locked and no more components may be added.
    *
    * @var bool
@@ -157,13 +170,21 @@ class ComponentCollection implements \IteratorAggregate {
       }
 
       // Keep track of the nearest requesting root component.
-      $this->requestRoots[$key] = $this->determineNearestRequestingRoot($key);
+      $closest_requesting_root = $this->determineNearestRequestingRoot($key);
+      $this->requestRoots[$key] = $closest_requesting_root;
 
       // Add to the array of local names.
       $this->localNames[$requesting_component->getUniqueID()][$local_name] = $key;
 
       // Add to the array of request paths.
       $this->requestPaths[$key] = $this->requestPaths[$requesting_component->getUniqueID()] . '/' . $local_name;
+    }
+
+    // Add to the merge tags list.
+    if ($merge_tag = $component->getMergeTag()) {
+      // $closest_requesting_root will be set because the root component has
+      // no merge tag.
+      $this->mergeTags[$closest_requesting_root][$component->getType()][$component->getMergeTag()] = $key;
     }
 
     $this->components[$key] = $component;
@@ -439,6 +460,47 @@ class ComponentCollection implements \IteratorAggregate {
     }
 
     return $return;
+  }
+
+  /**
+   * Get the component that matches the type and merge tag, if any.
+   *
+   * @param $component
+   *   The component to find a match for, not yet in the collection.
+   * @param $requesting_component
+   *   The component that is requesting the component to match.
+   *
+   * @return
+   *   Either a component that's in the collection and matches the given
+   *   component, or NULL if nothing was found.
+   */
+  public function getMatchingComponent($component, $requesting_component) {
+    if (is_null($requesting_component)) {
+      return;
+    }
+
+    if (!$component->getMergeTag()) {
+      return NULL;
+    }
+
+    // We've not added $component yet (and might not), so we don't know have
+    // any data about it. So we need to use the requesting component to get the
+    // closest requesting root.
+    $requesting_component_id = $requesting_component->getUniqueID();
+    if (isset($this->roots[$requesting_component_id])) {
+      // If the requesting component is a root, it's obviously the closest
+      // requesting root. But getClosestRequestingRootComponent() would not
+      // give us this, as root's closest requester is not itself.
+      $closest_requesting_root_id = $requesting_component_id;
+    }
+    else {
+      $closest_requesting_root_id = $this->getClosestRequestingRootComponent($requesting_component)->getUniqueID();
+    }
+
+    if (isset($this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()])) {
+      $matching_component_id = $this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()];
+      return $this->components[$matching_component_id];
+    }
   }
 
   /**
