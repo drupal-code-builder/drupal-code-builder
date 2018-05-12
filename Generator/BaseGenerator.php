@@ -360,8 +360,18 @@ abstract class BaseGenerator {
 
   /**
    * Merge data from additional requests of a component.
+   *
+   * @param array $additional_component_data
+   *   The array of new component data to merge in. This has the same format as
+   *   the parameter to __construct().
+   *
+   * @return bool
+   *   Boolean indicating whether any data needed to be merged: TRUE if so,
+   *   FALSE if nothing was merged because all values were the same.
    */
   public function mergeComponentData($additional_component_data) {
+    $differences_merged = FALSE;
+
     // Get the property info for just this component: we don't care about
     // going into compound properties.
     $component_property_info = static::componentDataDefinition();
@@ -388,8 +398,14 @@ abstract class BaseGenerator {
         continue;
       }
 
-      $this->component_data[$property_name] = array_merge_recursive($this->component_data[$property_name], $additional_component_data[$property_name]);
+      if ($this->component_data[$property_name] != $additional_component_data[$property_name]) {
+        $differences_merged = TRUE;
+
+        $this->component_data[$property_name] = array_merge_recursive($this->component_data[$property_name], $additional_component_data[$property_name]);
+      }
     }
+
+    return $differences_merged;
   }
 
   /**
