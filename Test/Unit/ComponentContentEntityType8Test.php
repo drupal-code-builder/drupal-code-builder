@@ -1185,6 +1185,13 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatTypeForm');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\BundleEntityFormBase');
     $php_tester->assertHasMethods(['form', 'submitForm']);
+
+    // Check the form elements in the bundle entity's form handler.
+    $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    $form_builder_tester->assertElementCount(2);
+    $form_builder_tester->assertAllElementsHaveDefaultValue();
+    $form_builder_tester->assertElementType('id', 'machine_name');
+    $form_builder_tester->assertElementType('label', 'textfield');
   }
 
 }
