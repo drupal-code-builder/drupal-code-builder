@@ -6,6 +6,7 @@ use PHPUnit\Framework\Assert;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Expr\Variable;
 
 /**
  * Helper class for testing a PHP method.
@@ -106,6 +107,34 @@ class PHPMethodTester {
     }
 
     Assert::assertEquals($string, $final_statement->expr->value);
+  }
+
+  /**
+   * Asserts the method returns the given variable name.
+   *
+   * This expects the final statement to be a return. Other return statements
+   * in the method are not checked.
+   *
+   * @param string $variable_name
+   *   The expected return variable name, without the '$'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertReturnsVariable($variable_name, $message = NULL) {
+    $message = $message ?? "The method {$this->methodName} returns the variable \${$variable_name}.";
+
+    // Find the return statement.
+    $statements = $this->methodNode->getStmts();
+    $final_statement = end($statements);
+    if (get_class($final_statement) != Return_::class) {
+      Assert::fail("Final statement in {$this->methodName} is not a return.");
+    }
+
+    if (get_class($final_statement->expr) != Variable::class) {
+      Assert::fail("Return statement in {$this->methodName} is not a variable.");
+    }
+
+    Assert::assertEquals($variable_name, $final_statement->expr->name, $message);
   }
 
 }
