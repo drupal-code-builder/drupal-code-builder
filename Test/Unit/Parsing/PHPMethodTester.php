@@ -46,6 +46,16 @@ class PHPMethodTester {
   }
 
   /**
+   * Gets a form builder tester for this method.
+   *
+   * @return FormBuilderTester
+   *   The form builder tester object.
+   */
+  public function getFormBuilderTester() {
+    return new FormBuilderTester($this->methodNode);
+  }
+
+  /**
    * Assert the method docblock has an 'inheritdoc' tag.
    *
    * @param string $message
