@@ -122,7 +122,7 @@ class ComponentCollection implements \IteratorAggregate {
 
     $key = $component->getUniqueID();
 
-    if (isset($this->items[$key])) {
+    if (isset($this->components[$key])) {
       throw new \Exception("Unique ID $key already in use.");
     }
 
