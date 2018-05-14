@@ -752,7 +752,7 @@ class PHPTester {
   public function getMethodTester($method_name) {
     $this->assertHasMethod($method_name);
 
-    return new PHPMethodTester($this->parser_nodes['methods'][$method_name]);
+    return new PHPMethodTester($this->parser_nodes['methods'][$method_name], $this->phpCode);
   }
 
   /**

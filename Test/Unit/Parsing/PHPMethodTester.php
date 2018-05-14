@@ -35,14 +35,32 @@ class PHPMethodTester {
   protected $methodName;
 
   /**
+   * The method code.
+   *
+   * @var string[]
+   */
+  protected $methodBody;
+
+  /**
    * Construct a new AnnotationTester.
    *
    * @param \PhpParser\Node\Stmt\ClassMethod $method_node
    *   The PhpParser method node.
+   * @param string $php_code
+   *   The complete PHP code being tested.
    */
-  public function __construct(ClassMethod $method_node) {
+  public function __construct(ClassMethod $method_node, $php_code) {
     $this->methodNode = $method_node;
     $this->methodName = $method_node->name;
+
+    $php_code_lines = explode("\n", $php_code);
+
+    $start_line = $method_node->getAttribute('startLine');
+    $end_line = $method_node->getAttribute('endLine');
+
+    // Don't include the final line as it's just the closing '}'.
+    $length = $end_line - $start_line - 1;
+    $this->methodBody = implode("\n", array_slice($php_code_lines, $start_line, $length));
   }
 
   /**
@@ -145,6 +163,21 @@ class PHPMethodTester {
     }
 
     Assert::assertEquals($variable_name, $final_statement->expr->name, $message);
+  }
+
+  /**
+   * Asserts the method has the given line of code.
+   *
+   * @param string $code_line
+   *   The expected code line. May use regex, but must not include the regex
+   *   delimiters.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasLine($code_line, $message = NULL) {
+    $message = $message ?? "The method {$this->methodName} contains the line '{$code_line}'.";
+
+    Assert::assertRegExp('@^\s*' . preg_quote($code_line) . '@m', $this->methodBody, $message . ' ' . print_r($this->methodBody, TRUE));
   }
 
 }
