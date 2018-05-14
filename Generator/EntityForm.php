@@ -23,6 +23,9 @@ class EntityForm extends EntityHandler {
       'form' => array(
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
+        // Quick hack! This needs to be set so that another form builder for a
+        // different entity type will not clash!
+        'code_file' => $this->component_data['entity_type_id'],
         'docblock_inherit' => TRUE,
         'declaration' => 'public function form(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [
@@ -32,6 +35,9 @@ class EntityForm extends EntityHandler {
       'submitForm' => array(
         'component_type' => 'PHPMethod',
         'containing_component' => '%requester',
+        // Quick hack! This needs to be set so that another form builder for a
+        // different entity type will not clash!
+        'code_file' => $this->component_data['entity_type_id'],
         'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [
