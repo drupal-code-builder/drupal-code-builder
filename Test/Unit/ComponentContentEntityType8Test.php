@@ -1047,6 +1047,25 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_form', "The route for adding a content entity is for the add form.");
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
+
+    // Check the content entity form file.
+    $entity_form_file = $files['src/Entity/Handler/KittyCatForm.php'];
+
+    $php_tester = new PHPTester($entity_form_file);
+    // We override formSubmit() empty so it's there for the developer to add to,
+    // so disable the sniff for empty overrides.
+    $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
+    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
+    $php_tester->assertHasMethods(['form', 'submitForm', 'save']);
+
+    // Check the form elements in the bundle entity's form handler.
+    // TODO: allow call to parent in the form builder.
+    // $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    // $form_builder_tester->assertElementCount(0);
+
+    $save_method_tester = $php_tester->getMethodTester('save');
+    $save_method_tester->assertHasLine('$form_state->setRedirectUrl($this->entity->toUrl(\'canonical\'));');
   }
 
   /**
@@ -1175,7 +1194,15 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
-    $php_tester->assertHasMethods(['form', 'submitForm']);
+    $php_tester->assertHasMethods(['form', 'submitForm', 'save']);
+
+    // Check the form elements in the bundle entity's form handler.
+    // TODO: allow call to parent in the form builder.
+    // $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    // $form_builder_tester->assertElementCount(0);
+
+    $save_method_tester = $php_tester->getMethodTester('save');
+    $save_method_tester->assertHasLine('$form_state->setRedirectUrl($this->entity->toUrl(\'canonical\'));');
 
     // Check the bundle entity form file.
     $entity_type_form_file = $files['src/Entity/Handler/KittyCatTypeForm.php'];
@@ -1194,6 +1221,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $form_builder_tester->assertAllElementsHaveDefaultValue();
     $form_builder_tester->assertElementType('id', 'machine_name');
     $form_builder_tester->assertElementType('label', 'textfield');
+
+    $save_method_tester = $php_tester->getMethodTester('save');
+    $save_method_tester->assertHasLine('$form_state->setRedirectUrl($this->entity->toUrl(\'collection\'));');
   }
 
 }
