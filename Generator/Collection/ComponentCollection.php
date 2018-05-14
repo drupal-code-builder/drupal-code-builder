@@ -126,6 +126,22 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
+   * Returns a unique key for a component.
+   *
+   * This is unique per component object, but does not depend on request data,
+   * so it cannot be used to deduplicate different objects.
+   *
+   * @param BaseGenerator $component
+   *   The component.
+   *
+   * @return string
+   *   The unique key.
+   */
+  public function getComponentKey(BaseGenerator $component) {
+    return spl_object_id($component);
+  }
+
+  /**
    * Adds a component to the collection.
    *
    * @param $local_name
@@ -144,7 +160,7 @@ class ComponentCollection implements \IteratorAggregate {
       throw new \LogicException("Attempt to add component to locked collection.");
     }
 
-    $key = $component->getUniqueID();
+    $key = $this->getComponentKey($component);
 
     if (isset($this->components[$key])) {
       throw new \Exception("Unique ID $key already in use.");
@@ -166,7 +182,7 @@ class ComponentCollection implements \IteratorAggregate {
       // Add to the array of requesters.
       if (!isset($this->requesters[$key])) {
         // TODO: store multiple requesters?
-        $this->requesters[$key] = $requesting_component->getUniqueID();
+        $this->requesters[$key] = $this->getComponentKey($requesting_component);
       }
 
       // Keep track of the nearest requesting root component.
@@ -174,10 +190,10 @@ class ComponentCollection implements \IteratorAggregate {
       $this->requestRoots[$key] = $closest_requesting_root;
 
       // Add to the array of local names.
-      $this->localNames[$requesting_component->getUniqueID()][$local_name] = $key;
+      $this->localNames[$this->getComponentKey($requesting_component)][$local_name] = $key;
 
       // Add to the array of request paths.
-      $this->requestPaths[$key] = $this->requestPaths[$requesting_component->getUniqueID()] . '/' . $local_name;
+      $this->requestPaths[$key] = $this->requestPaths[$this->getComponentKey($requesting_component)] . '/' . $local_name;
     }
 
     // Add to the merge tags list.
@@ -206,7 +222,7 @@ class ComponentCollection implements \IteratorAggregate {
    *   The component that requested the new component being discarded.
    */
   public function addAliasedComponent($local_name, BaseGenerator $existing_component, BaseGenerator $requesting_component) {
-    $this->localNames[$requesting_component->getUniqueID()][$local_name] = $existing_component->getUniqueID();
+    $this->localNames[$this->getComponentKey($requesting_component)][$local_name] = $this->getComponentKey($existing_component);
   }
 
   /**
@@ -436,7 +452,7 @@ class ComponentCollection implements \IteratorAggregate {
    *   The child components, keyed by unique ID.
    */
   public function getContainmentTreeChildren(BaseGenerator $component) {
-    $component_id = $component->getUniqueID();
+    $component_id = $this->getComponentKey($component);
 
     $tree = $this->getContainmentTree();
 
@@ -473,7 +489,7 @@ class ComponentCollection implements \IteratorAggregate {
     // We've not added $component yet (and might not), so we don't know have
     // any data about it. So we need to use the requesting component to get the
     // closest requesting root.
-    $requesting_component_id = $requesting_component->getUniqueID();
+    $requesting_component_id = $this->getComponentKey($requesting_component);
     if (isset($this->roots[$requesting_component_id])) {
       // If the requesting component is a root, it's obviously the closest
       // requesting root. But getClosestRequestingRootComponent() would not
@@ -481,7 +497,7 @@ class ComponentCollection implements \IteratorAggregate {
       $closest_requesting_root_id = $requesting_component_id;
     }
     else {
-      $closest_requesting_root_id = $this->getClosestRequestingRootComponent($requesting_component)->getUniqueID();
+      $closest_requesting_root_id = $this->getComponentKey($this->getClosestRequestingRootComponent($requesting_component));
     }
 
     if (isset($this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()])) {
@@ -502,7 +518,7 @@ class ComponentCollection implements \IteratorAggregate {
    *   The root component.
    */
   public function getClosestRequestingRootComponent(BaseGenerator $component) {
-    $component_id = $component->getUniqueID();
+    $component_id = $this->getComponentKey($component);
 
     $closest_requesting_root_id = $this->requestRoots[$component_id];
     return $this->components[$closest_requesting_root_id];
