@@ -1170,10 +1170,12 @@ class ComponentContentEntityType8Test extends TestBase {
     $entity_form_file = $files['src/Entity/Handler/KittyCatForm.php'];
 
     $php_tester = new PHPTester($entity_form_file);
-    $php_tester->assertDrupalCodingStandards();
+    // We override formSubmit() empty so it's there for the developer to add to,
+    // so disable the sniff for empty overrides.
+    $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
-    $php_tester->assertHasNoMethods();
+    $php_tester->assertHasMethods(['form', 'submitForm']);
 
     // Check the bundle entity form file.
     $entity_type_form_file = $files['src/Entity/Handler/KittyCatTypeForm.php'];
