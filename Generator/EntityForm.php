@@ -29,7 +29,8 @@ class EntityForm extends EntityHandler {
         'docblock_inherit' => TRUE,
         'declaration' => 'public function form(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [
-          'parent::form($form, $form_state);'
+          '$form = parent::form($form, $form_state);',
+          'return $form;',
         ],
       ),
       'submitForm' => array(
