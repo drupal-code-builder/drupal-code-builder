@@ -159,7 +159,8 @@ class FileAssembler {
       // TODO: consider changing this to be nearest root component; though
       // would require a change to File::containingComponent() among other
       // things.
-      $closest_requesting_root = $component_collection->getClosestRequestingRootComponent($file_info['source_component_id']);
+      $file_component = $component_collection->getComponent($file_info['source_component_id']);
+      $closest_requesting_root = $component_collection->getClosestRequestingRootComponent($file_component);
       $variables = $closest_requesting_root->getReplacements();
       $code = strtr($code, $variables);
       $filepath = strtr($filepath, $variables);

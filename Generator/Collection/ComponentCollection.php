@@ -371,13 +371,15 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * This may be called before the collection is complete.
    *
-   * @param $component_id
-   *   The ID of the component.
+   * @param BaseGenerator $component
+   *   The component to get children for.
    *
    * @return
    *   The root component.
    */
-  public function getClosestRequestingRootComponent($component_id) {
+  public function getClosestRequestingRootComponent(BaseGenerator $component) {
+    $component_id = $component->getUniqueID();
+
     $closest_requesting_root_id = $this->requestRoots[$component_id];
     return $this->components[$closest_requesting_root_id];
   }
