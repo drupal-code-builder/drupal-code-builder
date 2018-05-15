@@ -57,22 +57,13 @@ class FileAssembler {
    *   The component collection.
    */
   protected function collectFileContents(ComponentCollection $component_collection) {
-    $component_list = $component_collection->getComponents();
-    $tree = $component_collection->getContainmentTree();
-
     // Iterate over all file-providing components, i.e. one level below the root
     // of the tree.
-    $file_component_ids = $component_collection->getContainmentTreeChildrenIds($component_collection->getRootComponentId());
-    foreach ($file_component_ids as $file_component_name) {
-      // Skip files with no children in the tree.
-      if (empty($tree[$file_component_name])) {
-        continue;
-      }
-
+    $file_components = $component_collection->getContainmentTreeChildren($component_collection->getRootComponent());
+    foreach ($file_components as $file_component) {
       // Let the file component run over its children iteratively.
       // (Not literally ;)
-      $component_collection->getComponent($file_component_name)
-        ->buildComponentContentsIterative($component_collection);
+      $file_component->buildComponentContentsIterative($component_collection);
     }
   }
 
@@ -101,10 +92,8 @@ class FileAssembler {
 
     // Components which provide a file should have registered themselves as
     // children of the root component.
-    $root_component_name = $component_collection->getRootComponentId();
-    foreach ($component_collection->getContainmentTreeChildrenIds($root_component_name) as $child_component_name) {
-      $child_component = $component_collection->getComponent($child_component_name);
-
+    $file_components = $component_collection->getContainmentTreeChildren($component_collection->getRootComponent());
+    foreach ($file_components as $id => $child_component) {
       // Don't get files for existing components.
       // TODO! This is quick and dirty! It's a lot more complicated than this,
       // for instance with components that affect other files.
@@ -129,9 +118,9 @@ class FileAssembler {
         }
 
         // Add the source component ID.
-        $file_info_item['source_component_id'] = $child_component_name;
+        $file_info_item['source_component_id'] = $id;
 
-        $file_info[$child_component_name] = $file_info_item;
+        $file_info[$id] = $file_info_item;
       }
     }
 
