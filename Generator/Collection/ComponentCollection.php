@@ -245,19 +245,6 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
-   * Returns whether the collection has a component with the given ID.
-   *
-   * @param string $id
-   *   The component unique ID.
-   *
-   * @return bool
-   *   Whether the collection has a component with this ID.
-   */
-  public function hasComponent($id) {
-    return isset($this->components[$id]);
-  }
-
-  /**
    * Gets all components.
    *
    * @return array
