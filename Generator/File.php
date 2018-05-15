@@ -36,7 +36,7 @@ class File extends BaseGenerator {
    * Files are usually contained by the root component.
    */
   function containingComponent() {
-    return $this->root_component->getUniqueID();
+    return '%root';
   }
 
   /**

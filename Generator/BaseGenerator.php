@@ -413,6 +413,7 @@ abstract class BaseGenerator {
    *  One of the following:
    *   - The ID of this component's parent in the tree.
    *   - One of the following tokens to represent a parent component:
+   *     - '%root': Represents the root component.
    *     - '%requester': Represents the component that requested this component
    *        either via properties or requiredComponents().
    *     - '%requester:PATH': Represents a path of local names from the

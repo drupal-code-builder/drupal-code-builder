@@ -274,7 +274,10 @@ class ComponentCollection implements \IteratorAggregate {
       }
 
       // Handle tokens.
-      if ($parent_name == '%requester') {
+      if ($parent_name == '%root') {
+        $parent_name = $this->rootGeneratorId;
+      }
+      elseif ($parent_name == '%requester') {
         // TODO: consider whether this might go wrong when a component is
         // requested multiple times. Unlikely, as it tends to be containers
         // that are re-requested.
