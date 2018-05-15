@@ -344,6 +344,29 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
+   * Gets a component's children in the tree.
+   *
+   * @param BaseGenerator $component
+   *   The component to get children for.
+   *
+   * @return BaseGenerator[]
+   *   The child components, keyed by unique ID.
+   */
+  public function getContainmentTreeChildren(BaseGenerator $component) {
+    $component_id = $component->getUniqueID();
+
+    $tree = $this->getContainmentTree();
+
+    $child_ids = $tree[$component_id] ?? [];
+    $return = [];
+    foreach ($child_ids as $id) {
+      $return[$id] = $this->components[$id];
+    }
+
+    return $return;
+  }
+
+  /**
    * Returns the closest requester that is a root component.
    *
    * This may be called before the collection is complete.
