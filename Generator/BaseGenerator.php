@@ -456,11 +456,10 @@ abstract class BaseGenerator {
 
     // Allow each of our children to do the same as this to collect its own
     // children.
-    foreach ($component_collection->getContainmentTreeChildrenIds($this->getUniqueID()) as $child_name) {
-      $child_component = $component_collection->getComponent($child_name);
+    foreach ($component_collection->getContainmentTreeChildren($this) as $id => $child_component) {
       $child_contents = $child_component->buildComponentContentsIterative($component_collection);
       foreach ($child_contents as $key => $contents) {
-        $children_contents[$child_name . ':' . $key] = $contents;
+        $children_contents[$id . ':' . $key] = $contents;
       }
     }
 
