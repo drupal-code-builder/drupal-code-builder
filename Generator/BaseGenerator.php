@@ -422,6 +422,7 @@ abstract class BaseGenerator {
    *       For example, '%requester:foo' gets the component 'foo' that was also
    *       spawned by this component's spawner. '%requester:foo:bar' gets the
    *       component spawned by the 'foo' component.
+   *     - '%self:PATH': Represents a path of local names from this component.
    *     - '%sibling:NAME': (deprecated) Represents one of the sibling
    *       components, that is, a component that is also spawned by this
    *       component's requester. The NAME value is the local name, used by the
