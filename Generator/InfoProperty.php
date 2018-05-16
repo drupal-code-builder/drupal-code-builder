@@ -34,7 +34,7 @@ class InfoProperty extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return $this->component_data['root_component_name'] . '/' . 'Info:info';
+    return '%nearest_root:info';
   }
 
   /**
