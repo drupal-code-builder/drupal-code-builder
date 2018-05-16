@@ -343,6 +343,21 @@ class ComponentCollection implements \IteratorAggregate {
 
         $parent_name = $component_id;
       }
+      elseif (substr($parent_name, 0, strlen('%nearest_root:')) == '%nearest_root:') {
+        $path_string = substr($parent_name, strlen('%nearest_root:'));
+        $path_pieces = explode(':', $path_string);
+
+        $component_id = $this->requestRoots[$id];
+        foreach ($path_pieces as $path_piece) {
+          $local_name = $path_piece;
+
+          assert(isset($this->localNames[$component_id][$local_name]), "Failed to get containing component for $id, local name $local_name not found for ID $component_id.");
+
+          $component_id = $this->localNames[$component_id][$local_name];
+        }
+
+        $parent_name = $component_id;
+      }
 
       assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
 
