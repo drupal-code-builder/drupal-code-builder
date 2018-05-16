@@ -102,7 +102,7 @@ class PluginYAML extends BaseGenerator {
   function containingComponent() {
     $yaml_file_suffix = $this->component_data['plugin_type_data']['yaml_file_suffix'];
 
-    return $this->component_data['root_component_name'] . '/' . "YMLFile:%module.{$yaml_file_suffix}.yml";
+    return "%self:%module.{$yaml_file_suffix}.yml";
   }
 
   /**

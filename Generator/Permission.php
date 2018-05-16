@@ -76,7 +76,7 @@ class Permission extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return $this->component_data['root_component_name'] . '/' . 'YMLFile:%module.permissions.yml';
+    return '%self:%module.permissions.yml';
   }
 
   /**

@@ -27,7 +27,7 @@ class Permission7 extends Permission {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return $this->component_data['root_component_name'] . '/' . 'HookPermission:hook_permission';
+    return '%self:hooks:hook_permission';
   }
 
   /**

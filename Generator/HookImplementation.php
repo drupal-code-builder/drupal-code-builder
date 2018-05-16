@@ -67,7 +67,7 @@ class HookImplementation extends PHPFunction {
    * Return this component's parent in the component tree.
    */
   function containingComponent() {
-    return $this->component_data['root_component_name'] . '/' . 'ModuleCodeFile:' . $this->component_data['code_file'];
+    return '%self:' . $this->component_data['code_file'];
   }
 
   /**
