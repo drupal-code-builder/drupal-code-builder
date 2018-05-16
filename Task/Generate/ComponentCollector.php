@@ -230,6 +230,8 @@ class ComponentCollector {
         $this->debug($chain, "bailing on name $name; type: $component_type; ID: $component_unique_id");
         array_pop($chain);
 
+        $this->component_collection->addAliasedComponent($name, $generator, $requesting_component);
+
         return;
       }
     }
@@ -244,6 +246,8 @@ class ComponentCollector {
       $generator = $this->component_collection->getComponent($component_unique_id);
       //dump("merging $component_unique_id");
       $generator->mergeComponentData($component_data);
+
+      $this->component_collection->addAliasedComponent($name, $generator, $requesting_component);
 
       // We get required components from this even though we've already seen
       // it, as it may need further components based on the data its just

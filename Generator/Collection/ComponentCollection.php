@@ -154,6 +154,25 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
+   * Add details for a component's that's been replaced by an existing one.
+   *
+   * This ensures that the local names array still has track of the requested
+   * local name, even though the request didn't result in a new component.
+   *
+   * @param $local_name
+   *   The local name for the component that is being discarded, that is, the
+   *   name used within the requesting components list of components to spawn,
+   *   whether from properties or from requests.
+   * @param $existing_component
+   *   The existing component which caused the new component to be discarded.
+   * @param $requesting_component
+   *   The component that requested the new component being discarded.
+   */
+  public function addAliasedComponent($local_name, BaseGenerator $existing_component, BaseGenerator $requesting_component) {
+    $this->localNames[$requesting_component->getUniqueID()][$local_name] = $existing_component->getUniqueID();
+  }
+
+  /**
    * Determines the closest requester that is a root component.
    *
    * @param $key
