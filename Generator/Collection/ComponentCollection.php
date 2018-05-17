@@ -459,4 +459,26 @@ class ComponentCollection implements \IteratorAggregate {
     return $this->components[$closest_requesting_root_id];
   }
 
+  /**
+   * Dumps the data structures of the collection for debugging.
+   */
+  private function dumpStructure() {
+    dump("Requesters:");
+    dump($this->requesters);
+
+    dump("Request roots:");
+    dump($this->requestRoots);
+
+    dump("Request paths:");
+    dump($this->requestPaths);
+
+    dump("Local names:");
+    dump($this->localNames);
+
+    if (isset($this->tree)) {
+      dump("Containment tree:");
+      dump($this->tree);
+    }
+  }
+
 }
