@@ -70,7 +70,7 @@ class RouterItem7 extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return $this->component_data['root_component_name'] . '/' . 'HookMenu:hook_menu';
+    return '%self:hooks:hook_menu';
   }
 
   /**
