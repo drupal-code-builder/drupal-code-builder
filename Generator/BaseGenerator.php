@@ -407,33 +407,36 @@ abstract class BaseGenerator {
   }
 
   /**
-   * Returns this component's parent in the component tree.
+   * Defines this component's parent in the containment tree.
    *
-   * @return
-   *  One of the following:
-   *   - The ID of this component's parent in the tree.
-   *   - One of the following tokens to represent a parent component:
-   *     - '%root': Represents the root component.
-   *     - '%requester': Represents the component that requested this component
-   *        either via properties or requiredComponents().
-   *     - '%requester:PATH': Represents a path of local names from the
-   *       component that requested this component. The PATH may consist of a
-   *       single local name, or a series of local names separated by a ':'.
-   *       For example, '%requester:foo' gets the component 'foo' that was also
-   *       spawned by this component's spawner. '%requester:foo:bar' gets the
-   *       component spawned by the 'foo' component.
-   *     - '%self:PATH': Represents a path of local names from this component.
-   *     - '%nearest_root:PATH': Represents a path of local names from the
-   *       component's nearest requesting root.
-   *     - '%sibling:NAME': (deprecated) Represents one of the sibling
-   *       components, that is, a component that is also spawned by this
-   *       component's requester. The NAME value is the local name, used by the
-   *       requester in the list of components it spawns from both properties
-   *       and requests.
+   * This is called by the ComponentCollection when it assembles a tree of
+   * components by containment.
+   *
+   * @return string|NULL
+   *  A string that defines another component, using either a token, or a token
+   *  and a chain of local names from the component that the token represents.
+   *  The following patterns are allowed:
+   *   - '%root': Represents the root component.
+   *   - '%requester': Represents the component that requested this component
+   *      either via properties or requiredComponents().
+   *   - '%requester:PATH': Represents a path of local names from the
+   *     component that requested this component. The PATH may consist of a
+   *     single local name, or a series of local names separated by a ':'.
+   *     For example, '%requester:foo' gets the component 'foo' that was also
+   *     spawned by this component's spawner. '%requester:foo:bar' gets the
+   *     component spawned by the 'foo' component.
+   *   - '%self:PATH': Represents a path of local names from this component.
+   *   - '%nearest_root:PATH': Represents a path of local names from the
+   *     component's nearest requesting root.
+   *   - '%sibling:NAME': (deprecated) Represents one of the sibling
+   *     components, that is, a component that is also spawned by this
+   *     component's requester. The NAME value is the local name, used by the
+   *     requester in the list of components it spawns from both properties
+   *     and requests.
    *   - NULL if this component is either the base, or does not participate in
    *     the tree.
    *
-   * @see assembleComponentTree()
+   * @see ComponentCollection::assembleComponentTree()
    */
   function containingComponent() {
     return $this->component_data['containing_component'] ?? NULL;

@@ -279,6 +279,10 @@ class ComponentCollection implements \IteratorAggregate {
    *  component name, where each value is an array of the names of the child
    *  components. So for example, the list of children of component 'foo' is
    *  given by $tree['foo'].
+   *
+   * @throws \Exception
+   *  Throws an exception if the return value of containingComponent() for a
+   *  component is unrecognized as representing another component.
    */
   public function assembleContainmentTree() {
     // Lock the collection.
@@ -357,6 +361,9 @@ class ComponentCollection implements \IteratorAggregate {
         }
 
         $parent_name = $component_id;
+      }
+      else {
+        throw new \Exception("Unrecognized containing component token string '$parent_name' for component $id.");
       }
 
       assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
