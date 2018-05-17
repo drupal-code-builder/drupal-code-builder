@@ -333,10 +333,9 @@ abstract class BaseGenerator {
    */
   public function getComponentDataValue($name) {
     if (!isset($this->component_data[$name])) {
-      throw new \Exception(strtr("Property @name not found in data for @type component ID '@id'.", [
+      throw new \Exception(strtr("Property @name not found in data for @type.", [
         '@name' => $name,
         '@type' => get_class($this),
-        '@id' => $this->getUniqueID(),
       ]));
     }
 

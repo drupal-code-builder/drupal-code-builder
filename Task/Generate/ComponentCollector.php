@@ -217,14 +217,13 @@ class ComponentCollector {
       $this->root_component = $generator;
     }
 
-    $component_unique_id = $generator->getUniqueID();
-    $this->debug($chain, "instantiated name $name; type: $component_type; ID: $component_unique_id");
+    $this->debug($chain, "instantiated name $name; type: $component_type; ID");
 
     $existing_matching_component = $this->component_collection->getMatchingComponent($generator, $requesting_component);
     if ($existing_matching_component) {
       // There is a matching component already in the collection.
       // We determine whether our data needs to be merged in with it.
-      $this->debug($chain, "record has matching existing component name $name; type: $component_type; ID: $component_unique_id");
+      $this->debug($chain, "record has matching existing component name $name; type: $component_type");
 
       $differences_merged = $existing_matching_component->mergeComponentData($component_data);
 
@@ -232,7 +231,7 @@ class ComponentCollector {
         // There was nothing new in our component's data that needed to be
         // merged into the existing one. We give up on this current component,
         // as it's identical to one already in the collection.
-        $this->debug($chain, "bailing on name $name; type: $component_type; ID: $component_unique_id");
+        $this->debug($chain, "bailing on name $name; type: $component_type");
         array_pop($chain);
 
         $this->component_collection->addAliasedComponent($name, $existing_matching_component, $requesting_component);
