@@ -76,6 +76,17 @@ class ComponentCollection implements \IteratorAggregate {
   private $localNames = [];
 
   /**
+   * The list of request paths.
+   *
+   * An array whose keys are component unique IDs. Each item is a string
+   * representing the path of local names to that component from the root, with
+   * each name separated by '/'.
+   *
+   * @var array
+   */
+  private $requestPaths = [];
+
+  /**
    * The containment tree.
    *
    * A tree of parentage data for components, as an array keyed by the parent
@@ -129,6 +140,8 @@ class ComponentCollection implements \IteratorAggregate {
     // If this is the first component, it's the root.
     if (!isset($this->rootGeneratorId)) {
       $this->rootGeneratorId = $key;
+
+      $this->requestPaths[$key] = 'root';
     }
 
     // If this is *a* root, keep track of it.
@@ -148,6 +161,9 @@ class ComponentCollection implements \IteratorAggregate {
 
       // Add to the array of local names.
       $this->localNames[$requesting_component->getUniqueID()][$local_name] = $key;
+
+      // Add to the array of request paths.
+      $this->requestPaths[$key] = $this->requestPaths[$requesting_component->getUniqueID()] . '/' . $local_name;
     }
 
     $this->components[$key] = $component;
