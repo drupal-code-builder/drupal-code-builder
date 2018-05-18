@@ -170,7 +170,10 @@ class ComponentCollection implements \IteratorAggregate {
     if (!isset($this->rootGeneratorId)) {
       $this->rootGeneratorId = $key;
 
-      $this->requestPaths[$key] = 'root';
+      $request_path = 'root';
+
+      // Create the first item in the request paths array.
+      $this->requestPaths[$key] = $request_path;
     }
 
     // If this is *a* root, keep track of it.
@@ -179,6 +182,11 @@ class ComponentCollection implements \IteratorAggregate {
     }
 
     if ($requesting_component) {
+      $request_path = $this->requestPaths[$this->getComponentKey($requesting_component)] . '/' . $local_name;
+
+      // Add to the array of request paths.
+      $this->requestPaths[$key] = $request_path;
+
       // Add to the array of requesters.
       if (!isset($this->requesters[$key])) {
         // TODO: store multiple requesters?
@@ -191,9 +199,6 @@ class ComponentCollection implements \IteratorAggregate {
 
       // Add to the array of local names.
       $this->localNames[$this->getComponentKey($requesting_component)][$local_name] = $key;
-
-      // Add to the array of request paths.
-      $this->requestPaths[$key] = $this->requestPaths[$this->getComponentKey($requesting_component)] . '/' . $local_name;
     }
 
     // Add to the merge tags list.
