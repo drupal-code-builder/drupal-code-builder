@@ -67,6 +67,10 @@ class PHPFunction extends BaseGenerator {
         'internal' => TRUE,
         'default' => '%module.module',
       ],
+      // TODO: various things will take $this->name as being the function name!
+      'function_name' => [
+        'internal' => TRUE,
+      ],
       'docblock_inherit' => [
         'internal' => TRUE,
         'default' => FALSE,
