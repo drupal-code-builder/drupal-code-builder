@@ -420,20 +420,6 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
-   * Gets the containment tree.
-   *
-   * @return array
-   *   The tree assembled by assembleContainmentTree().
-   */
-  public function getContainmentTree() {
-    if (is_null($this->tree)) {
-      throw new \LogicException("Tree has not yet been assembled.");
-    }
-
-    return $this->tree;
-  }
-
-  /**
    * Gets a component's children in the tree.
    *
    * @param BaseGenerator $component
@@ -454,6 +440,20 @@ class ComponentCollection implements \IteratorAggregate {
     }
 
     return $return;
+  }
+
+  /**
+   * Gets the containment tree.
+   *
+   * @return array
+   *   The tree assembled by assembleContainmentTree().
+   */
+  private function getContainmentTree() {
+    if (is_null($this->tree)) {
+      throw new \LogicException("Tree has not yet been assembled.");
+    }
+
+    return $this->tree;
   }
 
   /**
