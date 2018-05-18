@@ -127,10 +127,7 @@ class PHPFunction extends BaseGenerator {
 
       // Add indent.
       if (!empty($this->component_data['body_indent'])) {
-        $padding = str_repeat(' ', $this->component_data['body_indent']);
-        $body = array_map(function($string) use ($padding) {
-          return empty($string) ? $string : "$padding$string";
-        }, $body);
+        $body = $this->indentCodeLines($body, $this->component_data['body_indent'] / 2);
       }
 
       $function_code = array_merge($function_code, $body);
