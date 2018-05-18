@@ -429,20 +429,6 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
-   * Gets the IDs of a component's children in the tree.
-   *
-   * @param string $component_id
-   *   The parent ID.
-   *
-   * @return string[]
-   *   The child IDs.
-   */
-  public function getContainmentTreeChildrenIds($component_id) {
-    $tree = $this->getContainmentTree();
-    return $tree[$component_id] ?? [];
-  }
-
-  /**
    * Gets a component's children in the tree.
    *
    * @param BaseGenerator $component
