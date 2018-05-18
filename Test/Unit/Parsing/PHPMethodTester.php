@@ -166,6 +166,38 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts a statement is a method call to the parent which assigns a value.
+   *
+   * @param int $index
+   *   The index of the statement in the method, starting at 0.
+   * @param string $assigned_variable
+   *   The name of the variable that should be assigned, without the '$'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertStatementIsParentCallAssignment($index, $assigned_variable, $message = NULL) {
+    $message = $message ?? "The method {$this->methodName} statement {$index} has a parent call that assigns the variable \${$assigned_variable}.";
+
+    $statements = $this->methodNode->getStmts();
+    $statement = $statements[$index];
+
+    Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($statement), $message);
+
+    Assert::assertObjectHasAttribute('var', $statement, $message);
+    Assert::assertObjectHasAttribute('name', $statement->var, $message);
+    Assert::assertEquals($assigned_variable, $statement->var->name, "The variable $assigned_variable is assigned by the parent call.");
+
+    Assert::assertObjectHasAttribute('expr', $statement, $message);
+    Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($statement->expr), $message);
+    Assert::assertObjectHasAttribute('class', $statement->expr, $message);
+    Assert::assertObjectHasAttribute('parts', $statement->expr->class, $message);
+    Assert::assertEquals('parent', $statement->expr->class->parts[0], $message);
+    Assert::assertEquals($this->methodName, $statement->expr->name, $message);
+
+    // TODO: check the method parameter names match the method call arguments.
+  }
+
+  /**
    * Asserts the method has the given line of code.
    *
    * @param string $code_line
