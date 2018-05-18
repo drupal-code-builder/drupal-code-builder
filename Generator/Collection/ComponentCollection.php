@@ -368,15 +368,6 @@ class ComponentCollection implements \IteratorAggregate {
 
         $parent_name = $component_id;
       }
-      elseif (substr($parent_name, 0, strlen('%sibling:')) == '%sibling:') {
-        // TODO: remove this functionality, replace with '%requester:FOO'.
-        $requester_id = $this->requesters[$id];
-        $sibling_local_name = substr($parent_name, strlen('%sibling:'));
-
-        assert(isset($this->localNames[$requester_id][$sibling_local_name]), "Failed to get containing component for $id, local name $sibling_local_name not found for ID $requester_id.");
-
-        $parent_name = $this->localNames[$requester_id][$sibling_local_name];
-      }
       elseif (substr($parent_name, 0, strlen('%self:')) == '%self:') {
         $path_string = substr($parent_name, strlen('%self:'));
         $path_pieces = explode(':', $path_string);

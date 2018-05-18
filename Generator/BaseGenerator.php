@@ -473,11 +473,6 @@ abstract class BaseGenerator {
    *   - '%self:PATH': Represents a path of local names from this component.
    *   - '%nearest_root:PATH': Represents a path of local names from the
    *     component's nearest requesting root.
-   *   - '%sibling:NAME': (deprecated) Represents one of the sibling
-   *     components, that is, a component that is also spawned by this
-   *     component's requester. The NAME value is the local name, used by the
-   *     requester in the list of components it spawns from both properties
-   *     and requests.
    *   - NULL if this component is either the base, or does not participate in
    *     the tree.
    *

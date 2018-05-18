@@ -166,7 +166,7 @@ class RouterItem extends BaseGenerator {
       );
       $components["{$controller_class_component_name}:content"] = [
         'component_type' => 'PHPMethod',
-        'containing_component' => "%sibling:{$controller_class_component_name}",
+        'containing_component' => "%requester:{$controller_class_component_name}",
         'declaration' => 'public function content()',
         'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
       ];
