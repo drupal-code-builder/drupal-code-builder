@@ -26,6 +26,11 @@ class FormBuilder extends PHPMethod {
 
     $function_code[] = $this->component_data['declaration'] . ' {';
 
+    // The function name for a form builder is not fixed: normal forms use
+    // form() but entity form handlers use buildForm().
+    $function_code[] = "  £{$this->name} = parent::form(£form, £form_state);";
+    $function_code[] = '';
+
     foreach ($children_contents as $child_item) {
       $content = $child_item['content'];
 
