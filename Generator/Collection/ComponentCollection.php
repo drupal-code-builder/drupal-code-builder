@@ -335,26 +335,26 @@ class ComponentCollection implements \IteratorAggregate {
 
     $this->tree = [];
     foreach ($this->components as $id => $component) {
-      $parent_name = $component->containingComponent();
+      $containing_component_token = $component->containingComponent();
 
-      if (empty($parent_name)) {
+      if (empty($containing_component_token)) {
         continue;
       }
 
       // Handle tokens.
-      if ($parent_name == '%root') {
+      if ($containing_component_token == '%root') {
         $parent_name = $this->rootGeneratorId;
       }
-      elseif ($parent_name == '%requester') {
+      elseif ($containing_component_token == '%requester') {
         // TODO: consider whether this might go wrong when a component is
         // requested multiple times. Unlikely, as it tends to be containers
         // that are re-requested.
         $parent_name = $this->requesters[$id];
       }
-      elseif (substr($parent_name, 0, strlen('%requester:')) == '%requester:') {
+      elseif (substr($containing_component_token, 0, strlen('%requester:')) == '%requester:') {
         $requester_id = $this->requesters[$id];
 
-        $path_string = substr($parent_name, strlen('%requester:'));
+        $path_string = substr($containing_component_token, strlen('%requester:'));
         $path_pieces = explode(':', $path_string);
 
         $component_id = $requester_id;
@@ -368,8 +368,8 @@ class ComponentCollection implements \IteratorAggregate {
 
         $parent_name = $component_id;
       }
-      elseif (substr($parent_name, 0, strlen('%self:')) == '%self:') {
-        $path_string = substr($parent_name, strlen('%self:'));
+      elseif (substr($containing_component_token, 0, strlen('%self:')) == '%self:') {
+        $path_string = substr($containing_component_token, strlen('%self:'));
         $path_pieces = explode(':', $path_string);
 
         $component_id = $id;
@@ -383,8 +383,8 @@ class ComponentCollection implements \IteratorAggregate {
 
         $parent_name = $component_id;
       }
-      elseif (substr($parent_name, 0, strlen('%nearest_root:')) == '%nearest_root:') {
-        $path_string = substr($parent_name, strlen('%nearest_root:'));
+      elseif (substr($containing_component_token, 0, strlen('%nearest_root:')) == '%nearest_root:') {
+        $path_string = substr($containing_component_token, strlen('%nearest_root:'));
         $path_pieces = explode(':', $path_string);
 
         $component_id = $this->requestRoots[$id];
@@ -399,7 +399,7 @@ class ComponentCollection implements \IteratorAggregate {
         $parent_name = $component_id;
       }
       else {
-        throw new \Exception("Unrecognized containing component token string '$parent_name' for component $id.");
+        throw new \Exception("Unrecognized containing component token string '$containing_component_token' for component $id.");
       }
 
       assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
