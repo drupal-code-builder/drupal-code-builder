@@ -26,7 +26,6 @@ class FileAssembler {
    */
   public function generateFiles($component_data, ComponentCollection $component_collection) {
     $component_list = $component_collection->getComponents();
-    $tree = $component_collection->getContainmentTree();
 
     // Let each file component in the tree gather data from its own children.
     $this->collectFileContents($component_collection);
@@ -80,9 +79,6 @@ class FileAssembler {
    *
    * @param $component_list
    *  The component list.
-   * @param $tree
-   *  An array of parentage data about components, as given by
-   *  assembleComponentTree().
    *
    * @return
    *  An array of file info, keyed by arbitrary file ID.
