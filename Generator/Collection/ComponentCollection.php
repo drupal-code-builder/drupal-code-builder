@@ -138,7 +138,9 @@ class ComponentCollection implements \IteratorAggregate {
    *   The unique key.
    */
   public function getComponentKey(BaseGenerator $component) {
-    return spl_object_id($component);
+    // TODO: Change this to the more succinct spl_object_id() once we drop
+    // support for PHP < 7.2.
+    return spl_object_hash($component);
   }
 
   /**
