@@ -23,7 +23,7 @@ class FormBuilderTester extends PHPMethodTester {
    *
    * @var array
    */
-  protected $formElements;
+  protected $formElements = [];
 
   /**
    * Construct a new FormBuilderTester.
