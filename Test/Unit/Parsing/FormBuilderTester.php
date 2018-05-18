@@ -37,16 +37,19 @@ class FormBuilderTester extends PHPMethodTester {
 
     // TODO: assert the form builder has the right parameters.
 
+    $this->assertStatementIsParentCallAssignment(0, 'form', "The form builder's first statement is a call to the parent.");
+
     $this->assertReturnsVariable('form', "The form builder returns the completed form.");
 
-    // Find the return statement.
+    // Get the form element statements.
     $statements = $this->methodNode->getStmts();
-    // We know the last statement is the return, so we can ignore it.
-    array_pop($statements);
+    // We know the first statement is the parent call, and the last is the
+    // return.
+    $form_element_statements = array_slice($statements, 1, -1);
 
     // Analyse each statement to build up information about the form element
     // it represents.
-    foreach ($statements as $index => $statement) {
+    foreach ($form_element_statements as $index => $statement) {
       $form_element_data = [
         'index' => $index,
       ];
