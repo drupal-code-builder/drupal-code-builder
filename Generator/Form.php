@@ -97,7 +97,7 @@ class Form extends PHPClassFileWithInjection {
         'code_file' => $this->name,
         'containing_component' => '%requester',
         'doxygen_first' => 'Form constructor.',
-        'declaration' => 'public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
+        'function_name' => 'buildForm',
         'body' => array(
           "£form['element'] = array(",
           "  '#type' => 'textfield',",

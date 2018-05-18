@@ -40,7 +40,7 @@ class EntityForm extends EntityHandler {
         // different entity type will not clash!
         'code_file' => $this->component_data['entity_type_id'],
         'docblock_inherit' => TRUE,
-        'declaration' => 'public function form(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
+        'function_name' => 'form',
         'body' => [
           '$form = parent::form($form, $form_state);',
           'return $form;',

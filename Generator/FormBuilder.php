@@ -12,6 +12,22 @@ class FormBuilder extends PHPFunction {
   /**
    * {@inheritdoc}
    */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    $data_definition['declaration']['process_default'] = TRUE;
+    $data_definition['declaration']['default'] = function($component_data) {
+      // TODO: different for Drupal 7: no 'public' (as function, not method)
+      // and no class typehint for the $form_state.
+      return "public function {$component_data['function_name']}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
+    };
+
+    return $data_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildComponentContents($children_contents) {
     // If there are no form elements, fall back to normal function generator
     // handling, which takes the body specified in the properties.
