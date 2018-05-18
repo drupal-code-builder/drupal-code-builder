@@ -49,9 +49,10 @@ class ComponentAdminSettings8Test extends TestBase {
     $method_tester->assertMethodDocblockHasInheritdoc();
     $method_tester->assertReturnsString('testmodule_settings_form');
 
-    $php_tester->assertHasMethod('buildForm');
+    $form_builder_tester = $php_tester->getMethodTester('buildForm')->getFormBuilderTester();
+    $form_builder_tester->assertElementCount(1);
+
     $php_tester->assertHasMethod('submitForm');
-    // TODO: check the methods.
 
     // Check the schema file.
     $config_schema_file = $files['config/schema/testmodule.schema.yml'];
