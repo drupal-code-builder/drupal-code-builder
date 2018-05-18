@@ -286,7 +286,37 @@ class PluginTypesCollector {
       $class_dicovery = new \ReflectionClass($discovery);
     }
 
-    $data['discovery'] = get_class($discovery);
+    $inner_discovery_class = get_class($discovery);
+
+    // See if the plugin type's discovery class inherits from one of the ones
+    // we handle.
+    $known_discovery_classes = [
+      'Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery',
+      'Drupal\Core\Plugin\Discovery\YamlDiscovery',
+      // We don't handle this type; only migrations use it. But we don't want
+      // to ascend the class hierarchy for this type as then we'll get
+      // YamlDiscovery and the analysis for that will fail.
+      'Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery',
+    ];
+
+    if (in_array($inner_discovery_class, $known_discovery_classes)) {
+      $data['discovery'] = $inner_discovery_class;
+    }
+    else {
+      $discovery_class = $inner_discovery_class;
+      while ($discovery_class = get_parent_class($discovery_class)) {
+        if (in_array($discovery_class, $known_discovery_classes)) {
+          $data['discovery'] = $discovery_class;
+          break;
+        }
+      }
+
+      // We didn't find a class we know in the parents: just set the inner
+      // discovery class.
+      if (!isset($data['discovery'])) {
+        $data['discovery'] = $inner_discovery_class;
+      }
+    }
 
     // Get more data from the service, depending on the discovery type of the
     // plugin.
