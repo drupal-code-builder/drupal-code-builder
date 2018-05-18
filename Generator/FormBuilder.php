@@ -6,10 +6,8 @@ namespace DrupalCodeBuilder\Generator;
  * Generator class for a form's builder method.
  *
  * This handles contained FormElement components to create the FormAPI array.
- *
- * TODO: to make this usable on D7, need to get rid of PHPMethod.
  */
-class FormBuilder extends PHPMethod {
+class FormBuilder extends PHPFunction {
 
   /**
    * {@inheritdoc}
