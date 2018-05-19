@@ -70,6 +70,8 @@ abstract class EntityTypeBase extends PHPClassFile {
           }
 
           $component_data['handler_form_default'] = 'custom';
+
+          $component_data['handler_list_builder'] = 'custom';
         },
       ],
       'interface_parents' => [

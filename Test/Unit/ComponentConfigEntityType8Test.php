@@ -285,11 +285,12 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertFileCount(9, $files);
+    $this->assertFileCount(10, $files);
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatForm.php", $files, "The files list has a form handler file.");
+    $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has a list builder handler file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
     $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
@@ -380,6 +381,12 @@ class ComponentConfigEntityType8Test extends TestBase {
     $form_builder_tester->assertElementType('id', 'machine_name');
     $form_builder_tester->assertElementType('label', 'textfield');
     $form_builder_tester->assertElementType('breed', 'textfield');
+
+    // Check the list builder file.
+    $list_builder_file = $files['src/Entity/Handler/KittyCatListBuilder.php'];
+
+    $php_tester = new PHPTester($list_builder_file);
+    $php_tester->assertHasMethods(['buildHeader', 'buildRow']);
   }
 
 }
