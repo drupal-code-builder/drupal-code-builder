@@ -71,6 +71,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatInterface']);
     $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
     // Test the entity annotation.
@@ -411,6 +412,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCatType');
     $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatTypeInterface']);
     $php_tester->assertHasNoMethods();
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();

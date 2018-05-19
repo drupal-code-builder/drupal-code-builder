@@ -64,6 +64,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
     $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatInterface']);
     $php_tester->assertHasNoMethods();
     $php_tester->assertClassHasProtectedProperty('breed', 'string', '');
     $php_tester->assertClassHasProtectedProperty('colour', 'string', '');

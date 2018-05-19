@@ -249,6 +249,13 @@ abstract class EntityTypeBase extends PHPClassFile {
       return "Provides the {$component_data['entity_type_label']} entity.";
     };
 
+    $data_definition['interfaces']['computed'] = TRUE;
+    $data_definition['interfaces']['default'] = function ($component_data) {
+      return [
+        $component_data['entity_interface_name'],
+      ];
+    };
+
     return $data_definition;
   }
 
