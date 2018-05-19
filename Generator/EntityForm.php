@@ -65,7 +65,7 @@ class EntityForm extends EntityHandler {
         // different entity type will not clash!
         'code_file' => $this->component_data['entity_type_id'],
         'docblock_inherit' => TRUE,
-        'declaration' => 'public function save(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
+        'declaration' => 'public function save(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [
           '$saved = parent::save($form, $form_state);',
           "£form_state->setRedirectUrl(£this->entity->toUrl('{$this->component_data['redirect_link_template']}'));",
