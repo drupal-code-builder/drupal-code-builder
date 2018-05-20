@@ -237,6 +237,16 @@ class ComponentConfigEntityType8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatListBuilder');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityListBuilder');
     $php_tester->assertClassDocBlockHasLine("Provides the list builder handler for the Kitty Cat entity.");
+    $php_tester->assertHasMethods(['buildHeader', 'buildRow']);
+
+    // TODO: add some more precise assertions for these.
+    $header_builder_tester = $php_tester->getMethodTester('buildHeader');
+    $header_builder_tester->assertHasLine("\$header['name'] = \$this->t('Name');");
+    $header_builder_tester->assertHasLine("return \$header + parent::buildHeader();");
+
+    $row_builder_tester = $php_tester->getMethodTester('buildRow');
+    $row_builder_tester->assertHasLine("\$row['name'] = \$entity->label();");
+    $row_builder_tester->assertHasLine("return \$row + parent::buildRow(\$entity);");
   }
 
   /**

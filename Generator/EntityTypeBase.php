@@ -372,6 +372,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'list_builder' => [
         'label' => 'list builder',
         'description' => "Provides the admin listing of entities of this type.",
+        'component_type' => 'EntityListBuilder',
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\EntityListBuilder',
       ],

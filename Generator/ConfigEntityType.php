@@ -109,6 +109,8 @@ class ConfigEntityType extends EntityTypeBase {
 
     $handler_types['storage']['base_class'] = '\Drupal\Core\Config\Entity\ConfigEntityStorage';
 
+    $handler_types['list_builder']['handler_properties']['entity_type_group'] = 'config';
+
     foreach (['form_default', 'form_add', 'form_edit'] as $form_handler_type) {
       // These get overridden in requiredComponents() if this is a bundle config
       // entity.

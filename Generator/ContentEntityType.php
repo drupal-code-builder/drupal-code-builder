@@ -190,6 +190,8 @@ class ContentEntityType extends EntityTypeBase {
 
     $handler_types['storage']['base_class'] = '\Drupal\Core\Entity\Sql\SqlContentEntityStorage';
 
+    $handler_types['list_builder']['handler_properties']['entity_type_group'] = 'content';
+
     foreach (['form_default', 'form_add', 'form_edit'] as $form_handler_type) {
       $handler_types[$form_handler_type]['base_class'] = '\Drupal\Core\Entity\ContentEntityForm';
 
