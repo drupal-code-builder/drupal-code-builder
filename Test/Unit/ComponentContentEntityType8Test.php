@@ -107,6 +107,8 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty cats');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'title');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'uuid'], 'uuid');
     $annotation_tester->assertNotHasProperty(['entity_keys', 'langcode']);
     $annotation_tester->assertNotHasProperty(['entity_keys', 'bundle']);
 
@@ -402,6 +404,8 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasTranslation('bundle_label');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'title');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'uuid'], 'uuid');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'bundle'], 'type');
     $annotation_tester->assertPropertyHasValue('bundle_entity_type', 'kitty_cat_type');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat_type.edit_form');

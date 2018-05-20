@@ -142,6 +142,8 @@ class ContentEntityType extends EntityTypeBase {
     $data_definition['entity_keys']['default'] = function($component_data) {
       $keys = [
         'id' => $component_data['entity_type_id'] . '_id',
+        'label' => 'title',
+        'uuid' => 'uuid',
       ];
 
       if (!empty($component_data['bundle_entity_type'])) {
