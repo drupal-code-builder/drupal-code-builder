@@ -14,13 +14,6 @@ class Form extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public function getUniqueID() {
-    return $this->component_data['root_component_name'] . '/' . $this->type . ':' . $this->component_data['form_id'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function componentDataDefinition() {
     $data_definition = array(
       'form_class_name' => array(

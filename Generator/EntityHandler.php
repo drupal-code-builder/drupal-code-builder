@@ -53,12 +53,4 @@ class EntityHandler extends PHPClassFile {
     return $data_definition;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getUniqueID() {
-    // Ensure this is unique across entity types.
-    return $this->component_data['root_component_name'] . '/' . $this->type . ':' . $this->component_data['entity_type_id'] . ':' . $this->component_data['handler_type'];
-  }
-
 }

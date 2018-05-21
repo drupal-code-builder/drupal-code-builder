@@ -83,10 +83,7 @@ abstract class BaseGenerator {
    * The request name of this generator.
    *
    * This is unique within the list of components spawned by this component's
-   * requester, but it might not be unique across all components. It's up to
-   * component classes to add to this in getUniqueID() to produce a unique ID.
-   *
-   * @see getUniqueID().
+   * requester, but it might not be unique across all components.
    */
   public $name;
 
@@ -274,22 +271,6 @@ abstract class BaseGenerator {
         'acquired' => TRUE,
       ],
     ];
-  }
-
-  /**
-   * Return a unique ID for this component.
-   *
-   * In most cases, it suffices to prefix the name with the component type;
-   * names will generally be unique within a type.
-   *
-   * @return
-   *  The unique ID
-   */
-  public function getUniqueID() {
-    return
-      $this->component_data['root_component_name'] . '/' .
-      $this->type . ':' .
-      $this->name;
   }
 
   /**

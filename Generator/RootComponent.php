@@ -54,20 +54,6 @@ abstract class RootComponent extends BaseGenerator {
   }
 
   /**
-   * Return a unique ID for this component.
-   *
-   * In most cases, it suffices to prefix the name with the component type;
-   * names will generally be unique within a type.
-   *
-   * @return
-   *  The unique ID
-   */
-  public function getUniqueID() {
-    // For root components, there is no requesting component.
-    return '/' . $this->type . ':' . $this->name;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function providedPropertiesMapping() {
