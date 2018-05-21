@@ -1064,6 +1064,8 @@ class ComponentContentEntityType8Test extends TestBase {
       'entity_keys',
       'links',
     ]);
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], "Drupal\test_module\Entity\Handler\KittyCatForm");
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'delete'], "Drupal\Core\Entity\ContentEntityDeleteForm");
     $annotation_tester->assertPropertyHasValue(['links', 'add-form'], "/kitty_cat/add");
     $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/kitty_cat/{kitty_cat}");
     $annotation_tester->assertPropertyHasValue(['links', 'collection'], "/admin/content/kitty_cat");

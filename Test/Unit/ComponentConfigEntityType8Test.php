@@ -305,6 +305,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
     $annotation_tester->assertPropertyHasValue(['handlers', 'route_provider', 'html'], 'Drupal\Core\Entity\Routing\AdminHtmlRouteProvider');
     $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\test_module\Entity\Handler\KittyCatForm', 'The entity type has a default form handler.');
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'delete'], "Drupal\Core\Entity\EntityDeleteForm");
 
     // Check the links are declared.
     $entity_class_file = $files['src/Entity/KittyCat.php'];

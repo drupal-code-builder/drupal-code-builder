@@ -71,6 +71,10 @@ abstract class EntityTypeBase extends PHPClassFile {
 
           $component_data['handler_form_default'] = 'custom';
 
+          // The UI option sets the 'delete-form' link template, so we need to
+          // set a form to handler it. The core form suffices.
+          $component_data['handler_form_delete'] = 'core';
+
           $component_data['handler_list_builder'] = 'custom';
         },
       ],
