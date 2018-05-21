@@ -89,8 +89,9 @@ class ReportHookData extends ReportHookDataFolder {
    *
    * @return
    *   An array keyed by hook group, whose items are in turn arrays keyed by
-   *   hook name, and whose items in turn are arrays with the following
-   *   properties:
+   *   hook name standardized to lowercase, and whose items in turn are arrays
+   *   with the following properties:
+   *    - 'name': The hook name in the original case.
    *    - 'type' One of 'hook' or 'callback'.
    *    - 'description' The first line from the hook definition's docblock.
    */
@@ -100,6 +101,7 @@ class ReportHookData extends ReportHookDataFolder {
     $return = array();
     foreach ($data as $hook_name => $hook_info) {
       $return[$hook_info['group']][$hook_name] = array(
+        'name' => $hook_info['name'],
         'description' => $hook_info['description'],
         'type' => $hook_info['type'],
         'core' => $hook_info['core'],
