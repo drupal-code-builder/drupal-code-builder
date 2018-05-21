@@ -62,8 +62,6 @@ class ConfigEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Config\Entity\ConfigEntityBase';
-
     $bundle_of_entity_properties = [
       'bundle_of_entity' => [
         'label' => 'Bundle of entity',
@@ -71,6 +69,17 @@ class ConfigEntityType extends EntityTypeBase {
       ],
     ];
     InsertArray::insertAfter($data_definition, 'entity_class_name', $bundle_of_entity_properties);
+
+    $data_definition['parent_class_name']['default'] = function($component_data) {
+      if (empty($component_data['bundle_of_entity'])) {
+        return '\Drupal\Core\Config\Entity\ConfigEntityBase';
+      }
+      else {
+        // Bundle entities need to use ConfigEntityBundleBase in order to clear
+        // caches and synchronize display entities.
+        return '\Drupal\Core\Config\Entity\ConfigEntityBundleBase';
+      }
+    };
 
     // Change the computed value for entity keys.
     $data_definition['entity_keys']['default'] = function($component_data) {

@@ -452,7 +452,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester = new PHPTester($bundle_entity_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCatType');
-    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBundleBase');
     $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatTypeInterface']);
     $php_tester->assertHasNoMethods();
 
@@ -1194,6 +1194,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
     $php_tester = new PHPTester($bundle_entity_class_file);
+    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBundleBase');
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertHasRootProperties([
