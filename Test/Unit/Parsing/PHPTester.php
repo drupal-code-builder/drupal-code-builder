@@ -1115,30 +1115,4 @@ class PHPTester {
     }
   }
 
-  /**
-   * Asserts that a statement has chained method calls.
-   *
-   * @param string[]
-   *   An array of expected method names.
-   * @param string $method_name
-   *   The name of the method to check.
-   * @param int $statement_index
-   *   The index of the statement to check.
-   */
-  public function assertStatementHasChainedMethodCalls($expected_calls, $method_name, $statement_index) {
-    $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
-
-    $method_call = $statement_node->expr;
-    while (isset($method_call->var)) {
-      $method_calls[] = $method_call->name;
-
-      $method_call = $method_call->var;
-    }
-
-    // Reverse the array, as we encounter them in reverse order.
-    $method_calls = array_reverse($method_calls);
-
-    Assert::assertEquals($expected_calls, $method_calls);
-  }
-
 }

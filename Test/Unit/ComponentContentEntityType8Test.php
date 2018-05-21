@@ -74,6 +74,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatInterface']);
     $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
+    // Test the chained method calls in baseFieldDefinitions().
+    $base_fields_definitions_tester = $php_tester->getMethodTester('baseFieldDefinitions');
+
     // Test the chained method calls for the title field.
     $expected_method_calls = [
       "setLabel",
@@ -83,7 +86,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'setDisplayConfigurable',
       'setDisplayConfigurable',
     ];
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 1);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(1, $expected_method_calls);
 
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
@@ -192,9 +195,12 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
     $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
-    // Test the chained method calls for the title field.
+    // Test the chained method calls in baseFieldDefinitions().
     // The first statement is the call to the parent; subsequent statements
     // should all be field creation.
+    $base_fields_definitions_tester = $php_tester->getMethodTester('baseFieldDefinitions');
+
+    // Test the chained method calls for the title field.
     $expected_method_calls = [
       "setLabel",
       "setRequired",
@@ -204,7 +210,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'setDisplayConfigurable',
       'setDisplayConfigurable',
     ];
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 1);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(1, $expected_method_calls);
 
     // Test the other fields.
     $expected_method_calls = [
@@ -212,8 +218,8 @@ class ComponentContentEntityType8Test extends TestBase {
       "setDescription",
       "setTranslatable",
     ];
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 2);
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 3);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(2, $expected_method_calls);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(3, $expected_method_calls);
 
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
@@ -294,9 +300,12 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
     $php_tester->assertHasMethods(['baseFieldDefinitions']);
 
-    // Test the chained method calls for the title field.
+    // Test the chained method calls in baseFieldDefinitions().
     // The first statement is the call to the parent; subsequent statements
     // should all be field creation.
+    $base_fields_definitions_tester = $php_tester->getMethodTester('baseFieldDefinitions');
+
+    // Test the chained method calls for the title field.
     $expected_method_calls = [
       "setLabel",
       "setRequired",
@@ -306,7 +315,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'setDisplayConfigurable',
       'setDisplayConfigurable',
     ];
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 1);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(1, $expected_method_calls);
 
     // Test the other fields.
     $expected_method_calls = [
@@ -314,8 +323,8 @@ class ComponentContentEntityType8Test extends TestBase {
       "setDescription",
       "setRevisionable",
     ];
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 2);
-    $php_tester->assertStatementHasChainedMethodCalls($expected_method_calls, 'baseFieldDefinitions', 3);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(2, $expected_method_calls);
+    $base_fields_definitions_tester->assertStatementHasChainedMethodCalls(3, $expected_method_calls);
 
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
