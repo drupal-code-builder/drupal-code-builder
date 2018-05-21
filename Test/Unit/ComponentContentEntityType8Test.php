@@ -981,7 +981,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $header_builder_tester->assertHasLine("return \$header + parent::buildHeader();");
 
     $row_builder_tester = $php_tester->getMethodTester('buildRow');
-    $row_builder_tester->assertHasLine("\$row['label'] = [");
+    $row_builder_tester->assertHasLine("\$row['label']['data'] = [");
     $row_builder_tester->assertHasLine("return \$row + parent::buildRow(\$entity);");
 
     $views_data_class_file = $files['src/Entity/Handler/KittyCatViewsData.php'];
@@ -1064,7 +1064,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'entity_keys',
       'links',
     ]);
-    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], "Drupal\test_module\Entity\Handler\KittyCatForm");
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\test_module\Entity\Handler\KittyCatForm');
     $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'delete'], "Drupal\Core\Entity\ContentEntityDeleteForm");
     $annotation_tester->assertPropertyHasValue(['links', 'add-form'], "/kitty_cat/add");
     $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/kitty_cat/{kitty_cat}");
