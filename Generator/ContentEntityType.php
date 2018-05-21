@@ -248,6 +248,37 @@ class ContentEntityType extends EntityTypeBase {
     // Calling the parent defines fields for entity keys.
     $method_body[] = '$fields = parent::baseFieldDefinitions($entity_type);';
     $method_body[] = '';
+
+    // The parent doesn't supply a label field, so the entity class has to.
+    $calls = [];
+
+    $method_body[] = "£fields['title'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')";
+    $title_field_calls = [
+      'setLabel' => "t('Title')",
+      'setRequired' => TRUE,
+    ];
+    if (!empty($this->component_data['revisionable'])) {
+      $title_field_calls['setRevisionable'] = TRUE;
+    }
+    if (!empty($this->component_data['translatable'])) {
+      $title_field_calls['setTranslatable'] = TRUE;
+    }
+    $title_field_calls += [
+      'setSetting' => ['max_length', 255],
+      'setDisplayOptions' => ['form', new \DrupalCodeBuilder\Generator\Render\FormAPIArrayRenderer([
+          'type' => 'string_textfield',
+          'weight' => -5,
+        ]),
+      ],
+      'setDisplayConfigurable' => ['form', TRUE],
+      'setDisplayConfigurable__1' => ['view', TRUE],
+    ];
+
+    $fluent_call_renderer = new \DrupalCodeBuilder\Generator\Render\FluentMethodCallRenderer($title_field_calls);
+    $call_lines = $fluent_call_renderer->render();
+    $method_body = array_merge($method_body, $call_lines);
+    $method_body[] = '';
+
     foreach ($this->component_data['base_fields'] as $base_field_data) {
       $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
 
