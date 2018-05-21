@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Generator\PHPFile;
 /**
  * Tests the PHP File generator class.
  */
-class ComponentPHPFile8Test extends TestBaseComponentGeneration {
+class ComponentPHPFile8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests the theme hook generator class.
  */
-class ComponentThemeHook8Test extends TestBaseComponentGeneration {
+class ComponentThemeHook8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

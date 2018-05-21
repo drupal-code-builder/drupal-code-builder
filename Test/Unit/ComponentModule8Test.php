@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests basic module generation.
  */
-class ComponentModule8Test extends TestBaseComponentGeneration {
+class ComponentModule8Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
