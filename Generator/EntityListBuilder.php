@@ -68,7 +68,7 @@ class EntityListBuilder extends EntityHandler {
     }
     else {
       // Content entities have a view page, so link to that.
-      $build_row_body[] = "£row['label'] = [";
+      $build_row_body[] = "£row['label']['data'] = [";
       $build_row_body[] = "  '#type' => 'link',";
       $build_row_body[] = "  '#title' => £entity->label(),";
       $build_row_body[] = "  '#url' => £entity->toUrl(),";
