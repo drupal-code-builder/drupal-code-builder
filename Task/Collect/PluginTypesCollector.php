@@ -10,6 +10,11 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 class PluginTypesCollector {
 
   /**
+   * The container builder helper.
+   */
+  protected $containerBuilderGetter;
+
+  /**
    * The method collector helper
    */
   protected $methodCollector;
@@ -35,6 +40,8 @@ class PluginTypesCollector {
    *
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
    *   The environment object.
+   * @param ContainerBuilderGetter $method_collector
+   *   The container builder helper.
    * @param MethodCollector $method_collector
    *   The method collector helper.
    * @param \DrupalCodeBuilder\Task\Collect\CodeAnalyser $code_analyser
@@ -42,10 +49,12 @@ class PluginTypesCollector {
    */
   public function __construct(
     EnvironmentInterface $environment,
+    ContainerBuilderGetter $container_builder_getter,
     MethodCollector $method_collector,
     CodeAnalyser $code_analyser
   ) {
     $this->environment = $environment;
+    $this->containerBuilderGetter = $container_builder_getter;
     $this->methodCollector = $method_collector;
     $this->codeAnalyser = $code_analyser;
   }
@@ -81,19 +90,29 @@ class PluginTypesCollector {
    *  managers.
    */
   protected function getPluginManagerServices() {
-    // Get the IDs of all services from the container.
-    $service_ids = \Drupal::getContainer()->getServiceIds();
-    //drush_print_r($service_ids);
+    $container_builder = $this->containerBuilderGetter->getContainerBuilder();
+
+    // Get the definitions of services from the container.
+    $definitions = $container_builder->getDefinitions();
 
     // Filter them down to the ones that are plugin managers.
-    // TODO: this omits some that don't conform to this pattern! Deal with
-    // these!
-    // See https://github.com/drupal-code-builder/drupal-code-builder/issues/24
-    $plugin_manager_service_ids = array_filter($service_ids, function($element) {
-      if (strpos($element, 'plugin.manager.') === 0) {
-        return TRUE;
+    $plugin_manager_service_ids = [];
+    foreach ($definitions as $service_id => $definition) {
+      // Skip any deprecated service.
+      if ($definition->isDeprecated()) {
+        continue;
       }
-    });
+
+      // Assume that any service whose name is of the form plugin.manager.FOO
+      // is a plugin type manager.
+      if (strpos($service_id, 'plugin.manager.') === 0) {
+        $plugin_manager_service_ids[] = $service_id;
+      }
+
+      // TODO: this omits some that don't conform to this pattern! Deal with
+      // these!
+      // See https://github.com/drupal-code-builder/drupal-code-builder/issues/24
+    }
 
     // Filter out a blacklist of known broken plugin types.
     $plugin_manager_service_ids = array_diff($plugin_manager_service_ids, [

@@ -306,6 +306,7 @@ class Collect8 extends Collect {
         case 'PluginTypesCollector':
           $helper = new $qualified_class(
             $this->environment,
+            $this->getHelper('ContainerBuilderGetter'),
             $this->getHelper('MethodCollector'),
             $this->getHelper('CodeAnalyser')
           );
