@@ -107,11 +107,22 @@ class PluginTypesCollector {
       // is a plugin type manager.
       if (strpos($service_id, 'plugin.manager.') === 0) {
         $plugin_manager_service_ids[] = $service_id;
+
+        continue;
       }
 
-      // TODO: this omits some that don't conform to this pattern! Deal with
-      // these!
-      // See https://github.com/drupal-code-builder/drupal-code-builder/issues/24
+      // Skip the entity type manager: these don't behave at all like normal
+      // plugins.
+      if ($service_id == 'entity_type.manager') {
+        continue;
+      }
+
+      // Find any plugin managers which don't conform to the pattern for the
+      // service name, but do inherit from the DefaultPluginManager class.
+      $service_class = $definition->getClass();
+      if (is_subclass_of($service_class, \Drupal\Core\Plugin\DefaultPluginManager::class)) {
+        $plugin_manager_service_ids[] = $service_id;
+      }
     }
 
     // Filter out a blacklist of known broken plugin types.
@@ -200,9 +211,16 @@ class PluginTypesCollector {
     // data to.
     $plugin_type_data = array();
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
-      // We identify plugin types by the part of the plugin manager service name
-      // that comes after 'plugin.manager.'.
-      $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
+      if (strpos($plugin_manager_service_id, 'plugin.manager.') === 0) {
+        // We identify plugin types where the service name follows the standard
+        // pattern by the part of the plugin manager service name that comes
+        // after 'plugin.manager.'.
+        $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
+      }
+      else {
+        // Non-standard service names often end in '.manager' or '_manager'.
+        $plugin_type_id = preg_replace('@.manager$@', '', $plugin_manager_service_id);
+      }
 
       // Get the class name for the service.
       // Babysit modules that don't define services properly!
