@@ -90,19 +90,19 @@ abstract class EntityTypeBase extends PHPClassFile {
           // Trim the namespace off the options, for UIs that show the keys,
           // such as Drush.
           $options = [];
-          foreach ($property_info['_long_options'] as $key => $text) {
-            $short_class_name = substr(strrchr($key, "\\"), 1);
-            $options[$short_class_name] = $text;
+          foreach ($property_info['_long_options'] as $key => $data) {
+            $options[$key] = $data['label'];
           }
           return $options;
         },
         'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $lookup = [];
-          foreach ($property_info['_long_options'] as $qualified_class_name => $text) {
-            $short_class_name = substr(strrchr($qualified_class_name, "\\"), 1);
-            $lookup[$qualified_class_name] = $short_class_name;
+          // Clear out the property value.
+          $component_data[$property_name] = [];
+
+          // Replace it with the full interface.
+          foreach ($value as $value_item) {
+            $component_data[$property_name][] = $property_info['_long_options'][$value_item]['interface'];
           }
-          $component_data[$property_name] = array_keys(array_intersect($lookup, $value));
         },
         // TODO: methods from this in the entity class!
         // TODO: use corresponding traits, eg EntityChangedTrait;
@@ -268,8 +268,10 @@ abstract class EntityTypeBase extends PHPClassFile {
    * Provides options for the interface_parents property's _long_options.
    *
    * @var array
-   *   An array whose keys are fully-qualified interace names and whose values
-   *   are descriptions.
+   *   An array whose keys are an arbitrary option key, and whose values are
+   *   arrays with:
+   *   - label: A description of the interface for the UI.
+   *   - interface: The fully-qualified interface name.
    */
   abstract protected static function interfaceParents();
 

@@ -222,8 +222,14 @@ class ContentEntityType extends EntityTypeBase {
    */
   protected static function interfaceParents() {
     return [
-      '\Drupal\Core\Entity\EntityChangedInterface' => 'EntityChangedInterface, for entities that store a timestamp for their last change',
-      '\Drupal\user\EntityOwnerInterface' => 'EntityOwnerInterface, for entities that have an owner',
+      'EntityChangedInterface' => [
+        'label' => 'EntityChangedInterface, for entities that store a timestamp for their last change',
+        'interface' => '\Drupal\Core\Entity\EntityChangedInterface',
+      ],
+      'EntityOwnerInterface' => [
+        'label' => 'EntityOwnerInterface, for entities that have an owner',
+        'interface' => '\Drupal\user\EntityOwnerInterface',
+      ],
       // EntityPublishedInterface? but this has its own base class.
       // EntityDescriptionInterface? but only used in core for config.
     ];

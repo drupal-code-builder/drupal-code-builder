@@ -99,7 +99,10 @@ class ConfigEntityType extends EntityTypeBase {
    */
   protected static function interfaceParents() {
     return [
-      'Drupal\Core\Entity\EntityWithPluginCollectionInterface' => 'EntityWithPluginCollectionInterface',
+      'EntityWithPluginCollectionInterface' => [
+        'label' => 'EntityWithPluginCollectionInterface',
+        'interface' => '\Drupal\Core\Entity\EntityWithPluginCollectionInterface',
+      ],
     ];
   }
 
