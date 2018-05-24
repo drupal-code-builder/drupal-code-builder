@@ -208,10 +208,19 @@ class PHPTester {
     // nodes we are interested in for subsequent assertions.
     $this->parser_nodes = [];
 
-    // Group the parser nodes by type, so subsequent assertions can easily
-    // find them.
-    $visitor = new class($this->parser_nodes) extends NodeVisitorAbstract {
+    // A recursive visitor that groups the parser nodes by type, so subsequent
+    // assertions can easily find them.
+    $recursive_visitor = new class($this->parser_nodes) extends NodeVisitorAbstract {
 
+      /**
+       * Constructor for the visitor.
+       *
+       * Receives the array of parser nodes from the outer PHPTester object by
+       * reference, so we can get data out of the visitor object.
+       *
+       * @param array $nodes
+       *   The PHPTester's array of parser nodes.
+       */
       public function __construct(&$nodes) {
         $this->nodes = &$nodes;
       }
@@ -244,7 +253,7 @@ class PHPTester {
     };
 
     $traverser = new NodeTraverser();
-    $traverser->addVisitor($visitor);
+    $traverser->addVisitor($recursive_visitor);
 
     $ast = $traverser->traverse($ast);
   }

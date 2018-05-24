@@ -14,7 +14,7 @@ class ParserPHPTest extends TestCase {
   /**
    * Tests the assertHasClass() assertion.
    */
-  public function testAssertClass() {
+  public function testAssertClassAssertion() {
     $php = <<<EOT
 <?php
 
