@@ -12,6 +12,49 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 class ParserPHPTest extends TestCase {
 
   /**
+   * Tests the assertIsProcedural() assertion.
+   */
+  public function testAssertIsProceduralAssertion() {
+    $php_procedural = <<<EOT
+<?php
+
+use Some\Other\Space\Namespaced;
+use Yet\Another\Space\Irrelevant;
+
+function foo() {
+
+}
+
+function bar() {
+
+}
+
+EOT;
+
+    $php_non_procedural = <<<EOT
+<?php
+
+namespace Some\Space\Namespaced;
+
+use Some\Other\Space\Namespaced;
+use Yet\Another\Space\Irrelevant;
+
+class Foo implements Plain, WithSpace {
+
+}
+
+EOT;
+
+    $php_tester = new PHPTester($php_procedural);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertIsProcedural');
+
+    $php_tester = new PHPTester($php_non_procedural);
+
+    $this->assertAssertion(FALSE, $php_tester, 'assertIsProcedural');
+  }
+
+  /**
    * Tests the assertHasClass() assertion.
    */
   public function testAssertClassAssertion() {
@@ -127,6 +170,33 @@ EOT;
       ],
       */
     ];
+  }
+
+  /**
+   * Tests the assertHasFunction() assertion.
+   */
+  public function testAssertHasFunctionAssertion() {
+    $php = <<<'EOT'
+<?php
+
+use Some\Other\Space\Namespaced;
+use Yet\Another\Space\Irrelevant;
+
+function foo($param) {
+
+}
+
+function bar() {
+
+}
+
+EOT;
+
+    $php_tester = new PHPTester($php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasFunction', 'foo');
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasFunction', 'bar');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasFunction', 'notHere');
   }
 
   /**
