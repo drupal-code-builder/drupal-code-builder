@@ -38,9 +38,6 @@ class ComponentContentEntityType8Test extends TestBase {
           'entity_type_id' => 'kitty_cat',
           'fieldable' => TRUE,
           'admin_permission' => TRUE,
-          'interface_parents' => [
-            'EntityOwnerInterface',
-          ],
           'handler_list_builder' => 'core',
           'base_fields' => [
             0 => [
@@ -58,6 +55,12 @@ class ComponentContentEntityType8Test extends TestBase {
     );
 
     $files = $this->generateModuleFiles($module_data);
+
+    $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
+    $php_tester = new PHPTester($entity_interface_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+    $php_tester->assertInterfaceHasParents(['Drupal\Core\Entity\ContentEntityInterface']);
 
     $this->assertCount(4, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
@@ -131,6 +134,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester = new PHPTester($entity_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+    $php_tester->assertInterfaceHasParents(['Drupal\Core\Entity\ContentEntityInterface']);
 
     // Check the .permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
@@ -139,6 +143,76 @@ class ComponentContentEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
     $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
+  }
+
+  /**
+   * Tests the parent interfaces.
+   *
+   * This covers the different combinations of options.
+   *
+   * @dataProvider providerContentEntityTypeInterfaceOptions
+   */
+  public function testContentEntityTypeInterfaceOptions($interface_option, $expected_parent_interfaces) {
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'interface_parents' => $interface_option
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
+
+    $php_tester = new PHPTester($entity_interface_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+    $php_tester->assertInterfaceHasParents($expected_parent_interfaces);
+  }
+
+  /**
+   * Data provider for testContentEntityTypeInterfaceOptions.
+   */
+  public function providerContentEntityTypeInterfaceOptions() {
+    return [
+      'empty' => [
+        // Option value.
+        [],
+        // Parent interfaces.
+        [
+          'Drupal\Core\Entity\ContentEntityInterface'
+        ],
+      ],
+      'owner' => [
+        ['EntityOwnerInterface'],
+        [
+          'Drupal\Core\Entity\ContentEntityInterface',
+          'Drupal\user\EntityOwnerInterface',
+        ],
+      ],
+      'changed' => [
+        ['EntityChangedInterface'],
+        [
+          'Drupal\Core\Entity\ContentEntityInterface',
+          'Drupal\Core\Entity\EntityChangedInterface',
+        ],
+      ],
+      'owner + changed' => [
+        ['EntityOwnerInterface', 'EntityChangedInterface'],
+        [
+          'Drupal\Core\Entity\ContentEntityInterface',
+          'Drupal\user\EntityOwnerInterface',
+          'Drupal\Core\Entity\EntityChangedInterface',
+        ],
+      ],
+    ];
   }
 
   /**
