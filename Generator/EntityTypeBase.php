@@ -102,8 +102,7 @@ abstract class EntityTypeBase extends PHPClassFile {
             $short_class_name = substr(strrchr($qualified_class_name, "\\"), 1);
             $lookup[$qualified_class_name] = $short_class_name;
           }
-          // TODO: DRY: prevent repetition of property name!
-          $component_data['interface_parents'] = array_keys(array_intersect($lookup, $value));
+          $component_data[$property_name] = array_keys(array_intersect($lookup, $value));
         },
         // TODO: methods from this in the entity class!
         // TODO: use corresponding traits, eg EntityChangedTrait;
