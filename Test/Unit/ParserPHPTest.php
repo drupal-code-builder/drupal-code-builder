@@ -12,6 +12,32 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 class ParserPHPTest extends TestCase {
 
   /**
+   * Tests the assertHasClass() assertion.
+   */
+  public function testAssertClass() {
+    $php = <<<EOT
+<?php
+
+namespace Some\Space\Namespaced;
+
+use Some\Other\Space\Namespaced;
+use Yet\Another\Space\Irrelevant;
+
+class Foo implements Plain, WithSpace {
+
+}
+
+EOT;
+
+    $php_tester = new PHPTester($php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasClass', 'Some\Space\Namespaced\Foo');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasClass', 'Some\Space\Namespaced\WrongClass');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasClass', 'Some\Space\WrongNamespace\Foo');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasClass', 'Some\Space\Namespaced\WithSpace');
+  }
+
+  /**
    * Tests the assertClassHasInterfaces() assertion.
    *
    * @dataProvider providerAssertClassInterfaces
