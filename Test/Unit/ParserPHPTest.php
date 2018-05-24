@@ -34,33 +34,8 @@ EOT;
 
     $expected_interfaces_string = implode(', ', $expected_interfaces);
 
-    try {
-      $php_tester->assertClassHasInterfaces($expected_interfaces);
-      // Assertion passed.
-      if (!$pass_has) {
-        $this->fail("assertClassHasInterfaces() should fail with " . $expected_interfaces_string);
-      }
-    }
-    catch (ExpectationFailedException $e) {
-      // Assertion failed.
-      if ($pass_has) {
-        $this->fail("assertClassHasInterfaces() should pass with " . $expected_interfaces_string);
-      }
-    }
-
-    try {
-      $php_tester->assertClassHasNotInterfaces($expected_interfaces);
-      // Assertion passed.
-      if (!$pass_has_not) {
-        $this->fail("assertClassHasNotInterfaces() should fail with " . $expected_interfaces_string);
-      }
-    }
-    catch (ExpectationFailedException $e) {
-      // Assertion failed.
-      if ($pass_has_not) {
-        $this->fail("assertClassHasNotInterfaces() should pass with " . $expected_interfaces_string);
-      }
-    }
+    $this->assertAssertion($pass_has, $php_tester, 'assertClassHasInterfaces', $expected_interfaces);
+    $this->assertAssertion($pass_has_not, $php_tester, 'assertClassHasNotInterfaces', $expected_interfaces);
   }
 
   /**
@@ -126,6 +101,39 @@ EOT;
       ],
       */
     ];
+  }
+
+  /**
+   * Helper for tests that test custom assertions.
+   *
+   * @param bool $pass
+   *   Whether the assertion should pass with the given parameters: TRUE if it
+   *   should pass, FALSE if it should fail.
+   * @param object $php_tester
+   *   The PHP tester, on which to call the assertion method.
+   * @param string $assertion_name
+   *   The name of the assertion method. It is expected to be on the given
+   *   object.
+   * @param mixed ...$assertion_parameters
+   *   Remaining parameters are passed to the assertion method.
+   */
+  protected function assertAssertion($pass, $php_tester, $assertion_name, ...$assertion_parameters) {
+    $message_parameters = print_r($assertion_parameters, TRUE);
+
+    try {
+      $php_tester->$assertion_name(...$assertion_parameters);
+
+      // We get here if the assertion passed.
+      if (!$pass) {
+        $this->fail("The assertion {$assertion_name}() should fail with the following parameters: {$message_parameters}");
+      }
+    }
+    catch (ExpectationFailedException $e) {
+      // We get here if the assertion failed.
+      if ($pass) {
+        $this->fail("The assertion {$assertion_name}() should pass with the following parameters: {$message_parameters}");
+      }
+    }
   }
 
 }
