@@ -394,6 +394,57 @@ class PHPTester {
   }
 
   /**
+   * Asserts that the defined interface has the expected parents.
+   *
+   * @param string[] $expected_parent_interface_full_names
+   *   An array of fully-qualified names of the parent interfaces, without the
+   *   leading '\'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertInterfaceHasParents($expected_parent_interface_full_names, $message = NULL) {
+    // There will be only one interface.
+    $interface_node = reset($this->parser_nodes['interfaces']);
+    $interface_name = $interface_node->name;
+
+    $message_parent_interfaces = implode(', ', $expected_parent_interface_full_names);
+    $message = $message ?? "The interface {$interface_name} inherits from the interfaces {$message_parent_interfaces}.";
+
+    foreach ($interface_node->extends as $parent_name_node) {
+      $actual_parent_interface_full_names[] = $this->resolveImportedClassLike($parent_name_node->parts[0]);
+    }
+
+    // Sort both arrays, as PHPUnit does not have an order-irrelevant array
+    // comparison assertion :(
+    sort($expected_parent_interface_full_names);
+    sort($actual_parent_interface_full_names);
+
+    Assert::assertEquals($expected_parent_interface_full_names, $actual_parent_interface_full_names, $message);
+  }
+
+  /**
+   * Gets the fully-qualified name for an imported class-like.
+   *
+   * WARNING: This will not handle aliased class imports! But none of our
+   * generated code under test uses these anyway.
+   *
+   * @param string $name
+   *   The short name for a class, interface, or trait that is imported.
+   *
+   * @return string
+   *   The full name, without the leading '\'.
+   */
+  protected function resolveImportedClassLike($name) {
+    foreach ($this->parser_nodes['imports'] as $use_node) {
+      if ($use_node->uses[0]->name->getLast() === $name) {
+        return $use_node->uses[0]->name->toString();
+      }
+    }
+
+    Assert::fail("An import statement was found for the short name {$name}.");
+  }
+
+  /**
    * Asserts the parsed code's class extends the given parent class.
    *
    * @param string $class_name
