@@ -309,7 +309,7 @@ class ContentEntityType extends EntityTypeBase {
     $method_body[] = 'return $fields;';
 
     $components["baseFieldDefinitions"] = [
-      'component_type' => 'PHPMethod',
+      'component_type' => 'PHPFunction',
       'containing_component' => '%requester',
       'declaration' => 'public static function baseFieldDefinitions(\Drupal\Core\Entity\EntityTypeInterface $entity_type)',
       'doxygen_first' => '{@inheritdoc}',

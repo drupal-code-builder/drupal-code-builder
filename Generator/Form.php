@@ -75,7 +75,7 @@ class Form extends PHPClassFileWithInjection {
     $components = array(
       // Request the form functions.
       'getFormId' => array(
-        'component_type' => 'PHPMethod',
+        'component_type' => 'PHPFunction',
         'code_file' => $this->name,
         'containing_component' => '%requester',
         'doxygen_first' => '{@inheritdoc}',
@@ -105,7 +105,7 @@ class Form extends PHPClassFileWithInjection {
         'body_indent' => 2,
       ),
       'submitForm' => array(
-        'component_type' => 'PHPMethod',
+        'component_type' => 'PHPFunction',
         'code_file' => $this->name,
         'containing_component' => '%requester',
         'doxygen_first' => 'Form submission handler.',

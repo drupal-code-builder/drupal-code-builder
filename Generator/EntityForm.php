@@ -47,7 +47,7 @@ class EntityForm extends EntityHandler {
         ],
       ),
       'submitForm' => array(
-        'component_type' => 'PHPMethod',
+        'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
         // Quick hack! This needs to be set so that another form builder for a
         // different entity type will not clash!
@@ -59,7 +59,7 @@ class EntityForm extends EntityHandler {
         ],
       ),
       'save' => [
-        'component_type' => 'PHPMethod',
+        'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
         // Quick hack! This needs to be set so that another form builder for a
         // different entity type will not clash!

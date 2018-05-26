@@ -131,7 +131,7 @@ class PluginType extends BaseGenerator {
     // set a constructor method generator to be contained by a Service.
     /*
     $components['__construct'] = array(
-      'component_type' => 'PHPMethod',
+      'component_type' => 'PHPFunction',
       'code_file' => $this->component_data['annotation_class'] . 'Manager',
       // TODO: brittle. Find a better way!
       // Use references to the array?
