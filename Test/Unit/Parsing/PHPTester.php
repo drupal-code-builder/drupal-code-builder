@@ -965,7 +965,11 @@ class PHPTester {
     $method_names_string = implode(", ", $method_names);
     $message = $message ?? "The file contains the methods {$method_names_string}.";
 
-    Assert::assertArraySubset($method_names, array_keys($this->parser_nodes['methods']), $message);
+    // Can't use assertArraySubset() on numeric arrays: see
+    // https://github.com/sebastianbergmann/phpunit/issues/2069
+    foreach ($method_names as $method_name) {
+      $this->assertHasMethod($method_name, $message);
+    }
   }
 
   /**
