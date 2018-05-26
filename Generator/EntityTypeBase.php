@@ -95,15 +95,6 @@ abstract class EntityTypeBase extends PHPClassFile {
           }
           return $options;
         },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          // Clear out the property value.
-          $component_data[$property_name] = [];
-
-          // Replace it with the full interface.
-          foreach ($value as $value_item) {
-            $component_data[$property_name][] = $property_info['_long_options'][$value_item]['interface'];
-          }
-        },
         // TODO: methods from this in the entity class!
         // TODO: use corresponding traits, eg EntityChangedTrait;
       ],
@@ -394,6 +385,16 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     //dump($this->component_data);
 
+    // Assemble the list of parents for the entity's interface.
+    // We convert the short option to the full interface at the last minute,
+    // rather than in the property processing callback, for better DX in other
+    // places that need to check which interfaces are in use.
+    $interface_parents[] = $this->interfaceBasicParent();
+    $interface_parents_options_definition = $this->interfaceParents();
+    foreach ($this->component_data['interface_parents'] as $value_item) {
+      $interface_parents[] = $interface_parents_options_definition[$value_item]['interface'];
+    }
+
     $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
       'relative_class_name' => [
@@ -401,11 +402,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         $this->component_data['entity_interface_name'],
       ],
       'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
-      'parent_interface_names' => array_merge([
-          $this->interfaceBasicParent(),
-        ],
-        $this->component_data['interface_parents']
-      ),
+      'parent_interface_names' => $interface_parents,
     ];
 
     // Handlers.
