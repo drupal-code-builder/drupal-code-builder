@@ -76,15 +76,22 @@ class PHPFunction extends BaseGenerator {
         'default' => FALSE,
         'processing' => function($value, &$component_data, $property_name, &$property_info) {
           if ($value) {
-            $component_data['doxygen_first'] = '{@inheritdoc}';
+            $component_data['function_docblock_lines'] = ['{@inheritdoc}'];
           }
         },
       ],
-      // The text of the first line of doxygen.
-      // TODO: deprecate and add a docblock_lines property instead.
+      // Deprecated: use function_docblock_lines instead.
       'doxygen_first' => [
         'internal' => TRUE,
         'default' => 'TODO: write function documentation.',
+      ],
+      // Lines for the class docblock.
+      // If there is more than one line, a blank link is inserted automatically
+      // after the first one.
+      'function_docblock_lines' => [
+        'format' => 'array',
+        'internal' => TRUE,
+        // No default, as most generators don't use this yet.
       ],
       'declaration' => [
         'internal' => TRUE,
@@ -104,11 +111,36 @@ class PHPFunction extends BaseGenerator {
   }
 
   /**
+   * Gets the bare lines to format as the docblock.
+   *
+   * @return string[]
+   *   An array of lines.
+   */
+  protected function getFunctionDocBlockLines() {
+    $lines = [];
+
+    if (!empty($this->component_data['function_docblock_lines'])) {
+      $lines = $this->component_data['function_docblock_lines'];
+
+      if (count($lines) > 1) {
+        // If there is more than one line, splice in a blank line after the
+        // first one.
+        array_splice($lines, 1, 0, '');
+      }
+    }
+    elseif (!empty($this->component_data['doxygen_first'])) {
+      $lines[] = $this->component_data['doxygen_first'];
+    }
+
+    return $lines;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
     $function_code = array();
-    $function_code = array_merge($function_code, $this->docBlock($this->component_data['doxygen_first']));
+    $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
     $declaration = str_replace('£', '$', $this->component_data['declaration']);
 
