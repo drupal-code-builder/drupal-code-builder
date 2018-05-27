@@ -242,6 +242,9 @@ class PHPTester {
           case \PhpParser\Node\Stmt\Property::class:
             $this->nodes['properties'][$node->props[0]->name] = $node;
             break;
+          case \PhpParser\Node\Stmt\TraitUse::class:
+            $this->nodes['traits'][$node->traits[0]->parts[0]] = $node;
+            break;
           case \PhpParser\Node\Stmt\Function_::class:
             $this->nodes['functions'][$node->name] = $node;
             break;
@@ -509,6 +512,39 @@ class PHPTester {
 
       $this->assertImportsClassLike($interface_parts);
     }
+  }
+
+  /**
+   * Asserts that the parsed class uses the given traits.
+   *
+   * @param string[] $expected_trait_full_names
+   *   An array of fully-qualified trait names, without the leading '\'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassHasTraits($expected_trait_full_names, $message = NULL) {
+    if (empty($expected_trait_full_names)) {
+      $message = $message ?? "The class does not use any traits.";
+
+      Assert::assertArrayNotHasKey('traits', $this->parser_nodes, $message);
+
+      return;
+    }
+
+    $message_traits = implode(', ', $expected_trait_full_names);
+    $message = $message ?? "The class uses the traits {$message_traits}.";
+
+    $actual_trait_full_names = [];
+    foreach ($this->parser_nodes['traits'] as $trait_node) {
+      $actual_trait_full_names[] = $this->resolveImportedClassLike($trait_node->traits[0]->parts[0]);
+    }
+
+    // Sort both arrays, as PHPUnit does not have an order-irrelevant array
+    // comparison assertion :(
+    sort($expected_trait_full_names);
+    sort($actual_trait_full_names);
+
+    Assert::assertEquals($expected_trait_full_names, $actual_trait_full_names, $message);
   }
 
   /**
