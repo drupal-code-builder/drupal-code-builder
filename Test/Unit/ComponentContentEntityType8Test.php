@@ -152,7 +152,12 @@ class ComponentContentEntityType8Test extends TestBase {
    *
    * @dataProvider providerContentEntityTypeInterfaceOptions
    */
-  public function testContentEntityTypeInterfaceOptions($interface_option, $expected_parent_interfaces) {
+  public function testContentEntityTypeInterfaceOptions(
+    $interface_option,
+    $expected_parent_interfaces,
+    $expected_extra_base_fields = [],
+    $expected_extra_methods = []
+  ) {
     $module_name = 'test_module';
     $module_data = array(
       'base' => 'module',
@@ -175,6 +180,26 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
     $php_tester->assertInterfaceHasParents($expected_parent_interfaces);
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+
+    $php_tester = new PHPTester($entity_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+
+    if ($expected_extra_base_fields) {
+      $base_fields_tester = $php_tester->getMethodTester('baseFieldDefinitions');
+      foreach ($expected_extra_base_fields as $base_field => $type) {
+        // TODO: improve this assertion by adding something that checks the
+        // parser nodes more precisely.
+        $base_fields_tester->assertHasLine("\$fields['{$base_field}'] = BaseFieldDefinition::create('{$type}')");
+      }
+    }
+
+    if ($expected_extra_methods) {
+      $php_tester->assertHasMethods($expected_extra_methods);
+    }
   }
 
   /**
@@ -195,6 +220,14 @@ class ComponentContentEntityType8Test extends TestBase {
         [
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\user\EntityOwnerInterface',
+        ],
+        // Additional base fields.
+        [
+          'uid' => 'entity_reference',
+        ],
+        // Additional methods the entity class should have.
+        [
+          'getCurrentUserId',
         ],
       ],
       'changed' => [
@@ -233,9 +266,6 @@ class ComponentContentEntityType8Test extends TestBase {
           'fieldable' => TRUE,
           'translatable' => TRUE,
           'admin_permission' => TRUE,
-          'interface_parents' => [
-            'EntityOwnerInterface',
-          ],
           'handler_list_builder' => 'core',
           'base_fields' => [
             0 => [
@@ -338,9 +368,6 @@ class ComponentContentEntityType8Test extends TestBase {
           'fieldable' => TRUE,
           'revisionable' => TRUE,
           'admin_permission' => TRUE,
-          'interface_parents' => [
-            'EntityOwnerInterface',
-          ],
           'handler_list_builder' => 'core',
           'base_fields' => [
             0 => [

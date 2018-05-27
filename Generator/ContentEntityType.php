@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
 
@@ -158,6 +159,10 @@ class ContentEntityType extends EntityTypeBase {
         $keys['langcode'] = 'langcode';
       }
 
+      if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
+        $keys['uid'] = 'uid';
+      }
+
       return $keys;
     };
 
@@ -248,6 +253,9 @@ class ContentEntityType extends EntityTypeBase {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
+    $use_revisionable = !empty($this->component_data['revisionable']);
+    $use_translatable = !empty($this->component_data['translatable']);
+
     //dump($this->component_data);
 
     $method_body = [];
@@ -285,6 +293,43 @@ class ContentEntityType extends EntityTypeBase {
     $method_body = array_merge($method_body, $call_lines);
     $method_body[] = '';
 
+    // Add a uid field if the entities have an owner.
+    if (in_array('EntityOwnerInterface', $this->component_data['interface_parents'])) {
+      $method_body[] = "£fields['uid'] = \Drupal\Core\Field\BaseFieldDefinition::create('entity_reference')";
+      $uid_field_calls = new FluentMethodCall;
+      $uid_field_calls
+        ->setLabel(FluentMethodCall::t('Authored by'))
+        ->setDescription(FluentMethodCall::t('The user ID of the author.'));
+      if ($use_revisionable) {
+        $uid_field_calls->setRevisionable(TRUE);
+      }
+      if ($use_translatable) {
+        $uid_field_calls->setTranslatable(TRUE);
+      }
+      $uid_field_calls->setSetting('target_type', 'user')
+        ->setDefaultValueCallback(FluentMethodCall::code("static::class . '::getCurrentUserId'"))
+        ->setDisplayOptions('form', [
+          'type' => 'entity_reference_autocomplete',
+          'weight' => 5,
+          'settings' => [
+            'match_operator' => 'CONTAINS',
+            'size' => '60',
+            'autocomplete_type' => 'tags',
+            'placeholder' => '',
+          ],
+        ])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayOptions('view', [
+          'label' => 'hidden',
+          'type' => 'author',
+          'weight' => 0,
+        ])
+        ->setDisplayConfigurable('view', TRUE);
+      $call_lines = $uid_field_calls->getCodeLines();
+      $method_body = array_merge($method_body, $call_lines);
+      $method_body[] = '';
+    }
+
     foreach ($this->component_data['base_fields'] as $base_field_data) {
       $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
 
@@ -315,6 +360,26 @@ class ContentEntityType extends EntityTypeBase {
       'doxygen_first' => '{@inheritdoc}',
       'body' => $method_body,
     ];
+
+    // The uid field annoyingly need a default value callback that's just
+    // boilerplate. See https://www.drupal.org/project/drupal/issues/2975503.
+    if (in_array('EntityOwnerInterface', $this->component_data['interface_parents'])) {
+      $components["getCurrentUserId"] = [
+        'component_type' => 'PHPFunction',
+        'containing_component' => '%requester',
+        'declaration' => 'public static function getCurrentUserId()',
+        'function_docblock_lines' => [
+          "Default value callback for 'uid' base field definition.",
+          "@see ::baseFieldDefinitions()",
+          "",
+          "@return array",
+          "  An array of default values.",
+        ],
+        'body' => [
+          "return [\Drupal::currentUser()->id()];",
+        ],
+      ];
+    }
 
     // TODO: other methods!
 
