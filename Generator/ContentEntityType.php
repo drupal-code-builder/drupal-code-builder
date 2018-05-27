@@ -230,6 +230,7 @@ class ContentEntityType extends EntityTypeBase {
       'EntityChangedInterface' => [
         'label' => 'EntityChangedInterface, for entities that store a timestamp for their last change',
         'interface' => '\Drupal\Core\Entity\EntityChangedInterface',
+        'trait' => '\Drupal\Core\Entity\EntityChangedTrait',
       ],
       'EntityOwnerInterface' => [
         'label' => 'EntityOwnerInterface, for entities that have an owner',

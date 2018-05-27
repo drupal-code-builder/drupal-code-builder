@@ -155,6 +155,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testContentEntityTypeInterfaceOptions(
     $interface_option,
     $expected_parent_interfaces,
+    $expected_traits = [],
     $expected_extra_base_fields = [],
     $expected_extra_methods = []
   ) {
@@ -187,6 +188,8 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
+
+    $php_tester->assertClassHasTraits($expected_traits);
 
     if ($expected_extra_base_fields) {
       $base_fields_tester = $php_tester->getMethodTester('baseFieldDefinitions');
@@ -221,6 +224,8 @@ class ComponentContentEntityType8Test extends TestBase {
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\user\EntityOwnerInterface',
         ],
+        // Additional traits.
+        [],
         // Additional base fields.
         [
           'uid' => 'entity_reference',
@@ -236,6 +241,10 @@ class ComponentContentEntityType8Test extends TestBase {
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\Core\Entity\EntityChangedInterface',
         ],
+        // Additional traits.
+        [
+          'Drupal\Core\Entity\EntityChangedTrait',
+        ],
       ],
       'owner + changed' => [
         ['EntityOwnerInterface', 'EntityChangedInterface'],
@@ -243,6 +252,10 @@ class ComponentContentEntityType8Test extends TestBase {
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\user\EntityOwnerInterface',
           'Drupal\Core\Entity\EntityChangedInterface',
+        ],
+        // Additional traits.
+        [
+          'Drupal\Core\Entity\EntityChangedTrait',
         ],
       ],
     ];
