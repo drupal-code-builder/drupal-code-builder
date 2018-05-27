@@ -191,6 +191,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $php_tester->assertClassHasTraits($expected_traits);
 
+    // TODO: make this check for incorrect presence.
     if ($expected_extra_base_fields) {
       $base_fields_tester = $php_tester->getMethodTester('baseFieldDefinitions');
       foreach ($expected_extra_base_fields as $base_field => $type) {
@@ -200,6 +201,7 @@ class ComponentContentEntityType8Test extends TestBase {
       }
     }
 
+    // TODO: make this check for incorrect presence.
     if ($expected_extra_methods) {
       $php_tester->assertHasMethods($expected_extra_methods);
     }
@@ -256,6 +258,14 @@ class ComponentContentEntityType8Test extends TestBase {
         // Additional traits.
         [
           'Drupal\Core\Entity\EntityChangedTrait',
+        ],
+        // Additional base fields.
+        [
+          'uid' => 'entity_reference',
+        ],
+        // Additional methods the entity class should have.
+        [
+          'getCurrentUserId',
         ],
       ],
     ];
