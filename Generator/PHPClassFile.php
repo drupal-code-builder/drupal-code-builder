@@ -117,6 +117,13 @@ class PHPClassFile extends PHPFile {
         'internal' => TRUE,
         'default' => [],
       ],
+      'traits' => [
+        'label' => 'Traits',
+        'description' => 'List of traits this class uses, as fully-qualified names with initial \.',
+        'format' => 'array',
+        'internal' => TRUE,
+        'default' => [],
+      ],
     ];
   }
 
@@ -282,6 +289,7 @@ class PHPClassFile extends PHPFile {
     $section_types = [
       // These are the names of class properties.
       // TODO: change these to being roles in the child components.
+      'traits',
       'constants',
       'properties',
       'constructor',
@@ -308,7 +316,11 @@ class PHPClassFile extends PHPFile {
    * section types defined in classCodeBody().
    */
   protected function collectSectionBlocks() {
-    // Child classes should override this.
+    foreach ($this->component_data['traits'] as $trait) {
+      $this->traits[] = [
+        "use {$trait};",
+      ];
+    }
   }
 
   /**

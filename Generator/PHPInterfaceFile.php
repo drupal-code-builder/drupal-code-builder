@@ -20,6 +20,7 @@ class PHPInterfaceFile extends PHPClassFile {
     unset($definition['abstract']);
     unset($definition['interfaces']);
     unset($definition['parent_class_name']);
+    unset($definition['traits']);
 
     $definition['parent_interface_names'] = [
       'label' => 'Parent interface names',
@@ -46,6 +47,14 @@ class PHPInterfaceFile extends PHPClassFile {
     return [
       $line,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function collectSectionBlocks() {
+    // Override the parent so we don't try to collect traits that aren't a
+    // property here.
   }
 
 }
