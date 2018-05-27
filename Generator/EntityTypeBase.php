@@ -252,6 +252,22 @@ abstract class EntityTypeBase extends PHPClassFile {
       ];
     };
 
+    // Force the traits property to have processing applied, so we can set
+    // additional values based on the interface parents.
+    $data_definition['traits']['process_empty'] = TRUE;
+    $data_definition['traits']['processing'] = function ($value, &$component_data, $property_name, &$property_info) {
+      if (empty($component_data['interface_parents'])) {
+        return;
+      }
+
+      $parent_interface_info = static::interfaceParents();
+      foreach ($component_data['interface_parents'] as $interface_parent_value) {
+        if (!empty($parent_interface_info[$interface_parent_value]['trait'])) {
+          $component_data[$property_name][] = $parent_interface_info[$interface_parent_value]['trait'];
+        }
+      }
+    };
+
     return $data_definition;
   }
 
@@ -263,6 +279,8 @@ abstract class EntityTypeBase extends PHPClassFile {
    *   arrays with:
    *   - label: A description of the interface for the UI.
    *   - interface: The fully-qualified interface name.
+   *   - trait: (optional) If set, the fully-qualified name of a trait the
+   *     entity class should use.
    */
   abstract protected static function interfaceParents();
 
