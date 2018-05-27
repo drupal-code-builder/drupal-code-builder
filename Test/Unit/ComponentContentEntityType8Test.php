@@ -247,6 +247,10 @@ class ComponentContentEntityType8Test extends TestBase {
         [
           'Drupal\Core\Entity\EntityChangedTrait',
         ],
+        // Additional base fields.
+        [
+          'changed' => 'changed',
+        ],
       ],
       'owner + changed' => [
         ['EntityOwnerInterface', 'EntityChangedInterface'],

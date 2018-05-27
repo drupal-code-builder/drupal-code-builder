@@ -331,6 +331,18 @@ class ContentEntityType extends EntityTypeBase {
       $method_body[] = '';
     }
 
+    // Add a 'changed' field if entities use the changed interface.
+    if (in_array('EntityChangedInterface', $this->component_data['interface_parents'])) {
+      $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";
+      $changed_field_calls = new FluentMethodCall;
+      $changed_field_calls->setLabel(FluentMethodCall::t('Changed'))
+        ->setDescription(FluentMethodCall::t('The time that the node was last edited.'))
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE);
+      $method_body = array_merge($method_body, $changed_field_calls->getCodeLines());
+      $method_body[] = '';
+    }
+
     foreach ($this->component_data['base_fields'] as $base_field_data) {
       $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
 
