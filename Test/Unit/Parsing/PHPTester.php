@@ -852,6 +852,18 @@ class PHPTester {
   }
 
   /**
+   * Gets a specialized method tester for the baseFieldDefinitions() method.
+   *
+   * @return DrupalCodeBuilder\Test\Unit\Parsing\BaseFieldDefinitionsTester
+   *   The tester object.
+   */
+  public function getBaseFieldDefinitionsTester() {
+    $this->assertHasMethod('baseFieldDefinitions');
+
+    return new BaseFieldDefinitionsTester($this->parser_nodes['methods']['baseFieldDefinitions'], $this->phpCode);
+  }
+
+  /**
    * Assert the parsed code contains the given function.
    *
    * @param string $function_name

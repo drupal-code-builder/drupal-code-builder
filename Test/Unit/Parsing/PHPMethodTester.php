@@ -66,6 +66,8 @@ class PHPMethodTester {
   /**
    * Gets a form builder tester for this method.
    *
+   * TODO: move this to PHPTester.
+   *
    * @return FormBuilderTester
    *   The form builder tester object.
    */
