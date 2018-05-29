@@ -164,6 +164,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $expected_extra_entity_keys = [],
     $expected_traits = [],
     $expected_extra_base_fields = [],
+    $expected_base_field_helper_calls = [],
     $expected_extra_methods = []
   ) {
     $module_name = 'test_module';
@@ -220,6 +221,8 @@ class ComponentContentEntityType8Test extends TestBase {
       $base_fields_definitions_tester->assertFieldType($type, $field_name);
     }
 
+    $base_fields_definitions_tester->assertHelperMethodCalls($expected_base_field_helper_calls);
+
     // TODO: make this check for incorrect presence.
     if ($expected_extra_methods) {
       $php_tester->assertHasMethods($expected_extra_methods);
@@ -255,6 +258,8 @@ class ComponentContentEntityType8Test extends TestBase {
         [
           'uid' => 'entity_reference',
         ],
+        // Additional base field helper calls.
+        [],
         // Additional methods the entity class should have.
         [
           'getCurrentUserId',
@@ -293,6 +298,10 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
         // Additional base fields.
         [],
+        // Additional base field helper calls.
+        [
+          'publishedBaseFieldDefinitions',
+        ],
         // Additional methods the entity class should have.
         [],
       ],
@@ -316,6 +325,8 @@ class ComponentContentEntityType8Test extends TestBase {
           'uid' => 'entity_reference',
           'changed' => 'changed',
         ],
+        // Additional base field helper calls.
+        [],
         // Additional methods the entity class should have.
         [
           'getCurrentUserId',

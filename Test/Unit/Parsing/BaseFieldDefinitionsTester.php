@@ -153,4 +153,17 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
     Assert::assertEquals($expected_calls, $this->baseFieldMethodCalls[$field_name], "The definition for the field {$field_name} has the expected method calls.");
   }
 
+  /**
+   * Asserts the helper method calls.
+   *
+   * These are methods that traits provide with additional field definitions,
+   * that baseFieldDefinitions() should then call to merge with its own list.
+   *
+   * @param string[] $expected_method_names
+   *   The names of the methods that should be called.
+   */
+  public function assertHelperMethodCalls($expected_method_names) {
+    Assert::assertEquals($expected_method_names, $this->helperMethodCalls, "The baseFieldDefinitions() method has the expected helper method calls.");
+  }
+
 }
