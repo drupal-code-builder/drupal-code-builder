@@ -205,14 +205,19 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $php_tester->assertClassHasTraits($expected_traits);
 
-    // TODO: make this check for incorrect presence.
-    if ($expected_extra_base_fields) {
-      $base_fields_tester = $php_tester->getMethodTester('baseFieldDefinitions');
-      foreach ($expected_extra_base_fields as $base_field => $type) {
-        // TODO: improve this assertion by adding something that checks the
-        // parser nodes more precisely.
-        $base_fields_tester->assertHasLine("\$fields['{$base_field}'] = BaseFieldDefinition::create('{$type}')");
-      }
+    // Test the field definitions.
+    $base_fields_definitions_tester = $php_tester->getBaseFieldDefinitionsTester();
+
+    $expected_fields = array_merge(
+      [
+        'title'
+      ],
+      array_keys($expected_extra_base_fields)
+    );
+    $base_fields_definitions_tester->assertFieldNames($expected_fields);
+
+    foreach ($expected_extra_base_fields as $field_name => $type) {
+      $base_fields_definitions_tester->assertFieldType($type, $field_name);
     }
 
     // TODO: make this check for incorrect presence.
