@@ -42,7 +42,7 @@ class PHPMethodTester {
   protected $methodBody;
 
   /**
-   * Construct a new AnnotationTester.
+   * Construct a new PHPMethodTester.
    *
    * @param \PhpParser\Node\Stmt\ClassMethod $method_node
    *   The PhpParser method node.
