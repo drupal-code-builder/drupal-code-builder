@@ -117,4 +117,42 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
     }
   }
 
+  /**
+   * Asserts the names of the defined fields are equal to the given list.
+   *
+   * @param string[] $expected_names
+   *   The expected field names.
+   */
+  public function assertFieldNames($expected_names) {
+    foreach ($expected_names as $expected_name) {
+      Assert::assertArrayHasKey($expected_name, $this->baseFields, "The baseFieldDefinitions() method defines the field {$expected_name}.");
+    }
+  }
+
+  /**
+   * Asserts a field's type.
+   *
+   * @param string $expected_type
+   *   The expected type.
+   * @param string $field_name
+   *   The name of the field to check.
+   */
+  public function assertFieldType($expected_type, $field_name) {
+    Assert::assertArrayHasKey($field_name, $this->baseFields, "The baseFieldDefinitions() method defines the field {$field_name}.");
+    Assert::assertEquals($expected_type, $this->baseFields[$field_name], "The field {$field_name} is of type {$expected_type}.");
+  }
+
+  /**
+   * Asserts the method calls for a field's definition.
+   *
+   * @param string $expected_type
+   *   The expected type.
+   * @param string $field_name
+   *   The name of the field to check.
+   */
+  public function assertFieldDefinitionMethodCalls($expected_calls, $field_name) {
+    Assert::assertArrayHasKey($field_name, $this->baseFields, "The baseFieldDefinitions() method defines the field {$field_name}.");
+    Assert::assertEquals($expected_calls, $this->baseFieldMethodCalls[$field_name], "The definition for the field {$field_name} has the expected method calls.");
+  }
+
 }
