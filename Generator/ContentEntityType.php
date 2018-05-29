@@ -159,8 +159,12 @@ class ContentEntityType extends EntityTypeBase {
         $keys['langcode'] = 'langcode';
       }
 
+      // TODO: convert these to draw from the interface parents definition.
       if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
         $keys['uid'] = 'uid';
+      }
+      if (in_array('EntityPublishedInterface', $component_data['interface_parents'])) {
+        $keys['published'] = 'status';
       }
 
       return $keys;
@@ -236,7 +240,20 @@ class ContentEntityType extends EntityTypeBase {
         'label' => 'EntityOwnerInterface, for entities that have an owner',
         'interface' => '\Drupal\user\EntityOwnerInterface',
       ],
-      // EntityPublishedInterface? but this has its own base class.
+      'EntityPublishedInterface' => [
+        'label' => "EntityPublishedInterface, for entities that have a 'published' status",
+        'interface' => '\Drupal\Core\Entity\EntityPublishedInterface',
+        'trait' => "\Drupal\Core\Entity\EntityPublishedTrait",
+        // Calls to bame in baseFieldDefinitions().
+        'helper_methods' => [
+          'publishedBaseFieldDefinitions',
+        ],
+        // Extra items for entity_keys annotation.
+        // TODO: doesn't work yet!
+        'entity_keys' => [
+          "published" => "status",
+        ],
+      ],
       // EntityDescriptionInterface? but only used in core for config.
     ];
   }
@@ -263,6 +280,20 @@ class ContentEntityType extends EntityTypeBase {
     // Calling the parent defines fields for entity keys.
     $method_body[] = '$fields = parent::baseFieldDefinitions($entity_type);';
     $method_body[] = '';
+
+    // Some interface-helper traits provide helper methods to define base
+    // fields.
+    $parent_interface_info = static::interfaceParents();
+    foreach ($this->component_data['interface_parents'] as $interface_parent_value) {
+      if (!isset($parent_interface_info[$interface_parent_value]['helper_methods'])) {
+        continue;
+      }
+
+      foreach ($parent_interface_info[$interface_parent_value]['helper_methods'] as $method_name) {
+        $method_body[] = "£fields += static::$method_name(£entity_type);";
+        $method_body[] = '';
+      }
+    }
 
     // The parent doesn't supply a label field, so the entity class has to.
     $calls = [];

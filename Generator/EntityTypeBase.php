@@ -274,6 +274,9 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * Provides options for the interface_parents property's _long_options.
    *
+   * TODO: convert this to multi-valued presets, as that's what it's fast
+   * turning into!
+   *
    * @var array
    *   An array whose keys are an arbitrary option key, and whose values are
    *   arrays with:

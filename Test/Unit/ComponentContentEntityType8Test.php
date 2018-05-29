@@ -270,6 +270,25 @@ class ComponentContentEntityType8Test extends TestBase {
           'changed' => 'changed',
         ],
       ],
+      'published' => [
+        ['EntityPublishedInterface'],
+        [
+          'Drupal\Core\Entity\ContentEntityInterface',
+          'Drupal\Core\Entity\EntityPublishedInterface',
+        ],
+        // Additional entity keys.
+        [
+          "published" => "status",
+        ],
+        // Additional traits.
+        [
+          'Drupal\Core\Entity\EntityPublishedTrait',
+        ],
+        // Additional base fields.
+        [],
+        // Additional methods the entity class should have.
+        [],
+      ],
       'owner + changed' => [
         ['EntityOwnerInterface', 'EntityChangedInterface'],
         [
