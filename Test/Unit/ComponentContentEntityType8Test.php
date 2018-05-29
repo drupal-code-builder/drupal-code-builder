@@ -82,6 +82,8 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $base_fields_definitions_tester->assertFieldNames([
       'title',
+      'breed',
+      'colour',
     ]);
 
     $base_fields_definitions_tester->assertFieldType('string', 'title');
@@ -307,6 +309,7 @@ class ComponentContentEntityType8Test extends TestBase {
         // Additional base fields.
         [
           'uid' => 'entity_reference',
+          'changed' => 'changed',
         ],
         // Additional methods the entity class should have.
         [

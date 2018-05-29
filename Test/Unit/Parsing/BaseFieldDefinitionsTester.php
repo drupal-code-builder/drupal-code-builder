@@ -124,9 +124,7 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
    *   The expected field names.
    */
   public function assertFieldNames($expected_names) {
-    foreach ($expected_names as $expected_name) {
-      Assert::assertArrayHasKey($expected_name, $this->baseFields, "The baseFieldDefinitions() method defines the field {$expected_name}.");
-    }
+    Assert::assertEquals($expected_names, array_keys($this->baseFields), "The baseFieldDefinitions() method defines the expected fields.");
   }
 
   /**
