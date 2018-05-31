@@ -77,21 +77,24 @@ class HookImplementation extends PHPFunction {
     // Replace the 'hook_' part of the function declaration.
     $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
 
-    // Replace the function body with template code if it exists.
-    // TODO: 'template' is in fact always set by Hooks::getTemplates()!
-    if (empty($children_contents) && isset($this->component_data['template'])) {
-      $this->component_data['body'] = $this->component_data['template'];
+    // If the body is specified, this overrides any template or sample code.
+    if (empty($this->component_data['body'])) {
+      // Replace the function body with template code if it exists.
+      // TODO: 'template' is in fact always set by Hooks::getTemplates()!
+      if (empty($children_contents) && isset($this->component_data['template'])) {
+        $this->component_data['body'] = $this->component_data['template'];
 
-      // The code is a single string, already indented. Tell
-      // buildComponentContents() not to indent it again.
-      $this->component_data['body_indent'] = 0;
-    }
+        // The code is a single string, already indented. Tell
+        // buildComponentContents() not to indent it again.
+        $this->component_data['body_indent'] = 0;
+      }
 
-    // Trim newlines from start and end of body if requested. Hook definitions
-    // have newlines at start and end. But when we define code ourselves, it's a
-    // pain to have to put those in.
-    if (!empty($this->component_data['has_wrapping_newlines'])) {
-      $this->component_data['body'] = array_slice($this->component_data['body'], 1, -1);
+      // Trim newlines from start and end of body if requested. Hook definitions
+      // have newlines at start and end. But when we define code ourselves, it's a
+      // pain to have to put those in.
+      if (!empty($this->component_data['has_wrapping_newlines'])) {
+        $this->component_data['body'] = array_slice($this->component_data['body'], 1, -1);
+      }
     }
 
     return parent::buildComponentContents($children_contents);
