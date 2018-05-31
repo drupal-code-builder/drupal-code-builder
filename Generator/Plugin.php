@@ -299,7 +299,8 @@ class Plugin extends PHPClassFileWithInjection {
         continue;
       }
 
-      if ($annotation_variable_info['type'] == '\Drupal\Core\Annotation\Translation') {
+      // Hacky workaround for https://github.com/drupal-code-builder/drupal-code-builder/issues/97.
+      if (isset($annotation_variable_info['type']) && $annotation_variable_info['type'] == '\Drupal\Core\Annotation\Translation') {
         // The annotation property value is translated.
         $docblock_code[] = '  ' . $annotation_variable . ' = @Translation("TODO: replace this with a value"),';
         continue;
