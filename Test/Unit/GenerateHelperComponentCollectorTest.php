@@ -130,7 +130,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   /**
    * Request with only the root generator, with presets.
    */
-  public function testSingleGeneratorNoRequirementsPresets() {
+  public function testSingleGeneratorPresetsNoRequirements() {
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
