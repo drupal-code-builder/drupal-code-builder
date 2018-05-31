@@ -45,6 +45,13 @@ class Hooks extends BaseGenerator {
         'required' => FALSE,
         'format' => 'array',
       ],
+      // The body code for any hook implementations. An array whose keys are
+      // the full hook names, and whose values are the value to pass on to
+      // that HookImplementation component.
+      'hook_bodies' => [
+        'internal' => TRUE,
+        'format' => 'array',
+      ],
     ];
   }
 
@@ -126,6 +133,10 @@ class Hooks extends BaseGenerator {
           // This needs to be split into an array of lines for things such as
           // PHPFile::extractFullyQualifiedClasses() to work.
           $components[$hook['name']]['template'] = explode("\n", $hook['template']);
+        }
+
+        if (isset($this->component_data['hook_bodies'][$hook_name])) {
+          $components[$hook_name]['body'] = $this->component_data['hook_bodies'][$hook_name];
         }
       }
     }
