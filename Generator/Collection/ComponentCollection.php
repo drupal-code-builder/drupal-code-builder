@@ -278,6 +278,17 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
+   * Gets the request paths.
+   *
+   * @return array
+   *   An array whose keys are the internal IDs and values are the request
+   *   paths.
+   */
+  public function getComponentRequestPaths() {
+    return $this->requestPaths;
+  }
+
+  /**
    * Gets the root component.
    *
    * @return
