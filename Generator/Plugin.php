@@ -147,7 +147,13 @@ class Plugin extends PHPClassFileWithInjection {
         'default' => function($component_data) {
           if (!empty($component_data['parent_plugin_id'])) {
             // TODO: go via the environment for testing!
-            $parent_plugin = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->createInstance($component_data['parent_plugin_id']);
+            try {
+              $parent_plugin = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->createInstance($component_data['parent_plugin_id']);
+            }
+            catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $plugin_exception) {
+              // Rethrow as something that UIs will catch.
+              throw new InvalidInputException($plugin_exception->getMessage());
+            }
 
             return get_class($parent_plugin);
           }
