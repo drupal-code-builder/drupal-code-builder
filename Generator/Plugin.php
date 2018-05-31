@@ -169,13 +169,14 @@ class Plugin extends PHPClassFileWithInjection {
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    $data_definition['class_docblock_lines']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+    $data_definition['class_docblock_lines']['default'] = function($component_data) {
       if (!empty($component_data['replace_parent_plugin'])) {
         return [
-          "Overrides the {$component_data['replace_parent_plugin']} plugin class.",
+          "Overrides the '{$component_data['parent_plugin_id']}' plugin class.",
         ];
       }
     };
+
 
     return $data_definition;
   }
