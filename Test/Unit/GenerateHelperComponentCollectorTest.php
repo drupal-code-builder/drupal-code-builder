@@ -17,13 +17,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   protected $drupalMajorVersion = 8;
 
   /**
-   * TEMPORARY: skip these tests while ComponentCollection is being changed.
-   */
-  protected function setUp() {
-    $this->markTestIncomplete();
-  }
-
-  /**
    * Request with only the root generator, which itself has no requirements.
    */
   public function testSingleGeneratorNoRequirements() {
@@ -100,7 +93,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // return things relating to it.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([]);
 
     // The ClassHandler mock returns the generator mock.
@@ -121,10 +114,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(1, $component_list, "The expected number of components is returned.");
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
+    $this->assertCount(1, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
   }
 
   /**
@@ -219,7 +212,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // return things relating to it.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([]);
 
     // The ClassHandler mock returns the generator mock.
@@ -250,7 +243,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
   }
-
 
   /**
    * Request with only the root generator, which has a child requirement.
@@ -283,7 +275,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([
       'child_requirement' => [
         'component_type' => 'child_requirement',
@@ -303,7 +295,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The child component the root component requests.
     $child_requirement_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $child_requirement_component->getUniqueID()->willReturn('child:child');
+    $child_requirement_component->getMergeTag()->willReturn(NULL);
     $child_requirement_component->requiredComponents()->willReturn([]);
 
     $child_requirement_component_data_info = [];
@@ -329,11 +321,11 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(2, $component_list, "The expected number of components is returned.");
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
-    $this->assertArrayHasKey('child:child', $component_list, "The component list has the root generator.");
+    $this->assertCount(2, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/child_requirement', $component_paths, "The component list has the child generator.");
   }
 
   /**
@@ -367,7 +359,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([
       'child_requirement' => [
         'component_type' => 'child_requirement',
@@ -387,7 +379,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The child component the root component requests.
     $child_requirement_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $child_requirement_component->getUniqueID()->willReturn('child:child');
+    $child_requirement_component->getMergeTag()->willReturn(NULL);
     $child_requirement_component->requiredComponents()->willReturn([
       'grandchild_requirement' => [
         'component_type' => 'grandchild_requirement',
@@ -413,7 +405,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The grandchild component requested by the child.
     $grandchild_requirement_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $grandchild_requirement_component->getUniqueID()->willReturn('grandchild:grandchild');
+    $grandchild_requirement_component->getMergeTag()->willReturn(NULL);
     $grandchild_requirement_component->requiredComponents()->willReturn([]);
 
     $grandchild_requirement_component_data_info = [];
@@ -439,12 +431,12 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(3, $component_list, "The expected number of components is returned.");
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
-    $this->assertArrayHasKey('child:child', $component_list, "The component list has the root generator.");
-    $this->assertArrayHasKey('grandchild:grandchild', $component_list, "The component list has the root generator.");
+    $this->assertCount(3, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/child_requirement', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/child_requirement/grandchild_requirement', $component_paths, "The component list has the root generator.");
   }
 
   /**
@@ -482,7 +474,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
 
     $class_handler->getGenerator(
       'my_root',
@@ -511,7 +503,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Simple child component.
     $simple_child_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $simple_child_component->getUniqueID()->willReturn('simple:simple');
+    $simple_child_component->getMergeTag()->willReturn(NULL);
     $simple_child_component->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
@@ -535,11 +527,11 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(2, $component_list, "The expected number of components is returned.");
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
-    $this->assertArrayHasKey('simple:simple', $component_list, "The component list has the simple property generator.");
+    $this->assertCount(2, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/simple', $component_paths, "The component list has the child generator.");
   }
 
   /**
@@ -580,7 +572,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
 
     $class_handler->getGenerator(
       'my_root',
@@ -608,7 +600,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Alpha child component.
     $alpha_child_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $alpha_child_component->getUniqueID()->willReturn('array:alpha');
+    $alpha_child_component->getMergeTag()->willReturn(NULL);
     $alpha_child_component->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
@@ -624,7 +616,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Beta child component.
     $beta_child_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $beta_child_component->getUniqueID()->willReturn('array:beta');
+    $beta_child_component->getMergeTag()->willReturn(NULL);
     $beta_child_component->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
@@ -649,12 +641,12 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(3, $component_list, "The expected number of components is returned.");
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
-    $this->assertArrayHasKey('array:alpha', $component_list, "The component list has the alpha array generator.");
-    $this->assertArrayHasKey('array:beta', $component_list, "The component list has the beta array generator.");
+    $this->assertCount(3, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/alpha', $component_paths, "The component list has the child generator.");
+    $this->assertContains('root/beta', $component_paths, "The component list has the child generator.");
   }
 
   /**
@@ -699,7 +691,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
     $root_component->providedPropertiesMapping()->willReturn([
       'root_name' => 'root_component_name',
     ]);
@@ -731,7 +723,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Compound child component 0.
     $compound_child_component_0 = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $compound_child_component_0->getUniqueID()->willReturn('compound:compound_0');
+    $compound_child_component_0->getMergeTag()->willReturn(NULL);
     $compound_child_component_0->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
@@ -758,7 +750,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Compound child component 1.
     $compound_child_component_1 = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
-    $compound_child_component_1->getUniqueID()->willReturn('compound:compound_1');
+    $compound_child_component_1->getMergeTag()->willReturn(NULL);
     $compound_child_component_1->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
@@ -782,13 +774,12 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(3, $component_list, "The expected number of components is returned.");
-
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
-    $this->assertArrayHasKey('compound:compound_0', $component_list, "The component list has the simple property generator.");
-    $this->assertArrayHasKey('compound:compound_1', $component_list, "The component list has the simple property generator.");
+    $this->assertCount(3, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/compound_0', $component_paths, "The component list has the child generator.");
+    $this->assertContains('root/compound_1', $component_paths, "The component list has the child generator.");
   }
 
   /**
@@ -895,7 +886,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
-    $root_component->getUniqueID()->willReturn('root:root');
+    $root_component->getMergeTag()->willReturn(NULL);
 
     $class_handler->getGenerator(
       'my_root',
@@ -918,11 +909,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
 
-    $this->assertCount(1, $component_list, "The expected number of components is returned.");
-
-    $this->assertArrayHasKey('root:root', $component_list, "The component list has the root generator.");
+    $this->assertCount(1, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
   }
 
   /*
