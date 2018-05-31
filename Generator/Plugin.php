@@ -142,6 +142,11 @@ class Plugin extends PHPClassFileWithInjection {
         'label' => 'Parent class plugin ID',
         'description' => "Use another plugin's class as the parent class for this plugin.",
       ],
+      'replace_parent_plugin' => [
+        'label' => 'Replace parent plugin',
+        'description' => "Replace the parent plugin's class with the generated class, rather than create a new plugin. The plugin ID value will be use to form the class name.",
+        'format' => 'boolean',
+      ],
       'parent_plugin_class' => [
         'computed' => TRUE,
         'default' => function($component_data) {
@@ -163,6 +168,14 @@ class Plugin extends PHPClassFileWithInjection {
 
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
+
+    $data_definition['class_docblock_lines']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+      if (!empty($component_data['replace_parent_plugin'])) {
+        return [
+          "Overrides the {$component_data['replace_parent_plugin']} plugin class.",
+        ];
+      }
+    };
 
     return $data_definition;
   }
@@ -199,6 +212,27 @@ class Plugin extends PHPClassFileWithInjection {
       ];
     }
 
+    if (!empty($this->component_data['replace_parent_plugin'])) {
+      if (!empty($this->component_data['plugin_type_data']['alter_hook_name'])) {
+        $alter_hook_name = 'hook_' . $this->component_data['plugin_type_data']['alter_hook_name'];
+
+        $components['hooks'] = [
+          'component_type' => 'Hooks',
+          'hooks' => [
+            $alter_hook_name => TRUE,
+          ],
+          'hook_bodies' => [
+            $alter_hook_name => [
+              "// Override the class for the '{$this->component_data['parent_plugin_id']}' plugin.",
+              "if (isset(£info['{$this->component_data['parent_plugin_id']}'])) {",
+              "  £info['{$this->component_data['parent_plugin_id']}']['class'] = \\{$this->component_data['qualified_class_name']}::class;",
+              "}",
+            ],
+          ],
+        ];
+      }
+    }
+
     return $components;
   }
 
@@ -219,6 +253,12 @@ class Plugin extends PHPClassFileWithInjection {
    */
   protected function getClassDocBlockLines() {
     $docblock_lines = parent::getClassDocBlockLines();
+
+    // Do not include the annotation if this plugin is a class override.
+    if (!empty($this->component_data['replace_parent_plugin'])) {
+      return $docblock_lines;
+    }
+
     $docblock_lines[] = '';
 
     $docblock_lines = array_merge($docblock_lines, $this->classAnnotation());
