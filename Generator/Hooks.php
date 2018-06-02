@@ -168,9 +168,7 @@ class Hooks extends BaseGenerator {
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
 
-    // Frankencoding to old variable names.
-    $requested_hooks = $requested_hook_list;
-    //print_r($requested_hooks);
+    //print_r($requested_hook_list);
     // TODO: might not need this; easier to test truth than isset.
 
     // Get array of the hook function declarations from the downloaded hook data.
@@ -184,18 +182,18 @@ class Hooks extends BaseGenerator {
     // TODO: this should contain the name of the api.php file that provided it!
 
     // Add hook dependencies.
-    foreach (array_keys($requested_hooks) as $hook_name) {
+    foreach (array_keys($requested_hook_list) as $hook_name) {
       if (!empty($hook_function_declarations[$hook_name]['dependencies'])) {
         //drush_print_r($hook_function_declarations[$hook_name]['dependencies']);
         foreach ($hook_function_declarations[$hook_name]['dependencies'] as $hook_dependency) {
-          $requested_hooks[$hook_dependency] = TRUE;
+          $requested_hook_list[$hook_dependency] = TRUE;
         }
       }
     }
 
     // Trim this down to just the ones we care about.
     // By this point, both sets of array keys are standardized to lower case.
-    $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hooks);
+    $hook_function_declarations = array_intersect_key($hook_function_declarations, $requested_hook_list);
     //print_r("hook_function_declarations: \n");
     //drush_print_r($hook_function_declarations);
 
@@ -206,9 +204,9 @@ class Hooks extends BaseGenerator {
     // We do this by hand this time rather than array_intersect_key() so we can
     // make a list of hooks we're rejecting for (TODO!) eventual warning output.
     $rejected_hooks = array();
-    foreach (array_keys($requested_hooks) as $hook_name) {
+    foreach (array_keys($requested_hook_list) as $hook_name) {
       if (!isset($hook_function_declarations[$hook_name])) {
-        unset($requested_hooks[$hook_name]);
+        unset($requested_hook_list[$hook_name]);
         $rejected_hooks[] = $hook_name;
       }
     }
@@ -282,7 +280,7 @@ class Hooks extends BaseGenerator {
         $template_data = $this->parseTemplate($template_file);
 
         // Trim the template data to the hooks we care about.
-        $template_data = array_intersect_key($template_data, $requested_hooks);
+        $template_data = array_intersect_key($template_data, $requested_hook_list);
 
         // Flag the template file in the hook list; ie, set to TRUE the template
         // file in the list which we first created as entirely FALSE.
