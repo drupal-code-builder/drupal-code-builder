@@ -7,6 +7,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Hooks component.
+ *
+ * @group hooks
  */
 class ComponentHooks8Test extends TestBase {
 
