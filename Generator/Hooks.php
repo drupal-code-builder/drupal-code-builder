@@ -20,26 +20,12 @@ namespace DrupalCodeBuilder\Generator;
 class Hooks extends BaseGenerator {
 
   /**
-   * Constructor.
-   *
-   * @param $component_name
-   *  The name of a function component should be its function (or method) name.
-   * @param $component_data
-   *  An array of data for the component. Any missing properties are given
-   *  default values. Valid properties in addition to those from parent classes
-   *  are:
-   *    - 'hooks': An array of requested hooks, where the keys are the long hook
-   *      names and the values are TRUE.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
+      // An array of requested hooks, where the keys are the long hook names and
+      // the values are TRUE.
       'hooks' => [
         'label' => 'Hook implementations',
         'required' => FALSE,
