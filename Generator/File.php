@@ -69,7 +69,7 @@ class File extends BaseGenerator {
     // Example:
     return array(
       'path' => '', // Means base folder.
-      'filename' => $this->root_component->component_data['root_name'] . '.info',
+      'filename' => '%module.info',
       'body' => $this->code_body(),
       // We join the info lines with linebreaks, as they (currently!) do not
       // come with their own lineends.
