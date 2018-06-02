@@ -180,11 +180,6 @@ class Hooks extends BaseGenerator {
     // We don't care for this order!
     $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
 
-    // If we get NULL then no hook data exists: return NULL again.
-    // TODO: check this sort of error at an earlier stage!
-    if (is_null($hook_function_declarations)) {
-      return NULL;
-    }
     //drush_print_r($hook_function_declarations);
     // TODO: this should contain the name of the api.php file that provided it!
 
