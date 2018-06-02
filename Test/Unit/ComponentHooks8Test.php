@@ -31,6 +31,33 @@ class ComponentHooks8Test extends TestBase {
   protected $drupalMajorVersion = 8;
 
   /**
+   * Tests generating a single hook implementation.
+   *
+   * Useful for debugging when generating multiple hooks creates too much noise.
+   */
+  public function testSingleHook8() {
+    $module_name = 'testmodule_8';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+        'hook_help',
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $module_file = $files["$module_name.module"];
+
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasHookImplementation('hook_help', $module_name);
+  }
+
+  /**
    * Test generating a module with hooks in various files.
    */
   public function testModuleGenerationHooks() {
