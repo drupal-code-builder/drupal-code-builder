@@ -102,14 +102,22 @@ class Hooks extends BaseGenerator {
           'code_file' => $hook['destination'],
           'hook_name' => $hook['name'],
           'declaration' => $hook['definition'],
-          // TODO: this is not used, apparently -- getTemplates() fills in
-          // the 'template' array key in all cases?
-          'body' => $hook['body'],
           'has_wrapping_newlines' => TRUE,
         );
-        if (isset($hook['template'])) {
+
+        // The body for the hook implementation can come either from this
+        // component's requester, as the 'hook_bodies' property, or from
+        // template  code, or finally, the hook documentation's example code.
+        // In the last two cases, the code is in $hook['template'].
+        // (Note that further down the line, some specific hook implementation
+        // generators assemble body from their own child components.)
+        if (isset($this->component_data['hook_bodies'][$hook_name])) {
+          $components[$hook_name]['body'] = $this->component_data['hook_bodies'][$hook_name];
+        }
+        else {
           // Strip out INFO: comments for advanced users.
           // This has to be done before we split this into lines.
+          // TODO: No need to do this if this is hook api.php file sample code!
           if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
             // Used to strip INFO messages out of generated file for advanced users.
             $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
@@ -118,11 +126,18 @@ class Hooks extends BaseGenerator {
 
           // This needs to be split into an array of lines for things such as
           // PHPFile::extractFullyQualifiedClasses() to work.
-          $components[$hook['name']]['template'] = explode("\n", $hook['template']);
-        }
+          $hook['template'] = explode("\n", $hook['template']);
 
-        if (isset($this->component_data['hook_bodies'][$hook_name])) {
-          $components[$hook_name]['body'] = $this->component_data['hook_bodies'][$hook_name];
+          // Trim lines from start and end of body, as hook definitions
+          // have newlines at start and end.
+          $hook['template'] = array_slice($hook['template'], 1, -1);
+
+          // Set it as the method body.
+          $components[$hook['name']]['body'] = $hook['template'];
+
+          // The code is a single string, already indented. Tell
+          // buildComponentContents() not to indent it again.
+          $components[$hook['name']]['body_indented'] = TRUE;
         }
       }
     }

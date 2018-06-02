@@ -99,13 +99,19 @@ class PHPFunction extends BaseGenerator {
       'body' => [
         'internal' => TRUE,
       ],
-      // The number of spaces to add to the start of each line, if 'body' is an
-      // array. This is relative to the indentation of the function as a whole;
-      // that is, it does not need to be increased for a class method. Defaults
-      // to 2.
+      // Deprecated.
+      // TODO: Remove.
       'body_indent' => [
         'internal' => TRUE,
+        'format' => 'string',
         'default' => 2,
+      ],
+      // Whether code lines in the 'body' property are already indented relative
+      // to the indentation of function as a whole.
+      'body_indented' => [
+        'internal' => TRUE,
+        'format' => 'boolean',
+        'default' => FALSE,
       ],
     ];
   }
@@ -158,8 +164,8 @@ class PHPFunction extends BaseGenerator {
         }, $body);
 
       // Add indent.
-      if (!empty($this->component_data['body_indent'])) {
-        $body = $this->indentCodeLines($body, $this->component_data['body_indent'] / 2);
+      if (empty($this->component_data['body_indented'])) {
+        $body = $this->indentCodeLines($body);
       }
 
       $function_code = array_merge($function_code, $body);
