@@ -143,28 +143,46 @@ class AnnotationTester {
         continue;
       }
 
-      // Extract the key and whatever is to the right of it.
-      // Only root keys of an annotation class are not quoted; deeper ones
-      // are.
-      $matches = [];
-      // Keys may contain word characters and hyphens.
-      $matched = preg_match('/^(?P<indent_spaces> +)"?(?P<key>[\w-]+)"? = (?P<value>.*)$/', $line, $matches);
-      if (!$matched) {
-        throw new \Exception("Unable to match annotation line: $line");
+      // The key can be explicit, or if not given, an implicit numeric key.
+      if (preg_match('@ = @', $line)) {
+        // Line with a key.
+        // Extract the key and whatever is to the right of it.
+        // Only root keys of an annotation class are not quoted; deeper ones
+        // are.
+        $matches = [];
+        // Keys may contain word characters and hyphens.
+        $matched = preg_match('/^(?P<indent_spaces> +)"?(?P<key>[\w-]+)"? = (?P<value>.*)$/', $line, $matches);
+        if (!$matched) {
+          throw new \Exception("Unable to match annotation line: $line");
+        }
+
+        //dump($matches);
+
+        $indent = strlen($matches['indent_spaces']) / 2;
+
+        $key = $matches['key'];
+        $value = $matches['value'];
+
+        // Numeric keys should not be explicit, so should not have been found
+        // with an '='.
+        if (is_numeric($key)) {
+          Assert::fail("Explicit numric key found for annotation line: '$line'.");
+        }
       }
+      else {
+        $parent_array = NestedArray::getValue($data, $current_parent);
 
-      //dump($matches);
-
-      $indent = strlen($matches['indent_spaces']) / 2;
-
-      $key = $matches['key'];
-      $value = $matches['value'];
+        $parent_count = count($parent_array);
+        $key = $parent_count;
+        $value = trim($line);
+      }
 
       $address = $current_parent;
       $address[] = $key;
 
-      // There are four cases for the value:
+      // There are following cases for the value:
       // id = "kitty_cat",
+      // "kitty_cat"
       // label = @Translation("Kitty Cat"),
       // label_count = @PluralTranslation(
       // handlers = {

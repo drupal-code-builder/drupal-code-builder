@@ -84,9 +84,13 @@ trait AnnotationTrait {
    *   to determine whether the key is the top level of an annotation class.
    */
   function annotationLineProcessor($key, $value, $indent, &$docblock_lines, $nesting) {
-    // Only top level keys of an annotation class are bare; after that, they
-    // must be quoted as strings.
-    if ($nesting) {
+    if (is_numeric($key)) {
+      // Numeric keys don't get output.
+      $key = '';
+    }
+    elseif ($nesting) {
+      // Only top level keys of an annotation class are bare; after that, they
+      // must be quoted as strings.
       $key = '"' . $key . '"';
     }
 
@@ -110,7 +114,7 @@ trait AnnotationTrait {
 
       $docblock_lines[] = str_repeat('  ', $indent)
         . (
-          is_numeric($key)
+          empty($key)
           ? ''
           : $key . ' = '
         )
