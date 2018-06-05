@@ -115,7 +115,7 @@ class RouterItem extends BaseGenerator {
       'access_type' => [
         'label' => "Access type",
         'options' => [
-          'accesss' => 'No access control',
+          'access' => 'No access control',
           'permission' => 'Permission',
           'role' => 'Role',
           'entity_access' => 'Entity access',
@@ -127,7 +127,7 @@ class RouterItem extends BaseGenerator {
         'internal' => TRUE,
         'default' => function ($component_data) {
           $lookup = [
-            'accesss' => 'TRUE',
+            'access' => 'TRUE',
             'permission' => 'TODO: set permission machine name',
             'role' => 'authenticated',
             'entity_access' => 'ENTITY_TYPE.OPERATION',
