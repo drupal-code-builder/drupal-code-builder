@@ -54,10 +54,6 @@ class Info extends File {
       'path' => '',
       'filename' => '%module.info',
       'body' => $this->file_body(),
-      // We join the info lines with linebreaks, as they (currently!) do not
-      // come with their own lineends.
-      // TODO: fix this!
-      'join_string' => "\n",
       'build_list_tags' => ['info'],
     );
   }

@@ -31,7 +31,6 @@ class API extends PHPFile {
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->fileContents(),
-      'join_string' => "\n",
       'build_list_tags' => ['code', 'api'],
     );
   }

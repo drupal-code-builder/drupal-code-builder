@@ -57,10 +57,6 @@ class File extends BaseGenerator {
    *    up by assembleFiles(). The array may be keyed numerically, or the keys
    *    can be meaningful to the generator class: they are immaterial to the
    *    caller.
-   *  - join_string: The string to join the body pieces with. If the body is an
-   *    array of single lines, you probably want to use "\n". If you have chunks
-   *    it makes more sense for each chunk to contain its own linebreaks
-   *    including the terminal one.
    */
   public function getFileInfo() {
     // Subclasses should override this.
@@ -71,10 +67,6 @@ class File extends BaseGenerator {
       'path' => '', // Means base folder.
       'filename' => '%module.info',
       'body' => $this->code_body(),
-      // We join the info lines with linebreaks, as they (currently!) do not
-      // come with their own lineends.
-      // TODO: fix this!
-      'join_string' => "\n",
     );
     */
 

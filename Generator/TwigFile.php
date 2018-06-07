@@ -17,7 +17,6 @@ class TwigFile extends File {
       'body' => [
         $this->getTwigContents(),
       ],
-      'join_string' => "\n",
     );
   }
 

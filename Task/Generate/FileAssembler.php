@@ -74,8 +74,6 @@ class FileAssembler {
    *  - 'body': An array of lines of content for the file.
    *  - 'path': The path for the file, relative to the module folder.
    *  - 'filename': The filename for the file.
-   *  - 'join_string': The string with which to join the items in the body
-   *    array. (TODO: remove this!)
    *
    * @param $component_list
    *  The component list.
@@ -147,7 +145,7 @@ class FileAssembler {
         $filepath = $file_info['filename'];
       }
 
-      $code = implode($file_info['join_string'], $file_info['body']);
+      $code = implode("\n", $file_info['body']);
 
       // Replace tokens in file contents and file path.
       // We get the tokens from the root component that was the nearest

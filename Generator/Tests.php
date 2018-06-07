@@ -26,7 +26,6 @@ class Tests extends PHPFile {
       'path' => 'src/Tests',
       'filename' => $test_file_name,
       'body' => $this->fileContents(),
-      'join_string' => "\n",
       'build_list_tags' => ['code', 'tests'],
     );
   }

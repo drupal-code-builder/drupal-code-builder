@@ -90,9 +90,6 @@ class YMLFile extends File {
       'path' => '', // Means base folder.
       'filename' => $this->filename,
       'body' => $this->getYamlBody($this->component_data['yaml_data']),
-      // We join code files up on a single newline. This means that each
-      // component is responsible for ending its own lines.
-      'join_string' => "\n",
     );
   }
 

@@ -137,7 +137,6 @@ class PHPClassFile extends PHPFile {
       'path' => $this->component_data['path'],
       'filename' => $this->component_data['plain_class_name'] . '.php',
       'body' => $this->fileContents(),
-      'join_string' => "\n",
       'build_list_tags' => ['code'],
     );
   }
