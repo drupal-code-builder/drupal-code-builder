@@ -372,47 +372,14 @@ class ComponentCollector {
    *  to allow property processing callbacks to make changes.
    */
   protected function processComponentData(&$component_data, &$component_data_info) {
-    // Set values forced by a preset.
+    // Set values from a preset.
     foreach ($component_data_info as $property_name => $property_info) {
       // Not a preset property: nothing to do.
       if (!isset($property_info['presets'])) {
         continue;
       }
 
-      if (empty($component_data[$property_name])) {
-        continue;
-      }
-
-      $preset_key = $component_data[$property_name];
-      $selected_preset_info = $property_info['presets'][$preset_key];
-
-      // Set values which are forced by the preset.
-      foreach ($selected_preset_info['data']['force'] as $forced_property_name => $forced_data) {
-        // Plain value.
-        if (isset($forced_data['value'])) {
-          $component_data[$forced_property_name] = $forced_data['value'];
-        }
-
-        // TODO: processed value, using chain of processing instructions.
-      }
-
-      // Set values which are suggested by the preset, if the value is empty.
-      if (isset($selected_preset_info['data']['suggest'])) {
-        foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
-          // Only set this if no incoming value is set.
-          if (!empty($component_data[$suggested_property_name])) {
-            continue;
-          }
-
-          // Plain value.
-          if (isset($suggested_data['value'])) {
-            $component_data[$suggested_property_name] = $suggested_data['value'];
-          }
-
-          // TODO: processed value, using chain of processing instructions.
-        }
-      }
-
+      $this->setPresetValues($property_name, $property_info, $component_data);
     }
 
     // Set defaults and apply processing callbacks.
@@ -451,6 +418,54 @@ class ComponentCollector {
 
       foreach ($component_data[$property_name] as $delta => &$item_data) {
         $this->processComponentData($item_data, $property_info['properties']);
+      }
+    }
+  }
+
+  /**
+   * Sets values from a presets property into other properties.
+   *
+   * @param string $property_name
+   *  The name of the preset property.
+   * @param $property_info
+   *  The property info array for the property.
+   * @param &$component_data_local
+   *  The array of component data, or for child properties, the item array that
+   *  immediately contains the property. In other words, this array would have
+   *  a key $property_name if data has been supplied for this property.
+   */
+  protected function setPresetValues($property_name, $property_info, &$component_data_local) {
+    if (empty($component_data_local[$property_name])) {
+      return;
+    }
+
+    $preset_key = $component_data_local[$property_name];
+    $selected_preset_info = $property_info['presets'][$preset_key];
+
+    // Set values which are forced by the preset.
+    foreach ($selected_preset_info['data']['force'] as $forced_property_name => $forced_data) {
+      // Plain value.
+      if (isset($forced_data['value'])) {
+        $component_data_local[$forced_property_name] = $forced_data['value'];
+      }
+
+      // TODO: processed value, using chain of processing instructions.
+    }
+
+    // Set values which are suggested by the preset, if the value is empty.
+    if (isset($selected_preset_info['data']['suggest'])) {
+      foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
+        // Only set this if no incoming value is set.
+        if (!empty($component_data_local[$suggested_property_name])) {
+          continue;
+        }
+
+        // Plain value.
+        if (isset($suggested_data['value'])) {
+          $component_data_local[$suggested_property_name] = $suggested_data['value'];
+        }
+
+        // TODO: processed value, using chain of processing instructions.
       }
     }
   }
