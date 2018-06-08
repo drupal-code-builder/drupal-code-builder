@@ -36,16 +36,8 @@ class EntityHandler extends PHPClassFile {
       ],
     ];
 
-    // Override some parent definitions to provide computed defaults.
-    // TODO: remove, always given by entity type generator.
-    $data_definition['relative_class_name']['default'] = function ($component_data) {
-      return [
-        'Entity',
-        'Handler',
-        // Class name is entity type + handler type, e.g. CatListBuilder.
-        $component_data['entity_class_name'] . CaseString::snake($component_data['handler_type'])->pascal(),
-      ];
-    };
+    // Note that relative_class_name is given by the entity type component.
+
     $data_definition['docblock_first_line']['default'] = function ($component_data) {
       return "Provides the {$component_data['handler_label']} handler for the {$component_data['entity_type_label']} entity.";
     };

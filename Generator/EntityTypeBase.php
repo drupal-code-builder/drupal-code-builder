@@ -453,11 +453,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
         'parent_class_name' => $handler_type_info['base_class'],
-        'relative_class_name' => [
-          'Entity',
-          'Handler',
-          $this->makeShortHandlerClassName($key, $handler_type_info),
-        ],
+        'relative_class_name' => $this->getRelativeHandlerClassNamePieces($key, $handler_type_info),
       ];
 
       if (isset($handler_type_info['handler_properties'])) {
@@ -670,6 +666,35 @@ abstract class EntityTypeBase extends PHPClassFile {
   }
 
   /**
+   * Helper to create the relative namespaced class name for a handler.
+   *
+   * @param string $key
+   *   The handler type key as defined by getHandlerTypes().
+   * @param array $handler_type_info
+   *   The handler type info as defined by getHandlerTypes().
+   *
+   * @return string[]
+   *   The handler class name, qualified relative to the module, as an array
+   *   of name pieces.
+   */
+  protected function getRelativeHandlerClassNamePieces($handler_type_key, $handler_type_info) {
+    $handler_short_class_name = $this->makeShortHandlerClassName($handler_type_key, $handler_type_info);
+    if (isset($handler_type_info['class_namespace'])) {
+      $handler_relative_class_name = $handler_type_info['class_namespace'];
+      $handler_relative_class_name[] = $handler_short_class_name;
+    }
+    else {
+      $handler_relative_class_name = [
+        'Entity',
+        'Handler',
+        $handler_short_class_name,
+      ];
+    }
+
+    return $handler_relative_class_name;
+  }
+
+  /**
    * Helper to create the full class name for a handler.
    *
    * @param string $key
@@ -681,14 +706,14 @@ abstract class EntityTypeBase extends PHPClassFile {
    *   The fully-qualified handler class name.
    */
   protected function makeQualifiedHandlerClassName($handler_type_key, $handler_type_info) {
-    $handler_class_name = static::makeQualifiedClassName([
-      // TODO: DRY, with EntityHandler class.
+    $relative_name_pieces = $this->getRelativeHandlerClassNamePieces($handler_type_key, $handler_type_info);
+    $name_pieces = array_merge([
       'Drupal',
       '%module',
-      'Entity',
-      'Handler',
-      $this->makeShortHandlerClassName($handler_type_key, $handler_type_info),
-    ]);
+    ], $relative_name_pieces);
+
+
+    $handler_class_name = static::makeQualifiedClassName($name_pieces);
 
     return $handler_class_name;
   }
