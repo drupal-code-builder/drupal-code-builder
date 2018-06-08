@@ -62,6 +62,12 @@ class ExportInclude {
       // data an come here several times for the same key. (Which they really
       // shouldn't, but it's not a nice way to catch the problem.)
       include $data_file;
+
+      // The included file must declare the $data variable.
+      if (!isset($data)) {
+        throw new \Exception("Included data file {$data_file} did not execute correctly as PHP.");
+      }
+
       return $data;
     }
 
