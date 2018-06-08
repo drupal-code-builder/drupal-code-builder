@@ -566,6 +566,14 @@ class PluginTypesCollector {
         return;
       }
 
+      // Skip any class that we can't attempt to load without a fatal. This will
+      // typically happen if the plugin is meant for use with another module,
+      // and inherits from a base class that doesn't exist in the current
+      // codebase.
+      if (!$this->codeAnalyser->classIsUsable($definition['class'])) {
+        continue;
+      }
+
       // Babysit modules that have a broken plugin class. This can be caused
       // if the namespace is incorrect for the file location, and so prevents
       // the class from being autoloaded.
