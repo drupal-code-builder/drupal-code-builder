@@ -356,16 +356,17 @@ class ComponentCollector {
   }
 
   /**
-   * Process component data prior to passing it to generateComponent().
+   * Recursively process component data prior instantiating components.
    *
    * Performs final processing for the component data:
+   *  - sets values forced or suggested by other properties' presets.
    *  - sets default values on empty properties. To prevent a default being set
    *    and keep the component a property represents absent, set it to FALSE.
-   *  - sets values forced by other properties' presets.
    *  - performs additional processing that a property may require
    *
    * @param &$component_data
-   *  The component data array.
+   *  The component data array. On the first call, this is the entire array; on
+   *  recursive calls this is the local data subset.
    * @param &$component_data_info
    *  The component data info for the data being processed. Passed by reference,
    *  to allow property processing callbacks to make changes.
@@ -373,6 +374,7 @@ class ComponentCollector {
   protected function processComponentData(&$component_data, &$component_data_info) {
     // Set values forced by a preset.
     foreach ($component_data_info as $property_name => $property_info) {
+      // Not a preset property: nothing to do.
       if (!isset($property_info['presets'])) {
         continue;
       }
@@ -456,6 +458,8 @@ class ComponentCollector {
   /**
    * Set the default value for a property in component data.
    *
+   * Helper for processComponentData().
+   *
    * @param $property_name
    *  The name of the property. For child properties, this is the name of just
    *  the child property.
@@ -519,6 +523,8 @@ class ComponentCollector {
 
   /**
    * Applies the processing callback for a property in component data.
+   *
+   * Helper for processComponentData().
    *
    * @param $property_name
    *  The name of the property. For child properties, this is the name of just
