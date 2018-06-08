@@ -324,6 +324,9 @@ abstract class EntityTypeBase extends PHPClassFile {
    *      handler type key.
    *   - 'class_name_suffix': (optional) Specifies the suffix to be added to the
    *     entity type when forming the class name for this handler type.
+   *   - 'class_namespace': (optional) Array giving the namespace of the handler
+   *     class beneath the module's namespace. Defaults to giving the handler
+   *     a namespace of Entity\Handler.
    */
   protected static function getHandlerTypes() {
     return [
@@ -354,6 +357,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'default'],
         'class_name_suffix' => 'Form',
+        'class_namespace' => ['Form'],
         'mode' => 'core_none',
         // base_class for all form handlers is set by child classes.
       ],
@@ -363,6 +367,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'add'],
         'class_name_suffix' => 'AddForm',
+        'class_namespace' => ['Form'],
         'mode' => 'custom_default',
         'default_type' => 'form_default',
       ],
@@ -372,6 +377,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'edit'],
         'class_name_suffix' => 'EditForm',
+        'class_namespace' => ['Form'],
         'mode' => 'custom_default',
         'default_type' => 'form_default',
       ],
@@ -379,6 +385,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'delete form',
         'description' => "The entity form class for the 'delete' operation.",
         'class_name_suffix' => 'DeleteForm',
+        'class_namespace' => ['Form'],
         'property_path' => ['form', 'delete'],
         'mode' => 'core_none',
       ],

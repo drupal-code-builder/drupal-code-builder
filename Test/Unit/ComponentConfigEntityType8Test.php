@@ -289,7 +289,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
     $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
-    $this->assertArrayHasKey("src/Entity/Handler/KittyCatForm.php", $files, "The files list has a form handler file.");
+    $this->assertArrayHasKey("src/Form/KittyCatForm.php", $files, "The files list has a form handler file.");
     $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has a list builder handler file.");
     $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
     $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
@@ -304,7 +304,7 @@ class ComponentConfigEntityType8Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
     $annotation_tester->assertPropertyHasValue(['handlers', 'route_provider', 'html'], 'Drupal\Core\Entity\Routing\AdminHtmlRouteProvider');
-    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\test_module\Entity\Handler\KittyCatForm', 'The entity type has a default form handler.');
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\test_module\Form\KittyCatForm', 'The entity type has a default form handler.');
     $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'delete'], "Drupal\Core\Entity\EntityDeleteForm");
 
     // Check the links are declared.
@@ -365,13 +365,13 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
 
     // Check the form file.
-    $entity_form_file = $files['src/Entity/Handler/KittyCatForm.php'];
+    $entity_form_file = $files['src/Form/KittyCatForm.php'];
 
     $php_tester = new PHPTester($entity_form_file);
     // We override formSubmit() empty so it's there for the developer to add to,
     // so disable the sniff for empty overrides.
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
-    $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatForm');
+    $php_tester->assertHasClass('Drupal\test_module\Form\KittyCatForm');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityForm');
     $php_tester->assertHasMethods(['form', 'submitForm']);
 
