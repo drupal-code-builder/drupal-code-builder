@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Storage;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Exception\StorageException;
 
 /**
  * Provides a storage handler that uses PHP serialization in files.
@@ -58,7 +59,7 @@ class Serialized {
       $data = unserialize(file_get_contents($data_file));
 
       if ($data === FALSE) {
-        throw new \Exception("Data file {$data_file} does not contain PHP serialized data.");
+        throw new StorageException("Data file {$data_file} does not contain PHP serialized data.");
       }
 
       return $data;

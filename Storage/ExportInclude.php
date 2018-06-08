@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Storage;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Exception\StorageException;
 
 /**
  * Provides a storage handler that writes PHP declarations of data in files.
@@ -65,7 +66,7 @@ class ExportInclude {
 
       // The included file must declare the $data variable.
       if (!isset($data)) {
-        throw new \Exception("Included data file {$data_file} did not execute correctly as PHP.");
+        throw new StorageException("Included data file {$data_file} did not execute correctly as PHP.");
       }
 
       return $data;
