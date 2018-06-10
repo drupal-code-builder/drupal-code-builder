@@ -25,6 +25,8 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'boolean',
         'default' => TRUE,
       ],
+      // '' TODO - characteristics preset
+      // TODO: UI preset
       'revisionable' =>  [
         'label' => 'Revisionable',
         'description' => "Whether this entity type allows multiple revisions of a single entity.",
