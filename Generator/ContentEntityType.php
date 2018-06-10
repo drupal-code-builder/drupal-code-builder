@@ -18,6 +18,29 @@ class ContentEntityType extends EntityTypeBase {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
+    // Set up the entity type functionality preset options.
+    $data_definition['functionality']['presets'] = [
+      'fieldable' => [
+        'label' => 'Fieldable',
+        'description' => "Whether this entity type allows custom fields.",
+        'data' => [
+          'force' => [
+            'forced_property' => [
+              'value' => ['forced_A'],
+            ],
+          ],
+          'suggest' => [
+            'suggested_property_filled' => [
+              'value' => ['suggested_A'],
+            ],
+            'suggested_property_empty' => [
+              'value' => ['suggested_A'],
+            ],
+          ],
+        ],
+      ],
+    ];
+
     $bundle_entity_properties = [
       'fieldable' => [
         'label' => 'Fieldable',
