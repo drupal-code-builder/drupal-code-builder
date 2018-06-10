@@ -379,7 +379,7 @@ class ComponentCollector {
         continue;
       }
 
-      $this->setPresetValues($property_name, $property_info, $component_data);
+      $this->setPresetValues($property_name, $component_data_info, $component_data);
     }
 
     // Set defaults and apply processing callbacks.
@@ -427,46 +427,138 @@ class ComponentCollector {
    *
    * @param string $property_name
    *  The name of the preset property.
-   * @param $property_info
-   *  The property info array for the property.
+   * @param $component_data_info
+   *  The component info array, or for child properties, the info array for the
+   *  current data.
    * @param &$component_data_local
    *  The array of component data, or for child properties, the item array that
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
    */
-  protected function setPresetValues($property_name, $property_info, &$component_data_local) {
+  protected function setPresetValues($property_name, &$component_data_info, &$component_data_local) {
     if (empty($component_data_local[$property_name])) {
       return;
     }
 
-    $preset_key = $component_data_local[$property_name];
-    $selected_preset_info = $property_info['presets'][$preset_key];
-
-    // Set values which are forced by the preset.
-    foreach ($selected_preset_info['data']['force'] as $forced_property_name => $forced_data) {
-      // Plain value.
-      if (isset($forced_data['value'])) {
-        $component_data_local[$forced_property_name] = $forced_data['value'];
-      }
-
-      // TODO: processed value, using chain of processing instructions.
+    // Treat the selected preset as an array, even if it's single-valued.
+    if ($component_data_info[$property_name]['format'] == 'array') {
+      $preset_keys = $component_data_local[$property_name];
+      $multiple_presets = TRUE;
+    }
+    else {
+      $preset_keys = [$component_data_local[$property_name]];
+      $multiple_presets = FALSE;
     }
 
-    // Set values which are suggested by the preset, if the value is empty.
-    if (isset($selected_preset_info['data']['suggest'])) {
-      foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
-        // Only set this if no incoming value is set.
-        if (!empty($component_data_local[$suggested_property_name])) {
-          continue;
-        }
+    // First, gather up the values that the selected preset items want to set.
+    // We will then apply them to the data.
+    $forced_values = [];
+    $suggested_values = [];
 
-        // Plain value.
-        if (isset($suggested_data['value'])) {
-          $component_data_local[$suggested_property_name] = $suggested_data['value'];
+    foreach ($preset_keys as $preset_key) {
+      $selected_preset_info = $component_data_info[$property_name]['presets'][$preset_key];
+
+      // Ensure these are both preset as at least empty arrays.
+      // TODO: handle filling this in in ComponentDataInfoGatherer?
+      // TODO: testing should cover that it's ok to have these absent.
+      $selected_preset_info['data'] += [
+        'force' => [],
+        'suggest' => [],
+      ];
+
+      // Values which are forced by the preset.
+      foreach ($selected_preset_info['data']['force'] as $forced_property_name => $forced_data) {
+        // Literal value. (This is the only type we support at the moment.)
+        if (isset($forced_data['value'])) {
+          $this->collectPresetValue(
+            $forced_values,
+            $multiple_presets,
+            $forced_property_name,
+            $component_data_info[$forced_property_name],
+            $forced_data['value']
+          );
         }
 
         // TODO: processed value, using chain of processing instructions.
       }
+
+      // Values which are only suggested by the preset.
+      foreach ($selected_preset_info['data']['suggest'] as $suggested_property_name => $suggested_data) {
+        // Literal value. (This is the only type we support at the moment.)
+        if (isset($suggested_data['value'])) {
+          $this->collectPresetValue(
+            $suggested_values,
+            $multiple_presets,
+            $suggested_property_name,
+            $component_data_info[$suggested_property_name],
+            $suggested_data['value']
+          );
+        }
+
+        // TODO: processed value, using chain of processing instructions.
+      }
+    }
+
+    // Set the collected data values into the actual component data, if
+    // applicable.
+    foreach ($forced_values as $forced_property_name => $forced_data) {
+      $component_data_local[$forced_property_name] = $forced_data;
+    }
+
+    foreach ($suggested_values as $suggested_property_name => $suggested_data) {
+      // Suggested values from the preset only get set if there is nothing
+      // already set there in the incoming data.
+      // TODO: boolean FALSE counts as non-empty for a boolean property in
+      // other places! ARGH!
+      if (!empty($component_data_local[$suggested_property_name])) {
+        continue;
+      }
+
+      $component_data_local[$suggested_property_name] = $suggested_data;
+    }
+  }
+
+  /**
+   * Collect values for presets.
+   *
+   * Helper for setPresetValues(). Merges values from multiple presets so that
+   * they can be set into the actual component data in one go.
+   *
+   * @param array &$collected_data
+   *   The data collected from presets so far. Further data for this call should
+   *   be added to this.
+   * @param bool $multiple_presets
+   *   Whether the current preset property is multi-valued or not.
+   * @param string $target_property_name
+   *   The name of the property to set from the preset.
+   * @param array $target_property_info
+   *   The property info array of the target property.
+   * @param mixed $preset_property_data
+   *   The value from the preset for the target property.
+   */
+  function collectPresetValue(
+    &$collected_data,
+    $multiple_presets,
+    $target_property_name,
+    $target_property_info,
+    $preset_property_data
+  ) {
+    // Check the format of the value is compatible with multiple presets.
+    if ($multiple_presets) {
+      if (!in_array($target_property_info['format'], ['array', 'compound'])) {
+        // TODO: check cardinality is allowable as well!
+        // TODO: give the preset name! ARGH another parameter :(
+        throw new \Exception("Multiple presets not compatible with single-valued properties, with target property {$target_property_name}.");
+      }
+    }
+
+    if (isset($collected_data[$target_property_name])) {
+      // Merge the data. The check above should have covered that this is
+      // allowed.
+      $collected_data[$target_property_name] = array_merge($collected_data[$target_property_name], $preset_property_data);
+    }
+    else {
+      $collected_data[$target_property_name] = $preset_property_data;
     }
   }
 
