@@ -48,6 +48,14 @@ abstract class EntityTypeBase extends PHPClassFile {
           return CaseString::snake($entity_type_id)->pascal();
         },
       ],
+      'functionality' => [
+        'label' => 'Entity functionality',
+        'description' => "Characteristics of the entity type that provide different kinds of functionality.",
+        'format' => 'array',
+        'presets' => [
+          // Provided by child classes.
+        ],
+      ],
       // UI property. This forces the route provider which in turn forces other
       // things, and also sets:
       // - the links annotation properties
