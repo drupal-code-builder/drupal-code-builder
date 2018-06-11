@@ -536,7 +536,7 @@ class ComponentCollector {
    * @param mixed $preset_property_data
    *   The value from the preset for the target property.
    */
-  function collectPresetValue(
+  protected function collectPresetValue(
     &$collected_data,
     $multiple_presets,
     $target_property_name,
