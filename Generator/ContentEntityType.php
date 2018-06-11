@@ -21,9 +21,19 @@ class ContentEntityType extends EntityTypeBase {
     // Set up the entity type functionality preset options.
     $data_definition['functionality']['presets'] = [
       'fieldable' => [
-        'label' => 'Fieldable',
+        'label' => 'Fieldable - allows custom fields',
+        // TODO: Not supported yet; will work on 3.3.x.
         'description' => "Whether this entity type allows custom fields.",
+        // No actual data, as the field_ui_base_route depends on whether this
+        // is a bundle entity!
+        // TODO: this would work if bundle entity is a subclass generator.
         'data' => [
+        ],
+      ],
+      'revisionable' => [
+        'label' => 'Revisionable - entities can have multiple revisions',
+        'data' => [
+          // argh need to MERGE entity_keys!
           'force' => [
             'forced_property' => [
               'value' => ['forced_A'],
