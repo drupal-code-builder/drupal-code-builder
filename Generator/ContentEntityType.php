@@ -50,6 +50,10 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
     ];
+    $data_definition['functionality']['default'] = [
+      'fieldable',
+      'revisionable',
+    ];
 
     $bundle_entity_properties = [
       'fieldable' => [
