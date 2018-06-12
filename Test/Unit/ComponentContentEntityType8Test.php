@@ -129,6 +129,11 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue(['handlers', 'list_builder'], 'Drupal\Core\Entity\EntityListBuilder');
     $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty cats');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
+    $annotation_tester->assertHasProperties([
+      'id',
+      'label',
+      'uuid',
+    ], 'entity_keys');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'title');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'uuid'], 'uuid');
@@ -440,6 +445,12 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue('translatable', 'TRUE');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('data_table', 'kitty_cat_field_data');
+    $annotation_tester->assertHasProperties([
+      'id',
+      'label',
+      'uuid',
+      'langcode',
+    ], 'entity_keys');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'langcode'], 'langcode');
   }
@@ -547,6 +558,12 @@ class ComponentContentEntityType8Test extends TestBase {
     ]);
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('revision_table', 'kitty_cat_revision');
+    $annotation_tester->assertHasProperties([
+      'id',
+      'label',
+      'uuid',
+      'revision',
+    ], 'entity_keys');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'revision'], 'revision_id');
   }
