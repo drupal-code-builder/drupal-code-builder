@@ -303,10 +303,10 @@ class ContentEntityType extends EntityTypeBase {
       'setLabel' => "t('Title')",
       'setRequired' => TRUE,
     ];
-    if (!empty($this->component_data['revisionable'])) {
+    if ($use_revisionable) {
       $title_field_calls['setRevisionable'] = TRUE;
     }
-    if (!empty($this->component_data['translatable'])) {
+    if ($use_translatable) {
       $title_field_calls['setTranslatable'] = TRUE;
     }
     $title_field_calls += [
@@ -380,10 +380,10 @@ class ContentEntityType extends EntityTypeBase {
       $fluent_calls = [];
       $fluent_calls[] = "  ->setLabel(t('{$base_field_data['label']}'))";
       $fluent_calls[] = "  ->setDescription(t('TODO: description of field.'))";
-      if (!empty($this->component_data['revisionable'])) {
+      if ($use_revisionable) {
         $fluent_calls[] = "  ->setRevisionable(TRUE)";
       }
-      if (!empty($this->component_data['translatable'])) {
+      if ($use_translatable) {
         $fluent_calls[] = "  ->setTranslatable(TRUE)";
       }
 
