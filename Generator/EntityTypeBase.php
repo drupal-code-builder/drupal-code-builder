@@ -52,7 +52,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'Entity functionality',
         'description' => "Characteristics of the entity type that provide different kinds of functionality.",
         'format' => 'array',
-        'process_default' => TRUE,
+        // 'process_default' => TRUE,
         'presets' => [
           // Provided by child classes.
         ],
