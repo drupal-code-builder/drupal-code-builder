@@ -447,7 +447,6 @@ class ComponentCollector {
       $preset_keys = [$component_data_local[$property_name]];
       $multiple_presets = FALSE;
     }
-    dump($preset_keys);
 
     // First, gather up the values that the selected preset items want to set.
     // We will then apply them to the data.

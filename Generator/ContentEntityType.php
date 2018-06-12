@@ -186,7 +186,6 @@ class ContentEntityType extends EntityTypeBase {
     // rather than 'default' so we can run after the preset values are applied
     // to add defaults and set the ordering.
     $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      dump($value);
       $value += [
         'id' => $component_data['entity_type_id'] . '_id',
         'label' => 'title',
@@ -219,7 +218,7 @@ class ContentEntityType extends EntityTypeBase {
       ];
 
       // dump($component_data);
-      dump($value);
+      // dump($value);
 
       $ordered_value = [];
       foreach ($entity_key_ordering as $key) {
@@ -227,7 +226,6 @@ class ContentEntityType extends EntityTypeBase {
           $ordered_value[$key] = $value[$key];
         }
       }
-      dump($ordered_value);
 
       $component_data[$property_name] = $ordered_value;
     };
@@ -332,6 +330,8 @@ class ContentEntityType extends EntityTypeBase {
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
+
+    // dump($this->component_data);
 
     $use_revisionable = in_array('revisionable', $this->component_data['functionality']);
     $use_translatable = in_array('translatable', $this->component_data['functionality']);
