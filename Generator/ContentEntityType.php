@@ -46,7 +46,7 @@ class ContentEntityType extends EntityTypeBase {
     // ARgh doesnt work, presets handled before defaults!
     $data_definition['functionality']['default'] = [
       'fieldable',
-      'revisionable',
+      // 'revisionable',
     ];
 
     $bundle_entity_properties = [
@@ -62,7 +62,7 @@ class ContentEntityType extends EntityTypeBase {
         'label' => 'Revisionable',
         'description' => "Whether this entity type allows multiple revisions of a single entity.",
         'format' => 'boolean',
-        'default' => TRUE,
+        'default' => TRUE, // ???
       ],
       'translatable' => [
         'label' => 'Translatable',
