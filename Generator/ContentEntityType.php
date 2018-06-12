@@ -42,6 +42,18 @@ class ContentEntityType extends EntityTypeBase {
           ],
         ],
       ],
+      'translatable' => [
+        'label' => 'Translatable - entities can be translated',
+        'data' => [
+          'force' => [
+            'entity_keys' => [
+              'value' => [
+                'langcode' => 'langcode',
+              ],
+            ],
+          ],
+        ],
+      ],
     ];
     $data_definition['functionality']['default'] = [
       'fieldable',
@@ -211,10 +223,6 @@ class ContentEntityType extends EntityTypeBase {
       // TODO: all the following will move to the functionality preset.
       if (!empty($component_data['bundle_entity_type'])) {
         $value['bundle'] = 'type';
-      }
-
-      if (!empty($component_data['translatable'])) {
-        $value['langcode'] = 'langcode';
       }
 
       // TODO: convert these to draw from the interface parents definition.
