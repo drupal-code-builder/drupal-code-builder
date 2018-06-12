@@ -112,7 +112,14 @@ abstract class EntityTypeBase extends PHPClassFile {
         // Note that the format here is abused: keys are used as well as values!
         'format' => 'array',
         'computed' => TRUE,
-        // Child classes set the default TODO! processing! callback.
+        // This uses a 'processing' callback rather than 'default' to set the
+        // computed value, so that we can run after the preset values are
+        // applied to add defaults and set the ordering. Accordingly, we have
+        // to force the processing to be applied, and we need an empty array
+        // as an initial default for the processing to apply to.
+        'default' => [],
+        'process_empty' => TRUE,
+        // Child classes set the processing callback.
       ],
       'entity_interface_name' => [
         'label' => 'Interface',

@@ -182,37 +182,9 @@ class ContentEntityType extends EntityTypeBase {
 
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
 
-    // Change the computed value for entity keys.
-    // TODO: obsolete!
-    $data_definition['entity_keys']['default'] = function($component_data) {
-      $keys = [
-        'id' => $component_data['entity_type_id'] . '_id',
-        'label' => 'title',
-        'uuid' => 'uuid',
-      ];
-
-      if (!empty($component_data['bundle_entity_type'])) {
-        $keys['bundle'] = 'type';
-      }
-
-      if (!empty($component_data['revisionable'])) {
-        $keys['revision'] = 'revision_id';
-      }
-
-      if (!empty($component_data['translatable'])) {
-        $keys['langcode'] = 'langcode';
-      }
-
-      // TODO: convert these to draw from the interface parents definition.
-      if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
-        $keys['uid'] = 'uid';
-      }
-      if (in_array('EntityPublishedInterface', $component_data['interface_parents'])) {
-        $keys['published'] = 'status';
-      }
-
-      return $keys;
-    };
+    // Set the computed value for entity keys. This is done in 'processing'
+    // rather than 'default' so we can run after the preset values are applied
+    // to add defaults and set the ordering.
     $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       $value += [
         'id' => $component_data['entity_type_id'] . '_id',
