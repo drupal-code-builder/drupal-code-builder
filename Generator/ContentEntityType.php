@@ -621,8 +621,8 @@ class ContentEntityType extends EntityTypeBase {
       ];
     }
 
-    $revisionable = !empty($this->component_data['revisionable']);
-    $translatable = !empty($this->component_data['translatable']);
+    $revisionable = in_array('revisionable', $this->component_data['functionality']);
+    $translatable = in_array('translatable', $this->component_data['functionality']);
 
     if (!empty($this->component_data['field_ui_base_route'])) {
       $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
