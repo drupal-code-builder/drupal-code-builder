@@ -36,7 +36,9 @@ class ComponentContentEntityType8Test extends TestBase {
           // Use an ID string with an underscore to test class names and labels
           // correctly have it removed.
           'entity_type_id' => 'kitty_cat',
-          // Note that 'functionality' gets a default of ['fieldable'].
+          'functionality' => [
+            'fieldable',
+          ],
           'admin_permission' => TRUE,
           'handler_list_builder' => 'core',
           'base_fields' => [
@@ -587,7 +589,9 @@ class ComponentContentEntityType8Test extends TestBase {
           // Use an ID string with an underscore to test class names and labels
           // correctly have it removed.
           'entity_type_id' => 'kitty_cat',
-          'fieldable' => TRUE,
+          'functionality' => [
+            'fieldable',
+          ],
           'interface_parents' => [
             'EntityOwnerInterface',
           ],
@@ -1378,7 +1382,9 @@ class ComponentContentEntityType8Test extends TestBase {
       'content_entity_types' => [
         0 => [
           'entity_type_id' => 'kitty_cat',
-          'functionality' => [],
+          'functionality' => [
+            'fieldable',
+          ],
           'entity_ui' => 'admin',
           'bundle_entity' => [
             0 => [
@@ -1429,6 +1435,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'bundle_entity_type',
+      'field_ui_base_route',
       'links',
     ]);
 
