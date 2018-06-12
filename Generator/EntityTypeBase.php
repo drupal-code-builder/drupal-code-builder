@@ -109,6 +109,8 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
+        // Note that the format here is abused: keys are used as well as values!
+        'format' => 'array',
         'computed' => TRUE,
         // Child classes set the default TODO! processing! callback.
       ],
