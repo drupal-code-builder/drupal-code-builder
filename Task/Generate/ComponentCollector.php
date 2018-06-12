@@ -359,9 +359,9 @@ class ComponentCollector {
    * Recursively process component data prior instantiating components.
    *
    * Performs final processing for the component data:
-   *  - sets values forced or suggested by other properties' presets.
    *  - sets default values on empty properties. To prevent a default being set
    *    and keep the component a property represents absent, set it to FALSE.
+   *  - sets values forced or suggested by other properties' presets.
    *  - performs additional processing that a property may require
    *
    * @param &$component_data
@@ -372,20 +372,18 @@ class ComponentCollector {
    *  to allow property processing callbacks to make changes.
    */
   protected function processComponentData(&$component_data, &$component_data_info) {
-    // Set values from a preset.
-    foreach ($component_data_info as $property_name => $property_info) {
-      // Not a preset property: nothing to do.
-      if (!isset($property_info['presets'])) {
-        continue;
-      }
-
-      $this->setPresetValues($property_name, $component_data_info, $component_data);
-    }
-
-    // Set defaults and apply processing callbacks.
+    // Work over each property.
     foreach ($component_data_info as $property_name => &$property_info) {
       // Set defaults for properties that don't have a value yet.
       $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+
+      // Set values from a preset.
+      // We do this after defaults, so preset properties can have a default
+      // value. Note this means that presets can only affect properties that
+      // come after them in the property info order.
+      if (isset($property_info['presets'])) {
+        $this->setPresetValues($property_name, $component_data_info, $component_data);
+      }
 
       // Allow each property to apply its processing callback. Note that this
       // may set or alter other properties in the component data array, and may
