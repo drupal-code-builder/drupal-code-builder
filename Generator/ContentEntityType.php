@@ -63,24 +63,6 @@ class ContentEntityType extends EntityTypeBase {
     ];
 
     $bundle_entity_properties = [
-      'fieldable' => [
-        'label' => 'Fieldable',
-        'description' => "Whether this entity type allows custom fields.",
-        'format' => 'boolean',
-        'default' => TRUE,
-      ],
-      'revisionable' =>  [
-        'label' => 'Revisionable',
-        'description' => "Whether this entity type allows multiple revisions of a single entity.",
-        'format' => 'boolean',
-        'default' => TRUE,
-      ],
-      'translatable' => [
-        'label' => 'Translatable',
-        'description' => "Whether this entity type allows translation.",
-        'format' => 'boolean',
-        'default' => TRUE,
-      ],
       'bundle_entity' => [
         'label' => 'Bundle config entity type',
         'description' => "Creates a config entity type which provides the bundles for this entity type. "
