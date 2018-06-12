@@ -66,13 +66,11 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'boolean',
         'default' => TRUE,
       ],
-      // '' TODO - characteristics preset
-      // TODO: UI preset
       'revisionable' =>  [
         'label' => 'Revisionable',
         'description' => "Whether this entity type allows multiple revisions of a single entity.",
         'format' => 'boolean',
-        'default' => TRUE, // ???
+        'default' => TRUE,
       ],
       'translatable' => [
         'label' => 'Translatable',
@@ -217,9 +215,6 @@ class ContentEntityType extends EntityTypeBase {
         'published',
       ];
 
-      // dump($component_data);
-      // dump($value);
-
       $ordered_value = [];
       foreach ($entity_key_ordering as $key) {
         if (isset($value[$key])) {
@@ -330,8 +325,6 @@ class ContentEntityType extends EntityTypeBase {
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
-
-    // dump($this->component_data);
 
     $use_revisionable = in_array('revisionable', $this->component_data['functionality']);
     $use_translatable = in_array('translatable', $this->component_data['functionality']);
