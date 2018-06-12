@@ -203,7 +203,7 @@ class ContentEntityType extends EntityTypeBase {
       return $keys;
     };
     $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      $keys = $value + [
+      $value += [
         'id' => $component_data['entity_type_id'] . '_id',
         'label' => 'title',
         'uuid' => 'uuid',
@@ -211,19 +211,19 @@ class ContentEntityType extends EntityTypeBase {
 
       // TODO: all the following will move to the functionality preset.
       if (!empty($component_data['bundle_entity_type'])) {
-        $keys['bundle'] = 'type';
+        $value['bundle'] = 'type';
       }
 
       if (!empty($component_data['translatable'])) {
-        $keys['langcode'] = 'langcode';
+        $value['langcode'] = 'langcode';
       }
 
       // TODO: convert these to draw from the interface parents definition.
       if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
-        $keys['uid'] = 'uid';
+        $value['uid'] = 'uid';
       }
       if (in_array('EntityPublishedInterface', $component_data['interface_parents'])) {
-        $keys['published'] = 'status';
+        $value['published'] = 'status';
       }
 
       // Apply a standard ordering to the keys.
@@ -237,13 +237,18 @@ class ContentEntityType extends EntityTypeBase {
         'uid',
         'published',
       ];
-      // TODO! this bit!
 
       // dump($component_data);
       dump($value);
-      dump($keys);
 
-      $component_data[$property_name] = $keys;
+      $ordered_value = [];
+      foreach ($entity_key_ordering as $key) {
+        if (isset($value[$key])) {
+          $ordered_value[$key] = $value[$key];
+        }
+      }
+
+      $component_data[$property_name] = $ordered_value;
     };
 
     return $data_definition;
