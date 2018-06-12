@@ -559,20 +559,23 @@ class ContentEntityType extends EntityTypeBase {
       ];
     }
 
+    $revisionable = !empty($this->component_data['revisionable']);
+    $translatable = !empty($this->component_data['translatable']);
+
     if (!empty($this->component_data['field_ui_base_route'])) {
       $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
     }
 
-    if (!empty($this->component_data['revisionable'])) {
+    if ($revisionable) {
       $annotation_data['revision_table'] = "{$annotation_data['base_table']}_revision";
     }
 
-    if (!empty($this->component_data['translatable'])) {
+    if ($translatable) {
       $annotation_data['translatable'] = 'TRUE';
       $annotation_data['data_table'] = "{$annotation_data['base_table']}_field_data";
     }
 
-    if (!empty($this->component_data['translatable']) && !empty($this->component_data['revisionable'])) {
+    if ($translatable && $revisionable) {
       $annotation_data['revision_data_table'] = "{$annotation_data['base_table']}_field_revision";
     }
 
