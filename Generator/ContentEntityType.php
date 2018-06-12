@@ -43,10 +43,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
     ];
-    // ARgh doesnt work, presets handled before defaults!
     $data_definition['functionality']['default'] = [
       'fieldable',
-      // 'revisionable',
     ];
 
     $bundle_entity_properties = [
@@ -173,6 +171,7 @@ class ContentEntityType extends EntityTypeBase {
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
 
     // Change the computed value for entity keys.
+    // TODO: obsolete!
     $data_definition['entity_keys']['default'] = function($component_data) {
       $keys = [
         'id' => $component_data['entity_type_id'] . '_id',
