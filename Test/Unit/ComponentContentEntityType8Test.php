@@ -1382,9 +1382,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'content_entity_types' => [
         0 => [
           'entity_type_id' => 'kitty_cat',
-          'functionality' => [
-            'fieldable',
-          ],
+          'functionality' => [],
           'entity_ui' => 'admin',
           'bundle_entity' => [
             0 => [
@@ -1435,7 +1433,6 @@ class ComponentContentEntityType8Test extends TestBase {
       'admin_permission',
       'entity_keys',
       'bundle_entity_type',
-      'field_ui_base_route',
       'links',
     ]);
 
