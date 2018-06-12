@@ -277,6 +277,32 @@ class AnnotationTester {
   }
 
   /**
+   * Asserts a set of properties, in the given order.
+   *
+   * @param string[] $property_names
+   *   An array of property names.
+   * @param string[] $parent_address
+   *   The address of the parent property. An array address for the property;
+   *   may be a scalar string for a top-level property.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasProperties($property_names, $parent_address, $message = NULL) {
+    if (!is_array($parent_address)) {
+      $parent_address = [$parent_address];
+    }
+
+    $property_string = $this->getPropertyString($parent_address);
+    $property_names_string = implode(', ', $property_names);
+
+    $message = $message ?? "The property {$property_string} has the expected child properties {$property_names_string} in the expected order.";
+
+    $child_value = NestedArray::getValue($this->data, $parent_address);
+
+    Assert::assertSame($property_names, array_keys($child_value), $message);
+  }
+
+  /**
    * Assert the annotation has the given property.
    *
    * @param mixed $property_address

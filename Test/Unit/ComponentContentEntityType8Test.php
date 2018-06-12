@@ -651,6 +651,13 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue('bundle_label', 'Kitty Cat Type');
     $annotation_tester->assertPropertyHasTranslation('bundle_label');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
+    $annotation_tester->assertHasProperties([
+      'id',
+      'label',
+      'uuid',
+      'bundle',
+      'uid',
+    ], 'entity_keys');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'title');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'uuid'], 'uuid');
