@@ -52,6 +52,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'Entity functionality',
         'description' => "Characteristics of the entity type that provide different kinds of functionality.",
         'format' => 'array',
+        'process_default' => TRUE,
         'presets' => [
           // Provided by child classes.
         ],
@@ -109,7 +110,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'entity_keys' => [
         'label' => 'Entity keys',
         'computed' => TRUE,
-        // Child classes set the default callback.
+        // Child classes set the default TODO! processing! callback.
       ],
       'entity_interface_name' => [
         'label' => 'Interface',

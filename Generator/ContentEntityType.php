@@ -33,23 +33,17 @@ class ContentEntityType extends EntityTypeBase {
       'revisionable' => [
         'label' => 'Revisionable - entities can have multiple revisions',
         'data' => [
-          // argh need to MERGE entity_keys!
           'force' => [
-            'forced_property' => [
-              'value' => ['forced_A'],
-            ],
-          ],
-          'suggest' => [
-            'suggested_property_filled' => [
-              'value' => ['suggested_A'],
-            ],
-            'suggested_property_empty' => [
-              'value' => ['suggested_A'],
+            'entity_keys' => [
+              'value' => [
+                'revision' => 'revision_id',
+              ],
             ],
           ],
         ],
       ],
     ];
+    // ARgh doesnt work, presets handled before defaults!
     $data_definition['functionality']['default'] = [
       'fieldable',
       'revisionable',
@@ -207,6 +201,10 @@ class ContentEntityType extends EntityTypeBase {
       }
 
       return $keys;
+    };
+    $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+      dump($component_data);
+      dump($value);
     };
 
     return $data_definition;
