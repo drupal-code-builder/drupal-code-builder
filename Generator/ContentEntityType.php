@@ -203,8 +203,47 @@ class ContentEntityType extends EntityTypeBase {
       return $keys;
     };
     $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      dump($component_data);
+      $keys = $value + [
+        'id' => $component_data['entity_type_id'] . '_id',
+        'label' => 'title',
+        'uuid' => 'uuid',
+      ];
+
+      // TODO: all the following will move to the functionality preset.
+      if (!empty($component_data['bundle_entity_type'])) {
+        $keys['bundle'] = 'type';
+      }
+
+      if (!empty($component_data['translatable'])) {
+        $keys['langcode'] = 'langcode';
+      }
+
+      // TODO: convert these to draw from the interface parents definition.
+      if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
+        $keys['uid'] = 'uid';
+      }
+      if (in_array('EntityPublishedInterface', $component_data['interface_parents'])) {
+        $keys['published'] = 'status';
+      }
+
+      // Apply a standard ordering to the keys.
+      $entity_key_ordering = [
+        'id',
+        'label',
+        'uuid',
+        'bundle',
+        'revision',
+        'langcode',
+        'uid',
+        'published',
+      ];
+      // TODO! this bit!
+
+      // dump($component_data);
       dump($value);
+      dump($keys);
+
+      $component_data[$property_name] = $keys;
     };
 
     return $data_definition;
