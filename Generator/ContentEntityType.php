@@ -367,9 +367,13 @@ class ContentEntityType extends EntityTypeBase {
       $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";
       $changed_field_calls = new FluentMethodCall;
       $changed_field_calls->setLabel(FluentMethodCall::t('Changed'))
-        ->setDescription(FluentMethodCall::t('The time that the node was last edited.'))
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE);
+        ->setDescription(FluentMethodCall::t('The time that the node was last edited.'));
+      if ($use_revisionable) {
+        $changed_field_calls->setRevisionable(TRUE);
+      }
+      if ($use_translatable) {
+        $changed_field_calls->setTranslatable(TRUE);
+      }
       $method_body = array_merge($method_body, $changed_field_calls->getCodeLines());
       $method_body[] = '';
     }
