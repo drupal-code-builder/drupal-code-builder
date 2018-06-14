@@ -17,6 +17,10 @@ class ConfigEntityType extends EntityTypeBase {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
+    // Temporary!
+    // TODO: add the functionality presets to this generator.
+    unset($data_definition['functionality']);
+
     $config_schema_property = [
       'entity_properties' => [
         'label' => 'Entity properties',

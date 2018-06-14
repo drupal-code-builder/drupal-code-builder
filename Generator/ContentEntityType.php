@@ -18,25 +18,50 @@ class ContentEntityType extends EntityTypeBase {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    $bundle_entity_properties = [
+    // Set up the entity type functionality preset options.
+    $data_definition['functionality']['presets'] = [
       'fieldable' => [
-        'label' => 'Fieldable',
+        'label' => 'Fieldable - allows custom fields',
+        // TODO: Not supported yet; will work on 3.3.x.
         'description' => "Whether this entity type allows custom fields.",
-        'format' => 'boolean',
-        'default' => TRUE,
+        // No actual data, as the field_ui_base_route depends on whether this
+        // is a bundle entity!
+        // TODO: this would work if bundle entity is a subclass generator.
+        'data' => [
+        ],
       ],
-      'revisionable' =>  [
-        'label' => 'Revisionable',
-        'description' => "Whether this entity type allows multiple revisions of a single entity.",
-        'format' => 'boolean',
-        'default' => TRUE,
+      'revisionable' => [
+        'label' => 'Revisionable - entities can have multiple revisions',
+        'data' => [
+          'force' => [
+            'entity_keys' => [
+              'value' => [
+                'revision' => 'revision_id',
+              ],
+            ],
+          ],
+        ],
       ],
       'translatable' => [
-        'label' => 'Translatable',
-        'description' => "Whether this entity type allows translation.",
-        'format' => 'boolean',
-        'default' => TRUE,
+        'label' => 'Translatable - entities can be translated',
+        'data' => [
+          'force' => [
+            'entity_keys' => [
+              'value' => [
+                'langcode' => 'langcode',
+              ],
+            ],
+          ],
+        ],
       ],
+    ];
+    $data_definition['functionality']['default'] = [
+      'fieldable',
+      'revisionable',
+      'translatable',
+    ];
+
+    $bundle_entity_properties = [
       'bundle_entity' => [
         'label' => 'Bundle config entity type',
         'description' => "Creates a config entity type which provides the bundles for this entity type. "
@@ -77,7 +102,7 @@ class ContentEntityType extends EntityTypeBase {
         // This will then be dependent on the 'fieldable' property.
         'computed' => TRUE,
         'default' => function($component_data) {
-          if (empty($component_data['fieldable'])) {
+          if (!in_array('fieldable', $component_data['functionality'])) {
             return NULL;
           }
 
@@ -139,35 +164,49 @@ class ContentEntityType extends EntityTypeBase {
 
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
 
-    // Change the computed value for entity keys.
-    $data_definition['entity_keys']['default'] = function($component_data) {
-      $keys = [
+    // Set the computed value for entity keys. This is done in 'processing'
+    // rather than 'default' so we can run after the preset values are applied
+    // to add defaults and set the ordering.
+    $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+      $value += [
         'id' => $component_data['entity_type_id'] . '_id',
         'label' => 'title',
         'uuid' => 'uuid',
       ];
 
+      // TODO: all the following will move to the functionality preset.
       if (!empty($component_data['bundle_entity_type'])) {
-        $keys['bundle'] = 'type';
-      }
-
-      if (!empty($component_data['revisionable'])) {
-        $keys['revision'] = 'revision_id';
-      }
-
-      if (!empty($component_data['translatable'])) {
-        $keys['langcode'] = 'langcode';
+        $value['bundle'] = 'type';
       }
 
       // TODO: convert these to draw from the interface parents definition.
       if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
-        $keys['uid'] = 'uid';
+        $value['uid'] = 'uid';
       }
       if (in_array('EntityPublishedInterface', $component_data['interface_parents'])) {
-        $keys['published'] = 'status';
+        $value['published'] = 'status';
       }
 
-      return $keys;
+      // Apply a standard ordering to the keys.
+      $entity_key_ordering = [
+        'id',
+        'label',
+        'uuid',
+        'bundle',
+        'revision',
+        'langcode',
+        'uid',
+        'published',
+      ];
+
+      $ordered_value = [];
+      foreach ($entity_key_ordering as $key) {
+        if (isset($value[$key])) {
+          $ordered_value[$key] = $value[$key];
+        }
+      }
+
+      $component_data[$property_name] = $ordered_value;
     };
 
     return $data_definition;
@@ -271,8 +310,8 @@ class ContentEntityType extends EntityTypeBase {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    $use_revisionable = !empty($this->component_data['revisionable']);
-    $use_translatable = !empty($this->component_data['translatable']);
+    $use_revisionable = in_array('revisionable', $this->component_data['functionality']);
+    $use_translatable = in_array('translatable', $this->component_data['functionality']);
 
     //dump($this->component_data);
 
@@ -559,8 +598,8 @@ class ContentEntityType extends EntityTypeBase {
       ];
     }
 
-    $revisionable = !empty($this->component_data['revisionable']);
-    $translatable = !empty($this->component_data['translatable']);
+    $revisionable = in_array('revisionable', $this->component_data['functionality']);
+    $translatable = in_array('translatable', $this->component_data['functionality']);
 
     if (!empty($this->component_data['field_ui_base_route'])) {
       $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];

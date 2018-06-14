@@ -48,6 +48,15 @@ abstract class EntityTypeBase extends PHPClassFile {
           return CaseString::snake($entity_type_id)->pascal();
         },
       ],
+      'functionality' => [
+        'label' => 'Entity functionality',
+        'description' => "Characteristics of the entity type that provide different kinds of functionality.",
+        'format' => 'array',
+        // 'process_default' => TRUE,
+        'presets' => [
+          // Provided by child classes.
+        ],
+      ],
       // UI property. This forces the route provider which in turn forces other
       // things, and also sets:
       // - the links annotation properties
@@ -100,8 +109,17 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
+        // Note that the format here is abused: keys are used as well as values!
+        'format' => 'array',
         'computed' => TRUE,
-        // Child classes set the default callback.
+        // This uses a 'processing' callback rather than 'default' to set the
+        // computed value, so that we can run after the preset values are
+        // applied to add defaults and set the ordering. Accordingly, we have
+        // to force the processing to be applied, and we need an empty array
+        // as an initial default for the processing to apply to.
+        'default' => [],
+        'process_empty' => TRUE,
+        // Child classes set the processing callback.
       ],
       'entity_interface_name' => [
         'label' => 'Interface',
