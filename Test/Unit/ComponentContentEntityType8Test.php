@@ -163,9 +163,9 @@ class ComponentContentEntityType8Test extends TestBase {
    *
    * This covers the different combinations of options.
    *
-   * @dataProvider providerContentEntityTypeInterfaceOptions
+   * @dataProvider providerContentEntityTypeFunctionalityOptions
    */
-  public function testContentEntityTypeInterfaceOptions(
+  public function testContentEntityTypeFunctionalityOptions(
     $interface_option,
     $expected_parent_interfaces,
     $expected_extra_entity_keys = [],
@@ -182,7 +182,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'content_entity_types' => [
         0 => [
           'entity_type_id' => 'kitty_cat',
-          'interface_parents' => $interface_option
+          'functionality' => $interface_option
         ],
       ],
       'readme' => FALSE,
@@ -237,9 +237,9 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
-   * Data provider for testContentEntityTypeInterfaceOptions.
+   * Data provider for testContentEntityTypeFunctionalityOptions.
    */
-  public function providerContentEntityTypeInterfaceOptions() {
+  public function providerContentEntityTypeFunctionalityOptions() {
     return [
       'empty' => [
         // Option value.
@@ -250,7 +250,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'owner' => [
-        ['EntityOwnerInterface'],
+        ['owner'],
         [
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\user\EntityOwnerInterface',
@@ -273,7 +273,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'changed' => [
-        ['EntityChangedInterface'],
+        ['changed'],
         [
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\Core\Entity\EntityChangedInterface',
@@ -290,7 +290,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'published' => [
-        ['EntityPublishedInterface'],
+        ['published'],
         [
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\Core\Entity\EntityPublishedInterface',
@@ -313,7 +313,7 @@ class ComponentContentEntityType8Test extends TestBase {
         [],
       ],
       'owner + changed' => [
-        ['EntityOwnerInterface', 'EntityChangedInterface'],
+        ['owner', 'changed'],
         [
           'Drupal\Core\Entity\ContentEntityInterface',
           'Drupal\user\EntityOwnerInterface',
@@ -591,9 +591,7 @@ class ComponentContentEntityType8Test extends TestBase {
           'entity_type_id' => 'kitty_cat',
           'functionality' => [
             'fieldable',
-          ],
-          'interface_parents' => [
-            'EntityOwnerInterface',
+            'owner',
           ],
           'bundle_entity' => [
             0 => [

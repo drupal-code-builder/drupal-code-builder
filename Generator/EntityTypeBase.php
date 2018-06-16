@@ -91,21 +91,8 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
         'format' => 'array',
-        // Data for the options and processing callbacks.
-        // Bit of a hack, as we need full class names internally, but they're
-        // unwieldy in the UI.
-        '_long_options' => static::interfaceParents(),
-        'options' => function(&$property_info) {
-          // Trim the namespace off the options, for UIs that show the keys,
-          // such as Drush.
-          $options = [];
-          foreach ($property_info['_long_options'] as $key => $data) {
-            $options[$key] = $data['label'];
-          }
-          return $options;
-        },
-        // TODO: methods from this in the entity class!
-        // TODO: use corresponding traits, eg EntityChangedTrait;
+        'internal' => TRUE,
+        'default' => [],
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
@@ -270,40 +257,8 @@ abstract class EntityTypeBase extends PHPClassFile {
       ];
     };
 
-    // Force the traits property to have processing applied, so we can set
-    // additional values based on the interface parents.
-    $data_definition['traits']['process_empty'] = TRUE;
-    $data_definition['traits']['processing'] = function ($value, &$component_data, $property_name, &$property_info) {
-      if (empty($component_data['interface_parents'])) {
-        return;
-      }
-
-      $parent_interface_info = static::interfaceParents();
-      foreach ($component_data['interface_parents'] as $interface_parent_value) {
-        if (!empty($parent_interface_info[$interface_parent_value]['trait'])) {
-          $component_data[$property_name][] = $parent_interface_info[$interface_parent_value]['trait'];
-        }
-      }
-    };
-
     return $data_definition;
   }
-
-  /**
-   * Provides options for the interface_parents property's _long_options.
-   *
-   * TODO: convert this to multi-valued presets, as that's what it's fast
-   * turning into!
-   *
-   * @var array
-   *   An array whose keys are an arbitrary option key, and whose values are
-   *   arrays with:
-   *   - label: A description of the interface for the UI.
-   *   - interface: The fully-qualified interface name.
-   *   - trait: (optional) If set, the fully-qualified name of a trait the
-   *     entity class should use.
-   */
-  abstract protected static function interfaceParents();
 
   /**
    * Provides the basic interface that the entity type interface must inherit.
@@ -432,14 +387,9 @@ abstract class EntityTypeBase extends PHPClassFile {
     //dump($this->component_data);
 
     // Assemble the list of parents for the entity's interface.
-    // We convert the short option to the full interface at the last minute,
-    // rather than in the property processing callback, for better DX in other
-    // places that need to check which interfaces are in use.
-    $interface_parents[] = $this->interfaceBasicParent();
-    $interface_parents_options_definition = $this->interfaceParents();
-    foreach ($this->component_data['interface_parents'] as $value_item) {
-      $interface_parents[] = $interface_parents_options_definition[$value_item]['interface'];
-    }
+    // TODO: move this from helper method to property processing.
+    $interface_parents = $this->component_data['interface_parents'];
+    array_unshift($interface_parents, $this->interfaceBasicParent());
 
     $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
       'component_type' => 'PHPInterfaceFile',

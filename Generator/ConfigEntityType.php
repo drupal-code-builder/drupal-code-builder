@@ -17,9 +17,19 @@ class ConfigEntityType extends EntityTypeBase {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    // Temporary!
-    // TODO: add the functionality presets to this generator.
-    unset($data_definition['functionality']);
+    // Set up the entity type functionality preset options.
+    $data_definition['functionality']['presets'] = [
+      'plugin_collection' => [
+        'label' => "Plugin collection - entities use plugins; implements EntityWithPluginCollectionInterface",
+        'data' => [
+          'force' => [
+            'interface_parents' => [
+              'value' => ['\Drupal\Core\Entity\EntityWithPluginCollectionInterface'],
+            ],
+          ],
+        ],
+      ],
+    ];
 
     $config_schema_property = [
       'entity_properties' => [
@@ -96,18 +106,6 @@ class ConfigEntityType extends EntityTypeBase {
     };
 
     return $data_definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static function interfaceParents() {
-    return [
-      'EntityWithPluginCollectionInterface' => [
-        'label' => 'EntityWithPluginCollectionInterface',
-        'interface' => '\Drupal\Core\Entity\EntityWithPluginCollectionInterface',
-      ],
-    ];
   }
 
   /**

@@ -54,6 +54,57 @@ class ContentEntityType extends EntityTypeBase {
           ],
         ],
       ],
+      'changed' => [
+        'label' => "Changed - entities store a timetamp for their last change; implement EntityChangedInterface",
+        'data' => [
+          'force' => [
+            'interface_parents' => [
+              'value' => ['\Drupal\Core\Entity\EntityChangedInterface'],
+            ],
+            'traits' => [
+              'value' => ['\Drupal\Core\Entity\EntityChangedTrait'],
+            ],
+          ],
+        ],
+      ],
+      'owner' => [
+        'label' => "Owner - entities each have an owner; implement EntityOwnerInterface",
+        'data' => [
+          'force' => [
+            'interface_parents' => [
+              'value' => ['\Drupal\user\EntityOwnerInterface'],
+            ],
+            'entity_keys' => [
+              'value' => [
+                'uid' => 'uid',
+              ],
+            ],
+            // TODO: handle base field here?
+            // TODO: handle faffy callback method?
+          ],
+        ],
+      ],
+      'published' => [
+        'label' => "Published - entities have a field indicating whether they are published or not; implement EntityPublishedInterface",
+        'data' => [
+          'force' => [
+            'interface_parents' => [
+              'value' => ['\Drupal\Core\Entity\EntityPublishedInterface'],
+            ],
+            'traits' => [
+              'value' => ['\Drupal\Core\Entity\EntityPublishedTrait'],
+            ],
+            'entity_keys' => [
+              'value' => [
+                'published' => 'status',
+              ],
+            ],
+            'base_fields_helper_methods' => [
+              'value' => ['publishedBaseFieldDefinitions'],
+            ],
+          ],
+        ],
+      ],
     ];
     $data_definition['functionality']['default'] = [
       'fieldable',
@@ -117,7 +168,7 @@ class ContentEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);
 
-    $base_fields_property = [
+    $base_fields_properties = [
       'base_fields' => [
         'label' => 'Base fields',
         'description' => "The base fields for this content entity.",
@@ -145,8 +196,14 @@ class ContentEntityType extends EntityTypeBase {
           // we have conditional properties.
         ],
       ],
+      // Helper methods from traits that baseFieldDefinitions() should call.
+      'base_fields_helper_methods' => [
+        'internal' => TRUE,
+        'format' => 'array',
+        'default' => [],
+      ],
     ];
-    InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_property);
+    InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_properties);
 
     $bundle_entity_type_property = [
       'bundle_entity_type' => [
@@ -174,17 +231,8 @@ class ContentEntityType extends EntityTypeBase {
         'uuid' => 'uuid',
       ];
 
-      // TODO: all the following will move to the functionality preset.
       if (!empty($component_data['bundle_entity_type'])) {
         $value['bundle'] = 'type';
-      }
-
-      // TODO: convert these to draw from the interface parents definition.
-      if (in_array('EntityOwnerInterface', $component_data['interface_parents'])) {
-        $value['uid'] = 'uid';
-      }
-      if (in_array('EntityPublishedInterface', $component_data['interface_parents'])) {
-        $value['published'] = 'status';
       }
 
       // Apply a standard ordering to the keys.
@@ -268,38 +316,6 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected static function interfaceParents() {
-    return [
-      'EntityChangedInterface' => [
-        'label' => 'EntityChangedInterface, for entities that store a timestamp for their last change',
-        'interface' => '\Drupal\Core\Entity\EntityChangedInterface',
-        'trait' => '\Drupal\Core\Entity\EntityChangedTrait',
-      ],
-      'EntityOwnerInterface' => [
-        'label' => 'EntityOwnerInterface, for entities that have an owner',
-        'interface' => '\Drupal\user\EntityOwnerInterface',
-      ],
-      'EntityPublishedInterface' => [
-        'label' => "EntityPublishedInterface, for entities that have a 'published' status",
-        'interface' => '\Drupal\Core\Entity\EntityPublishedInterface',
-        'trait' => "\Drupal\Core\Entity\EntityPublishedTrait",
-        // Calls to bame in baseFieldDefinitions().
-        'helper_methods' => [
-          'publishedBaseFieldDefinitions',
-        ],
-        // Extra items for entity_keys annotation.
-        // TODO: doesn't work yet!
-        'entity_keys' => [
-          "published" => "status",
-        ],
-      ],
-      // EntityDescriptionInterface? but only used in core for config.
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function interfaceBasicParent() {
     return '\Drupal\Core\Entity\ContentEntityInterface';
   }
@@ -322,16 +338,9 @@ class ContentEntityType extends EntityTypeBase {
 
     // Some interface-helper traits provide helper methods to define base
     // fields.
-    $parent_interface_info = static::interfaceParents();
-    foreach ($this->component_data['interface_parents'] as $interface_parent_value) {
-      if (!isset($parent_interface_info[$interface_parent_value]['helper_methods'])) {
-        continue;
-      }
-
-      foreach ($parent_interface_info[$interface_parent_value]['helper_methods'] as $method_name) {
-        $method_body[] = "£fields += static::$method_name(£entity_type);";
-        $method_body[] = '';
-      }
+    foreach ($this->component_data['base_fields_helper_methods'] as $method_name) {
+      $method_body[] = "£fields += static::$method_name(£entity_type);";
+      $method_body[] = '';
     }
 
     // The parent doesn't supply a label field, so the entity class has to.
@@ -365,7 +374,7 @@ class ContentEntityType extends EntityTypeBase {
     $method_body[] = '';
 
     // Add a uid field if the entities have an owner.
-    if (in_array('EntityOwnerInterface', $this->component_data['interface_parents'])) {
+    if (in_array('owner', $this->component_data['functionality'])) {
       $method_body[] = "£fields['uid'] = \Drupal\Core\Field\BaseFieldDefinition::create('entity_reference')";
       $uid_field_calls = new FluentMethodCall;
       $uid_field_calls
@@ -402,7 +411,7 @@ class ContentEntityType extends EntityTypeBase {
     }
 
     // Add a 'changed' field if entities use the changed interface.
-    if (in_array('EntityChangedInterface', $this->component_data['interface_parents'])) {
+    if (in_array('changed', $this->component_data['functionality'])) {
       $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";
       $changed_field_calls = new FluentMethodCall;
       $changed_field_calls->setLabel(FluentMethodCall::t('Changed'))
@@ -450,7 +459,7 @@ class ContentEntityType extends EntityTypeBase {
 
     // The uid field annoyingly need a default value callback that's just
     // boilerplate. See https://www.drupal.org/project/drupal/issues/2975503.
-    if (in_array('EntityOwnerInterface', $this->component_data['interface_parents'])) {
+    if (in_array('owner', $this->component_data['functionality'])) {
       $components["getCurrentUserId"] = [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
