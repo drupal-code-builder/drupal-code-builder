@@ -347,29 +347,26 @@ class ContentEntityType extends EntityTypeBase {
     $calls = [];
 
     $method_body[] = "£fields['title'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')";
-    $title_field_calls = [
-      'setLabel' => "t('Title')",
-      'setRequired' => TRUE,
-    ];
+    $title_field_calls = new FluentMethodCall;
+    $title_field_calls
+      ->setLabel(FluentMethodCall::t('Title'))
+      ->setRequired(TRUE);
     if ($use_revisionable) {
-      $title_field_calls['setRevisionable'] = TRUE;
+      $title_field_calls->setRevisionable(TRUE);
     }
     if ($use_translatable) {
-      $title_field_calls['setTranslatable'] = TRUE;
+      $title_field_calls->setTranslatable(TRUE);
     }
-    $title_field_calls += [
-      'setSetting' => ['max_length', 255],
-      'setDisplayOptions' => ['form', new \DrupalCodeBuilder\Generator\Render\FormAPIArrayRenderer([
-          'type' => 'string_textfield',
-          'weight' => -5,
-        ]),
-      ],
-      'setDisplayConfigurable' => ['form', TRUE],
-      'setDisplayConfigurable__1' => ['view', TRUE],
-    ];
+    $title_field_calls
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayConfigurable('form', TRUE);
 
-    $fluent_call_renderer = new \DrupalCodeBuilder\Generator\Render\FluentMethodCallRenderer($title_field_calls);
-    $call_lines = $fluent_call_renderer->render();
+    $call_lines = $title_field_calls->getCodeLines();
     $method_body = array_merge($method_body, $call_lines);
     $method_body[] = '';
 
