@@ -239,6 +239,11 @@ abstract class BaseGenerator {
    *    defines the option), whose values are arrays keyed by the options. Each
    *    value is a further array with these properties:
    *      - 'description': A longer description of the item.
+   *  - 'options_extra': (optional) If the possible options are so numerous that
+   *    they would be unwieldy in the UI, use 'options' to specify a subset, and
+   *    this property to provide the complete list. This allows UIs to use
+   *    something such as an autocomplete to offer the full list of options,
+   *    and also show the user the more common options.
    *  - 'options_allow_other': DEPRECATED, will be removed by 4.0.0. (optional)
    *    If TRUE, specifies that values outside the list of options are
    *    allowable.
