@@ -126,8 +126,6 @@ abstract class BaseGenerator {
    *
    * On other components (e.g., 'Routing'), this contains data from the request
    * for the component. Properties will depend on the class.
-   *
-   * TODO: split this var into two somehow??!
    */
   public $component_data = array();
 
