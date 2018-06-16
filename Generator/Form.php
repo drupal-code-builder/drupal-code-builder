@@ -83,7 +83,6 @@ class Form extends PHPClassFileWithInjection {
         'body' => array(
           "return '$form_name';",
         ),
-        'body_indent' => 2,
       ),
       'buildForm' => array(
         'component_type' => 'FormBuilder',
@@ -102,7 +101,6 @@ class Form extends PHPClassFileWithInjection {
           "",
           "return £form;",
         ),
-        'body_indent' => 2,
       ),
       'submitForm' => array(
         'component_type' => 'PHPFunction',
@@ -111,7 +109,6 @@ class Form extends PHPClassFileWithInjection {
         'doxygen_first' => 'Form submission handler.',
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
-        'body_indent' => 2,
       ),
     );
 

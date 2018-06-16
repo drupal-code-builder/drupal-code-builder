@@ -58,8 +58,6 @@ class HookMenu extends HookImplementation {
     $code[] = '';
     $code[] = 'return £items;';
 
-    $this->component_data['body_indent'] = 2;
-
     $this->component_data['body'] = $code;
 
     return parent::buildComponentContents($children_contents);

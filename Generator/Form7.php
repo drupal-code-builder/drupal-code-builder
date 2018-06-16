@@ -80,7 +80,6 @@ class Form7 extends BaseGenerator {
           "",
           "return £form;",
         ),
-        'body_indent' => 2,
       ),
       $form_name . '_validate' => array(
         'component_type' => 'PHPFunction',
@@ -92,7 +91,6 @@ class Form7 extends BaseGenerator {
           "  form_set_error('element', t('Please say hello?'));",
           "}",
         ),
-        'body_indent' => 2,
       ),
       $form_name . '_submit' => array(
         'component_type' => 'PHPFunction',
@@ -100,7 +98,6 @@ class Form7 extends BaseGenerator {
         'doxygen_first' => 'Form submit handler.',
         'declaration' => "function $form_submit(£form, &£form_state)",
         'body' => '',
-        'body_indent' => 2,
       ),
     );
 

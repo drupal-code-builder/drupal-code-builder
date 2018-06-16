@@ -66,8 +66,6 @@ class HookPermission extends HookImplementation {
     $code[] = '';
     $code[] = 'return £permissions;';
 
-    $this->component_data['body_indent'] = 2;
-
     $this->component_data['body'] = $code;
 
     return parent::buildComponentContents($children_contents);

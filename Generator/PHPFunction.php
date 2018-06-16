@@ -45,10 +45,6 @@ class PHPFunction extends BaseGenerator {
    *        Hooks::getTemplates() always returns an array of lines in 'template'
    *        even if that's just the analysis body code.
    *      - an array of lines of code. These should not have their newlines.
-   *    - 'body_indent': (optional) The number of spaces to add to the start of
-   *      each line, if 'body' is an array. This is relative to the indentation
-   *      of the function as a whole; that is, it does not need to be increased
-   *      for a class method. Defaults to 2.
    */
   function __construct($component_name, $component_data, $root_generator) {
     parent::__construct($component_name, $component_data, $root_generator);
@@ -98,13 +94,6 @@ class PHPFunction extends BaseGenerator {
       ],
       'body' => [
         'internal' => TRUE,
-      ],
-      // Deprecated.
-      // TODO: Remove.
-      'body_indent' => [
-        'internal' => TRUE,
-        'format' => 'string',
-        'default' => 2,
       ],
       // Whether code lines in the 'body' property are already indented relative
       // to the indentation of function as a whole.
