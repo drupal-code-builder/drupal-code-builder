@@ -327,17 +327,6 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
-      // The data may either be a string giving a class name, or an array.
-      // TODO: No longer used. Remove this; remove mentions in other
-      // documentation.
-      if (is_string($required_item_data)) {
-        $component_type = $required_item_data;
-
-        $required_item_data = [
-          'component_type' => $required_item_data,
-        ];
-      }
-
       // Guard against a clash of required item key.
       // In other words, a key in requiredComponents() can't be the same as a
       // property name.

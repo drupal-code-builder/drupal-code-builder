@@ -355,13 +355,10 @@ abstract class BaseGenerator {
    *  within both this array and the components that this component spawns from
    *  properties (note that this is not quite the same as the property names,
    *  as properties with multiple cardinality receive a delta).
-   *  Each value is either:
-   *    - the type for the component, suitable for passing to
-   *      Generate::getGenerator() to get the generator class.
-   *    - an array of data for the component. This must include a properties
-   *      'component_type', which gives the type for the component as above.
-   *      Further array properties are determined by the component class's
-   *      componentDataDefinition() method.
+   *  Each value an array of data for the component. This must include a
+   *  property 'component_type', which gives the type for the component as
+   *  above. Further array properties are determined by the component class's
+   *  componentDataDefinition() method.
    *
    * @see Generate::assembleComponentList()
    */
