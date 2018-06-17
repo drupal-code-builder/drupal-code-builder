@@ -220,6 +220,10 @@ class ContentEntityType extends EntityTypeBase {
     InsertArray::insertBefore($data_definition, 'entity_keys', $bundle_entity_type_property);
 
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
+    $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+      array_unshift($value, '\Drupal\Core\Entity\ContentEntityInterface');
+      $component_data[$property_name] = $value;
+    };
 
     // Set the computed value for entity keys. This is done in 'processing'
     // rather than 'default' so we can run after the preset values are applied
@@ -311,13 +315,6 @@ class ContentEntityType extends EntityTypeBase {
     InsertArray::insertAfter($handler_types, 'storage', $storage_schema_type);
 
     return $handler_types;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function interfaceBasicParent() {
-    return '\Drupal\Core\Entity\ContentEntityInterface';
   }
 
   /**

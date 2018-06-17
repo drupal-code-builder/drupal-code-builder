@@ -91,8 +91,14 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
         'format' => 'array',
-        'internal' => TRUE,
+        'computed' => TRUE,
+        // The basic value is set in a processing callback by the child classes,
+        // so that it gets added to values from the 'functionality' preset.
+        // TODO: figure out how to have presets merge with default values.
         'default' => [],
+        // This is required so the basic value gets added even if no interfaces
+        // are supplied by the 'functionality' preset.
+        'process_empty' => TRUE,
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
@@ -261,14 +267,6 @@ abstract class EntityTypeBase extends PHPClassFile {
   }
 
   /**
-   * Provides the basic interface that the entity type interface must inherit.
-   *
-   * @var string
-   *   The fully-qualified interface name.
-   */
-  abstract protected function interfaceBasicParent();
-
-  /**
    * Lists the available handler types.
    *
    * @return array
@@ -386,11 +384,6 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     //dump($this->component_data);
 
-    // Assemble the list of parents for the entity's interface.
-    // TODO: move this from helper method to property processing.
-    $interface_parents = $this->component_data['interface_parents'];
-    array_unshift($interface_parents, $this->interfaceBasicParent());
-
     $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
       'relative_class_name' => [
@@ -398,7 +391,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         $this->component_data['entity_interface_name'],
       ],
       'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
-      'parent_interface_names' => $interface_parents,
+      'parent_interface_names' => $this->component_data['interface_parents'],
     ];
 
     // Handlers.

@@ -94,6 +94,10 @@ class ConfigEntityType extends EntityTypeBase {
         return '\Drupal\Core\Config\Entity\ConfigEntityBundleBase';
       }
     };
+    $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+      array_unshift($value, '\Drupal\Core\Config\Entity\ConfigEntityInterface');
+      $component_data[$property_name] = $value;
+    };
 
     // Change the computed value for entity keys.
     $data_definition['entity_keys']['default'] = function($component_data) {
@@ -106,13 +110,6 @@ class ConfigEntityType extends EntityTypeBase {
     };
 
     return $data_definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function interfaceBasicParent() {
-    return '\Drupal\Core\Config\Entity\ConfigEntityInterface';
   }
 
   /**
