@@ -180,6 +180,7 @@ class Service extends PHPClassFileWithInjection {
 
     $components['%module.services.yml'] = [
       'component_type' => 'YMLFile',
+      'filename' => '%module.services.yml',
       'yaml_data' => $yaml_data,
       'yaml_inline_level' => 3,
       // Expand the tags property further than the others.
