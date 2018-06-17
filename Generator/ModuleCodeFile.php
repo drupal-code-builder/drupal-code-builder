@@ -16,7 +16,7 @@ class ModuleCodeFile extends PHPFile {
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    return $this->filename;
+    return $this->component_data['filename'];
   }
 
   /**
@@ -24,7 +24,7 @@ class ModuleCodeFile extends PHPFile {
    */
   public function getFileInfo() {
     // Create a build list tag from the filename.
-    $filename_pieces = explode('.', $this->filename);
+    $filename_pieces = explode('.', $this->component_data['filename']);
     if ($filename_pieces[0] == '%module') {
       // Take off the module name from the front.
       array_shift($filename_pieces);
@@ -38,7 +38,7 @@ class ModuleCodeFile extends PHPFile {
 
     return array(
       'path' => '', // Means base folder.
-      'filename' => $this->filename,
+      'filename' => $this->component_data['filename'],
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', $file_key_tag],
     );
