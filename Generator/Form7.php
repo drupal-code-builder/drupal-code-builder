@@ -64,7 +64,10 @@ class Form7 extends BaseGenerator {
 
     $components = array(
       // Request the file we belong to.
-      $this->component_data['code_file'] => 'ModuleCodeFile',
+      $this->component_data['code_file'] => [
+        'component_type' => 'ModuleCodeFile',
+        'filename' => $this->component_data['code_file'],
+      ],
       // Request the form functions.
       $form_builder => array(
         'component_type' => 'PHPFunction',

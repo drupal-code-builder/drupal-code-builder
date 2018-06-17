@@ -58,16 +58,19 @@ class HookImplementation extends PHPFunction {
   public function requiredComponents() {
     $code_file = $this->component_data['code_file'];
 
-    return array(
-      $code_file => 'ModuleCodeFile',
-    );
+    return [
+      'code_file' => [
+        'component_type' => 'ModuleCodeFile',
+        'filename' => $code_file,
+      ],
+    ];
   }
 
   /**
    * Return this component's parent in the component tree.
    */
   function containingComponent() {
-    return '%self:' . $this->component_data['code_file'];
+    return '%self:code_file';
   }
 
   /**
