@@ -355,16 +355,13 @@ abstract class BaseGenerator {
    *  within both this array and the components that this component spawns from
    *  properties (note that this is not quite the same as the property names,
    *  as properties with multiple cardinality receive a delta).
-   *  If the local name of a component is such that the component's unique ID
-   *  (which usually includes the local name) is a duplicate, then the data will
-   *  be merged into the existing component.
    *  Each value is either:
    *    - the type for the component, suitable for passing to
    *      Generate::getGenerator() to get the generator class.
    *    - an array of data for the component. This must include a properties
    *      'component_type', which gives the type for the component as above.
    *      Further array properties are determined by the component class's
-   *      __construct().
+   *      componentDataDefinition() method.
    *
    * @see Generate::assembleComponentList()
    */
