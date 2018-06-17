@@ -17,11 +17,6 @@ class File extends BaseGenerator {
   public $name;
 
   /**
-   * The actual name of the file to write.
-   */
-  protected $filename;
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
@@ -43,11 +38,6 @@ class File extends BaseGenerator {
    *   An array of data for the component.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    // Set the class property for code that still expects it.
-    if (!empty($component_data['filename'])) {
-      $this->filename = $component_data['filename'];
-    }
-
     parent::__construct($component_name, $component_data, $root_generator);
   }
 

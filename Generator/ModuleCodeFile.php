@@ -8,11 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class ModuleCodeFile extends PHPFile {
 
   /**
-   * The name of the file this creates, which may include tokens.
-   */
-  protected $filename;
-
-  /**
    * {@inheritdoc}
    */
   public function getMergeTag() {
