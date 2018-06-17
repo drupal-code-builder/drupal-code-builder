@@ -402,7 +402,11 @@ abstract class BaseGenerator {
       if (!isset($property_info['format']) || $property_info['format'] != 'array') {
         // Don't merge this property, but check that we're not throwing away
         // data from the additional data.
-        assert($this->component_data[$property_name] == $additional_component_data[$property_name],
+        // TEMPORARY: allow the additional data to not have the property at all,
+        // in which case we know that we certainly aren't throwing any data
+        // away. This is needed for file components that currently set
+        // the 'filename' property in their constructor.
+        assert(empty($additional_component_data[$property_name]) || $this->component_data[$property_name] == $additional_component_data[$property_name],
           "Attempted to discard request for new component, but failed on property $property_name with existing data "
            . print_r($this->component_data, TRUE)
            . " and new data "

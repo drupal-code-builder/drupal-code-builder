@@ -22,6 +22,40 @@ class File extends BaseGenerator {
   protected $filename;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      // The name of the file, without the path.
+      'filename' => [
+        'internal' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param $component_name
+   *  The name should be the eventual filename, which may include tokens such as
+   *  %module, which are handled by assembleFiles().
+   * @param $component_data
+   *   An array of data for the component.
+   */
+  function __construct($component_name, $component_data, $root_generator) {
+    if (empty($component_data['filename'])) {
+      // For backwards-compatibility, allow the component name to be the
+      // filename if that was not specified.
+      $component_data['filename'] = $component_name;
+    }
+
+    // Set the class property for code that still expects it.
+    $this->filename = $component_data['filename'];
+
+    parent::__construct($component_name, $component_data, $root_generator);
+  }
+
+  /**
    * Return an empty array of subcomponent types.
    *
    * Files are (so far!) always terminal components.

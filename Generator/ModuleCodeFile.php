@@ -13,21 +13,6 @@ class ModuleCodeFile extends PHPFile {
   protected $filename;
 
   /**
-   * Constructor.
-   *
-   * @param $component_name
-   *  The name should be the eventual filename, which may include tokens such as
-   *  %module, which are handled by assembleFiles().
-   * @param $component_data
-   *   An array of data for the component.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    $this->filename = $component_name;
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getMergeTag() {
