@@ -82,13 +82,9 @@ class YMLFile extends File {
    * Build the code files.
    */
   public function getFileInfo() {
-    // Our component name is our future filename. Tokens such as '%module' are
-    // replaced by assembleFiles().
-    $this->filename = $this->name;
-
     return array(
       'path' => '', // Means base folder.
-      'filename' => $this->filename,
+      'filename' => $this->component_data['filename'],
       'body' => $this->getYamlBody($this->component_data['yaml_data']),
     );
   }

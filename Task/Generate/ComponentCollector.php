@@ -328,6 +328,8 @@ class ComponentCollector {
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
       // The data may either be a string giving a class name, or an array.
+      // TODO: No longer used. Remove this; remove mentions in other
+      // documentation.
       if (is_string($required_item_data)) {
         $component_type = $required_item_data;
 

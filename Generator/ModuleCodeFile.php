@@ -8,30 +8,10 @@ namespace DrupalCodeBuilder\Generator;
 class ModuleCodeFile extends PHPFile {
 
   /**
-   * The name of the file this creates, which may include tokens.
-   */
-  protected $filename;
-
-  /**
-   * Constructor.
-   *
-   * @param $component_name
-   *  The name should be the eventual filename, which may include tokens such as
-   *  %module, which are handled by assembleFiles().
-   * @param $component_data
-   *   An array of data for the component.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    $this->filename = $component_name;
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    return $this->filename;
+    return $this->component_data['filename'];
   }
 
   /**
@@ -39,7 +19,7 @@ class ModuleCodeFile extends PHPFile {
    */
   public function getFileInfo() {
     // Create a build list tag from the filename.
-    $filename_pieces = explode('.', $this->filename);
+    $filename_pieces = explode('.', $this->component_data['filename']);
     if ($filename_pieces[0] == '%module') {
       // Take off the module name from the front.
       array_shift($filename_pieces);
@@ -53,7 +33,7 @@ class ModuleCodeFile extends PHPFile {
 
     return array(
       'path' => '', // Means base folder.
-      'filename' => $this->filename,
+      'filename' => $this->component_data['filename'],
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', $file_key_tag],
     );

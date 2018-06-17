@@ -75,8 +75,6 @@ class PHPFile extends File {
 
   /**
    * Return the file doxygen header and any custom header code.
-   *
-   * Expects $this->filename to be set.
    */
   function code_header() {
     $lines = array(

@@ -25,11 +25,9 @@ class API extends PHPFile {
   public function getFileInfo() {
     $module_root_name = $this->component_data['root_component_name'];
 
-    $this->filename = "$module_root_name.api.php";
-
     return array(
       'path' => '', // Means base folder.
-      'filename' => $this->filename,
+      'filename' => "$module_root_name.api.php",
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', 'api'],
     );

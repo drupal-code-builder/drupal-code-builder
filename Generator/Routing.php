@@ -12,6 +12,17 @@ namespace DrupalCodeBuilder\Generator;
 class Routing extends YMLFile {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    $definition = parent::componentDataDefinition();
+
+    $definition['filename']['default'] = "%module.routing.yml";
+
+    return $definition;
+  }
+
+  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name

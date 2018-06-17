@@ -186,6 +186,7 @@ class PluginType extends BaseGenerator {
     $module = $this->component_data['root_component_name'];
     $components["%module.plugin_type.yml"] = [
       'component_type' => 'YMLFile',
+      'filename' => '%module.plugin_type.yml',
       'yaml_data' => [
         "{$module}.{$plugin_type}"=> [
           'label' => $this->component_data['plugin_label'],

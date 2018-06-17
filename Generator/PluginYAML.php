@@ -90,6 +90,7 @@ class PluginYAML extends BaseGenerator {
     $components = array(
       "%module.{$yaml_file_suffix}.yml" => array(
         'component_type' => 'YMLFile',
+        'filename' => "%module.{$yaml_file_suffix}.yml",
       ),
     );
 

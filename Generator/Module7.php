@@ -44,7 +44,10 @@ class Module7 extends Module {
     $components = parent::requiredComponents();
 
     // On D7 and lower, modules need a .module file, even if empty.
-    $components['%module.module'] = 'ModuleCodeFile';
+    $components['%module.module'] = [
+      'component_type' => 'ModuleCodeFile',
+      'filename' => '%module.module',
+    ];
 
     return $components;
   }

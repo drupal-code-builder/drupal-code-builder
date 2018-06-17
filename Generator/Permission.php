@@ -66,6 +66,7 @@ class Permission extends BaseGenerator {
     $components = array(
       '%module.permissions.yml' => array(
         'component_type' => 'YMLFile',
+        'filename' => '%module.permissions.yml',
       ),
     );
 
