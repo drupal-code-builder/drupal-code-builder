@@ -200,7 +200,11 @@ class ComponentContentEntityType8Test extends TestBase {
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
     $php_tester = new PHPTester($entity_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    // TODO: remove this coding standards exception when the comment for core
+    // issue https://www.drupal.org/project/drupal/issues/2949964 is removed
+    // from content entity type generation. See
+    // ContentEntityType::collectSectionBlocks().
+    $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.InlineComment.SpacingAfter']);
 
     // Test the additional entity keys.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
@@ -639,7 +643,11 @@ class ComponentContentEntityType8Test extends TestBase {
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
     $php_tester = new PHPTester($entity_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    // TODO: remove this coding standards exception when the comment for core
+    // issue https://www.drupal.org/project/drupal/issues/2949964 is removed
+    // from content entity type generation. See
+    // ContentEntityType::collectSectionBlocks().
+    $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.InlineComment.SpacingAfter']);
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
     $php_tester->assertHasMethods(['baseFieldDefinitions']);
 

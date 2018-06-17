@@ -323,6 +323,24 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
+  protected function collectSectionBlocks() {
+    parent::collectSectionBlocks();
+
+    // Temporary, until https://www.drupal.org/project/drupal/issues/2949964
+    // gets into Drupal core.
+    // TODO: remove this when a core release includes the fix.
+    if (in_array('owner', $this->component_data['functionality'])) {
+      $this->functions = array_merge(['core-2949964-comment' => [
+        '// TODO: methods from interface \Drupal\user\EntityOwnerInterface must be',
+        '// implemented until https://www.drupal.org/project/drupal/issues/2949964',
+        '// is fixed.',
+      ]], $this->functions);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
