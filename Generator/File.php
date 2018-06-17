@@ -43,14 +43,10 @@ class File extends BaseGenerator {
    *   An array of data for the component.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    if (empty($component_data['filename'])) {
-      // For backwards-compatibility, allow the component name to be the
-      // filename if that was not specified.
-      $component_data['filename'] = $component_name;
-    }
-
     // Set the class property for code that still expects it.
-    $this->filename = $component_data['filename'];
+    if (!empty($component_data['filename'])) {
+      $this->filename = $component_data['filename'];
+    }
 
     parent::__construct($component_name, $component_data, $root_generator);
   }
