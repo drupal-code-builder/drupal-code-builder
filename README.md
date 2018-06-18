@@ -1,10 +1,15 @@
 Drupal Code Builder is a system for generating scaffold code for Drupal modules (and other components).
 
 This is a library, and has no UI of its own. It can be used in several ways:
-- with the [Drupal Module Builder project](https://www.drupal.org/project/module_builder), which provides a UI within Drupal. (The Drupal Code Builder library was formerly part of the Module Builder module.)
-- with the [Drush command extension](https://github.com/drupal-code-builder/drupal-code-builder-drush).
+- with the [Drupal Module Builder
+  project](https://www.drupal.org/project/module_builder), which provides a UI
+  within Drupal. (The Drupal Code Builder library was formerly part of the
+  Module Builder module.)
+- with the [Drush command
+  extension](https://github.com/drupal-code-builder/drupal-code-builder-drush).
 
-Drupal Code Builder can be used for any current version of Drupal (7, 8). Older versions are unsupported, but it should produce code for 5 and 6 also.
+Drupal Code Builder can be used for any current version of Drupal (7, 8). Older
+versions are unsupported, but it should produce code for 5 and 6 also.
 
 Tests powered by PHPUnit ensure that the generated PHP code passes PHP linting,
 and adheres to Drupal Coding Standards, as enforced by PHP CodeSniffer.
@@ -37,6 +42,8 @@ Furthermore, complex subcomponents can generate multiple code elements:
 
 ## Installation
 
-Follow the instructions given in the component that requests Drupal Coder Builder (e.g., Module Builder, Drush command).
+Follow the instructions given in the component that requests Drupal Coder
+Builder (e.g., Module Builder, Drush command).
 
-Additionally, if [Plugin module](https://www.drupal.org/project/plugin) is present, plugin type definitions will be enhanced with its data.
+Additionally, if [Plugin module](https://www.drupal.org/project/plugin) is
+present, plugin type definitions will be enhanced with its data.
