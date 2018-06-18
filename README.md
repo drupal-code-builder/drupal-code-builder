@@ -13,11 +13,12 @@ and adheres to Drupal Coding Standards, as enforced by PHP CodeSniffer.
 
 Drupal Code Builder can generate the following for a module:
 - code files, containing hook implementations
-- info file (.info.yml on Drupal 8)
+- info.yml file (.info file on Drupal 7 and older)
 - README file
 - PHPUnit test case classes, with presets for different types
 - Simpletest test case classes
-- plugin classes
+- annotated class plugins
+- YAML file plugins
 - services, with presets for tagged service types
 - content entity types, with bundle entity and base fields
 - config entity types, with properties
