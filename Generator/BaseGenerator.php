@@ -263,7 +263,11 @@ abstract class BaseGenerator {
    *  - 'acquired': (optional) If TRUE, indicates that this property's value
    *    is obtained during processing from the requesting component. By default,
    *    the value is taken from a property of the same name on the requesting
-   *    component, but this can be changed with providedPropertiesMapping().
+   *    component, but this can be changed with providedPropertiesMapping() or
+   *    the 'acquired_from' attribute.
+   *  - 'acquired_from': (optional) If 'acquired' is TRUE, this can be used to
+   *    specify the name of the property on the requesting component to take
+   *    the value from.
    *
    * @see Generate::getComponentDataInfo()
    */

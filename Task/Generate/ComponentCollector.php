@@ -192,6 +192,9 @@ class ComponentCollector {
           $provider_property_name = $property_name_conversion_map[$property_name];
           $component_data[$property_name] = $requesting_component->getComponentDataValue($provider_property_name);
         }
+        elseif (isset($property_info['acquired_from'])) {
+          $component_data[$property_name] = $requesting_component->getComponentDataValue($property_info['acquired_from']);
+        }
         else {
           $component_data[$property_name] = $requesting_component->getComponentDataValue($property_name);
         }
