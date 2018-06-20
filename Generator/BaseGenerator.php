@@ -260,6 +260,10 @@ abstract class BaseGenerator {
    *  - 'internal': (optional) If TRUE, indicates that this property should not
    *    be returned to UIs, as it is for internal use only when requested by
    *    other generators.
+   *  - 'acquired': (optional) If TRUE, indicates that this property's value
+   *    is obtained during processing from the requesting component. By default,
+   *    the value is taken from a property of the same name on the requesting
+   *    component, but this can be changed with providedPropertiesMapping().
    *
    * @see Generate::getComponentDataInfo()
    */
