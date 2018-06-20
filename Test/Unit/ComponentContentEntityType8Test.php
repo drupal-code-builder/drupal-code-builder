@@ -666,7 +666,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'entity_keys',
       'bundle_entity_type',
       'field_ui_base_route',
-    ]);
+    ], "The content entity has the expected root annotation properties.");
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
     $annotation_tester->assertPropertyHasTranslation('label');
@@ -688,7 +688,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'uuid',
       'bundle',
       'uid',
-    ], 'entity_keys');
+    ], 'entity_keys', "The content entity has the expected entity_keys annotation properties.");
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'title');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'uuid'], 'uuid');
