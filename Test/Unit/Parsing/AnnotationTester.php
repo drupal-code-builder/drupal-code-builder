@@ -273,7 +273,7 @@ class AnnotationTester {
   public function assertHasRootProperties($property_names, $message = NULL) {
     $message = $message ?? "The annotation has the expected properties: " . implode(', ', $property_names);
 
-    Assert::assertSame($property_names, array_keys($this->data));
+    Assert::assertSame($property_names, array_keys($this->data), $message);
   }
 
   /**
