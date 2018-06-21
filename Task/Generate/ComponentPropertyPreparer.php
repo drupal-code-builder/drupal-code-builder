@@ -7,6 +7,8 @@ use DrupalCodeBuilder\Generator\RootComponent;
 
 /**
  * Task helper for preparing a component's property info for use by UIs.
+ *
+ * This recurses into a compound property's child properties.
  */
 class ComponentPropertyPreparer {
 
@@ -16,24 +18,9 @@ class ComponentPropertyPreparer {
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
     // Set options.
     $this->prepareComponentDataPropertyCreateOptions($property_name, $property_info);
-    if (isset($property_info['properties'])) {
-      foreach ($property_info['properties'] as $child_property_name => &$child_property_info) {
-        $this->prepareComponentDataPropertyCreateOptions($child_property_name, $child_property_info);
-      }
-    }
-    // Argh, deal with PHP's wacky behaviour with refereced loop variables.
-    unset($child_property_info);
 
     // Set a default value.
     $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
-    // Handle compound property child items if they are present.
-    if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
-      foreach ($component_data[$property_name] as $delta => $delta_data) {
-        foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
-          $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data[$property_name][$delta]);
-        }
-      }
-    }
   }
 
   /**
@@ -80,8 +67,6 @@ class ComponentPropertyPreparer {
       }
 
       $property_info['options'] = $options;
-
-      return;
     }
 
     // Extract options from a list of presets for the property.
@@ -92,6 +77,13 @@ class ComponentPropertyPreparer {
       }
 
       $property_info['options'] = $options;
+    }
+
+    // Recurse child properties.
+    if (isset($property_info['properties'])) {
+      foreach ($property_info['properties'] as $child_property_name => &$child_property_info) {
+        $this->prepareComponentDataPropertyCreateOptions($child_property_name, $child_property_info);
+      }
     }
   }
 
@@ -137,6 +129,15 @@ class ComponentPropertyPreparer {
       // matter what.)
       $default_value = $property_info['format'] == 'array' ? array() : NULL;
       $component_data_local[$property_name] = $default_value;
+    }
+
+    // Handle compound property child items if they are present.
+    if (isset($property_info['properties']) && isset($component_data[$property_name]) && is_array($component_data[$property_name])) {
+      foreach ($component_data_local[$property_name] as $delta => $delta_data) {
+        foreach ($property_info['properties'] as $child_property_name => $child_property_info) {
+          $this->setComponentDataPropertyDefault($child_property_name, $child_property_info, $component_data_local[$property_name][$delta]);
+        }
+      }
     }
   }
 
