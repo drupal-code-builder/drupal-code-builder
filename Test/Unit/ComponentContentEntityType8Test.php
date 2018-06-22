@@ -599,7 +599,7 @@ class ComponentContentEntityType8Test extends TestBase {
           ],
           'bundle_entity' => [
             0 => [
-              'entity_type_id' => 'kitty_cat_type',
+              // Don't specify entity_type_id, let it be derived.
               // Request a route provider so UI features are generated.
               'handler_route_provider' => 'admin',
               'entity_properties' => [

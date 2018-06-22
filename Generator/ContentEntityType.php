@@ -113,38 +113,45 @@ class ContentEntityType extends EntityTypeBase {
     ];
 
     $bundle_entity_properties = [
+      // Single place to compute a bundle entity type ID. Here rather than in
+      // the bundle generator, as this component needs it too.
+      // This is always computed, even when there is no bundle entity selected.
+      'bundle_entity_type_id' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          if (!empty($component_data['entity_type_id'])) {
+            return $component_data['entity_type_id'] . '_type';
+          }
+          else {
+            return '';
+          }
+        }
+      ],
       'bundle_entity' => [
         'label' => 'Bundle config entity type',
         'description' => "Creates a config entity type which provides the bundles for this entity type. "
           . "This is analogous to the Node Type entity type providing bundles for the Node entity type.",
         'format' => 'compound',
         'cardinality' => 1,
-        'component' => 'ConfigEntityType',
+        'component' => 'ConfigBundleEntityType',
         'default' => function($component_data) {
           return [
             0 => [
+              // Default values for the benefit of progressive UIs.
               // The bundle entity type ID defaults to CONTENT_TYPE_type.
+              // Note this doesn't work in tests or non-progressive UIs!
               'entity_type_id' => $component_data['entity_type_id'] . '_type',
               'bundle_of_entity' => $component_data['entity_type_id'],
             ],
           ];
         },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          // Fill in defaults if an item is requested.
-          // Bit faffy, but needed for non-progressive UIs.
-          if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
-            $component_data['bundle_entity'][0]['bundle_of_entity'] = $component_data['entity_type_id'];
-          }
-        },
       ],
       'bundle_label' => [
         'computed' => TRUE,
         'default' => function($component_data) {
-          if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
-            // TODO: get the actual value of the entity_type_label property from
-            // the bundle entity -- but this is proving rather labyrinthine...
-            return CaseString::snake($component_data['bundle_entity'][0]['entity_type_id'])->title();
-          }
+          // TODO: get the actual value of the entity_type_label property from
+          // the bundle entity -- but this is proving rather labyrinthine...
+          return CaseString::snake($component_data['bundle_entity_type_id'])->title();
         },
       ],
       'field_ui_base_route' => [
@@ -157,8 +164,8 @@ class ContentEntityType extends EntityTypeBase {
             return NULL;
           }
 
-          if (isset($component_data['bundle_entity'][0]['entity_type_id'])) {
-            return 'entity.' . $component_data['bundle_entity'][0]['entity_type_id'] . '.edit_form';
+          if (isset($component_data['bundle_entity'][0])) {
+            return 'entity.' . $component_data['bundle_entity_type_id'] . '.edit_form';
           }
           else {
             return 'entity.' . $component_data['entity_type_id'] . '.admin_form';
@@ -205,20 +212,6 @@ class ContentEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_properties);
 
-    $bundle_entity_type_property = [
-      'bundle_entity_type' => [
-        'label' => 'Bundle entity type',
-        'format' => 'string',
-        'internal' => TRUE,
-        'default' => function($component_data) {
-          return $component_data['bundle_entity'][0]['entity_type_id'] ?? NULL;
-        },
-      ],
-    ];
-    // Bundle entity type must go before entity_keys, as we change the default
-    // of that to depend on this.
-    InsertArray::insertBefore($data_definition, 'entity_keys', $bundle_entity_type_property);
-
     $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
     $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       array_unshift($value, '\Drupal\Core\Entity\ContentEntityInterface');
@@ -235,7 +228,7 @@ class ContentEntityType extends EntityTypeBase {
         'uuid' => 'uuid',
       ];
 
-      if (!empty($component_data['bundle_entity_type'])) {
+      if (isset($component_data['bundle_entity'][0])) {
         $value['bundle'] = 'type';
       }
 
@@ -515,7 +508,7 @@ class ContentEntityType extends EntityTypeBase {
       // If there is a bundle entity, change the 'add' local action to go to
       // the add page route, where a bundle can be selected, rather than the
       // add form.
-      if (!empty($this->component_data['bundle_entity_type'])) {
+      if (isset($this->component_data['bundle_entity'][0])) {
         $components['collection_menu_action' . $this->component_data['entity_type_id']]['plugin_properties']['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
       }
 
@@ -587,13 +580,14 @@ class ContentEntityType extends EntityTypeBase {
     if (!empty($this->component_data['entity_ui'])) {
       $annotation_data['links'] = [];
       $entity_path_component = $this->component_data['entity_type_id'];
-      $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type'];
 
       // The structure of the add UI depends on whether there is a bundle
       // entity.
-      if (isset($this->component_data['bundle_entity_type'])) {
+      if (isset($this->component_data['bundle_entity'][0])) {
         // If there's a bundle entity, the add UI is made up of first a page to
         // select the bundle, and then a form with a bundle parameter.
+        $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type_id'];
+
         $annotation_data['links']["add-page"] = "/$entity_path_component/add";
         $annotation_data['links']["add-form"] = "/$entity_path_component/add/{{$bundle_entity_type_path_argument}}";
       }
@@ -611,8 +605,8 @@ class ContentEntityType extends EntityTypeBase {
       // $annotation_data['links']["revision"] = "/$entity_path_component/{}/revisions/{media_revision}/view";
     }
 
-    if (isset($this->component_data['bundle_entity_type'])) {
-      $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type'];
+    if (isset($this->component_data['bundle_entity'][0])) {
+      $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type_id'];
       $annotation_data['bundle_label'] = [
         '#class' => 'Translation',
         '#data' => $this->component_data['bundle_label'],

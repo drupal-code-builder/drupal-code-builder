@@ -76,24 +76,7 @@ class ConfigEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
 
-    $bundle_of_entity_properties = [
-      'bundle_of_entity' => [
-        'label' => 'Bundle of entity',
-        'internal' => TRUE,
-      ],
-    ];
-    InsertArray::insertAfter($data_definition, 'entity_class_name', $bundle_of_entity_properties);
-
-    $data_definition['parent_class_name']['default'] = function($component_data) {
-      if (empty($component_data['bundle_of_entity'])) {
-        return '\Drupal\Core\Config\Entity\ConfigEntityBase';
-      }
-      else {
-        // Bundle entities need to use ConfigEntityBundleBase in order to clear
-        // caches and synchronize display entities.
-        return '\Drupal\Core\Config\Entity\ConfigEntityBundleBase';
-      }
-    };
+    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Config\Entity\ConfigEntityBase';
     $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       array_unshift($value, '\Drupal\Core\Config\Entity\ConfigEntityInterface');
       $component_data[$property_name] = $value;
@@ -123,8 +106,6 @@ class ConfigEntityType extends EntityTypeBase {
     $handler_types['list_builder']['handler_properties']['entity_type_group'] = 'config';
 
     foreach (['form_default', 'form_add', 'form_edit'] as $form_handler_type) {
-      // These get overridden in requiredComponents() if this is a bundle config
-      // entity.
       $handler_types[$form_handler_type]['base_class'] = '\Drupal\Core\Entity\EntityForm';
 
       $handler_types[$form_handler_type]['handler_properties'] = [
@@ -143,16 +124,6 @@ class ConfigEntityType extends EntityTypeBase {
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
-
-    // Override the base class of any form handlers if this is a bundle entity.
-    // TODO: clean this up!
-    if (isset($this->component_data['bundle_of_entity'])) {
-      foreach ($components as $component_key => $component_data) {
-        if (isset($component_data['parent_class_name']) && $component_data['parent_class_name'] == '\Drupal\Core\Entity\EntityForm') {
-          $components[$component_key]['parent_class_name'] = '\Drupal\Core\Entity\BundleEntityFormBase';
-        }
-      }
-    }
 
     // Add form elements for the form handlers, if present.
     $form_handlers_to_add_form_elements_to = [];
@@ -199,6 +170,7 @@ class ConfigEntityType extends EntityTypeBase {
           ],
         ],
       ];
+      // TODO: handle this in ConfigBundleEntityType.
       if (isset($this->component_data['bundle_of_entity'])) {
         $components[$data_key . ':id']['element_array']['maxlength'] =
           '\Drupal\Core\Entity\EntityTypeInterface::BUNDLE_MAX_LENGTH';
@@ -343,6 +315,7 @@ class ConfigEntityType extends EntityTypeBase {
     }
 
     // Add further annotation properties.
+    // TODO: handle this in ConfigBundleEntityType.
     if (isset($this->component_data['bundle_of_entity'])) {
       $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
     }
