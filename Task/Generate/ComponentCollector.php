@@ -9,7 +9,9 @@ use DrupalCodeBuilder\Generator\RootComponent;
  * Task helper for collecting components recursively.
  *
  * This takes a structured array of data for the root component, and produces
- * an array of components, that is, instantiated Generator objects.
+ * an array of components, that is, instantiated Generator objects. These are
+ * added to the ComponentCollection object, which keeps track of the
+ * relationships between them.
  *
  * Before being passed to instantiated components, the data is processed in
  * various ways:
@@ -44,12 +46,19 @@ use DrupalCodeBuilder\Generator\RootComponent;
  *   'component_type' property.
  *
  * It is possible for the attempted creation of a component to not produce a
- * new component, if a component with the same unique ID has already been
- * created. There are two cases where this happens:
+ * new component, if the ComponentCollection determines that the new component
+ * is in fact a duplicate of one it already has. This checking is done by
+ * ComponentCollection::getMatchingComponent(), which compares the match tag,
+ * component type, and closest root component. If this happens, there are two
+ * possible outcome:
  * - The request data array for the new component and the existing one are
- *   identical. Nothing further happens and the new component is discarded.
+ *   identical. Nothing further happens and the new component is discarded. An
+ *   alias is added to the ComponentCollection.
  * - The request data arrays are different. The new request data array is merged
- *   into the existing component.
+ *   into the existing component. The process continues with the existing
+ *   component, allowing it to request data. This is done even though the
+ *   component will have previously done this when it was instantiated, because
+ *   with the new data, it may request further components.
  */
 class ComponentCollector {
 
