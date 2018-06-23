@@ -11,6 +11,14 @@ use DrupalCodeBuilder\Generator\RootComponent;
  * This takes a structured array of data for the root component, and produces
  * an array of components, that is, instantiated Generator objects.
  *
+ * Before being passed to instantiated components, the data is processed in
+ * various ways:
+ *  - data values can be acquired from the component that requested the current
+ *    one.
+ *  - preset values are expanded.
+ *  - default values are filled in.
+ *  - 'processing' callbacks are called for each property.
+ *
  * Component data arrays have their structure defined by data property info
  * arrays, which each Generator class defines in its componentDataDefinition()
  * static method.
