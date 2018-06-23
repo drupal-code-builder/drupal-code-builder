@@ -1086,6 +1086,11 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'acquired_from_source' => [
         'format' => 'string',
       ],
+      // This is just a dummy to test that 'acquired_from_source' is used
+      // instead of this.
+      'acquired_from_specified' => [
+        'format' => 'string',
+      ],
     ];
     $this->componentDataInfoAddDefaults($root_data_info);
     // The request data we pass in to the system.
@@ -1095,6 +1100,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'acquired_verbatim' => 'acquired_verbatim_value',
       'acquired_mapped' => 'acquired_mapped_value',
       'acquired_from_source' => 'acquired_from_source_value',
+      'acquired_from_specified' => 'acquired_from_specified_value',
     ];
 
     // The component collector's injected dependencies.
