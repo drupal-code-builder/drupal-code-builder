@@ -192,34 +192,47 @@ class ComponentCollector {
     $component_type = $component_data['component_type'];
     $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
+    // Get the requesting component data info to find any acquisition aliases.
+    if ($requesting_component) {
+      $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
+    }
+
     // Allow the new generator to acquire properties from the requester.
-    $property_name_conversion_map = NULL;
     foreach ($component_data_info as $property_name => $property_info) {
       if (!empty($property_info['acquired'])) {
         if (!$requesting_component) {
           throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
         }
 
-        // Get the mapping from the requesting component, but only once.
-        if (is_null($property_name_conversion_map)) {
-          $property_name_conversion_map = array_flip($requesting_component->providedPropertiesMapping());
-        }
-
-        if (isset($property_name_conversion_map[$property_name])) {
-          // If the requesting component defines a property mapping, then
-          // use that to get the name of the source proeprty.
-          $provider_property_name = $property_name_conversion_map[$property_name];
-          $component_data[$property_name] = $requesting_component->getComponentDataValue($provider_property_name);
-        }
-        elseif (isset($property_info['acquired_from'])) {
+        $acquired_value = NULL;
+        if (isset($property_info['acquired_from'])) {
           // If the current property says it is acquired from something else,
           // use that.
-          $component_data[$property_name] = $requesting_component->getComponentDataValue($property_info['acquired_from']);
+          $acquired_value = $requesting_component->getComponentDataValue($property_info['acquired_from']);
+        }
+        elseif (isset($requesting_component_data_info[$property_name])) {
+          // Get the value from the property of the same name, if one exists.
+          $acquired_value = $requesting_component->getComponentDataValue($property_name);
         }
         else {
-          // Finally, get the value from the property of the same name.
-          $component_data[$property_name] = $requesting_component->getComponentDataValue($property_name);
+          // Finally, try to find an acquisition alias.
+          foreach ($requesting_component_data_info as $requesting_component_property_name => $requesting_component_property_info) {
+            if (!isset($requesting_component_property_info['acquired_alias'])) {
+              continue;
+            }
+
+            if ($requesting_component_property_info['acquired_alias'] == $property_name) {
+              $acquired_value = $requesting_component->getComponentDataValue($requesting_component_property_name);
+              break;
+            }
+          }
         }
+
+        if (!isset($acquired_value)) {
+          throw new \Exception("Unable to acquire value for property $property_name.");
+        }
+
+        $component_data[$property_name] = $acquired_value;
       }
     }
 

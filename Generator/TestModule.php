@@ -49,13 +49,4 @@ class TestModule extends Module {
     return $component_data_definition;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function providedPropertiesMapping() {
-    return [
-      'root_name' => 'root_component_name',
-    ];
-  }
-
 }

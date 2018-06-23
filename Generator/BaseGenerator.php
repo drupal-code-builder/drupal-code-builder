@@ -268,6 +268,11 @@ abstract class BaseGenerator {
    *  - 'acquired_from': (optional) If 'acquired' is TRUE, this can be used to
    *    specify the name of the property on the requesting component to take
    *    the value from.
+   *  - 'acquired_alias': (optional) A property name that requested components
+   *    can use to request this property instead of its real name. Must not be
+   *    the name of a property on this generator. Will be ignored if the
+   *    requesting property has the 'acquired_from' attribute set, or if a
+   *    matching property name exists.
    *
    * @see Generate::getComponentDataInfo()
    */
@@ -333,21 +338,6 @@ abstract class BaseGenerator {
     }
 
     return $this->component_data[$name];
-  }
-
-  /**
-   * Define how other components acquire properties from this one.
-   *
-   * @see ComponentCollector::getComponentsFromData()
-   *
-   * @return array
-   *   An array where the key is the property name in this class's component
-   *   data, and the value is the property name provided to other components.
-   */
-  public function providedPropertiesMapping() {
-    return [
-      'root_component_name' => 'root_component_name',
-    ];
   }
 
   /**
