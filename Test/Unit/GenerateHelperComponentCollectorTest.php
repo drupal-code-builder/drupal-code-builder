@@ -1066,6 +1066,128 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $this->assertContains('root', $component_paths, "The component list has the root generator.");
   }
 
+  /**
+   * Test acquired property values.
+   */
+  public function testAcquiredValues() {
+    // The mocked root component's data info.
+    $root_data_info = [
+      // This property is assumed to exist by the collector.
+      'root_name' => [
+        'label' => 'Component machine name',
+        'required' => TRUE,
+      ],
+      'acquired_verbatim' => [
+        'format' => 'string',
+      ],
+      'acquired_mapped' => [
+        'format' => 'string',
+      ],
+      'acquired_from_source' => [
+        'format' => 'string',
+      ],
+    ];
+    $this->componentDataInfoAddDefaults($root_data_info);
+    // The request data we pass in to the system.
+    $root_data = [
+      'base' => 'my_root',
+      'root_name' => 'my_component',
+      'acquired_verbatim' => 'acquired_verbatim_value',
+      'acquired_mapped' => 'acquired_mapped_value',
+      'acquired_from_source' => 'acquired_from_source_value',
+    ];
+
+    // The component collector's injected dependencies.
+    $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
+    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
+    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
+
+    // The root component.
+    $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
+
+    $root_component->getMergeTag()->willReturn(NULL);
+    $root_component->requiredComponents()->willReturn([
+      'child_requirement' => [
+        'component_type' => 'child_requirement',
+      ]
+    ]);
+    $root_component->providedPropertiesMapping()->willReturn([
+      'acquired_mapped' => 'acquired_from_mapping',
+    ]);
+    $root_component->getComponentDataValue("acquired_verbatim")->willReturn('acquired_verbatim_value');
+    $root_component->getComponentDataValue("acquired_mapped")->willReturn('acquired_mapped_value');
+    $root_component->getComponentDataValue("acquired_from_source")->willReturn('acquired_from_source_value');
+
+    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
+    $class_handler->getGenerator(
+      'my_root',
+      'my_component',
+      Argument::that(function ($arg) use ($root_data) {
+        return empty(array_diff($root_data, $arg));
+      }),
+      NULL
+    )->willReturn($root_component->reveal());
+
+    // The child component the root component requests.
+    $child_requirement_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
+
+    $child_requirement_component->getMergeTag()->willReturn(NULL);
+    $child_requirement_component->requiredComponents()->willReturn([]);
+
+    $child_requirement_component_data_info = [
+      'acquired_verbatim' => [
+        'format' => 'string',
+        'acquired' => TRUE,
+      ],
+      'acquired_from_mapping' => [
+        'format' => 'string',
+        'acquired' => TRUE,
+      ],
+      'acquired_from_specified' => [
+        'format' => 'string',
+        'acquired' => TRUE,
+        'acquired_from' => 'acquired_from_source',
+      ],
+    ];
+    $this->componentDataInfoAddDefaults($child_requirement_component_data_info);
+
+    $data_info_gatherer->getComponentDataInfo('child_requirement', TRUE)->willReturn($child_requirement_component_data_info);
+    // Wildcard the data parameter. We're not testing what components receive
+    // for construction.
+    $class_handler->getGenerator(
+      'child_requirement',
+      'child_requirement',
+      Argument::that(function ($arg) {
+        // Use a PHPUnit assertion because its error output is much better
+        // than prophecy's.
+        $this->assertEquals([
+          'component_type' => 'child_requirement',
+          // Acquired from root values.
+          'acquired_verbatim' => 'acquired_verbatim_value',
+          // Acquired from root values, with a mapping.
+          'acquired_from_mapping' => 'acquired_mapped_value',
+          // Acquired from specified property.
+          'acquired_from_specified' => 'acquired_from_source_value',
+        ], $arg, "The child component is created with the expected data.");
+        return TRUE;
+      }),
+      $root_component->reveal()
+    )->willReturn($child_requirement_component->reveal());
+
+    // Create the helper, with mocks passed in.
+    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
+      $environment->reveal(),
+      $class_handler->reveal(),
+      $data_info_gatherer->reveal()
+    );
+
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
+
+    $this->assertCount(2, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/child_requirement', $component_paths, "The component list has the child generator.");
+  }
+
   /*
   Further tests todo:
   - basic properties, single generator makes requests
