@@ -206,13 +206,18 @@ class ComponentCollector {
         }
 
         if (isset($property_name_conversion_map[$property_name])) {
+          // If the requesting component defines a property mapping, then
+          // use that to get the name of the source proeprty.
           $provider_property_name = $property_name_conversion_map[$property_name];
           $component_data[$property_name] = $requesting_component->getComponentDataValue($provider_property_name);
         }
         elseif (isset($property_info['acquired_from'])) {
+          // If the current property says it is acquired from something else,
+          // use that.
           $component_data[$property_name] = $requesting_component->getComponentDataValue($property_info['acquired_from']);
         }
         else {
+          // Finally, get the value from the property of the same name.
           $component_data[$property_name] = $requesting_component->getComponentDataValue($property_name);
         }
       }
