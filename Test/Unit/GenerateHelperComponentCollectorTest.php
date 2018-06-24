@@ -16,11 +16,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    */
   protected $drupalMajorVersion = 8;
 
-  // TEMPORARY while acquisition system is refactored.
-  public function setUp() {
-    $this->markTestIncomplete();
-  }
-
   /**
    * Request with only the root generator, which itself has no requirements.
    */
@@ -100,6 +95,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([]);
+    $root_component->getType()->willReturn('my_root');
 
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
@@ -221,6 +217,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([]);
+    $root_component->getType()->willReturn('my_root');
 
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
@@ -369,6 +366,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $root_component->getMergeTag()->willReturn(NULL);
     $root_component->requiredComponents()->willReturn([]);
+    $root_component->getType()->willReturn('my_root');
 
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
@@ -437,6 +435,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'component_type' => 'child_requirement',
       ]
     ]);
+    $root_component->getType()->willReturn('my_root');
 
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
@@ -521,6 +520,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'component_type' => 'child_requirement',
       ]
     ]);
+    $root_component->getType()->willReturn('my_root');
 
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
@@ -536,6 +536,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $child_requirement_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
     $child_requirement_component->getMergeTag()->willReturn(NULL);
+    $child_requirement_component->getType()->willReturn('child_requirement');
     $child_requirement_component->requiredComponents()->willReturn([
       'grandchild_requirement' => [
         'component_type' => 'grandchild_requirement',
@@ -631,6 +632,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
     $root_component->getMergeTag()->willReturn(NULL);
+    $root_component->getType()->willReturn('my_root');
 
     $class_handler->getGenerator(
       'my_root',
@@ -729,6 +731,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
     $root_component->getMergeTag()->willReturn(NULL);
+    $root_component->getType()->willReturn('my_root');
 
     $class_handler->getGenerator(
       'my_root',
@@ -815,6 +818,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'root_name' => [
         'label' => 'Component machine name',
         'required' => TRUE,
+        'acquired_alias' => 'root_component_name',
       ],
       'plain_property_string' => [
         'format' => 'string',
@@ -848,10 +852,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
     $root_component->getMergeTag()->willReturn(NULL);
-    $root_component->providedPropertiesMapping()->willReturn([
-      'root_name' => 'root_component_name',
-    ]);
     $root_component->getComponentDataValue('root_name')->willReturn($root_data['root_name']);
+    $root_component->getType()->willReturn('my_root');
 
     $class_handler->getGenerator(
       'my_root',
@@ -1043,6 +1045,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
 
     $root_component->getMergeTag()->willReturn(NULL);
+    $root_component->getType()->willReturn('my_root');
 
     $class_handler->getGenerator(
       'my_root',
@@ -1085,8 +1088,9 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'acquired_verbatim' => [
         'format' => 'string',
       ],
-      'acquired_mapped' => [
+      'acquired_aliased' => [
         'format' => 'string',
+        'acquired_alias' => 'acquired_from_alias',
       ],
       'acquired_from_source' => [
         'format' => 'string',
@@ -1103,7 +1107,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'base' => 'my_root',
       'root_name' => 'my_component',
       'acquired_verbatim' => 'acquired_verbatim_value',
-      'acquired_mapped' => 'acquired_mapped_value',
+      'acquired_aliased' => 'acquired_aliased_value',
       'acquired_from_source' => 'acquired_from_source_value',
       'acquired_from_specified' => 'acquired_from_specified_value',
     ];
@@ -1122,11 +1126,9 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'component_type' => 'child_requirement',
       ]
     ]);
-    $root_component->providedPropertiesMapping()->willReturn([
-      'acquired_mapped' => 'acquired_from_mapping',
-    ]);
+    $root_component->getType()->willReturn('my_root');
     $root_component->getComponentDataValue("acquired_verbatim")->willReturn('acquired_verbatim_value');
-    $root_component->getComponentDataValue("acquired_mapped")->willReturn('acquired_mapped_value');
+    $root_component->getComponentDataValue("acquired_aliased")->willReturn('acquired_aliased_value');
     $root_component->getComponentDataValue("acquired_from_source")->willReturn('acquired_from_source_value');
 
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
@@ -1150,7 +1152,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'format' => 'string',
         'acquired' => TRUE,
       ],
-      'acquired_from_mapping' => [
+      'acquired_from_alias' => [
         'format' => 'string',
         'acquired' => TRUE,
       ],
@@ -1175,8 +1177,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
           'component_type' => 'child_requirement',
           // Acquired from root values.
           'acquired_verbatim' => 'acquired_verbatim_value',
-          // Acquired from root values, with a mapping.
-          'acquired_from_mapping' => 'acquired_mapped_value',
+          // Acquired from root values, with an alias.
+          'acquired_from_alias' => 'acquired_aliased_value',
           // Acquired from specified property.
           'acquired_from_specified' => 'acquired_from_source_value',
         ], $arg, "The child component is created with the expected data.");
