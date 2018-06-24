@@ -35,6 +35,9 @@ abstract class RootComponent extends BaseGenerator {
     $component_data_definition['root_name'] = [
       'label' => 'Extension machine name',
       'required' => TRUE,
+      // Requested components will acquire the root name as the
+      // 'root_component_name' property.
+      'acquired_alias' => 'root_component_name',
     ];
 
     // Remove the root_component_name property that's come from the parent
@@ -51,17 +54,6 @@ abstract class RootComponent extends BaseGenerator {
     ];
 
     return $component_data_definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function providedPropertiesMapping() {
-    return [
-      // For a root component, the root name is a property with a different
-      // name.
-      'root_name' => 'root_component_name',
-    ];
   }
 
   /**
