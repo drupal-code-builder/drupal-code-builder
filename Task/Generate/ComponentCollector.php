@@ -364,10 +364,15 @@ class ComponentCollector {
    *   there is no requesting component present.
    */
   protected function acquireDataFromRequestingComponent(&$component_data, $component_data_info, $requesting_component) {
-    // Get the requesting component data info to find any acquisition aliases.
+    // Get the requesting component's data info.
     if ($requesting_component) {
       $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
     }
+
+    // Initialize a map of property acquisition aliases in the requesting
+    // component. This is lazily computed if we find no other way to find the
+    // acquired property.
+    $requesting_component_alias_map = NULL;
 
     // Allow the new generator to acquire properties from the requester.
     foreach ($component_data_info as $property_name => $property_info) {
@@ -382,21 +387,30 @@ class ComponentCollector {
           // use that.
           $acquired_value = $requesting_component->getComponentDataValue($property_info['acquired_from']);
         }
-        elseif (isset($requesting_component_data_info[$property_name])) {
+        elseif (array_key_exists($property_name, $requesting_component_data_info)) {
           // Get the value from the property of the same name, if one exists.
           $acquired_value = $requesting_component->getComponentDataValue($property_name);
         }
         else {
           // Finally, try to find an acquisition alias.
-          foreach ($requesting_component_data_info as $requesting_component_property_name => $requesting_component_property_info) {
-            if (!isset($requesting_component_property_info['acquired_alias'])) {
-              continue;
-            }
+          if (is_null($requesting_component_alias_map)) {
+            // Lazily build a map of aliases that exist in the requesting
+            // component's data info, now that we need it.
+            $requesting_component_alias_map = [];
 
-            if ($requesting_component_property_info['acquired_alias'] == $property_name) {
-              $acquired_value = $requesting_component->getComponentDataValue($requesting_component_property_name);
-              break;
+            foreach ($requesting_component_data_info as $requesting_component_property_name => $requesting_component_property_info) {
+              if (!isset($requesting_component_property_info['acquired_alias'])) {
+                continue;
+              }
+
+              // Create a map of the current data's property name => the
+              // requesting component's property name.
+              $requesting_component_alias_map[$requesting_component_property_info['acquired_alias']] = $requesting_component_property_name;
             }
+          }
+
+          if (isset($requesting_component_alias_map[$property_name])) {
+            $acquired_value = $requesting_component->getComponentDataValue($requesting_component_alias_map[$property_name]);
           }
         }
 
