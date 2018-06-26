@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
+use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use CaseConverter\CaseString;
 
 /**
@@ -274,45 +275,42 @@ class Plugin extends PHPClassFileWithInjection {
    *   An array of lines suitable for docBlock().
    */
   function classAnnotation() {
-    $docblock_code = [];
-
     $annotation_class_path = explode('\\', $this->component_data['plugin_type_data']['plugin_definition_annotation_name']);
     $annotation_class = array_pop($annotation_class_path);
 
     // Special case: annotation that's just the plugin ID.
     if (!empty($this->component_data['plugin_type_data']['annotation_id_only'])) {
-      $docblock_code[] = '@'
-        . $annotation_class
-        . '("'
-        . $this->component_data['plugin_name']
-        . '")';
+      $annotation = ClassAnnotation::{$annotation_class}($this->component_data['plugin_name']);
 
-      return $docblock_code;
+      $annotation_lines = $annotation->render();
+
+      return $annotation_lines;
     }
 
     $annotation_variables = $this->component_data['plugin_type_data']['plugin_properties'];
 
-    $docblock_code[] = '@' . $annotation_class . '(';
-
+    $annotation_data = [];
     foreach ($annotation_variables as $annotation_variable => $annotation_variable_info) {
       if ($annotation_variable == 'id') {
-        $docblock_code[] = '  ' . $annotation_variable . ' = "' . $this->component_data['plugin_name'] . '",';
+        $annotation_data['id'] = $this->component_data['plugin_name'];
         continue;
       }
 
       // Hacky workaround for https://github.com/drupal-code-builder/drupal-code-builder/issues/97.
       if (isset($annotation_variable_info['type']) && $annotation_variable_info['type'] == '\Drupal\Core\Annotation\Translation') {
         // The annotation property value is translated.
-        $docblock_code[] = '  ' . $annotation_variable . ' = @Translation("TODO: replace this with a value"),';
+        $annotation_data[$annotation_variable] = ClassAnnotation::Translation("TODO: replace this with a value");
         continue;
       }
 
       // It's a plain string.
-      $docblock_code[] = '  ' . $annotation_variable . ' = "TODO: replace this with a value",';
+      $annotation_data[$annotation_variable] = "TODO: replace this with a value";
     }
-    $docblock_code[] = ')';
 
-    return $docblock_code;
+    $annotation = ClassAnnotation::{$annotation_class}($annotation_data);
+    $annotation_lines = $annotation->render();
+
+    return $annotation_lines;
   }
 
   /**
