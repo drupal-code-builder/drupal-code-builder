@@ -420,7 +420,7 @@ class ContentEntityType extends EntityTypeBase {
       $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";
       $changed_field_calls = new FluentMethodCall;
       $changed_field_calls->setLabel(FluentMethodCall::t('Changed'))
-        ->setDescription(FluentMethodCall::t('The time that the node was last edited.'));
+        ->setDescription(FluentMethodCall::t('The time that the entity was last edited.'));
       if ($use_revisionable) {
         $changed_field_calls->setRevisionable(TRUE);
       }
