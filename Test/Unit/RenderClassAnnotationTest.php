@@ -33,12 +33,12 @@ class RenderClassAnnotationTest extends TestCase {
         'plural' => "@count content items",
       ]),
       'handlers' => [
-        "storage" => "Drupal\node\NodeStorage",
+        "storage" => "Drupal\cat\CatStorage",
         "form" => [
-          "default" => "Drupal\node\NodeForm",
-          "delete" => "Drupal\node\Form\NodeDeleteForm",
+          "default" => "Drupal\cat\CatForm",
+          "delete" => "Drupal\cat\Form\CatDeleteForm",
         ],
-        "list_builder" => "Drupal\node\NodeListBuilder",
+        "list_builder" => "Drupal\cat\CatListBuilder",
       ],
       'entity_keys' => [
         'id' => 'nid',
@@ -57,12 +57,12 @@ class RenderClassAnnotationTest extends TestCase {
  *     plural = "@count content items",
  *   ),
  *   handlers = {
- *     "storage" = "Drupal\node\NodeStorage",
+ *     "storage" = "Drupal\cat\CatStorage",
  *     "form" = {
- *       "default" = "Drupal\node\NodeForm",
- *       "delete" = "Drupal\node\Form\NodeDeleteForm",
+ *       "default" = "Drupal\cat\CatForm",
+ *       "delete" = "Drupal\cat\Form\CatDeleteForm",
  *     },
- *     "list_builder" = "Drupal\node\NodeListBuilder",
+ *     "list_builder" = "Drupal\cat\CatListBuilder",
  *   },
  *   entity_keys = {
  *     "id" = "nid",
