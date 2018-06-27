@@ -705,8 +705,23 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatTypeInterface']);
     $php_tester->assertHasNoMethods();
 
+    // Test the bundle entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'handlers',
+      'admin_permission',
+      'entity_keys',
+      'config_export',
+      'bundle_of',
+    ]);
+    $annotation_tester->assertPropertyHasValue('bundle_of', "kitty_cat");
 
     $config_yaml_file = $files['config/schema/test_module.schema.yml'];
     $yaml_tester = new YamlTester($config_yaml_file);
@@ -1441,6 +1456,8 @@ class ComponentContentEntityType8Test extends TestBase {
       'bundle_entity_type',
       'links',
     ]);
+    $annotation_tester->assertPropertyHasValue('bundle_label', "Kitty Cat Type");
+    $annotation_tester->assertPropertyHasValue('bundle_entity_type', "kitty_cat_type");
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
@@ -1462,6 +1479,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'links',
       'bundle_of',
     ]);
+    $annotation_tester->assertPropertyHasValue('bundle_of', "kitty_cat");
 
     // Check the permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
