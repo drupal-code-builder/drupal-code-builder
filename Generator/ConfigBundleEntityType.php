@@ -14,6 +14,24 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
+  protected $annotationTopLevelOrder = [
+    'id',
+    'label',
+    'label_collection',
+    'label_singular',
+    'label_plural',
+    'label_count',
+    'handlers',
+    'admin_permission',
+    'bundle_of',
+    'entity_keys',
+    'config_export',
+    'links',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 

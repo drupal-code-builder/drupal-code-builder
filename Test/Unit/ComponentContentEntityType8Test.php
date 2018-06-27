@@ -717,9 +717,9 @@ class ComponentContentEntityType8Test extends TestBase {
       'label_count',
       'handlers',
       'admin_permission',
+      'bundle_of',
       'entity_keys',
       'config_export',
-      'bundle_of',
     ]);
     $annotation_tester->assertPropertyHasValue('bundle_of', "kitty_cat");
 
@@ -1474,10 +1474,10 @@ class ComponentContentEntityType8Test extends TestBase {
       'label_count',
       'handlers',
       'admin_permission',
+      'bundle_of',
       'entity_keys',
       'config_export',
       'links',
-      'bundle_of',
     ]);
     $annotation_tester->assertPropertyHasValue('bundle_of', "kitty_cat");
 
