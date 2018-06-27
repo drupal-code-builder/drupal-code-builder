@@ -312,12 +312,6 @@ class ConfigEntityType extends EntityTypeBase {
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
-    // Add further annotation properties.
-    // TODO: handle this in ConfigBundleEntityType.
-    if (isset($this->component_data['bundle_of_entity'])) {
-      $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
-    }
-
     if (!empty($this->component_data['entity_ui'])) {
       $annotation_data['links'] = [];
       $entity_path_component = $this->component_data['entity_type_id'];

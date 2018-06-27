@@ -64,4 +64,15 @@ class ConfigBundleEntityType extends ConfigEntityType {
     return $handler_types;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getAnnotationData() {
+    $annotation_data = parent::getAnnotationData();
+
+    $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
+
+    return $annotation_data;
+  }
+
 }
