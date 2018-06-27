@@ -137,16 +137,25 @@ class ClassAnnotation {
     $indent = str_repeat('  ', $nesting);
 
     foreach ($data as $key => $value) {
-      // Keys need to be quoted for all levels except the first level of an
-      // annotation.
-      if ($annotation_nesting != 0) {
-        $key = '"' . $key . '"';
+      if (is_numeric($key)) {
+        // Numeric keys are not shown.
+        $declaration_line = "{$indent}";
+      }
+      else {
+        // Keys need to be quoted for all levels except the first level of an
+        // annotation.
+        if ($annotation_nesting != 0) {
+          $key = '"' . $key . '"';
+        }
+
+        $declaration_line = "{$indent}{$key} = ";
       }
 
       if (is_string($value)) {
         $value = '"' . $value . '"';
 
-        $docblock_lines[] = "{$indent}{$key} = {$value},";
+        $declaration_line .= "{$value},";
+        $docblock_lines[] = $declaration_line;
       }
       elseif (is_object($value)) {
         // Child annotation. The nesting level doesn't increase here, as the
@@ -155,13 +164,15 @@ class ClassAnnotation {
         // annotation.
         $sub_lines = $value->render($nesting, 0);
 
-        $docblock_lines[] = $indent . "{$key} = " . array_shift($sub_lines);
+        $declaration_line .= array_shift($sub_lines);
+        $docblock_lines[] = $declaration_line;
 
         $docblock_lines = array_merge($docblock_lines, $sub_lines);
       }
       else {
         // Array of values. Recurse into this method.
-        $docblock_lines[] = $indent . "{$key} = {";
+        $declaration_line .= '{';
+        $docblock_lines[] = $declaration_line;
 
         $this->renderArray($docblock_lines, $value, $nesting + 1, $annotation_nesting + 1);
 

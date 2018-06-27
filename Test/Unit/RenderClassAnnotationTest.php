@@ -44,6 +44,11 @@ class RenderClassAnnotationTest extends TestCase {
         'id' => 'nid',
         'bundle' => 'type',
       ],
+      // Numeric keys should not be output.
+      'config_export' => [
+        'whiskers',
+        'paws',
+      ],
     ]);
     $annotation_lines = $annotation->render();
     $annotation_text = $this->renderDocblock($annotation_lines);
@@ -67,6 +72,10 @@ class RenderClassAnnotationTest extends TestCase {
  *   entity_keys = {
  *     "id" = "nid",
  *     "bundle" = "type",
+ *   },
+ *   config_export = {
+ *     "whiskers",
+ *     "paws",
  *   },
  * )
 EOT;
