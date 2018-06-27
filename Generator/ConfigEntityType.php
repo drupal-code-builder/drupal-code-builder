@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
 
@@ -10,6 +10,28 @@ use CaseConverter\CaseString;
  * Generator for a config entity type.
  */
 class ConfigEntityType extends EntityTypeBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $annotationClassName = 'ConfigEntityType';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $annotationTopLevelOrder = [
+    'id',
+    'label',
+    'label_collection',
+    'label_singular',
+    'label_plural',
+    'label_count',
+    'handlers',
+    'admin_permission',
+    'entity_keys',
+    'config_export',
+    'links',
+  ];
 
   /**
    * {@inheritdoc}
@@ -288,31 +310,7 @@ class ConfigEntityType extends EntityTypeBase {
    * {@inheritdoc}
    */
   protected function getAnnotationData() {
-    $annotation = parent::getAnnotationData();
-
-    $annotation['#class'] = 'ConfigEntityType';
-
-    // Standard ordering for our annotation keys.
-    $annotation_keys = [
-      'id',
-      'label',
-      'label_collection',
-      'label_singular',
-      'label_plural',
-      'label_count',
-      'handlers',
-      'admin_permission',
-      'entity_keys',
-      'config_export',
-      'links',
-    ];
-    $annotation_data = array_fill_keys($annotation_keys, NULL);
-
-    // Re-create the annotation #data array, with the properties in our set
-    // order.
-    foreach ($annotation['#data'] as $key => $data) {
-      $annotation_data[$key] = $data;
-    }
+    $annotation_data = parent::getAnnotationData();
 
     // Add further annotation properties.
     // TODO: handle this in ConfigBundleEntityType.
@@ -338,19 +336,7 @@ class ConfigEntityType extends EntityTypeBase {
       $annotation_data['config_export'] = $config_export_values;
     }
 
-    // Filter the annotation data to remove any keys which are NULL; that is,
-    // which are still in the state that the array fill put them in and that
-    // have not had any actual data in. AFAIK annotation values are never
-    // actually NULL, so this is ok.
-    $annotation_data = array_filter($annotation_data, function($item) {
-      return !is_null($item);
-    });
-
-    // Put our data into the annotation array.
-    $annotation['#data'] = $annotation_data;
-
-    return $annotation;
+    return $annotation_data;
   }
-
 
 }

@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
@@ -11,6 +11,35 @@ use CaseConverter\CaseString;
  * Generator for a content entity type.
  */
 class ContentEntityType extends EntityTypeBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $annotationClassName = 'ContentEntityType';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $annotationTopLevelOrder = [
+    'id',
+    'label',
+    'label_collection',
+    'label_singular',
+    'label_plural',
+    'label_count',
+    'bundle_label',
+    'base_table',
+    'data_table',
+    'revision_table',
+    'revision_data_table',
+    'translatable',
+    'handlers',
+    'admin_permission',
+    'entity_keys',
+    'bundle_entity_type',
+    'field_ui_base_route',
+    'links',
+  ];
 
   /**
    * {@inheritdoc}
@@ -540,38 +569,7 @@ class ContentEntityType extends EntityTypeBase {
    * {@inheritdoc}
    */
   protected function getAnnotationData() {
-    $annotation = parent::getAnnotationData();
-
-    $annotation['#class'] = 'ContentEntityType';
-
-    // Standard ordering for our annotation keys.
-    $annotation_keys = [
-      'id',
-      'label',
-      'label_collection',
-      'label_singular',
-      'label_plural',
-      'label_count',
-      'bundle_label',
-      'base_table',
-      'data_table',
-      'revision_table',
-      'revision_data_table',
-      'translatable',
-      'handlers',
-      'admin_permission',
-      'entity_keys',
-      'bundle_entity_type',
-      'field_ui_base_route',
-      'links',
-    ];
-    $annotation_data = array_fill_keys($annotation_keys, NULL);
-
-    // Re-create the annotation #data array, with the properties in our set
-    // order.
-    foreach ($annotation['#data'] as $key => $data) {
-      $annotation_data[$key] = $data;
-    }
+    $annotation_data = parent::getAnnotationData();
 
     // Add further annotation properties.
     // Use the entity type ID as the base table.
@@ -607,10 +605,7 @@ class ContentEntityType extends EntityTypeBase {
 
     if (isset($this->component_data['bundle_entity'][0])) {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type_id'];
-      $annotation_data['bundle_label'] = [
-        '#class' => 'Translation',
-        '#data' => $this->component_data['bundle_label'],
-      ];
+      $annotation_data['bundle_label'] = ClassAnnotation::Translation($this->component_data['bundle_label']);
     }
 
     $revisionable = in_array('revisionable', $this->component_data['functionality']);
@@ -633,18 +628,7 @@ class ContentEntityType extends EntityTypeBase {
       $annotation_data['revision_data_table'] = "{$annotation_data['base_table']}_field_revision";
     }
 
-    // Filter the annotation data to remove any keys which are NULL; that is,
-    // which are still in the state that the array fill put them in and that
-    // have not had any actual data in. AFAIK annotation values are never
-    // actually NULL, so this is ok.
-    $annotation_data = array_filter($annotation_data, function($item) {
-      return !is_null($item);
-    });
-
-    // Put our data into the annotation array.
-    $annotation['#data'] = $annotation_data;
-
-    return $annotation;
+    return $annotation_data;
   }
 
 }

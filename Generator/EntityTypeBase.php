@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Generator\FormattingTrait\AnnotationTrait;
+use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
@@ -14,7 +14,25 @@ abstract class EntityTypeBase extends PHPClassFile {
 
   use NameFormattingTrait;
 
-  use AnnotationTrait;
+  /**
+   * The class to use for the entity class annotation.
+   *
+   * Child classes must override this.
+   */
+  protected $annotationClassName = '';
+
+  /**
+   * The ordering to apply to annotation top-level properties.
+   *
+   * Child classes must override this.
+   *
+   * It is permissible for:
+   * - a generated annotation to not have a property that is given in this
+   *   array.
+   * - a generated annotation to have a property that is not given in this
+   *   array.
+   */
+  protected $annotationTopLevelOrder = [];
 
   /**
    * {@inheritdoc}
@@ -488,9 +506,22 @@ abstract class EntityTypeBase extends PHPClassFile {
     $docblock_lines = parent::getClassDocBlockLines();
     $docblock_lines[] = '';
 
-    $annotation = $this->getAnnotationData();
+    $annotation_data = $this->getAnnotationData();
 
-    $docblock_lines = array_merge($docblock_lines, $this->renderAnnnotation($annotation));
+    // Order the annotation data by the ordering array.
+    $annotation_data_ordered = array_fill_keys($this->annotationTopLevelOrder, NULL);
+    $annotation_data_ordered = array_replace($annotation_data_ordered, $annotation_data);
+    // Filter the annotation data to remove any keys which are NULL; that is,
+    // which are still in the state that the array fill put them in and that
+    // have not had any actual data in. AFAIK annotation values are never
+    // actually NULL, so this is ok.
+    $annotation_data_ordered = array_filter($annotation_data_ordered, function($item) {
+      return !is_null($item);
+    });
+
+    $annotation = ClassAnnotation::{$this->annotationClassName}($annotation_data_ordered);
+
+    $docblock_lines = array_merge($docblock_lines, $annotation->render());
 
     return $docblock_lines;
   }
@@ -499,45 +530,21 @@ abstract class EntityTypeBase extends PHPClassFile {
    * Gets the data for the annotation.
    *
    * @return array
-   *   A data array suitable for renderAnnnotation().
+   *   A data array suitable for passing to ClassAnnotation.
    */
   protected function getAnnotationData() {
-    $annotation = [
-      '#class' => 'CHILD CLASS SETS THIS',
-      '#data' => [
-        'id' => $this->component_data['entity_type_id'],
-        'label' => [
-          '#class' => 'Translation',
-          '#data' => $this->component_data['entity_type_label'],
-        ],
-      ],
-    ];
-
-    $annotation['#data'] += [
-      'entity_keys' => $this->component_data['entity_keys'],
-    ];
-
-    $annotation_data['label_collection'] = [
-      '#class' => 'Translation',
-      '#data' => $this->component_data['entity_type_label'] . 's',
-    ];
-    $annotation_data['label_singular'] = [
-      '#class' => 'Translation',
-      '#data' => strtolower($this->component_data['entity_type_label']),
-    ];
-    $annotation_data['label_plural'] = [
-      '#class' => 'Translation',
-      '#data' => strtolower($this->component_data['entity_type_label']) . 's',
-    ];
-    $annotation_data['label_count'] = [
-      '#class' => 'PluralTranslation',
-      '#data' => [
+    $annotation_data = [
+      'id' => $this->component_data['entity_type_id'],
+      'label' => ClassAnnotation::Translation($this->component_data['entity_type_label']),
+      'label_collection' => ClassAnnotation::Translation($this->component_data['entity_type_label'] . 's'),
+      'label_singular' => ClassAnnotation::Translation(strtolower($this->component_data['entity_type_label'])),
+      'label_plural' => ClassAnnotation::Translation(strtolower($this->component_data['entity_type_label']) . 's'),
+      'label_count' => ClassAnnotation::PluralTranslation([
         'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
         'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
-      ],
+      ]),
+      'entity_keys' => $this->component_data['entity_keys'],
     ];
-    // TODO: clean up this array assignment!
-    $annotation['#data'] += $annotation_data;
 
     // Handlers.
     $handler_data = [];
@@ -600,15 +607,15 @@ abstract class EntityTypeBase extends PHPClassFile {
       }
     }
     if ($handler_data) {
-      $annotation['#data']['handlers'] = $handler_data;
+      $annotation_data['handlers'] = $handler_data;
     }
 
     if ($this->component_data['admin_permission_name']) {
-      $annotation['#data']['admin_permission'] = $this->component_data['admin_permission_name'];
+      $annotation_data['admin_permission'] = $this->component_data['admin_permission_name'];
       $handler_class = substr($handler_class, 1);
     }
 
-    return $annotation;
+    return $annotation_data;
   }
 
   /**
