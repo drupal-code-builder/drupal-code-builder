@@ -96,6 +96,11 @@ class Plugin extends PHPClassFileWithInjection {
         'description' => 'The module name will be prepended, unless the ID is a derivative.',
         'required' => TRUE,
         'default' => function($component_data) {
+          // Skip this for non-interactive UIs.
+          if (empty($component_data['plugin_type'])) {
+            return;
+          }
+
           // Keep a running count of the plugins of each type, so we can offer
           // a default in the form 'block_one', 'block_two'.
           $plugin_type = $component_data['plugin_type'];
