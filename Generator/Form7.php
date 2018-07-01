@@ -19,31 +19,16 @@ class Form7 extends BaseGenerator {
   public $name;
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   *   Valid properties are:
-   *      - 'code_file': The code file to place this form in. This may contain
-   *        placeholders.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'code_file' => '%module.module',
-    );
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
+      'code_file' => [
+        // The code file to place the form's functions into. This may contain
+        // placeholders.
+        'internal' => TRUE,
+        'default' => '%module.module',
+      ],
       'form_id' => [
         'computed' => TRUE,
         'default' => function($component_data) {

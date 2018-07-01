@@ -8,22 +8,12 @@ namespace DrupalCodeBuilder\Generator;
 class AdminSettingsForm7 extends Form7 {
 
   /**
-   * Override the parent to set the code file.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'code_file' => '%module.admin.inc',
-    );
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
+
+    $data_definition['code_file']['default'] = '%module.admin.inc';
 
     $data_definition['form_id']['default'] = function($component_data) {
       return $component_data['root_component_name'] . '_settings_form';
