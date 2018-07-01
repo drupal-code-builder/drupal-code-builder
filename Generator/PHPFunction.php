@@ -21,7 +21,6 @@ class PHPFunction extends BaseGenerator {
    * @param $component_data
    *   An array of data for the component. Any missing properties are given
    *   default values. Valid properties are:
-   *    - 'doxygen_first': The text of the first line of doxygen.
    *    - 'declaration': The function declaration, including the function name
    *      and parameters, up to the closing parenthesis. Should not however
    *      include the opening brace of the function body.
