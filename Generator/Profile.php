@@ -38,7 +38,7 @@ class Profile extends RootComponent {
   public static function componentDataDefinition() {
     $component_data_definition = parent::componentDataDefinition();
 
-    $component_data_definition['base'] => [
+    $component_data_definition['base'] = [
       'internal' => TRUE,
       'default' => 'profile',
       'process_default' => TRUE,
