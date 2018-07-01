@@ -892,31 +892,11 @@ class PHPTester {
   }
 
   /**
-   * Asserts a method of the parsed class has the given parameters.
-   *
-   * @param $parameters
-   *   An array of parameters: keys are the parameter names, values are the
-   *   typehint, with NULL for no typehint.
-   * @param string $method_name
-   *   The method name.
-   * @param string $message
-   *   (optional) The assertion message.
-   */
-  public function assertMethodHasParameters($parameters, $method_name, $message = NULL) {
-    $this->assertHasMethod($method_name);
-
-    $expected_parameter_names = array_keys($parameters);
-
-    $parameter_names_string = implode(", ", $expected_parameter_names);
-    $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string}.";
-
-    $this->assertHelperMethodHasParametersSlice($parameters, $method_name, $message);
-  }
-
-  /**
    * Asserts a subset of the parameters of a method of the parsed class.
    *
-   * Helper for assertMethodHasParameters() and other assertions.
+   * Helper for other assertions.
+   *
+   * TODO: Move assertions that use this to PHPMethodTester and remove this.
    *
    * @param $parameters
    *   An array of parameters: keys are the parameter names, values are the

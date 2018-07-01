@@ -391,12 +391,13 @@ class ComponentPluginsAnnotated8Test extends TestBase {
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
     ]);
 
-    $php_tester->assertMethodHasParameters([
+    $create_tester = $php_tester->getMethodTester('create');
+    $create_tester->assertHasParameters([
       'container' => 'Symfony\Component\DependencyInjection\ContainerInterface',
       'configuration' => 'array',
       'plugin_id' => NULL,
       'plugin_definition' => NULL,
-    ], 'create');
+    ]);
 
     $php_tester->assertConstructorBaseParameters([
       'plugin_id' => NULL,

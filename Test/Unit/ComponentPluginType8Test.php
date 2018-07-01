@@ -56,12 +56,13 @@ class ComponentPluginType8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
     $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
 
+    $constructor_tester = $php_tester->getMethodTester('__construct');
     // Check the __construct() method's parameters.
-    $php_tester->assertMethodHasParameters([
+    $constructor_tester->assertHasParameters([
       'namespaces' => 'Traversable',
       'cache_backend' => 'Drupal\Core\Cache\CacheBackendInterface',
       'module_handler' => 'Drupal\Core\Extension\ModuleHandlerInterface',
-    ], '__construct');
+    ]);
 
     // Check the __construct() method's statements.
     $php_tester->assertStatementIsParentCall('__construct', 0);

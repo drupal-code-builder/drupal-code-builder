@@ -122,6 +122,110 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts a method of the parsed class has the given parameters.
+   *
+   * @param $parameters
+   *   An array of parameters: keys are the parameter names, values are the
+   *   typehint, with NULL for no typehint.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasParameters($parameters, $message = NULL) {
+    $expected_parameter_names = array_keys($parameters);
+
+    $parameter_names_string = implode(", ", $expected_parameter_names);
+    $message = $message ?? "The method {$this->methodName} has the parameters {$parameter_names_string}.";
+
+    $this->assertHelperHasParametersSlice($parameters, $message);
+  }
+
+  /**
+   * Asserts a subset of the parameters of a method of the parsed class.
+   *
+   * Helper for assertMethodHasParameters() and other assertions.
+   *
+   * @param $parameters
+   *   An array of parameters: keys are the parameter names, values are the
+   *   typehint, with NULL for no typehint.
+   * @param integer $offset
+   *   (optional) The array slice offset in the actual parameters to compare
+   *   with.
+   * @param integer $length
+   *   (optional) The array slice length in the actual parameters to compare
+   *   with. If omitted, all the actual parameters from the offset are
+   *   considered. This means that omitting both values will compare the given
+   *   parameters with all of the method's parameters for an exact match.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  private function assertHelperHasParametersSlice($parameters, $message = NULL, $offset = 0, $length = NULL) {
+    $expected_parameter_names = array_keys($parameters);
+    $expected_parameter_typehints = array_values($parameters);
+
+    $parameter_names_string = implode(", ", $expected_parameter_names);
+    $message = $message ?? "The method {$this->methodName} has the parameters {$parameter_names_string} in positions ... TODO.";
+
+    //dump($this->parser_nodes['methods'][$method_name]);
+
+    // Get the actual parameter names.
+    $param_nodes = $this->methodNode->params;
+    if (empty($length)) {
+      $param_nodes_slice = array_slice($param_nodes, $offset);
+    }
+    else {
+      $param_nodes_slice = array_slice($param_nodes, $offset, $length);
+    }
+
+    // Sanity check.
+    Assert::assertEquals(count($parameters), count($param_nodes_slice), "The length of the expected parameters list for {$this->methodName} matches the found ones.");
+
+    $actual_parameter_names_slice = [];
+    $actual_parameter_types_slice = [];
+    foreach ($param_nodes_slice as $index => $param_node) {
+      $actual_parameter_names_slice[] = $param_node->name;
+
+      if (is_null($param_node->type)) {
+        $actual_parameter_types_slice[] = NULL;
+      }
+      elseif (is_string($param_node->type)) {
+        $actual_parameter_types_slice[] = $param_node->type;
+      }
+      else {
+        // PHP CodeSniffer will have already caught a non-imported class, so
+        // safe to assume there is only one part to the class name.
+        $actual_parameter_types_slice[] = $param_node->type->parts[0];
+
+        $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
+
+        if (count($expected_typehint_parts) == 1) {
+          // It's a class in the global namespace, e.g. '\Traversable'. This
+          // will have the '\' with it and not be imported. PHP Parser doesn't
+          // keep the initial '\' here. Rather, the param node will be a
+          // PhpParser\Node\Name\FullyQualified rather than a
+          // PhpParser\Node\Name.
+          Assert::assertInstanceOf(\PhpParser\Node\Name\FullyQualified::class, $param_node->type,
+            "The typehint for the parameter \${$param_node->name} is a fully-qualified class name.");
+
+          $expected_parameter_typehints[$index] = $expected_parameter_typehints[$index];
+        }
+        else {
+          // It's a namespaced class.
+          // Check the full expected typehint is imported.
+          $this->fileTester->assertImportsClassLike($expected_typehint_parts, "The typehint for the {$index} parameter is imported.");
+
+          // Replace the fully-qualified name with the short name in the
+          // expectations array for comparison.
+          $expected_parameter_typehints[$index] = end($expected_typehint_parts);
+        }
+      }
+    }
+
+    Assert::assertEquals($expected_parameter_names, $actual_parameter_names_slice, $message);
+
+    Assert::assertEquals($expected_parameter_typehints, $actual_parameter_types_slice, $message);
+  }
+
+  /**
    * Asserts the method returns the given string.
    *
    * This expects the final statement to be a return. Other return statements
