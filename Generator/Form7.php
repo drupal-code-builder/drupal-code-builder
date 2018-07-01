@@ -31,9 +31,8 @@ class Form7 extends BaseGenerator {
       ],
       'form_id' => [
         'computed' => TRUE,
-        'default' => function($component_data) {
-          return $this->name;
-        },
+        // TODO: not yet in use.
+        'default' => '',
       ],
     ];
   }
