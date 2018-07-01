@@ -17,6 +17,12 @@ class HookImplementation extends PHPFunction {
   public static function componentDataDefinition() {
     $properties = parent::componentDataDefinition();
 
+    // The name of the file that this hook implementation should be placed into.
+    $properties['code_file'] = [
+      'internal' => TRUE,
+      'default' => '%module.module',
+    ];
+
     $hook_name_property = [
       // The full name of the hook.
       'hook_name' => [

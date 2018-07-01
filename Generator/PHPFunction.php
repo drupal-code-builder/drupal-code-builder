@@ -14,15 +14,6 @@ class PHPFunction extends BaseGenerator {
   use PHPFormattingTrait;
 
   /**
-   * The code file this function belongs in.
-   *
-   * This is in the form of a relative path to the module folder, with
-   * placeholders such as '%module'.
-   * TODO: add a @see to the function that does placeholder replacement.
-   */
-  protected $code_file;
-
-  /**
    * Constructor.
    *
    * @param $component_name
@@ -30,8 +21,6 @@ class PHPFunction extends BaseGenerator {
    * @param $component_data
    *   An array of data for the component. Any missing properties are given
    *   default values. Valid properties are:
-   *    - 'code_file': The name of the file component for the file that this
-   *       function should be placed into.
    *    - 'doxygen_first': The text of the first line of doxygen.
    *    - 'declaration': The function declaration, including the function name
    *      and parameters, up to the closing parenthesis. Should not however
@@ -55,14 +44,6 @@ class PHPFunction extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      // The name of the file component for the file that this function should
-      // be placed into.
-      // Deprecated. Use containing component instead.
-      // TODO: remove this!
-      'code_file' => [
-        'internal' => TRUE,
-        'default' => '%module.module',
-      ],
       // TODO: various things will take $this->name as being the function name!
       'function_name' => [
         'internal' => TRUE,
