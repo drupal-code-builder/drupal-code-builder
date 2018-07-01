@@ -56,7 +56,7 @@ class Form7 extends BaseGenerator {
       // Request the form functions.
       $form_builder => array(
         'component_type' => 'PHPFunction',
-        'code_file' => '%module.module',
+        'containing_component' => '%module.module',
         'doxygen_first' => 'Form builder.',
         'declaration' => "function $form_builder(£form, &£form_state)",
         'body' => array(
@@ -71,7 +71,7 @@ class Form7 extends BaseGenerator {
       ),
       $form_name . '_validate' => array(
         'component_type' => 'PHPFunction',
-        'code_file' => '%module.module',
+        'containing_component' => '%module.module',
         'doxygen_first' => 'Form validate handler.',
         'declaration' => "function $form_validate(£form, &£form_state)",
         'body' => array(
@@ -82,7 +82,7 @@ class Form7 extends BaseGenerator {
       ),
       $form_name . '_submit' => array(
         'component_type' => 'PHPFunction',
-        'code_file' => '%module.module',
+        'containing_component' => '%module.module',
         'doxygen_first' => 'Form submit handler.',
         'declaration' => "function $form_submit(£form, &£form_state)",
         'body' => '',
