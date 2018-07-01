@@ -42,16 +42,26 @@ class PHPMethodTester {
   protected $methodBody;
 
   /**
+   * The PHP tester for the file this method is in.
+   *
+   * @var \DrupalCodeBuilder\Test\Unit\Parsing\PHPTester
+   */
+  protected $fileTester;
+
+  /**
    * Construct a new PHPMethodTester.
    *
    * @param \PhpParser\Node\Stmt\ClassMethod $method_node
    *   The PhpParser method node.
+   * @param \DrupalCodeBuilder\Test\Unit\Parsing\PHPTester file_tester
+   *   The PHP tester for the file this method is in.
    * @param string $php_code
    *   The complete PHP code being tested.
    */
-  public function __construct(ClassMethod $method_node, $php_code) {
+  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $php_code) {
     $this->methodNode = $method_node;
     $this->methodName = $method_node->name;
+    $this->fileTester = $file_tester;
 
     $php_code_lines = explode("\n", $php_code);
 

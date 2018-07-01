@@ -44,11 +44,13 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
    *
    * @param \PhpParser\Node\Stmt\ClassMethod $method_node
    *   The PhpParser method node.
+   * @param \DrupalCodeBuilder\Test\Unit\Parsing\PHPTester file_tester
+   *   The PHP tester for the file this method is in.
    * @param string $php_code
    *   The complete PHP code being tested.
    */
-  public function __construct(ClassMethod $method_node, $php_code) {
-    parent::__construct($method_node, $php_code);
+  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $php_code) {
+    parent::__construct($method_node, $file_tester, $php_code);
 
     $this->assertStatementIsParentCallAssignment(0, 'fields', "The baseFieldDefinitions() method's first statement is a call to the parent.");
 
