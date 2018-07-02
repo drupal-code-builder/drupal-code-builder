@@ -98,6 +98,11 @@ class PluginType extends BaseGenerator {
         'description' => "The name of the hook used to alter plugin info, without the 'hook_' prefix.",
         'required' => TRUE,
         'default' => function($component_data) {
+          // Skip this for non-interactive UIs.
+          if (empty($component_data['plugin_type'])) {
+            return;
+          }
+
           $plugin_type = $component_data['plugin_type'];
           return "{$component_data['plugin_type']}_info";
         },
