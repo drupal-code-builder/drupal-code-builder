@@ -119,7 +119,7 @@ class PluginType extends BaseGenerator {
 
     $plugin_type = $this->component_data['plugin_type'];
 
-    $components["plugin_type_{$plugin_type}_service"] = array(
+    $components['manager'] = array(
       'component_type' => 'PluginTypeManager',
       'prefixed_service_name' => $this->component_data['plugin_manager_service_id'],
       // Use the annotation class name as the basis for the manager class name.
@@ -149,7 +149,7 @@ class PluginType extends BaseGenerator {
     );
     */
 
-    $components["plugin_type_{$plugin_type}_annotation"] = [
+    $components['annotation'] = [
       'component_type' => 'AnnotationClass',
       'relative_class_name' => ['Annotation', $this->component_data['annotation_class']],
       'parent_class_name' => '\Drupal\Component\Annotation\Plugin',
@@ -162,7 +162,7 @@ class PluginType extends BaseGenerator {
 
     $plugin_relative_namespace_pieces = explode('\\', $this->component_data['plugin_relative_namespace']);
 
-    $components["plugin_type_{$plugin_type}_interface"] = [
+    $components['interface'] = [
       'component_type' => 'PHPInterfaceFile',
       'relative_class_name' => array_merge(
         ['Plugin'],
@@ -173,7 +173,7 @@ class PluginType extends BaseGenerator {
       // TODO: parent interfaces.
     ];
 
-    $components["plugin_type_{$plugin_type}_base_class"] = [
+    $components['base_class'] = [
       'component_type' => 'PHPClassFile',
       'relative_class_name' => array_merge(
         ['Plugin'],
@@ -189,7 +189,7 @@ class PluginType extends BaseGenerator {
     ];
 
     $module = $this->component_data['root_component_name'];
-    $components["%module.plugin_type.yml"] = [
+    $components['plugin_type_yml'] = [
       'component_type' => 'YMLFile',
       'filename' => '%module.plugin_type.yml',
       'yaml_data' => [
