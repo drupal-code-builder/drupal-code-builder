@@ -51,6 +51,7 @@ class ComponentAPI8Test extends TestBase {
     // TODO: expand the docblock assertion for these.
     $this->assertContains("Hooks provided by the Test Module module.", $api_file, 'The API file contains the correct docblock header.');
     $this->assertContains("@addtogroup hooks", $api_file, 'The API file contains the addtogroup docblock tag.');
+    $this->assertContains('@} End of "addtogroup hooks".', $api_file, 'The API file contains the closing addtogroup docblock tag.');
   }
 
 }

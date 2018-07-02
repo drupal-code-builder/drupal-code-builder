@@ -65,6 +65,14 @@ EOT;
       $code_pieces[$hook_short_name] = $this->hook_code($hook_short_name, $parameters);
     }
 
+    // The docblock grouping.
+    $code_pieces['end_group'] = <<<EOT
+/**
+ * @} End of "addtogroup hooks".
+ */
+
+EOT;
+
     return $code_pieces;
   }
 
