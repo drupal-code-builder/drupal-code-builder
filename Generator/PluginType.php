@@ -199,7 +199,26 @@ class PluginType extends BaseGenerator {
       ],
     ];
 
-    // TODO: api.php file for our info alter hook.
+    // Request this even though the Module generator may have done, so we ensure
+    // it is there.
+    $components['api'] = [
+      'component_type' => 'API',
+    ];
+
+     $components['alter_hook'] = [
+      'component_type' => 'PHPFunction',
+      'containing_component' => '%requester:api',
+      'declaration' => "function hook_{$this->component_data['info_alter_hook']}_alter(array &£info)",
+      'function_docblock_lines' => [
+        "Perform alterations on {$this->component_data['plugin_label']} definitions.",
+        '@param array $info',
+        "  Array of information on {$this->component_data['plugin_label']} plugins.",
+      ],
+      'body' => [
+        "// Change the class of the 'foo' plugin.",
+        "£info['foo']['class'] = SomeOtherClass::class;",
+      ],
+    ];
 
     return $components;
   }

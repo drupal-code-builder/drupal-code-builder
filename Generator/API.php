@@ -65,6 +65,15 @@ EOT;
       $code_pieces[$hook_short_name] = $this->hook_code($hook_short_name, $parameters);
     }
 
+    // Add lines from child function components.
+    // Function data has been set by buildComponentContents().
+    foreach ($this->functions as $component_name => $function_lines) {
+      // Blank line after the function.
+      $function_lines[] = '';
+
+      $code_pieces[$component_name] = implode("\n", $function_lines);
+    }
+
     // The docblock grouping.
     $code_pieces['end_group'] = <<<EOT
 /**

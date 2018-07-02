@@ -41,12 +41,24 @@ class ComponentPluginType8Test extends TestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/CatFeederManager.php',
+      'src/Annotation/CatFeeder.php',
+      'src/Plugin/CatFeeder/CatFeederBase.php',
+      'src/Plugin/CatFeeder/CatFeederInterface.php',
+      'test_module.services.yml',
+      'test_module.plugin_type.yml',
+      'test_module.api.php',
+    ], $files);
+
     $this->assertArrayHasKey('src/CatFeederManager.php', $files, "The plugin manager class file is generated.");
     $this->assertArrayHasKey('src/Annotation/CatFeeder.php', $files, "The annotation class file is generated.");
     $this->assertArrayHasKey('src/Plugin/CatFeeder/CatFeederBase.php', $files, "The plugin base class file is generated.");
     $this->assertArrayHasKey('src/Plugin/CatFeeder/CatFeederInterface.php', $files, "The plugin interface file is generated.");
     $this->assertArrayHasKey('test_module.services.yml', $files, "The services file is generated.");
     $this->assertArrayHasKey('test_module.plugin_type.yml', $files, "The plugin type definition file is generated.");
+    $this->assertArrayHasKey('test_module.api.php', $files, "The files list has an api.php file.");
 
     // Check the plugin manager file.
     $plugin_manager_file = $files["src/CatFeederManager.php"];
@@ -124,6 +136,19 @@ class ComponentPluginType8Test extends TestBase {
     $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_cat_feeder"]);
     $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'class'], 'Drupal\test_module\CatFeederManager');
     $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'parent'], "default_plugin_manager");
+
+    // Check the api.php file.
+    $api_file = $files["$module_name.api.php"];
+
+    $php_tester = new PHPTester($api_file);
+    $php_tester->assertDrupalCodingStandards();
+
+    // TODO: expand the docblock assertion for these.
+    $this->assertContains("Hooks provided by the Test module module.", $api_file, 'The API file contains the correct docblock header.');
+    $this->assertContains("@addtogroup hooks", $api_file, 'The API file contains the addtogroup docblock tag.');
+    $this->assertContains('@} End of "addtogroup hooks".', $api_file, 'The API file contains the closing addtogroup docblock tag.');
+
+    $php_tester->assertHasFunction('hook_cat_feeder_info_alter');
 
     // Check the plugin type file.
     $plugin_type_file = $files['test_module.plugin_type.yml'];
