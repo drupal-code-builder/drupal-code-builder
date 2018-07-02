@@ -88,6 +88,23 @@ abstract class TestBase extends TestCase {
   }
 
   /**
+   * Asserts the names of the generated files.
+   *
+   * @param string[] $filenames
+   *   An array of filenames.
+   * @param array $actual_files
+   *   The array of files returned from the generator.
+   */
+  protected function assertFiles($filenames, $actual_files) {
+    $actual_file_names = array_keys($actual_files);
+
+    sort($filenames);
+    sort($actual_file_names);
+
+    $this->assertEquals($filenames, $actual_file_names, "The expected files were generated.");
+  }
+
+  /**
    * Assert a string has no whitespace at line ends.
    *
    * @param $string
