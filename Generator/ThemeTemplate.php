@@ -49,6 +49,7 @@ class ThemeTemplate extends BaseGenerator {
 
     return array(
       'path' => $file_path,
+      // TODO: declare a property for this.
       'filename' => $this->name . '.tpl.php',
       'body' => array(
         $tpl_code,
