@@ -52,11 +52,6 @@ class Plugin extends PHPClassFileWithInjection {
   ];
 
   /**
-   * The unique name of this generator.
-   */
-  public $name;
-
-  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name

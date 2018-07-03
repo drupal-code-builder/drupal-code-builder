@@ -80,14 +80,6 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 abstract class BaseGenerator {
 
   /**
-   * The request name of this generator.
-   *
-   * This is unique within the list of components spawned by this component's
-   * requester, but it might not be unique across all components.
-   */
-  public $name;
-
-  /**
    * The generator type.
    *
    * This is the unqualified class name without the version suffix.
@@ -153,7 +145,6 @@ abstract class BaseGenerator {
    *   The root Generator object.
    */
   function __construct($component_name, $component_data, $root_generator) {
-    $this->name = $component_name;
     $this->component_data = $component_data;
 
     // TODO: Remove this to simplify how generator classes get their data.

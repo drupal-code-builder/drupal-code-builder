@@ -8,16 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class HookTheme extends HookImplementation {
 
   /**
-   * The unique name of this generator.
-   *
-   * A generator's name is used as the key in the $components array.
-   *
-   * A HookImplementation generator should use as its name the full hook name,
-   * e.g., 'hook_menu'.
-   */
-  public $name = 'hook_theme';
-
-  /**
    * Constructor method; sets the component data.
    */
   function __construct($component_name, $component_data, $root_generator) {

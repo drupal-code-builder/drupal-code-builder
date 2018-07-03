@@ -8,16 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class HookPermission extends HookImplementation {
 
   /**
-   * The unique name of this generator.
-   *
-   * A generator's name is used as the key in the $components array.
-   *
-   * A HookImplementation generator should use as its name the full hook name,
-   * e.g., 'hook_menu'.
-   */
-  public $name = 'hook_permission';
-
-  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name

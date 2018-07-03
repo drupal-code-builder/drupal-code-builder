@@ -8,15 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class File extends BaseGenerator {
 
   /**
-   * The request name of this generator.
-   *
-   * A File generator should use as its name the generic form of its eventual
-   * file name, that is, the filename with the token '%module' in place of the
-   * module name. For example: %module.module, $module.views.inc, etc.
-   */
-  public $name;
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {

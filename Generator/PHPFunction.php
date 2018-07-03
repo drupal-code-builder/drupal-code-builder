@@ -43,7 +43,6 @@ class PHPFunction extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      // TODO: various things will take $this->name as being the function name!
       'function_name' => [
         'internal' => TRUE,
       ],

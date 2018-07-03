@@ -11,13 +11,6 @@ namespace DrupalCodeBuilder\Generator;
 class RouterItem7 extends BaseGenerator {
 
   /**
-   * The unique name of this generator.
-   *
-   * A D7 RouterItem generator should use as its name its path.
-   */
-  public $name;
-
-  /**
    * Constructor method; sets the component data.
    *
    * @param $component_name

@@ -12,11 +12,6 @@ class PluginType extends BaseGenerator {
   use NameFormattingTrait;
 
   /**
-   * The unique name of this generator.
-   */
-  public $name;
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {

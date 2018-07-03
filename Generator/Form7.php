@@ -11,14 +11,6 @@ namespace DrupalCodeBuilder\Generator;
 class Form7 extends BaseGenerator {
 
   /**
-   * The unique name of this generator.
-   *
-   * A Form generator should use as its name the form ID.
-   */
-   // ARGH will clash with func name :()
-  public $name;
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
