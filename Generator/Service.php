@@ -140,8 +140,7 @@ class Service extends PHPClassFileWithInjection {
 
     $yaml_data_arguments = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
-      // TODO: UPDATE!
-      $components[$this->name . '_' . $service_id] = array(
+      $components['service_' . $service_id] = array(
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,

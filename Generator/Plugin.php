@@ -194,7 +194,7 @@ class Plugin extends PHPClassFileWithInjection {
     $components = parent::requiredComponents();
 
     foreach ($this->component_data['injected_services'] as $service_id) {
-      $components[$this->name . '_' . $service_id] = array(
+      $components['service_' . $service_id] = array(
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
