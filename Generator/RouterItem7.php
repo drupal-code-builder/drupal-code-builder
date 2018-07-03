@@ -48,6 +48,19 @@ class RouterItem7 extends BaseGenerator {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'path' => [
+        'label' => 'The menu item path',
+        'internal' => TRUE,
+        'primary' => TRUE,
+      ],
+    ];
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * @return
@@ -80,7 +93,7 @@ class RouterItem7 extends BaseGenerator {
     // Return code for a single menu item. Our parent in the component tree,
     // HookMenu, will merge it in its own buildComponentContents().
     $code = array();
-    $code[] = "£items['{$this->name}'] = array(";
+    $code[] = "£items['{$this->component_data['path']}'] = array(";
     $code[] = "  'title' => '{$this->component_data['title']}',";
     if (isset($this->component_data['description'])) {
       $code[] = "  'description' => '{$this->component_data['description']}',";
