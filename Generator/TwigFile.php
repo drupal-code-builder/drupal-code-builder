@@ -13,7 +13,7 @@ class TwigFile extends File {
   public function getFileInfo() {
     return array(
       'path' => 'templates',
-      'filename' => $this->name,
+      'filename' => $this->component_data['filename'],
       'body' => [
         $this->getTwigContents(),
       ],
