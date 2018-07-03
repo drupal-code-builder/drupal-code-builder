@@ -22,16 +22,4 @@ class Routing extends YMLFile {
     return $definition;
   }
 
-  /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   An array of data for the component.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
 }

@@ -8,35 +8,24 @@ use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
  * Generator base class for functions.
  *
  * (We can't call this 'Function', as that's a reserved word.)
+ *
+ * Properties include:
+ *    - 'declaration': The function declaration, including the function name
+ *      and parameters, up to the closing parenthesis. Should not however
+ *      include the opening brace of the function body.
+ *    - 'body' The code of the function. The character '£' is replaced with
+ *      '$' as a convenience to avoid having to keep escaping names of
+ *      variables. This can be in one of the following forms:
+ *      - a string, not including the enclosing function braces or the opening
+ *        or closing newlines.
+ *        TODO: This is not currently working, but doesn't matter as
+ *        Hooks::getTemplates() always returns an array of lines in 'template'
+ *        even if that's just the analysis body code.
+ *      - an array of lines of code. These should not have their newlines.
  */
 class PHPFunction extends BaseGenerator {
 
   use PHPFormattingTrait;
-
-  /**
-   * Constructor.
-   *
-   * @param $component_name
-   *  The name of a function component should be its function (or method) name.
-   * @param $component_data
-   *   An array of data for the component. Any missing properties are given
-   *   default values. Valid properties are:
-   *    - 'declaration': The function declaration, including the function name
-   *      and parameters, up to the closing parenthesis. Should not however
-   *      include the opening brace of the function body.
-   *    - 'body' The code of the function. The character '£' is replaced with
-   *      '$' as a convenience to avoid having to keep escaping names of
-   *      variables. This can be in one of the following forms:
-   *      - a string, not including the enclosing function braces or the opening
-   *        or closing newlines.
-   *        TODO: This is not currently working, but doesn't matter as
-   *        Hooks::getTemplates() always returns an array of lines in 'template'
-   *        even if that's just the analysis body code.
-   *      - an array of lines of code. These should not have their newlines.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
 
   /**
    * {@inheritdoc}

@@ -19,10 +19,6 @@ class Profile extends RootComponent {
    */
   public static $sanity_level = 'none';
 
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
   /**
    * This can't be a class property due to use of closures.
    *

@@ -20,19 +20,6 @@ class File extends BaseGenerator {
   }
 
   /**
-   * Constructor.
-   *
-   * @param $component_name
-   *  The name should be the eventual filename, which may include tokens such as
-   *  %module, which are handled by assembleFiles().
-   * @param $component_data
-   *   An array of data for the component.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * Return an empty array of subcomponent types.
    *
    * Files are (so far!) always terminal components.
