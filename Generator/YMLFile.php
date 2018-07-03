@@ -55,8 +55,7 @@ class YMLFile extends File {
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    // This is the filename.
-    return $this->name;
+    return $this->component_data['filename'];
   }
 
   /**

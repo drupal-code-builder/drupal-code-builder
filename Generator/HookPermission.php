@@ -41,7 +41,7 @@ class HookPermission extends HookImplementation {
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    return $this->name;
+    return $this->component_data['hook_name'];
   }
 
   /**
