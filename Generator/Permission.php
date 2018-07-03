@@ -8,30 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class Permission extends BaseGenerator {
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   An array of data for the component. Valid properties are:
-   *    - 'permission': The machine name of the permission.
-   *    - 'description': (optional) The description of the permission. If
-   *      omitted, a default is generated from the machine name.
-   *    - 'restrict_access': (optional) Whether to apply the 'restrict_access'
-   *      property to the permission.
-   */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      // The array property value is set at the component name by
-      // processComponentData().
-      'permission' => $component_name,
-    );
-
-    parent::__construct($component_name, $component_data, $root_generator);
-  }
-
-  /**
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
@@ -42,7 +18,7 @@ class Permission extends BaseGenerator {
         'required' => TRUE,
       ),
       'description' => array(
-        'label' => 'Permission description',
+        'label' => 'Permission description. If omitted, this is derived from the machine name.',
         'default' => function($component_data) {
           if (isset($component_data['permission'])) {
             return ucfirst(str_replace('_', ' ', $component_data['permission']));
