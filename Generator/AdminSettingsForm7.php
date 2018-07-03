@@ -53,8 +53,9 @@ class AdminSettingsForm7 extends Form7 {
     unset($components[$form_submit]);
 
     // This takes care of adding hook_menu() and so on.
-    $components['admin/config/TODO-SECTION/%module'] = array(
+    $components['menu_item'] = array(
       'component_type' => 'RouterItem',
+      'path' => 'admin/config/TODO-SECTION/%module',
       'title' => 'Administer %readable',
       'description' => 'Configure settings for %readable.',
       'page callback' => 'drupal_get_form',

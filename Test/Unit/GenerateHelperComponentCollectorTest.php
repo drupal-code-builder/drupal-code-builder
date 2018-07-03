@@ -712,6 +712,15 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ],
     ];
     $this->componentDataInfoAddDefaults($root_data_info);
+
+    // The child component data info.
+    $component_array_data_info = [
+      'primary_property' => [
+        'primary' => TRUE,
+      ],
+    ];
+    $this->componentDataInfoAddDefaults($component_array_data_info);
+
     // The request data we pass in to the system.
     $root_data = [
       'base' => 'my_root',
@@ -765,9 +774,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $class_handler->getGenerator(
       'component_array',
       'alpha',
-      Argument::that(function ($arg) {
-        return empty(array_diff(["component_type" => "component_array"], $arg));
-      }),
+      [
+        "component_type" => "component_array",
+        "primary_property" => "alpha",
+      ],
       $root_component
     )
     ->willReturn($alpha_child_component->reveal());
@@ -781,17 +791,17 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $class_handler->getGenerator(
       'component_array',
       'beta',
-      Argument::that(function ($arg) {
-        return empty(array_diff(["component_type" => "component_array"], $arg));
-      }),
+      [
+        "component_type" => "component_array",
+        "primary_property" => "beta",
+      ],
       $root_component
     )
     ->willReturn($beta_child_component->reveal());
 
-    // Components which are used for an 'array' format property have no
-    // properties of their own, since they get created with just the single
-    // array value as their name.
-    $data_info_gatherer->getComponentDataInfo('component_array', TRUE)->willReturn([]);
+    // Components which are used for an 'array' format property need at least
+    // one property, set to primary.
+    $data_info_gatherer->getComponentDataInfo('component_array', TRUE)->willReturn($component_array_data_info);
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(

@@ -107,7 +107,17 @@ class ComponentDataInfoGatherer {
   protected function processPropertyList($properties, $include_internal) {
     $return = [];
 
+    // Track the primary property so we can check there is not more than one.
+    $primary = NULL;
+
     foreach ($properties as $property_name => $property_info) {
+      // Check there is no more than one property set as primary.
+      if (!empty($property_info['primary'])) {
+        assert(is_null($primary), "Property {$primary} already set as primary, but so is {$property_name}.");
+
+        $primary = $property_name;
+      }
+
       // Skip computed and internal if not requested.
       if (!$include_internal) {
         if (!empty($property_info['computed']) ||

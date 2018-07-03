@@ -8,28 +8,23 @@ namespace DrupalCodeBuilder\Generator;
 class ThemeHook extends BaseGenerator {
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   An array of data for the component. Valid properties are:
-   *    - 'theme_hook_name': The machine name of the theme hook.
+   * {@inheritdoc}
    */
-  function __construct($component_name, $component_data, $root_generator) {
-    // Set some default properties.
-    $component_data += array(
-      'theme_hook_name' => $component_name,
-    );
-
-    parent::__construct($component_name, $component_data, $root_generator);
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'theme_hook_name' => [
+        'label' => 'The theme hook name',
+        'internal' => TRUE,
+        'primary' => TRUE,
+      ],
+    ];
   }
 
   /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
-    $twig_file_name = $declaration = str_replace('_', '-', $this->name) . '.html.twig';
+    $twig_file_name = $declaration = str_replace('_', '-', $this->component_data['theme_hook_name']) . '.html.twig';
 
     $components = array(
       'hooks' => array(

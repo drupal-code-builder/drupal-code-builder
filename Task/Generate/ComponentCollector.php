@@ -301,15 +301,28 @@ class ComponentCollector {
           $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           break;
         case 'array':
+          // The value in the array is set to the component's primary property.
+          // Find the primary property.
+          $child_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($item_component_type, TRUE);
+          $primary_property = NULL;
+          foreach ($child_component_data_info as $child_property_name => $child_property_info) {
+            if (!empty($child_property_info['primary'])) {
+              $primary_property = $child_property_name;
+              break;
+            }
+          }
+          assert(!is_null($primary_property), "No primary property found for array format property.");
+
           foreach ($component_data[$property_name] as $item_value) {
             $item_data = [
               'component_type' => $item_component_type,
+              // Set the value from the array to the primary property.
+              $primary_property => $item_value,
             ];
-            // Each value in the array is the name of the component.
+            // Use the value in the array as the local name.
             $item_request_name = $item_value;
 
             $local_names[$item_request_name] = TRUE;
-
 
             $property_component = $this->getComponentsFromData($item_request_name, $item_data, $generator);
           }
