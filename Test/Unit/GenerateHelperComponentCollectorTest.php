@@ -708,7 +708,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ],
       'component_property_array' => [
         'format' => 'array',
-        'component' => 'array'
+        'component' => 'component_array'
       ],
     ];
     $this->componentDataInfoAddDefaults($root_data_info);
@@ -763,10 +763,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $alpha_child_component->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
-      'array',
+      'component_array',
       'alpha',
       Argument::that(function ($arg) {
-        return empty(array_diff(["component_type" => "array"], $arg));
+        return empty(array_diff(["component_type" => "component_array"], $arg));
       }),
       $root_component
     )
@@ -779,10 +779,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $beta_child_component->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
-      'array',
+      'component_array',
       'beta',
       Argument::that(function ($arg) {
-        return empty(array_diff(["component_type" => "array"], $arg));
+        return empty(array_diff(["component_type" => "component_array"], $arg));
       }),
       $root_component
     )
@@ -791,7 +791,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Components which are used for an 'array' format property have no
     // properties of their own, since they get created with just the single
     // array value as their name.
-    $data_info_gatherer->getComponentDataInfo('array', TRUE)->willReturn([]);
+    $data_info_gatherer->getComponentDataInfo('component_array', TRUE)->willReturn([]);
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
