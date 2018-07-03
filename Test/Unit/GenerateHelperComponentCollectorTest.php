@@ -100,7 +100,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       $root_component_construction_data,
       NULL
     )->willReturn($root_component->reveal());
@@ -222,7 +221,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_component_construction_data) {
         // Prophecy insists on the same array item order, so use a callback
         // so we don't have to care.
@@ -371,7 +369,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_component_construction_data) {
         // Prophecy insists on the same array item order, so use a callback
         // so we don't have to care.
@@ -440,7 +437,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
       }),
@@ -459,7 +455,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
-      'child_requirement',
       'child_requirement',
       Argument::that(function ($arg) {
         return empty(array_diff([
@@ -525,7 +520,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
       }),
@@ -550,7 +544,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // for construction.
     $class_handler->getGenerator(
       'child_requirement',
-      'child_requirement',
       Argument::that(function ($arg) {
         return empty(array_diff([
           'component_type' => 'child_requirement',
@@ -571,7 +564,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
-      'grandchild_requirement',
       'grandchild_requirement',
       Argument::that(function ($arg) {
         return empty(array_diff([
@@ -636,7 +628,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
@@ -665,9 +656,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $simple_child_component->requiredComponents()->willReturn([]);
 
     $class_handler->getGenerator(
-      'simple',
-      // Singleton, so its name is not prefixed apparently. Could be an
-      // inconsistency for component properties...
       'simple',
       Argument::that(function ($arg) {
         return empty(array_diff(["component_type" => "simple"], $arg));
@@ -744,7 +732,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
@@ -773,7 +760,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'component_array',
-      'alpha',
       [
         "component_type" => "component_array",
         "primary_property" => "alpha",
@@ -790,7 +776,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'component_array',
-      'beta',
       [
         "component_type" => "component_array",
         "primary_property" => "beta",
@@ -867,7 +852,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         // Use a wildcard rather than $root_data, the collector may add data.
         // Check that the param contains all the elements of $root_data.
@@ -896,9 +880,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'compound',
-      // Singleton, so its name is not prefixed apparently. Could be an
-      // inconsistency for component properties...
-      'compound_0',
       [
         "child_property_string" => "child_string_value_0",
         "component_type" => "compound",
@@ -923,9 +904,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'compound',
-      // Singleton, so its name is not prefixed apparently. Could be an
-      // inconsistency for component properties...
-      'compound_1',
       [
         "child_property_string" => "child_string_value_1",
         "component_type" => "compound",
@@ -1059,7 +1037,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       $root_component_construction_data,
       NULL
     )
@@ -1144,7 +1121,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
-      'my_component',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
       }),
@@ -1178,7 +1154,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
-      'child_requirement',
       'child_requirement',
       Argument::that(function ($arg) {
         // Use a PHPUnit assertion because its error output is much better

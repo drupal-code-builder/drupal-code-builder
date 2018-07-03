@@ -10,13 +10,13 @@ class HookTheme extends HookImplementation {
   /**
    * Constructor method; sets the component data.
    */
-  function __construct($component_name, $component_data, $root_generator) {
+  function __construct($component_data, $root_generator) {
     // Set some default properties.
     $component_data += array(
       'hook_name' => 'hook_theme',
     );
 
-    parent::__construct($component_name, $component_data, $root_generator);
+    parent::__construct($component_data, $root_generator);
   }
 
   /**

@@ -38,10 +38,6 @@ class ComponentClassHandler {
    * @param $component_type
    *   The type of the component. This is use to build the class name: see
    *   getGeneratorClass().
-   * @param $component_name
-   *   The identifier for the component. This is often the same as the type
-   *   (e.g., 'module', 'hooks') but in the case of types used multiple times
-   *   this will be a unique identifier.
    * @param $component_data
    *   An array of data for the component. This is passed to the generator's
    *   __construct().
@@ -57,7 +53,7 @@ class ComponentClassHandler {
    *   Throws an exception if the given component type does not correspond to
    *   a component class.
    */
-  public function getGenerator($component_type, $component_name, $component_data, $root_generator) {
+  public function getGenerator($component_type, $component_data, $root_generator) {
     $class = $this->getGeneratorClass($component_type);
 
     if (!class_exists($class)) {
@@ -68,7 +64,7 @@ class ComponentClassHandler {
 
     // TODO: this passes in the NULL $root_generator when we're constructing
     // the root generator itself! Clean this up!
-    $generator = new $class($component_name, $component_data, $root_generator);
+    $generator = new $class($component_data, $root_generator);
 
     // Quick hack for the benefit of the Hooks generator.
     $generator->classHandlerHelper = $this;

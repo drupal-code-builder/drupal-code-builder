@@ -131,10 +131,6 @@ abstract class BaseGenerator {
   /**
    * Constructor method; sets the component data.
    *
-   * @param $component_name
-   *   The identifier for the component. This is often the same as the type
-   *   (e.g., 'module', 'hooks') but in the case of types used multiple times
-   *   this will be a unique identifier.
    * @param $component_data
    *   An array of data for the component.
    *   While each component will have its own array of data, components may also
@@ -144,7 +140,7 @@ abstract class BaseGenerator {
    * @param $root_generator
    *   The root Generator object.
    */
-  function __construct($component_name, $component_data, $root_generator) {
+  function __construct($component_data, $root_generator) {
     $this->component_data = $component_data;
 
     // TODO: Remove this to simplify how generator classes get their data.

@@ -205,7 +205,7 @@ class ComponentCollector {
     // We always pass in the root component.
     // We need to ensure that we create the root generator first, before we
     // recurse, as all subsequent generators need it.
-    $generator = $this->classHandler->getGenerator($component_type, $name, $component_data, $this->root_component);
+    $generator = $this->classHandler->getGenerator($component_type, $component_data, $this->root_component);
 
     // If we've not yet set the root component, then this is the first
     // generator we've created, and thus is the root component. Set it on the

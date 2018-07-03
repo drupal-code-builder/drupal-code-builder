@@ -22,7 +22,7 @@ class RouterItem7 extends BaseGenerator {
    *      - 'title': The title for the item.
    *      - TODO: further properties such as access!
    */
-  function __construct($component_name, $component_data, $root_generator) {
+  function __construct($component_data, $root_generator) {
     // Set some default properties.
     // This allows the user to leave off specifying details like title and
     // access, and get default strings in place that they can replace in
@@ -37,7 +37,7 @@ class RouterItem7 extends BaseGenerator {
       'access arguments' => "array('access content')",
     );
 
-    parent::__construct($component_name, $component_data, $root_generator);
+    parent::__construct($component_data, $root_generator);
   }
 
   /**

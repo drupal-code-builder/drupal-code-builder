@@ -252,7 +252,7 @@ class Generate extends Base {
    * @deprecated
    */
   public function getGenerator($component_type, $component_name, $component_data = array()) {
-    return $this->getHelper('ComponentClassHandler')->getGenerator($component_type, $component_name, $component_data, $this->root_generator);
+    return $this->getHelper('ComponentClassHandler')->getGenerator($component_type, $component_data, $this->root_generator);
   }
 
   /**
