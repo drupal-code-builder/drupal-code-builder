@@ -203,6 +203,10 @@ abstract class BaseGenerator {
    *      is a further array of properties. The keys are ignored. The values in
    *      each array are specified by calling this method on the class
    *      determined from the 'component' property.
+   *  - 'primary': (optional) Boolean indicating that this property should be
+   *    considered the principal property for this component. Only one property
+   *    in a component may be declared as primary. Currently internal only.
+   *    TODO: make this part of the API for 3.3.x.
    *  - 'default': (optional) The default value for the property. This is either
    *    a static value, or a callable, in which case it must be called with the
    *    array of component data assembled so far. Depending on the value of
@@ -254,7 +258,13 @@ abstract class BaseGenerator {
    *    FALSE.
    *  - 'component': (optional) The name of a generator class, relative to the
    *    namespace. If present, this results in child components of this class
-   *    being added to the component tree.
+   *    being added to the component tree. How the child components receive
+   *    data depends on the format type:
+   *    - 'boolean': The child component receives no values.
+   *    - 'array': Each value results in a separate child component, which gets
+   *      the value set for its primary property.
+   *    - 'compound': Each set of values is passed to a separate child
+   *      component.
    *  - 'computed': (optional) If TRUE, indicates that this property is computed
    *    by the component, and should not be obtained from the user.
    *  - 'internal': (optional) If TRUE, indicates that this property should not
