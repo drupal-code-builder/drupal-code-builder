@@ -62,7 +62,7 @@ class Plugin extends PHPClassFileWithInjection {
    *
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    */
-  function __construct($component_data, $root_generator) {
+  function __construct($component_data) {
     // Set some default properties.
     $component_data += array(
       'injected_services' => [],
@@ -77,7 +77,7 @@ class Plugin extends PHPClassFileWithInjection {
     // processing.
     $component_data['plugin_type_data'] = $plugin_types_data[$plugin_type];
 
-    parent::__construct($component_data, $root_generator);
+    parent::__construct($component_data);
   }
 
   /**

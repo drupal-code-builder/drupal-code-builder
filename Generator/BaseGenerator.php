@@ -94,13 +94,6 @@ abstract class BaseGenerator {
   public $task;
 
   /**
-   * Reference to the root component of this component.
-   *
-   * This should be used to access the component data.
-   */
-  public $root_component;
-
-  /**
    * The base component's flat list of components.
    *
    * This is keyed by the name of the component name. Values are the
@@ -133,18 +126,9 @@ abstract class BaseGenerator {
    *
    * @param $component_data
    *   An array of data for the component.
-   *   While each component will have its own array of data, components may also
-   *   need to access the data of the root component.
-   *   TODO: check whether components really need to do this, as removing this
-   *   would simplify things!
-   * @param $root_generator
-   *   The root Generator object.
    */
-  function __construct($component_data, $root_generator) {
+  function __construct($component_data) {
     $this->component_data = $component_data;
-
-    // TODO: Remove this to simplify how generator classes get their data.
-    $this->root_component = $root_generator;
 
     // Set the type. This is the short class name without the numeric version
     // suffix.

@@ -80,8 +80,8 @@ class Module extends RootComponent {
    *         This is the filename without the initial 'MODULE.' or the '.inc'
    *         extension.
    */
-  function __construct($component_data, $root_generator) {
-    parent::__construct($component_data, $root_generator);
+  function __construct($component_data) {
+    parent::__construct($component_data);
   }
 
   /**

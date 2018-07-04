@@ -62,9 +62,7 @@ class ComponentClassHandler {
       )));
     }
 
-    // TODO: this passes in the NULL $root_generator when we're constructing
-    // the root generator itself! Clean this up!
-    $generator = new $class($component_data, $root_generator);
+    $generator = new $class($component_data);
 
     // Quick hack for the benefit of the Hooks generator.
     $generator->classHandlerHelper = $this;

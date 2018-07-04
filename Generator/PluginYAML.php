@@ -19,7 +19,7 @@ class PluginYAML extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  function __construct($component_data, $root_generator) {
+  function __construct($component_data) {
     $plugin_type = $component_data['plugin_type'];
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
@@ -29,7 +29,7 @@ class PluginYAML extends BaseGenerator {
     // processing.
     $component_data['plugin_type_data'] = $plugin_types_data[$plugin_type];
 
-    parent::__construct($component_data, $root_generator);
+    parent::__construct($component_data);
   }
 
   /**
