@@ -8,6 +8,26 @@ namespace DrupalCodeBuilder\Generator;
 class Tests extends PHPFile {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    // Properties acquired from the requesting component.
+    $root_component_properties = [
+      'readable_name',
+      'camel_case_name',
+    ];
+    foreach ($root_component_properties as $property_name) {
+      $data_definition[$property_name] = [
+        'acquired' => TRUE,
+      ];
+    }
+
+    return $data_definition;
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
@@ -19,7 +39,7 @@ class Tests extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $module_root_name = $this->root_component->component_data['camel_case_name'];
+    $module_root_name = $this->component_data['camel_case_name'];
     $test_file_name = $module_root_name . "Test.php";
 
     return array(
@@ -34,7 +54,7 @@ class Tests extends PHPFile {
    * Return the summary line for the file docblock.
    */
   function fileDocblockSummary() {
-    $module_readable_name = $this->root_component->component_data['readable_name'];
+    $module_readable_name = $this->component_data['readable_name'];
     return "Contains tests for the $module_readable_name module.";
   }
 
@@ -42,9 +62,9 @@ class Tests extends PHPFile {
    * Return the main body of the file code.
    */
   function code_body() {
-    $module_root_name = $this->root_component->component_data['root_name'];
-    $module_camel_case = $this->root_component->component_data['camel_case_name'];
-    $module_readable_name = $this->root_component->component_data['readable_name'];
+    $module_root_name = $this->component_data['root_component_name'];
+    $module_camel_case = $this->component_data['camel_case_name'];
+    $module_readable_name = $this->component_data['readable_name'];
 
     $code = <<<EOT
 /**
