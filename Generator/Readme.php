@@ -10,6 +10,17 @@ namespace DrupalCodeBuilder\Generator;
 class Readme extends File {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'readable_name' => [
+        'acquired' => TRUE,
+      ],
+    ];
+  }
+
+  /**
    * Collect the code files.
    */
   public function getFileInfo() {
@@ -31,8 +42,8 @@ class Readme extends File {
    */
   function lines() {
     return array(
-      $this->root_component->component_data['readable_name'],
-      str_repeat('=', strlen($this->root_component->component_data['readable_name'])),
+      $this->component_data['readable_name'],
+      str_repeat('=', strlen($this->component_data['readable_name'])),
       '',
       'TODO: write some documentation.',
       '',
