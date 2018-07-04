@@ -21,6 +21,8 @@ class ThemeTemplate extends BaseGenerator {
   public function getFileInfo() {
     $theme_registry = theme_get_registry();
     // Our theme base was set in our incoming component data.
+    // TODO: Broken! No longer have $this->root_component! Acquire this as a
+    // property instead.
     $theme_base = $this->root_component->component_data['theme_hook_bases'][$this->name];
     $theme_info = $theme_registry[$theme_base];
 
