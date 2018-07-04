@@ -2,10 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests the Simpletest test class generator.
  */
-class ComponentTests7Test extends TestBaseComponentGeneration {
+class ComponentTests7Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -13,6 +15,21 @@ class ComponentTests7Test extends TestBaseComponentGeneration {
    * @var int
    */
   protected $drupalMajorVersion = 7;
+
+  /**
+   * The PHP CodeSniffer rules to exclude for this test class files.
+   *
+   * @var string[]
+   */
+  protected $phpcsExcludedSniffs = [
+    // This picks up that the setUp() merely calls the parent class, but this
+    // is useful to developers as a starting point to add code to, therefore
+    // this is excluded.
+    'Generic.CodeAnalysis.UselessOverridingMethod',
+    // Drupal 7 does not have the convention of setting a scope on test class
+    // methods.
+    'Drupal.Scope.MethodScope.Missing',
+  ];
 
   /**
    * Test Tests component.
@@ -41,14 +58,10 @@ class ComponentTests7Test extends TestBaseComponentGeneration {
     // Check the .test file.
     $tests_file = $files["tests/$module_name.test"];
 
-    $this->assertWellFormedPHP($tests_file);
-
-    $this->assertNoTrailingWhitespace($tests_file, "The tests file contains no trailing whitespace.");
-
-    // Can't use assertWellFormedPHP() as the parent class does not exist here.
-
-    $this->assertFileHeader($tests_file, "The install file contains the correct PHP open tag and file doc header");
-    $this->assertClass('TestModuleTestCase', $tests_file, "The test class file contains the correct class");
+    $php_tester = new PHPTester($tests_file);
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+    $php_tester->assertHasClass('TestModuleTestCase', "The test class file contains the correct class");
+    $php_tester->assertHasMethods(['getInfo', 'setUp', 'testTodoChangeThisName']);
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];
