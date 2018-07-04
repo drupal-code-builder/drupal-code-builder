@@ -43,10 +43,13 @@ class PHPFile extends File {
   protected function fileContents() {
     // If only bare code is requested, only output the body, wthout headers
     // or footer.
+    /*
+    // TODO: Decide whether to restore this or remove it.
     $module_data = $this->root_component->component_data;
     if (!empty($module_data['bare_code'])) {
       return $this->code_body();
     }
+    */
 
     // File contents are built up.
     $file_contents = array_merge(
