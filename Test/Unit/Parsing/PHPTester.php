@@ -335,8 +335,10 @@ class PHPTester {
     Assert::assertArrayHasKey($class_short_name, $this->parser_nodes['classes'], $message);
 
     // Check the namespace of the class.
-    Assert::assertCount(1, $this->parser_nodes['namespace']);
-    Assert::assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts, $message);
+    if (count($class_name_parts) > 1) {
+      Assert::assertCount(1, $this->parser_nodes['namespace']);
+      Assert::assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts, $message);
+    }
   }
 
   /**
