@@ -30,13 +30,6 @@ class HookPermission extends HookImplementation {
   /**
    * {@inheritdoc}
    */
-  public function getMergeTag() {
-    return $this->component_data['hook_name'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function buildComponentContents($children_contents) {
     // If we have no children, i.e. no Permission components, then hand over to
     // the parent, which will output the default hook code.

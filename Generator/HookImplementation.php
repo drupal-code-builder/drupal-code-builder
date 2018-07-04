@@ -50,6 +50,13 @@ class HookImplementation extends PHPFunction {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMergeTag() {
+    return $this->component_data['hook_name'];
+  }
+
+  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.
