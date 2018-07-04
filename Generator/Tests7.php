@@ -28,8 +28,6 @@ class Tests7 extends Tests {
   public function getFileInfo() {
     $file = parent::getFileInfo();
 
-    $module_root_name = $this->root_component->component_data['root_name'];
-
     // Change the file location for D7.
     $file['path'] = 'tests';
     $file['filename'] = "%module.test";
