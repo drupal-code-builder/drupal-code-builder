@@ -11,18 +11,16 @@ class Info5 extends InfoIni {
    * Create lines of file body for Drupal 5.
    */
   function file_body() {
-    $module_data = $this->root_component->component_data;
-
     $lines = array();
-    $lines['name'] = $module_data['readable_name'];
-    $lines['description'] = $module_data['short_description'];
+    $lines['name'] =  $this->component_data['readable_name'];
+    $lines['description'] =  $this->component_data['short_description'];
 
-    if (!empty($module_data['module_dependencies'])) {
-      $lines['dependencies'] = implode(' ', $module_data['module_dependencies']);
+    if (!empty( $this->component_data['module_dependencies'])) {
+      $lines['dependencies'] = implode(' ',  $this->component_data['module_dependencies']);
     }
 
-    if (!empty($module_data['module_package'])) {
-      $lines['package'] = $module_data['module_package'];
+    if (!empty( $this->component_data['module_package'])) {
+      $lines['package'] =  $this->component_data['module_package'];
     }
 
     $info = $this->process_info_lines($lines);

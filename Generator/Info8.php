@@ -10,6 +10,19 @@ class Info8 extends Info {
   /**
    * {@inheritdoc}
    */
+  public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    $data_definition['base'] = [
+      'acquired' => TRUE,
+    ];
+
+    return $data_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function detectExistence($existing_module_files) {
     // Quick and dirty hack!
     $root_component_name = $this->component_data['root_component_name'];

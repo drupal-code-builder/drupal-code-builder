@@ -16,8 +16,6 @@ class Info extends File {
     // Properties acquired from the requesting root component.
     $plugin_type_properties = [
       'readable_name',
-      // Only needed for D8 info files.
-      'base',
       'short_description',
       'module_dependencies',
       'module_package',
