@@ -189,7 +189,7 @@ abstract class BaseGenerator {
    *    - 'compound': The property's data should be an array where each element
    *      is a further array of properties. The keys are ignored. The values in
    *      each array are specified by calling this method on the class
-   *      determined from the 'component' property.
+   *      determined from the 'component_type' property.
    *  - 'primary': (optional) Boolean indicating that this property should be
    *    considered the principal property for this component. Only one property
    *    in a component may be declared as primary. Currently internal only.
@@ -243,10 +243,10 @@ abstract class BaseGenerator {
    *  - 'process_empty': (optional) Boolean to indicate whether the processing
    *    callback should be applied if the property value is empty. Defaults to
    *    FALSE.
-   *  - 'component': (optional) The name of a generator class, relative to the
-   *    namespace. If present, this results in child components of this class
-   *    being added to the component tree. How the child components receive
-   *    data depends on the format type:
+   *  - 'component_type': (optional) The name of a generator class, relative to
+   *    the namespace. If present, this results in child components of this
+   *    class being added to the component tree. How the child components
+   *    receive data depends on the format type:
    *    - 'boolean': The child component receives no values.
    *    - 'array': Each value results in a separate child component, which gets
    *      the value set for its primary property.

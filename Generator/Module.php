@@ -148,28 +148,28 @@ class Module extends RootComponent {
         'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
         'required' => FALSE,
         'format' => 'boolean',
-        'component' => 'AdminSettingsForm',
+        'component_type' => 'AdminSettingsForm',
       ),
       'forms' => array(
         'label' => "Forms",
         'description' => "The forms for this module to provide.",
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'Form',
+        'component_type' => 'Form',
       ),
       'services' => array(
         'label' => "Services",
         'description' => 'The services for this module to provide.',
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'Service',
+        'component_type' => 'Service',
       ),
       'permissions' => array(
         'label' => "Permissions",
         'description' => 'The permissions for this module to provide.',
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'Permission',
+        'component_type' => 'Permission',
       ),
       'module_hook_presets' => array(
         'label' => 'Hook preset groups',
@@ -275,13 +275,13 @@ class Module extends RootComponent {
         // This tells the system that this is a request for generator
         // components, and the input data should be placed in a nested array in
         // the module data.
-        'component' => 'ContentEntityType',
+        'component_type' => 'ContentEntityType',
       ),
       'config_entity_types' => array(
         'label' => 'Config entity types',
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'ConfigEntityType',
+        'component_type' => 'ConfigEntityType',
       ),
       // TODO: come up with a way to generalize this if more plugin discovery
       // types become common.
@@ -293,32 +293,32 @@ class Module extends RootComponent {
         // This tells the system that this is a request for generator
         // components, and the input data should be placed in a nested array in
         // the module data.
-        'component' => 'Plugin',
+        'component_type' => 'Plugin',
       ),
       'plugins_yaml' => [
         'label' => 'Plugins (YAML)',
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'PluginYAML',
+        'component_type' => 'PluginYAML',
       ],
       'plugin_types' => array(
         'label' => 'Plugin types',
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'PluginType',
+        'component_type' => 'PluginType',
       ),
       'theme_hooks' => array(
         'label' => "Theme hooks",
         'description' => "The name of theme hooks, without the leading 'theme_'.",
         'required' => FALSE,
         'format' => 'array',
-        'component' => 'ThemeHook',
+        'component_type' => 'ThemeHook',
       ),
       'router_items' => array(
         'label' => "Routes",
         'required' => FALSE,
         'format' => 'compound',
-        'component' => 'RouterItem',
+        'component_type' => 'RouterItem',
       ),
       'api' => array(
         'label' => "api.php file",
@@ -326,19 +326,19 @@ class Module extends RootComponent {
         'required' => FALSE,
         'default' => FALSE,
         'format' => 'boolean',
-        'component' => 'API',
+        'component_type' => 'API',
       ),
       'readme' => array(
         'label' => "README file",
         'required' => FALSE,
         'default' => TRUE,
         'format' => 'boolean',
-        'component' => 'Readme',
+        'component_type' => 'Readme',
       ),
       'phpunit_tests' => array(
         'label' => "PHPUnit test case class",
         'format' => 'compound',
-        'component' => 'PHPUnitTest',
+        'component_type' => 'PHPUnitTest',
         'required' => FALSE,
       ),
       'tests' => array(
@@ -347,7 +347,7 @@ class Module extends RootComponent {
         'required' => FALSE,
         'default' => FALSE,
         'format' => 'boolean',
-        'component' => 'Tests',
+        'component_type' => 'Tests',
       ),
 
       // The following defaults are for ease of developing.

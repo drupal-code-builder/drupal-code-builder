@@ -604,7 +604,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ],
       'component_property_simple' => [
         'format' => 'boolean',
-        'component' => 'simple'
+        'component_type' => 'simple'
       ],
     ];
     $this->componentDataInfoAddDefaults($root_data_info);
@@ -696,7 +696,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ],
       'component_property_array' => [
         'format' => 'array',
-        'component' => 'component_array'
+        'component_type' => 'component_array'
       ],
     ];
     $this->componentDataInfoAddDefaults($root_data_info);
@@ -820,7 +820,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ],
       'component_property_compound' => [
         'format' => 'compound',
-        'component' => 'compound'
+        'component_type' => 'compound'
       ],
     ];
     $this->componentDataInfoAddDefaults($root_data_info);

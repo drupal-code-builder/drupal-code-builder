@@ -53,7 +53,7 @@ class GenerateHelperComponentDataInfoGathererTest extends TestBase {
       'property_compound_component' => [
         'label' => 'Compound component',
         'format' => 'compound',
-        'component' => 'Child',
+        'component_type' => 'Child',
       ],
       // Compound with child properties.
       'property_compound_child' => [
@@ -135,7 +135,7 @@ class GenerateHelperComponentDataInfoGathererTest extends TestBase {
     $this->assertEquals('boolean', $info['property_public_format']['format'], "The specified format is preserved.");
     $this->assertEquals(TRUE, $info['property_public_required']['required'], "The specified required is preserved.");
 
-    $this->assertEquals('Child', $info['property_compound_component']['component'], "The compound property specifies the component.");
+    $this->assertEquals('Child', $info['property_compound_component']['component_type'], "The compound property specifies the component.");
     $this->assertEquals('compound', $info['property_compound_component']['format'], "The compound property specifies the format.");
     $this->assertArrayHasKey('properties', $info['property_compound_component'], "The compound property has an array of child properties.");
 

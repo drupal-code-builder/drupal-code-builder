@@ -106,7 +106,7 @@ class PHPUnitTest extends PHPClassFile {
       'test_modules' => [
         'label' => 'Test modules',
         'format' => 'compound',
-        'component' => 'TestModule',
+        'component_type' => 'TestModule',
         'default' => function($component_data) {
           return [
             0 => [

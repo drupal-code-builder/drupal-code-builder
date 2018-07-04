@@ -31,7 +31,7 @@ class Module7 extends Module {
       'description' => "Paths for hook_menu(), eg 'path/foo'",
       'required' => FALSE,
       'format' => 'array',
-      'component' => 'RouterItem',
+      'component_type' => 'RouterItem',
     ];
 
     return $component_data_definition;

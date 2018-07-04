@@ -31,11 +31,11 @@ use DrupalCodeBuilder\Generator\RootComponent;
  *   a data array for a Module or a Permission will try to get a generator of
  *   that type. ('Try' because of duplicates and merging: see below.)
  * - Properties in the structured component data can be declared in the property
- *   info as having a component themselves, with the 'component' key. This will
- *   cause the value of this single property to be expanded and, upon suitable
- *   treatment, passed back in as a component data array in its own right. The
- *   nature of the expansion and treatment depends on the format of the
- *   property:
+ *   info as having a component themselves, with the 'component_type' key. This
+ *   will cause the value of this single property to be expanded and, upon
+ *   suitable treatment, passed back in as a component data array in its own
+ *   right. The nature of the expansion and treatment depends on the format of
+ *   the property:
  *   - boolean: This simply represents whether the subcomponent exists or not.
  *   - array: Each value in the array produces a component.
  *   - compound: The data is an array keyed by delta, where each value is itself
@@ -261,7 +261,7 @@ class ComponentCollector {
     // child components.
     foreach ($component_data_info as $property_name => $property_info) {
       // We're only interested in component properties.
-      if (!isset($property_info['component'])) {
+      if (!isset($property_info['component_type'])) {
         continue;
       }
       // Only work with properties for which there is data.
@@ -270,7 +270,7 @@ class ComponentCollector {
       }
 
       // Get the component type.
-      $item_component_type = $property_info['component'];
+      $item_component_type = $property_info['component_type'];
 
       switch ($property_info['format']) {
         case 'compound':
@@ -488,7 +488,7 @@ class ComponentCollector {
 
       // Don't work with component child properties, as the generator will
       // handle this.
-      if (isset($property_info['component'])) {
+      if (isset($property_info['component_type'])) {
         continue;
       }
 
@@ -660,7 +660,7 @@ class ComponentCollector {
    */
   protected function setComponentDataPropertyDefault($property_name, $property_info, &$component_data_local) {
     // Determine whether we should fill in a default value.
-    if (isset($property_info['component'])) {
+    if (isset($property_info['component_type'])) {
       // No need to set defaults on components here; the defaults will be filled
       // in when the component is instantiated in assembleComponentList() and
       // and this is called with the component's own data.

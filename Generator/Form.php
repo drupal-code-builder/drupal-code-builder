@@ -48,7 +48,7 @@ class Form extends PHPClassFileWithInjection {
         // Internal for now. TODO: expose to the UI.
         'internal' => TRUE,
         'format' => 'compound',
-        'component' => 'FormElement',
+        'component_type' => 'FormElement',
       ],
     );
 

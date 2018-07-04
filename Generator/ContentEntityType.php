@@ -162,7 +162,7 @@ class ContentEntityType extends EntityTypeBase {
           . "This is analogous to the Node Type entity type providing bundles for the Node entity type.",
         'format' => 'compound',
         'cardinality' => 1,
-        'component' => 'ConfigBundleEntityType',
+        'component_type' => 'ConfigBundleEntityType',
         'default' => function($component_data) {
           return [
             0 => [
