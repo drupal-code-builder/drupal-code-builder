@@ -168,7 +168,7 @@ class ComponentCollection implements \IteratorAggregate {
     $key = $this->getComponentKey($component);
 
     if (isset($this->components[$key])) {
-      throw new \Exception("Unique ID $key already in use.");
+      throw new \Exception("Unique ID $key already in use, by component with request path {$this->requestPaths[$key]}.");
     }
 
     // If this is the first component, it's the root.
