@@ -96,6 +96,9 @@ class ComponentCollection implements \IteratorAggregate {
    * components. So for example, the list of children of component 'foo' is
    * given by $tree['foo'].
    *
+   * Do not access this directly, but use getContainmentTree(), which checks
+   * that the tree has been assembled and is available.
+   *
    * @var array
    */
   private $tree = NULL;
@@ -449,8 +452,13 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Gets the containment tree.
    *
+   * This checks that the tree has been assembled already.
+   *
    * @return array
    *   The tree assembled by assembleContainmentTree().
+   *
+   * @throws \LogicException
+   *   Throws an exception if the tree has not yet been assembled.
    */
   private function getContainmentTree() {
     if (is_null($this->tree)) {
