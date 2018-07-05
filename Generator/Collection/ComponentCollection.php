@@ -511,8 +511,16 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * @return
    *   The root component.
+   *
+   * @throws \LogicException
+   *   Throws an exception if called with the root component, as in that case
+   *   the answer does not make sense.
    */
   public function getClosestRequestingRootComponent(BaseGenerator $component) {
+    if ($this->getComponentKey($component) === $this->rootGeneratorId) {
+      throw new \LogicException("ComponentCollection::getClosestRequestingRootComponent() may not be called with the root component.");
+    }
+
     $component_id = $this->getComponentKey($component);
 
     $closest_requesting_root_id = $this->requestRoots[$component_id];
