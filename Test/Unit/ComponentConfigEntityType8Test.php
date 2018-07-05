@@ -52,11 +52,12 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
-    $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
-    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Entity/KittyCat.php',
+      'src/Entity/KittyCatInterface.php',
+      'config/schema/test_module.schema.yml',
+    ], $files);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -184,14 +185,15 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(7, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
-    $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
-    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
-    $this->assertArrayHasKey("src/Entity/Handler/KittyCatAccess.php", $files, "The files list has an list builder class file.");
-    $this->assertArrayHasKey("src/Entity/Handler/KittyCatStorage.php", $files, "The files list has an list builder class file.");
-    $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has an list builder class file.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Entity/KittyCat.php',
+      'src/Entity/KittyCatInterface.php',
+      'config/schema/test_module.schema.yml',
+      'src/Entity/Handler/KittyCatAccess.php',
+      'src/Entity/Handler/KittyCatStorage.php',
+      'src/Entity/Handler/KittyCatListBuilder.php',
+    ], $files);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
@@ -285,17 +287,18 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertFileCount(10, $files);
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Entity/KittyCat.php", $files, "The files list has an entity class file.");
-    $this->assertArrayHasKey("src/Entity/KittyCatInterface.php", $files, "The files list has an entity interface file.");
-    $this->assertArrayHasKey("src/Form/KittyCatForm.php", $files, "The files list has a form handler file.");
-    $this->assertArrayHasKey("src/Entity/Handler/KittyCatListBuilder.php", $files, "The files list has a list builder handler file.");
-    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a config schema file.");
-    $this->assertArrayHasKey("test_module.permissions.yml", $files, "The files list has a permissions file.");
-    $this->assertArrayHasKey("test_module.links.menu.yml", $files, "The files list has a menu links file.");
-    $this->assertArrayHasKey("test_module.links.task.yml", $files, "The files list has a task links file.");
-    $this->assertArrayHasKey("test_module.links.action.yml", $files, "The files list has an action links file.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Entity/KittyCat.php',
+      'src/Entity/KittyCatInterface.php',
+      'test_module.permissions.yml',
+      'config/schema/test_module.schema.yml',
+      'src/Form/KittyCatForm.php',
+      'src/Entity/Handler/KittyCatListBuilder.php',
+      'test_module.links.menu.yml',
+      'test_module.links.task.yml',
+      'test_module.links.action.yml',
+    ], $files);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
     $php_tester = new PHPTester($entity_class_file);

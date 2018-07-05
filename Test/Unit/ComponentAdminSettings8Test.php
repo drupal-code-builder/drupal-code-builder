@@ -35,7 +35,14 @@ class ComponentAdminSettings8Test extends TestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(6, $files, "The expected number of files are returned.");
+    $this->assertFiles([
+      'testmodule.info.yml',
+      'src/Form/AdminSettingsForm.php',
+      'testmodule.routing.yml',
+      'testmodule.links.menu.yml',
+      'testmodule.permissions.yml',
+      'config/schema/testmodule.schema.yml',
+    ], $files);
 
     // Check the form class code.
     $form_file = $files['src/Form/AdminSettingsForm.php'];

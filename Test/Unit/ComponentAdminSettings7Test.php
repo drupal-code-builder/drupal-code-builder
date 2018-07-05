@@ -32,7 +32,11 @@ class ComponentAdminSettings7Test extends TestBaseComponentGeneration {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(3, $files, "Three files are returned.");
+    $this->assertFiles([
+      'testmodule.info',
+      'testmodule.module',
+      'testmodule.admin.inc',
+    ], $files);
 
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];

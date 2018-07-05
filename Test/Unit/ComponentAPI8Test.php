@@ -38,7 +38,10 @@ class ComponentAPI8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "Two files are returned.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.api.php',
+    ], $files);
 
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .module file.");
     $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has an api.php file.");
