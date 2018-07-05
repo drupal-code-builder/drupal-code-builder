@@ -77,13 +77,6 @@ class ComponentCollector {
   protected $component_collection;
 
   /**
-   * The root component generator.
-   *
-   * @var \DrupalCodeBuilder\Generator\RootComponent
-   */
-  protected $root_component = NULL;
-
-  /**
    * The record of requested data, keyed by generator ID.
    *
    * This allows us to prevent creation of duplicate generators which may be
@@ -133,7 +126,6 @@ class ComponentCollector {
   public function assembleComponentList($component_data) {
     // Reset all class properties. We don't normally run this twice, but
     // probably needed for tests.
-    $this->root_component = NULL;
     $this->requested_data_record = [];
 
     $this->component_collection = new \DrupalCodeBuilder\Generator\Collection\ComponentCollection;
@@ -205,16 +197,7 @@ class ComponentCollector {
     // We always pass in the root component.
     // We need to ensure that we create the root generator first, before we
     // recurse, as all subsequent generators need it.
-    $generator = $this->classHandler->getGenerator($component_type, $component_data, $this->root_component);
-
-    // If we've not yet set the root component, then this is the first
-    // generator we've created, and thus is the root component. Set it on the
-    // helper so we pass it to all subsequent generators.
-    // NOTE: For this to work properly, we have to instantiate the generator
-    // for this call before we recurse into properties or requirements!
-    if (is_null($this->root_component)) {
-      $this->root_component = $generator;
-    }
+    $generator = $this->classHandler->getGenerator($component_type, $component_data);
 
     $this->debug($chain, "instantiated name $name; type: $component_type; ID");
 

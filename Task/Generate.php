@@ -25,11 +25,6 @@ class Generate extends Base {
   private $base;
 
   /**
-   * Our root generator.
-   */
-  private $root_generator;
-
-  /**
    * The list of components.
    *
    * This is keyed by the unique ID of the component. Values are the
@@ -182,9 +177,6 @@ class Generate extends Base {
     // TODO: replace this.
     $this->component_list = $component_collection->getComponents();
 
-    // The root generator is the first component in the list.
-    $this->root_generator = reset($this->component_list);
-
     \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
 
     // Let each component detect whether it already exists in the given module
@@ -252,7 +244,7 @@ class Generate extends Base {
    * @deprecated
    */
   public function getGenerator($component_type, $component_name, $component_data = array()) {
-    return $this->getHelper('ComponentClassHandler')->getGenerator($component_type, $component_data, $this->root_generator);
+    return $this->getHelper('ComponentClassHandler')->getGenerator($component_type, $component_data);
   }
 
   /**

@@ -41,9 +41,6 @@ class ComponentClassHandler {
    * @param $component_data
    *   An array of data for the component. This is passed to the generator's
    *   __construct().
-   * @param $root_generator
-   *   The root generator, or NULL if it's the root generator itself that is
-   *   being created.
    *
    * @return
    *   A generator object, with the component name and data set on it, as well
@@ -53,7 +50,7 @@ class ComponentClassHandler {
    *   Throws an exception if the given component type does not correspond to
    *   a component class.
    */
-  public function getGenerator($component_type, $component_data, $root_generator) {
+  public function getGenerator($component_type, $component_data) {
     $class = $this->getGeneratorClass($component_type);
 
     if (!class_exists($class)) {

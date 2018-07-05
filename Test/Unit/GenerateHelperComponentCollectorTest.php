@@ -100,8 +100,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      $root_component_construction_data,
-      NULL
+      $root_component_construction_data
     )->willReturn($root_component->reveal());
 
     // The ComponentDataInfoGatherer mock returns the generator's info.
@@ -229,8 +228,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         $this->assertEquals($root_component_construction_data, $arg);
 
         return ($arg == $root_component_construction_data);
-      }),
-      NULL
+      })
     )->willReturn($root_component->reveal());
 
     // The ComponentDataInfoGatherer mock returns the generator's info.
@@ -377,8 +375,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         $this->assertEquals($root_component_construction_data, $arg);
 
         return ($arg == $root_component_construction_data);
-      }),
-      NULL
+      })
     )->willReturn($root_component->reveal());
 
     // The ComponentDataInfoGatherer mock returns the generator's info.
@@ -439,8 +436,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
-      }),
-      NULL
+      })
     )->willReturn($root_component->reveal());
 
     // The child component the root component requests.
@@ -460,8 +456,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         return empty(array_diff([
           'component_type' => 'child_requirement',
         ], $arg));
-      }),
-      $root_component->reveal()
+      })
     )->willReturn($child_requirement_component->reveal());
 
     // Create the helper, with mocks passed in.
@@ -522,8 +517,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
-      }),
-      NULL
+      })
     )->willReturn($root_component->reveal());
 
     // The child component the root component requests.
@@ -548,8 +542,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         return empty(array_diff([
           'component_type' => 'child_requirement',
         ], $arg));
-      }),
-      $root_component->reveal()
+      })
     )->willReturn($child_requirement_component->reveal());
 
     // The grandchild component requested by the child.
@@ -569,8 +562,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         return empty(array_diff([
           'component_type' => 'grandchild_requirement',
         ], $arg));
-      }),
-      $root_component->reveal()
+      })
     )->willReturn($grandchild_requirement_component->reveal());
 
     // Create the helper, with mocks passed in.
@@ -638,8 +630,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
           }
         }
         return TRUE;
-      }),
-      NULL
+      })
     )
     ->will(function ($args) use ($root_component) {
       return $root_component->reveal();
@@ -659,8 +650,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'simple',
       Argument::that(function ($arg) {
         return empty(array_diff(["component_type" => "simple"], $arg));
-      }),
-      $root_component
+      })
     )
     ->willReturn($simple_child_component->reveal());
 
@@ -742,8 +732,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
           }
         }
         return TRUE;
-      }),
-      NULL
+      })
     )
     ->will(function ($args) use ($root_component) {
       return $root_component->reveal();
@@ -763,8 +752,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       [
         "component_type" => "component_array",
         "primary_property" => "alpha",
-      ],
-      $root_component
+      ]
     )
     ->willReturn($alpha_child_component->reveal());
 
@@ -779,8 +767,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       [
         "component_type" => "component_array",
         "primary_property" => "beta",
-      ],
-      $root_component
+      ]
     )
     ->willReturn($beta_child_component->reveal());
 
@@ -862,8 +849,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
           }
         }
         return TRUE;
-      }),
-      NULL
+      })
     )
     ->will(function ($args) use ($root_component) {
       return $root_component->reveal();
@@ -884,8 +870,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         "child_property_string" => "child_string_value_0",
         "component_type" => "compound",
         "root_component_name" => "my_component",
-      ],
-      $root_component
+      ]
     )
     ->willReturn($compound_child_component_0->reveal());
 
@@ -908,8 +893,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         "child_property_string" => "child_string_value_1",
         "component_type" => "compound",
         "root_component_name" => "my_component",
-      ],
-      $root_component
+      ]
     )
     ->willReturn($compound_child_component_1->reveal());
 
@@ -1037,8 +1021,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $class_handler->getGenerator(
       'my_root',
-      $root_component_construction_data,
-      NULL
+      $root_component_construction_data
     )
     ->will(function ($args) use ($root_component) {
       return $root_component->reveal();
@@ -1123,8 +1106,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
         return empty(array_diff($root_data, $arg));
-      }),
-      NULL
+      })
     )->willReturn($root_component->reveal());
 
     // The child component the root component requests.
@@ -1168,8 +1150,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
           'acquired_from_specified' => 'acquired_from_source_value',
         ], $arg, "The child component is created with the expected data.");
         return TRUE;
-      }),
-      $root_component->reveal()
+      })
     )->willReturn($child_requirement_component->reveal());
 
     // Create the helper, with mocks passed in.
