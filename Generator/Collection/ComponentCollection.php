@@ -427,6 +427,28 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
+   * Gets the containment tree, with components represented by request paths.
+   *
+   * @return array
+   *  An array of the same structure as getContainmentTree() returns, but
+   *  instead of using object keys, every component is represented by its
+   *  request path.
+   */
+  public function getContainmentTreeWithRequestPaths() {
+    $tree_by_path = [];
+
+    $tree = $this->getContainmentTree();
+
+    foreach ($tree as $parent => $children) {
+      foreach ($children as $child) {
+        $tree_by_path[$this->requestPaths[$parent]][] = $this->requestPaths[$child];
+      }
+    }
+
+    return $tree_by_path;
+  }
+
+  /**
    * Gets a component's children in the tree.
    *
    * @param BaseGenerator $component
