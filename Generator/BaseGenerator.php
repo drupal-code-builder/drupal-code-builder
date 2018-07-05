@@ -87,23 +87,6 @@ abstract class BaseGenerator {
   public $type;
 
   /**
-   * Reference to the Generate task handler.
-   *
-   * This should be used to access the environment, and to call getGenerator().
-   */
-  public $task;
-
-  /**
-   * The base component's flat list of components.
-   *
-   * This is keyed by the name of the component name. Values are the
-   * instantiated component generators.
-   *
-   * (This is only present on the root component.)
-   */
-  public $components = array();
-
-  /**
    * The data for the component.
    *
    * On the base component (e.g., 'Module'), this is the entirety of the data
