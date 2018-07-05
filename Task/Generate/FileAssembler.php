@@ -30,8 +30,6 @@ class FileAssembler {
     // Let each file component in the tree gather data from its own children.
     $this->collectFileContents($component_collection);
 
-    //drush_print_r($generator->components);
-
     // Build files.
     // Get info on files. All components that wish to provide a file should have
     // registered themselves as first-level children of the root component.
