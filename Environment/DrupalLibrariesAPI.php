@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Environment;
  * Sample code to include MB as a library:
  * @code
  *  function YOURMODULE_libraries_info() {
- *    $libraries['drupal_code_builder'] = array(
+ *    $libraries['drupal-code-builder'] = array(
  *      // Only used in administrative UI of Libraries API.
  *      'name' => 'Drupal Code Builder',
  *      'vendor url' => 'http://example.com',
@@ -43,7 +43,7 @@ class DrupalLibrariesAPI extends DrupalUI {
    * Get a path to a module builder file or folder.
    */
   function getPath($subpath) {
-    $path = libraries_get_path('drupal_code_builder');
+    $path = libraries_get_path('drupal-code-builder');
     $path = $path . '/' . $subpath;
     return $path;
   }
