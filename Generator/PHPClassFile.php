@@ -177,8 +177,11 @@ class PHPClassFile extends PHPFile {
   function code_body() {
     // Get the class code from the class docblock onwards first, so it can be
     // then processed for qualified class names.
+    $class_doc_block = $this->getClassDocBlockLines();
+    $class_doc_block = $this->docBlock($class_doc_block);
+
     $class_code = array_merge(
-      $this->class_doc_block(),
+      $class_doc_block,
       $this->class_declaration(),
       $this->classCodeBody()
     );
@@ -233,20 +236,6 @@ class PHPClassFile extends PHPFile {
     }
 
     return $lines;
-  }
-
-  /**
-   * Produces the formatted docblock lines for the class.
-   *
-   * TODO: Fold this into the caller.
-   *
-   * @return string[]
-   *   An array of docblock formatted lines.
-   */
-  protected function class_doc_block() {
-    $lines = $this->getClassDocBlockLines();
-
-    return $this->docBlock($lines);
   }
 
   /**
