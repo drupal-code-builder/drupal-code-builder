@@ -75,11 +75,8 @@ class Generate extends Base {
    * be passed to prepareComponentDataProperty(), to set any option lists and
    * allow defaults to build up incrementally.
    *
-   * After all data has been gathered from the user, the completed data array
-   * should be passed to processComponentData().
-   *
-   * Finally, the array should be passed to generateComponent() to generate the
-   * code.
+   * The array with the complete data collected from the user should then be
+   * passed to generateComponent() to generate the code.
    *
    * @param $include_computed
    *  (optional) Boolean indicating whether to include computed properties.
