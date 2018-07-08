@@ -237,7 +237,7 @@ class Collect extends Base {
           'destination' => $destination,
           'dependencies'  => $hook_dependencies,
           'group'       => $group,
-          'core'        => $file_data['core'],
+          'core'        => $file_data['core'] ?? NULL,
           'file_path'   => $file_data['path'],
           'body'        => $hook_data_raw['bodies'][$key],
         );
