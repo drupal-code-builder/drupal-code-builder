@@ -1,16 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Task\Collect6.
- */
+namespace DrupalCodeBuilder\Task\Collect;
 
-namespace DrupalCodeBuilder\Task;
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
 
 /**
- * Task handler for collecting and processing hook definitions.
+ * Task helper for collecting data on hooks on Drupal 6.
  */
-class Collect6 extends Collect {
+class HooksCollector6 extends HooksCollector {
 
   /**
    * Gather hook documentation files.

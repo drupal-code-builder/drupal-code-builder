@@ -1,25 +1,28 @@
 <?php
 
-/**
- * @file
- * Contains DrupalCodeBuilder\Task\Collect7.
- */
+namespace DrupalCodeBuilder\Task\Collect;
 
-namespace DrupalCodeBuilder\Task;
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
 
 /**
- * Task handler for collecting and processing hook definitions.
+ * Task helper for collecting data on hooks on Drupal 8.
  */
-class Collect7 extends Collect {
+class HooksCollector8 extends HooksCollector {
 
   /**
    * Gather hook documentation files.
    *
    * This retrieves a list of api hook documentation files from the current
-   * Drupal install. On D7 these are files of the form MODULE.api.php and are
+   * Drupal install. On D8 these are files of the form MODULE.api.php and are
    * present in the codebase (rather than needing to be downloaded from an
    * online code repository viewer as is the case in previous versions of
    * Drupal).
+   *
+   * Because Drupal 8 puts api.php files in places other than module folders,
+   * keys of the return array may be in one of these forms:
+   *  - foo.api.php: The API file for foo module.
+   *  - core:foo.api.php: The API file in a Drupal component.
+   *  - core.api.php: The single core.api.php file.
    */
   protected function gatherHookDocumentationFiles() {
     // Get the hooks directory.
@@ -35,28 +38,64 @@ class Collect7 extends Collect {
     // keyed by filename, eg 'comment.api.php'
     // What this does not give us is the originating module!
 
+    // Add in api.php files in core/lib.
+    $core_directory = new \RecursiveDirectoryIterator('core/lib/Drupal');
+    $iterator = new \RecursiveIteratorIterator($core_directory);
+    $regex = new \RegexIterator($iterator, '/^.+\.api.php$/i', \RecursiveRegexIterator::GET_MATCH);
+    $core_api_files = [];
+    foreach ($regex as $regex_files) {
+      foreach ($regex_files as $file) {
+        $filename = basename($file);
+
+        $component_name = explode('.', $filename)[0];
+        $system_listing['core:' . $filename] = (object) array(
+          'uri' => $file,
+          'filename' => $filename,
+          'name' => basename($file, '.php'),
+          'group' => 'core:' . $component_name,
+          'module' => 'core',
+        );
+      }
+    }
+
+    // Add in core.api.php, which won't have been picked up because it's not
+    // in a module!
+    $system_listing['core.api.php'] = (object) array(
+      'uri' => 'core/core.api.php',
+      'filename' => 'core.api.php',
+      'name' => 'core.api',
+      'group' => 'core:core',
+      'module' => 'core',
+    );
+
     //print_r($system_listing);
 
-    foreach ($system_listing as $filename => $file) {
+    foreach ($system_listing as $key => $file) {
       // Extract the module name from the path.
       // WARNING: this is not always going to be correct: will fail in the
       // case of submodules. So Commerce is a big problem here.
       // We could instead assume we have MODULE.api.php, but some modules
       // have multiple API files with suffixed names, eg Services.
       // @todo: make this more robust, somehow!
-      $matches = array();
-      preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
-      //print_r($matches);
-      $module = $matches[1];
+      if (!isset($file->module)) {
+        $matches = array();
+        preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
+        //print_r($matches);
+        $file->module = $matches[1];
+        $file->group = $file->module;
+      }
       //dsm($matches, $module);
 
-      $hook_files[$filename] = array(
+      // Mark core files.
+      $core = (substr($file->uri, 0, 4) == 'core');
+
+      $hook_files[$key] = array(
         'original' => $drupal_root . '/' . $file->uri, // no idea if useful
-        'filename' => $filename,
         'path' => $directory . '/' . $file->filename,
         'destination' => '%module.module', // Default. We override this below.
-        'group'       => $module, // @todo specialize this?
-        'module'      => $module,
+        'group'       => $file->group,
+        'module'      => $file->module,
+        'core'        => $core,
       );
     }
 
@@ -113,13 +152,26 @@ class Collect7 extends Collect {
   }
 
   /**
+   * Get info about hooks from Drupal.
+   *
+   * @return
+   *  The data from hook_hook_info().
+   */
+  protected function getDrupalHookInfo() {
+    $hook_info = \Drupal::service('module_handler')->getHookInfo();
+    return $hook_info;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function getAdditionalHookInfo() {
-    // For D7, keys should match the filename MODULE.api.php
+    // Keys should match the filename MODULE.api.php
     $info = array(
       // Hooks on behalf of Drupal core.
-      'system' => array(
+      // api.php files that are in core rather than in a module have a prefix of
+      // 'core:'.
+      'core:module' => array(
         'hook_destinations' => array(
           '%module.install' => array(
             'hook_requirements',
@@ -129,60 +181,6 @@ class Collect7 extends Collect {
             'hook_update_N',
             'hook_update_last_removed',
             'hook_uninstall',
-            'hook_enable',
-            'hook_disable',
-          ),
-        ),
-      ),
-      'block' => array(
-        'hook_dependencies' => array(
-          'hook_block_info' => array(
-            'hook_block_*',
-          ),
-        ),
-      ),
-      'field' => array(
-        'hook_destinations' => array(
-          '%module.install' => array(
-            'hook_field_schema',
-          ),
-        ),
-      ),
-      // Hooks in theme.api.php. This does nothing yet!
-      'theme' => array(
-        'destination' => 'template.php',
-      ),
-      // Views
-      'views' => array(
-        'hook_destinations' => array(
-          '%module.views.inc' => array(
-            'hook_views_data',
-            'hook_views_data_alter',
-            'hook_views_plugins',
-            'hook_views_plugins_alter',
-            'hook_views_query_alter',
-          ),
-          '%module.views_default.inc' => array(
-            'hook_views_default_views',
-          ),
-        ),
-        // Data about hook dependencies.
-        'hook_dependencies' => array(
-          // A required hook.
-          'hook_views_api' => array(
-            // An array of hooks that require this, as a regex.
-            // TODO!??? dependencies across different API files not yet supported!
-            'hook_views_.*',
-          ),
-        ),
-      ),
-      'rules' => array(
-        'hook_destinations' => array(
-          '%module.rules.inc' => array(
-            'hook_rules_action_info',
-          ),
-          '%module.rules_default.inc' => array(
-            'hook_default_rules_configuration',
           ),
         ),
       ),
