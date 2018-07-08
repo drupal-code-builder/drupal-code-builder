@@ -24,6 +24,13 @@ class Collect extends Base {
   protected $sanity_level = 'data_directory_exists';
 
   /**
+   *  Helper objects.
+   *
+   * @var array
+   */
+  protected $helpers = [];
+
+  /**
    * Collect data about Drupal components from the current site's codebase.
    *
    * @return array

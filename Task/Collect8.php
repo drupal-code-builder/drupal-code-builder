@@ -15,13 +15,6 @@ namespace DrupalCodeBuilder\Task;
 class Collect8 extends Collect {
 
   /**
-   *  Helper objects.
-   *
-   * @var array
-   */
-  protected $helpers = [];
-
-  /**
    * {@inheritdoc}
    */
   public function collectComponentData() {
