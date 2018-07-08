@@ -53,7 +53,7 @@ class Collect extends Base {
     $this->environment->getStorage()->store('hooks', $hook_data);
 
     $count = 0;
-    foreach ($hook_files as $group => $hooks) {
+    foreach ($hook_data as $group => $hooks) {
       $count += count($hooks);
     }
 
