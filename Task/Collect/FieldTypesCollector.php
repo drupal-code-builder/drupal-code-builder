@@ -7,7 +7,17 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 /**
  * Task helper for collecting data on field types.
  */
-class FieldTypesCollector {
+class FieldTypesCollector extends CollectorBase  {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $saveDataKey = 'field_types';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $reportingString = 'field types';
 
   /**
    * The names of field types to collect for testing sample data.
@@ -41,7 +51,7 @@ class FieldTypesCollector {
    *   - 'default_widget': The default widget plugin ID.
    *   - 'default_formatter': The default formatter plugin ID.
    */
-  public function collectFieldTypes() {
+  public function collect() {
     $plugin_manager = \Drupal::service('plugin.manager.field.field_type');
     $plugin_definitions = $plugin_manager->getDefinitions();
 

@@ -7,7 +7,17 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 /**
  * Task helper for collecting data on services.
  */
-class ServicesCollector {
+class ServicesCollector extends CollectorBase  {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $saveDataKey = 'services';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $reportingString = 'services';
 
   /**
    * The names of services to collect for testing sample data.
@@ -81,6 +91,19 @@ class ServicesCollector {
     ];
 
     return $return;
+  }
+
+  /**
+   * Gets the count of items in an array of data.
+   *
+   * @param array $data
+   *   An array of analysis data.
+   *
+   * @return int
+   */
+  public function getDataCount($data) {
+    // Services data consists of two lists of services.
+    return count($data['all']);
   }
 
   /**

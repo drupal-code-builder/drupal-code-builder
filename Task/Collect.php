@@ -24,6 +24,15 @@ class Collect extends Base {
   protected $sanity_level = 'data_directory_exists';
 
   /**
+   * The short names of classes in this namespace to use as collectors.
+   *
+   * @var string[]
+   */
+  protected $collectorClassNames = [
+    'HooksCollector',
+  ];
+
+  /**
    *  Helper objects.
    *
    * @var array
@@ -38,26 +47,24 @@ class Collect extends Base {
    *   is a count of that type of item.
    */
   public function collectComponentData() {
-    $result = $this->collectHooks();
+    $result = [];
 
-    return $result;
-  }
+    // Allow each of our declared collectors to perform its work.
+    foreach ($this->collectorClassNames as $collector_class_name) {
+      $collector_helper = $this->getHelper($collector_class_name);
 
-  /**
-   * Collect hook data from api.php documentation files.
-   */
-  protected function collectHooks() {
-    $hook_data = $this->getHelper('HooksCollector')->collect();
+      $collector_data = $collector_helper->collect();
 
-    // Save the data.
-    $this->environment->getStorage()->store('hooks', $hook_data);
+      // Save the data.
+      $this->environment->getStorage()->store($collector_helper->getSaveDataKey(), $collector_data);
 
-    $count = 0;
-    foreach ($hook_data as $group => $hooks) {
-      $count += count($hooks);
+      // Add the count to the results.
+      $count = $collector_helper->getDataCount($collector_data);
+
+      $result[$collector_helper->getReportingKey()] = $count;
     }
 
-    return ['hook definitions' => $count];
+    return $result;
   }
 
   /**

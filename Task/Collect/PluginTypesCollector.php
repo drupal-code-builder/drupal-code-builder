@@ -7,7 +7,17 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 /**
  * Task helper for collecting data on plugin types.
  */
-class PluginTypesCollector {
+class PluginTypesCollector extends CollectorBase  {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $saveDataKey = 'plugins';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $reportingString = 'plugin types';
 
   /**
    * The container builder helper.

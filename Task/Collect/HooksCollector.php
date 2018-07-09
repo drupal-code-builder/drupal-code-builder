@@ -7,7 +7,17 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 /**
  * Base task helper for collecting data on hooks.
  */
-class HooksCollector {
+class HooksCollector extends CollectorBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $saveDataKey = 'hooks';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $reportingString = 'hook definitions';
 
   /**
    * Constructs a new helper.
@@ -19,6 +29,20 @@ class HooksCollector {
     EnvironmentInterface $environment
   ) {
     $this->environment = $environment;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataCount($data) {
+    $count = 0;
+
+    // Hook data is grouped rather than flat.
+    foreach ($data as $group => $hooks) {
+      $count += count($hooks);
+    }
+
+    return $count;
   }
 
   /**

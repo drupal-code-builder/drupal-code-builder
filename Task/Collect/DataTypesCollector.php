@@ -8,7 +8,17 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Task helper for collecting data on data types.
  */
-class DataTypesCollector {
+class DataTypesCollector extends CollectorBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $saveDataKey = 'data_types';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $reportingString = 'data types';
 
   /**
    * The names of data types to collect for testing sample data.

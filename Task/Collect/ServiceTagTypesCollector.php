@@ -8,7 +8,17 @@ use CaseConverter\CaseString;
 /**
  *  Task helper for collecting data on tagged services.
  */
-class ServiceTagTypesCollector {
+class ServiceTagTypesCollector extends CollectorBase  {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $saveDataKey = 'service_tag_types';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $reportingString = 'tagged service types';
 
   /**
    * The method collector helper
@@ -59,7 +69,7 @@ class ServiceTagTypesCollector {
    *    - 'methods': An array of the methods of this interface, in the same
    *      format as returned by MethodCollector::collectMethods().
    */
-  public function collectServiceTagTypes() {
+  public function collect() {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
 
     $collectors_info = $this->getCollectorServiceIds($container_builder);
