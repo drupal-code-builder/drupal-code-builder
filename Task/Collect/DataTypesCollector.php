@@ -41,6 +41,14 @@ class DataTypesCollector extends CollectorBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getJobList() {
+    // No point splitting this up into jobs.
+    return NULL;
+  }
+
+  /**
    * Collect data on data types.
    *
    * @return array
@@ -48,7 +56,7 @@ class DataTypesCollector extends CollectorBase {
    *   - 'type': The type ID.
    *   - 'label': The label.
    */
-  public function collect() {
+  public function collect($job_list) {
     // TODO: is there an API for reading this file? Where?
     $definition_file = 'core/config/schema/core.data_types.schema.yml';
     $yml = file_get_contents($definition_file);

@@ -10,15 +10,20 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 class HooksCollector7 extends HooksCollector {
 
   /**
-   * Gather hook documentation files.
-   *
-   * This retrieves a list of api hook documentation files from the current
-   * Drupal install. On D7 these are files of the form MODULE.api.php and are
-   * present in the codebase (rather than needing to be downloaded from an
-   * online code repository viewer as is the case in previous versions of
-   * Drupal).
+   * {@inheritdoc}
    */
-  protected function gatherHookDocumentationFiles() {
+  public function getJobList() {
+    // On D7 these are files of the form MODULE.api.php and are
+    // present in the codebase (rather than needing to be downloaded from an
+    // online code repository viewer as is the case in previous versions of
+    // Drupal).
+    return \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function gatherHookDocumentationFiles($system_listing) {
     // Get the hooks directory.
     $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
@@ -27,10 +32,9 @@ class HooksCollector7 extends HooksCollector {
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
-    $system_listing = \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
-    // returns an array of objects, properties: uri, filename, name,
-    // keyed by filename, eg 'comment.api.php'
-    // What this does not give us is the originating module!
+    // $system_listing is an array of objects, properties: uri, filename, name,
+    // keyed by filename, eg 'comment.api.php' What this does not give us is the
+    // originating module!
 
     //print_r($system_listing);
 

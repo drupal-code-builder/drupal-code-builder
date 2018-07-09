@@ -53,7 +53,12 @@ class Collect extends Base {
     foreach ($this->collectorClassNames as $collector_class_name) {
       $collector_helper = $this->getHelper($collector_class_name);
 
-      $collector_data = $collector_helper->collect();
+      // Get the list of jobs.
+      // (In 3.3.x, this list will be exposed to the API, so UIs can run the
+      // analysis in batches.)
+      $job_list = $collector_helper->getJobList();
+
+      $collector_data = $collector_helper->collect($job_list);
 
       // Save the data.
       $this->environment->getStorage()->store($collector_helper->getSaveDataKey(), $collector_data);

@@ -10,12 +10,23 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 class HooksCollector6 extends HooksCollector {
 
   /**
+   * {@inheritdoc}
+   */
+  public function getJobList() {
+    // D6 and prior does not support batched analysis, mostly because I don't
+    // have a working D6 site to test on!
+    return NULL;
+  }
+
+  /**
    * Gather hook documentation files.
    *
    * This retrieves a list of api hook documentation files from drupal.org's
    * version control server.
+   *
+   * Because getJobList() returns NULL, $job_list is NULL and is ignored.
    */
-  protected function gatherHookDocumentationFiles() {
+  protected function gatherHookDocumentationFiles($job_list) {
     $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
     // Fetch data about the files we need to download.

@@ -10,33 +10,10 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 class HooksCollector8 extends HooksCollector {
 
   /**
-   * Gather hook documentation files.
-   *
-   * This retrieves a list of api hook documentation files from the current
-   * Drupal install. On D8 these are files of the form MODULE.api.php and are
-   * present in the codebase (rather than needing to be downloaded from an
-   * online code repository viewer as is the case in previous versions of
-   * Drupal).
-   *
-   * Because Drupal 8 puts api.php files in places other than module folders,
-   * keys of the return array may be in one of these forms:
-   *  - foo.api.php: The API file for foo module.
-   *  - core:foo.api.php: The API file in a Drupal component.
-   *  - core.api.php: The single core.api.php file.
+   * {@inheritdoc}
    */
-  protected function gatherHookDocumentationFiles() {
-    // Get the hooks directory.
-    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
-
-    // Get Drupal root folder as a file path.
-    // DRUPAL_ROOT is defined both by Drupal and Drush.
-    // @see _drush_bootstrap_drupal_root(), index.php.
-    $drupal_root = DRUPAL_ROOT;
-
+  public function getJobList() {
     $system_listing = \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
-    // returns an array of objects, properties: uri, filename, name,
-    // keyed by filename, eg 'comment.api.php'
-    // What this does not give us is the originating module!
 
     // Add in api.php files in core/lib.
     $core_directory = new \RecursiveDirectoryIterator('core/lib/Drupal');
@@ -68,7 +45,32 @@ class HooksCollector8 extends HooksCollector {
       'module' => 'core',
     );
 
-    //print_r($system_listing);
+    return $system_listing;
+  }
+
+  /**
+   * Gather hook documentation files.
+   *
+   * This retrieves a list of api hook documentation files from the current
+   * Drupal install. On D8 these are files of the form MODULE.api.php and are
+   * present in the codebase (rather than needing to be downloaded from an
+   * online code repository viewer as is the case in previous versions of
+   * Drupal).
+   *
+   * Because Drupal 8 puts api.php files in places other than module folders,
+   * keys of the return array may be in one of these forms:
+   *  - foo.api.php: The API file for foo module.
+   *  - core:foo.api.php: The API file in a Drupal component.
+   *  - core.api.php: The single core.api.php file.
+   */
+  protected function gatherHookDocumentationFiles($system_listing) {
+    // Get the hooks directory.
+    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
+
+    // Get Drupal root folder as a file path.
+    // DRUPAL_ROOT is defined both by Drupal and Drush.
+    // @see _drush_bootstrap_drupal_root(), index.php.
+    $drupal_root = DRUPAL_ROOT;
 
     foreach ($system_listing as $key => $file) {
       // Extract the module name from the path.

@@ -70,14 +70,23 @@ class PluginTypesCollector extends CollectorBase  {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getJobList() {
+    $plugin_manager_service_ids = $this->getPluginManagerServices();
+
+    return $plugin_manager_service_ids;
+  }
+
+  /**
    * Get definitions of plugin types.
    *
    * @return array
    *   An array of data about plugin types. See gatherPluginTypeInfo() for the
    *   details.
    */
-  public function collect() {
-    $plugin_manager_service_ids = $this->getPluginManagerServices();
+  public function collect($job_list) {
+    $plugin_manager_service_ids = $job_list;
 
     // Filter for testing sample data collection.
     if (!empty($this->environment->sample_data_write)) {

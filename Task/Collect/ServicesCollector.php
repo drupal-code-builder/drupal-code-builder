@@ -53,6 +53,15 @@ class ServicesCollector extends CollectorBase  {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getJobList() {
+    // No point splitting this up into jobs, getting the list of services is
+    // pretty much the whole task.
+    return NULL;
+  }
+
+  /**
    * Get definitions of services.
    *
    * @return array
@@ -67,7 +76,7 @@ class ServicesCollector extends CollectorBase  {
    *    - 'interface': The fully-qualified interface that the service class
    *      implements, with the initial '\'.
    */
-  public function collect() {
+  public function collect($job_list) {
     $all_services = $this->getAllServices();
     $static_container_services = $this->getStaticContainerServices();
 

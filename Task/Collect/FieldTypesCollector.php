@@ -40,6 +40,14 @@ class FieldTypesCollector extends CollectorBase  {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getJobList() {
+    // No point splitting this up into jobs.
+    return NULL;
+  }
+
+  /**
    * Gets definitions of field types.
    *
    * @return array
@@ -51,7 +59,7 @@ class FieldTypesCollector extends CollectorBase  {
    *   - 'default_widget': The default widget plugin ID.
    *   - 'default_formatter': The default formatter plugin ID.
    */
-  public function collect() {
+  public function collect($job_list) {
     $plugin_manager = \Drupal::service('plugin.manager.field.field_type');
     $plugin_definitions = $plugin_manager->getDefinitions();
 

@@ -59,6 +59,14 @@ class ServiceTagTypesCollector extends CollectorBase  {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getJobList() {
+    // No point splitting this up into jobs.
+    return NULL;
+  }
+
+  /**
    * Collect data on tagged services.
    *
    * @return
@@ -69,7 +77,7 @@ class ServiceTagTypesCollector extends CollectorBase  {
    *    - 'methods': An array of the methods of this interface, in the same
    *      format as returned by MethodCollector::collectMethods().
    */
-  public function collect() {
+  public function collect($job_list) {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
 
     $collectors_info = $this->getCollectorServiceIds($container_builder);

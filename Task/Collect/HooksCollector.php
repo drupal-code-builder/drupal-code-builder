@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 /**
  * Base task helper for collecting data on hooks.
  */
-class HooksCollector extends CollectorBase {
+abstract class HooksCollector extends CollectorBase {
 
   /**
    * {@inheritdoc}
@@ -48,12 +48,14 @@ class HooksCollector extends CollectorBase {
   /**
    * Get definitions of hooks.
    *
+   * @param $job_list
+   *   The data returned from getJobList().
+   *
    * @return array
    *   An array of data about hooks.
    */
-  public function collect() {
-    // Update the hook documentation.
-    $hook_files = $this->gatherHookDocumentationFiles();
+  public function collect($job_list) {
+    $hook_files = $this->gatherHookDocumentationFiles($job_list);
 
     // Copy the hook files to the hooks directory.
     // This is done after the files have been gathered, so when gathering
@@ -70,6 +72,13 @@ class HooksCollector extends CollectorBase {
 
   /**
    * Gather hook documentation files.
+   *
+   * This adds extra data to the list of files retrieved by getJobList().
+   *
+   * TODO: Rename this now it doesn't do the actual gathering!
+   *
+   * @param $system_listing
+   *   The data on api.php files returned by getJobList().
    *
    * @return
    *  Array of data about hook files suitable for passing to processHookData().
@@ -100,7 +109,7 @@ class HooksCollector extends CollectorBase {
    *    [module]      => node
    * @endcode
    */
-  protected function gatherHookDocumentationFiles() {
+  protected function gatherHookDocumentationFiles($system_listing) {
     // Needs to be overridden by subclasses.
   }
 

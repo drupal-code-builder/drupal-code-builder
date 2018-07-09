@@ -58,10 +58,27 @@ abstract class CollectorBase {
   }
 
   /**
+   * Produces the list of jobs for this collector.
+   *
+   * (The idea is that in 3.3.x, this list will be used by UIs that can perform
+   * the analysis in batches to get a complete list of the jobs, to then pass
+   * back in successive batches.)
+   *
+   * @return array|null
+   *   An array of job data, subsets of which can be passed to collect(), or
+   *   NULL to indicate that this collector does not support batched analysis.
+   */
+  abstract public function getJobList();
+
+  /**
    * Collect the data.
    *
+   * @param $job_list
+   *   The array of job data from getJobList();
+   *
    * @return array
+   *   The array of analysis data.
    */
-  abstract public function collect();
+  abstract public function collect($job_list);
 
 }
