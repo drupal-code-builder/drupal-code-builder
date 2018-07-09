@@ -137,7 +137,7 @@ return array(
     'DrupalCodeBuilder\\Task\\Collect' => $baseDir . '/Task/Collect.php',
     'DrupalCodeBuilder\\Task\\Collect8' => $baseDir . '/Task/Collect8.php',
     'DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser' => $baseDir . '/Task/Collect/CodeAnalyser.php',
-    'DrupalCodeBuilder\\Task\\Collect\\CollectorInterface' => $baseDir . '/Task/Collect/CollectorInterface.php',
+    'DrupalCodeBuilder\\Task\\Collect\\CollectorBase' => $baseDir . '/Task/Collect/CollectorBase.php',
     'DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter' => $baseDir . '/Task/Collect/ContainerBuilderGetter.php',
     'DrupalCodeBuilder\\Task\\Collect\\DataTypesCollector' => $baseDir . '/Task/Collect/DataTypesCollector.php',
     'DrupalCodeBuilder\\Task\\Collect\\FieldTypesCollector' => $baseDir . '/Task/Collect/FieldTypesCollector.php',
