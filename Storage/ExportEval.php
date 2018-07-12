@@ -2,34 +2,13 @@
 
 namespace DrupalCodeBuilder\Storage;
 
-use DrupalCodeBuilder\Environment\EnvironmentInterface;
-
 /**
  * Provides a storage handler that uses PHP exported variables in files.
  *
  * This is intended for use with the sample data used by our unit tests. Yes,
  * eval() is evil, but this makes the resulting storage files human-readable.
  */
-class ExportEval {
-
-  /**
-   * The environment object.
-   *
-   * @var \DrupalCodeBuilder\Environment\EnvironmentInterface
-   */
-  protected $environment;
-
-  /**
-   * Constructs a new helper.
-   *
-   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-   *   The environment object.
-   */
-  public function __construct(
-    EnvironmentInterface $environment
-  ) {
-    $this->environment = $environment;
-  }
+class ExportEval extends StorageBase {
 
   /**
    * Stores data.

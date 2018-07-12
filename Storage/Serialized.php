@@ -2,32 +2,12 @@
 
 namespace DrupalCodeBuilder\Storage;
 
-use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Exception\StorageException;
 
 /**
  * Provides a storage handler that uses PHP serialization in files.
  */
-class Serialized {
-
-  /**
-   * The environment object.
-   *
-   * @var \DrupalCodeBuilder\Environment\EnvironmentInterface
-   */
-  protected $environment;
-
-  /**
-   * Constructs a new helper.
-   *
-   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-   *   The environment object.
-   */
-  public function __construct(
-    EnvironmentInterface $environment
-  ) {
-    $this->environment = $environment;
-  }
+class Serialized extends StorageBase {
 
   /**
    * Stores data.

@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Storage;
 
-use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Exception\StorageException;
 
 /**
@@ -11,26 +10,7 @@ use DrupalCodeBuilder\Exception\StorageException;
  * Slightly better than DumpEval, as the resulting files get syntax highlighting
  * in text editors.
  */
-class ExportInclude {
-
-  /**
-   * The environment object.
-   *
-   * @var \DrupalCodeBuilder\Environment\EnvironmentInterface
-   */
-  protected $environment;
-
-  /**
-   * Constructs a new helper.
-   *
-   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-   *   The environment object.
-   */
-  public function __construct(
-    EnvironmentInterface $environment
-  ) {
-    $this->environment = $environment;
-  }
+class ExportInclude extends StorageBase {
 
   /**
    * Stores data.
