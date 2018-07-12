@@ -27,7 +27,10 @@ class HooksCollector8 extends HooksCollector {
         $component_name = explode('.', $filename)[0];
         $system_listing['core:' . $filename] = (object) array(
           'uri' => $file,
-          'filename' => $filename,
+          // Prefix the filename, to prevent file.api.php that's in core/lib
+          // clobbering the one for file module (and any other such WTFs that
+          // come up in future).
+          'filename' => 'CORE_' . $filename,
           'name' => basename($file, '.php'),
           'group' => 'core:' . $component_name,
           'module' => 'core',
@@ -39,7 +42,7 @@ class HooksCollector8 extends HooksCollector {
     // in a module!
     $system_listing['core.api.php'] = (object) array(
       'uri' => 'core/core.api.php',
-      'filename' => 'core.api.php',
+      'filename' => 'CORE_core.api.php',
       'name' => 'core.api',
       'group' => 'core:core',
       'module' => 'core',
@@ -72,6 +75,7 @@ class HooksCollector8 extends HooksCollector {
     // @see _drush_bootstrap_drupal_root(), index.php.
     $drupal_root = DRUPAL_ROOT;
 
+    $hook_files = [];
     foreach ($system_listing as $key => $file) {
       // Extract the module name from the path.
       // WARNING: this is not always going to be correct: will fail in the
