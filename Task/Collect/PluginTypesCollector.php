@@ -75,7 +75,40 @@ class PluginTypesCollector extends CollectorBase  {
   public function getJobList() {
     $plugin_manager_service_ids = $this->getPluginManagerServices();
 
-    return $plugin_manager_service_ids;
+    // Filter for testing sample data collection.
+    if (!empty($this->environment->sample_data_write)) {
+      // Note this is not an intersect on keys like the other collectors!
+      $plugin_manager_service_ids = array_intersect($plugin_manager_service_ids, $this->testingPluginManagerServiceIds);
+    }
+    //$plugin_manager_service_ids = ['plugin.manager.block'];
+
+    // Convert to a numeric array.
+    $job_list = [];
+    foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
+      // Derive a plugin type ID.
+      if (strpos($plugin_manager_service_id, 'plugin.manager.') === 0) {
+        // We identify plugin types where the service name follows the standard
+        // pattern by the part of the plugin manager service name that comes
+        // after 'plugin.manager.'.
+        $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
+      }
+      else {
+        // Non-standard service names often end in '.manager' or '_manager'.
+        $plugin_type_id = preg_replace('@.manager$@', '', $plugin_manager_service_id);
+      }
+
+      $job_list[] = [
+        'service_id' => $plugin_manager_service_id,
+        'type_id' => $plugin_type_id,
+      ];
+    }
+
+    // Sort by the plugin type ID.
+    usort($job_list, function($a, $b) {
+      return strcmp($a['type_id'], $b['type_id']);
+    });
+
+    return $job_list;
   }
 
   /**
@@ -86,17 +119,7 @@ class PluginTypesCollector extends CollectorBase  {
    *   details.
    */
   public function collect($job_list) {
-    $plugin_manager_service_ids = $job_list;
-
-    // Filter for testing sample data collection.
-    if (!empty($this->environment->sample_data_write)) {
-      // Note this is not an intersect on keys like the other collectors!
-      $plugin_manager_service_ids = array_intersect($plugin_manager_service_ids, $this->testingPluginManagerServiceIds);
-    }
-
-    //$plugin_manager_service_ids = ['plugin.manager.block'];
-
-    $plugin_type_data = $this->gatherPluginTypeInfo($plugin_manager_service_ids);
+    $plugin_type_data = $this->gatherPluginTypeInfo($job_list);
 
     return $plugin_type_data;
   }
@@ -162,8 +185,10 @@ class PluginTypesCollector extends CollectorBase  {
   /**
    * Detects information about plugin types from the plugin manager services.
    *
-   * @param $plugin_manager_service_ids
-   *  An array of service IDs.
+   * @param $job_list
+   *  A numeric array whose values are arrays containing:
+   *  - 'service_id': The service ID of the plugin type manager.
+   *  - 'type_id': The derived ID of the plugin type.
    *
    * @return
    *  The assembled plugin type data. This is an array keyed by plugin type ID.
@@ -229,17 +254,9 @@ class PluginTypesCollector extends CollectorBase  {
     // Assemble a basic array of plugin type data, that we will successively add
     // data to.
     $plugin_type_data = array();
-    foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
-      if (strpos($plugin_manager_service_id, 'plugin.manager.') === 0) {
-        // We identify plugin types where the service name follows the standard
-        // pattern by the part of the plugin manager service name that comes
-        // after 'plugin.manager.'.
-        $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
-      }
-      else {
-        // Non-standard service names often end in '.manager' or '_manager'.
-        $plugin_type_id = preg_replace('@.manager$@', '', $plugin_manager_service_id);
-      }
+    foreach ($plugin_manager_service_ids as $data) {
+      $plugin_manager_service_id = $data['service_id'];
+      $plugin_type_id = $data['type_id'];
 
       // Get the class name for the service.
       // Babysit modules that don't define services properly!
@@ -290,9 +307,6 @@ class PluginTypesCollector extends CollectorBase  {
     // We get data on all plugin types in one go, so this handles the whole
     // data.
     $this->addPluginModuleData($plugin_type_data);
-
-    // Sort by ID.
-    ksort($plugin_type_data);
 
     //drush_print_r($plugin_type_data);
 

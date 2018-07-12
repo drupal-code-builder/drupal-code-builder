@@ -17,7 +17,20 @@ class HooksCollector7 extends HooksCollector {
     // present in the codebase (rather than needing to be downloaded from an
     // online code repository viewer as is the case in previous versions of
     // Drupal).
-    return \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
+    $system_listing = \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
+
+    // Convert the file objects into arrays.
+    $api_files = [];
+    // Ignore the key; it's repeated in the object anyway.
+    foreach ($system_listing as $filename => $file) {
+      $api_files[$filename] = (array) $file;
+    }
+
+    // Sort by the filename key.
+    ksort($api_files);
+
+    // Strip the key out for the job list.
+    return array_values($api_files);
   }
 
   /**
@@ -38,7 +51,9 @@ class HooksCollector7 extends HooksCollector {
 
     //print_r($system_listing);
 
-    foreach ($system_listing as $filename => $file) {
+    foreach ($system_listing as $file) {
+      $filename = $file['filename'];
+
       // Extract the module name from the path.
       // WARNING: this is not always going to be correct: will fail in the
       // case of submodules. So Commerce is a big problem here.
@@ -46,14 +61,14 @@ class HooksCollector7 extends HooksCollector {
       // have multiple API files with suffixed names, eg Services.
       // @todo: make this more robust, somehow!
       $matches = array();
-      preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
+      preg_match('@modules/(?:contrib/)?(\w+)@', $file['uri'], $matches);
       //print_r($matches);
       $module = $matches[1];
 
       $hook_files[$filename] = array(
-        'original' => $drupal_root . '/' . $file->uri, // no idea if useful
+        'original' => $drupal_root . '/' . $file['uri'], // no idea if useful
         'filename' => $filename,
-        'path' => $directory . '/' . $file->filename,
+        'path' => $directory . '/' . $filename,
         'destination' => '%module.module', // Default. We override this below.
         'group'       => $module, // @todo specialize this?
         'module'      => $module,

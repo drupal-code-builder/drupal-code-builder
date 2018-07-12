@@ -65,8 +65,12 @@ abstract class CollectorBase {
    * back in successive batches.)
    *
    * @return array|null
-   *   An array of job data, subsets of which can be passed to collect(), or
-   *   NULL to indicate that this collector does not support batched analysis.
+   *   A numeric array of job data, subsets of which can be passed to collect(),
+   *   or NULL to indicate that this collector does not support batched
+   *   analysis. Each job item in the array should itself be an array of data.
+   *   The elements in the array are internal to the Collector class, but the
+   *   keys 'collector' and 'last' is reserved. Collector classes should perform
+   *   sorting in this method, rather than later on during collect().
    */
   abstract public function getJobList();
 

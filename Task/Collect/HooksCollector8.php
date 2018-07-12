@@ -15,6 +15,13 @@ class HooksCollector8 extends HooksCollector {
   public function getJobList() {
     $system_listing = \DrupalCodeBuilder\Factory::getEnvironment()->systemListing('/\.api\.php$/', 'modules', 'filename');
 
+    // Convert the file objects into arrays.
+    $api_files = [];
+    // Keep the key for now so we can sort by it.
+    foreach ($system_listing as $filename => $file) {
+      $api_files[$filename] = (array) $file;
+    }
+
     // Add in api.php files in core/lib.
     $core_directory = new \RecursiveDirectoryIterator('core/lib/Drupal');
     $iterator = new \RecursiveIteratorIterator($core_directory);
@@ -25,7 +32,7 @@ class HooksCollector8 extends HooksCollector {
         $filename = basename($file);
 
         $component_name = explode('.', $filename)[0];
-        $system_listing['core:' . $filename] = (object) array(
+        $api_files['core:' . $filename] = array(
           'uri' => $file,
           // Prefix the filename, to prevent file.api.php that's in core/lib
           // clobbering the one for file module (and any other such WTFs that
@@ -40,7 +47,7 @@ class HooksCollector8 extends HooksCollector {
 
     // Add in core.api.php, which won't have been picked up because it's not
     // in a module!
-    $system_listing['core.api.php'] = (object) array(
+    $api_files['core.api.php'] = array(
       'uri' => 'core/core.api.php',
       'filename' => 'CORE_core.api.php',
       'name' => 'core.api',
@@ -48,7 +55,12 @@ class HooksCollector8 extends HooksCollector {
       'module' => 'core',
     );
 
-    return $system_listing;
+    // Sort by the key, which is the filename for module files, and the group
+    // for core files.
+    ksort($api_files);
+
+    // Strip the key out for the job list.
+    return array_values($api_files);
   }
 
   /**
@@ -66,7 +78,7 @@ class HooksCollector8 extends HooksCollector {
    *  - core:foo.api.php: The API file in a Drupal component.
    *  - core.api.php: The single core.api.php file.
    */
-  protected function gatherHookDocumentationFiles($system_listing) {
+  protected function gatherHookDocumentationFiles($api_files) {
     // Get the hooks directory.
     $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
 
@@ -76,31 +88,33 @@ class HooksCollector8 extends HooksCollector {
     $drupal_root = DRUPAL_ROOT;
 
     $hook_files = [];
-    foreach ($system_listing as $key => $file) {
+    foreach ($api_files as $file) {
+      $filename = $file['filename'];
+
       // Extract the module name from the path.
       // WARNING: this is not always going to be correct: will fail in the
       // case of submodules. So Commerce is a big problem here.
       // We could instead assume we have MODULE.api.php, but some modules
       // have multiple API files with suffixed names, eg Services.
       // @todo: make this more robust, somehow!
-      if (!isset($file->module)) {
+      if (!isset($file['module'])) {
         $matches = array();
-        preg_match('@modules/(?:contrib/)?(\w+)@', $file->uri, $matches);
+        preg_match('@modules/(?:contrib/)?(\w+)@', $file['uri'], $matches);
         //print_r($matches);
-        $file->module = $matches[1];
-        $file->group = $file->module;
+        $file['module'] = $matches[1];
+        $file['group'] = $file['module'];
       }
       //dsm($matches, $module);
 
       // Mark core files.
-      $core = (substr($file->uri, 0, 4) == 'core');
+      $core = (substr($file['uri'], 0, 4) == 'core');
 
-      $hook_files[$key] = array(
-        'original' => $drupal_root . '/' . $file->uri, // no idea if useful
-        'path' => $directory . '/' . $file->filename,
+      $hook_files[$filename] = array(
+        'original' => $drupal_root . '/' . $file['uri'], // no idea if useful
+        'path' => $directory . '/' . $file['filename'],
         'destination' => '%module.module', // Default. We override this below.
-        'group'       => $file->group,
-        'module'      => $file->module,
+        'group'       => $file['group'],
+        'module'      => $file['module'],
         'core'        => $core,
       );
     }
@@ -124,10 +138,10 @@ class HooksCollector8 extends HooksCollector {
 
     // Incoming data is destination key, array of hooks.
     // (Because it makes typing the data out easier! Computers can just adapt.)
-    foreach ($data as $module => $module_data) {
+    foreach ($data as $file_basename => $module_data) {
       // The key in $hook_files we correspond to
       // @todo, possibly: this feels like slightly shaky ground.
-      $filename = "$module.api.php";
+      $filename = "$file_basename.api.php";
 
       // Skip filenames we haven't already found, so we don't pollute our data
       // array with hook destination data for files that don't exist here.
@@ -176,8 +190,11 @@ class HooksCollector8 extends HooksCollector {
     $info = array(
       // Hooks on behalf of Drupal core.
       // api.php files that are in core rather than in a module have a prefix of
-      // 'core:'.
-      'core:module' => array(
+      // 'CORE_'.
+      // TODO: clarify and document what this key represents. It's sort of the
+      // api file basename, unless it's a file from core components rather than
+      // a module.
+      'CORE_module' => array(
         'hook_destinations' => array(
           '%module.install' => array(
             'hook_requirements',
