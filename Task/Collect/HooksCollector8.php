@@ -138,10 +138,10 @@ class HooksCollector8 extends HooksCollector {
 
     // Incoming data is destination key, array of hooks.
     // (Because it makes typing the data out easier! Computers can just adapt.)
-    foreach ($data as $file_basename => $module_data) {
+    foreach ($data as $module => $module_data) {
       // The key in $hook_files we correspond to
       // @todo, possibly: this feels like slightly shaky ground.
-      $filename = "$file_basename.api.php";
+      $filename = "$module.api.php";
 
       // Skip filenames we haven't already found, so we don't pollute our data
       // array with hook destination data for files that don't exist here.
