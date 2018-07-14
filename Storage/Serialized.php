@@ -10,12 +10,7 @@ use DrupalCodeBuilder\Exception\StorageException;
 class Serialized extends StorageBase {
 
   /**
-   * Stores data.
-   *
-   * @param string $key
-   *   The indentifier for the data, e.g. 'hooks'.
-   * @param array $data
-   *   The data to store.
+   * {@inheritdoc}
    */
   public function store($key, $data) {
     $directory = $this->environment->getHooksDirectory();
@@ -24,13 +19,7 @@ class Serialized extends StorageBase {
   }
 
   /**
-   * Retrieves data.
-   *
-   * @param string $key
-   *   The indentifier for the data, e.g. 'hooks'.
-   *
-   * @return $data
-   *   The data that was given to store().
+   * {@inheritdoc}
    */
   public function retrieve($key) {
     $directory = $this->environment->getHooksDirectory();
@@ -45,8 +34,6 @@ class Serialized extends StorageBase {
       return $data;
     }
 
-    // Sanity checks ensure we never get here, but in case they have been
-    // skipped, return something that makes sense to the caller.
     return [];
   }
 

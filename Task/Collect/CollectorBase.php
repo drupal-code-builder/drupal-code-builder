@@ -60,16 +60,24 @@ abstract class CollectorBase {
   /**
    * Produces the list of jobs for this collector.
    *
-   * (The idea is that in 3.3.x, this list will be used by UIs that can perform
-   * the analysis in batches to get a complete list of the jobs, to then pass
-   * back in successive batches.)
+   * This is used by collectComponentDataIncremental() to give UIs a list of
+   * jobs they can then call in batches, and internally by
+   * collectComponentData() to simply perform the whole analysis in one go.
    *
    * @return array|null
    *   A numeric array of job data, subsets of which can be passed to collect(),
    *   or NULL to indicate that this collector does not support batched
    *   analysis. Each job item in the array should itself be an array of data.
-   *   The elements in the array are internal to the Collector class, but the
-   *   keys 'collector' and 'last' is reserved. Collector classes should perform
+   *   The elements in the array are internal to the Collector class, except for
+   *   the following keys:
+   *   - 'process_label': Should be set to a human-readable string describing
+   *     the process being run. This should be the same for each job from a
+   *     particular collector.
+   *   - 'item_label': Should be set to a human-readable string for the
+   *     particular item.
+   *   - 'collector': Reserved for Collect task use.
+   *   - 'last': Reserved for Collect task use.
+   *   Collector classes should perform
    *   sorting in this method, rather than later on during collect().
    */
   abstract public function getJobList();
@@ -84,5 +92,24 @@ abstract class CollectorBase {
    *   The array of analysis data.
    */
   abstract public function collect($job_list);
+
+  /**
+   * Merge incrementally collected data.
+   *
+   * @param array $existing_data
+   *   An array of data in the format returned by collect().
+   * @param array $new_data
+   *   An array of data in the format returned by collect().
+   *
+   * @return
+   *   The result of the merge.
+   */
+  public function mergeComponentData($existing_data, $new_data) {
+    // Top-level merge is fine for collectors that just return an array of data
+    // keyed by an ID.
+    $merged_data = array_merge($existing_data, $new_data);
+
+    return $merged_data;
+  }
 
 }

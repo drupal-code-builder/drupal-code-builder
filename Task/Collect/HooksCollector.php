@@ -71,6 +71,19 @@ abstract class HooksCollector extends CollectorBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function mergeComponentData($existing_data, $new_data) {
+    foreach ($new_data as $group => $group_data) {
+      foreach ($group_data as $hook => $hook_data) {
+        $existing_data[$group][$hook] = $hook_data;
+      }
+    }
+
+    return $existing_data;
+  }
+
+  /**
    * Gather hook documentation files.
    *
    * This adds extra data to the list of files retrieved by getJobList().

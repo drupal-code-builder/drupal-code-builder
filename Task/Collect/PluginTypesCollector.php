@@ -100,6 +100,8 @@ class PluginTypesCollector extends CollectorBase  {
       $job_list[] = [
         'service_id' => $plugin_manager_service_id,
         'type_id' => $plugin_type_id,
+        'process_label' => 'plugin type',
+        'item_label' => $plugin_manager_service_id,
       ];
     }
 
@@ -250,13 +252,13 @@ class PluginTypesCollector extends CollectorBase  {
    *  Due to the difficult nature of analysing the code for plugin types, some
    *  of these properties may be empty if they could not be deduced.
    */
-  protected function gatherPluginTypeInfo($plugin_manager_service_ids) {
+  protected function gatherPluginTypeInfo($job_list) {
     // Assemble a basic array of plugin type data, that we will successively add
     // data to.
     $plugin_type_data = array();
-    foreach ($plugin_manager_service_ids as $data) {
-      $plugin_manager_service_id = $data['service_id'];
-      $plugin_type_id = $data['type_id'];
+    foreach ($job_list as $job) {
+      $plugin_manager_service_id = $job['service_id'];
+      $plugin_type_id = $job['type_id'];
 
       // Get the class name for the service.
       // Babysit modules that don't define services properly!

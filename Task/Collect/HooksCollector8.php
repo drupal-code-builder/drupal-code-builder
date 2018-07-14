@@ -20,6 +20,9 @@ class HooksCollector8 extends HooksCollector {
     // Keep the key for now so we can sort by it.
     foreach ($system_listing as $filename => $file) {
       $api_files[$filename] = (array) $file;
+
+      $api_files[$filename]['process_label'] = 'hooks';
+      $api_files[$filename]['item_label'] = $filename;
     }
 
     // Add in api.php files in core/lib.
@@ -41,6 +44,8 @@ class HooksCollector8 extends HooksCollector {
           'name' => basename($file, '.php'),
           'group' => 'core:' . $component_name,
           'module' => 'core',
+          'process_label' => 'hooks',
+          'item_label' => $filename,
         );
       }
     }
@@ -53,6 +58,8 @@ class HooksCollector8 extends HooksCollector {
       'name' => 'core.api',
       'group' => 'core:core',
       'module' => 'core',
+      'process_label' => 'hooks',
+      'item_label' => 'core.api.php',
     );
 
     // Sort by the key, which is the filename for module files, and the group

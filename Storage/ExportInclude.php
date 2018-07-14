@@ -13,12 +13,7 @@ use DrupalCodeBuilder\Exception\StorageException;
 class ExportInclude extends StorageBase {
 
   /**
-   * Stores data.
-   *
-   * @param string $key
-   *   The indentifier for the data, e.g. 'hooks'.
-   * @param array $data
-   *   The data to store.
+   * {@inheritdoc}
    */
   public function store($key, $data) {
     $directory = $this->environment->getHooksDirectory();
@@ -27,13 +22,7 @@ class ExportInclude extends StorageBase {
   }
 
   /**
-   * Retrieves data.
-   *
-   * @param string $key
-   *   The indentifier for the data, e.g. 'hooks'.
-   *
-   * @return $data
-   *   The data that was given to store().
+   * {@inheritdoc}
    */
   public function retrieve($key) {
     $directory = $this->environment->getHooksDirectory();
@@ -52,8 +41,8 @@ class ExportInclude extends StorageBase {
       return $data;
     }
 
-    // Sanity checks ensure we never get here, but in case they have been
-    // skipped, return something that makes sense to the caller.
+    // Incremental code analysis will call this method before anything has been
+    // saved, so if the file doesn't exist just return an empty array.
     return [];
   }
 

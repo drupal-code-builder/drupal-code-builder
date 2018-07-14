@@ -24,6 +24,8 @@ class HooksCollector7 extends HooksCollector {
     // Ignore the key; it's repeated in the object anyway.
     foreach ($system_listing as $filename => $file) {
       $api_files[$filename] = (array) $file;
+      $api_files[$filename]['process_label'] = 'hooks';
+      $api_files[$filename]['item_label'] = $filename;
     }
 
     // Sort by the filename key.
