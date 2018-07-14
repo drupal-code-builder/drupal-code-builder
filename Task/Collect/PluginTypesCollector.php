@@ -1110,7 +1110,7 @@ class PluginTypesCollector extends CollectorBase  {
       $plugin_type_id = substr($plugin_manager_service_id, strlen('plugin.manager.'));
 
       if (!isset($plugin_type_data[$plugin_type_id])) {
-        return;
+        continue;
       }
 
       // Replace the default label with the one from Plugin module, casting it
