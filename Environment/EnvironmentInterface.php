@@ -78,7 +78,7 @@ interface EnvironmentInterface {
   public function getCoreMajorVersion();
 
   /**
-  * Get path to the directory where collected data about hooks is stored.
+  * Get path to the directory where data from code analysis is stored.
   *
   * Depending on our environment this is either relative to Drupal root or
   * absolute, but in either case it is in a format that other environment
@@ -90,6 +90,13 @@ interface EnvironmentInterface {
    *
    * @return string
    *  The path to the directory.
+   */
+  public function getDataDirectory();
+
+  /**
+   * Same as getDataDirectory().
+   *
+   * @deprecated
    */
   public function getHooksDirectory();
 

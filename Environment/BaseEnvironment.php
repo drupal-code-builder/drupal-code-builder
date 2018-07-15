@@ -115,12 +115,19 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   /**
    * {@inheritdoc}
    */
-  public function getHooksDirectory() {
+  public function getDataDirectory() {
     if (empty($this->hooks_directory)) {
       $this->getHooksDirectorySetting();
     }
 
     return $this->hooks_directory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHooksDirectory() {
+    return $this->getDataDirectory();
   }
 
   /**
