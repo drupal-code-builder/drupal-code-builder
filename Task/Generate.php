@@ -159,6 +159,9 @@ class Generate extends Base {
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
    *  values are the code destined for each file.
+   *
+   * @throws \DrupalCodeBuilder\Exception\InvalidInputException
+   *   Throws an exception if the given data is invalid.
    */
   public function generateComponent($component_data, $existing_module_files = []) {
     // Add the top-level component to the data.
