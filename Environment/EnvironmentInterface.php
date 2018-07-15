@@ -20,6 +20,20 @@ interface EnvironmentInterface {
   public function setCoreVersionNumber($drupal_core_version);
 
   /**
+   * Sets the storage type to use for analysis data.
+   *
+   * @param string $storage_class
+   *  The short name of the storage class to set on the factory, relative to the
+   *  \DrupalCodeBuilder\Storage namespace. If empty (because the configuration
+   *  doesn't exist, for example), then nothing is set. This allows UI to not
+   *  need to know the default.
+   *
+   * @return
+   *  The environment object.
+   */
+  public function setStorageLocalClass($storage_class);
+
+  /**
    * Sanity check our basic environment to a specified level.
    *
    * This is called by DrupalCodeBuilder\Factory when a Task is requested from it.

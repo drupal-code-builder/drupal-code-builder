@@ -104,6 +104,17 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   /**
    * {@inheritdoc}
    */
+  public function setStorageLocalClass($storage_class) {
+    if ($storage_class) {
+      $this->storageType = $storage_class;
+    }
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getHooksDirectory() {
     if (empty($this->hooks_directory)) {
       $this->getHooksDirectorySetting();
