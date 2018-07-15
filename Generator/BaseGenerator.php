@@ -159,8 +159,11 @@ abstract class BaseGenerator {
    *      determined from the 'component_type' property.
    *  - 'primary': (optional) Boolean indicating that this property should be
    *    considered the principal property for this component. Only one property
-   *    in a component may be declared as primary. Currently internal only.
-   *    TODO: make this part of the API for 3.3.x.
+   *    in a component may be declared as primary. Internally, this is used to
+   *    determine the property to set when expanding a compound property with
+   *    format set to 'array'. UIs may use this to pick a value from a
+   *    component's data to use as a heading, falling back to the first property
+   *    if no properties are have this set.
    *  - 'default': (optional) The default value for the property. This is either
    *    a static value, or a callable, in which case it must be called with the
    *    array of component data assembled so far. Depending on the value of
