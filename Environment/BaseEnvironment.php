@@ -79,6 +79,8 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     $helper_class_name = '\DrupalCodeBuilder\Environment\VersionHelper' . $major_version;
 
     $this->version_helper = new $helper_class_name();
+
+    return $this;
   }
 
   /**
@@ -89,9 +91,14 @@ abstract class BaseEnvironment implements EnvironmentInterface {
    *
    * @param $version_helper
    *  The version helper object.
+   *
+   * @return $this
+   *  The environment object.
    */
   public function setCoreVersionHelper($version_helper) {
     $this->version_helper = $version_helper;
+
+    return $this;
   }
 
   /**

@@ -13,6 +13,9 @@ interface EnvironmentInterface {
    * @param int|string
    *  The Drupal core version. May be either just the major number, such as 8,
    *  or a complete version number string, such as '8.2.x'.
+   *
+   * @return $this
+   *  The environment object.
    */
   public function setCoreVersionNumber($drupal_core_version);
 
