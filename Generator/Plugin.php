@@ -142,6 +142,20 @@ class Plugin extends PHPClassFileWithInjection {
       'parent_plugin_id' => [
         'label' => 'Parent class plugin ID',
         'description' => "Use another plugin's class as the parent class for this plugin.",
+        'validation' => function($property_name, $property_info, $component_data) {
+          if (!empty($component_data['parent_plugin_id'])) {
+            // TODO: go via the environment for testing!
+            try {
+              $plugin_definition = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->getDefinition($component_data['parent_plugin_id']);
+            }
+            catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $plugin_exception) {
+              return ["There is no plugin '@plugin-id' of type '@plugin-type'.", [
+                '@plugin-id' => $component_data['parent_plugin_id'],
+                '@plugin-type' => $component_data['plugin_type']
+              ]];
+            }
+          }
+        },
       ],
       'replace_parent_plugin' => [
         'label' => 'Replace parent plugin',
