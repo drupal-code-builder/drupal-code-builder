@@ -203,6 +203,11 @@ abstract class BaseGenerator {
    *  - 'options_allow_other': DEPRECATED, will be removed by 4.0.0. (optional)
    *    If TRUE, specifies that values outside the list of options are
    *    allowable.
+   * - 'validation': (optional) A callback to validate the value for this
+   *    property. Validation is optional: UIs are not required to perform it,
+   *    therefore, any checking should also be done in the processing callback.
+   *    TODO: Figure out whether the processing system should just call
+   *    validation to take care of this.
    *  - 'processing': (optional) A callback to process input values into the
    *    final format for the component data array. Any changes values should be
    *    placed into the data array. This is called by
