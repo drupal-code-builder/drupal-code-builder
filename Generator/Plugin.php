@@ -144,9 +144,18 @@ class Plugin extends PHPClassFileWithInjection {
         'description' => "Use another plugin's class as the parent class for this plugin.",
         'validation' => function($property_name, $property_info, $component_data) {
           if (!empty($component_data['parent_plugin_id'])) {
+            $plugin_type = $component_data['plugin_type'];
+
+            $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+            $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
+
+            // The plugin type has already been validated by the plugin_type property's
+            // processing.
+            $plugin_service_id = $plugin_types_data[$plugin_type]['service_id'];
+
             // TODO: go via the environment for testing!
             try {
-              $plugin_definition = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->getDefinition($component_data['parent_plugin_id']);
+              $plugin_definition = \Drupal::service($plugin_service_id)->getDefinition($component_data['parent_plugin_id']);
             }
             catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $plugin_exception) {
               return ["There is no plugin '@plugin-id' of type '@plugin-type'.", [
@@ -166,9 +175,18 @@ class Plugin extends PHPClassFileWithInjection {
         'computed' => TRUE,
         'default' => function($component_data) {
           if (!empty($component_data['parent_plugin_id'])) {
+            $plugin_type = $component_data['plugin_type'];
+
+            $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+            $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
+
+            // The plugin type has already been validated by the plugin_type property's
+            // processing.
+            $plugin_service_id = $plugin_types_data[$plugin_type]['service_id'];
+
             // TODO: go via the environment for testing!
             try {
-              $plugin_definition = \Drupal::service('plugin.manager.' . $component_data['plugin_type'])->getDefinition($component_data['parent_plugin_id']);
+              $plugin_definition = \Drupal::service($plugin_service_id)->getDefinition($component_data['parent_plugin_id']);
             }
             catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $plugin_exception) {
               // Rethrow as something that UIs will catch.
