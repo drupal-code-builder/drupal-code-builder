@@ -612,7 +612,6 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     if ($this->component_data['admin_permission_name']) {
       $annotation_data['admin_permission'] = $this->component_data['admin_permission_name'];
-      $handler_class = substr($handler_class, 1);
     }
 
     return $annotation_data;
