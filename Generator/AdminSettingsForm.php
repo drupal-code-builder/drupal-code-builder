@@ -49,7 +49,7 @@ class AdminSettingsForm extends Form {
     $components['route'] = array(
       'component_type' => 'RouterItem',
       // Specify this so we can refer to it in the menu link.
-      'route_name' => '%module.settings',
+      'route_name' => "{$this->component_data['root_component_name']}.settings",
       // OK to use a token here, as the YAML value for this will be quoted
       // anyway.
       'path' => $settings_form_path,
@@ -67,7 +67,7 @@ class AdminSettingsForm extends Form {
       'plugin_properties' => [
         'title' => '%Module',
         'description' => 'Configure the settings for %Module.',
-        'route_name' => '%module.settings',
+        'route_name' => "{$this->component_data['root_component_name']}.settings",
         'parent' => $this->component_data['parent_route'],
       ],
     ];
