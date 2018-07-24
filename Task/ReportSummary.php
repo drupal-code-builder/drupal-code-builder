@@ -103,6 +103,16 @@ class ReportSummary extends ReportHookDataFolder {
       'count' => count($data),
     ];
 
+    // Admin routes.
+    $task = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');
+    $data = $task->listAdminRoutesOptions();
+
+    $return['admin_routes'] = [
+      'label' => 'Admin routes',
+      'list' => $data,
+      'count' => count($data),
+    ];
+
     return $return;
   }
 
