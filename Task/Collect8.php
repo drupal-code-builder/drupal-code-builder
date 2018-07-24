@@ -26,6 +26,7 @@ class Collect8 extends Collect {
     'ServiceTagTypesCollector',
     'FieldTypesCollector',
     'DataTypesCollector',
+    'AdminRoutesCollector',
   ];
 
   /**
