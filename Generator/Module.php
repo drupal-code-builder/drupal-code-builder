@@ -147,7 +147,8 @@ class Module extends RootComponent {
         'label' => "Admin settings form",
         'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
         'required' => FALSE,
-        'format' => 'boolean',
+        'format' => 'compound',
+        'cardinality' => 1,
         'component_type' => 'AdminSettingsForm',
       ),
       'forms' => array(

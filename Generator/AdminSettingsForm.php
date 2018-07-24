@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Utility\InsertArray;
+
 /**
  * Component generator: admin form for modules.
  */
@@ -13,6 +15,14 @@ class AdminSettingsForm extends Form {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
+    $parent_route_property['parent_route'] = [
+      'label' => 'Parent menu item',
+      'options' => 'ReportAdminRoutes:listAdminRoutesOptions',
+      'required' => TRUE,
+    ];
+    InsertArray::insertBefore($data_definition, 'injected_services', $parent_route_property);
+
+    $data_definition['form_class_name']['internal'] = TRUE;
     $data_definition['form_class_name']['default'] = 'AdminSettingsForm';
     $data_definition['form_class_name']['process_default'] = TRUE;
 
@@ -29,13 +39,20 @@ class AdminSettingsForm extends Form {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    $components['admin/config/TODO-SECTION/%module'] = array(
+    $task_handler_report_admin_routes = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');
+    $admin_routes = $task_handler_report_admin_routes->listAdminRoutes();
+
+    $parent_route_data = $admin_routes[$this->component_data['parent_route']];
+
+    $settings_form_path = ltrim($parent_route_data['path'], '/') . '/%module';
+
+    $components['route'] = array(
       'component_type' => 'RouterItem',
       // Specify this so we can refer to it in the menu link.
       'route_name' => '%module.settings',
       // OK to use a token here, as the YAML value for this will be quoted
       // anyway.
-      'path' => 'admin/config/TODO-SECTION/%module',
+      'path' => $settings_form_path,
       'title' => 'Administer %readable',
       'controller_type' => 'form',
       'controller_type_value' => '\\' . $this->component_data['qualified_class_name'],
@@ -51,7 +68,7 @@ class AdminSettingsForm extends Form {
         'title' => '%Module',
         'description' => 'Configure the settings for %Module.',
         'route_name' => '%module.settings',
-        'parent' => 'system.admin_config_system',
+        'parent' => $this->component_data['parent_route'],
       ],
     ];
 
@@ -63,7 +80,7 @@ class AdminSettingsForm extends Form {
     $components['info_configuration'] = array(
       'component_type' => 'InfoProperty',
       'property_name' => 'configure',
-      'property_value' => 'admin/config/TODO-SECTION/%module',
+      'property_value' => $settings_form_path,
     );
 
     $components["config/schema/%module.schema.yml"] = [
