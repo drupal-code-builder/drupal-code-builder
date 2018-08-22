@@ -71,9 +71,8 @@ class FieldTypesCollector extends CollectorBase  {
         // Labels and descriptions need to be stringified from
         // TranslatableMarkup.
         'label' => (string) $plugin_definition['label'],
-        'description' => $plugin_definition['description'] ?
-          (string) $plugin_definition['description'] :
-          (string) $plugin_definition['label'],
+        // Some field types brokenly don't define a description.
+        'description' => (string) ( $plugin_definition['description'] ?? $plugin_definition['label'] ),
         // Some of the weirder plugins don't have these.
         'default_widget' => $plugin_definition['default_widget'] ?? '',
         'default_formatter' => $plugin_definition['default_formatter'] ?? '',
