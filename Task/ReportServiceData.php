@@ -87,6 +87,12 @@ class ReportServiceData extends ReportHookDataFolder {
       $this->serviceData = $this->environment->getStorage()->retrieve('services');
     }
 
+    // Populate the keys, in case analysis crashed.
+    $this->serviceData += [
+      'primary' => [],
+      'all' => [],
+    ];
+
     return $this->serviceData;
   }
 
