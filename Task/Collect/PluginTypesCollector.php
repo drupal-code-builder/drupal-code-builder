@@ -47,9 +47,6 @@ class PluginTypesCollector extends CollectorBase  {
 
   /**
    * List of plugins known to be broken.
-   *
-   * TODO: Remove this once I figure out how to catch \Throwables within
-   * Drupal!
    */
   protected $brokenPlugins = [
     'migrate.destination' => [
@@ -628,6 +625,15 @@ class PluginTypesCollector extends CollectorBase  {
         return;
       }
 
+      // Babysit plugins which crash. This happens a lot more often than you'd
+      // think, as some just never get instantiated in normal operation and have
+      // clearly not been properly tested! Typically, this is caused by the
+      // plugin class not not correctly implementing the interface, often due to
+      // method typehints.
+      if (isset($this->brokenPlugins[$data['type_id']][$plugin_id])) {
+        continue;
+      }
+
       // Skip any class that we can't attempt to load without a fatal. This will
       // typically happen if the plugin is meant for use with another module,
       // and inherits from a base class that doesn't exist in the current
@@ -636,21 +642,9 @@ class PluginTypesCollector extends CollectorBase  {
         continue;
       }
 
-      // Babysit plugins which crash. This happens a lot more often than you'd
-      // think, as some just never get instantiated in normal operation and have
-      // clearly not been properly tested!
-      if (isset($this->brokenPlugins[$data['type_id']][$plugin_id])) {
-        continue;
-      }
-
       // Babysit modules that have a broken plugin class. A number of things can
-      // go wrong:
-      // - Fatal errors caused by the plugin class not correctly implementing
-      //   the interface, often due to method typehints.
-      // - Fatal errors due to the namespace being incorrect for the file
-      //   location, preventing the class from being autoloaded.
-      // TODO: catching a \Throwable doesn't work in Drupal, presumably due to
-      // custom error handling!
+      // go wrong, including the namespace being incorrect for the file
+      // location, preventing the class from being autoloaded.
       try {
         if (!class_exists($plugin_class)) {
           // Skip just this plugin.
