@@ -34,6 +34,9 @@ class Module7 extends Module {
       'component_type' => 'RouterItem',
     ];
 
+    $component_data_definition['settings_form']['format'] = 'boolean';
+    unset($component_data_definition['settings_form']['cardinality']);
+
     return $component_data_definition;
   }
 
