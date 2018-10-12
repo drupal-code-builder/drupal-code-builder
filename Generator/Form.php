@@ -89,7 +89,8 @@ class Form extends PHPClassFileWithInjection {
         'doxygen_first' => 'Form constructor.',
         'function_name' => 'buildForm',
         'body' => array(
-          "£form = parent::buildForm(£form, £form_state);",
+          "// Uncomment this line if you change the base class.",
+          "// £form = parent::buildForm(£form, £form_state);",
           "",
           "£form['element'] = array(",
           "  '#type' => 'textfield',",
