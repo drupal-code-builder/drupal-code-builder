@@ -82,7 +82,7 @@ class PHPMethodTester {
    *   The form builder tester object.
    */
   public function getFormBuilderTester() {
-    return new FormBuilderTester($this->methodNode);
+    return new FormBuilderTester($this->methodNode, $this->fileTester);
   }
 
   /**

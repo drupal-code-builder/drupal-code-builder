@@ -26,26 +26,52 @@ class FormBuilderTester extends PHPMethodTester {
   protected $formElements = [];
 
   /**
+   * Whether the form class inherits from FormBase directly.
+   *
+   * @var bool
+   */
+  protected $immediateParentIsBase;
+
+  /**
    * Construct a new FormBuilderTester.
    *
    * @param \PhpParser\Node\Stmt\ClassMethod $method_node
    *   The PhpParser method node.
    */
-  public function __construct(ClassMethod $method_node) {
+  public function __construct(ClassMethod $method_node, PHPTester $file_tester) {
     $this->methodNode = $method_node;
     $this->methodName = $method_node->name;
+    $this->fileTester = $file_tester;
+
+    // Check the parent class.
+    $class_node = reset($this->fileTester->parser_nodes['classes']);
+    $parent_class_short_name = $class_node->extends->parts[0];
+    // Strictly speaking we should check the whole class name but eh CBA.
+    $this->immediateParentIsBase = ($parent_class_short_name == 'FormBase');
 
     // TODO: assert the form builder has the right parameters.
 
-    $this->assertStatementIsParentCallAssignment(0, 'form', "The form builder's first statement is a call to the parent.");
+    // Don't check for a call to the parent method if this form inherits from
+    // FormBase, as formBuilder() is abstract there.
+    if (!$this->immediateParentIsBase) {
+      $this->assertStatementIsParentCallAssignment(0, 'form', "The form builder's first statement is a call to the parent.");
+    }
 
     $this->assertReturnsVariable('form', "The form builder returns the completed form.");
 
     // Get the form element statements.
     $statements = $this->methodNode->getStmts();
-    // We know the first statement is the parent call, and the last is the
-    // return.
-    $form_element_statements = array_slice($statements, 1, -1);
+
+    if ($this->immediateParentIsBase) {
+      $first_element_index = 0;
+    }
+    else {
+      // The first statement is the parent call.
+      $first_element_index = 1;
+    }
+
+    // We know the last statement is the return.
+    $form_element_statements = array_slice($statements, $first_element_index, -1);
 
     // Analyse each statement to build up information about the form element
     // it represents.
