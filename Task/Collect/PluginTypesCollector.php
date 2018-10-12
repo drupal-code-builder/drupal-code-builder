@@ -607,6 +607,11 @@ class PluginTypesCollector extends CollectorBase  {
 
     $service = \Drupal::service($data['service_id']);
     $definitions = $service->getDefinitions();
+
+    // Keep track of the classes we've seen, so we can skip derivative plugins
+    // that have the same class.
+    $plugin_classes = [];
+
     foreach ($definitions as $plugin_id => $definition) {
       if (is_array($definition)) {
         // We can't work with plugins that don't define a class: skip the whole
@@ -624,6 +629,12 @@ class PluginTypesCollector extends CollectorBase  {
         // Skip the whole plugin type: no idea how to handle it.
         return;
       }
+
+      // Skip classes we've seen already.
+      if (isset($plugin_classes[$plugin_class])) {
+        continue;
+      }
+      $plugin_classes[$plugin_class] = TRUE;
 
       // Babysit plugins which crash. This happens a lot more often than you'd
       // think, as some just never get instantiated in normal operation and have
