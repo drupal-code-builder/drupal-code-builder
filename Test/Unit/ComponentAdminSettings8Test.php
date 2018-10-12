@@ -52,7 +52,11 @@ class ComponentAdminSettings8Test extends TestBase {
     $form_file = $files['src/Form/AdminSettingsForm.php'];
 
     $php_tester = new PHPTester($form_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards([
+      // Excluded because of the buildForm() commented-out code.
+      'Drupal.Commenting.InlineComment.SpacingAfter',
+      'Drupal.Commenting.InlineComment.InvalidEndChar',
+    ]);
     $php_tester->assertHasClass('Drupal\testmodule\Form\AdminSettingsForm');
     $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
 
