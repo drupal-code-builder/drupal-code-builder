@@ -102,7 +102,7 @@ class FormBuilderTester extends PHPMethodTester {
   public function assertElementCount($expected_count, $message = NULL) {
     $message = $message ?? "The form builder has {$expected_count} elements.";
 
-    Assert::assertCount($expected_count, $this->formElements);
+    Assert::assertCount($expected_count, $this->formElements, $message);
   }
 
   /**
