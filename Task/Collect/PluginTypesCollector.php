@@ -248,6 +248,8 @@ class PluginTypesCollector extends CollectorBase  {
    *    - 'yaml_properties': The default properties for plugins declared in YAML
    *      files. An array whose keys are property names and values are the
    *      default values.
+   *    - 'broken_plugins': (internal) An array of any plugins which could not
+   *      be correctly loaded. Keys are plugin IDs; values are a brief reason.
    *
    *  Due to the difficult nature of analysing the code for plugin types, some
    *  of these properties may be empty if they could not be deduced.
@@ -587,7 +589,7 @@ class PluginTypesCollector extends CollectorBase  {
    * @return string
    *   The base class to use when generating plugins of this type.
    */
-  protected function analysePluginTypeBaseClass($data) {
+  protected function analysePluginTypeBaseClass(&$data) {
     // Work over each plugin of this type, finding a suitable candidate for
     // base class with each one.
     $potential_base_classes = [];
@@ -628,6 +630,8 @@ class PluginTypesCollector extends CollectorBase  {
       // and inherits from a base class that doesn't exist in the current
       // codebase.
       if (!$this->codeAnalyser->classIsUsable($plugin_class)) {
+        $data['broken_plugins'][$plugin_id] = 'crashes';
+
         continue;
       }
 
@@ -636,11 +640,15 @@ class PluginTypesCollector extends CollectorBase  {
       // location, preventing the class from being autoloaded.
       try {
         if (!class_exists($plugin_class)) {
+          $data['broken_plugins'][$plugin_id] = 'no class';
+
           // Skip just this plugin.
           continue;
         }
       }
       catch (\Throwable $ex) {
+        $data['broken_plugins'][$plugin_id] = 'exception';
+
         continue;
       }
 
