@@ -185,7 +185,9 @@ class ServicesCollector extends CollectorBase  {
       if (!$this->codeAnalyser->classIsUsable($service_class)) {
         continue;
       }
-
+      if (!class_exists($service_class)) {
+        continue;
+      }
 
       // Get the short class name to use as a label.
       $service_class_pieces = explode('\\', $service_class);

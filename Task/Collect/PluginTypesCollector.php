@@ -46,19 +46,6 @@ class PluginTypesCollector extends CollectorBase  {
   ];
 
   /**
-   * List of plugins known to be broken.
-   */
-  protected $brokenPlugins = [
-    'migrate.destination' => [
-      'draggableviews' => TRUE,
-      'entity:block' => TRUE,
-    ],
-    'validation.constraint' => [
-      'RedirectSourceLinkType' => TRUE,
-    ],
-  ];
-
-  /**
    * Constructs a new helper.
    *
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
@@ -635,15 +622,6 @@ class PluginTypesCollector extends CollectorBase  {
         continue;
       }
       $plugin_classes[$plugin_class] = TRUE;
-
-      // Babysit plugins which crash. This happens a lot more often than you'd
-      // think, as some just never get instantiated in normal operation and have
-      // clearly not been properly tested! Typically, this is caused by the
-      // plugin class not not correctly implementing the interface, often due to
-      // method typehints.
-      if (isset($this->brokenPlugins[$data['type_id']][$plugin_id])) {
-        continue;
-      }
 
       // Skip any class that we can't attempt to load without a fatal. This will
       // typically happen if the plugin is meant for use with another module,
