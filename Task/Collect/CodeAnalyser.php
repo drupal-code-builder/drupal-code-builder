@@ -53,9 +53,14 @@ class CodeAnalyser {
     // Check the process to see whether it has crashed or not.
     $status = proc_get_status($this->checking_script_resource);
 
-    // Output is used only for debugging.
-    // $output = stream_get_contents($this->pipes[1]);
-    // dump($output);
+    if ($this->debug) {
+      // Output is used only for debugging.
+      // We need to trim each line so that the script can send an empty line to
+      // indicate it's done with the current class, so this loop moves on.
+      while ($line = trim(fgets($this->pipes[1]))) {
+        // dump("script output: $line");
+      }
+    }
 
     // If the script crashed, the class is bad.
     if ($status['running'] != TRUE && $status['exitcode'] != 0) {

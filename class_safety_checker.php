@@ -77,5 +77,9 @@ while ($class_to_load = trim(fgets(STDIN))) {
 
   if ($debug) {
     print "$class_to_load did not crash.\n";
+
+    // Print an empty line so the code running this script knows to stop
+    // reading from this process's STDOUT.
+    print "\n";
   }
 }
