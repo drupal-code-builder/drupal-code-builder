@@ -52,14 +52,13 @@ class CodeAnalyser {
 
     // Check the process to see whether it has crashed or not.
     $status = proc_get_status($this->checking_script_resource);
-    $exit = $status['exitcode'];
 
     // Output is used only for debugging.
     // $output = stream_get_contents($this->pipes[1]);
     // dump($output);
 
     // If the script crashed, the class is bad.
-    if ($exit != 0) {
+    if ($status['running'] != TRUE && $status['exitcode'] != 0) {
       // Close the process so the script is reinitialized TODO
       proc_close($this->checking_script_resource);
 
