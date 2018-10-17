@@ -102,7 +102,7 @@ class CodeAnalyser {
     // Debug option for the script.
     $debug_int = (int) $this->debug;
 
-    $command = "php {$script_name} '{$autoloader_filepath}' '{$qualified_classname}' {$debug_int}";
+    $command = "php {$script_name} '{$autoloader_filepath}' {$debug_int}";
 
     // Open pipes for both input and output.
     $descriptorspec = array(

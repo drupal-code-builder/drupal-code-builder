@@ -52,7 +52,7 @@ list(
   // us.
   $autoloader_path,
   // The fully-qualified name of the class to attempt to load.
-  $class_to_load,
+  // $class_to_load,
   // Whether to enable debug output: 0 or 1. This prints to STDOUT.
   // TODO: allow this parameter to be absent -- make it a command-line option.
   $debug
