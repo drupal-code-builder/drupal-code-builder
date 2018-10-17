@@ -68,9 +68,13 @@ while ($line = fgets(STDIN)) {
   $autoloader->addPsr4($prefix, $path);
 }
 
-// Moment of truth: this will crash if the class is malformed.
-$class_exists = class_exists($class_to_load);
+while ($class_to_load = fgets(STDIN)) {
+  print "about to check $line.\n";
 
-if ($debug) {
-  print "$class_to_load did not crash.\n";
+  // Moment of truth: this will crash if the class is malformed.
+  $class_exists = class_exists($class_to_load);
+
+  if ($debug) {
+    print "$class_to_load did not crash.\n";
+  }
 }

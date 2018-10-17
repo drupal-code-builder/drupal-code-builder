@@ -14,6 +14,10 @@ class CodeAnalyser {
    */
   protected $debug = TRUE;
 
+  protected $checking_script_resource = NULL;
+
+  protected $pipes = [];
+
   /**
    * Determines whether a class may be instantiated safely.
    *
@@ -35,6 +39,40 @@ class CodeAnalyser {
    *   will cause a PHP fatal error.
    */
   public function classIsUsable($qualified_classname) {
+    // Set up the script with its autoloader if not already done so.
+    // This means we only instantiate the script once per request to DCB and
+    // keep the resource open between calls to this task method. TODO, or whenever a
+    // class crashes it.
+    if (!is_resource($this->checking_script_resource)) {
+      $this->setupScript();
+    }
+
+    // Write the class to check to the script's STDIN.
+    fwrite($pipes[0], $qualified_classname . PHP_EOL);
+
+    $status = proc_get_status($this->checking_script_resource);
+    $exit = $status['exitcode'];
+
+    // Output is used only for debugging.
+    $output = stream_get_contents($pipes[1]);
+    dsm($output);
+
+    // Get the exit code to see if the script crashed or not.
+    $exit = proc_close($process);
+
+    // If the script crashed, the class is bad.
+    if ($exit != 0) {
+      // Close the process so the script is reinitialized TODO
+      proc_close($this->checking_script_resource);
+
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
+  }
+
+  protected function setupScript() {
     $script_name = __DIR__ . '/../../class_safety_checker.php';
     $autoloader_filepath = DRUPAL_ROOT . '/autoload.php';
 
@@ -71,29 +109,28 @@ class CodeAnalyser {
        0 => array("pipe", "r"),
        1 => array("pipe", "w")
     );
-    $process = proc_open($command, $descriptorspec, $pipes);
+    $this->checking_script_resource = proc_open($command, $descriptorspec, $this->pipes);
 
-    if (!is_resource($process)) {
+    if (!is_resource($this->checking_script_resource)) {
       throw new \Exception("Could not create process for classIsUsable().");
     }
 
     foreach ($psr4 as $line) {
-      fwrite($pipes[0], $line . PHP_EOL);
+      fwrite($this->pipes[0], $line . PHP_EOL);
     }
-    fclose($pipes[0]);
 
-    // Output is used only for debugging.
-    $output = stream_get_contents($pipes[1]);
+    // Write a blank line to the script to tell it we are done with PSR4
+    // namespaces.
+    fwrite($this->pipes[0], PHP_EOL);
+  }
 
-    // Get the exit code to see if the script crashed or not.
-    $exit = proc_close($process);
-
-    // If the script crashed, the class is bad.
-    if ($exit != 0) {
-      return FALSE;
-    }
-    else {
-      return TRUE;
+  public function __destruct() {
+    // Close the script when this task service is destroyed, or at the end of
+    // the request.
+    // Allow for the script to not have been started at all, e.g. in debugging
+    // scenarios.
+    if (is_resource($this->checking_script_resource)) {
+      proc_close($this->checking_script_resource);
     }
   }
 
