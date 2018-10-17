@@ -12,10 +12,20 @@ class CodeAnalyser {
    *
    * Set to TRUE to get logging from the script's output.
    */
-  protected $debug = TRUE;
+  protected $debug = FALSE;
 
+  /**
+   * The resource for the class safety script process.
+   *
+   * @var resource
+   */
   protected $checking_script_resource = NULL;
 
+  /**
+   * The pipes for the class safety script.
+   *
+   * @var array
+   */
   protected $pipes = [];
 
   /**
