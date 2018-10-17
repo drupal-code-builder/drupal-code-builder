@@ -61,7 +61,8 @@ list(
 $autoloader = require_once $autoloader_path;
 
 // Add PSR4 namespaces to the autoloader.
-while ($line = fgets(STDIN)) {
+// Trim immediately so we get an empty string for a line that's only a newline.
+while ($line = trim(fgets(STDIN))) {
   $line = trim($line);
   list($prefix, $path) = explode('::', $line);
 
