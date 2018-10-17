@@ -64,7 +64,8 @@ class CodeAnalyser {
 
     // If the script crashed, the class is bad.
     if ($status['running'] != TRUE && $status['exitcode'] != 0) {
-      // Close the process so the script is reinitialized TODO
+      // Close the process so the script is reinitialized the next time this
+      // method is called.
       proc_close($this->checking_script_resource);
 
       return FALSE;
