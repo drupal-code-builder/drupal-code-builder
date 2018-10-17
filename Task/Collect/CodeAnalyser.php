@@ -48,13 +48,13 @@ class CodeAnalyser {
     }
 
     // Write the class to check to the script's STDIN.
-    fwrite($pipes[0], $qualified_classname . PHP_EOL);
+    fwrite($this->pipes[0], $qualified_classname . PHP_EOL);
 
     $status = proc_get_status($this->checking_script_resource);
     $exit = $status['exitcode'];
 
     // Output is used only for debugging.
-    $output = stream_get_contents($pipes[1]);
+    $output = stream_get_contents($this->pipes[1]);
     dsm($output);
 
     // Get the exit code to see if the script crashed or not.
