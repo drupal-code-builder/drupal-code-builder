@@ -8,6 +8,13 @@ namespace DrupalCodeBuilder\Task\Collect;
 class CodeAnalyser {
 
   /**
+   * Whether to have the checker script output debugging statements.
+   *
+   * Set to TRUE to get logging from the script's output.
+   */
+  protected $debug = TRUE;
+
+  /**
    * Determines whether a class may be instantiated safely.
    *
    * This is needed because:
@@ -54,11 +61,10 @@ class CodeAnalyser {
       $psr4[] = $prefix . '\\' . '::' . $paths;
     }
 
-    // Debug option for the script. Set to 1 to get logging from the script's
-    // output.
-    $debug = 0;
+    // Debug option for the script.
+    $debug_int = (int) $this->debug;
 
-    $command = "php {$script_name} '{$autoloader_filepath}' '{$qualified_classname}' {$debug}";
+    $command = "php {$script_name} '{$autoloader_filepath}' '{$qualified_classname}' {$debug_int}";
 
     // Open pipes for both input and output.
     $descriptorspec = array(
