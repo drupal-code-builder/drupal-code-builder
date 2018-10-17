@@ -54,7 +54,11 @@ class CodeAnalyser {
       $psr4[] = $prefix . '\\' . '::' . $paths;
     }
 
-    $command = "php {$script_name} '{$autoloader_filepath}' '{$qualified_classname}'";
+    // Debug option for the script. Set to 1 to get logging from the script's
+    // output.
+    $debug = 0;
+
+    $command = "php {$script_name} '{$autoloader_filepath}' '{$qualified_classname}' {$debug}";
 
     // Open pipes for both input and output.
     $descriptorspec = array(
