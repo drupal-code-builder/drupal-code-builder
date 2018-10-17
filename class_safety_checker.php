@@ -70,7 +70,7 @@ while ($line = trim(fgets(STDIN))) {
 }
 
 while ($class_to_load = fgets(STDIN)) {
-  print "about to check $line.\n";
+  print "about to check $class_to_load.\n";
 
   // Moment of truth: this will crash if the class is malformed.
   $class_exists = class_exists($class_to_load);
