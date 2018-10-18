@@ -57,25 +57,49 @@ class CodeAnalyser {
       $this->setupScript();
     }
 
+    dump("checking $qualified_classname");
+
     // Write the class to check to the script's STDIN.
     fwrite($this->pipes[0], $qualified_classname . PHP_EOL);
 
-    // Check the process to see whether it has crashed or not.
-    $status = proc_get_status($this->checking_script_resource);
+    $status_line = trim(fgets($this->pipes[1]));
+    dump($status_line);
+
+    if (empty($status_line)) {
+      // The process has crashed.
+      // Clean up so the script is reinitialized the next time this
+      // method is called.
+      fclose($this->pipes[0]);
+      fclose($this->pipes[1]);
+      proc_close($this->checking_script_resource);
+
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
+
 
     if ($this->debug) {
       // Output is used only for debugging.
       // We need to trim each line so that the script can send an empty line to
       // indicate it's done with the current class, so this loop moves on.
       while ($line = trim(fgets($this->pipes[1]))) {
-        // dump("script output: $line");
+        dump("script output: $line");
       }
     }
+
+    // Check the process to see whether it has crashed or not.
+    $status = proc_get_status($this->checking_script_resource);
+
+    dump($status);
 
     // If the script crashed, the class is bad.
     if ($status['running'] != TRUE && $status['exitcode'] != 0) {
       // Close the process so the script is reinitialized the next time this
       // method is called.
+      fclose($pipes[0]);
+      fclose($pipes[1]);
       proc_close($this->checking_script_resource);
 
       return FALSE;
