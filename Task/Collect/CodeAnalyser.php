@@ -49,21 +49,24 @@ class CodeAnalyser {
    *   will cause a PHP fatal error.
    */
   public function classIsUsable($qualified_classname) {
-    // Set up the script with its autoloader if not already done so.
-    // This means we only instantiate the script once per request to DCB and
-    // keep the resource open between calls to this task method. TODO, or whenever a
-    // class crashes it.
+    // Set up the script with its autoloader if not already done so. We keep the
+    // resource to the process open between calls to this method.
+    // This means we only need to start a new process at the start of a request
+    // to DCB and after a bad class has caused the script to crash.
     if (!is_resource($this->checking_script_resource)) {
       $this->setupScript();
     }
 
-    dump("checking $qualified_classname");
-
     // Write the class to check to the script's STDIN.
     fwrite($this->pipes[0], $qualified_classname . PHP_EOL);
 
+    // We expect a single line back from the script to confirm the class is
+    // OK. This is necessary because proc_get_status() can't immediately
+    // confirm the script is no longer running due to concurrency issues:
+    // see https://stackoverflow.com/questions/52871286/why-doesnt-proc-get-status-show-me-a-process-has-crashed
+    // The line needs to be trimmed as if there's a crash, fgets() produces
+    // a string containing only a newline character.
     $status_line = trim(fgets($this->pipes[1]));
-    dump($status_line);
 
     if (empty($status_line)) {
       // The process has crashed.
@@ -76,39 +79,15 @@ class CodeAnalyser {
       return FALSE;
     }
     else {
-      return TRUE;
-    }
-
-
-    if ($this->debug) {
-      // Output is used only for debugging.
-      // We need to trim each line so that the script can send an empty line to
-      // indicate it's done with the current class, so this loop moves on.
-      while ($line = trim(fgets($this->pipes[1]))) {
-        dump("script output: $line");
-      }
-    }
-
-    // Check the process to see whether it has crashed or not.
-    $status = proc_get_status($this->checking_script_resource);
-
-    dump($status);
-
-    // If the script crashed, the class is bad.
-    if ($status['running'] != TRUE && $status['exitcode'] != 0) {
-      // Close the process so the script is reinitialized the next time this
-      // method is called.
-      fclose($pipes[0]);
-      fclose($pipes[1]);
-      proc_close($this->checking_script_resource);
-
-      return FALSE;
-    }
-    else {
+      // The process returned a confirmation, therefore the class did not
+      // crash it.
       return TRUE;
     }
   }
 
+  /**
+   * Starts a process running the class safety script.
+   */
   protected function setupScript() {
     $script_name = __DIR__ . '/../../class_safety_checker.php';
     $autoloader_filepath = DRUPAL_ROOT . '/autoload.php';
@@ -161,12 +140,19 @@ class CodeAnalyser {
     fwrite($this->pipes[0], PHP_EOL);
   }
 
+  /**
+   * Magic method.
+   *
+   * Cleans up the process when this task helper is destroyed.
+   */
   public function __destruct() {
     // Close the script when this task service is destroyed, or at the end of
     // the request.
     // Allow for the script to not have been started at all, e.g. in debugging
     // scenarios.
     if (is_resource($this->checking_script_resource)) {
+      fclose($this->pipes[0]);
+      fclose($this->pipes[1]);
       proc_close($this->checking_script_resource);
     }
   }
