@@ -8,6 +8,29 @@ namespace DrupalCodeBuilder\Task\Collect;
 class CodeAnalyser {
 
   /**
+   * Whether to have the checker script output debugging statements.
+   *
+   * Set to TRUE to get logging from the script's output.
+   *
+   * TODO: restore the functionality for this.
+   */
+  protected $debug = FALSE;
+
+  /**
+   * The resource for the class safety script process.
+   *
+   * @var resource
+   */
+  protected $checking_script_resource = NULL;
+
+  /**
+   * The pipes for the class safety script.
+   *
+   * @var array
+   */
+  protected $pipes = [];
+
+  /**
    * Determines whether a class may be instantiated safely.
    *
    * This is needed because:
@@ -28,6 +51,46 @@ class CodeAnalyser {
    *   will cause a PHP fatal error.
    */
   public function classIsUsable($qualified_classname) {
+    // Set up the script with its autoloader if not already done so. We keep the
+    // resource to the process open between calls to this method.
+    // This means we only need to start a new process at the start of a request
+    // to DCB and after a bad class has caused the script to crash.
+    if (!is_resource($this->checking_script_resource)) {
+      $this->setupScript();
+    }
+
+    // Write the class to check to the script's STDIN.
+    fwrite($this->pipes[0], $qualified_classname . PHP_EOL);
+
+    // We expect a single line back from the script to confirm the class is
+    // OK. This is necessary because proc_get_status() can't immediately
+    // confirm the script is no longer running due to concurrency issues:
+    // see https://stackoverflow.com/questions/52871286/why-doesnt-proc-get-status-show-me-a-process-has-crashed
+    // The line needs to be trimmed as if there's a crash, fgets() produces
+    // a string containing only a newline character.
+    $status_line = trim(fgets($this->pipes[1]));
+
+    if (empty($status_line)) {
+      // The process has crashed.
+      // Clean up so the script is reinitialized the next time this
+      // method is called.
+      fclose($this->pipes[0]);
+      fclose($this->pipes[1]);
+      proc_close($this->checking_script_resource);
+
+      return FALSE;
+    }
+    else {
+      // The process returned a confirmation, therefore the class did not
+      // crash it.
+      return TRUE;
+    }
+  }
+
+  /**
+   * Starts a process running the class safety script.
+   */
+  protected function setupScript() {
     $script_name = __DIR__ . '/../../class_safety_checker.php';
     $autoloader_filepath = DRUPAL_ROOT . '/autoload.php';
 
@@ -54,36 +117,45 @@ class CodeAnalyser {
       $psr4[] = $prefix . '\\' . '::' . $paths;
     }
 
-    $command = "php {$script_name} '{$autoloader_filepath}' '{$qualified_classname}'";
+    // Debug option for the script.
+    $debug_int = (int) $this->debug;
+
+    $command = "php {$script_name} '{$autoloader_filepath}' {$debug_int}";
 
     // Open pipes for both input and output.
     $descriptorspec = array(
        0 => array("pipe", "r"),
        1 => array("pipe", "w")
     );
-    $process = proc_open($command, $descriptorspec, $pipes);
+    $this->checking_script_resource = proc_open($command, $descriptorspec, $this->pipes);
 
-    if (!is_resource($process)) {
+    if (!is_resource($this->checking_script_resource)) {
       throw new \Exception("Could not create process for classIsUsable().");
     }
 
     foreach ($psr4 as $line) {
-      fwrite($pipes[0], $line . PHP_EOL);
+      fwrite($this->pipes[0], $line . PHP_EOL);
     }
-    fclose($pipes[0]);
 
-    // Output is used only for debugging.
-    $output = stream_get_contents($pipes[1]);
+    // Write a blank line to the script to tell it we are done with PSR4
+    // namespaces.
+    fwrite($this->pipes[0], PHP_EOL);
+  }
 
-    // Get the exit code to see if the script crashed or not.
-    $exit = proc_close($process);
-
-    // If the script crashed, the class is bad.
-    if ($exit != 0) {
-      return FALSE;
-    }
-    else {
-      return TRUE;
+  /**
+   * Magic method.
+   *
+   * Cleans up the process when this task helper is destroyed.
+   */
+  public function __destruct() {
+    // Close the script when this task service is destroyed, or at the end of
+    // the request.
+    // Allow for the script to not have been started at all, e.g. in debugging
+    // scenarios.
+    if (is_resource($this->checking_script_resource)) {
+      fclose($this->pipes[0]);
+      fclose($this->pipes[1]);
+      proc_close($this->checking_script_resource);
     }
   }
 
