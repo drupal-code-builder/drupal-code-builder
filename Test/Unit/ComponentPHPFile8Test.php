@@ -88,9 +88,12 @@ class ComponentPHPFile8Test extends TestBase {
         NULL,
       ],
       'parameter typehint' => [
-        'function myfunc(\Foo\Bar $param_1, \Bar\Bax\Biz $param_2) {',
-        'function myfunc(Bar $param_1, Biz $param_2) {',
-        'Foo\Bar',
+        'function myfunc(\Foo\Bar $param_1, \Bar\Bax\Biz $param_2, \BuiltIn $param_3) {',
+        'function myfunc(Bar $param_1, Biz $param_2, \BuiltIn $param_3) {',
+        [
+          'Foo\Bar',
+          'Bar\Bax\Biz',
+        ]
       ],
       'static call' => [
         '$foo = \Foo\Bar::myfunc();',
