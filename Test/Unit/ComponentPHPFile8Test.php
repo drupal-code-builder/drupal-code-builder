@@ -26,11 +26,15 @@ class ComponentPHPFile8Test extends TestBase {
    * @param $expected_changed_code
    *   The original code, with the expected alteration. NULL if no extraction
    *   is expected.
-   * @param $expected_qualified_class_name
-   *   The expected qualified class name that will be extracted from the code;
-   *   NULL if we do not expect extraction.
+   * @param string|string[]|null $expected_qualified_class_name
+   *   One of:
+   *   - The single expected qualified class name that will be extracted
+   *     from the code,
+   *   - An array of all the qualified class names that are expected to be
+   *     extracted.
+   *   - NULL if we do not expect extraction.
    */
-  public function testQualifiedClassNameExtraction($code, $expected_changed_code, $expected_qualified_class_name) {
+  public function testQualifiedClassNameExtraction($code, $expected_changed_code, $expected_qualified_class_names) {
     // Make the protected method we're testing callable.
     $method = new \ReflectionMethod(PHPFile::class, 'extractFullyQualifiedClasses');
     $method->setAccessible(TRUE);
@@ -45,11 +49,14 @@ class ComponentPHPFile8Test extends TestBase {
 
     $method->invokeArgs($php_file_generator, [&$code_lines, &$imported_classes, 'Current\Namespace']);
 
-    if (is_null($expected_qualified_class_name)) {
+    if (is_null($expected_qualified_class_names)) {
       $this->assertEmpty($imported_classes, "No class name was extracted.");
     }
     else {
-      $this->assertEquals([$expected_qualified_class_name], $imported_classes, "The qualified class name was extracted.");
+      if (!is_array($expected_qualified_class_names)) {
+        $expected_qualified_class_names = [$expected_qualified_class_names];
+      }
+      $this->assertEquals($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
 
       $changed_code = array_pop($code_lines);
       $this->assertEquals($expected_changed_code, $changed_code, "The code was changed to use the short class name.");
