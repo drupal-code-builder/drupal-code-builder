@@ -21,9 +21,9 @@ class ComponentPHPFile8Test extends TestBase {
    *
    * @dataProvider providerQualifiedClassNameExtraction
    *
-   * @param $code
+   * @param string $code
    *   The code to extract class names from.
-   * @param $expected_changed_code
+   * @param string $expected_changed_code
    *   The original code, with the expected alteration. NULL if no extraction
    *   is expected.
    * @param string|string[]|null $expected_qualified_class_name
