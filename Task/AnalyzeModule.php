@@ -124,7 +124,7 @@ class AnalyzeModule extends Base {
           'pattern' =>
             "/
             module_invoke \(
-              [^,]+ # The $module parameter.
+              [^,]+ # The \$module parameter.
               , \s*
               ' ( $hook_prefix \w+ ) ' # Hook name, with the hook prefix.
               (?:
