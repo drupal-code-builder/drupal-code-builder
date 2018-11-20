@@ -12,6 +12,13 @@ namespace DrupalCodeBuilder\Generator;
 class API extends PHPFile {
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMergeTag() {
+    return $this->component_data['root_component_name'] . '.api.php';
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
