@@ -19,6 +19,13 @@ use PhpParser\NodeVisitorAbstract;
 class PHPTester {
 
   /**
+   * The full syntax tree parsed by PhpParser.
+   *
+   * @var array
+   */
+  protected $ast;
+
+  /**
    * Construct a new PHPTester.
    *
    * @param string $php_code
@@ -195,13 +202,13 @@ class PHPTester {
   protected function parseCode() {
     $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
     try {
-      $ast = $parser->parse($this->phpCode);
+      $this->ast = $parser->parse($this->phpCode);
     }
     catch (Error $error) {
       Assert::fail("Parse error: {$error->getMessage()}");
     }
 
-    //dump($ast);
+    //dump($this->ast);
 
     // Reset our array of parser nodes.
     // This then passed into the anonymous visitor class, and populated with the
@@ -258,7 +265,7 @@ class PHPTester {
     $traverser = new NodeTraverser();
     $traverser->addVisitor($recursive_visitor);
 
-    $ast = $traverser->traverse($ast);
+    $this->ast = $traverser->traverse($this->ast);
   }
 
   /**
@@ -274,6 +281,26 @@ class PHPTester {
     Assert::assertArrayNotHasKey('interfaces', $this->parser_nodes, $message);
     // Technically we should cover traits too, but we don't generate any of
     // those.
+  }
+
+  /**
+   * Asserts the file docblock contains the given line.
+   *
+   * @param string $line
+   *   The text to check for in the docblock.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertFileDocblockHasLine($line, $message = NULL) {
+    $message = $message ?? "The file has a @file docblock containing the line: '{$line}'.";
+
+    // The @file docblock, even though standalone, is treated by PHPParser as
+    // belonging to the first actual PHP statement, whatever it is.
+    $first_statement = $this->ast[0];
+    $docblock_text = $first_statement->getAttribute('comments')[0]->getText();
+
+    Assert::assertContains('@file', $docblock_text, "The @file docblock has the @file doxygen tag.");
+    Assert::assertContains($line, $docblock_text, $message);
   }
 
   /**
