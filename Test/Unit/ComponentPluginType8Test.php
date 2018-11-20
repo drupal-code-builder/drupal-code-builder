@@ -60,6 +60,15 @@ class ComponentPluginType8Test extends TestBase {
     $this->assertArrayHasKey('test_module.plugin_type.yml', $files, "The plugin type definition file is generated.");
     $this->assertArrayHasKey('test_module.api.php', $files, "The files list has an api.php file.");
 
+    // Check the services.yml file.
+    $services_file = $files["test_module.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_cat_feeder"]);
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'class'], 'Drupal\test_module\CatFeederManager');
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'parent'], "default_plugin_manager");
+
     // Check the plugin manager file.
     $plugin_manager_file = $files["src/CatFeederManager.php"];
 
