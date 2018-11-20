@@ -187,6 +187,8 @@ abstract class BaseGenerator {
    *    permissions, which can be derived from the machine name. Defaults to
    *    FALSE.
    *  - 'options': (optional) One of:
+   *    - An array of options. Keys are the machine value, values are the human-
+   *      readable label.
    *    - A callable which returns a list of options for the property. This
    *      receives the component data assembled so far.
    *    - A string in the form 'TASKNAME:METHOD' to call to get the array of
