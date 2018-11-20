@@ -377,14 +377,6 @@ class PHPClassFile extends PHPFile {
    * @param string $type
    *   The typehint. Classes and interfaces should be fully-qualified, with the
    *   initial '\'.
-   * @param mixed $description
-   *   A single-line description for the docblock, as a string, or an array of
-   *   lines. If an array, the first item must be the single-line first docblock
-   *   line, and the second item must be an empty string.
-   * @param array $modifiers
-   *   An array of the modifiers. Defaults to 'protected'.
-   * @param $default
-   *   The default value, as the actual value. May be any type.
    * @param $options
    *  An array of options. May contain:
    *  - 'docblock_first_line' The text for the first line of the docblock.
