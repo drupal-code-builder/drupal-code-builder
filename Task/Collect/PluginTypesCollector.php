@@ -709,6 +709,9 @@ class PluginTypesCollector extends CollectorBase  {
 
       // End of the loop for the current plugin.
       next_plugin:
+        // This is a noop line to stop the PHP linting in my IDE from
+        // complaining that this label has no statements, grrr...
+        assert(true);
     } // foreach $definitions
 
     // If we found nothing, we're done.
