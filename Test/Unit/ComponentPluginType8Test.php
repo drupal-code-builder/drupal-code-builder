@@ -156,7 +156,6 @@ class ComponentPluginType8Test extends TestBase {
     $yaml_tester = new YamlTester($plugin_type_file);
     $yaml_tester->assertHasProperty('test_module.cat_feeder');
     $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'label'], 'Cat Feeder');
-    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'provider'], 'test_module');
     $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'plugin_manager_service_id'], 'plugin.manager.test_module_cat_feeder');
     $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'plugin_definition_decorator_class'], 'Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator');
   }
