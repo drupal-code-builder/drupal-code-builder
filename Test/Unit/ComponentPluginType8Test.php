@@ -300,4 +300,52 @@ class ComponentPluginType8Test extends TestBase {
     //$get_discovery_tester->assertReturnsVariable('discovery');
   }
 
+  /**
+   * Tests multiple plugin types.
+   *
+   * Checks that no equivalent items for different plugin types get
+   * accidentally smushed.
+   */
+  function testMultiplePluginTypes() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugin_types' => array(
+        0 => [
+          'plugin_type' => 'alpha',
+          // Use annotation type for both, as that generates more things.
+          'discovery_type' => 'annotation',
+        ],
+        1 => [
+          'plugin_type' => 'beta',
+          'discovery_type' => 'annotation',
+        ],
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    $api_file = $files['test_module.api.php'];
+
+    $api_tester = new PHPTester($api_file);
+    $api_tester->assertDrupalCodingStandards();
+    $api_tester->assertHasFunction('hook_alpha_info_alter');
+    $api_tester->assertHasFunction('hook_beta_info_alter');
+
+    $services_file = $files["test_module.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_alpha"]);
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_alpha", 'class'], 'Drupal\test_module\AlphaManager');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_beta"]);
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_beta", 'class'], 'Drupal\test_module\BetaManager');
+  }
+
 }
