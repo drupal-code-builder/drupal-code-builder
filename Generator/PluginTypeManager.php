@@ -78,7 +78,6 @@ class PluginTypeManager extends Service {
     $code[] = '  ' . "'Plugin/{$this->component_data['plugin_subdirectory']}',";
     $code[] = '  $namespaces,';
     $code[] = '  $module_handler,';
-    // TODO: use $this->component_data['interface'], but that has initial \!
     $code[] = "  " . $this->component_data['interface'] . '::class' . ",";
     $code[] = "  " . '\\' . $this->makeQualifiedClassName([
       'Drupal',
