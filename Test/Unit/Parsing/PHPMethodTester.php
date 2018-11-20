@@ -140,6 +140,18 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts a method of the parsed class has no parameters.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasNoParameters($message = NULL) {
+    $message = $message ?? "The method {$this->methodName} has no parameters.";
+
+    $this->assertHelperHasParametersSlice([], $message);
+  }
+
+  /**
    * Asserts a subset of the parameters of a method of the parsed class.
    *
    * Helper for assertMethodHasParameters() and other assertions.
