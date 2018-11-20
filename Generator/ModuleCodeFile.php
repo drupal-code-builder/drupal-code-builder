@@ -40,6 +40,20 @@ class ModuleCodeFile extends PHPFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  function fileDocblockSummary() {
+    $filename_pieces = explode('.', $this->component_data['filename']);
+    if (end($filename_pieces) == 'module') {
+      return "Contains hook implementations for the %readable module.";
+    }
+    else {
+      // TODO: handle other .inc files that contain hooks?
+      return parent::fileDocblockSummary();
+    }
+  }
+
+  /**
    * Return a file footer.
    */
   function code_footer() {

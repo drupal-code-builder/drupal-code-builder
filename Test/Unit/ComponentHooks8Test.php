@@ -56,6 +56,7 @@ class ComponentHooks8Test extends TestBase {
 
     $php_tester = new PHPTester($module_file);
     $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_help', $module_name);
   }
 
