@@ -428,9 +428,18 @@ class PHPClassFile extends PHPFile {
           $declaration_first_line .= '[';
           $declaration_lines[] = $declaration_first_line;
 
-          foreach ($options['default'] as $default_value_array_item) {
+          // TODO: we assume that numeric keys should not be output, but it's
+          // possible for numeric keys to be out of order or interspersed and
+          // therefore need to be output.
+
+          foreach ($options['default'] as $default_value_array_item_key => $default_value_array_item) {
             // TODO: assuming these are all strings for now!
-            $declaration_lines[] = '  ' . "'{$default_value_array_item}',";
+            if (is_numeric($default_value_array_item_key)) {
+              $declaration_lines[] = '  ' . "'{$default_value_array_item}',";
+            }
+            else {
+              $declaration_lines[] = '  ' . "'{$default_value_array_item_key}' => '{$default_value_array_item}',";
+            }
           }
 
           $declaration_lines[] = '];';
