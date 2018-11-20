@@ -79,6 +79,26 @@ class YamlTester {
   }
 
   /**
+   * Assert the YAML does not have the given property.
+   *
+   * @param mixed $property_address
+   *   The address of the property. An array address for the property; may be
+   *   a scalar string for a top-level property.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasNotProperty($property_address, $message = NULL) {
+    if (!is_array($property_address)) {
+      $property_address = [$property_address];
+    }
+
+    $property_string = $this->getPropertyString($property_address);
+    $message = $message ?? "The YAML file does not have the property $property_string.";
+
+    Assert::assertFalse(NestedArray::keyExists($this->parsedYamlData, $property_address), $message);
+  }
+
+  /**
    * Asserts the YAML property is formatted with a blank line before it.
    *
    * @param mixed $property_address
