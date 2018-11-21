@@ -1123,7 +1123,7 @@ class PHPTester {
    *   (optional) The assertion message.
    */
   protected function assertDocblockHasLine($line, Doc $docblock, $message = NULL) {
-    $message = $message ?? "The docblock contains the line {$line}.";
+    $message = $message ?? "The docblock contains the line '{$line}'.";
 
     $docblock_text = $docblock->getReformattedText();
     $docblock_lines = explode("\n", $docblock_text);
@@ -1136,7 +1136,9 @@ class PHPTester {
 
     // Work around assertContains() not outputting the array on failure by
     // putting it in the message.
-    Assert::assertContains($line, $docblock_lines, "The line '{$line}' was found in the docblock lines: " . print_r($docblock_lines, TRUE));
+    $message .= " Given docblock was: " . print_r($docblock_lines, TRUE);
+
+    Assert::assertContains($line, $docblock_lines, $message);
   }
 
   /**
