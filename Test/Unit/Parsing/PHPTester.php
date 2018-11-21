@@ -1130,9 +1130,10 @@ class PHPTester {
 
     // Slice off first and last lines, which are the '/**' and '*/'.
     $docblock_lines = array_slice($docblock_lines, 1, -1);
-    $docblock_lines = array_map(function($line) {
-      return preg_replace('/^ \* /', '', $line);
-    }, $docblock_lines);
+    // Trim off the docblock formatting.
+    array_walk($docblock_lines, function(&$line) {
+      $line = preg_replace('/^ \* /', '', $line);
+    });
 
     // Work around assertContains() not outputting the array on failure by
     // putting it in the message.
