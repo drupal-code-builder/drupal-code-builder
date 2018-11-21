@@ -1123,7 +1123,7 @@ class PHPTester {
    *   (optional) The assertion message.
    */
   protected function assertDocblockHasLine($line, Doc $docblock, $message = NULL) {
-    $message = $message ?? "The method docblock contains the line {$line}.";
+    $message = $message ?? "The docblock contains the line {$line}.";
 
     $docblock_text = $docblock->getReformattedText();
     $docblock_lines = explode("\n", $docblock_text);
