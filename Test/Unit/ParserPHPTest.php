@@ -200,6 +200,112 @@ EOT;
   }
 
   /**
+   * Tests the assertClassDocBlockHasLine() assertion.
+   *
+   * @group php_tester_docblocks
+   */
+  public function testAssertClassDocblockHasLineAssertion() {
+    $php = <<<EOT
+<?php
+
+/**
+ * Class docblock.
+ *
+ * Further line.
+ * Partial line.
+ */
+class Foo {
+
+}
+
+EOT;
+
+    $php_tester = new PHPTester($php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Class docblock.');
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Further line.');
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Further line.');
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassDocBlockHasLine', 'not this line');
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassDocBlockHasLine', 'Partial');
+  }
+
+  /**
+   * Tests the assertFileDocblockHasLine() assertion.
+   *
+   * @group php_tester_docblocks
+   */
+  public function testAssertFileDocblockHasLineAssertion() {
+    $php = <<<EOT
+<?php
+
+/**
+ * @file
+ * File docblock.
+ *
+ * Further line.
+ * Partial line.
+ */
+
+/**
+ * Function docblock.
+ */
+function foo() {
+}
+
+EOT;
+
+    $php_tester = new PHPTester($php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertFileDocblockHasLine', 'File docblock.');
+    $this->assertAssertion(TRUE, $php_tester, 'assertFileDocblockHasLine', 'Further line.');
+    $this->assertAssertion(TRUE, $php_tester, 'assertFileDocblockHasLine', 'Further line.');
+    $this->assertAssertion(FALSE, $php_tester, 'assertFileDocblockHasLine', 'not this line');
+    // TODO: assertion is not strict enough.
+    // $this->assertAssertion(FALSE, $php_tester, 'assertFileDocblockHasLine', 'Partial');
+  }
+
+  /**
+   * Tests the assertHasHookImplementation() assertion.
+   *
+   * @group php_tester_docblocks
+   */
+  public function testAssertHasHookImplementationAssertion() {
+    $php = <<<EOT
+<?php
+
+/**
+ * @file
+ * File docblock.
+ */
+
+/**
+ * Implements hook_foo().
+ */
+function my_module_foo() {
+}
+
+/**
+ * hook_bar() has bad docblock, not properly implemented.
+ */
+function my_module_bar() {
+}
+
+/**
+ * Not a hook.
+ */
+function my_module_not_hook() {
+}
+
+EOT;
+
+    $php_tester = new PHPTester($php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasHookImplementation', 'hook_foo', 'my_module');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasHookImplementation', 'hook_bar', 'my_module');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasHookImplementation', 'hook_not_hook', 'my_module');
+  }
+
+  /**
    * Helper for tests that test custom assertions.
    *
    * @param bool $pass
