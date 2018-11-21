@@ -298,10 +298,10 @@ class PHPTester {
     // The @file docblock, even though standalone, is treated by PHPParser as
     // belonging to the first actual PHP statement, whatever it is.
     $first_statement = $this->ast[0];
-    $docblock_text = $first_statement->getAttribute('comments')[0]->getText();
+    $docblock = $first_statement->getAttribute('comments')[0];
 
-    Assert::assertContains('@file', $docblock_text, "The @file docblock has the @file doxygen tag.");
-    Assert::assertContains($line, $docblock_text, $message);
+    $this->assertDocblockHasLine('@file', $docblock, "The @file docblock has the @file doxygen tag.");
+    $this->assertDocblockHasLine($line, $docblock, $message);
   }
 
   /**
@@ -380,20 +380,15 @@ class PHPTester {
    *   (optional) The assertion message.
    */
   public function assertClassDocBlockHasLine($line, $message = NULL) {
+    $message = $message ?? "The class docblock has the line '{$line}'";
+
     // All the class files we generate contain only one class.
     Assert::assertCount(1, $this->parser_nodes['classes']);
     $class_node = reset($this->parser_nodes['classes']);
-    $docblock_text = $class_node->getAttribute('comments')[0]->getText();
-    $docblock_lines = explode("\n", $docblock_text);
 
-    // Trim off the docblock formatting.
-    array_walk($docblock_lines, function(&$line) {
-      $line = str_replace(" * ", '', $line);
-    });
+    $docblock = $class_node->getAttribute('comments')[0];
 
-    $message = $message ?? "The docblock has the line '{$line}': " . print_r($docblock_lines, TRUE);
-
-    Assert::assertContains($line, $docblock_lines, $message);
+    $this->assertDocblockHasLine($line, $docblock, $message);
   }
 
   /**
