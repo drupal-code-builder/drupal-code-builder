@@ -16,6 +16,16 @@ class PluginType extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
+      'discovery_type' => [
+        'label' => 'Plugin discovery type',
+        'description' => "The way in which plugins of this type are formed.",
+        'options' => [
+          'annotation' => 'Annotation: Plugins are classes with an annotation',
+          'yaml' => 'YAML: Plugins are declared in a single YAML file, usually sharing the same class',
+        ],
+        'default' => 'annotation',
+        'required' => TRUE,
+      ],
       'plugin_type' => array(
         'label' => 'Plugin type ID',
         'description' => "The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.",
@@ -54,7 +64,7 @@ class PluginType extends BaseGenerator {
         },
       ],
       'annotation_class' => array(
-        'label' => 'Annotation class name',
+        'label' => 'Annotation class name. (Only used for annotation discovery plugins.)',
         'required' => TRUE,
         'default' => function($component_data) {
           $plugin_type = $component_data['plugin_type'];
@@ -78,6 +88,19 @@ class PluginType extends BaseGenerator {
           ]);
         },
       ),
+      'base_class' => [
+        'label' => 'Base class',
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return '\\' . self::makeQualifiedClassName([
+            'Drupal',
+            '%module',
+            'Plugin',
+            $component_data['plugin_relative_namespace'],
+            $component_data['annotation_class'] . 'Base',
+          ]);
+        },
+      ],
       'plugin_manager_service_id' => [
         'computed' => TRUE,
         'default' => function($component_data) {
@@ -121,11 +144,25 @@ class PluginType extends BaseGenerator {
       'service_class_name' => $this->component_data['annotation_class'] . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
-      'parent' => 'default_plugin_manager',
+    );
+
+    if ($this->component_data['discovery_type'] == 'annotation') {
+      // Annotation plugin managers inherit from DefaultPluginManager.
+      $components['manager']['parent'] = 'default_plugin_manager';
       // TODO: a service should be able to detect the parent class name from
       // service definitions.... if we had all of them.
-      'parent_class_name' => '\Drupal\Core\Plugin\DefaultPluginManager',
-    );
+      $components['manager']['parent_class_name'] = '\Drupal\Core\Plugin\DefaultPluginManager';
+    }
+    else {
+      // YAML plugin managers need some services injecting.
+      $components['manager']['injected_services'] = [
+        'module_handler',
+      ];
+      // Don't inherit from the default plugin manager as a service, but do
+      // inherit from it as a class. (See menu YAML plugins for example.)
+      $components['manager']['parent_class_name'] = '\Drupal\Core\Plugin\DefaultPluginManager';
+    }
+
 
     // TODO: remove the specialized PluginTypeManager generator, and instead
     // set a constructor method generator to be contained by a Service.
@@ -141,16 +178,18 @@ class PluginType extends BaseGenerator {
     );
     */
 
-    $components['annotation'] = [
-      'component_type' => 'AnnotationClass',
-      'relative_class_name' => ['Annotation', $this->component_data['annotation_class']],
-      'parent_class_name' => '\Drupal\Component\Annotation\Plugin',
-      'class_docblock_lines' => [
-        "Defines the {$this->component_data['plugin_label']} plugin annotation object.",
-        "Plugin namespace: {$this->component_data['plugin_relative_namespace']}.",
-      ],
-      // TODO: Some annotation properties such as ID and label.
-    ];
+    if ($this->component_data['discovery_type'] == 'annotation') {
+      $components['annotation'] = [
+        'component_type' => 'AnnotationClass',
+        'relative_class_name' => ['Annotation', $this->component_data['annotation_class']],
+        'parent_class_name' => '\Drupal\Component\Annotation\Plugin',
+        'class_docblock_lines' => [
+          "Defines the {$this->component_data['plugin_label']} plugin annotation object.",
+          "Plugin namespace: {$this->component_data['plugin_relative_namespace']}.",
+        ],
+        // TODO: Some annotation properties such as ID and label.
+      ];
+    }
 
     $plugin_relative_namespace_pieces = explode('\\', $this->component_data['plugin_relative_namespace']);
 

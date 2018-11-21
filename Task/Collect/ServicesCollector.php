@@ -25,6 +25,7 @@ class ServicesCollector extends CollectorBase  {
   protected $testingServiceNames = [
     'current_user' => TRUE,
     'entity_type.manager' => TRUE,
+    'module_handler' => TRUE,
   ];
 
   /**

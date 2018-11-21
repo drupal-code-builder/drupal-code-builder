@@ -18,6 +18,14 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
     ),
+    'module_handler' =>
+    array (
+      'id' => 'module_handler',
+      'label' => 'Module handler',
+      'static_method' => 'moduleHandler',
+      'interface' => '\\Drupal\\Core\\Extension\\ModuleHandlerInterface',
+      'description' => 'The module handler',
+    ),
   ),
   'all' => 
   array (
@@ -36,6 +44,14 @@ array (
       'static_method' => 'entityTypeManager',
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
+    ),
+    'module_handler' =>
+    array (
+      'id' => 'module_handler',
+      'label' => 'Module handler',
+      'static_method' => 'moduleHandler',
+      'interface' => '\\Drupal\\Core\\Extension\\ModuleHandlerInterface',
+      'description' => 'The module handler',
     ),
   ),
 );

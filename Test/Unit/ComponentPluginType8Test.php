@@ -22,7 +22,7 @@ class ComponentPluginType8Test extends TestBase {
   /**
    * Test Plugin Type component.
    */
-  function testBasicPluginTypeGeneration() {
+  function testAnnotationPluginTypeBasic() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -35,6 +35,7 @@ class ComponentPluginType8Test extends TestBase {
       'plugin_types' => array(
         0 => [
           'plugin_type' => 'cat_feeder',
+          'discovery_type' => 'annotation',
         ]
       ),
       'readme' => FALSE,
@@ -172,7 +173,7 @@ class ComponentPluginType8Test extends TestBase {
   /**
    * Test Plugin Type component with a nested plugin folder.
    */
-  function testPluginTypeGenerationWithNestedFolder() {
+  function testAnnotationPluginTypeGenerationWithNestedFolder() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -185,6 +186,7 @@ class ComponentPluginType8Test extends TestBase {
       'plugin_types' => array(
         0 => [
           'plugin_type' => 'cat_feeder',
+          'discovery_type' => 'annotation',
           'plugin_subdirectory' => 'Animals/CatFeeder'
         ]
       ),
@@ -214,6 +216,88 @@ class ComponentPluginType8Test extends TestBase {
     $php_tester = new PHPTester($plugin_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface');
+  }
+
+  /**
+   * Test YAML plugin type.
+   */
+  function testYamlPluginTypeBasic() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugin_types' => array(
+        0 => [
+          'plugin_type' => 'cat_feeder',
+          'discovery_type' => 'yaml',
+        ]
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/CatFeederManager.php',
+      'src/Plugin/CatFeeder/CatFeederBase.php',
+      'src/Plugin/CatFeeder/CatFeederInterface.php',
+      'test_module.services.yml',
+      'test_module.plugin_type.yml',
+      'test_module.api.php',
+    ], $files);
+
+    // Check the services.yml file.
+    $services_file = $files["test_module.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_cat_feeder"]);
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'class'], 'Drupal\test_module\CatFeederManager');
+    $yaml_tester->assertHasNotProperty(['services', "plugin.manager.test_module_cat_feeder", 'parent']);
+
+    // Check the plugin manager file.
+    $plugin_manager_file = $files["src/CatFeederManager.php"];
+
+    $php_tester = new PHPTester($plugin_manager_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
+    $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
+
+    $php_tester->assertClassHasProtectedProperty('defaults', 'array', [
+      'class' => 'Drupal\test_module\Plugin\CatFeeder\CatFeederBase',
+    ]);
+
+    $constructor_tester = $php_tester->getMethodTester('__construct');
+    // Check the __construct() method's parameters.
+    $constructor_tester->assertHasParameters([
+      'namespaces' => 'Traversable',
+      'cache_backend' => 'Drupal\Core\Cache\CacheBackendInterface',
+      'module_handler' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+    ]);
+
+    $php_tester->assertStatementIsLocalMethodCall('alterInfo', '__construct', 1);
+    $php_tester->assertCallHasArgs([
+      'cat_feeder_info' => 'string',
+    ],
+    '__construct', 1);
+
+    $php_tester->assertStatementIsLocalMethodCall('setCacheBackend', '__construct', 2);
+    $php_tester->assertCallHasArgs([
+      'cache_backend' => 'var',
+      'cat_feeder_plugins' => 'string',
+    ],
+    '__construct', 2);
+
+    // Test the getDiscovery() method.
+    $get_discovery_tester = $php_tester->getMethodTester('getDiscovery');
+    $get_discovery_tester->assertHasNoParameters();
+    // TODO: assertion doesn't handle properties.
+    //$get_discovery_tester->assertReturnsVariable('discovery');
   }
 
 }
