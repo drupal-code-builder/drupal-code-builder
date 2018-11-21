@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
 use PHPUnit\Framework\Assert;
 use PHP_CodeSniffer;
+use PhpParser\Comment\Doc;
 use PhpParser\Error;
 use PhpParser\NodeDumper;
 use PhpParser\ParserFactory;
@@ -1084,13 +1085,12 @@ class PHPTester {
     // docblock.
     // @see https://github.com/nikic/PHP-Parser/issues/445
     $function_docblock = end($comments);
-    $docblock_text = $function_docblock->getReformattedText();
 
     // TODO: this will need to switch on major version when we use this to test
     // D7 hooks.
     $expected_line = "Implements {$hook_name}().";
 
-    $this->assertDocblockHasLine($expected_line, $docblock_text, "The module file contains the docblock for hook_menu().");
+    $this->assertDocblockHasLine($expected_line, $function_docblock, "The module file contains the docblock for hook_menu().");
   }
 
   /**
@@ -1117,15 +1117,16 @@ class PHPTester {
    *
    * @param string $line
    *   The expected line.
-   * @param $docblock
-   *   The docblock text.
+   * @param \PhpParser\Comment\Doc $docblock
+   *   The docblock parser node.
    * @param string $message
    *   (optional) The assertion message.
    */
-  protected function assertDocblockHasLine($line, $docblock, $message = NULL) {
+  protected function assertDocblockHasLine($line, Doc $docblock, $message = NULL) {
     $message = $message ?? "The method docblock contains the line {$line}.";
 
-    $docblock_lines = explode("\n", $docblock);
+    $docblock_text = $docblock->getReformattedText();
+    $docblock_lines = explode("\n", $docblock_text);
 
     // Slice off first and last lines, which are the '/**' and '*/'.
     $docblock_lines = array_slice($docblock_lines, 1, -1);
