@@ -137,8 +137,6 @@ class ServicesCollector extends CollectorBase  {
       }
     }
 
-    $ids = $container_builder->getServiceIds();
-
     $data = [];
 
     foreach ($definitions as $service_id => $definition) {
