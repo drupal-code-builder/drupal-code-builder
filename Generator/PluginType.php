@@ -215,7 +215,9 @@ class PluginType extends BaseGenerator {
       'interfaces' => [
         $this->component_data['interface'],
       ],
-      'abstract'=> TRUE,
+      // Abstract for annotation plugins, where each plugin provides a class;
+      // for YAML plugins, each plugin will typically just use this class.
+      'abstract'=> ($this->component_data['discovery_type'] == 'annotation'),
       'docblock_first_line' => "Base class for {$this->component_data['plugin_label']} plugins.",
     ];
 

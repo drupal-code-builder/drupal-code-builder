@@ -370,6 +370,32 @@ class PHPTester {
   }
 
   /**
+   * Asserts that the file's class is abstract.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassIsAbstract($message = NULL) {
+    $message = $message ?? "The file's class is abstract.";
+
+    $class_node = reset($this->parser_nodes['classes']);
+    Assert::assertTrue($class_node->isAbstract(), $message);
+  }
+
+  /**
+   * Asserts that the file's class is not abstract.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassNotAbstract($message = NULL) {
+    $message = $message ?? "The file's class is not abstract.";
+
+    $class_node = reset($this->parser_nodes['classes']);
+    Assert::assertFalse($class_node->isAbstract(), $message);
+  }
+
+  /**
    * Asserts that the class's docblock contains the given line.
    *
    * @param string $line

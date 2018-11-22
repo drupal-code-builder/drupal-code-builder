@@ -129,6 +129,7 @@ class ComponentPluginType8Test extends TestBase {
     $php_tester = new PHPTester($plugin_base_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\CatFeeder\CatFeederBase');
+    $php_tester->assertClassIsAbstract();
     $php_tester->assertClassHasInterfaces(['Drupal\test_module\Plugin\CatFeeder\CatFeederInterface']);
 
     // Check the plugin interface file.
@@ -298,6 +299,15 @@ class ComponentPluginType8Test extends TestBase {
     $get_discovery_tester->assertHasNoParameters();
     // TODO: assertion doesn't handle properties.
     //$get_discovery_tester->assertReturnsVariable('discovery');
+
+    // Check the plugin base class file.
+    $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeederBase.php"];
+
+    $php_tester = new PHPTester($plugin_base_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\CatFeeder\CatFeederBase');
+    $php_tester->assertClassNotAbstract();
+    $php_tester->assertClassHasInterfaces(['Drupal\test_module\Plugin\CatFeeder\CatFeederInterface']);
   }
 
   /**
