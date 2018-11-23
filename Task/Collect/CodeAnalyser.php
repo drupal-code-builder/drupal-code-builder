@@ -72,31 +72,18 @@ class CodeAnalyser {
     }
 
     // Write the class to check to the script's STDIN.
-    fwrite($this->pipes[0], $qualified_classname . PHP_EOL);
+    $status = $this->sendCommand('CLASS', $qualified_classname);
 
-    // We expect a single line back from the script to confirm the class is
-    // OK. This is necessary because proc_get_status() can't immediately
-    // confirm the script is no longer running due to concurrency issues:
-    // see https://stackoverflow.com/questions/52871286/why-doesnt-proc-get-status-show-me-a-process-has-crashed
-    // The line needs to be trimmed as if there's a crash, fgets() produces
-    // a string containing only a newline character.
-    $status_line = trim(fgets($this->pipes[1]));
-
-    if (empty($status_line)) {
+    if (!$status) {
       // The process has crashed.
-      // Clean up so the script is reinitialized the next time this
-      // method is called.
-      fclose($this->pipes[0]);
-      fclose($this->pipes[1]);
-      proc_close($this->checking_script_resource);
+      // Clean up so the script is reinitialized the next time this method is
+      // called.
+      $this->closeScript();
+    }
 
-      return FALSE;
-    }
-    else {
-      // The process returned a confirmation, therefore the class did not
-      // crash it.
-      return TRUE;
-    }
+    // Return the status of the class check: TRUE means the class is usable,
+    // FALSE means it is broken and a class_exists() causes a crash.
+    return $status;
   }
 
   /**
@@ -146,12 +133,51 @@ class CodeAnalyser {
     }
 
     foreach ($psr4 as $line) {
-      fwrite($this->pipes[0], $line . PHP_EOL);
+      $this->sendCommand('PSR4', $line);
+    }
+  }
+
+  /**
+   * Send a single command to the script.
+   *
+   * @param string $command
+   *   The command to send to the script. One of:
+   *    - 'PSR4': A PSR4 namespace and folder to add to the autoloader.
+   *    - 'CLASS': A class to check.
+   * @param string $payload
+   *   The value to send to the script. Format depends on the command.
+   *
+   * @return bool
+   *  Returns TRUE if the command was successful; FALSE if the process appears
+   *  to have crashed.
+   *
+   * @throws \Exception
+   *  Throws an exception if the command failed.
+   */
+  protected function sendCommand($command, $payload) {
+    fwrite($this->pipes[0], $command . ':' . $payload . PHP_EOL);
+
+    $status_line = trim(fgets($this->pipes[1]));
+
+    // An empty status line means the script has stopped responding, and has
+    // presumably crashed.
+    if (empty($status_line)) {
+      return FALSE;
     }
 
-    // Write a blank line to the script to tell it we are done with PSR4
-    // namespaces.
-    fwrite($this->pipes[0], PHP_EOL);
+    // An expected status line that matches the sent command means everything
+    // went fine.
+    if ($status_line == "$command OK") {
+      return TRUE;
+    }
+
+    // If something's gone wrong, get any further output from the script so we
+    // can see error messages.
+    while ($line = fgets($this->pipes[1])) {
+      dump($line);
+    }
+
+    throw new \Exception("Command $command with payload '$payload' failed.");
   }
 
   /**
