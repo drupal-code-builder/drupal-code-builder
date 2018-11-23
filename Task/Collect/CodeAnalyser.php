@@ -155,6 +155,17 @@ class CodeAnalyser {
   }
 
   /**
+   * Close the script.
+   *
+   * Note this is called automatically when this object is destroyed.
+   */
+  public function closeScript() {
+    fclose($this->pipes[0]);
+    fclose($this->pipes[1]);
+    proc_close($this->checking_script_resource);
+  }
+
+  /**
    * Magic method.
    *
    * Cleans up the process when this task helper is destroyed.
@@ -165,9 +176,7 @@ class CodeAnalyser {
     // Allow for the script to not have been started at all, e.g. in debugging
     // scenarios.
     if (is_resource($this->checking_script_resource)) {
-      fclose($this->pipes[0]);
-      fclose($this->pipes[1]);
-      proc_close($this->checking_script_resource);
+      $this->closeScript();
     }
   }
 
