@@ -104,24 +104,24 @@ class CodeAnalyser {
    */
   protected function setupScript() {
     $script_name = __DIR__ . '/../../class_safety_checker.php';
-    $autoloader_filepath = DRUPAL_ROOT . '/autoload.php';
+    $drupal_root = $this->environment->getRoot();
+    $autoloader_filepath = $drupal_root . '/autoload.php';
 
     // We need to pass all the dynamic namespaces to the script, as Composer's
     // generated autoloader knows only about /vendor and /core/lib, but not
     // modules.
     // This code is taken from DrupalKernel::attachSynthetic().
-    $container = \Drupal::getContainer();
-    $root = \Drupal::root();
+    $container = $this->environment->getContainer();
     $namespaces = $container->getParameter('container.namespaces');
     $psr4 = [];
     foreach ($namespaces as $prefix => $paths) {
       if (is_array($paths)) {
         foreach ($paths as $key => $value) {
-          $paths[$key] = $root . '/' . $value;
+          $paths[$key] = $drupal_root . '/' . $value;
         }
       }
       elseif (is_string($paths)) {
-        $paths = $root . '/' . $paths;
+        $paths = $drupal_root . '/' . $paths;
       }
 
       // Build a list of data to pass to the script on STDIN.

@@ -209,6 +209,21 @@ interface EnvironmentInterface {
   public function getExtensionPath($type, $name);
 
   /**
+   * Gets the service container.
+   *
+   * (Drupal 8 only!)
+   */
+  public function getContainer();
+
+  /**
+   * Gets the Drupal root.
+   *
+   * @return string
+   *   The root path.
+   */
+  public function getRoot();
+
+  /**
    * Output verbose log data.
    *
    * @param $data

@@ -281,4 +281,20 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     return $this->version_helper->getExtensionPath($type, $name);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getContainer() {
+    return \Drupal::getContainer();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoot() {
+    // TODO: this should be moved to the version helper so that non-D8 versions
+    // can use this, but YAGNI.
+    return \Drupal::root();
+  }
+
 }
