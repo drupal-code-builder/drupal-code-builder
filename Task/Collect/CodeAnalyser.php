@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Task\Collect;
 
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
+
 /**
  * Task helper for analysing PHP code.
  */
@@ -29,6 +31,16 @@ class CodeAnalyser {
    * @var array
    */
   protected $pipes = [];
+
+  /**
+   * Constructs a new helper.
+   *
+   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
+   *   The environment object.
+   */
+  public function __construct(EnvironmentInterface $environment) {
+    $this->environment = $environment;
+  }
 
   /**
    * Determines whether a class may be instantiated safely.
