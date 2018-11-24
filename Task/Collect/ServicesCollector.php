@@ -57,9 +57,18 @@ class ServicesCollector extends CollectorBase  {
    * {@inheritdoc}
    */
   public function getJobList() {
-    // No point splitting this up into jobs, getting the list of services is
-    // pretty much the whole task.
-    return NULL;
+    $job_list = [];
+    foreach ($this->getServiceIDs() as $service_id) {
+      $job_list[] = [
+        'service_id' => $service_id,
+        'process_label' => 'service',
+        'item_label' => $service_id,
+      ];
+    }
+
+    // Final job: TODO! gather the static \Drupal:: services!
+
+    return $job_list;
   }
 
   /**
@@ -117,11 +126,11 @@ class ServicesCollector extends CollectorBase  {
   }
 
   /**
-   * Get data on all services from the container builder.
+   * Get data on all services from the container builder. TODO
    *
    * @return [type] [description]
    */
-  protected function getAllServices() {
+  protected function getServiceIDs() {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
     $definitions = $container_builder->getDefinitions();
 
@@ -137,7 +146,7 @@ class ServicesCollector extends CollectorBase  {
       }
     }
 
-    $data = [];
+    $service_ids = [];
 
     foreach ($definitions as $service_id => $definition) {
       // Skip services from Drush.
@@ -176,6 +185,16 @@ class ServicesCollector extends CollectorBase  {
         continue;
       }
 
+      $service_ids[] = $service_id;
+    }
+
+    sort($service_ids);
+
+    return $service_ids;
+  }
+
+  function aaargh() {
+    /*
       // Skip if the class doesn't exist, or its parent doesn't exist, as we
       // can't work with just an ID to generate things like injection.
       // (The case of a service class whose parent does not exist happens if
@@ -207,6 +226,7 @@ class ServicesCollector extends CollectorBase  {
     ksort($data);
 
     return $data;
+    */
   }
 
   /**
