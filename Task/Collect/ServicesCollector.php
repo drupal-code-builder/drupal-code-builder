@@ -87,6 +87,34 @@ class ServicesCollector extends CollectorBase  {
    *      implements, with the initial '\'.
    */
   public function collect($job_list) {
+    // SHOULD HAVE 455 once filtered!
+
+    $data = [];
+
+    foreach ($job_list as $job) {
+      $job_data = $this->analyseService($job['service_id']);
+
+      // Service was bad in some way: skip it.
+      if (empty($job_data)) {
+        continue;
+      }
+
+      $data['all'][$job['service_id']] = $job_data;
+    }
+
+    // TODO! primary services!
+
+    return $data;
+
+
+
+
+
+
+
+
+
+
     $all_services = $this->getAllServices();
     $static_container_services = $this->getStaticContainerServices();
 
@@ -110,6 +138,13 @@ class ServicesCollector extends CollectorBase  {
     ];
 
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mergeComponentData($existing_data, $new_data) {
+    return array_merge_recursive($existing_data, $new_data);
   }
 
   /**
@@ -193,40 +228,50 @@ class ServicesCollector extends CollectorBase  {
     return $service_ids;
   }
 
-  function aaargh() {
-    /*
-      // Skip if the class doesn't exist, or its parent doesn't exist, as we
-      // can't work with just an ID to generate things like injection.
-      // (The case of a service class whose parent does not exist happens if
-      // a module Foo provides a service for module Bar's collection with a
-      // service tag. Metatag module is one such example.)
-      if (!$this->codeAnalyser->classIsUsable($service_class)) {
-        continue;
-      }
-      if (!class_exists($service_class)) {
-        continue;
-      }
+  /**
+   * Analyses a single service.
+   *
+   * @param string $service_id
+   *   The service ID.
+   *
+   * @return array|null
+   *   An array of data about the service, or NULL is the service is not
+   *   suitable in some way.
+   */
+  protected function analyseService($service_id) {
+    $container_builder = $this->containerBuilderGetter->getContainerBuilder();
+    $definition = $container_builder->getDefinition($service_id);
+    $service_class = $definition->getClass();
 
-      // Get the short class name to use as a label.
-      $service_class_pieces = explode('\\', $service_class);
-      $service_short_class = array_pop($service_class_pieces);
-      // Convert CamelCase to Title Case. We don't expect any numbers to be in
-      // the name, so our conversion can be fairly naive.
-      $label = preg_replace('@([[:lower:]])([[:upper:]])@', '$1 $2', $service_short_class);
-
-      $data[$service_id] = [
-        'id' => $service_id,
-        'label' => $label,
-        'static_method' => '', // Not used.
-        'interface' => $this->getServiceInterface($service_class),
-        'description' => "The {$label} service",
-      ];
+    // Skip if the class doesn't exist, or its parent doesn't exist, as we
+    // can't work with just an ID to generate things like injection.
+    // (The case of a service class whose parent does not exist happens if
+    // a module Foo provides a service for module Bar's collection with a
+    // service tag. Metatag module is one such example.)
+    if (!$this->codeAnalyser->classIsUsable($service_class)) {
+      // dsm("BAILING $service_class");
+      return;
+    }
+    if (!class_exists($service_class)) {
+      return;
     }
 
-    ksort($data);
+    // Get the short class name to use as a label.
+    $service_class_pieces = explode('\\', $service_class);
+    $service_short_class = array_pop($service_class_pieces);
+    // Convert CamelCase to Title Case. We don't expect any numbers to be in
+    // the name, so our conversion can be fairly naive.
+    $label = preg_replace('@([[:lower:]])([[:upper:]])@', '$1 $2', $service_short_class);
 
-    return $data;
-    */
+    $service_data = [
+      'id' => $service_id,
+      'label' => $label,
+      'static_method' => '', // Not used.
+      'interface' => $this->getServiceInterface($service_class),
+      'description' => "The {$label} service",
+    ];
+
+    return $service_data;
   }
 
   /**
