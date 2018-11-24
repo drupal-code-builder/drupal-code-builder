@@ -90,6 +90,11 @@ class CodeAnalyser {
    * Starts a process running the class safety script.
    */
   protected function setupScript() {
+    // The PHP that proc_open() will find may not be the same one as run by
+    // the webserver, and indeed, on some systems may be an out-of-date version,
+    // so detect the PHP that we're currently running and ensure we use that.
+    $php = PHP_BINDIR . '/php';
+
     $script_name = __DIR__ . '/../../class_safety_checker.php';
     $drupal_root = $this->environment->getRoot();
     $autoloader_filepath = $drupal_root . '/autoload.php';
@@ -119,7 +124,7 @@ class CodeAnalyser {
     // Debug option for the script.
     $debug_int = (int) $this->debug;
 
-    $command = "php {$script_name} '{$autoloader_filepath}' {$debug_int}";
+    $command = "{$php} {$script_name} '{$autoloader_filepath}' {$debug_int}";
 
     // Open pipes for both input and output.
     $descriptorspec = array(
