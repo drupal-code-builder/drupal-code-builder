@@ -158,31 +158,35 @@ class ServicesCollector extends CollectorBase  {
    * {@inheritdoc}
    */
   public function mergeComponentData($existing_data, $new_data) {
-    // If 'primary' is not set in the new data, then so far we've only done the
-    // general services.
-    if (!isset($new_data['primary'])) {
-      return array_merge_recursive($existing_data, $new_data);
+    // If the new container only contains 'primary' is set in the new data, then
+    // the static container analysis has just been done as the final job for
+    // this collector. $new_data contains just those, while $existing_data is
+    // just the general services.
+    if (isset($new_data['primary']) && !isset($new_data['all'])) {
+      $all_services = $existing_data['all'];
+      $static_container_services = $new_data['primary'];
+
+      // Filter out anything from the static inspection, to remove deprecated
+      // services, and also in case some non-services snuck in.
+      $static_container_services = array_intersect_key($static_container_services, $all_services);
+
+      // Replace the definitions from the container with the hopefully better
+      // data from the static Drupal class.
+      $all_services = array_merge($all_services, $static_container_services);
+
+      $return = [
+        'primary' => $static_container_services,
+        'all' => $all_services,
+      ];
+
+      return $return;
     }
 
-    // If 'primary' is set, then the static container analysis has been done as
-    // the final job for this collector.
-    // $new_data contains just those, while $existing_data is just the general
-    // services.
-    $all_services = $existing_data['all'];
-    $static_container_services = $new_data['primary'];
-
-    // Filter out anything from the static inspection, to remove deprecated
-    // services, and also in case some non-services snuck in.
-    $static_container_services = array_intersect_key($static_container_services, $all_services);
-
-    // Replace the definitions from the container with the hopefully better
-    // data from the static Drupal class.
-    $all_services = array_merge($all_services, $static_container_services);
-
-    $return = [
-      'primary' => $static_container_services,
-      'all' => $all_services,
-    ];
+    // Otherwise, just do a recursive merge.
+    // Note that we will come here one more time AFTER the special handling for
+    // 'primary' has been done, when temporary storage data is merged to this
+    // collector's final run.
+    return array_merge_recursive($existing_data, $new_data);
   }
 
   /**
