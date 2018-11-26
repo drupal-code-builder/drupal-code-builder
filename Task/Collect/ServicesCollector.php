@@ -93,7 +93,10 @@ class ServicesCollector extends CollectorBase  {
   public function collect($job_list) {
     // SHOULD HAVE 455 once filtered!
 
-    $data = [];
+    $data = [
+      'primary' => [],
+      'all' => [],
+    ];
 
     foreach ($job_list as $job) {
       // A job is either a single service to analyse, or the analysis of the
@@ -162,7 +165,7 @@ class ServicesCollector extends CollectorBase  {
     // the static container analysis has just been done as the final job for
     // this collector. $new_data contains just those, while $existing_data is
     // just the general services.
-    if (isset($new_data['primary']) && !isset($new_data['all'])) {
+    if (!empty($new_data['primary']) && empty($new_data['all'])) {
       $all_services = $existing_data['all'];
       $static_container_services = $new_data['primary'];
 
@@ -182,11 +185,15 @@ class ServicesCollector extends CollectorBase  {
       return $return;
     }
 
-    // Otherwise, just do a recursive merge.
+    // Otherwise, just do a merge of both arrays.
     // Note that we will come here one more time AFTER the special handling for
     // 'primary' has been done, when temporary storage data is merged to this
     // collector's final run.
-    return array_merge_recursive($existing_data, $new_data);
+    $return = [
+      'primary' => array_merge($existing_data['primary'], $new_data['primary']),
+      'all' => array_merge($existing_data['all'], $new_data['all']),
+    ]
+    return $return;
   }
 
   /**
