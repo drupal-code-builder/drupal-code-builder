@@ -161,9 +161,15 @@ class ServicesCollector extends CollectorBase  {
   }
 
   /**
-   * Get data on all services from the container builder. TODO
+   * Gets a list of service IDs from the container.
    *
-   * @return [type] [description]
+   * This performs some basic filtering that's not too resource-intensive, such
+   * as any filtering based on just pattern-matching the service ID, or simple
+   * calls to the service definition object. Anything heavier should be left
+   * to the collect() method.
+   *
+   * @return string[]
+   *   A list of service IDs.
    */
   protected function getServiceIDs() {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
@@ -235,8 +241,8 @@ class ServicesCollector extends CollectorBase  {
    *   The service ID.
    *
    * @return array|null
-   *   An array of data about the service, or NULL is the service is not
-   *   suitable in some way.
+   *   An array of data about the service, or NULL if no data should be
+   *   collected for the service because it is not suitable in some way.
    */
   protected function analyseService($service_id) {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
