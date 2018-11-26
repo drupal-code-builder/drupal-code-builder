@@ -122,39 +122,6 @@ class ServicesCollector extends CollectorBase  {
     }
 
     return $data;
-
-
-
-
-
-
-
-
-
-
-    $all_services = $this->getAllServices();
-    $static_container_services = $this->getStaticContainerServices();
-
-    // Filter out anything from the static inspection, to remove deprecated
-    // services, and also in case some non-services snuck in.
-    $static_container_services = array_intersect_key($static_container_services, $all_services);
-
-    // Replace the definitions from the container with the hopefully better
-    // data from the static Drupal class.
-    $all_services = array_merge($all_services, $static_container_services);
-
-    // Filter for testing sample data collection.
-    if (!empty($this->environment->sample_data_write)) {
-      $static_container_services = array_intersect_key($static_container_services, $this->testingServiceNames);
-      $all_services = array_intersect_key($all_services, $this->testingServiceNames);
-    }
-
-    $return = [
-      'primary' => $static_container_services,
-      'all' => $all_services,
-    ];
-
-    return $return;
   }
 
   /**
