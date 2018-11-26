@@ -66,7 +66,11 @@ class ServicesCollector extends CollectorBase  {
       ];
     }
 
-    // Final job: TODO! gather the static \Drupal:: services!
+    $job_list[] = [
+      'static_container' => TRUE,
+      'process_label' => 'service',
+      'item_label' => 'static container services',
+    ];
 
     return $job_list;
   }
@@ -92,17 +96,27 @@ class ServicesCollector extends CollectorBase  {
     $data = [];
 
     foreach ($job_list as $job) {
-      $job_data = $this->analyseService($job['service_id']);
+      // A job is either a single service to analyse, or the analysis of the
+      // static container.
+      if (isset($job['service_id'])) {
+        $job_data = $this->analyseService($job['service_id']);
 
-      // Service was bad in some way: skip it.
-      if (empty($job_data)) {
-        continue;
+        // Service was bad in some way: skip it.
+        if (empty($job_data)) {
+          continue;
+        }
+
+        $data['all'][$job['service_id']] = $job_data;
       }
-
-      $data['all'][$job['service_id']] = $job_data;
+      else {
+        // Get the primary list of services from the static container.
+        // This list then needs filtering by the services in 'all', and also
+        // the data in the 'all' list needs to have the additional data from
+        // the primary services merged in: this is taken care of by
+        // mergeComponentData().
+        $data['primary'] = $this->getStaticContainerServices();
+      }
     }
-
-    // TODO! primary services!
 
     return $data;
 
@@ -144,7 +158,31 @@ class ServicesCollector extends CollectorBase  {
    * {@inheritdoc}
    */
   public function mergeComponentData($existing_data, $new_data) {
-    return array_merge_recursive($existing_data, $new_data);
+    // If 'primary' is not set in the new data, then so far we've only done the
+    // general services.
+    if (!isset($new_data['primary'])) {
+      return array_merge_recursive($existing_data, $new_data);
+    }
+
+    // If 'primary' is set, then the static container analysis has been done as
+    // the final job for this collector.
+    // $new_data contains just those, while $existing_data is just the general
+    // services.
+    $all_services = $existing_data['all'];
+    $static_container_services = $new_data['primary'];
+
+    // Filter out anything from the static inspection, to remove deprecated
+    // services, and also in case some non-services snuck in.
+    $static_container_services = array_intersect_key($static_container_services, $all_services);
+
+    // Replace the definitions from the container with the hopefully better
+    // data from the static Drupal class.
+    $all_services = array_merge($all_services, $static_container_services);
+
+    $return = [
+      'primary' => $static_container_services,
+      'all' => $all_services,
+    ];
   }
 
   /**
