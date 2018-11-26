@@ -159,7 +159,7 @@ class ServicesCollector extends CollectorBase  {
     $return = [
       'primary' => array_merge($existing_data['primary'], $new_data['primary']),
       'all' => array_merge($existing_data['all'], $new_data['all']),
-    ]
+    ];
     return $return;
   }
 
