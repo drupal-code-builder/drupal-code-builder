@@ -138,6 +138,7 @@ class ServicesCollector extends CollectorBase  {
 
       // Filter out anything from the static inspection, to remove deprecated
       // services, and also in case some non-services snuck in.
+      // SHIT THIS WON"T WORK.
       $static_container_services = array_intersect_key($static_container_services, $all_services);
 
       // Replace the definitions from the container with the hopefully better
@@ -156,6 +157,9 @@ class ServicesCollector extends CollectorBase  {
     // Note that we will come here one more time AFTER the special handling for
     // 'primary' has been done, when temporary storage data is merged to this
     // collector's final run.
+    foreach ($new_data['all'] as $service_id => $data) {
+      $existing_data['all'][$service_id] = $data;
+    }
     $return = [
       'primary' => array_merge($existing_data['primary'], $new_data['primary']),
       'all' => array_merge($existing_data['all'], $new_data['all']),
