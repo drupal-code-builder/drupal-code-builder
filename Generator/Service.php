@@ -64,6 +64,10 @@ class Service extends PHPClassFileWithInjection {
     // TODO: implement this once we have a processing system.
     //$presets['event_subscriber']['data']['force']['relative_class_name'] ...
 
+    uasort($presets, function($a, $b) {
+      return strnatcasecmp($a['label'], $b['label']);
+    });
+
     $data_definition = array(
       'service_tag_type' => [
         'label' => 'Service type preset',
