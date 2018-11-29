@@ -120,11 +120,6 @@ class Collect extends Base {
 
       $jobs_data = $collector_helper->collect($jobs);
 
-      $incremental_data[$collector_class_name] = $collector_helper->mergeComponentData(
-        $incremental_data[$collector_class_name],
-        $jobs_data
-      );
-
       $last_job = end($jobs);
       if (!empty($last_job['last'])) {
         $final_jobs[$collector_class_name] = TRUE;
