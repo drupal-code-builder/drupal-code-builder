@@ -26,6 +26,7 @@ class ServicesCollector extends CollectorBase  {
     'current_user' => TRUE,
     'entity_type.manager' => TRUE,
     'module_handler' => TRUE,
+    'cache.discovery' => TRUE,
   ];
 
   /**

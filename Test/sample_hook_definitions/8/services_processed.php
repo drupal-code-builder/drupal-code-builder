@@ -53,5 +53,13 @@ array (
       'interface' => '\\Drupal\\Core\\Extension\\ModuleHandlerInterface',
       'description' => 'The module handler',
     ),
+    'cache.discovery' =>
+    array (
+      'id' => 'cache.discovery',
+      'label' => 'Cache Backend Interface',
+      'static_method' => '',
+      'interface' => '',
+      'description' => 'The Cache Backend Interface service',
+    ),
   ),
 );
