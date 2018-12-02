@@ -75,6 +75,7 @@ class ServicesCollector extends CollectorBase  {
    *    - 'id': The service ID.
    *    - 'label': A label for the service.
    *    - 'description': A longer description for the service.
+   *    - 'class': The fully-qualified class that is defined for the service.
    *    - 'interface': The fully-qualified interface that the service class
    *      implements, with the initial '\'.
    */
@@ -204,6 +205,7 @@ class ServicesCollector extends CollectorBase  {
         'id' => $service_id,
         'label' => $label,
         'static_method' => '', // Not used.
+        'class' => '\\' . $service_class,
         'interface' => $this->getServiceInterface($service_class),
         'description' => "The {$label} service",
       ];
@@ -279,6 +281,8 @@ class ServicesCollector extends CollectorBase  {
    *   An array of service data.
    */
   protected function getStaticContainerServices() {
+    $container_builder = $this->containerBuilderGetter->getContainerBuilder();
+
     // We can get service IDs from the container,
     $static_container_reflection = new \ReflectionClass('\Drupal');
     $filename = $static_container_reflection->getFileName();
@@ -331,10 +335,13 @@ class ServicesCollector extends CollectorBase  {
       $description = ucfirst($matches[1]);
       $label = ucfirst($matches[2]);
 
+      $definition = $container_builder->getDefinition($service_id);
+
       $service_definition = [
         'id' => $service_id,
         'label' => $label,
         'static_method' => $name, // not used.
+        'class' => '\\' . $definition->getClass(),
         'interface' => $interface,
         'description' => $description,
       ];
