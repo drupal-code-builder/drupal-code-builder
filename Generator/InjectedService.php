@@ -37,6 +37,7 @@ class InjectedService extends BaseGenerator {
         // Copy these explicitly for maintainability and readability.
         $service_info['description']  = $services_data[$service_id]['description'];
         $service_info['interface']    = $services_data[$service_id]['interface'];
+        $service_info['class']        = $services_data[$service_id]['class'];
 
         // Derive further information.
         $service_id_pieces = preg_split('@[_.]@', $value);
@@ -44,7 +45,7 @@ class InjectedService extends BaseGenerator {
         $service_info['property_name'] = (new StringAssembler($service_id_pieces))->camel();
 
         // If the service has no interface, typehint on the class.
-        $service_info['typehint'] = $service_info['interface'] ?? $service_info['class'];
+        $service_info['typehint'] = $service_info['interface'] ?: $service_info['class'];
 
         // Set the service info.
         // Bit of a cheat, as undeclared data property!
