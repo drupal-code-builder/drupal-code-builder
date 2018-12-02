@@ -72,15 +72,18 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected function collectSectionBlocksForDependencyInjection() {
     // Injected services.
     if (!empty($this->injectedServices)) {
-      foreach ($this->injectedServices as $service_info) {
-        $property_code = $this->docBlock([
-          $service_info['description'] . '.',
-          '',
-          '@var ' . $service_info['typehint']
-        ]);
-        $property_code[] = 'protected $' . $service_info['property_name'] . ';';
+      // Service class property.
+      if (isset($this->childContentsGrouped['service_property'])) {
+        foreach ($this->childContentsGrouped['service_property'] as $service_property) {
+          $property_code = $this->docBlock([
+            $service_property['description'] . '.',
+            '',
+            '@var ' . $service_property['typehint']
+          ]);
+          $property_code[] = 'protected $' . $service_property['property_name'] . ';';
 
-        $this->properties[] = $property_code;
+          $this->properties[] = $property_code;
+        }
       }
 
       // __construct() method

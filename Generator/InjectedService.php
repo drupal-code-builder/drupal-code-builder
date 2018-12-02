@@ -66,6 +66,14 @@ class InjectedService extends BaseGenerator {
         'role' => 'service',
         'content' => $service_info,
       ],
+      'service_property' => [
+        'role' => 'service_property',
+        'content' => [
+          'property_name' => $service_info['property_name'],
+          'typehint'      => $service_info['typehint'],
+          'description'   => $service_info['description'],
+        ],
+      ],
       'container_extraction' => [
         'role' => 'container_extraction',
         'content' => "\$container->get('{$service_info['id']}'),",
