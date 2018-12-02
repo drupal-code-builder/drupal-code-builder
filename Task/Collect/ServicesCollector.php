@@ -176,7 +176,7 @@ class ServicesCollector extends CollectorBase  {
         continue;
       }
 
-      // Skip if the class doesn't exist, or its parent doesn't exist, as we
+      // Skip if the class isn't loadable by PHP without causing a fatal, as we
       // can't work with just an ID to generate things like injection.
       // (The case of a service class whose parent does not exist happens if
       // a module Foo provides a service for module Bar's collection with a
@@ -184,7 +184,11 @@ class ServicesCollector extends CollectorBase  {
       if (!$this->codeAnalyser->classIsUsable($service_class)) {
         continue;
       }
-      if (!class_exists($service_class)) {
+
+      // Skip if the clas doesn't exist.
+      // The service class can sometimes actually be an interface, as with
+      // cache services. (This is not documented!)
+      if (!(class_exists($service_class) || interface_exists($service_class))) {
         continue;
       }
 
