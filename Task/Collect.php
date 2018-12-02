@@ -118,7 +118,7 @@ class Collect extends Base {
     foreach ($grouped_jobs as $collector_class_name => $jobs) {
       $collector_helper = $this->getHelper($collector_class_name);
 
-      $jobs_data = $collector_helper->collect($jobs);
+      $incremental_data[$collector_class_name] = $collector_helper->collect($jobs);
 
       $last_job = end($jobs);
       if (!empty($last_job['last'])) {
