@@ -727,6 +727,20 @@ class PHPTester {
   }
 
   /**
+   * Assert the parsed class does not have the given property.
+   *
+   * @param string $property_name
+   *   The name of the property, without the initial '$'.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassHasNotProperty($property_name, $message = NULL) {
+    $message = $message ?? "The class does not define the property \${$property_name}";
+
+    Assert::assertArrayNotHasKey($property_name, $this->parser_nodes['properties'], $message);
+  }
+
+  /**
    * Assert the parsed class injects the given services.
    *
    * @param array $injected_services
