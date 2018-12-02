@@ -69,6 +69,7 @@ class ComponentPluginType8Test extends TestBase {
     $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_cat_feeder"]);
     $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'class'], 'Drupal\test_module\CatFeederManager');
     $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'parent'], "default_plugin_manager");
+    $yaml_tester->assertHasNotProperty(['services', "plugin.manager.test_module_cat_feeder", 'arguments'], "The plugin manager service has no injected arguments.");
 
     // Check the plugin manager file.
     $plugin_manager_file = $files["src/CatFeederManager.php"];
