@@ -39,6 +39,39 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
+  protected function buildComponentContents($children_contents) {
+    parent::buildComponentContents($children_contents);
+
+    // For YAML plugin type, we need to hack out various bits of injection,
+    // which is a PITA.
+    if ($this->component_data['discovery_type'] == 'yaml') {
+      // The cache.discover service is injected, but not set to a property.
+      foreach ($this->childContentsGrouped['service_property'] as $key => $content) {
+        if ($content['property_name'] == 'cacheDiscovery') {
+          unset($this->childContentsGrouped['service_property'][$key]);
+        }
+      }
+
+      // The cache.discovery param name needs to be tweaked.
+      // TODO: fix this hack, do it somewhere like code analysis?
+      foreach ($this->childContentsGrouped['constructor_param'] as $key => $content) {
+        if ($content['name'] == 'cache_discovery') {
+          $this->childContentsGrouped['constructor_param'][$key]['name'] = 'cache_backend';
+        }
+      }
+
+      // The cache.discovery param doesn't get assigned.
+      foreach ($this->childContentsGrouped['property_assignment'] as $key => $content) {
+        if ($content['variable_name'] == 'cache_discovery') {
+          unset($this->childContentsGrouped['property_assignment'][$key]);
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function collectSectionBlocks() {
     $this->constructor = $this->codeBodyClassMethodConstruct();
 
@@ -68,23 +101,35 @@ class PluginTypeManager extends Service {
    * {@inheritdoc}
    */
   protected function codeBodyClassMethodConstruct() {
-    $parameters = [
-      [
-        'name' => 'namespaces',
-        'typehint' => '\Traversable',
-        'description' => "An object that implements \Traversable which contains the root paths keyed by the corresponding namespace to look for plugin implementations.",
-      ],
-      [
-        'name' => 'cache_backend',
-        'typehint' => '\Drupal\Core\Cache\CacheBackendInterface',
-        'description' => 'The cache backend.',
-      ],
-      [
-        'name' => 'module_handler',
-        'typehint' => '\Drupal\Core\Extension\ModuleHandlerInterface',
-        'description' => 'The module handler.',
-      ],
-    ];
+    $parameters = [];
+
+    // Annotation plugins have injection parameters that don't come from the
+    // service definition, as they have a parent service.
+    if ($this->component_data['discovery_type'] == 'annotation') {
+      $parameters = [
+        [
+          'name' => 'namespaces',
+          'typehint' => '\Traversable',
+          'description' => "An object that implements \Traversable which contains the root paths keyed by the corresponding namespace to look for plugin implementations.",
+        ],
+        [
+          'name' => 'cache_backend',
+          'typehint' => '\Drupal\Core\Cache\CacheBackendInterface',
+          'description' => 'The cache backend.',
+        ],
+        [
+          'name' => 'module_handler',
+          'typehint' => '\Drupal\Core\Extension\ModuleHandlerInterface',
+          'description' => 'The module handler.',
+        ],
+      ];
+    }
+    else {
+      foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+        $parameters[] = $service_parameter;
+      }
+    }
+
     $parent_injected_services = $this->getConstructParentInjectedServices();
     $parameters = array_merge($parameters, $parent_injected_services);
 
