@@ -197,6 +197,11 @@ class ServicesCollector extends CollectorBase  {
       // Get the short class name to use as a label.
       $service_class_pieces = explode('\\', $service_class);
       $service_short_class = array_pop($service_class_pieces);
+
+      // If the class is in fact secretly an interface (this is the case for
+      // cache services!) then remove the 'Interface' suffix.
+      $service_short_class = preg_replace('/Interface$/', '', $service_short_class);
+
       // Convert CamelCase to Title Case. We don't expect any numbers to be in
       // the name, so our conversion can be fairly naive.
       $label = preg_replace('@([[:lower:]])([[:upper:]])@', '$1 $2', $service_short_class);
