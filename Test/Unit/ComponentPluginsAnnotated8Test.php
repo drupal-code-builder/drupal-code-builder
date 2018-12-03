@@ -211,6 +211,8 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   /**
    * Test Plugins component with injected services.
+   *
+   * @group di
    */
   function testPluginsGenerationWithServices() {
     // Create a module.
@@ -278,6 +280,8 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   /**
    * Test Plugins component with a plugin base class with an existing create().
+   *
+   * @group di
    */
   function testPluginsGenerationWithExistingCreate() {
     // Create a module.
@@ -353,6 +357,8 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   /**
    * Tests a plugin base class with nonstandard fixed constructor parameters.
+   *
+   * @group di
    */
   function testPluginsGenerationWithNonstandardFixedParameters() {
     // Create a module.

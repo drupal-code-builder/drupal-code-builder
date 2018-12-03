@@ -61,6 +61,8 @@ class ComponentForm8Test extends TestBase {
 
   /**
    * Test Form component with injected services.
+   *
+   * @group di
    */
   function testFormGenerationWithServices() {
     // Assemble module data.

@@ -163,6 +163,8 @@ class ComponentService8Test extends TestBase {
 
   /**
    * Test a service with with injected services.
+   *
+   * @group di
    */
   function testServiceGenerationWithServices() {
     // Assemble module data.
