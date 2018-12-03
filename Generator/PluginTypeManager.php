@@ -123,9 +123,9 @@ class PluginTypeManager extends Service {
       $code[] = '// discovery.';
     }
 
-    if ($this->injectedServices) {
-      foreach ($this->injectedServices as $service_info) {
-        $code[] = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+    if (isset($this->childContentsGrouped['property_assignment'])) {
+      foreach ($this->childContentsGrouped['property_assignment'] as $content) {
+        $code[] = "\$this->{$content['property_name']} = \${$content['variable_name']};";
       }
       $code[] = '';
     }

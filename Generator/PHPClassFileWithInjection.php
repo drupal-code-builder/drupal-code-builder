@@ -214,8 +214,8 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $code[] = '  ' . 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
     }
 
-    foreach ($this->injectedServices as $service_info) {
-      $code[] = "  \$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+    foreach ($this->childContentsGrouped['property_assignment'] as $content) {
+      $code[] = "  \$this->{$content['property_name']} = \${$content['variable_name']};";
     }
     $code[] = '}';
 

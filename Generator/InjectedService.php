@@ -87,6 +87,13 @@ class InjectedService extends BaseGenerator {
           'description' => $service_info['description'] . '.',
         ],
       ],
+      'property_assignment' => [
+        'role' => 'property_assignment',
+        'content' => [
+          'property_name' => $service_info['property_name'],
+          'variable_name' => $service_info['variable_name'],
+        ],
+      ],
     ];
   }
 
