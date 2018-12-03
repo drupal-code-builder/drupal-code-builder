@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use CaseConverter\CaseString;
 
 /**
  * Task helper for collecting data on services.
@@ -202,9 +203,7 @@ class ServicesCollector extends CollectorBase  {
       // cache services!) then remove the 'Interface' suffix.
       $service_short_class = preg_replace('/Interface$/', '', $service_short_class);
 
-      // Convert CamelCase to Title Case. We don't expect any numbers to be in
-      // the name, so our conversion can be fairly naive.
-      $label = preg_replace('@([[:lower:]])([[:upper:]])@', '$1 $2', $service_short_class);
+      $label = CaseString::pascal($service_short_class)->sentence();
 
       $data[$service_id] = [
         'id' => $service_id,
