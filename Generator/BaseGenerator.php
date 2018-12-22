@@ -155,8 +155,12 @@ abstract class BaseGenerator {
    *      keys are ignored.
    *    - 'compound': The property's data should be an array where each element
    *      is a further array of properties. The keys are ignored. The values in
-   *      each array are specified by calling this method on the class
-   *      determined from the 'component_type' property.
+   *      each array are themselves defined by data properties, which are
+   *      specified in one of two ways:
+   *      - This property has its own 'properties' attribute, which contains
+   *        a definition in the same format as this method's return value.
+   *      - This method should be called this method on the class given by the
+   *        'component_type' attribute, in order to get child properties.
    *  - 'primary': (optional) Boolean indicating that this property should be
    *    considered the principal property for this component. Only one property
    *    in a component may be declared as primary. Internally, this is used to
