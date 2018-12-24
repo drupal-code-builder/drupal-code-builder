@@ -87,8 +87,8 @@ class MethodCollector {
     // import statements.
     // Get the typehint classes on parameters.
     $parameters = $method->getParameters();
-    $parameter_hinted_class_short_names = [];
-    $parameter_hinted_class_full_names = [];
+    $search = [];
+    $replace = [];
     foreach ($parameters as $parameter) {
       $parameter_hinted_class = $parameter->getClass();
 
@@ -97,16 +97,21 @@ class MethodCollector {
         continue;
       }
 
-      // Create arrays for str_replace() of short and long classnames.
-      $parameter_hinted_class_short_names[] = $parameter_hinted_class->getShortName();
-      // The PHPFile generator works with fully-qualified classnames, with
-      // an initial '\', so we need to prepend that.
-      $parameter_hinted_class_full_names[] = '\\' . $parameter_hinted_class->getName();
+      // Create arrays for preg_replace() of search and replace strings.
+      // Add a negative lookbehind for the backslash so we don't replace a
+      // fully-qualified root-namespace typehint (such as \Iterator).
+      // Add the space between the typehint and the parameter to help guard
+      // against false replacements.
+      $parameter_hinted_class_short_name = $parameter_hinted_class->getShortName();
+      $search[] = "@(?<!\\\\){$parameter_hinted_class_short_name}(?= )@";
+
+      // Prepend the initial '\'.
+      $replace[] = '\\' . $parameter_hinted_class->getName();
     }
 
-    $interface_method_data['declaration'] = str_replace(
-      $parameter_hinted_class_short_names,
-      $parameter_hinted_class_full_names,
+    $interface_method_data['declaration'] = preg_replace(
+      $search,
+      $replace,
       $interface_method_data['declaration']
     );
 
