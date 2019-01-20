@@ -21,17 +21,20 @@ class RouterItem extends BaseGenerator {
     return parent::componentDataDefinition() + [
       'path' => [
         'label' => "Route path",
-        'description' => "The path of the route. Do not include the initial '/'.",
+        'description' => "The path of the route. Include the initial '/'.",
         'required' => TRUE,
       ],
       'route_name' => [
         'internal' => TRUE,
         'process_default' => TRUE,
         'default' => function($component_data) {
+          // Strip the initial slash so it's not turned into a surplus dot.
+          $trimmed_path = ltrim($component_data['path'], '/');
+
           // Get the module name rather than using the token, to avoid the
           // property name getting quoted.
           $module = $component_data['root_component_name'];
-          $route_name = $module . '.' . str_replace('/', '.', $component_data['path']);
+          $route_name = $module . '.' . str_replace('/', '.', $trimmed_path);
           return $route_name;
         },
       ],
@@ -207,8 +210,11 @@ class RouterItem extends BaseGenerator {
 
     $route_yaml = [];
 
-    // Prepend a slash to the path for D8.
-    $route_yaml['path'] = '/' . $path;
+    // Prepend a slash to the path for D8 if one not given.
+    if (substr($path, 0, 1) != '/') {
+      $path = '/' . $path;
+    }
+    $route_yaml['path'] = $path;
     $route_yaml['defaults']['_title'] = $this->component_data['title'];
 
     // Set the YAML values that come from component data with an address.
