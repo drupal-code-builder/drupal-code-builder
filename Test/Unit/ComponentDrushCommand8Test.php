@@ -21,7 +21,7 @@ class ComponentDrushCommand8Test extends TestBase {
   protected $drupalMajorVersion = 8;
 
   /**
-   * Test generating a module with a service.
+   * Test generating a Drush command file.
    */
   public function testBasicServiceGeneration() {
     // Assemble module data.
