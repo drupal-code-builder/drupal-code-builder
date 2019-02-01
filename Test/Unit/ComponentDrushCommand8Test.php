@@ -36,7 +36,7 @@ class ComponentDrushCommand8Test extends TestBase {
           'command_name' => 'alpha',
         ],
         1 => [
-          'command_name' => 'beta',
+          'command_name' => 'my_group:beta',
         ],
       ),
       'readme' => FALSE,
@@ -65,6 +65,8 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
+    $php_tester->assertHasMethod('alpha');
+    $php_tester->assertHasMethod('beta');
   }
 
 }
