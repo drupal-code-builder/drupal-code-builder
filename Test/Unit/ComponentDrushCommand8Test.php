@@ -33,10 +33,10 @@ class ComponentDrushCommand8Test extends TestBase {
       'short_description' => 'Test Module description',
       'drush_commands' => array(
         0 => [
-          'command_class_name' => 'MyCommand',
+          'command_name' => 'alpha',
         ],
         1 => [
-          'command_class_name' => 'MyCommandTwo',
+          'command_name' => 'beta',
         ],
       ),
       'readme' => FALSE,
@@ -47,24 +47,23 @@ class ComponentDrushCommand8Test extends TestBase {
     $this->assertFiles([
       'test_module.info.yml',
       'drush.services.yml',
-      'src/Commands/MyCommand.php',
-      'src/Commands/MyCommandTwo.php',
+      'src/Commands/TestModuleCommands.php',
     ], $files);
 
     $drush_services_file = $files["drush.services.yml"];
+    dump($drush_services_file);
 
     $yaml_tester = new YamlTester($drush_services_file);
     $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "$module_name.my_command"]);
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_command", 'class'], "Drupal\\$module_name\\Commands\\MyCommand");
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_command_two", 'class'], "Drupal\\$module_name\\Commands\\MyCommandTwo");
+    $yaml_tester->assertHasProperty(['services', "$module_name.commands"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.commands", 'class'], "Drupal\\$module_name\\Commands\\TestModuleCommands");
 
-    $command_class_file = $files["src/Commands/MyCommand.php"];
+    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
     dump($command_class_file);
 
     $php_tester = new PHPTester($command_class_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\Commands\MyCommand');
+    $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
   }
 

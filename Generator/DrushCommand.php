@@ -7,12 +7,80 @@ use CaseConverter\CaseString;
 /**
  * Generator for a Drush 9 command.
  */
-class DrushCommand extends PHPClassFileWithInjection {
+class DrushCommand extends BaseGenerator {
+
+  use NameFormattingTrait;
 
   /**
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
+    $data_definition = parent::componentDataDefinition();
+
+    $data_definition += [
+      'command_name' => [
+        'label' => 'Command name',
+        'description' => "The command name, either in the format 'group:command', or just 'command' to prepend the module name as the group.",
+        'required' => TRUE,
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          if (strpos($value, ':') === FALSE) {
+            return $component_data['root_component_name'] . ':' . $value;
+          }
+        },
+      ],
+      'command_name_aliases' => [
+        'label' => 'Command aliases',
+        'format' => 'array',
+      ],
+      'injected_services' => [
+        'label' => 'Injected services',
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+
+          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+
+          return $options;
+        },
+        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
+      ],
+      'command_short_class_name' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          return CaseString::snake($component_data['root_component_name'])->pascal() . 'Commands';
+        },
+      ],
+      // TODO: move the rest of these to support multiple commands.
+      'qualified_class_name_pieces' => [
+        'computed' => TRUE,
+        'format' => 'array',
+        'default' => function($component_data) {
+          $class_name_pieces = [
+            'Drupal',
+            $component_data['root_component_name'],
+            'Commands',
+            $component_data['command_short_class_name'],
+          ];
+
+          return $class_name_pieces;
+        },
+      ],
+      'qualified_class_name' => [
+        'computed' => TRUE,
+        'format' => 'string',
+        'default' => function($component_data) {
+          return self::makeQualifiedClassName($component_data['qualified_class_name_pieces']);
+        },
+      ],
+      'drush_service_name' => [
+        'internal' => TRUE,
+        'default' => function($component_data) {
+          return $component_data['root_component_name'] . '.commands';
+        },
+      ],
+    ];
+
+    /*
     $data_definition = array(
       'command_class_name' => array(
         'label' => 'Command class name',
@@ -51,6 +119,7 @@ class DrushCommand extends PHPClassFileWithInjection {
 
     // Set the parent class.
     $data_definition['parent_class_name']['default'] = '\Drush\Commands\DrushCommands';
+    */
 
     return $data_definition;
   }
@@ -60,6 +129,15 @@ class DrushCommand extends PHPClassFileWithInjection {
    */
   public function requiredComponents() {
     $components = [];
+
+    $components['command_file'] = [
+      'component_type' => 'PHPClassFileWithInjection',
+      'relative_class_name' => [
+        'Commands',
+        $this->component_data['command_short_class_name'],
+      ],
+      'parent_class_name' => '\Drush\Commands\DrushCommands',
+    ];
 
     $yaml_data_arguments = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
@@ -74,7 +152,7 @@ class DrushCommand extends PHPClassFileWithInjection {
     }
 
     $yaml_service_definition = [
-      'class' => $this->component_data['qualified_class_name'],
+      'class' => self::makeQualifiedClassName($this->component_data['qualified_class_name_pieces']),
     ];
     if ($yaml_data_arguments) {
       $yaml_service_definition['arguments'] = $yaml_data_arguments;
