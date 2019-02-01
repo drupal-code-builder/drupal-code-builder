@@ -114,14 +114,6 @@ class DrushCommand extends BaseGenerator {
       ],
     ];
 
-    /*
-       * @command config-devel-export
-   * @param string $extension Machine name of the module, profile or theme to export.
-   * @usage drush config-devel-export MODULE_NAME
-   *   Write back configuration to the specified module, based on .info file.
-   * @aliases cde,cd-em
-*/
-
     $docblock_lines = [
       $this->component_data['command_description'],
       "@command {$this->component_data['command_name']}",
