@@ -23,7 +23,7 @@ class ComponentDrushCommand8Test extends TestBase {
   /**
    * Test generating a Drush command file.
    */
-  public function testBasicServiceGeneration() {
+  public function testBasicCommandGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = array(
@@ -69,6 +69,54 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');
+  }
+
+  /**
+   * Test a command with with injected services.
+   *
+   * @group di
+   */
+  function testCommandGenerationWithServices() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'drush_commands' => array(
+        0 => [
+          'command_name' => 'alpha',
+          'command_description' => 'Do alpha.',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+        1 => [
+          'command_name' => 'my_group:beta',
+          'command_description' => 'Do beta.',
+          'injected_services' => [
+            'entity_type.manager',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'drush.services.yml',
+      'src/Commands/TestModuleCommands.php',
+    ], $files);
+
+    $drush_services_file = $files["drush.services.yml"];
+    dump($drush_services_file);
+
+    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
+    dump($command_class_file);
+
   }
 
 }
