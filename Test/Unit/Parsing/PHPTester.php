@@ -661,6 +661,7 @@ class PHPTester {
 
     // Check the class is declared as extending the short parent name.
     $extends_node = $class_node->extends;
+    Assert::assertInstanceOf(\PhpParser\Node\Name::class, $extends_node, "The class has a parent.");
     Assert::assertTrue($extends_node->isUnqualified(), "The class parent is unqualified.");
     Assert::assertEquals($parent_class_short_name, $extends_node->getLast(), $message);
 
