@@ -32,6 +32,11 @@ class DrushCommand extends BaseGenerator {
         'label' => 'Command aliases',
         'format' => 'array',
       ],
+      'command_description' => [
+        'label' => 'Command description',
+        'required' => TRUE,
+        'default' => 'TODO: write a description',
+      ],
       'command_method_name' => [
         'computed' => TRUE,
         'default' => function($component_data) {
@@ -104,13 +109,34 @@ class DrushCommand extends BaseGenerator {
         $this->component_data['command_short_class_name'],
       ],
       'parent_class_name' => '\Drush\Commands\DrushCommands',
+      'class_docblock_lines' => [
+        "Drush integration for the %Module module.",
+      ],
     ];
+
+    /*
+       * @command config-devel-export
+   * @param string $extension Machine name of the module, profile or theme to export.
+   * @usage drush config-devel-export MODULE_NAME
+   *   Write back configuration to the specified module, based on .info file.
+   * @aliases cde,cd-em
+*/
+
+    $docblock_lines = [
+      $this->component_data['command_description'],
+      "@command {$this->component_data['command_name']}",
+      "@usage drush {$this->component_data['command_name']}",
+      "  {$this->component_data['command_description']}",
+    ];
+    if (!empty($this->component_data['command_name_aliases'])) {
+      $docblock_lines[] =  "@aliases " . implode(',', $this->component_data['command_name_aliases']);
+    }
 
     $components['command_method'] = [
       'component_type' => 'PHPFunction',
       'containing_component' => '%requester:command_file',
       'declaration' => "public function {$this->component_data['command_method_name']}()",
-      'doxygen_first' => '',
+      'function_docblock_lines' => $docblock_lines,
       'body' => [],
     ];
 

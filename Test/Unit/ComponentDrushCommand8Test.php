@@ -34,9 +34,11 @@ class ComponentDrushCommand8Test extends TestBase {
       'drush_commands' => array(
         0 => [
           'command_name' => 'alpha',
+          'command_description' => 'Do alpha.',
         ],
         1 => [
           'command_name' => 'my_group:beta',
+          'command_description' => 'Do beta.',
         ],
       ),
       'readme' => FALSE,
