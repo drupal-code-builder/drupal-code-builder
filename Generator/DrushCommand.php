@@ -88,47 +88,6 @@ class DrushCommand extends BaseGenerator {
       ],
     ];
 
-    /*
-    $data_definition = array(
-      'command_class_name' => array(
-        'label' => 'Command class name',
-        'required' => TRUE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data['command_class_name'] = ucfirst($value);
-        },
-      ),
-      'drush_service_name' => [
-        'internal' => TRUE,
-        'default' => function($component_data) {
-          return $component_data['root_component_name'] . '.' . CaseString::pascal($component_data['command_class_name'])->snake();
-        },
-      ],
-      'injected_services' => array(
-        'label' => 'Injected services',
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
-
-          return $options;
-        },
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
-      ),
-    );
-
-    // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
-
-    // Put the class in the 'Commands' relative namespace.
-    $data_definition['relative_class_name']['default'] = function($component_data) {
-      return ['Commands', $component_data['command_class_name']];
-    };
-
-    // Set the parent class.
-    $data_definition['parent_class_name']['default'] = '\Drush\Commands\DrushCommands';
-    */
-
     return $data_definition;
   }
 
@@ -155,6 +114,8 @@ class DrushCommand extends BaseGenerator {
       'body' => [],
     ];
 
+    // TODO: this won't work with multiple commands -- merge needs to be
+    // handled.
     $yaml_data_arguments = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
       $components['service_' . $service_id] = array(
@@ -173,24 +134,6 @@ class DrushCommand extends BaseGenerator {
     if ($yaml_data_arguments) {
       $yaml_service_definition['arguments'] = $yaml_data_arguments;
     }
-
-    dump($yaml_service_definition);
-
-    /*
-    services:
-  config_devel.commands:
-    class: \Drupal\config_devel\Commands\ConfigDevelCommands
-    arguments:
-      - '@module_handler'
-      - '@theme_handler'
-      - '@info_parser'
-      - '@config.factory'
-      - '@config_devel.writeback_subscriber'
-      - '@config_devel.auto_import_subscriber'
-      - '@file_system'
-    tags:
-      - { name: drush.command }
-    */
 
     // Service tags.
     $yaml_service_definition['tags'][] = [
