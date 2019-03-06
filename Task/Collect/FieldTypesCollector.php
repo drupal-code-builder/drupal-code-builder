@@ -84,6 +84,10 @@ class FieldTypesCollector extends CollectorBase  {
       $field_types_data = array_intersect_key($field_types_data, $this->testingFieldTypes);
     }
 
+    uasort($field_types_data, function($a, $b) {
+      return strcmp($a['label'], $b['label']);
+    });
+
     return $field_types_data;
   }
 
