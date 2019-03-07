@@ -32,4 +32,4 @@ script:
   - if [ "$TESTTYPE" = "drupal" ]; then cd ../..; ls; cd drupal; fi
   # Only run the collection test for now; the installation tests have been
   # broken by changes in Drupal core.
-  - if [ "$TESTTYPE" = "drupal" ]; then ./vendor/bin/phpunit -c core ../drupal-code-builder/drupal-code-builder/Test/Integration/CollectPluginInfoTest.php; fi
+  - if [ "$TESTTYPE" = "drupal" ]; then ./vendor/bin/phpunit -c core ../drupal-code-builder/drupal-code-builder/Test/Integration/Collection; fi
