@@ -61,16 +61,25 @@ class CollectPluginInfoTest extends KernelTestBase {
     $method = $class->getMethod('gatherPluginTypeInfo');
     $method->setAccessible(TRUE);
 
-    $test_plugin_types = [
+    $test_plugin_jobs = [
       // In Core, and other modules provide plugins.
-      'plugin.manager.queue_worker',
+      [
+        'service_id' => 'plugin.manager.queue_worker',
+        'type_id' => 'queue_worker',
+      ],
       // In Core, and our name doesn't match Plugin module's name.
-      'plugin.manager.field.field_type',
+      [
+        'service_id' => 'plugin.manager.field.field_type',
+        'type_id' => 'field.field_type',
+      ],
       // In a module, and other modules provide plugins.
-      'plugin.manager.help_section',
+      [
+        'service_id' => 'plugin.manager.help_section',
+        'type_id' => 'help_section',
+      ]
     ];
 
-    $plugin_types_info = $method->invoke($plugin_types_collector, $test_plugin_types);
+    $plugin_types_info = $method->invoke($plugin_types_collector, $test_plugin_jobs);
 
     $this->assertCount(3, $plugin_types_info);
     $this->assertArrayHasKey('queue_worker', $plugin_types_info, "The plugin types list has the queue_worker plugin type.");
