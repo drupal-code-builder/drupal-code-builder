@@ -57,6 +57,11 @@ class CollectHooksTest extends CollectTestBase {
     $body = $hook_entity_base_field_info_data['body'];
 
     $this->assertNotEmpty($body);
+    $this->assertContains(
+      "\$fields['mymodule_text'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')",
+      $body,
+      'The short class name in hook body code is replaced with the fully-qualified version.'
+    );
   }
 
 }

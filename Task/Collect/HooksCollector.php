@@ -294,6 +294,22 @@ abstract class HooksCollector extends CollectorBase {
   protected function processHookFile($filepath) {
     $contents = file_get_contents("$filepath");
 
+    // Prepare a replacement set of the import statements, so we can replace
+    // short class names will fully-qualified ones, so the sample code can
+    // actually run.
+    $imports_pattern = "@^use (.+);@m";
+    $matches = [];
+    preg_match_all($imports_pattern, $contents, $matches);
+    $imports = $matches[1];
+
+    $import_replacements = [];
+    foreach ($imports as $import) {
+      $pieces = explode('\\', $import);
+      $short_class_name = array_pop($pieces);
+
+      $import_replacements['@\b' . $short_class_name . '\b@'] = '\\' . $import;
+    }
+
     // The pattern for extracting function data: capture first line of doc,
     // function declaration, and hook name.
     $pattern = '[
@@ -309,6 +325,7 @@ abstract class HooksCollector extends CollectorBase {
            ^ }
     ]mx';
 
+    $matches = [];
     preg_match_all($pattern, $contents, $matches);
 
     // We don't care about the full matches.
@@ -322,6 +339,11 @@ abstract class HooksCollector extends CollectorBase {
       'type'          => $matches[5],
       'bodies'        => $matches[6],
     );
+
+    // Replace all the short class names in body code with fully-qualified ones.
+    foreach ($data['bodies'] as &$hook_body) {
+      $hook_body = preg_replace(array_keys($import_replacements), array_values($import_replacements), $hook_body);
+    }
 
     return $data;
   }
