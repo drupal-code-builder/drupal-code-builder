@@ -140,6 +140,61 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   }
 
   /**
+   * Create a test class with a preset.
+   *
+   * @group di
+   */
+  function testModuleGenerationTestsWithServices() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Generated module',
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'kernel',
+          'test_class_name' => 'MyTest',
+          'container_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+          'mocked_services' => [
+            'module_handler',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(2, $files, "The expected number of files is returned.");
+
+    $this->assertArrayHasKey("tests/src/Kernel/MyTest.php", $files, "The files list has a test class file.");
+
+    $test_file = $files["tests/src/Kernel/MyTest.php"];
+
+    $php_tester = new PHPTester($test_file);
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+    $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
+    $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
+    $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+
+    // Container services.
+    $php_tester->assertClassHasProtectedProperty('currentUser', 'Drupal\Core\Session\AccountProxyInterface');
+    $php_tester->assertClassHasProtectedProperty('entityTypeManager', 'Drupal\Core\Entity\EntityTypeManagerInterface');
+
+    $setup_method_tester = $php_tester->getMethodTester('setUp');
+    // Quick and dirty; TODO: better!
+    $setup_method_tester->assertHasLine('$this->currentUser = $this->container->get(\'current_user\');');
+    $setup_method_tester->assertHasLine('$this->entityTypeManager = $this->container->get(\'entity_type.manager\');');
+
+    $setup_method_tester->assertHasLine('$module_handler = $this->prophesize(ModuleHandlerInterface);');
+    $setup_method_tester->assertHasLine('$this->container->set(\'module_handler\', $module_handler->reveal());');
+  }
+
+  /**
    * Create a test class with a test module.
    *
    * @group test

@@ -106,6 +106,32 @@ class PHPUnitTest extends PHPClassFile {
           }
         },
       ],
+      'container_services' => [
+        'label' => 'Services from the container',
+        'description' => "The services that this test class gets from the container, to use normally.",
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+
+          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+
+          return $options;
+        },
+        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
+      ],
+      'mocked_services' => [
+        'label' => 'Services to mock',
+        'description' => "The services that this test class creates mocks for.",
+        'format' => 'array',
+        'options' => function(&$property_info) {
+          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+
+          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+
+          return $options;
+        },
+        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
+      ],
       'module_dependencies' => [
         'acquired' => TRUE,
       ],
@@ -176,8 +202,36 @@ class PHPUnitTest extends PHPClassFile {
    * {@inheritdoc}
    */
   public function requiredComponents() {
-    // We have no subcomponents.
-    return [];
+    $components = [];
+
+    foreach ($this->component_data['container_services'] as $service_id) {
+      $components['service_' . $service_id] = [
+        'component_type' => 'InjectedService',
+        'containing_component' => '%requester',
+        'service_id' => $service_id,
+        'role_suffix' => '_container',
+      ];
+    }
+    foreach ($this->component_data['mocked_services'] as $service_id) {
+      $components['service_' . $service_id] = [
+        'component_type' => 'InjectedService',
+        'containing_component' => '%requester',
+        'service_id' => $service_id,
+        'role_suffix' => '_mocked',
+      ];
+    }
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function buildComponentContents($children_contents) {
+    // TEMPORARY, until Generate task handles returned contents.
+    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
+
+    return array();
   }
 
   /**
@@ -218,6 +272,9 @@ class PHPUnitTest extends PHPClassFile {
       }
     }
 
+    // Class properties.
+    // The modules property should come first, as it's the most interesting to
+    // a developer; others are boilerplate.
     $this->properties[] = $this->createPropertyBlock(
       'modules',
       'array',
@@ -229,10 +286,57 @@ class PHPUnitTest extends PHPClassFile {
       ]
     );
 
+    // Add properties for services obtained from the container.
+    if (!empty($this->childContentsGrouped['service_property_container'])) {
+      // Service class property.
+      foreach ($this->childContentsGrouped['service_property_container'] as $service_property) {
+        $property_code = $this->docBlock([
+          $service_property['description'] . '.',
+          '',
+          '@var ' . $service_property['typehint']
+        ]);
+        $property_code[] = 'protected $' . $service_property['property_name'] . ';';
+
+        $this->properties[] = $property_code;
+      }
+    }
+
     $setup_lines = $this->buildMethodHeader('setUp', [], ['inheritdoc' => TRUE, 'prefixes' => ['protected']]);
+    // TODO: WTF should not need to manually indent!
     $setup_lines[] = '  parent::setUp();';
+
+    // Container services setup.
+    if (!empty($this->childContentsGrouped['service_container'])) {
+      $setup_lines[] = '';
+
+      // Use the main service infor rather than 'container_extraction', as
+      // that is intended for use in an array and so has a terminal comma.
+      // TODO: remove the terminal comma so we can use it here!
+      foreach ($this->childContentsGrouped['service_container'] as $service_info) {
+        $setup_lines[] = "  £this->{$service_info['property_name']} = £this->container->get('{$service_info['id']}');";
+      }
+
+      $setup_lines[] = '';
+    }
+
+    // Mocked services.
+    if (!empty($this->childContentsGrouped['service_mocked'])) {
+      foreach ($this->childContentsGrouped['service_mocked'] as $service_info) {
+        $setup_lines[] = "  // Mock the {$service_info['label']} service.";
+        $setup_lines[] = "  £{$service_info['variable_name']} = £this->prophesize({$service_info['typehint']});";
+        $setup_lines[] = "  £this->container->set('{$service_info['id']}', £{$service_info['variable_name']}->reveal());";
+      }
+
+      $setup_lines[] = '';
+    }
+
     $setup_lines[] = '  // TODO: setup tasks here.';
     $setup_lines[] = '}';
+
+    // TOFO: WTF this should be central!!!
+    $setup_lines = array_map(function($line) {
+      return str_replace('£', '$', $line);
+    }, $setup_lines);
 
     $this->functions[] = $setup_lines;
 

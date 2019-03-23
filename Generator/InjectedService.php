@@ -35,6 +35,7 @@ class InjectedService extends BaseGenerator {
         $service_info['id'] = $service_id = $value;
 
         // Copy these explicitly for maintainability and readability.
+        $service_info['label']        = $services_data[$service_id]['label'];
         $service_info['description']  = $services_data[$service_id]['description'];
         $service_info['interface']    = $services_data[$service_id]['interface'];
         $service_info['class']        = $services_data[$service_id]['class'];
@@ -53,6 +54,13 @@ class InjectedService extends BaseGenerator {
       }
     ];
 
+    // Bit of a hack for PHPUnitTest generator's sake. Lets the requesting
+    // generator tack a suffix onto the roles we give to component contents.
+    // PHPUnitTest needs this as it has two kinds of service.
+    $data_definition['role_suffix'] = [
+      'internal' => TRUE,
+    ];
+
     return $data_definition;
   }
 
@@ -62,7 +70,7 @@ class InjectedService extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     $service_info = $this->component_data['service_info'];
 
-    return [
+    $contents = [
       'service' => [
         'role' => 'service',
         'content' => $service_info,
@@ -95,6 +103,14 @@ class InjectedService extends BaseGenerator {
         ],
       ],
     ];
+
+    if (!empty($this->component_data['role_suffix'])) {
+      foreach ($contents as &$data) {
+        $data['role'] .= $this->component_data['role_suffix'];
+      }
+    }
+
+    return $contents;
   }
 
 }
