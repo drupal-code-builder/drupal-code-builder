@@ -106,20 +106,20 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $schema_file = $files['config/schema/test_module.schema.yml'];
     $yaml_tester = new YamlTester($schema_file);
-    $yaml_tester->assertHasProperty('test_module.kitty_cat');
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'type'], 'config_entity');
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'label'], 'Kitty Cat');
+    $yaml_tester->assertHasProperty('test_module.kitty_cat.*');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'type'], 'config_entity');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'label'], 'Kitty Cat');
 
-    $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'id']);
-    $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'label']);
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'id']);
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'label']);
 
-    $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'breed']);
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'breed', 'type'], 'string');
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'breed', 'label'], 'Breed');
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'breed']);
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'breed', 'type'], 'string');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'breed', 'label'], 'Breed');
 
-    $yaml_tester->assertHasProperty(['test_module.kitty_cat', 'mapping', 'colour']);
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'colour', 'type'], 'string');
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat', 'mapping', 'colour', 'label'], 'Colour');
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'colour']);
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'colour', 'type'], 'string');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'colour', 'label'], 'Colour');
   }
 
   /**
@@ -159,7 +159,8 @@ class ComponentConfigEntityType8Test extends TestBase {
     $schema_file = $files['config/schema/test_module.schema.yml'];
 
     $yaml_tester = new YamlTester($schema_file);
-    $yaml_tester->assertPropertyHasBlankLineBefore(['test_module.beta']);
+    // The YAML dumper will incorrectly quote this property because of the '*'.
+    $yaml_tester->assertPropertyHasBlankLineBefore(["'test_module.beta.*'"]);
   }
 
   /**

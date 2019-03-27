@@ -234,7 +234,7 @@ class ConfigEntityType extends EntityTypeBase {
     $components["config/schema/%module.schema.yml"] = [
       'component_type' => 'ConfigSchema',
       'yaml_data' => [
-        "{$module}.{$entity_config_key}"=> [
+        "{$module}.{$entity_config_key}.*"=> [
           'type' => 'config_entity',
           'label' => $this->component_data['entity_type_label'],
           'mapping' => $schema_properties_yml,

@@ -729,11 +729,11 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $config_yaml_file = $files['config/schema/test_module.schema.yml'];
     $yaml_tester = new YamlTester($config_yaml_file);
-    $yaml_tester->assertHasProperty('test_module.kitty_cat_type');
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type', 'type'], 'config_entity');
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type', 'label'], 'Kitty Cat Type');
-    $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'foo']);
-    $yaml_tester->assertHasProperty(['test_module.kitty_cat_type', 'mapping', 'colour']);
+    $yaml_tester->assertHasProperty('test_module.kitty_cat_type.*');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type.*', 'type'], 'config_entity');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat_type.*', 'label'], 'Kitty Cat Type');
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat_type.*', 'mapping', 'foo']);
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat_type.*', 'mapping', 'colour']);
 
     // Check the permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
