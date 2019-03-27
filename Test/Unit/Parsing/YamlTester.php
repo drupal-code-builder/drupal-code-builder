@@ -72,6 +72,11 @@ class YamlTester {
       $property_address = [$property_address];
     }
 
+    // Strip quotes from the property address, as the YAML parser does so too.
+    array_walk($property_address, function(&$item) {
+      $item = preg_replace('@^[\'"]?(.+?)[\'"]?$@', '$1', $item);
+    });
+
     $property_string = $this->getPropertyString($property_address);
     $message = $message ?? "The YAML file has the expected property $property_string.";
 
