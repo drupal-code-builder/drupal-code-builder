@@ -98,7 +98,7 @@ class PHPUnitTest extends PHPClassFile {
       'test_class_name' => [
         'label' => 'Test class name',
         'description' => "The short class name of the test.",
-        'process_default' => TRUE,
+        'required' => TRUE,
         'validation' => function($property_name, $property_info, $component_data) {
           // TODO: check camel case!
           if (!preg_match('@^\w+$@', $component_data[$property_name])) {
