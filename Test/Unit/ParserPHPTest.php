@@ -12,6 +12,56 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 class ParserPHPTest extends TestCase {
 
   /**
+   * Tests the testing of Drupal coding standards.
+   *
+   * This is fairly simple for now, and is just to sanity check that Coder
+   * and PHP Codersniffer run ok.
+   *
+   * @dataProvider providerAssertDrupalCodingStandards
+   */
+  public function testAssertDrupalCodingStandards($code, $pass) {
+    $php_tester = new PHPTester($code);
+
+    $this->assertAssertion($pass, $php_tester, 'assertDrupalCodingStandards');
+  }
+
+  /**
+   * Data provider for testAssertDrupalCodingStandards().
+   */
+  public function providerAssertDrupalCodingStandards() {
+    return [
+      [
+        <<<EOT
+<?php
+
+/**
+ * @file
+ * This file is empty.
+ */
+
+EOT
+// Argh, comma has to be on next line. Roll on PHP 7.3!! TODO: clean up!
+,
+        TRUE,
+      ],
+      [
+        <<<EOT
+<?php
+
+/**
+ * Class documentation.
+ */
+class Foo {
+}
+
+EOT
+,
+        TRUE,
+      ],
+    ];
+  }
+
+  /**
    * Tests the assertIsProcedural() assertion.
    */
   public function testAssertIsProceduralAssertion() {
