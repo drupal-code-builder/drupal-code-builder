@@ -13,6 +13,10 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
+use PHP_CodeSniffer\Runner;
+use PHP_CodeSniffer\Config;
+use PHP_CodeSniffer\Reporter;
+use PHP_CodeSniffer\Files\DummyFile;
 
 /**
  * Helper class for parsing and testing PHP.
@@ -78,9 +82,12 @@ class PHPTester {
    *   (optional) An array of names of PHPCS sniffs to exclude from testing.
    */
   public function assertDrupalCodingStandards(array $excluded_sniffs = []) {
-    $phpcs = $this->setUpPHPCS($excluded_sniffs);
+    $phpcs_runner = $this->setUpPHPCS($excluded_sniffs);
 
     // Process the file with PHPCS.
+
+
+    // KILL?
     // We need to pass in a value for the filename, even though the file does
     // not exist, as the Drupal standard uses it to try to check the file when
     // it tries to find an associated module .info file to detect the Drupal
@@ -89,10 +96,21 @@ class PHPTester {
     // Drupal_Sniffs_Array_DisallowLongArraySyntaxSniff sniff calls that to
     // determine whether to run itself. This check for the Drupal code version
     // will fail, which means that the short array sniff will not be run.
-    $phpcsFile = $phpcs->processFile('fictious file name', $this->phpCode);
 
-    $error_count   = $phpcsFile->getErrorCount();
-    $warning_count = $phpcsFile->getWarningCount();
+
+    // Create and process a single file, faking the path so the report looks nice.
+    // $fileContent = "<?php\necho 'hi';";
+    $file = new DummyFile($this->phpCode, $phpcs_runner->ruleset, $phpcs_runner->config);
+    $file->path = '/path/to/my/file.php';
+    // Process the file.
+    $phpcs_runner->processFile($file);
+    // Print out the reports.
+    // $phpcs_runner->reporter->printReports();
+
+    // $phpcsFile = $phpcs_runner->processFile('fictious file name', $this->phpCode);
+
+    $error_count   = $file->getErrorCount();
+    $warning_count = $file->getWarningCount();
 
     $total_error_count = $error_count + $warning_count;
 
@@ -103,11 +121,11 @@ class PHPTester {
     }
 
     // Get the reporting to process the errors.
-    $this->reporting = new \PHP_CodeSniffer_Reporting();
-    $reportClass = $this->reporting->factory('full');
+    $this->reporting = new \PHP_CodeSniffer\Reporter($this->PHPCodeSnifferConfig);
+    // $reportClass = $this->reporting->factory('full');
     // Prepare the report, but don't call generateFileReport() as that echo()s
     // it!
-    $reportData  = $this->reporting->prepareFileReport($phpcsFile);
+    $reportData  = $this->reporting->prepareFileReport($file);
     //$reportClass->generateFileReport($reportData, $phpcsFile);
 
     // Dump the code lines as an array so we get the line numbers.
@@ -137,6 +155,46 @@ class PHPTester {
    * Helper for assertDrupalCodingStandards().
    */
   protected function setUpPHPCS($excluded_sniffs) {
+    // Need to define this to avoid a deprecation error from PHP!
+    if (defined('PHP_CODESNIFFER_CBF') === false) {
+      define('PHP_CODESNIFFER_CBF', false);
+    }
+
+    // PHPCS has its own autoloader...
+    require __DIR__ . '/../../../vendor/squizlabs/php_codesniffer/autoload.php';
+
+    $runner = new Runner();
+    $runner->config = new Config();
+    $runner->config->setConfigData('installed_paths', __DIR__ . '/../../../vendor/drupal/coder/coder_sniffer');
+    $runner->config->standards = array('Drupal');
+    $runner->config->exclude = $excluded_sniffs;
+    $runner->init();
+    // Hard-code some other config settings.
+    // Do this after init() so these values override anything that was set in
+    // the rulesets we processed during init(). Or do this before if you want
+    // to use them like defaults instead.
+    $runner->config->reports      = array('summary' => null, 'full' => null);
+    $runner->config->verbosity    = 0;
+    $runner->config->showProgress = false;
+    $runner->config->interactive  = false;
+    $runner->config->cache        = false;
+    $runner->config->showSources  = true;
+    // Create the reporter, using the hard-coded settings from above.
+    $runner->reporter = new Reporter($runner->config);
+
+    // Store the config, as we need it for the reporter.
+    $this->PHPCodeSnifferConfig = $runner->config;
+
+    return $runner;
+
+
+
+
+
+
+
+    return;
+
     // Set runtime config.
     PHP_CodeSniffer::setConfigData(
       'installed_paths',
