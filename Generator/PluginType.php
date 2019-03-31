@@ -88,6 +88,16 @@ class PluginType extends BaseGenerator {
           ]);
         },
       ),
+      // TODO: Argh, do something about this mess of relative / qualified
+      // class names!
+      'base_class_short_name' => [
+        'computed' => TRUE,
+        'default' => function($component_data) {
+          $short_class_name = $component_data['annotation_class'];
+
+          return $short_class_name;
+        },
+      ],
       'base_class' => [
         'label' => 'Base class',
         'computed' => TRUE,
@@ -97,7 +107,7 @@ class PluginType extends BaseGenerator {
             '%module',
             'Plugin',
             $component_data['plugin_relative_namespace'],
-            $component_data['annotation_class'] . 'Base',
+            $component_data['base_class_short_name'],
           ]);
         },
       ],
@@ -210,7 +220,7 @@ class PluginType extends BaseGenerator {
       'relative_class_name' => array_merge(
         ['Plugin'],
         $plugin_relative_namespace_pieces,
-        [$this->component_data['annotation_class'] . 'Base']
+        [$this->component_data['base_class_short_name']]
       ),
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
       'interfaces' => [
