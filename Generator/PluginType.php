@@ -95,6 +95,14 @@ class PluginType extends BaseGenerator {
         'default' => function($component_data) {
           $short_class_name = $component_data['annotation_class'];
 
+          // Append 'Base' to the base class name for annotation plugins, where
+          // the base class is actually a base class, but not for YAML plugins,
+          // where the base class really is the class that's mostly used for
+          // all plugins.
+          if ($component_data['discovery_type'] == 'annotation') {
+            $short_class_name .= 'Base';
+          }
+
           return $short_class_name;
         },
       ],
