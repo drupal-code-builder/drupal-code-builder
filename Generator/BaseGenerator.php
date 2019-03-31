@@ -215,6 +215,8 @@ abstract class BaseGenerator {
    * - 'validation': (optional) A callback to validate the value for this
    *    property. Validation is optional: UIs are not required to perform it,
    *    therefore, any checking should also be done in the processing callback.
+   *    A validation callback should return a string containing an error message
+   *    if validation fails, and NULL if validation passes.
    *    TODO: Figure out whether the processing system should just call
    *    validation to take care of this.
    *  - 'processing': (optional) A callback to process input values into the
