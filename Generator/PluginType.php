@@ -40,7 +40,7 @@ class PluginType extends BaseGenerator {
 
           // Convert the plugin type to camel case. E.g., 'my_plugin' becomes
           // 'My Plugin'.
-          return CaseString::snake($plugin_type)->title();
+          return CaseString::snake($plugin_type)->sentence();
         },
       ],
       'plugin_subdirectory' => array(
