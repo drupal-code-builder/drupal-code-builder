@@ -476,7 +476,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
     $yaml_tester = new YamlTester($config_yaml_file);
     $yaml_tester->assertHasProperty('block.settings.test_module_alpha');
-    $yaml_tester->assertHasProperty('test_module.cake');
+    $yaml_tester->assertHasProperty('test_module.cake.*');
     $yaml_tester->assertPropertyHasBlankLineBefore(['block.settings.test_module_alpha']);
     // TODO: assert deeper into the YAML.
   }
