@@ -249,8 +249,11 @@ class Service extends PHPClassFileWithInjection {
     if (!empty($this->component_data['service_tag_type'])) {
       $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
       $service_types_data = $task_handler_report_services->listServiceTypeData();
-      $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
-      $this->createBlocksFromMethodData($service_type_interface_data);
+
+      if (!empty($service_types_data[$this->component_data['service_tag_type']]['methods'])) {
+        $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
+        $this->createBlocksFromMethodData($service_type_interface_data);
+      }
     }
   }
 

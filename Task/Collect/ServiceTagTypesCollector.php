@@ -94,47 +94,76 @@ class ServiceTagTypesCollector extends CollectorBase  {
     ];
 
     foreach ($collectors_info as $service_name => $tag_infos) {
+      // Sloppy array structure...
+      $collector_type = $tag_infos['collector_type'];
+      unset($tag_infos['collector_type']);
+
+      $service_definition = $container_builder->getDefinition($service_name);
+      $service_class = $service_definition->getClass();
+
       // A single service collector service can collect on more than one tag.
       foreach ($tag_infos as $tag_info) {
         $tag = $tag_info['tag'];
 
-        if (!isset($tag_info['call'])) {
-          // Shouldn't normally happen, but protected against badly-declated
-          // services.
-          continue;
+        if ($collector_type == 'service_id_collector') {
+          // Service ID collectors don't give us anything but the service ID,
+          // so nothing can be detected about the interface collected services
+          // should use.
+          // The only example of a service collector using this tag
+          // in core is 'theme.negotiator', which is self-consuming: it expects
+          // its tagged services to implement its own interface. So all we can
+          // do is assume other implementations will do the same.
+          $service_class_reflection = new \ReflectionClass($service_class);
+
+          $label = CaseString::pascal($service_class_reflection->getShortName())->title();
+
+          // Hope there's only one interface...
+          $service_interfaces = $service_class_reflection->getInterfaceNames();
+          $collected_services_interface = array_shift($service_interfaces);
+
+          $interface_methods = $this->methodCollector->collectMethods($collected_services_interface);
         }
+        else {
+          // Service collectors tell us what the container should call on the
+          // collector to add a tagged service, and so from that we can deduce
+          // the interface that tagged services must implement.
+          if (!isset($tag_info['call'])) {
+            // Shouldn't normally happen, but protected against badly-declated
+            // services.
+            continue;
+          }
 
-        $collecting_method = $tag_info['call'];
+          $collecting_method = $tag_info['call'];
 
-        $service_definition = $container_builder->getDefinition($service_name);
-        $service_class = $service_definition->getClass();
-        $collecting_methodR = new \ReflectionMethod($service_class, $collecting_method);
-        $collecting_method_paramR = $collecting_methodR->getParameters();
+          $collecting_methodR = new \ReflectionMethod($service_class, $collecting_method);
+          $collecting_method_paramR = $collecting_methodR->getParameters();
 
-        // TODO: skip if more than 1 param.
-        // getNumberOfParameters
+          // TODO: skip if more than 1 param.
+          // getNumberOfParameters
 
-        $type = (string) $collecting_method_paramR[0]->getType();
+          $collected_services_interface = (string) $collecting_method_paramR[0]->getType();
 
-        if (!interface_exists($type)) {
-          // Shouldn't happen, as the typehint will be an interface the
-          // collected services must implement.
-          continue;
+          if (!interface_exists($collected_services_interface)) {
+            // Shouldn't happen, as the typehint will be an interface the
+            // collected services must implement.
+            continue;
+          }
+
+          // Make a label from the interface name: take the short interface name,
+          // and remove an 'Interface' suffix, convert to title case.
+          $interface_pieces = explode('\\', $collected_services_interface);
+          $label = array_pop($interface_pieces);
+          $label = preg_replace('@Interface$@', '', $label);
+          $label = CaseString::pascal($label)->title();
+
+          $interface_methods = $this->methodCollector->collectMethods($collected_services_interface);
         }
-
-        // Make a label from the interface name: take the short interface name,
-        // and remove an 'Interface' suffix, convert to title case.
-        $interface_pieces = explode('\\', $type);
-        $label = array_pop($interface_pieces);
-        $label = preg_replace('@Interface$@', '', $label);
-        $label = CaseString::pascal($label)->title();
-
-        $type_hint_methods = $this->methodCollector->collectMethods($type);
 
         $data[$tag] = [
           'label' => $label,
-          'interface' => $type,
-          'methods' => $type_hint_methods,
+          'collector_type' => $collector_type,
+          'interface' => $collected_services_interface,
+          'methods' => $interface_methods,
         ];
       }
     }
@@ -155,6 +184,7 @@ class ServiceTagTypesCollector extends CollectorBase  {
    *  An array of data about services. Structure is as follows:
    *  @code
    *   "path_processor_manager" => array:2 [
+   *     "collector_type" => "service_collector"
    *     0 => array:2 [
    *      "tag" => "path_processor_inbound"
    *      "call" => "addInbound"
@@ -169,7 +199,22 @@ class ServiceTagTypesCollector extends CollectorBase  {
   protected function getCollectorServiceIds(\Symfony\Component\DependencyInjection\TaggedContainerInterface $container_builder) {
     // Get the details of all service collector services.
     // Note that the docs for this method are completely wrong.
-    $collectors_info = $container_builder->findTaggedServiceIds('service_collector');
+    // Also, there are TWO possible tags for collectors, and the lazy version,
+    // 'service_id_collector', doesn't specify any data such as the 'call'
+    // property.
+    $service_collectors_info = $container_builder->findTaggedServiceIds('service_collector');
+    $service_id_collectors_info = $container_builder->findTaggedServiceIds('service_id_collector');
+
+    array_walk($service_collectors_info, function(&$item) {
+      $item['collector_type'] = 'service_collector';
+    });
+    array_walk($service_id_collectors_info, function(&$item) {
+      $item['collector_type'] = 'service_id_collector';
+    });
+
+    // We're going to assume that there is no collecting service that uses BOTH
+    // systems to collect two tags, that would be crazy.
+    $collectors_info = $service_collectors_info + $service_id_collectors_info;
 
     // Filter for testing sample data collection.
     if (!empty($this->environment->sample_data_write)) {
