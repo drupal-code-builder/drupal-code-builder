@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests for Router item component.
  */
-class ComponentRouterItem7Test extends TestBaseComponentGeneration {
+class ComponentRouterItem7Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);
