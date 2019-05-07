@@ -653,6 +653,8 @@ abstract class TestBase extends TestCase {
   /**
    * Assert a string contains a function whose body contains specific code.
    *
+   * TODO: replace this with something using PHPTester.
+   *
    * @param $string
    *  The text to check for a function declaration.
    * @param $function_name
