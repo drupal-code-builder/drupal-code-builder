@@ -2,10 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests the Permissions generator class.
  */
-class ComponentPermissions7Test extends TestBaseComponentGeneration {
+class ComponentPermissions7Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);
@@ -39,9 +41,9 @@ class ComponentPermissions7Test extends TestBaseComponentGeneration {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $this->assertWellFormedPHP($module_file);
-    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
-    $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['$permission_name']");
   }
 
