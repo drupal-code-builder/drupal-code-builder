@@ -2,10 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+
 /**
  * Tests the AdminSettingsForm generator class.
  */
-class ComponentAdminSettings7Test extends TestBaseComponentGeneration {
+class ComponentAdminSettings7Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
@@ -40,16 +42,16 @@ class ComponentAdminSettings7Test extends TestBaseComponentGeneration {
 
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];
-    $this->assertNoTrailingWhitespace($admin_file, "The admin.inc file contains no trailing whitespace.");
-    $this->assertFunction("{$module_name}_settings_form", $admin_file, "The admin.inc file contains the settings form builder.");
+    $php_tester = new PHPTester($admin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasFunction("{$module_name}_settings_form", $admin_file, "The admin.inc file contains the settings form builder.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $this->assertWellFormedPHP($module_file);
-    $this->assertNoTrailingWhitespace($module_file, "The module file contains no trailing whitespace.");
-    $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
-    $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester->assertHasHookImplementation('hook_menu', $module_name, "The module file contains a function declaration that implements hook_menu().");
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];
@@ -81,10 +83,10 @@ class ComponentAdminSettings7Test extends TestBaseComponentGeneration {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $this->assertWellFormedPHP($module_file);
-    $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
-    $this->assertHookImplementation($module_file, 'hook_menu', $module_name, "The module file contains a function declaration that implements hook_permission().");
-    $this->assertHookImplementation($module_file, 'hook_init', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester->assertHasHookImplementation('hook_menu', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester->assertHasHookImplementation('hook_init', $module_name, "The module file contains a function declaration that implements hook_permission().");
   }
 
   /**
@@ -112,8 +114,8 @@ class ComponentAdminSettings7Test extends TestBaseComponentGeneration {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $this->assertWellFormedPHP($module_file);
-    $this->assertHookImplementation($module_file, 'hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['access testmodule']");
   }
