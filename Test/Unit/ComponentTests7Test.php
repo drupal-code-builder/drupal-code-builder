@@ -29,6 +29,9 @@ class ComponentTests7Test extends TestBase {
     // Drupal 7 does not have the convention of setting a scope on test class
     // methods.
     'Drupal.Scope.MethodScope.Missing',
+    // Workaround for https://www.drupal.org/project/coder/issues/2971177, which
+    // thinks class methods that have docs saying 'Implements foo' and hooks.
+    'Drupal.Commenting.HookComment.HookRepeat',
   ];
 
   /**

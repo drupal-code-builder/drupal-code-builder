@@ -29,6 +29,11 @@ class ComponentTests8Test extends TestBase {
     // Ignore this error in the test class. Simpletest tests are deprecated in
     // Drupal 8 anyway.
     'Drupal.Scope.MethodScope.Missing',
+    // Workaround for https://www.drupal.org/project/coder/issues/2971177, which
+    // thinks class methods that have docs saying 'Implements foo' and hooks.
+    // The generated methods should really say '@inheritdoc', but simpletest
+    // tests are deprecated anyway, so who cares.
+    'Drupal.Commenting.HookComment.HookRepeat',
   ];
 
   /**
