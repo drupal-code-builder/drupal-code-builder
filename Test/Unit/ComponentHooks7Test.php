@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  *
  * @group hooks
  */
-class ComponentHooks7Test extends TestBaseComponentGeneration {
+class ComponentHooks7Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);
