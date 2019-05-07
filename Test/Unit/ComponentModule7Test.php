@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  *
  * @group hooks
  */
-class ComponentModule7Test extends TestBaseComponentGeneration {
+class ComponentModule7Test extends TestBase {
 
   protected function setUp() {
     $this->setupDrupalCodeBuilder(7);
@@ -63,7 +63,8 @@ class ComponentModule7Test extends TestBaseComponentGeneration {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $this->assertWellFormedPHP($module_file);
+    $php_tester = new PHPTester($module_file);
+    $php_tester->assertDrupalCodingStandards();
   }
 
   /**
