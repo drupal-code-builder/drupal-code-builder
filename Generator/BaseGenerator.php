@@ -80,6 +80,11 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 abstract class BaseGenerator {
 
   /**
+   * Property attribute shorthand for acquired properties.
+   */
+  const PROPERTY_ACQUIRED = ['acquired' => TRUE];
+
+  /**
    * The generator type.
    *
    * This is the unqualified class name without the version suffix.
