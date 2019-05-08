@@ -321,6 +321,13 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component_type' => 'RouterItem',
       ),
+      'library' => [
+        'label' => "Library",
+        'description' => 'A collection of CSS and JS assets, declared in a libraries.yml file.',
+        'required' => FALSE,
+        'format' => 'compound',
+        'component_type' => 'Library',
+      ],
       'api' => array(
         'label' => "api.php file",
         'description' => 'An api.php file documents hooks and callbacks that this module invents.',
