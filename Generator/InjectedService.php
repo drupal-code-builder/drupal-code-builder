@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Exception\InvalidInputException;
 use CaseConverter\StringAssembler;
+use CaseConverter\CaseString;
 
 /**
  * Generator for a service injection into a class.
@@ -40,10 +41,28 @@ class InjectedService extends BaseGenerator {
         $service_info['interface']    = $services_data[$service_id]['interface'];
         $service_info['class']        = $services_data[$service_id]['class'];
 
-        // Derive further information.
-        $service_id_pieces = preg_split('@[_.]@', $value);
-        $service_info['variable_name'] = (new StringAssembler($service_id_pieces))->snake();
-        $service_info['property_name'] = (new StringAssembler($service_id_pieces))->camel();
+        // Derive variable and property names.
+        // TODO: move this to the analysis instead.
+        $service_id_pieces = preg_split('@[_.]@', $service_id);
+        $class_pieces = explode('\\', $services_data[$service_id]['class']);
+        $short_class = array_pop($class_pieces);
+
+        // Trim an 'Interface' suffix from the class in case it's actually an
+        // interface. This is the case for cache backend services.
+        $short_class = preg_replace('@Interface$@', '', $short_class);
+
+        if (substr_count($service_id, '.') == 0) {
+          // If the service name does not contain any dots, in particular,
+          // 'current_user', then use that, as it's usually clearer than the
+          // class name.
+          $service_info['variable_name'] = (new StringAssembler($service_id_pieces))->snake();
+          $service_info['property_name'] = (new StringAssembler($service_id_pieces))->camel();
+        }
+        else {
+          // Otherwise, use the service class name.
+          $service_info['variable_name'] = CaseString::pascal($short_class)->snake();
+          $service_info['property_name'] = CaseString::pascal($short_class)->camel();
+        }
 
         // If the service has no interface, typehint on the class.
         $service_info['typehint'] = $service_info['interface'] ?: $service_info['class'];
@@ -78,6 +97,7 @@ class InjectedService extends BaseGenerator {
       'service_property' => [
         'role' => 'service_property',
         'content' => [
+          'id'            => $service_info['id'],
           'property_name' => $service_info['property_name'],
           'typehint'      => $service_info['typehint'],
           'description'   => $service_info['description'],
@@ -90,6 +110,7 @@ class InjectedService extends BaseGenerator {
       'constructor_param' => [
         'role' => 'constructor_param',
         'content' => [
+          'id'            => $service_info['id'],
           'name'        => $service_info['variable_name'],
           'typehint'    => $service_info['typehint'],
           'description' => $service_info['description'] . '.',
@@ -98,6 +119,7 @@ class InjectedService extends BaseGenerator {
       'property_assignment' => [
         'role' => 'property_assignment',
         'content' => [
+          'id'            => $service_info['id'],
           'property_name' => $service_info['property_name'],
           'variable_name' => $service_info['variable_name'],
         ],

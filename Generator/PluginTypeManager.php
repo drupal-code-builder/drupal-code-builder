@@ -47,7 +47,7 @@ class PluginTypeManager extends Service {
     if ($this->component_data['discovery_type'] == 'yaml') {
       // The cache.discover service is injected, but not set to a property.
       foreach ($this->childContentsGrouped['service_property'] as $key => $content) {
-        if ($content['property_name'] == 'cacheDiscovery') {
+        if ($content['id'] == 'cache.discovery') {
           unset($this->childContentsGrouped['service_property'][$key]);
         }
       }
@@ -55,14 +55,14 @@ class PluginTypeManager extends Service {
       // The cache.discovery param name needs to be tweaked.
       // TODO: fix this hack, do it somewhere like code analysis?
       foreach ($this->childContentsGrouped['constructor_param'] as $key => $content) {
-        if ($content['name'] == 'cache_discovery') {
+        if ($content['id'] == 'cache.discovery') {
           $this->childContentsGrouped['constructor_param'][$key]['name'] = 'cache_backend';
         }
       }
 
       // The cache.discovery param doesn't get assigned.
       foreach ($this->childContentsGrouped['property_assignment'] as $key => $content) {
-        if ($content['variable_name'] == 'cache_discovery') {
+        if ($content['id'] == 'cache.discovery') {
           unset($this->childContentsGrouped['property_assignment'][$key]);
         }
       }
