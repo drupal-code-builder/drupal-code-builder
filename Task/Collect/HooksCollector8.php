@@ -141,11 +141,11 @@ class HooksCollector8 extends HooksCollector {
    */
   private function getHookDestinations(&$hook_files) {
     // Get our data.
-    $data = $this->getHookInfo();
+    $hook_destinations = $this->getHookInfo();
 
     // Incoming data is destination key, array of hooks.
     // (Because it makes typing the data out easier! Computers can just adapt.)
-    foreach ($data as $module => $module_data) {
+    foreach ($hook_destinations as $module => $module_data) {
       // The key in $hook_files we correspond to
       // @todo, possibly: this feels like slightly shaky ground.
       $filename = "$module.api.php";
@@ -201,12 +201,18 @@ class HooksCollector8 extends HooksCollector {
       // TODO: clarify and document what this key represents. It's sort of the
       // api file basename, unless it's a file from core components rather than
       // a module.
+      'CORE_database' => [
+        'hook_destinations' => [
+          '%module.install' => [
+            'hook_schema',
+            'hook_schema_alter',
+          ],
+        ],
+      ],
       'CORE_module' => array(
         'hook_destinations' => array(
           '%module.install' => array(
             'hook_requirements',
-            'hook_schema',
-            'hook_schema_alter',
             'hook_install',
             'hook_update_N',
             'hook_update_last_removed',
