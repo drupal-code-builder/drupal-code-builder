@@ -106,10 +106,15 @@ class ContentEntityType extends EntityTypeBase {
             'entity_keys' => [
               'value' => [
                 'uid' => 'uid',
+                'owner' => 'uid',
               ],
             ],
-            // TODO: handle base field here?
-            // TODO: handle faffy callback method?
+            'traits' => [
+              'value' => ['\Drupal\user\EntityOwnerTrait'],
+            ],
+            'base_fields_helper_methods' => [
+              'value' => ['ownerBaseFieldDefinitions'],
+            ],
           ],
         ],
       ],
@@ -269,6 +274,9 @@ class ContentEntityType extends EntityTypeBase {
         'bundle',
         'revision',
         'langcode',
+        'owner',
+        // EntityOwnerTrait uses 'owner', but many entity types prior to 8.7.x
+        // use 'uid' and there is probably lots of code that expects this.
         'uid',
         'published',
       ];
@@ -345,13 +353,20 @@ class ContentEntityType extends EntityTypeBase {
   protected function collectSectionBlocks() {
     parent::collectSectionBlocks();
 
-    // TODO: remove this when Drupal core 8.7.x is released.
+    // TODO: remove this when Drupal core 8.6.x is no longer supported.
     // See https://www.drupal.org/project/drupal/issues/2949964
     if (in_array('owner', $this->component_data['functionality'])) {
       $this->functions = array_merge(['core-2949964-comment' => [
-        '// TODO: methods from interface \Drupal\user\EntityOwnerInterface must be',
-        '// implemented until https://www.drupal.org/project/drupal/issues/2949964',
-        '// is fixed.',
+        // No idea why the first line gets an extra indent; removing it here to
+        // compensate. Not worth fixing properly as this will get removed in
+        // the near future.
+        <<<EOT
+// TODO: If using Drupal core prior to 8.6.x, methods from interface
+  // \Drupal\user\EntityOwnerInterface must be implemented, the owner base field
+  // defined, and EntityOwnerTrait and the call to ownerBaseFieldDefinitions()
+  // removed. See https://www.drupal.org/project/drupal/issues/2949964.
+EOT
+        ,
       ]], $this->functions);
     }
   }
@@ -406,43 +421,6 @@ class ContentEntityType extends EntityTypeBase {
     $method_body = array_merge($method_body, $call_lines);
     $method_body[] = '';
 
-    // Add a uid field if the entities have an owner.
-    if (in_array('owner', $this->component_data['functionality'])) {
-      $method_body[] = "£fields['uid'] = \Drupal\Core\Field\BaseFieldDefinition::create('entity_reference')";
-      $uid_field_calls = new FluentMethodCall;
-      $uid_field_calls
-        ->setLabel(FluentMethodCall::t('Authored by'))
-        ->setDescription(FluentMethodCall::t('The user ID of the author.'));
-      if ($use_revisionable) {
-        $uid_field_calls->setRevisionable(TRUE);
-      }
-      if ($use_translatable) {
-        $uid_field_calls->setTranslatable(TRUE);
-      }
-      $uid_field_calls->setSetting('target_type', 'user')
-        ->setDefaultValueCallback(FluentMethodCall::code("static::class . '::getCurrentUserId'"))
-        ->setDisplayOptions('form', [
-          'type' => 'entity_reference_autocomplete',
-          'weight' => 5,
-          'settings' => [
-            'match_operator' => 'CONTAINS',
-            'size' => '60',
-            'autocomplete_type' => 'tags',
-            'placeholder' => '',
-          ],
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayOptions('view', [
-          'label' => 'hidden',
-          'type' => 'author',
-          'weight' => 0,
-        ])
-        ->setDisplayConfigurable('view', TRUE);
-      $call_lines = $uid_field_calls->getCodeLines();
-      $method_body = array_merge($method_body, $call_lines);
-      $method_body[] = '';
-    }
-
     // Add a 'changed' field if entities use the changed interface.
     if (in_array('changed', $this->component_data['functionality'])) {
       $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";
@@ -489,26 +467,6 @@ class ContentEntityType extends EntityTypeBase {
       'doxygen_first' => '{@inheritdoc}',
       'body' => $method_body,
     ];
-
-    // The uid field annoyingly need a default value callback that's just
-    // boilerplate. See https://www.drupal.org/project/drupal/issues/2975503.
-    if (in_array('owner', $this->component_data['functionality'])) {
-      $components["getCurrentUserId"] = [
-        'component_type' => 'PHPFunction',
-        'containing_component' => '%requester',
-        'declaration' => 'public static function getCurrentUserId()',
-        'function_docblock_lines' => [
-          "Default value callback for 'uid' base field definition.",
-          "@see ::baseFieldDefinitions()",
-          "",
-          "@return array",
-          "  An array of default values.",
-        ],
-        'body' => [
-          "return [\Drupal::currentUser()->id()];",
-        ],
-      ];
-    }
 
     // TODO: other methods!
 
