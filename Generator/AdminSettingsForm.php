@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\InsertArray;
+use CaseConverter\CaseString;
 
 /**
  * Component generator: admin form for modules.
@@ -31,6 +32,32 @@ class AdminSettingsForm extends Form {
     $data_definition['form_id']['default'] = function($component_data) {
       return $component_data['root_component_name'] . '_settings_form';
     };
+
+    $data_definition['config_properties'] = [
+      'label' => 'Entity properties',
+      'description' => "The config properties that are stored for each entity of this type. An ID and label property are provided automatically.",
+      'format' => 'compound',
+      'properties' => [
+        'name' => [
+          'label' => 'Property name',
+          'required' => TRUE,
+        ],
+        'label' => [
+          'label' => 'Property label',
+          'default' => function($component_data) {
+            $entity_type_id = $component_data['name'];
+            return CaseString::snake($entity_type_id)->title();
+          },
+          'process_default' => TRUE,
+        ],
+        'type' => [
+          'label' => 'Data type',
+          'required' => TRUE,
+          'options' => 'ReportDataTypes:listDataTypesOptions',
+        ],
+      ],
+      'process_empty' => TRUE,
+    ];
 
     return $data_definition;
   }
@@ -121,14 +148,42 @@ class AdminSettingsForm extends Form {
       'property_value' => $settings_form_path,
     );
 
+    // Add a form element for each custom entity property.
+    foreach ($this->component_data['config_properties'] as $schema_item) {
+      $property_name = $schema_item['name'];
+
+      // Skip id and label; done above.
+      if ($property_name == 'id' || $property_name == 'label') {
+        continue;
+      }
+
+      $components[$property_name] = [
+        'component_type' => 'FormElement',
+        'containing_component' => "%requester",
+        'form_key' => $property_name,
+        'element_type' => 'textfield',
+        'element_title' => $schema_item['label'],
+        'element_array' => [
+          'default_value' => "£this->entity->get('{$property_name}')",
+        ],
+      ];
+    }
+
+    $schema_properties_yml = [];
+    foreach ($this->component_data['config_properties'] as $schema_item) {
+      $schema_properties_yml[$schema_item['name']] = [
+        'type' => $schema_item['type'],
+        'label' => $schema_item['label'],
+      ];
+    }
+
     $components["config/schema/%module.schema.yml"] = [
       'component_type' => 'ConfigSchema',
       'yaml_data' => [
          $this->component_data['root_component_name'] . '.settings' => [
            'type' => 'config_object',
            'label' => '%Module settings',
-          'mapping' => [
-          ],
+          'mapping' => $schema_properties_yml,
         ],
       ],
     ];
