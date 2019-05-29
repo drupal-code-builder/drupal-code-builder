@@ -135,7 +135,7 @@ class RouterItem extends BaseGenerator {
             'role' => 'authenticated',
             'entity_access' => 'ENTITY_TYPE.OPERATION',
           ];
-          if (isset($component_data['access_type'])) {
+          if (!empty($component_data['access_type'])) {
             return $lookup[$component_data['access_type']];
           }
         },
