@@ -190,7 +190,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $setup_method_tester->assertHasLine('$this->currentUser = $this->container->get(\'current_user\');');
     $setup_method_tester->assertHasLine('$this->entityTypeManager = $this->container->get(\'entity_type.manager\');');
 
-    $setup_method_tester->assertHasLine('$module_handler = $this->prophesize(ModuleHandlerInterface);');
+    $setup_method_tester->assertHasLine('$module_handler = $this->prophesize(ModuleHandlerInterface::class);');
     $setup_method_tester->assertHasLine('$this->container->set(\'module_handler\', $module_handler->reveal());');
   }
 
