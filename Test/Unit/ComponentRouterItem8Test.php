@@ -42,18 +42,25 @@ class ComponentRouterItem8Test extends TestBase {
           'controller_type' => 'controller',
           'access_type' => 'permission',
         ],
+        2 => [
+          'path' => '/my/{parameter}/path',
+          'title' => 'My Parameter Page',
+          'controller_type' => 'controller',
+          'access_type' => 'permission',
+        ],
       ],
       'readme' => FALSE,
     );
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "The expected number of files is returned.");
+    $this->assertCount(5, $files, "The expected number of files is returned.");
 
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
     $this->assertArrayHasKey("$module_name.routing.yml", $files, "The files list has a routing file.");
     $this->assertArrayHasKey("src/Controller/MyPathController.php", $files, "The files list has a controller class file.");
     $this->assertArrayHasKey("src/Controller/MyOtherPathController.php", $files, "The files list has a controller class file.");
+    $this->assertArrayHasKey("src/Controller/MyParameterPathController.php", $files, "The path containing a parameter has the braces removed from the controller class name.");
 
     $routing_file = $files["$module_name.routing.yml"];
     $yaml_tester = new YamlTester($routing_file);
