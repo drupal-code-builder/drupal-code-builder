@@ -106,7 +106,7 @@ class HooksCollector8 extends HooksCollector {
       // @todo: make this more robust, somehow!
       if (!isset($file['module'])) {
         $matches = array();
-        preg_match('@modules/(?:contrib/)?(\w+)@', $file['uri'], $matches);
+        preg_match('@modules/(?:(?:contrib|custom)/)?(\w+)@', $file['uri'], $matches);
         //print_r($matches);
         $file['module'] = $matches[1];
         $file['group'] = $file['module'];
