@@ -57,6 +57,18 @@ class AdminSettingsForm extends Form {
       "return £form;",
     ];
 
+    // Add body for the submitForm() method.
+    $components['submitForm']['body'] = [
+      'parent::submitForm($form, $form_state);',
+      "£config = £this->config('%module.settings');",
+      '',
+      "if (£form_state->hasValue('element')) {",
+      "  £config->set('element', £form_state->getValue('element'));",
+      '}',
+      '',
+      '£config->save();',
+    ];
+
     $components['getEditableConfigNames'] = [
       'component_type' => 'PHPFunction',
       'containing_component' => '%requester',
