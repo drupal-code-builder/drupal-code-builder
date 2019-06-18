@@ -57,6 +57,14 @@ class AdminSettingsForm extends Form {
       "return £form;",
     ];
 
+    $components['getEditableConfigNames'] = [
+      'component_type' => 'PHPFunction',
+      'containing_component' => '%requester',
+      'doxygen_first' => '{@inheritdoc}',
+      'declaration' => 'protected function getEditableConfigNames()',
+      'body' => "return ['%module.settings'];",
+    ];
+
     $task_handler_report_admin_routes = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');
     $admin_routes = $task_handler_report_admin_routes->listAdminRoutes();
 

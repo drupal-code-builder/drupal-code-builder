@@ -69,6 +69,10 @@ class ComponentAdminSettings8Test extends TestBase {
 
     $php_tester->assertHasMethod('submitForm');
 
+    $method_tester = $php_tester->getMethodTester('getEditableConfigNames');
+    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->assertHasNoParameters();
+
     // Check the schema file.
     $config_schema_file = $files['config/schema/testmodule.schema.yml'];
     $yaml_tester = new YamlTester($config_schema_file);
