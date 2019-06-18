@@ -58,7 +58,7 @@ class ComponentAdminSettings8Test extends TestBase {
       'Drupal.Commenting.InlineComment.InvalidEndChar',
     ]);
     $php_tester->assertHasClass('Drupal\testmodule\Form\AdminSettingsForm');
-    $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
+    $php_tester->assertClassHasParent('Drupal\Core\Form\ConfigFormBase');
 
     $method_tester = $php_tester->getMethodTester('getFormId');
     $method_tester->assertMethodDocblockHasInheritdoc();

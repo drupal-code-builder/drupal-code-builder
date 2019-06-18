@@ -15,6 +15,8 @@ class AdminSettingsForm extends Form {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
+    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Form\ConfigFormBase';
+
     $parent_route_property['parent_route'] = [
       'label' => 'Parent menu item',
       'options' => 'ReportAdminRoutes:listAdminRoutesOptions',
@@ -38,6 +40,19 @@ class AdminSettingsForm extends Form {
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
+
+    // Restore the call to the parent method.
+    $components['buildForm']['body'] = [
+      "£form = parent::buildForm(£form, £form_state);",
+      "",
+      "£form['element'] = [",
+      "  '#type' => 'textfield',",
+      "  '#title' => t('Enter a value'),",
+      "  '#required' => TRUE,",
+      "];",
+      "",
+      "return £form;",
+    ];
 
     $task_handler_report_admin_routes = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');
     $admin_routes = $task_handler_report_admin_routes->listAdminRoutes();
