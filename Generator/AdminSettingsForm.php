@@ -45,10 +45,13 @@ class AdminSettingsForm extends Form {
     $components['buildForm']['body'] = [
       "£form = parent::buildForm(£form, £form_state);",
       "",
+      "£config = £this->config('%module.settings');",
+      "",
       "£form['element'] = [",
       "  '#type' => 'textfield',",
       "  '#title' => t('Enter a value'),",
       "  '#required' => TRUE,",
+      "  '#default_value' => £config->get('element'),",
       "];",
       "",
       "return £form;",
