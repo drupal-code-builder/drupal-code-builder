@@ -86,7 +86,7 @@ class Form extends PHPClassFileWithInjection {
       'buildForm' => array(
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
-        'doxygen_first' => 'Form constructor.',
+        'doxygen_first' => '{@inheritdoc}',
         'function_name' => 'buildForm',
         'body' => array(
           "// Uncomment this line if you change the base class.",
@@ -104,7 +104,7 @@ class Form extends PHPClassFileWithInjection {
       'submitForm' => array(
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
-        'doxygen_first' => 'Form submission handler.',
+        'doxygen_first' => '{@inheritdoc}',
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
       ),
