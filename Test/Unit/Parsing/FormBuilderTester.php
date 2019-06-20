@@ -115,9 +115,9 @@ class FormBuilderTester extends PHPMethodTester {
 
       // Check some basic things about each form element.
       foreach ($this->formElements as $form_element_name => $form_element) {
-        Assert::ArrayHasKey('type', $form_element, "The form element {$form_element_name} has a type set.");
-        Assert::ArrayHasKey('#title', $form_element['attributes'], "The form element {$form_element_name} has a title.");
-        Assert::ArrayHasKey('#description', $form_element['attributes'], "The form element {$form_element_name} has a description.");
+        Assert::assertArrayHasKey('type', $form_element, "The form element {$form_element_name} has a type set.");
+        Assert::assertArrayHasKey('#title', $form_element['attributes'], "The form element {$form_element_name} has a title.");
+        Assert::assertArrayHasKey('#description', $form_element['attributes'], "The form element {$form_element_name} has a description.");
       }
     }
   }
@@ -141,7 +141,7 @@ class FormBuilderTester extends PHPMethodTester {
    */
   public function assertAllElementsHaveDefaultValue() {
     foreach ($this->formElements as $form_element_name => $form_element) {
-      Assert::ArrayHasKey('#default_value', $form_element['attributes'], "The form element {$form_element_name} has a default value.");
+      Assert::assertArrayHasKey('#default_value', $form_element['attributes'], "The form element {$form_element_name} has a default value.");
     }
   }
 
