@@ -1294,6 +1294,7 @@ class ComponentContentEntityType8Test extends TestBase {
    * Tests creating a content entity with a UI.
    *
    * @group entity_ui
+   * @group form
    */
   public function testContentEntityTypeWithUI() {
     $module_name = 'test_module';
@@ -1399,6 +1400,7 @@ class ComponentContentEntityType8Test extends TestBase {
    * Test creating a content entity type with a bundle entity and UI.
    *
    * @group entity_ui
+   * @group form
    */
   public function testEntityTypeWithUIAndBundleEntity() {
     // Create a module.

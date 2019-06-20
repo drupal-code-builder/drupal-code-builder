@@ -256,6 +256,7 @@ class ComponentConfigEntityType8Test extends TestBase {
    * Test creating a config entity type with a UI.
    *
    * @group entity_ui
+   * @group form
    */
   public function testConfigEntityTypeWithUI() {
     // Create a module.

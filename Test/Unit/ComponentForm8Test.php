@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests for Form component.
+ *
+ * @group form
  */
 class ComponentForm8Test extends TestBase {
 
