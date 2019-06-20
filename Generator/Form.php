@@ -95,6 +95,8 @@ class Form extends PHPClassFileWithInjection {
           "£form['element'] = [",
           "  '#type' => 'textfield',",
           "  '#title' => t('Enter a value'),",
+          "  '#description' => t('Enter a description'),",
+          "  '#default_value' => 'enter the default value',",
           "  '#required' => TRUE,",
           "];",
           "",
