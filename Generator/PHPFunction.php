@@ -47,7 +47,6 @@ class PHPFunction extends BaseGenerator {
       // Deprecated: use function_docblock_lines instead.
       'doxygen_first' => [
         'internal' => TRUE,
-        'default' => 'TODO: write function documentation.',
       ],
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
@@ -55,7 +54,9 @@ class PHPFunction extends BaseGenerator {
       'function_docblock_lines' => [
         'format' => 'array',
         'internal' => TRUE,
-        // No default, as most generators don't use this yet.
+        'default' => [
+          'TODO: write function documentation.',
+        ],
       ],
       'declaration' => [
         'internal' => TRUE,
@@ -82,7 +83,12 @@ class PHPFunction extends BaseGenerator {
   protected function getFunctionDocBlockLines() {
     $lines = [];
 
-    if (!empty($this->component_data['function_docblock_lines'])) {
+    // Check the deprecated 'doxygen_first' property first, as code that doesn't
+    // use this will have it empty.
+    if (!empty($this->component_data['doxygen_first'])) {
+      $lines[] = $this->component_data['doxygen_first'];
+    }
+    elseif (!empty($this->component_data['function_docblock_lines'])) {
       $lines = $this->component_data['function_docblock_lines'];
 
       if (count($lines) > 1) {
@@ -90,9 +96,6 @@ class PHPFunction extends BaseGenerator {
         // first one.
         array_splice($lines, 1, 0, '');
       }
-    }
-    elseif (!empty($this->component_data['doxygen_first'])) {
-      $lines[] = $this->component_data['doxygen_first'];
     }
 
     return $lines;

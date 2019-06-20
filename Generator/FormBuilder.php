@@ -36,7 +36,7 @@ class FormBuilder extends PHPFunction {
     }
 
     $function_code = array();
-    $function_code = array_merge($function_code, $this->docBlock($this->component_data['doxygen_first']));
+    $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
     $function_code[] = $this->component_data['declaration'] . ' {';
 
