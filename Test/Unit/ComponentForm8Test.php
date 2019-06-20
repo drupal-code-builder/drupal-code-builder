@@ -58,8 +58,7 @@ class ComponentForm8Test extends TestBase {
     $method_tester->assertMethodDocblockHasInheritdoc();
     $method_tester->assertReturnsString('test_module_my_form');
 
-    $method_tester = $php_tester->getMethodTester('buildForm');
-    $method_tester->assertMethodDocblockHasInheritdoc();
+    $form_builder_tester = $php_tester->getMethodTester('buildForm')->getFormBuilderTester();
 
     $method_tester = $php_tester->getMethodTester('submitForm');
     $method_tester->assertMethodDocblockHasInheritdoc();
