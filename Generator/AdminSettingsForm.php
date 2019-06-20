@@ -50,6 +50,7 @@ class AdminSettingsForm extends Form {
       "£form['element'] = [",
       "  '#type' => 'textfield',",
       "  '#title' => t('Enter a value'),",
+      "  '#description' => t('Enter a description'),",
       "  '#required' => TRUE,",
       "  '#default_value' => £config->get('element'),",
       "];",

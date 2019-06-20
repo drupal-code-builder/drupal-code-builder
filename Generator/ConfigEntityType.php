@@ -182,7 +182,7 @@ class ConfigEntityType extends EntityTypeBase {
         'containing_component' => "%requester:{$data_key}:form",
         'form_key' => 'id',
         'element_type' => 'machine_name',
-        'element_title' => '',
+        'element_title' => 'Name',
         'element_description' => "A unique machine-readable name for this entity. It must only contain lowercase letters, numbers, and underscores.",
         'element_array' => [
           'default_value' => "£this->entity->id()",
@@ -213,6 +213,7 @@ class ConfigEntityType extends EntityTypeBase {
           'form_key' => $property_name,
           'element_type' => 'textfield',
           'element_title' => $schema_item['label'],
+          'element_description' => "TODO: enter a description.",
           'element_array' => [
             'default_value' => "£this->entity->get('{$property_name}')",
           ],
