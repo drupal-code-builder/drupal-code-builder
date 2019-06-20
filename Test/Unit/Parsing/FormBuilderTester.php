@@ -54,6 +54,17 @@ class FormBuilderTester extends PHPMethodTester {
     // Strictly speaking we should check the whole class name but eh CBA.
     $this->immediateParentIsBase = ($parent_class_short_name == 'FormBase');
 
+    // Determine whether to expect a submit button.
+    $expect_submit_button_element = TRUE;
+    if ($parent_class_short_name == 'ConfigFormBase') {
+      // Config forms rely on the parent to supply the submit button.
+      $expect_submit_button_element = FALSE;
+    }
+    if ($this->methodName == 'form') {
+      // Entity forms rely on the parent to supply the submit button.
+      $expect_submit_button_element = FALSE;
+    }
+
     // TODO: assert the form builder has the right parameters.
 
     // Don't check for a call to the parent method if this form inherits from
@@ -80,6 +91,13 @@ class FormBuilderTester extends PHPMethodTester {
 
     // We know the last statement is the return.
     $form_element_statements = array_slice($statements, $first_element_index, -1);
+
+    // Check the submit button, if one is expected.
+    if ($expect_submit_button_element) {
+      $submit_button_element_statement = array_pop($form_element_statements);
+      $submit_button_element_data = $this->analyseElementArrayNode($submit_button_element_statement->expr);
+      Assert::assertEquals('submit', $submit_button_element_data['type'], "The last form element is a submit button.");
+    }
 
     // Analyse each statement to build up information about the form element
     // it represents.
@@ -123,6 +141,33 @@ class FormBuilderTester extends PHPMethodTester {
         Assert::assertArrayHasKey('#description', $form_element['attributes'], "The form element {$form_element_name} has a description.");
       }
     }
+  }
+
+  /**
+   * Get an array about a form element.
+   *
+   * @param \PhpParser\Node\Expr\Array_ $array_node
+   *   The PHPParser node.
+   *
+   * @return array
+   *   The array of data.
+   */
+  protected function analyseElementArrayNode(\PhpParser\Node\Expr\Array_ $array_node) {
+    $form_element_data = [];
+
+    foreach ($array_node->items as $array_item_node) {
+      if ($array_item_node->key->value == '#type') {
+        Assert::assertEquals(\PhpParser\Node\Scalar\String_::class, get_class($array_item_node->value));
+
+        $form_element_data['type'] = $array_item_node->value->value;
+
+        continue;
+      }
+
+      $form_element_data['attributes'][$array_item_node->key->value] = TRUE;
+    }
+
+    return $form_element_data;
   }
 
   /**
