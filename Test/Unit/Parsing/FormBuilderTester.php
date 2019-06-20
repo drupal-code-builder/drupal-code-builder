@@ -62,6 +62,9 @@ class FormBuilderTester extends PHPMethodTester {
       $this->assertStatementIsParentCallAssignment(0, 'form', "The form builder's first statement is a call to the parent.");
     }
 
+    // All form builders implement an interface method.
+    $this->assertMethodDocblockHasInheritdoc();
+
     $this->assertReturnsVariable('form', "The form builder returns the completed form.");
 
     // Get the form element statements.
