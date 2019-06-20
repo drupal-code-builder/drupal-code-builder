@@ -164,7 +164,12 @@ class PHPTester {
     require __DIR__ . '/../../../vendor/squizlabs/php_codesniffer/autoload.php';
 
     $runner = new Runner();
-    $runner->config = new Config();
+    // We need to pass in a non-empty array of fake command-line arguments to
+    // the Config class constructor, as otherwise it will take them from the
+    // real command- line arguments to the phpunit command, and will crash if it
+    // finds PHPUnit's '--group' options, as it doesn't recognize it. The '--'
+    // is treated as a null argument.
+    $runner->config = new Config(['--']);
     $runner->config->setConfigData('installed_paths', __DIR__ . '/../../../vendor/drupal/coder/coder_sniffer');
     $runner->config->standards = array('Drupal');
     $runner->config->exclude = $excluded_sniffs;
