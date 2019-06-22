@@ -577,6 +577,9 @@ class PluginTypesCollector extends CollectorBase  {
     $base_class = $this->analysePluginTypeBaseClass($data);
     if ($base_class) {
       $data['base_class'] = $base_class;
+
+      // Determine whether the base class has dependency injection.
+      $data['base_class_has_di'] = is_a($base_class, \Drupal\Core\Plugin\ContainerFactoryPluginInterface::class, TRUE);
     }
   }
 

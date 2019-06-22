@@ -363,7 +363,12 @@ class Plugin extends PHPClassFileWithInjection {
     if (!empty($this->injectedServices)) {
       $use_di_interface = TRUE;
 
-      if (isset($this->component_data['parent_plugin_class'])) {
+      if (!empty($this->component_data['plugin_type_data']['base_class_has_di'])) {
+        // No need to implement the interface if the base class already
+        // implements it.
+        $use_di_interface = FALSE;
+      }
+      elseif (isset($this->component_data['parent_plugin_class'])) {
         // TODO: violates DRY; we call this twice.
         $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
         if (!empty($parent_construction_parameters)) {
