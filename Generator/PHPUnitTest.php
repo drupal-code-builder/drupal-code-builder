@@ -79,7 +79,7 @@ class PHPUnitTest extends PHPClassFile {
               'value' => 'FunctionalJavascript',
             ],
             'parent_class_name' => [
-              'value' => '\Drupal\FunctionalJavascriptTests\JavascriptTestBase',
+              'value' => '\Drupal\FunctionalJavascriptTests\WebDriverTestBase',
             ],
           ],
         ],
