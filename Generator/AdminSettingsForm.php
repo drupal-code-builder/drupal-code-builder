@@ -126,7 +126,7 @@ class AdminSettingsForm extends Form {
     $components['info_configuration'] = array(
       'component_type' => 'InfoProperty',
       'property_name' => 'configure',
-      'property_value' => $settings_form_path,
+      'property_value' => $this->component_data['route_name'],
     );
 
     $components["config/schema/%module.schema.yml"] = [
