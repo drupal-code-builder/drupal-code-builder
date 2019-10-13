@@ -90,6 +90,7 @@ class PHPUnitTest extends PHPClassFile {
       'test_type' => [
         'label' => 'Test type',
         'presets' => $test_type_presets,
+        'required' => TRUE,
       ],
       'test_namespace' => [
         'label' => "The namespace piece above the class name, e.g. 'Kernel'",
