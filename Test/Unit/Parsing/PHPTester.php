@@ -277,7 +277,16 @@ class PHPTester {
     // Reset our array of parser nodes.
     // This then passed into the anonymous visitor class, and populated with the
     // nodes we are interested in for subsequent assertions.
-    $this->parser_nodes = [];
+    $this->parser_nodes = array_fill_keys([
+      'namespace',
+      'imports',
+      'classes',
+      'interfaces',
+      'properties',
+      'traits',
+      'functions',
+      'methods',
+    ], []);
 
     // A recursive visitor that groups the parser nodes by type, so subsequent
     // assertions can easily find them.
@@ -341,8 +350,8 @@ class PHPTester {
   public function assertIsProcedural($message = NULL) {
     $message = $message ?? "The file contains only procedural code.";
 
-    Assert::assertArrayNotHasKey('classes', $this->parser_nodes, $message);
-    Assert::assertArrayNotHasKey('interfaces', $this->parser_nodes, $message);
+    Assert::assertEmpty($this->parser_nodes['classes'], $message);
+    Assert::assertEmpty($this->parser_nodes['interfaces'], $message);
     // Technically we should cover traits too, but we don't generate any of
     // those.
   }
@@ -640,7 +649,7 @@ class PHPTester {
     if (empty($expected_trait_full_names)) {
       $message = $message ?? "The class does not use any traits.";
 
-      Assert::assertArrayNotHasKey('traits', $this->parser_nodes, $message);
+      Assert::assertEmpty($this->parser_nodes['traits'], $message);
 
       return;
     }
@@ -1150,7 +1159,8 @@ class PHPTester {
    */
   public function assertHasNoMethods($message = NULL) {
     $message = $message ?? "The file contains no methods.";
-    Assert::assertArrayNotHasKey('methods', $this->parser_nodes, $message);
+
+    Assert::assertEmpty($this->parser_nodes['methods'], $message);
   }
 
   /**
