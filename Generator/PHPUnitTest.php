@@ -252,40 +252,42 @@ class PHPUnitTest extends PHPClassFile {
   protected function collectSectionBlocks() {
     // Set up properties and methods.
 
-    // Create the array of modules to install in the test.
-    $test_install_modules = array_merge(
-      // Some general defaults.
-      [
-        'system',
-        'user',
-      ],
-      // The generated module's dependencies.
-      $this->component_data['module_dependencies'],
-      // The generated module itself.
-      [
-        '%module',
-      ]
-    );
-    // Any test modules.
-    if (!empty($this->component_data['test_modules'])) {
-      foreach ($this->component_data['test_modules'] as $data) {
-        $test_install_modules[] = $data['root_name'];
+    if ($this->component_data['test_type'] != 'unit') {
+      // Create the array of modules to install in the test.
+      $test_install_modules = array_merge(
+        // Some general defaults.
+        [
+          'system',
+          'user',
+        ],
+        // The generated module's dependencies.
+        $this->component_data['module_dependencies'],
+        // The generated module itself.
+        [
+          '%module',
+        ]
+      );
+      // Any test modules.
+      if (!empty($this->component_data['test_modules'])) {
+        foreach ($this->component_data['test_modules'] as $data) {
+          $test_install_modules[] = $data['root_name'];
+        }
       }
-    }
 
-    // Class properties.
-    // The modules property should come first, as it's the most interesting to
-    // a developer; others are boilerplate.
-    $this->properties[] = $this->createPropertyBlock(
-      'modules',
-      'array',
-      [
-        'docblock_first_line' => 'The modules to enable.',
-        'prefixes' => ['public', 'static'],
-        'default' => $test_install_modules,
-        'break_array_value' => TRUE,
-      ]
-    );
+      // Class properties.
+      // The modules property should come first, as it's the most interesting to
+      // a developer; others are boilerplate.
+      $this->properties[] = $this->createPropertyBlock(
+        'modules',
+        'array',
+        [
+          'docblock_first_line' => 'The modules to enable.',
+          'prefixes' => ['public', 'static'],
+          'default' => $test_install_modules,
+          'break_array_value' => TRUE,
+        ]
+      );
+    }
 
     // Add properties for services obtained from the container.
     if (!empty($this->childContentsGrouped['service_property_container'])) {

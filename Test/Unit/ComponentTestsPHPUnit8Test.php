@@ -74,7 +74,42 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   }
 
   /**
-   * Create a test class with a preset.
+   * Create a basic unit test.
+   */
+  function testModuleGenerationUnitTest() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Generated module',
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'unit',
+          'test_class_name' => 'MyTest',
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(2, $files, "The expected number of files is returned.");
+
+    $this->assertArrayHasKey("tests/src/Unit/MyTest.php", $files, "The files list has a test class file.");
+
+    $test_file = $files["tests/src/Unit/MyTest.php"];
+
+    $php_tester = new PHPTester($test_file);
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+    $php_tester->assertHasClass('Drupal\Tests\test_module\Unit\MyTest');
+    $php_tester->assertClassHasParent('Drupal\Tests\UnitTestCase');
+    $php_tester->assertClassHasNotProperty('modules');
+    $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+  }
+
+  /**
+   * Create a basic kernel test.
    */
   function testModuleGenerationKernelTest() {
     // Create a module.
@@ -104,6 +139,11 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
+    $php_tester->assertClassHasPublicProperty('modules', 'array', [
+      'system',
+      'user',
+      'test_module',
+    ]);
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
   }
 
