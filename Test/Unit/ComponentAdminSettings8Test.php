@@ -24,7 +24,7 @@ class ComponentAdminSettings8Test extends TestBase {
    */
   function test8AdminSettingsGenerationTest() {
     // Create a module.
-    $module_name = 'testmodule';
+    $module_name = 'test_module';
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
@@ -42,12 +42,12 @@ class ComponentAdminSettings8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
-      'testmodule.info.yml',
+      'test_module.info.yml',
       'src/Form/AdminSettingsForm.php',
-      'testmodule.routing.yml',
-      'testmodule.links.menu.yml',
-      'testmodule.permissions.yml',
-      'config/schema/testmodule.schema.yml',
+      'test_module.routing.yml',
+      'test_module.links.menu.yml',
+      'test_module.permissions.yml',
+      'config/schema/test_module.schema.yml',
     ], $files);
 
     // Check the form class code.
@@ -59,12 +59,12 @@ class ComponentAdminSettings8Test extends TestBase {
       'Drupal.Commenting.InlineComment.SpacingAfter',
       'Drupal.Commenting.InlineComment.InvalidEndChar',
     ]);
-    $php_tester->assertHasClass('Drupal\testmodule\Form\AdminSettingsForm');
+    $php_tester->assertHasClass('Drupal\test_module\Form\AdminSettingsForm');
     $php_tester->assertClassHasParent('Drupal\Core\Form\ConfigFormBase');
 
     $method_tester = $php_tester->getMethodTester('getFormId');
     $method_tester->assertMethodDocblockHasInheritdoc();
-    $method_tester->assertReturnsString('testmodule_settings_form');
+    $method_tester->assertReturnsString('test_module_settings_form');
 
     $form_builder_tester = $php_tester->getMethodTester('buildForm')->getFormBuilderTester(1);
     $form_builder_tester->assertElementCount(1);
@@ -76,42 +76,42 @@ class ComponentAdminSettings8Test extends TestBase {
     $method_tester->assertHasNoParameters();
 
     // Check the schema file.
-    $config_schema_file = $files['config/schema/testmodule.schema.yml'];
+    $config_schema_file = $files['config/schema/test_module.schema.yml'];
     $yaml_tester = new YamlTester($config_schema_file);
 
-    $yaml_tester->assertHasProperty('testmodule.settings', "The schema file has the property for the settings.");
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'type'], 'config_object');
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'label'], 'Test module settings');
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'mapping'], []);
+    $yaml_tester->assertHasProperty('test_module.settings', "The schema file has the property for the settings.");
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'type'], 'config_object');
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'label'], 'Test module settings');
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'mapping'], []);
 
     // Check the .routing file.
     $routing_file = $files["$module_name.routing.yml"];
     $yaml_tester = new YamlTester($routing_file);
 
-    $expected_route_name = 'testmodule.settings';
+    $expected_route_name = 'test_module.settings';
     $yaml_tester->assertHasProperty($expected_route_name, "The routing file has the property for the admin route.");
-    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'path'], '/admin/config/system/testmodule', "The routing file declares the route path.");
-    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_form'], '\Drupal\testmodule\Form\AdminSettingsForm', "The routing file declares the route form.");
+    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'path'], '/admin/config/system/test_module', "The routing file declares the route path.");
+    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_form'], '\Drupal\test_module\Form\AdminSettingsForm', "The routing file declares the route form.");
     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_title'], 'Administer Test module', "The routing file declares the route title.");
-    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'administer testmodule', "The routing file declares the route permission.");
+    $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'administer test_module', "The routing file declares the route permission.");
 
     // Check the menu links file.
-    $links_file = $files['testmodule.links.menu.yml'];
+    $links_file = $files['test_module.links.menu.yml'];
     $yaml_tester = new YamlTester($links_file);
 
-    $yaml_tester->assertHasProperty('testmodule.settings', "The links file has the link name.");
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'title'], 'Test module');
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'description'], 'Configure the settings for Test module.');
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'route_name'], 'testmodule.settings');
-    $yaml_tester->assertPropertyHasValue(['testmodule.settings', 'parent'], 'system.admin_config_system');
+    $yaml_tester->assertHasProperty('test_module.settings', "The links file has the link name.");
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'title'], 'Test module');
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'description'], 'Configure the settings for Test module.');
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'route_name'], 'test_module.settings');
+    $yaml_tester->assertPropertyHasValue(['test_module.settings', 'parent'], 'system.admin_config_system');
 
     // Check the .permissions file.
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer testmodule', "The permissions file declares the admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer testmodule', 'title'], 'Administer testmodule', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer testmodule', 'description'], 'Administer testmodule', "The permission has the expected title.");
+    $yaml_tester->assertHasProperty('administer test_module', "The permissions file declares the admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'title'], 'Administer test_module', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'description'], 'Administer test_module', "The permission has the expected title.");
 
     // Check the .info file.
     $info_file = $files["$module_name.info.yml"];
@@ -120,7 +120,7 @@ class ComponentAdminSettings8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('name', $module_data['readable_name'], "The info file declares the module name.");
     $yaml_tester->assertPropertyHasValue('description', $module_data['short_description'], "The info file declares the module description.");
     $yaml_tester->assertPropertyHasValue('core', "8.x", "The info file declares the core version.");
-    $yaml_tester->assertPropertyHasValue('configure', "testmodule.settings", "The info file declares the configuration route.");
+    $yaml_tester->assertPropertyHasValue('configure', "test_module.settings", "The info file declares the configuration route.");
   }
 
   /**
@@ -128,7 +128,7 @@ class ComponentAdminSettings8Test extends TestBase {
    */
   function testAdminSettingsOtherPermsTest() {
     // Create a module.
-    $module_name = 'testmodule';
+    $module_name = 'test_module';
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
@@ -138,7 +138,7 @@ class ComponentAdminSettings8Test extends TestBase {
       ),
       'permissions' => array(
         1 => array(
-          'permission' => 'access testmodule',
+          'permission' => 'access test_module',
         ),
       ),
       'settings_form' => [
@@ -154,11 +154,11 @@ class ComponentAdminSettings8Test extends TestBase {
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer testmodule', "The permissions file declares the admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer testmodule', 'title'], 'Administer testmodule', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer testmodule', 'description'], 'Administer testmodule', "The permission has the expected title.");
+    $yaml_tester->assertHasProperty('administer test_module', "The permissions file declares the admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'title'], 'Administer test_module', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'description'], 'Administer test_module', "The permission has the expected title.");
 
-    $yaml_tester->assertHasProperty('access testmodule', "The permissions file declares the requested permission.");
+    $yaml_tester->assertHasProperty('access test_module', "The permissions file declares the requested permission.");
    }
 
    /**
@@ -166,7 +166,7 @@ class ComponentAdminSettings8Test extends TestBase {
     */
    function testAdminSettingsOtherRouterItemsTest() {
      // Create a module.
-     $module_name = 'testmodule';
+     $module_name = 'test_module';
      $module_data = array(
        'base' => 'module',
        'root_name' => $module_name,
@@ -176,7 +176,7 @@ class ComponentAdminSettings8Test extends TestBase {
        ),
        'permissions' => array(
          1 => array(
-           'permission' => 'access testmodule',
+           'permission' => 'access test_module',
          ),
        ),
        'settings_form' => [
@@ -197,14 +197,14 @@ class ComponentAdminSettings8Test extends TestBase {
      $routing_file = $files["$module_name.routing.yml"];
      $yaml_tester = new YamlTester($routing_file);
 
-     $expected_route_name = 'testmodule.settings';
+     $expected_route_name = 'test_module.settings';
      $yaml_tester->assertHasProperty($expected_route_name, "The routing file has the property for the admin route.");
-     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'path'], '/admin/config/system/testmodule', "The routing file declares the route path.");
-     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_form'], '\Drupal\testmodule\Form\AdminSettingsForm', "The routing file declares the route form.");
+     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'path'], '/admin/config/system/test_module', "The routing file declares the route path.");
+     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_form'], '\Drupal\test_module\Form\AdminSettingsForm', "The routing file declares the route form.");
      $yaml_tester->assertPropertyHasValue([$expected_route_name, 'defaults', '_title'], 'Administer Test module', "The routing file declares the route title.");
-     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'administer testmodule', "The routing file declares the route permission.");
+     $yaml_tester->assertPropertyHasValue([$expected_route_name, 'requirements', '_permission'], 'administer test_module', "The routing file declares the route permission.");
 
-     $yaml_tester->assertPropertyHasValue(['testmodule.requested.route.path', 'path'], "/requested/route/path", "The routing file declares the requested path.");
+     $yaml_tester->assertPropertyHasValue(['test_module.requested.route.path', 'path'], "/requested/route/path", "The routing file declares the requested path.");
   }
 
 }
