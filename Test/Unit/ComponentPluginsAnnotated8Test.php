@@ -77,6 +77,46 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   }
 
   /**
+   * Test plugin with specified class name.
+   */
+  function testBasicPluginsGenerationClassName() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'plugins' => array(
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+          'plugin_class_name' => 'OtherClassName',
+        ],
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $files = $this->generateModuleFiles($module_data);
+    $file_names = array_keys($files);
+
+    $this->assertCount(3, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("src/Plugin/Block/OtherClassName.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
+
+    // Check the plugin file.
+    $plugin_file = $files["src/Plugin/Block/OtherClassName.php"];
+
+    $php_tester = new PHPTester($plugin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\OtherClassName');
+    $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
+  }
+
+  /**
    * Tests special handling for a derivative plugin ID.
    */
   public function testPluginsGenerationDerivativeID() {

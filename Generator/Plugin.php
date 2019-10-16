@@ -126,6 +126,29 @@ class Plugin extends PHPClassFileWithInjection {
           $component_data['plugin_name'] = $module_name . '_' . $component_data['plugin_name'];
         },
       ),
+      'plugin_class_name' => [
+        'label' => 'Plugin short class name',
+        'process_default' => TRUE,
+        'default' => function($component_data) {
+          // Derive the plugin class from the plugin ID.
+          // Remove any derivative prefix.
+          if (strpos($component_data['plugin_name'], ':') === FALSE) {
+            $plugin_id = $component_data['plugin_name'];
+          }
+          else {
+            list (, $plugin_id) = explode(':', $component_data['plugin_name']);
+          }
+
+          // Remove the module name from the front.
+          $stripped_plugin_id = preg_replace("@^{$component_data['root_component_name']}_@", '', $plugin_id);
+
+          // Convert to pascal case.
+          return CaseString::snake($stripped_plugin_id)->pascal();
+        },
+        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+          $component_data['plugin_class_name'] = ucfirst($value);
+        },
+      ],
       'injected_services' => array(
         'label' => 'Injected services',
         'format' => 'array',
@@ -201,6 +224,16 @@ class Plugin extends PHPClassFileWithInjection {
 
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
+
+    // Put the class in the plugin's namespace.
+    $data_definition['relative_class_name']['default'] = function($component_data) {
+      return array_merge(
+        // Plugin subdirectory.
+        self::pathToNamespacePieces($component_data['plugin_type_data']['subdir']),
+        // Plugin class name.
+        [ $component_data['plugin_class_name'] ]
+      );
+    };
 
     $data_definition['class_docblock_lines']['default'] = function($component_data) {
       if (!empty($component_data['replace_parent_plugin'])) {
