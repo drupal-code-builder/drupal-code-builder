@@ -17,11 +17,20 @@ class Permission extends BaseGenerator {
         'default' => 'access my_module',
         'required' => TRUE,
       ),
-      'description' => array(
-        'label' => 'Permission description. If omitted, this is derived from the machine name.',
+      'title' => [
+        'label' => 'Permission human-readable name. If omitted, this is derived from the machine name.',
         'default' => function($component_data) {
           if (isset($component_data['permission'])) {
             return ucfirst(str_replace('_', ' ', $component_data['permission']));
+          }
+        },
+        'process_default' => TRUE,
+      ],
+      'description' => array(
+        'label' => 'Permission description',
+        'default' => function($component_data) {
+          if (isset($component_data['title'])) {
+            return $component_data['title'];
           }
         },
         'process_default' => TRUE,
@@ -63,7 +72,7 @@ class Permission extends BaseGenerator {
     $permission_name = $this->component_data['permission'];
 
     $permission_info = array(
-      'title' => ucfirst($permission_name),
+      'title' => $this->component_data['title'],
       'description' => $this->component_data['description'],
     );
     if (!empty($this->component_data['restrict_access'])) {
