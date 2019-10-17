@@ -121,6 +121,7 @@ class AdminSettingsForm extends Form {
     $components['administer %module'] = array(
       'component_type' => 'Permission',
       'permission' => 'administer %module',
+      'title' => 'Administer %readable',
     );
 
     $components['info_configuration'] = array(

@@ -110,8 +110,8 @@ class ComponentAdminSettings8Test extends TestBase {
     $yaml_tester = new YamlTester($permissions_file);
 
     $yaml_tester->assertHasProperty('administer test_module', "The permissions file declares the admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer test_module', 'title'], 'Administer test_module', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer test_module', 'description'], 'Administer test_module', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'title'], 'Administer Test module', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'description'], 'Administer Test module', "The permission has the expected title.");
 
     // Check the .info file.
     $info_file = $files["$module_name.info.yml"];
@@ -155,8 +155,8 @@ class ComponentAdminSettings8Test extends TestBase {
     $yaml_tester = new YamlTester($permissions_file);
 
     $yaml_tester->assertHasProperty('administer test_module', "The permissions file declares the admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer test_module', 'title'], 'Administer test_module', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer test_module', 'description'], 'Administer test_module', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'title'], 'Administer Test module', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer test_module', 'description'], 'Administer Test module', "The permission has the expected title.");
 
     $yaml_tester->assertHasProperty('access test_module', "The permissions file declares the requested permission.");
    }
