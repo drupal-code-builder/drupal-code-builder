@@ -45,6 +45,41 @@ class ComponentModule8Test extends TestBase {
   }
 
   /**
+   * Tests the token replacements for modules.
+   */
+  public function testModule8TokenReplacements() {
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'short_description' => 'Test Module description',
+      'hooks' => array(
+      ),
+      'readme' => FALSE,
+    );
+
+    $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
+
+    // Hack into the generator to get the task helper. We need to get the task
+    // helper itself so we can get the component collection.
+    $class = new \ReflectionClass($task_handler_generate);
+    $method = $class->getMethod('getHelper');
+    $method->setAccessible(TRUE);
+
+    $component_collector = $method->invokeArgs($task_handler_generate, ['ComponentCollector']);
+
+    $component_collection = $component_collector->assembleComponentList($module_data);
+
+    $module_component = $component_collection->getRootComponent();
+    $variables = $module_component->getReplacements();
+
+    $this->assertEquals('test_module', $variables['%module']);
+    $this->assertEquals('Test Module', $variables['%readable']);
+    $this->assertEquals('Test Module', $variables['%Module']);
+    $this->assertEquals('Test module', $variables['%sentence']);
+    $this->assertEquals('test module', $variables['%lower']);
+  }
+
+  /**
    * Test requesting a module with no options produces basic files.
    */
   function testNoOptions() {
