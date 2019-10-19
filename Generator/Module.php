@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
+
 /**
  * Component generator: module.
  *
@@ -461,7 +463,9 @@ class Module extends RootComponent {
     return array(
       '%module'       => $module_data['root_name'],
       '%readable'     => str_replace("'", "\'", $module_data['readable_name']),
-      '%Module'       => ucfirst($module_data['readable_name']),
+      '%Module'       => CaseString::title($module_data['readable_name'])->title(),
+      '%sentence'     => CaseString::title($module_data['readable_name'])->sentence(),
+      '%lower'        => strtolower($module_data['readable_name']),
       '%description'  => str_replace("'", "\'", $module_data['short_description']),
       '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : 'TODO: Create admin help text.',
     );
