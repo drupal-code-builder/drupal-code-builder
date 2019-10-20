@@ -172,6 +172,14 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component_type' => 'Service',
       ),
+      'service_provider' => [
+        'label' => "Service provider",
+        'description' => 'A service provider alters existing services or defines services dynamically.',
+        'required' => FALSE,
+        'default' => FALSE,
+        'format' => 'boolean',
+        'component_type' => 'ServiceProvider',
+      ],
       'permissions' => array(
         'label' => "Permissions",
         'description' => 'The permissions for this module to provide.',
