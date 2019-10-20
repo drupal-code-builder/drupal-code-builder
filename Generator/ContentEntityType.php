@@ -464,7 +464,7 @@ EOT
       'component_type' => 'PHPFunction',
       'containing_component' => '%requester',
       'declaration' => 'public static function baseFieldDefinitions(\Drupal\Core\Entity\EntityTypeInterface $entity_type)',
-      'doxygen_first' => '{@inheritdoc}',
+      'docblock_inherit' => TRUE,
       'body' => $method_body,
     ];
 

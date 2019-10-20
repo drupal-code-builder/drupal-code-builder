@@ -80,7 +80,7 @@ class Form extends PHPClassFileWithInjection {
       'getFormId' => array(
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
-        'doxygen_first' => '{@inheritdoc}',
+        'docblock_inherit' => TRUE,
         'declaration' => 'public function getFormId()',
         'body' => array(
           "return '$form_name';",
@@ -89,7 +89,7 @@ class Form extends PHPClassFileWithInjection {
       'buildForm' => array(
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
-        'doxygen_first' => '{@inheritdoc}',
+        'docblock_inherit' => TRUE,
         'function_name' => 'buildForm',
         'body' => array(
           "// Uncomment this line if you change the base class.",
@@ -121,7 +121,7 @@ class Form extends PHPClassFileWithInjection {
       'submitForm' => array(
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
-        'doxygen_first' => '{@inheritdoc}',
+        'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
       ),
