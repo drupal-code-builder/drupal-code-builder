@@ -1385,6 +1385,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
     $php_tester->assertHasClass('Drupal\test_module\Form\KittyCatForm');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
+    $php_tester->assertHasMethods(['form', 'validateForm']);
     $php_tester->assertHasMethods(['form', 'submitForm', 'save']);
 
     // Check the form elements in the bundle entity's form handler.

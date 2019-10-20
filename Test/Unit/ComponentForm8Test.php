@@ -64,6 +64,9 @@ class ComponentForm8Test extends TestBase {
     $form_builder_tester->assertElementCount(1);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
 
+    $method_tester = $php_tester->getMethodTester('validateForm');
+    $method_tester->assertMethodDocblockHasInheritdoc();
+
     $method_tester = $php_tester->getMethodTester('submitForm');
     $method_tester->assertMethodDocblockHasInheritdoc();
   }

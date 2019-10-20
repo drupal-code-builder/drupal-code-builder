@@ -68,6 +68,7 @@ class ComponentAdminSettings8Test extends TestBase {
     $form_builder_tester = $php_tester->getMethodTester('buildForm')->getFormBuilderTester(1);
     $form_builder_tester->assertElementCount(1);
 
+    $php_tester->assertHasMethod('validateForm');
     $php_tester->assertHasMethod('submitForm');
 
     $method_tester = $php_tester->getMethodTester('getEditableConfigNames');

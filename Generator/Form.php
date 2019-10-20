@@ -6,6 +6,9 @@ use CaseConverter\CaseString;
 
 /**
  * Generator class for forms on Drupal 8.
+ *
+ * Note that entity forms use the EntityForm generator which does *not*
+ * inherit from this class!
  */
 class Form extends PHPClassFileWithInjection {
 
@@ -108,6 +111,13 @@ class Form extends PHPClassFileWithInjection {
           "return £form;",
         ),
       ),
+      'validateForm' => [
+        'component_type' => 'PHPFunction',
+        'containing_component' => '%requester',
+        'docblock_inherit' => TRUE,
+        'declaration' => 'public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
+        'body' => '',
+      ],
       'submitForm' => array(
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
