@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator for a module library asset
+ * Generator for a JS library asset.
  */
 class LibraryJSAsset extends BaseGenerator {
 
