@@ -99,7 +99,7 @@ class AdminSettingsForm extends Form {
       // OK to use a token here, as the YAML value for this will be quoted
       // anyway.
       'path' => $settings_form_path,
-      'title' => 'Administer %readable',
+      'title' => 'Administer %lower',
       'controller_type' => 'form',
       'controller_type_value' => '\\' . $this->component_data['qualified_class_name'],
       'access_type' => 'permission',
@@ -111,8 +111,8 @@ class AdminSettingsForm extends Form {
       'plugin_type' => 'menu.link',
       'plugin_name' => 'settings',
       'plugin_properties' => [
-        'title' => '%Module',
-        'description' => 'Configure the settings for %Module.',
+        'title' => '%sentence',
+        'description' => 'Configure the settings for %lower.',
         'route_name' => $this->component_data['route_name'],
         'parent' => $this->component_data['parent_route'],
       ],
@@ -121,7 +121,7 @@ class AdminSettingsForm extends Form {
     $components['administer %module'] = array(
       'component_type' => 'Permission',
       'permission' => 'administer %module',
-      'title' => 'Administer %readable',
+      'title' => 'Administer %sentence',
     );
 
     $components['info_configuration'] = array(
@@ -135,7 +135,7 @@ class AdminSettingsForm extends Form {
       'yaml_data' => [
         $this->component_data['route_name'] => [
            'type' => 'config_object',
-           'label' => '%Module settings',
+           'label' => '%sentence settings',
           'mapping' => [
           ],
         ],
