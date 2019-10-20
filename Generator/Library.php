@@ -34,8 +34,13 @@ class Library extends BaseGenerator {
       ],
       'dependencies' => [
         'label' => 'Library dependencies',
+        'description' => "The sample code in JavaScriptFile requires core/jquery and core/drupal.",
         'format' => 'array',
-        'default' => [],
+        'default' => [
+          // The sample code in JavaScriptFile assumes these dependencies.
+          'core/jquery',
+          'core/drupal',
+        ],
         'required' => FALSE,
         'process_default' => TRUE,
       ],

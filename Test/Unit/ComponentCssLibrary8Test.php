@@ -90,6 +90,7 @@ class ComponentCssLibrary8Test extends TestBase {
     $yaml_tester->assertHasProperty('second_library');
     $yaml_tester->assertPropertyHasValue(['second_library', 'version'], '1.x', "The libraries file declares the library version.");
     $yaml_tester->assertPropertyHasValue(['second_library', 'header'], TRUE, "The libraries file declares the library version.");
+    $yaml_tester->assertPropertyHasValue(['second_library', 'dependencies'], ['core/jquery', 'core/drupal'], "The second library has the default dependencies.");
 
     $js_file = $files['js/js_one.js'];
     // Some crude testing of the JS file.
