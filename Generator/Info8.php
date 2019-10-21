@@ -55,7 +55,7 @@ class Info8 extends Info {
     $module_data = $this->component_data;
     //print_r($module_data);
 
-    $lines = array();
+    $lines = $this->getInfoFileEmptyLines();
     $lines['name'] = $module_data['readable_name'];
     $lines['type'] = $module_data['base'];
     $lines['description'] = $module_data['short_description'];
@@ -76,6 +76,8 @@ class Info8 extends Info {
     if (!empty($this->extraLines)) {
       $lines = array_merge($lines, $this->extraLines);
     }
+
+   $lines = array_filter($lines);
 
     $info = $this->process_info_lines($lines);
     return $info;

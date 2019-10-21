@@ -8,6 +8,21 @@ namespace DrupalCodeBuilder\Generator;
 class Info extends File {
 
   /**
+   * The order of keys in the info file.
+   *
+   * @todo: Make this protected once our minimum PHP version is 7.1.
+   */
+  const INFO_LINE_ORDER = [
+    'name',
+    'type',
+    'description',
+    'package',
+    'version',
+    'core',
+    'dependencies',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
@@ -54,6 +69,16 @@ class Info extends File {
       'body' => $this->file_body(),
       'build_list_tags' => ['info'],
     );
+  }
+
+  /**
+   * Gets an array of info file lines in the correct order to be populated.
+   *
+   * @return array
+   *   The array of lines.
+   */
+  protected function getInfoFileEmptyLines() {
+    return array_fill_keys(self::INFO_LINE_ORDER, []);
   }
 
 }

@@ -59,6 +59,25 @@ class YamlTester {
   }
 
   /**
+   * Assert the YAML keys are in the given order.
+   *
+   * @param mixed $property_address
+   *   The address of the property to check keys for. An array address for the
+   *   property; may be a scalar string for a top-level property. Use an empty
+   *   array for the top-level.
+   * @param string[] $expected_keys
+   *   The expected array of keys, in the expected order.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertKeyOrder($property_address, $expected_keys, $message = NULL) {
+    $actual_value = NestedArray::getValue($this->parsedYamlData, $property_address);
+    $actual_keys = array_keys($actual_value);
+
+    Assert::assertEquals($expected_keys, $actual_keys);
+  }
+
+  /**
    * Assert the YAML has the given property.
    *
    * @param mixed $property_address

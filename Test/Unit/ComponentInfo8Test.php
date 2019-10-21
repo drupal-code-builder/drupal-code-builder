@@ -70,6 +70,17 @@ class ComponentInfo8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('description', 'Test Module description');
     $yaml_tester->assertPropertyHasValue('package', 'Test Package');
     $yaml_tester->assertPropertyHasValue('dependencies', ['node', 'block']);
+
+    $yaml_tester->assertKeyOrder([], [
+      'name',
+      'type',
+      'description',
+      'package',
+      // We don't create the 'version' key.
+      // 'version',
+      'core',
+      'dependencies',
+    ]);
   }
 
 }
