@@ -598,7 +598,14 @@ class PluginTypesCollector extends CollectorBase  {
     $potential_base_classes = [];
 
     $service = \Drupal::service($data['service_id']);
-    $definitions = $service->getDefinitions();
+    try {
+      $definitions = $service->getDefinitions();
+    }
+    catch (\Throwable $e) {
+      // TODO: report the problem.
+
+      return;
+    }
 
     // Keep track of the classes we've seen, so we can skip derivative plugins
     // that have the same class.
