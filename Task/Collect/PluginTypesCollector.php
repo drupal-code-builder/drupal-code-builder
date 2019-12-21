@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use Exception;
 
 /**
  * Task helper for collecting data on plugin types.
@@ -598,7 +599,12 @@ class PluginTypesCollector extends CollectorBase  {
     $potential_base_classes = [];
 
     $service = \Drupal::service($data['service_id']);
-    $definitions = $service->getDefinitions();
+    try {
+      $definitions = $service->getDefinitions();
+    }    
+    catch (Exception $e) {
+      return FALSE;
+    }
 
     // Keep track of the classes we've seen, so we can skip derivative plugins
     // that have the same class.
