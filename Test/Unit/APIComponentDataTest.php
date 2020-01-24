@@ -17,9 +17,10 @@ namespace DrupalCodeBuilder\Test\Unit;
  */
 class APIComponentDataTest extends TestBase {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(7);
-  }
+  /**
+   * {@inheritdoc}
+   */
+  protected $drupalMajorVersion = 7;
 
   /**
    * Test defaults in component data.

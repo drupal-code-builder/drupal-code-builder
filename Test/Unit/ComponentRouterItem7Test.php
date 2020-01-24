@@ -9,9 +9,10 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  */
 class ComponentRouterItem7Test extends TestBase {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(7);
-  }
+  /**
+   * {@inheritdoc}
+   */
+  protected $drupalMajorVersion = 7;
 
   /**
    * Test generating a module with menu items.

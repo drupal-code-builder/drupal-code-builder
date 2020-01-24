@@ -11,9 +11,10 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  */
 class ComponentModule7Test extends TestBase {
 
-  protected function setUp() {
-    $this->setupDrupalCodeBuilder(7);
-  }
+  /**
+   * {@inheritdoc}
+   */
+  protected $drupalMajorVersion = 7;
 
   /**
    * Tests preparation of component properties.

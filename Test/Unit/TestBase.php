@@ -27,8 +27,6 @@ abstract class TestBase extends TestCase {
 
   /**
    * This expects the class property $drupalMajorVersion to be defined.
-   *
-   * Classes that don't have this yet should override this.
    */
   protected function setUp() {
     $this->setupDrupalCodeBuilder($this->drupalMajorVersion);
