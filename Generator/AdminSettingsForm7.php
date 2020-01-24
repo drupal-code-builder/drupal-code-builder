@@ -37,12 +37,12 @@ class AdminSettingsForm7 extends Form7 {
     // Override the form builder's location and code.
     $components[$form_builder]['containing_component'] = '%requester:%module.admin.inc';
     $components[$form_builder]['body'] = array(
-      "£form['%module_variable_foo'] = array(",
+      "£form['%module_variable_foo'] = [",
       "  '#type' => 'textfield',",
       "  '#title' => t('Foo'),",
       "  '#default_value' => variable_get('%module_variable_foo', 42),",
       "  '#required' => TRUE,",
-      ");",
+      "];",
       "",
       "return system_settings_form(£form);",
     );
