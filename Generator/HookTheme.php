@@ -34,11 +34,11 @@ class HookTheme extends HookImplementation {
     $this->component_data['has_wrapping_newlines'] = FALSE;
 
     $code = array();
-    $code[] = 'return array(';
+    $code[] = 'return [';
     foreach ($this->filterComponentContentsForRole($children_contents, 'item') as $menu_item_lines) {
       $code = array_merge($code, $menu_item_lines);
     }
-    $code[] = ');';
+    $code[] = '];';
 
     $this->component_data['body'] = $code;
 

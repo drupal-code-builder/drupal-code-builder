@@ -59,9 +59,9 @@ class ThemeHook extends BaseGenerator {
 
     $code = array();
 
-    $code[] = "  '$theme_hook_name' => array(";
+    $code[] = "  '$theme_hook_name' => [";
     $code[] = "    'render element' => 'elements',";
-    $code[] = "  ),";
+    $code[] = "  ],";
 
     return [
       'item' => [
