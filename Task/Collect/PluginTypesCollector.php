@@ -590,8 +590,9 @@ class PluginTypesCollector extends CollectorBase  {
    * @param array $data
    *   The array of data for the plugin type.
    *
-   * @return string
-   *   The base class to use when generating plugins of this type.
+   * @return string|null
+   *   The base class to use when generating plugins of this type, or NULL if
+   *   this cannot be determined.
    */
   protected function analysePluginTypeBaseClass(&$data) {
     // Work over each plugin of this type, finding a suitable candidate for
