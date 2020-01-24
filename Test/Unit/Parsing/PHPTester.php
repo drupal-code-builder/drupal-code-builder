@@ -82,6 +82,10 @@ class PHPTester {
    *   (optional) An array of names of PHPCS sniffs to exclude from testing.
    */
   public function assertDrupalCodingStandards(array $excluded_sniffs = []) {
+    // Exclude this sniff, as we don't have access to the class name.
+    // TODO: restore this as part of #170.
+    $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
+
     $phpcs_runner = $this->setUpPHPCS($excluded_sniffs);
 
     // Process the file with PHPCS.
