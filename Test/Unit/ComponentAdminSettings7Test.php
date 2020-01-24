@@ -42,13 +42,13 @@ class ComponentAdminSettings7Test extends TestBase {
 
     // Check the admin.inc file code.
     $admin_file = $files["$module_name.admin.inc"];
-    $php_tester = new PHPTester($admin_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $admin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasFunction("{$module_name}_settings_form", $admin_file, "The admin.inc file contains the settings form builder.");
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($module_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
     $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
     $php_tester->assertHasHookImplementation('hook_menu', $module_name, "The module file contains a function declaration that implements hook_menu().");
@@ -83,7 +83,7 @@ class ComponentAdminSettings7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($module_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
     $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $php_tester->assertHasHookImplementation('hook_menu', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $php_tester->assertHasHookImplementation('hook_init', $module_name, "The module file contains a function declaration that implements hook_permission().");
@@ -114,7 +114,7 @@ class ComponentAdminSettings7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($module_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
     $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['administer $module_name']");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['access testmodule']");

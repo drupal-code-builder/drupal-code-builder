@@ -38,7 +38,7 @@ class ComponentServiceProviderTest extends TestBase {
 
     $service_provider_file = $files['src/TestModuleServiceProvider.php'];
 
-    $php_tester = new PHPTester($service_provider_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_provider_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\TestModuleServiceProvider');
     $php_tester->assertClassHasParent('Drupal\Core\DependencyInjection\ServiceProviderBase');

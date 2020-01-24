@@ -60,7 +60,7 @@ class ComponentService8Test extends TestBase {
 
     $service_class_file = $files["src/MyService.php"];
 
-    $php_tester = new PHPTester($service_class_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\MyService');
   }
@@ -104,7 +104,7 @@ class ComponentService8Test extends TestBase {
     $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
 
-    $php_tester = new PHPTester($service_class_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\BreadcrumbBuilder');
     $php_tester->assertClassHasInterfaces(['Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface']);
@@ -152,7 +152,7 @@ class ComponentService8Test extends TestBase {
     $this->assertArrayHasKey("src/EventSubscriber/EventSubscriber.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
 
-    $php_tester = new PHPTester($service_class_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\EventSubscriber\EventSubscriber');
     $php_tester->assertClassHasInterfaces(['Symfony\Component\EventDispatcher\EventSubscriberInterface']);
@@ -205,7 +205,7 @@ class ComponentService8Test extends TestBase {
 
     $service_class_file = $files["src/MyService.php"];
 
-    $php_tester = new PHPTester($service_class_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\MyService');
 
@@ -291,7 +291,7 @@ class ComponentService8Test extends TestBase {
 
     $service_class_file = $files["src/MyServiceClass.php"];
 
-    $php_tester = new PHPTester($service_class_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\MyServiceClass');
   }

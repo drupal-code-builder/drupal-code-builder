@@ -24,6 +24,13 @@ use PHP_CodeSniffer\Files\DummyFile;
 class PHPTester {
 
   /**
+   * The Drupal major version of the code being tested.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion;
+
+  /**
    * The full syntax tree parsed by PhpParser.
    *
    * @var array
@@ -36,7 +43,8 @@ class PHPTester {
    * @param string $php_code
    *   The PHP code that should be tested.
    */
-  public function __construct($php_code) {
+  public function __construct($drupal_major_version, $php_code) {
+    $this->drupalMajorVersion = $drupal_major_version;
     $this->phpCode = $php_code;
 
     $this->assertWellFormedPHP();
@@ -90,17 +98,10 @@ class PHPTester {
 
     // Process the file with PHPCS.
 
-
-    // KILL?
     // We need to pass in a value for the filename, even though the file does
-    // not exist, as the Drupal standard uses it to try to check the file when
-    // it tries to find an associated module .info file to detect the Drupal
-    // major version in DrupalPractice_Project::getCoreVersion(). We don't use
-    // the DrupalPractice standard, so that shouldn't concern us, but the
-    // Drupal_Sniffs_Array_DisallowLongArraySyntaxSniff sniff calls that to
-    // determine whether to run itself. This check for the Drupal code version
-    // will fail, which means that the short array sniff will not be run.
-
+    // not exist.
+    // TODO: #170 pass the real filename, as at least one sniff makes use of
+    // it.
 
     // Create and process a single file, faking the path so the report looks nice.
     // $fileContent = "<?php\necho 'hi';";
@@ -175,6 +176,7 @@ class PHPTester {
     // is treated as a null argument.
     $runner->config = new Config(['--']);
     $runner->config->setConfigData('installed_paths', __DIR__ . '/../../../vendor/drupal/coder/coder_sniffer');
+    $runner->config->setConfigData('drupal_core_version', $this->drupalMajorVersion);
     $runner->config->standards = array('Drupal');
     $runner->config->exclude = $excluded_sniffs;
     $runner->init();

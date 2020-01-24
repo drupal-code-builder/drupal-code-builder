@@ -56,7 +56,7 @@ class ComponentHooks7Test extends TestBase {
     $module_file = $files["$module_name.module"];
     //debug($module_file);
 
-    $php_tester = new PHPTester($module_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
     // Exclude the sniff for blank lines after a comment, as we intentionally
     // have one in our template for hook_menu().
     $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.InlineComment.SpacingAfter']);
@@ -69,7 +69,7 @@ class ComponentHooks7Test extends TestBase {
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];
-    $php_tester = new PHPTester($install_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $install_file);
     $php_tester->assertDrupalCodingStandards();
 
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
@@ -81,7 +81,7 @@ class ComponentHooks7Test extends TestBase {
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
-    $php_tester = new PHPTester($tokens_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $tokens_file);
     $php_tester->assertDrupalCodingStandards();
 
     $php_tester->assertHasHookImplementation('hook_tokens', $module_name);

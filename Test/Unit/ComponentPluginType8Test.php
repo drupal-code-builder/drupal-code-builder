@@ -75,7 +75,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin manager file.
     $plugin_manager_file = $files["src/CatFeederManager.php"];
 
-    $php_tester = new PHPTester($plugin_manager_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
     $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
@@ -115,7 +115,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the annotation class file.
     $annotation_file = $files["src/Annotation/CatFeeder.php"];
 
-    $php_tester = new PHPTester($annotation_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $annotation_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Annotation\CatFeeder');
     $php_tester->assertClassHasParent('Drupal\Component\Annotation\Plugin');
@@ -128,7 +128,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeederBase.php"];
 
-    $php_tester = new PHPTester($plugin_base_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_base_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\CatFeeder\CatFeederBase');
     $php_tester->assertClassIsAbstract();
@@ -137,7 +137,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin interface file.
     $plugin_interface_file = $files["src/Plugin/CatFeeder/CatFeederInterface.php"];
 
-    $php_tester = new PHPTester($plugin_interface_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Plugin\CatFeeder\CatFeederInterface');
 
@@ -153,7 +153,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the api.php file.
     $api_file = $files["$module_name.api.php"];
 
-    $php_tester = new PHPTester($api_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $api_file);
     $php_tester->assertDrupalCodingStandards();
 
     // TODO: expand the docblock assertion for these.
@@ -200,7 +200,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin manager file, as it mentions the interface.
     $plugin_manager_file = $files["src/CatFeederManager.php"];
 
-    $php_tester = new PHPTester($plugin_manager_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
 
@@ -208,7 +208,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/Animals/CatFeeder/CatFeederBase.php"];
 
-    $php_tester = new PHPTester($plugin_base_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_base_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederBase');
     $php_tester->assertClassHasInterfaces(['Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface']);
@@ -216,7 +216,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin interface file.
     $plugin_interface_file = $files["src/Plugin/Animals/CatFeeder/CatFeederInterface.php"];
 
-    $php_tester = new PHPTester($plugin_interface_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface');
   }
@@ -268,7 +268,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin manager file.
     $plugin_manager_file = $files["src/CatFeederManager.php"];
 
-    $php_tester = new PHPTester($plugin_manager_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
     $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
@@ -308,7 +308,7 @@ class ComponentPluginType8Test extends TestBase {
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeeder.php"];
 
-    $php_tester = new PHPTester($plugin_base_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_base_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\CatFeeder\CatFeeder');
     $php_tester->assertClassNotAbstract();
@@ -348,7 +348,7 @@ class ComponentPluginType8Test extends TestBase {
 
     $api_file = $files['test_module.api.php'];
 
-    $api_tester = new PHPTester($api_file);
+    $api_tester = new PHPTester($this->drupalMajorVersion, $api_file);
     $api_tester->assertDrupalCodingStandards();
     $api_tester->assertHasFunction('hook_alpha_info_alter');
     $api_tester->assertHasFunction('hook_beta_info_alter');

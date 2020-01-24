@@ -60,7 +60,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
-    $php_tester = new PHPTester($test_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
@@ -100,7 +100,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $test_file = $files["tests/src/Unit/MyTest.php"];
 
-    $php_tester = new PHPTester($test_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Unit\MyTest');
     $php_tester->assertClassHasParent('Drupal\Tests\UnitTestCase');
@@ -135,7 +135,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
-    $php_tester = new PHPTester($test_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
@@ -183,7 +183,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
-    $php_tester = new PHPTester($test_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
@@ -271,7 +271,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     // Check the main module plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
 
-    $php_tester = new PHPTester($plugin_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\generated_module\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
@@ -279,14 +279,14 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     // Check the test module plugin file.
     $test_plugin_file = $files["tests/modules/test_module/src/Plugin/Block/Alpha.php"];
 
-    $php_tester = new PHPTester($test_plugin_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $test_plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
-    $php_tester = new PHPTester($test_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $test_file);
     $php_tester->assertHasClass('Drupal\Tests\generated_module\Kernel\MyTest');
     $expected_modules_property_value = [
       'system',

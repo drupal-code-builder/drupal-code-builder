@@ -79,7 +79,7 @@ class ComponentRouterItem8Test extends TestBase {
 
     $controller_file = $files["src/Controller/MyPathController.php"];
 
-    $php_tester = new PHPTester($controller_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $controller_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
     $php_tester->assertHasMethod('content');

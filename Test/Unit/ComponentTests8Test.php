@@ -68,7 +68,7 @@ class ComponentTests8Test extends TestBase {
     // Check the .test file.
     $tests_file = $files['src/Tests/TestModuleTest.php'];
 
-    $php_tester = new PHPTester($tests_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $tests_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('TestModuleTestCase', "The test class file contains the correct class");
     $php_tester->assertHasMethods(['getInfo', 'setUp', 'testTodoChangeThisName']);

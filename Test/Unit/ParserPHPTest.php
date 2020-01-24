@@ -20,7 +20,7 @@ class ParserPHPTest extends TestCase {
    * @dataProvider providerAssertDrupalCodingStandards
    */
   public function testAssertDrupalCodingStandards($code, $pass) {
-    $php_tester = new PHPTester($code);
+    $php_tester = new PHPTester(8, $code);
 
     $this->assertAssertion($pass, $php_tester, 'assertDrupalCodingStandards');
   }
@@ -95,11 +95,11 @@ class Foo implements Plain, WithSpace {
 
 EOT;
 
-    $php_tester = new PHPTester($php_procedural);
+    $php_tester = new PHPTester(8, $php_procedural);
 
     $this->assertAssertion(TRUE, $php_tester, 'assertIsProcedural');
 
-    $php_tester = new PHPTester($php_non_procedural);
+    $php_tester = new PHPTester(8, $php_non_procedural);
 
     $this->assertAssertion(FALSE, $php_tester, 'assertIsProcedural');
   }
@@ -122,7 +122,7 @@ class Foo implements Plain, WithSpace {
 
 EOT;
 
-    $php_tester = new PHPTester($php);
+    $php_tester = new PHPTester(8, $php);
 
     $this->assertAssertion(TRUE, $php_tester, 'assertHasClass', 'Some\Space\Namespaced\Foo');
     $this->assertAssertion(FALSE, $php_tester, 'assertHasClass', 'Some\Space\Namespaced\WrongClass');
@@ -149,7 +149,7 @@ class Foo implements Plain, Namespaced, NamespacedOther {
 
 EOT;
 
-    $php_tester = new PHPTester($php);
+    $php_tester = new PHPTester(8, $php);
 
     $expected_interfaces_string = implode(', ', $expected_interfaces);
 
@@ -242,7 +242,7 @@ function bar() {
 
 EOT;
 
-    $php_tester = new PHPTester($php);
+    $php_tester = new PHPTester(8, $php);
 
     $this->assertAssertion(TRUE, $php_tester, 'assertHasFunction', 'foo');
     $this->assertAssertion(TRUE, $php_tester, 'assertHasFunction', 'bar');
@@ -270,7 +270,7 @@ class Foo {
 
 EOT;
 
-    $php_tester = new PHPTester($php);
+    $php_tester = new PHPTester(8, $php);
 
     $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Class docblock.');
     $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Further line.');
@@ -304,7 +304,7 @@ function foo() {
 
 EOT;
 
-    $php_tester = new PHPTester($php);
+    $php_tester = new PHPTester(8, $php);
 
     $this->assertAssertion(TRUE, $php_tester, 'assertFileDocblockHasLine', 'File docblock.');
     $this->assertAssertion(TRUE, $php_tester, 'assertFileDocblockHasLine', 'Further line.');
@@ -348,7 +348,7 @@ function my_module_not_hook() {
 
 EOT;
 
-    $php_tester = new PHPTester($php);
+    $php_tester = new PHPTester(8, $php);
 
     $this->assertAssertion(TRUE, $php_tester, 'assertHasHookImplementation', 'hook_foo', 'my_module');
     $this->assertAssertion(FALSE, $php_tester, 'assertHasHookImplementation', 'hook_bar', 'my_module');

@@ -48,7 +48,7 @@ class ComponentAPI8Test extends TestBase {
 
     $api_file = $files["$module_name.api.php"];
 
-    $php_tester = new PHPTester($api_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $api_file);
     $php_tester->assertDrupalCodingStandards();
 
     // TODO: expand the docblock assertion for these.

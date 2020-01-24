@@ -41,7 +41,7 @@ class ComponentPermissions7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($module_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasHookImplementation('hook_permission', $module_name, "The module file contains a function declaration that implements hook_permission().");
     $this->assertFunctionCode($module_file, "{$module_name}_permission", "permissions['$permission_name']");

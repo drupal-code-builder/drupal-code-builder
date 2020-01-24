@@ -47,7 +47,7 @@ class ComponentForm8Test extends TestBase {
 
     $form_file = $files["src/Form/MyForm.php"];
 
-    $php_tester = new PHPTester($form_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $form_file);
     $php_tester->assertDrupalCodingStandards([
       // Excluded because of the buildForm() commented-out code.
       'Drupal.Commenting.InlineComment.SpacingAfter',
@@ -102,7 +102,7 @@ class ComponentForm8Test extends TestBase {
 
     $form_file = $files["src/Form/MyForm.php"];
 
-    $php_tester = new PHPTester($form_file);
+    $php_tester = new PHPTester($this->drupalMajorVersion, $form_file);
     $php_tester->assertDrupalCodingStandards([
       // Excluded because of the buildForm() commented-out code.
       'Drupal.Commenting.InlineComment.SpacingAfter',
