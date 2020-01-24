@@ -34,6 +34,9 @@ class ComponentTests8Test extends TestBase {
     // The generated methods should really say '@inheritdoc', but simpletest
     // tests are deprecated anyway, so who cares.
     'Drupal.Commenting.HookComment.HookRepeat',
+    // This is disabled because I CBA to fix the Simpletest tests as they're
+    // obsolete anyway.
+    'Drupal.Arrays.DisallowLongArraySyntax.Found',
   ];
 
   /**
