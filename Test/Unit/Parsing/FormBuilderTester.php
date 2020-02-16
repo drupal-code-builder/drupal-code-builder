@@ -97,7 +97,7 @@ class FormBuilderTester extends PHPMethodTester {
       $submit_button_element_statement = array_pop($form_element_statements);
       $submit_button_element_data = $this->analyseElementArrayNode($submit_button_element_statement->expr);
       Assert::assertEquals('submit', $submit_button_element_data['type'], "The last form element is a submit button.");
-      Assert::assertArrayHasKey('#title', $submit_button_element_data['attributes'], "The submit button has a title.");
+      Assert::assertArrayHasKey('#value', $submit_button_element_data['attributes'], "The submit button has a value attribute.");
     }
 
     // Analyse each statement to build up information about the form element

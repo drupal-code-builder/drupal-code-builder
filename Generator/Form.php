@@ -105,7 +105,7 @@ class Form extends PHPClassFileWithInjection {
           "",
           "£form['submit'] = [",
           "  '#type' => 'submit',",
-          "  '#title' => t('Submit'),",
+          "  '#value' => t('Submit'),",
           "];",
           "",
           "return £form;",
