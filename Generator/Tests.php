@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Component generator: tests.
+ * Component generator: Simpletest test class.
  */
 class Tests extends PHPFile {
 
