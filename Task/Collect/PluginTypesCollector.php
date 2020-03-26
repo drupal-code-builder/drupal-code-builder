@@ -915,6 +915,11 @@ class PluginTypesCollector extends CollectorBase  {
       return;
     }
 
+    if (!class_exists($data['plugin_interface'])) {
+      // Some contrib modules declare the interface but don't define it...
+      return;
+    }
+
     // Analyze the interface, if there is one.
     $reflection = new \ReflectionClass($data['plugin_interface']);
     $methods = $reflection->getMethods();
