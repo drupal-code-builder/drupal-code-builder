@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
-use Exception;
+use Throwable;
 
 /**
  * Task helper for collecting data on plugin types.
@@ -602,8 +602,9 @@ class PluginTypesCollector extends CollectorBase  {
     $service = \Drupal::service($data['service_id']);
     try {
       $definitions = $service->getDefinitions();
-    }    
-    catch (Exception $e) {
+    }
+    // Catch errors as well as exceptions; some contrib plugin managers crash!
+    catch (Throwable $e) {
       return FALSE;
     }
 
