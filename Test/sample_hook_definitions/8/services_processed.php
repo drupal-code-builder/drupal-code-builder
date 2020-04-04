@@ -68,5 +68,14 @@ array (
       'interface' => '',
       'description' => 'The Cache Backend Interface service',
     ),
+    'storage:node' =>
+    array (
+      'id' => 'storage:node',
+      'label' => 'Content storage',
+      'static_method' => '',
+      'class' => "FOO",
+      'interface' => '\Drupal\Core\Entity\EntityStorageInterface',
+      'description' => 'The node storage handler',
+    ),
   ),
 );

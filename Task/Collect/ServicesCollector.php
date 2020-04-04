@@ -28,6 +28,7 @@ class ServicesCollector extends CollectorBase  {
     'entity_type.manager' => TRUE,
     'module_handler' => TRUE,
     'cache.discovery' => TRUE,
+    'storage:node' => TRUE,
   ];
 
   /**
@@ -92,11 +93,19 @@ class ServicesCollector extends CollectorBase  {
     // data from the static Drupal class.
     $all_services = array_merge($all_services, $static_container_services);
 
+
+    $pseudo_services = $this->getPseudoServices();
+    $all_services = array_merge($all_services, $pseudo_services);
+
     // Filter for testing sample data collection.
     if (!empty($this->environment->sample_data_write)) {
       $static_container_services = array_intersect_key($static_container_services, $this->testingServiceNames);
       $all_services = array_intersect_key($all_services, $this->testingServiceNames);
     }
+
+    // Sort by ID.
+    ksort($all_services);
+    ksort($static_container_services);
 
     $return = [
       'primary' => $static_container_services,
@@ -214,8 +223,6 @@ class ServicesCollector extends CollectorBase  {
         'description' => "The {$label} service",
       ];
     }
-
-    ksort($data);
 
     return $data;
   }
@@ -352,10 +359,28 @@ class ServicesCollector extends CollectorBase  {
       $service_definitions[$service_id] = $service_definition;
     }
 
-    // Sort by ID.
-    ksort($service_definitions);
-
     return $service_definitions;
+  }
+
+  protected function getPseudoServices() {
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $entity_types = $entity_type_manager->getDefinitions();
+
+    $entity_storage_pseudo_services = [];
+    foreach ($entity_types as $entity_type_id => $entity_type) {
+      $pseudo_service_id = "storage:{$entity_type_id}";
+      $entity_storage_pseudo_services[$pseudo_service_id] = [
+        'id' => $pseudo_service_id,
+        'label' => $entity_type->getLabel() . ' storage',
+        'static_method' => '', // Not used.
+        // 'class' => '\\' . $service_class,
+        'interface' => '\Drupal\Core\Entity\EntityStorageInterface',
+        // TODO; no don't use labels in code.
+        'description' => "The {$entity_type_id} storage handler",
+      ];
+    }
+
+    return $entity_storage_pseudo_services;
   }
 
 }
