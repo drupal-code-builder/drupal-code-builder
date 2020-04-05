@@ -34,24 +34,34 @@ class InjectedService extends BaseGenerator {
         // Build up the service info.
         $service_info = [];
         $service_info['id'] = $service_id = $value;
+        $service_info['type']         = 'service';
 
         // Copy these explicitly for maintainability and readability.
         $service_info['label']        = $services_data[$service_id]['label'];
         $service_info['description']  = $services_data[$service_id]['description'];
         $service_info['interface']    = $services_data[$service_id]['interface'];
-        $service_info['class']        = $services_data[$service_id]['class'];
+        $service_info['class']        = $services_data[$service_id]['class'] ?? '';
 
         // Derive variable and property names.
         // TODO: move this to the analysis instead.
         $service_id_pieces = preg_split('@[_.]@', $service_id);
-        $class_pieces = explode('\\', $services_data[$service_id]['class']);
-        $short_class = array_pop($class_pieces);
 
-        // Trim an 'Interface' suffix from the class in case it's actually an
-        // interface. This is the case for cache backend services.
-        $short_class = preg_replace('@Interface$@', '', $short_class);
+        if (substr_count($service_id, ':') != 0) {
+          // If the service name contains a ':' then it's a pseudoservice, that
+          // is, not an actual service but something else injectable.
+          [$pseudo_service_type, $variant] = explode(':', $service_id);
 
-        if (substr_count($service_id, '.') == 0) {
+          $service_info['type'] = 'storage';
+
+          if ($pseudo_service_type != 'storage') {
+            throw new InvalidInputException("Pseudoservice {$service_id} not found.");
+          }
+
+          $service_info['variant']        = $variant;
+          $service_info['variable_name']  = $variant . '_storage';
+          $service_info['property_name']  = CaseString::snake($variant)->camel() . 'Storage';
+        }
+        elseif (substr_count($service_id, '.') == 0) {
           // If the service name does not contain any dots, in particular,
           // 'current_user', then use that, as it's usually clearer than the
           // class name.
@@ -60,6 +70,13 @@ class InjectedService extends BaseGenerator {
         }
         else {
           // Otherwise, use the service class name.
+          $class_pieces = explode('\\', $services_data[$service_id]['class']);
+          $short_class = array_pop($class_pieces);
+
+          // Trim an 'Interface' suffix from the class in case it's actually an
+          // interface. This is the case for cache backend services.
+          $short_class = preg_replace('@Interface$@', '', $short_class);
+
           $service_info['variable_name'] = CaseString::pascal($short_class)->snake();
           $service_info['property_name'] = CaseString::pascal($short_class)->camel();
         }
@@ -89,6 +106,13 @@ class InjectedService extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     $service_info = $this->component_data['service_info'];
 
+    if ($service_info['type'] == 'service') {
+      $container_extraction = "\$container->get('{$service_info['id']}'),";
+    }
+    else {
+      $container_extraction = "\$container->get('entity_type.manager')->getStorage('{$service_info['variant']}'),";
+    }
+
     $contents = [
       'service' => [
         'role' => 'service',
@@ -105,12 +129,12 @@ class InjectedService extends BaseGenerator {
       ],
       'container_extraction' => [
         'role' => 'container_extraction',
-        'content' => "\$container->get('{$service_info['id']}'),",
+        'content' => $container_extraction,
       ],
       'constructor_param' => [
         'role' => 'constructor_param',
         'content' => [
-          'id'            => $service_info['id'],
+          'id'          => $service_info['id'],
           'name'        => $service_info['variable_name'],
           'typehint'    => $service_info['typehint'],
           'description' => $service_info['description'] . '.',
