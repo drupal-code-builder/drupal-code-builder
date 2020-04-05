@@ -867,7 +867,7 @@ class PHPTester {
    * Assert the parsed class injects the given services using a static factory.
    *
    * @param array $injected_services
-   *   Array of the injected services.
+   *   An array of details about the expected injected services.
    * @param string $message
    *   The assertion message.
    */
@@ -885,7 +885,8 @@ class PHPTester {
     Assert::assertEquals(\PhpParser\Node\Stmt\Return_::class, get_class($return_statement), "The create() method's statement is a return.");
     $return_args = $return_statement->expr->args;
 
-    // Slice the construct call arguments to the count of services.
+    // Slice the construct call arguments to the count of services, assuming
+    // that injection parameters are at the end.
     $construct_service_args = array_slice($return_args, - $service_count);
 
     // After the basic arguments, each one should match a service.
