@@ -913,7 +913,9 @@ class PHPTester {
       // The argument is a container extraction.
       Assert::assertEquals('container', $var_node->name,
         "The create() method's new call's parameter {$index} is a method call on the \$container variable.");
-      Assert::assertEquals('get', $method_call_node->name,
+
+      $extraction_call = $injected_services[$index]['extraction_call'] ?? 'get';
+      Assert::assertEquals($extraction_call, $method_call_node->name,
         "The create() method's new call's parameter {$index} is a method call to get().");
       Assert::assertCount(1, $arg->value->args);
       Assert::assertEquals($injected_services[$index]['service_name'], $arg->value->args[0]->value->value, "The call to the container extracts the expected service.");
