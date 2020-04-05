@@ -90,6 +90,7 @@ class ComponentForm8Test extends TestBase {
           'injected_services' => [
             'current_user',
             'entity_type.manager',
+            'storage:node',
           ],
         ],
       ),
@@ -124,6 +125,13 @@ class ComponentForm8Test extends TestBase {
         'service_name' => 'entity_type.manager',
         'property_name' => 'entityTypeManager',
         'parameter_name' => 'entity_type_manager',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+        'service_name' => 'node',
+        'property_name' => 'nodeStorage',
+        'parameter_name' => 'node_storage',
+        'extraction_call' => 'getStorage',
       ],
     ]);
   }

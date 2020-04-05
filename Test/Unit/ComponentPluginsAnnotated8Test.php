@@ -270,6 +270,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
           'plugin_name' => 'alpha',
           'injected_services' => [
             'current_user',
+            'storage:node',
           ],
         ],
       ),
@@ -300,6 +301,13 @@ class ComponentPluginsAnnotated8Test extends TestBase {
         'service_name' => 'current_user',
         'property_name' => 'currentUser',
         'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+        'service_name' => 'node',
+        'property_name' => 'nodeStorage',
+        'parameter_name' => 'node_storage',
+        'extraction_call' => 'getStorage',
       ],
     ]);
     $php_tester->assertConstructorBaseParameters([
@@ -339,6 +347,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
           'plugin_name' => 'alpha',
           'injected_services' => [
             'current_user',
+            'storage:node',
           ],
         ],
       ),
@@ -369,6 +378,13 @@ class ComponentPluginsAnnotated8Test extends TestBase {
         'service_name' => 'current_user',
         'property_name' => 'currentUser',
         'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+        'service_name' => 'node',
+        'property_name' => 'nodeStorage',
+        'parameter_name' => 'node_storage',
+        'extraction_call' => 'getStorage',
       ],
     ]);
     $php_tester->assertConstructorBaseParameters([
@@ -416,6 +432,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
           'plugin_name' => 'alpha',
           'injected_services' => [
             'current_user',
+            'storage:node',
           ],
         ],
       ),
@@ -461,6 +478,13 @@ class ComponentPluginsAnnotated8Test extends TestBase {
         'service_name' => 'current_user',
         'property_name' => 'currentUser',
         'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+        'service_name' => 'node',
+        'property_name' => 'nodeStorage',
+        'parameter_name' => 'node_storage',
+        'extraction_call' => 'getStorage',
       ],
     ]);
   }
