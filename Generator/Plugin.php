@@ -130,6 +130,12 @@ class Plugin extends PHPClassFileWithInjection {
         'label' => 'Plugin short class name',
         'process_default' => TRUE,
         'default' => function($component_data) {
+          // WTF? How is this broken now when it's been working fine since
+          // this change was committed?
+          if (!isset($component_data['root_component_name'])) {
+            return '';
+          }
+
           // Derive the plugin class from the plugin ID.
           // Remove any derivative prefix.
           if (strpos($component_data['plugin_name'], ':') === FALSE) {
