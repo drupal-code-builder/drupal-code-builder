@@ -5,6 +5,8 @@ namespace DrupalCodeBuilder\Generator;
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\PropertyDefinition;
+use MutableTypedData\Definition\VariantDefinition;
 
 /**
  * Generator for a plugin.
@@ -78,6 +80,44 @@ class Plugin extends PHPClassFileWithInjection {
     $component_data['plugin_type_data'] = $plugin_types_data[$plugin_type];
 
     parent::__construct($component_data);
+  }
+
+  public static function getPropertyDefinition() {
+    $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+
+    $definition = PropertyDefinition::create('mutable')
+      ->setProperties([
+        'type' => PropertyDefinition::create('string')
+          ->setLabel('Plugin type')
+          ->setOptions(
+            $plugin_data_task->listPluginNamesOptions()
+          )
+      ])
+      ->setVariantMapping($plugin_data_task->getPluginTypesMapping())
+      ->setVariants([
+        'annotation' => VariantDefinition::create()
+          ->setLabel('Annotation plugin')
+          ->setProperties([
+            'plugin_name' => PropertyDefinition::create('string')
+              ->setLabel('Plugin ID')
+              ->setRequired(TRUE),
+            'plugin_class_name' => PropertyDefinition::create('string')
+              ->setLabel('Plugin class name')
+              ->setRequired(TRUE),
+          ]),
+        'yaml' => VariantDefinition::create()
+          ->setLabel('YAML plugin')
+          ->setProperties([
+            'plugin_name' => PropertyDefinition::create('string')
+              ->setLabel('Plugin ID')
+              ->setRequired(TRUE),
+            'plugin_class_name' => PropertyDefinition::create('string')
+              ->setLabel('Plugin class name')
+              ->setRequired(TRUE),
+          ]),
+      ]);
+
+    return $definition;
   }
 
   /**

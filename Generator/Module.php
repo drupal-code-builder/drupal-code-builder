@@ -3,6 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\PropertyDefinition;
+use MutableTypedData\Definition\VariantDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 
 /**
  * Component generator: module.
@@ -84,6 +87,58 @@ class Module extends RootComponent {
    */
   function __construct($component_data) {
     parent::__construct($component_data);
+  }
+
+  public static function componentData() {
+    $definition = parent::componentData();
+
+    $definition->setLabel('Module');
+
+    $array_def = self::componentDataDefinition();
+    $converted_defs = [];
+    foreach ($array_def as $name => $def) {
+      if (!empty($def['computed'])) {
+        continue;
+      }
+      if (!empty($def['internal'])) {
+        continue;
+      }
+
+      if (isset($def['component_type'])) {
+        $converted_defs[$name] = GeneratorDefinition::create($def['component_type'])
+          ->setLabel($def['label']);
+      }
+      else {
+        $converted_defs[$name] = PropertyDefinition::create('string')
+          ->setLabel($def['label']);
+      }
+
+    }
+
+    $definition->addProperties($converted_defs);
+
+
+
+
+    $definition->getProperty('root_name')
+      ->setLabel('Module machine name');
+
+    $definition->addProperties([
+      'plugins' => GeneratorDefinition::create('Plugin')
+        ->setLabel('Plugins')
+        ->setMultiple(TRUE)
+        // need to subclass property definition it would seem!
+        // ->setComponent('Plugin'),
+        // ->setVariantMapping([
+        //   'a' => 'alpha',
+        //   'aleph' => 'alpha',
+        //   'alpha' => 'alpha',
+        //   'b' => 'beta',
+        // ])
+    ]);
+
+    // dump($definition);
+    return $definition;
   }
 
   /**

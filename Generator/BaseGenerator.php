@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use MutableTypedData\Definition\PropertyDefinition;
 
 /**
  * Abstract base Generator for components.
@@ -124,6 +126,50 @@ abstract class BaseGenerator {
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     $this->type = preg_replace('@\d+$@', '', $short_class);
+  }
+
+  public static function componentData() {
+    return PropertyDefinition::create('complex')
+      ->setRequired(TRUE)
+      ->setProperties([
+        'root_name' => PropertyDefinition::create('string')
+          ->setRequired(TRUE),
+      ]);
+  }
+
+  public static function getPropertyDefinition() {
+    $array_def = static::componentDataDefinition();
+
+    $converted_defs = [];
+    foreach ($array_def as $name => $def) {
+      if (!empty($def['computed'])) {
+        continue;
+      }
+      if (!empty($def['internal'])) {
+        continue;
+      }
+      if (!empty($def['acquired'])) {
+        continue;
+      }
+
+      if (isset($def['component_type'])) {
+        $converted_defs[$name] = GeneratorDefinition::create($def['component_type'])
+          ->setLabel($def['label']);
+      }
+      else {
+        $converted_defs[$name] = PropertyDefinition::create('string')
+          ->setLabel($def['label']);
+      }
+
+    }
+
+    $definition = PropertyDefinition::create('complex')
+      ->setProperties($converted_defs);
+
+      // dsm($definition);
+
+    return $definition;
+
   }
 
   /**

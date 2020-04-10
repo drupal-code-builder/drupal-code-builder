@@ -16,6 +16,12 @@ class ComponentClassHandler {
    */
   protected $classes = [];
 
+  public function getComponentData($component_type) {
+    $class = $this->getGeneratorClass($component_type);
+
+    return $class::componentData();
+  }
+
   /**
    * Gets the data definition from a component.
    *

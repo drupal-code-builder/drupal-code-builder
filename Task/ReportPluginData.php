@@ -100,4 +100,23 @@ class ReportPluginData extends ReportHookDataFolder {
     return $return;
   }
 
+  public function getPluginTypesMapping() :array {
+    $mapping = [];
+
+    $data = $this->listPluginData();
+
+    // TODO: move all this to analysis!
+    $types = [
+      'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery' => 'annotation',
+      'Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery' => 'yaml',
+      'Drupal\Core\Config\Schema\ConfigSchemaDiscovery' => 'yaml', // ????
+    ];
+
+    foreach ($data as $plugin_type_name => $plugin_type_info) {
+      $mapping[$plugin_type_name] = $types[$plugin_type_info['discovery']];
+    }
+
+    return $mapping;
+  }
+
 }
