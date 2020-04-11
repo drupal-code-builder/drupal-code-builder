@@ -2,6 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use MutableTypedData\Definition\PropertyDefinition;
+
 /**
  * Abstract Generator for root components.
  *
@@ -23,6 +26,15 @@ abstract class RootComponent extends BaseGenerator {
    */
   public static function getSanityLevel() {
     return static::$sanity_level;
+  }
+
+  public static function getPropertyDefinition() {
+    return PropertyDefinition::create('complex')
+      ->setRequired(TRUE)
+      ->setProperties([
+        'root_name' => PropertyDefinition::create('string')
+          ->setRequired(TRUE),
+      ]);
   }
 
   /**

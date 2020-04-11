@@ -89,6 +89,10 @@ class Module extends RootComponent {
     parent::__construct($component_data);
   }
 
+  public static function getPropertyDefinition() {
+    return static::componentData();
+  }
+
   public static function componentData() {
     $definition = parent::componentData();
 
