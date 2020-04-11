@@ -97,19 +97,10 @@ class Module extends RootComponent {
     $definition->getProperty('root_name')
       ->setLabel('Module machine name');
 
-    $definition->addProperties([
-      'plugins' => GeneratorDefinition::create('Plugin')
-        ->setLabel('Plugins')
-        ->setMultiple(TRUE)
-        // need to subclass property definition it would seem!
-        // ->setComponent('Plugin'),
-        // ->setVariantMapping([
-        //   'a' => 'alpha',
-        //   'aleph' => 'alpha',
-        //   'alpha' => 'alpha',
-        //   'b' => 'beta',
-        // ])
-    ]);
+    $definition->getProperty('plugins')
+      ->setLabel('Plugins');
+
+    $definition->removeProperty('plugins_yaml');
 
     // dump($definition);
     return $definition;
