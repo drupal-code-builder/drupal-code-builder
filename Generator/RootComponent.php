@@ -28,15 +28,6 @@ abstract class RootComponent extends BaseGenerator {
     return static::$sanity_level;
   }
 
-  public static function getPropertyDefinition() {
-    return PropertyDefinition::create('complex')
-      ->setRequired(TRUE)
-      ->setProperties([
-        'root_name' => PropertyDefinition::create('string')
-          ->setRequired(TRUE),
-      ]);
-  }
-
   /**
    * {@inheritdoc}
    */

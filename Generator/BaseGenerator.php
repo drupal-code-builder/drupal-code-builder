@@ -128,15 +128,6 @@ abstract class BaseGenerator {
     $this->type = preg_replace('@\d+$@', '', $short_class);
   }
 
-  public static function componentData() {
-    return PropertyDefinition::create('complex')
-      ->setRequired(TRUE)
-      ->setProperties([
-        'root_name' => PropertyDefinition::create('string')
-          ->setRequired(TRUE),
-      ]);
-  }
-
   public static function getPropertyDefinition() {
     $array_def = static::componentDataDefinition();
 
@@ -152,15 +143,55 @@ abstract class BaseGenerator {
         continue;
       }
 
-      if (isset($def['component_type'])) {
+      // Add defaults.
+      $def += array(
+        'required' => FALSE,
+        'format' => 'string',
+      );
+
+      if (isset($def['component_type']) && $def['format'] == 'compound') {
         $converted_defs[$name] = GeneratorDefinition::create($def['component_type'])
+          ->setMultiple(TRUE)
           ->setLabel($def['label']);
       }
       else {
-        $converted_defs[$name] = PropertyDefinition::create('string')
-          ->setLabel($def['label']);
+        switch ($def['format']) {
+          case 'compound':
+            $converted_defs[$name] = PropertyDefinition::create('complex')
+              ->setMultiple(TRUE)
+              ->setLabel($def['label']);
+            break;
+
+          case 'boolean':
+            $converted_defs[$name] = PropertyDefinition::create('boolean')
+              // ->setMultiple(TRUE)
+              ->setLabel($def['label']);
+            break;
+
+          default:
+            $converted_defs[$name] = PropertyDefinition::create('string')
+              ->setLabel($def['label']);
+
+        }
+
+
+        // TODO:         'cardinality' => 1,
+
+        // $type = [
+        //   //'boolean' =>
+        //   'compound'
+        // ][$def['format']];
+
+
       }
 
+      if (isset($def['description'])) {
+        $converted_defs[$name]->setDescription($def['description']);
+      }
+
+      if (isset($def['cardinality'])) {
+        $converted_defs[$name]->setMaxCardinality($def['cardinality']);
+      }
     }
 
     $definition = PropertyDefinition::create('complex')
