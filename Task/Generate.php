@@ -108,6 +108,10 @@ class Generate extends Base {
     return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($this->base, $include_computed);
   }
 
+  public function getComponentDataInfo($component_type, $include_internal = FALSE) {
+    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($component_type, $include_internal);
+  }
+
   public function getRootComponentData() {
     $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
     $data_definition = $class::getPropertyDefinition();

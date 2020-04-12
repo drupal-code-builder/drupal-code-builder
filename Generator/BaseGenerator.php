@@ -128,11 +128,25 @@ abstract class BaseGenerator {
     $this->type = preg_replace('@\d+$@', '', $short_class);
   }
 
+  protected static function deriveType(string $class) {
+    $class_pieces = explode('\\', $class);
+    $short_class = array_pop($class_pieces);
+    return preg_replace('@\d+$@', '', $short_class);
+  }
+
   public static function getPropertyDefinition() {
-    $array_def = static::componentDataDefinition();
+    $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
+
+    $array_property_info = $generate_task->getComponentDataInfo(static::deriveType(static::class));
 
     $converted_defs = [];
-    foreach ($array_def as $name => $def) {
+
+    $dummy_component_data = [];
+
+    foreach ($array_property_info as $name => $def) {
+      $generate_task->prepareComponentDataProperty($name, $def, $dummy_component_data);
+
+
       if (!empty($def['computed'])) {
         continue;
       }

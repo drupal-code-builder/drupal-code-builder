@@ -137,13 +137,14 @@ class ComponentDataInfoGatherer {
       // Expand compound properties..
       if ($property_info['format'] == 'compound') {
         if (isset($property_info['component_type'])) {
-          // Properties that use a generator.
-          $component_type = $property_info['component_type'];
+          // NO! Don't recurse here any more! getPropertyDefinition() takes care of that now!
+          // // Properties that use a generator.
+          // $component_type = $property_info['component_type'];
 
-          // Recurse to get the child properties.
-          $child_properties = $this->getComponentDataInfo($component_type, $include_internal);
+          // // Recurse to get the child properties.
+          // $child_properties = $this->getComponentDataInfo($component_type, $include_internal);
 
-          $property_info['properties'] = $child_properties;
+          // $property_info['properties'] = $child_properties;
         }
         else {
           // Recurse into the child properties list.
