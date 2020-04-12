@@ -146,7 +146,6 @@ abstract class BaseGenerator {
     foreach ($array_property_info as $name => $def) {
       $generate_task->prepareComponentDataProperty($name, $def, $dummy_component_data);
 
-
       if (!empty($def['computed'])) {
         continue;
       }
@@ -206,6 +205,11 @@ abstract class BaseGenerator {
       if (isset($def['cardinality'])) {
         $converted_defs[$name]->setMaxCardinality($def['cardinality']);
       }
+
+      if (isset($def['options'])) {
+        $converted_defs[$name]->setOptions($def['options']);
+      }
+
     }
 
     $definition = PropertyDefinition::create('complex')
