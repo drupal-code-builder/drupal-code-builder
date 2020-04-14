@@ -165,26 +165,27 @@ abstract class BaseGenerator {
 
       if (isset($def['component_type']) && $def['format'] == 'compound') {
         $converted_defs[$name] = GeneratorDefinition::create($def['component_type'])
-          ->setMultiple(TRUE)
-          ->setLabel($def['label']);
+          ->setMultiple(TRUE);
       }
       else {
         switch ($def['format']) {
           case 'compound':
             $converted_defs[$name] = PropertyDefinition::create('complex')
-              ->setMultiple(TRUE)
-              ->setLabel($def['label']);
+              ->setMultiple(TRUE);
+            break;
+
+          case 'array':
+            // BUT! don't want a multi-value multiple!!! ARGH! Want a textarea!
+            $converted_defs[$name] = PropertyDefinition::create('string')
+              ->setMultiple(TRUE);
             break;
 
           case 'boolean':
-            $converted_defs[$name] = PropertyDefinition::create('boolean')
-              // ->setMultiple(TRUE)
-              ->setLabel($def['label']);
+            $converted_defs[$name] = PropertyDefinition::create('boolean');
             break;
 
           default:
-            $converted_defs[$name] = PropertyDefinition::create('string')
-              ->setLabel($def['label']);
+            $converted_defs[$name] = PropertyDefinition::create('string');
 
         }
 
@@ -198,6 +199,7 @@ abstract class BaseGenerator {
 
 
       }
+      $converted_defs[$name]->setLabel($def['label']);
 
       if (isset($def['description'])) {
         $converted_defs[$name]->setDescription($def['description']);
