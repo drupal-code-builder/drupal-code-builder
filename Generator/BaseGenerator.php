@@ -135,7 +135,7 @@ abstract class BaseGenerator {
     return preg_replace('@\d+$@', '', $short_class);
   }
 
-  public static function getPropertyDefinition() {
+  public static function getPropertyDefinition() :PropertyDefinition {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $array_property_info = $generate_task->getComponentDataInfo(static::deriveType(static::class));
