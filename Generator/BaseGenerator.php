@@ -188,17 +188,20 @@ abstract class BaseGenerator {
             $converted_defs[$name] = PropertyDefinition::create('string');
 
         }
-
-
-        // TODO:         'cardinality' => 1,
-
-        // $type = [
-        //   //'boolean' =>
-        //   'compound'
-        // ][$def['format']];
-
-
       }
+
+      /*
+      special cases:
+
+      - textarea for multi-valued string
+      - autocomplete for services
+      - hooks!
+      - hook groups
+      - dropdowns everywhere instead of radios?
+
+
+      */
+
       $converted_defs[$name]->setLabel($def['label']);
 
       if (isset($def['description'])) {
