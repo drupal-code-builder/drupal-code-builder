@@ -141,17 +141,16 @@ abstract class BaseGenerator {
     $array_property_info = $generate_task->getComponentDataInfo(static::deriveType(static::class));
     // dsm($array_property_info);
 
-    $converted_defs = static::convertArrayPropertyInfoToDefinitions($array_property_info);
+    $definition = PropertyDefinition::create('complex');
 
-    $definition = PropertyDefinition::create('complex')
-    ->setProperties($converted_defs);
+    static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
 
     // dsm($definition);
 
     return $definition;
   }
 
-  protected static function convertArrayPropertyInfoToDefinitions($array_property_info) {
+  protected static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $converted_defs = [];
@@ -186,6 +185,8 @@ abstract class BaseGenerator {
           case 'compound':
             $converted_defs[$name] = PropertyDefinition::create('complex')
               ->setMultiple(TRUE);
+
+            static::addArrayPropertyInfoToDefinition($converted_defs[$name], $def['properties']);
 
             // fuck. recurse.
             //   $definition = PropertyDefinition::create('complex')
@@ -245,7 +246,7 @@ abstract class BaseGenerator {
 
     }
 
-    return $converted_defs;
+    $definition->setProperties($converted_defs);
   }
 
   /**
