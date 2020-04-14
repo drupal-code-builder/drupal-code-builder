@@ -89,7 +89,7 @@ class Module extends RootComponent {
     parent::__construct($component_data);
   }
 
-  public static function getPropertyDefinition() {
+  public static function getPropertyDefinition() :PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
     $definition->setLabel('Module');

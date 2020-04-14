@@ -82,7 +82,7 @@ class Plugin extends PHPClassFileWithInjection {
     parent::__construct($component_data);
   }
 
-  public static function getPropertyDefinition() {
+  public static function getPropertyDefinition() :PropertyDefinition {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
 
     $definition = PropertyDefinition::create('mutable')
