@@ -224,7 +224,6 @@ abstract class BaseGenerator {
       Broken:
 
       - Entity functionality item -- 'presets' not converted to options!
-      - base fields
 
       */
 
