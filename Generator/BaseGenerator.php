@@ -172,6 +172,13 @@ abstract class BaseGenerator {
           case 'compound':
             $converted_defs[$name] = PropertyDefinition::create('complex')
               ->setMultiple(TRUE);
+
+            // fuck. recurse.
+            //   $definition = PropertyDefinition::create('complex')
+            //   ->setProperties($converted_defs);
+
+            // $def['properties']))
+
             break;
 
           case 'array':
@@ -199,6 +206,10 @@ abstract class BaseGenerator {
       - hook groups
       - dropdowns everywhere instead of radios?
 
+      Broken:
+
+      - Entity functionality item -- 'presets' not converted to options!
+      - base fields
 
       */
 
