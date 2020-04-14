@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\PropertyDefinition;
 
 /**
@@ -207,7 +208,9 @@ abstract class BaseGenerator {
       }
 
       if (isset($def['options'])) {
-        $converted_defs[$name]->setOptions($def['options']);
+        foreach ($def['options'] as $value => $label) {
+          $converted_defs[$name]->addOption(OptionDefinition::create($value, $label));
+        }
       }
 
     }

@@ -89,7 +89,7 @@ class Plugin extends PHPClassFileWithInjection {
       ->setProperties([
         'type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')
-          ->setOptions(
+          ->setOptionsArray(
             $plugin_data_task->listPluginNamesOptions()
           )
       ])
