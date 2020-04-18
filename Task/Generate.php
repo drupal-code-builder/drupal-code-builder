@@ -116,9 +116,12 @@ class Generate extends Base {
     $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
     $data_definition = $class::getPropertyDefinition();
 
+    $data = \MutableTypedData\DataItemFactory::createFromDefinition($data_definition);
+
+
     // dump($data_definition);
 
-    return $data_definition;
+    return $data;
   }
 
   /**
