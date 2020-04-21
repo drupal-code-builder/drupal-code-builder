@@ -111,6 +111,12 @@ class ComponentDataInfoGatherer {
     $primary = NULL;
 
     foreach ($properties as $property_name => $property_info) {
+      if (is_object($property_info)) {
+        $return[$property_name] = $property_info;
+
+        continue;
+      }
+
       // Check there is no more than one property set as primary.
       if (!empty($property_info['primary'])) {
         assert(is_null($primary), "Property {$primary} already set as primary, but so is {$property_name}.");

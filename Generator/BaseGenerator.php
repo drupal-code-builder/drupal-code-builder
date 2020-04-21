@@ -158,6 +158,14 @@ abstract class BaseGenerator {
     $dummy_component_data = [];
 
     foreach ($array_property_info as $name => $def) {
+      // Allow some definitions to be updated to PropertyDefinitions.
+      if ($def instanceof PropertyDefinition) {
+        $def->setMachineName($name);
+        $definition->addProperty($def);
+
+        continue;
+      }
+
       $generate_task->prepareComponentDataProperty($name, $def, $dummy_component_data);
 
       if (!empty($def['computed'])) {
@@ -243,9 +251,12 @@ abstract class BaseGenerator {
         }
       }
 
+      $converted_defs[$name]->setMachineName($name);
+
+      $definition->addProperty($converted_defs[$name]);
     }
 
-    $definition->setProperties($converted_defs);
+    // $definition->setProperties($converted_defs);
   }
 
   /**
