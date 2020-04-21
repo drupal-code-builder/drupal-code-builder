@@ -3,7 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-
+use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Definition\PropertyDefinition;
 /**
  * Generator for a plugin type.
  */
@@ -16,16 +17,22 @@ class PluginType extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'discovery_type' => [
-        'label' => 'Plugin discovery type',
-        'description' => "The way in which plugins of this type are formed.",
-        'options' => [
-          'annotation' => 'Annotation: Plugins are classes with an annotation',
-          'yaml' => 'YAML: Plugins are declared in a single YAML file, usually sharing the same class',
-        ],
-        'default' => 'annotation',
-        'required' => TRUE,
-      ],
+      'discovery_type' => PropertyDefinition::create('string')
+        ->setLabel('Plugin discovery type')
+        ->setDescription("The way in which plugins of this type are formed.")
+        ->setOptions(
+          OptionDefinition::create(
+            'annotation',
+            'Annotation plugin',
+            "Plugins are classes with an annotation."
+          ),
+          OptionDefinition::create(
+            'yaml',
+            'YAML plugin',
+            "Plugins are declared in a single YAML file, usually sharing the same class."
+          )
+        )
+        ->setRequired(TRUE),
       'plugin_type' => array(
         'label' => 'Plugin type ID',
         'description' => "The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.",
