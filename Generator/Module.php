@@ -92,7 +92,8 @@ class Module extends RootComponent {
   public static function getPropertyDefinition() :PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
-    $definition->setLabel('Module');
+    $definition->setLabel('Module')
+      ->setMachineName('module');
 
     $definition->getProperty('root_name')
       ->setLabel('Module machine name');
