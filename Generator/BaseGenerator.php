@@ -138,10 +138,12 @@ abstract class BaseGenerator {
   public static function getPropertyDefinition() :PropertyDefinition {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
-    $array_property_info = $generate_task->getComponentDataInfo(static::deriveType(static::class));
-    // dsm($array_property_info);
+    $type = static::deriveType(static::class);
 
-    $definition = PropertyDefinition::create('complex');
+    $array_property_info = $generate_task->getComponentDataInfo($type);
+    // dump($array_property_info);
+
+    $definition = GeneratorDefinition::createFromGeneratorType($type);
 
     static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
 

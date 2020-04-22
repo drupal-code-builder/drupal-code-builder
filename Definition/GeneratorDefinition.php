@@ -6,18 +6,41 @@ use MutableTypedData\Definition\PropertyDefinition;
 
 // we need this because we want to be able to selectively upgrade some generator
 // classes to have their own getPropertyDefinition() method.
-class GeneratorDefinition {
+class GeneratorDefinition extends PropertyDefinition {
 
+  /**
+   * The full generator class for this definition.
+   *
+   * @var string
+   */
   protected $generatorClass;
 
-  public static function create(string $generator_type) :PropertyDefinition {
-    // Argh, need to instantiate the class handler outside of the Generate
-    // task... time for a proper service architecture?
+  /**
+   * Constructor.
+   *
+   * @param string $generator_type
+   *   The generator type.
+   */
+  public function __construct(string $generator_type) {
+    parent::__construct('complex');
+
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
-    $generator_class = $class_handler->getGeneratorClass($generator_type);
+    $this->generator_class = $class_handler->getGeneratorClass($generator_type);
+  }
 
-    return $generator_class::getPropertyDefinition();
+  /**
+   * Creates a new definition from a component type.
+   *
+   * @param string $generator_type
+   *   The generator type; that is, the short class name without the version
+   *   number.
+   *
+   * @return self
+   *   The new definition.
+   */
+  static public function createFromGeneratorType(string $generator_type): self {
+    return new static($generator_type);
   }
 
 }
