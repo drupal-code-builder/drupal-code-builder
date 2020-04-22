@@ -15,9 +15,9 @@ class GeneratorDefinition {
     // task... time for a proper service architecture?
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
-    $this->generator_class = $class_handler->getGeneratorClass($generator_type);
+    $generator_class = $class_handler->getGeneratorClass($generator_type);
 
-    return $this->generator_class::getPropertyDefinition();
+    return $generator_class::getPropertyDefinition();
   }
 
 }
