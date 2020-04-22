@@ -185,8 +185,14 @@ abstract class BaseGenerator {
       );
 
       if (isset($def['component_type']) && $def['format'] == 'compound') {
-        $converted_defs[$name] = GeneratorDefinition::create($def['component_type'])
-          ->setMultiple(TRUE);
+        // Argh, need to instantiate the class handler outside of the Generate
+        // task... time for a proper service architecture?
+        $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+        $generator_class = $class_handler->getGeneratorClass($def['component_type']);
+
+        $property_definition = $generator_class::getPropertyDefinition();
+
+        $converted_defs[$name] = $property_definition->setMultiple(TRUE);
       }
       else {
         switch ($def['format']) {
