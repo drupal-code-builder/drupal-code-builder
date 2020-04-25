@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use MutableTypedData\Data\DataItem;
+
 /**
  * Task handler for generating a component.
  */
@@ -214,16 +216,19 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.
    */
-  public function generateComponent($component_data, $existing_module_files = []) {
-    // Add the top-level component to the data.
-    $component_type = $this->base;
-    $component_data['base'] = $component_type;
+  public function generateComponent(DataItem $component_data, $existing_module_files = []) {
+
+    // // Add the top-level component to the data.
+    // $component_type = $this->base;
+    // $component_data['base'] = $component_type;
 
     // The component name is just the same as the type for the base generator.
     $component_name = $component_type;
 
     // Assemble the component list from the request data.
     $component_collection = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
+    return;
+
     // Backward-compatiblity.
     // TODO: replace this.
     $this->component_list = $component_collection->getComponents();

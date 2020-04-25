@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Generator\RootComponent;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Task helper for collecting components recursively.
@@ -123,7 +124,7 @@ class ComponentCollector {
    * @return \DrupalCodeBuilder\Generator\Collection\ComponentCollection
    *  The collection of components.
    */
-  public function assembleComponentList($component_data) {
+  public function assembleComponentList(DataItem $component_data) {
     // Reset all class properties. We don't normally run this twice, but
     // probably needed for tests.
     $this->requested_data_record = [];
@@ -131,12 +132,12 @@ class ComponentCollector {
     $this->component_collection = new \DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 
     // Fiddly different handling for the type in the root component...
-    $component_type = $component_data['base'];
-    $component_data['component_type'] = $component_type;
+    // $component_type = $component_data->getMachineName();
+    // $component_data['component_type'] = $component_type;
 
     // The name for the root component is its root name, which will be the
     // name of the Drupal extension.
-    $this->getComponentsFromData($component_data['root_name'], $component_data, NULL);
+    $this->getComponentsFromData($component_data->root_name->value, $component_data, NULL);
 
     return $this->component_collection;
   }
@@ -167,17 +168,13 @@ class ComponentCollector {
    *   NULL if the data is a duplicate set. Note that nothing needs to be done
    *   with the return; the generator gets added to $this->component_collection.
    */
-  protected function getComponentsFromData($name, $component_data, $requesting_component) {
+  protected function getComponentsFromData($name, DataItem $component_data, $requesting_component) {
     // Debugging: record the chain of how we get here each time.
     static $chain;
     $chain[] = $name;
-    $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
+    // $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
 
-    if (empty($component_data['component_type'])) {
-      throw new \Exception("Data for $name missing the 'component_type' property");
-    }
-
-    $component_type = $component_data['component_type'];
+    $component_type = $component_data->getComponentType();
     $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
     // Acquire data from the requesting component. We call this even if there

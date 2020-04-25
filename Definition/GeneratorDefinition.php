@@ -9,6 +9,13 @@ use MutableTypedData\Definition\PropertyDefinition;
 class GeneratorDefinition extends PropertyDefinition {
 
   /**
+   * The component type.
+   *
+   * @var string
+   */
+  protected $componentType;
+
+  /**
    * The full generator class for this definition.
    *
    * @var string
@@ -26,7 +33,8 @@ class GeneratorDefinition extends PropertyDefinition {
 
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
-    $this->generator_class = $class_handler->getGeneratorClass($generator_type);
+    $this->componentType = $generator_type;
+    $this->generatorClass = $class_handler->getGeneratorClass($generator_type);
   }
 
   /**
@@ -41,6 +49,10 @@ class GeneratorDefinition extends PropertyDefinition {
    */
   static public function createFromGeneratorType(string $generator_type): self {
     return new static($generator_type);
+  }
+
+  public function getComponentType() :string {
+    return $this->componentType;
   }
 
 }
