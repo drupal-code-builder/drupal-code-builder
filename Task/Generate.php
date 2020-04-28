@@ -7,7 +7,10 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\ExpressionLanguage\ChangeCaseExpressionLanguageProvider;
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\DataItemFactory;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Task handler for generating a component.
@@ -117,6 +120,11 @@ class Generate extends Base {
   public function getRootComponentData() {
     $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
     $data_definition = $class::getPropertyDefinition();
+
+    // Set up the Expression Language with our custom functions.
+    $expression_language = new ExpressionLanguage();
+    $expression_language->registerProvider(new ChangeCaseExpressionLanguageProvider());
+    DataItemFactory::setExpressionLanguage($expression_language);
 
     $data = \MutableTypedData\DataItemFactory::createFromDefinition($data_definition);
 
