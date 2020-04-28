@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\PropertyDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 
@@ -103,7 +104,11 @@ class Plugin extends PHPClassFileWithInjection {
               ->setRequired(TRUE),
             'plugin_class_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin class name')
-              ->setRequired(TRUE),
+              // ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToClass(parent['plugin_name'])")
+                ->setDependencies('TODOcomplex_data:plugin_name')
+              ),
           ]),
         'yaml' => VariantDefinition::create()
           ->setLabel('YAML plugin')

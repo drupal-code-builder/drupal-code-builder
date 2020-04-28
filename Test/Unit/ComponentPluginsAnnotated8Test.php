@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+use MutableTypedData\Test\VarDumperSetupTrait;
 
 /**
  * Tests the Plugins generator class.
@@ -13,12 +14,31 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  */
 class ComponentPluginsAnnotated8Test extends TestBase {
 
+  use VarDumperSetupTrait;
+
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
   protected $drupalMajorVersion = 8;
+
+  // TEMPORARY! FOLD INTO OTHERS ONCE THEY ARE CONVERTED
+  public function testPluginDataDefinition() {
+    $this->setUpVarDumper();
+
+    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
+    $component_data = $mb_task_handler_generate->getRootComponentData();
+
+    // dump($component_data);
+    $component_data->plugins;
+    $component_data->plugins[0]->type = 'block';
+    $component_data->plugins[0]->plugin_name = 'my_block';
+    // Instantiate to set the default.
+    $component_data->plugins[0]->plugin_class_name;
+    dump($component_data->plugins);
+    // ARGH need a dumper that removes the parent.
+  }
 
   /**
    * Test Plugins component.
