@@ -3,8 +3,10 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\PropertyDefinition;
+
 /**
  * Generator for a plugin type.
  */
@@ -38,18 +40,17 @@ class PluginType extends BaseGenerator {
         'description' => "The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.",
         'required' => TRUE,
       ),
-      'plugin_label' => [
-        'label' => 'Plugin label',
-        'description' => "The human-readable label for plugins of this type. This is used in documentation text.",
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          $plugin_type = $component_data['plugin_type'];
-
-          // Convert the plugin type to camel case. E.g., 'my_plugin' becomes
-          // 'My Plugin'.
-          return CaseString::snake($plugin_type)->sentence();
-        },
-      ],
+      'plugin_label' => PropertyDefinition::create('string')
+        ->setLabel('Plugin type label')
+        ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
+        ->setDefault(DefaultDefinition::create()
+          // ARGH should be PARENT but the JS doesn't know that!
+          // ->setExpression("machineToClass(parent['plugin_name'])")
+          ->setExpression("machineToLabel(data['module']['plugin_types'][0]['plugin_type'])")
+          // TODO: should not have to know place in the complete data structure!!!
+          // TODO: argh, MULTI-VALUED! how do we represent the delta???
+          ->setDependencies('module:plugin_types:0:plugin_type')
+        ),
       'plugin_subdirectory' => array(
         'label' => 'Plugin subdirectory within the Plugins directory',
         'required' => TRUE,
