@@ -106,8 +106,12 @@ class Plugin extends PHPClassFileWithInjection {
               ->setLabel('Plugin class name')
               // ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(parent['plugin_name'])")
-                ->setDependencies('TODOcomplex_data:plugin_name')
+                // ARGH should be PARENT but the JS doesn't know that!
+                // ->setExpression("machineToClass(parent['plugin_name'])")
+                ->setExpression("machineToClass(data['module']['plugins'][0]['plugin_name'])")
+                // TODO: should not have to know place in the complete data structure!!!
+                // TODO: argh, MULTI-VALUED! how do we represent the delta???
+                ->setDependencies('module:plugins:0:plugin_name')
               ),
           ]),
         'yaml' => VariantDefinition::create()
