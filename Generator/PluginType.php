@@ -6,6 +6,7 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\PropertyDefinition;
+use MutableTypedData\Definition\VariantDefinition;
 
 /**
  * Generator for a plugin type.
@@ -14,10 +15,88 @@ class PluginType extends BaseGenerator {
 
   use NameFormattingTrait;
 
+
+  public static function getPropertyDefinition() :PropertyDefinition {
+    $definition = PropertyDefinition::create('mutable')
+      ->setProperties([
+        'discovery_type' => PropertyDefinition::create('string')
+          ->setLabel('Plugin discovery type')
+          ->setDescription("The way in which plugins of this type are formed.")
+          ->setOptions(
+            OptionDefinition::create(
+              'annotation',
+              'Annotation plugin',
+              "Plugins are classes with an annotation."
+            ),
+            OptionDefinition::create(
+              'yaml',
+              'YAML plugin',
+              "Plugins are declared in a single YAML file, usually sharing the same class."
+            )
+          )
+        ])
+      ->setVariants([
+        'annotation' => VariantDefinition::create()
+          ->setLabel('Annotation plugin')
+          ->setProperties([
+            'plugin_type' => PropertyDefinition::create('string')
+              ->setLabel('Plugin type ID')
+              ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
+              ->setRequired(TRUE),
+            'plugin_label' => PropertyDefinition::create('string')
+              ->setLabel('Plugin type label')
+              ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              ),
+            'plugin_subdirectory' => PropertyDefinition::create('string')
+              ->setLabel('Plugin subdirectory')
+              ->setDescription("The subdirectory within the Plugins directory for plugins of this type.")
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              ),
+            // TODO: 'plugin_relative_namespace' => PropertyDefinition::create('string')
+            // TODO: other computed.
+            'annotation_class' => PropertyDefinition::create('string')
+              ->setLabel('Annotation class name')
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              ),
+            'info_alter_hook' => PropertyDefinition::create('string')
+              ->setLabel('Alter hook name')
+              ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("getChildValue(parent, 'plugin_type') ~ '_info'")
+                ->setDependencies('..:plugin_type')
+              ),
+        ]),
+        'yaml' => VariantDefinition::create()
+          ->setLabel('Annotation plugin')
+          ->setProperties([
+            'plugin_type' => PropertyDefinition::create('string')
+              ->setLabel('Plugin type ID')
+              ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
+              ->setRequired(TRUE),
+            'plugin_label' => PropertyDefinition::create('string')
+              ->setLabel('Plugin type label')
+              ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              ),
+          ]),
+      ]);
+
+    return $definition;
+  }
+
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
+  public static function XcomponentDataDefinition() {
     return parent::componentDataDefinition() + [
       'discovery_type' => PropertyDefinition::create('string')
         ->setLabel('Plugin discovery type')
@@ -47,6 +126,14 @@ class PluginType extends BaseGenerator {
           ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
           ->setDependencies('..:plugin_type')
         ),
+      // 'plugin_subdirectory' => PropertyDefinition::create('string')
+      //   ->setLabel('Plugin class name')
+      //   // ->setRequired(TRUE)
+      //   ->setDefault(DefaultDefinition::create()
+      //     ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
+      //     ->setDependencies('..:plugin_name')
+      //   ),
+
       'plugin_subdirectory' => array(
         'label' => 'Plugin subdirectory within the Plugins directory',
         'required' => TRUE,
