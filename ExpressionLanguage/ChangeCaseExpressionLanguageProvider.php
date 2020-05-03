@@ -11,8 +11,12 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
  */
 class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFunctions() {
     return [
+      // Converts a machine name in snake case to a label in title case.
       new ExpressionFunction('machineToLabel', function ($str) {
         return sprintf('(is_string(%1$s) ? CaseString::snake(%1$s) : %1$s)->title()', $str);
       },
@@ -23,6 +27,7 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
 
         return CaseString::snake($str)->title();
       }),
+      // Converts a machine name in snake case to a pascal case class name.
       new ExpressionFunction('machineToClass', function ($str) {
         return sprintf('(is_string(%1$s) ? CaseString::snake(%1$s) : %1$s)->pascal()', $str);
       },
