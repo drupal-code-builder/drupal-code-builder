@@ -108,10 +108,10 @@ class Plugin extends PHPClassFileWithInjection {
               ->setDefault(DefaultDefinition::create()
                 // ARGH should be PARENT but the JS doesn't know that!
                 // ->setExpression("machineToClass(parent['plugin_name'])")
-                ->setExpression("machineToClass(data['module']['plugins'][0]['plugin_name'])")
+                ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
                 // TODO: should not have to know place in the complete data structure!!!
                 // TODO: argh, MULTI-VALUED! how do we represent the delta???
-                ->setDependencies('module:plugins:0:plugin_name')
+                ->setDependencies('..:plugin_name')
               ),
           ]),
         'yaml' => VariantDefinition::create()
