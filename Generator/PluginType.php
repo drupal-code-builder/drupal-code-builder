@@ -44,12 +44,8 @@ class PluginType extends BaseGenerator {
         ->setLabel('Plugin type label')
         ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
         ->setDefault(DefaultDefinition::create()
-          // ARGH should be PARENT but the JS doesn't know that!
-          // ->setExpression("machineToClass(parent['plugin_name'])")
-          ->setExpression("machineToLabel(data['module']['plugin_types'][0]['plugin_type'])")
-          // TODO: should not have to know place in the complete data structure!!!
-          // TODO: argh, MULTI-VALUED! how do we represent the delta???
-          ->setDependencies('module:plugin_types:0:plugin_type')
+          ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
+          ->setDependencies('..:plugin_type')
         ),
       'plugin_subdirectory' => array(
         'label' => 'Plugin subdirectory within the Plugins directory',
