@@ -83,8 +83,12 @@ class Plugin extends PHPClassFileWithInjection {
     parent::__construct($component_data);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getPropertyDefinition() :PropertyDefinition {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+    $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
     $definition = PropertyDefinition::create('mutable')
       ->setProperties([
@@ -109,7 +113,12 @@ class Plugin extends PHPClassFileWithInjection {
                 ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
                 ->setDependencies('..:plugin_name')
               ),
-          ]),
+              'injected_services' => PropertyDefinition::create('string')
+                ->setLabel('Injected services')
+                ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+                ->setMultiple(TRUE)
+                ->setOptionsArray($services_data_task->listServiceNamesOptionsAll())
+            ]),
         'yaml' => VariantDefinition::create()
           ->setLabel('YAML plugin')
           ->setProperties([
