@@ -25,19 +25,25 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   // TEMPORARY! FOLD INTO OTHERS ONCE THEY ARE CONVERTED
   public function testPluginDataDefinition() {
+    // TODO; move to setup!
     $this->setUpVarDumper();
 
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $component_data = $mb_task_handler_generate->getRootComponentData();
 
     // dump($component_data);
-    $component_data->plugins;
+    // $component_data->plugins;
     $component_data->plugins[0]->type = 'block';
     $component_data->plugins[0]->plugin_name = 'my_block';
     // Instantiate to set the default.
     $component_data->plugins[0]->plugin_class_name;
-    dump($component_data->plugins);
+
+    // $component_data->
+    // dump($component_data->plugins);
     // ARGH need a dumper that removes the parent.
+
+    $files = $mb_task_handler_generate->generateComponent($component_data);
+
   }
 
   /**
