@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Generator\RootComponent;
 use MutableTypedData\Data\DataItem;
@@ -137,7 +138,7 @@ class ComponentCollector {
 
     // The name for the root component is its root name, which will be the
     // name of the Drupal extension.
-    $this->getComponentsFromData($component_data->root_name->value, $component_data, NULL);
+    $this->getComponentsFromData($component_data, NULL);
 
     return $this->component_collection;
   }
@@ -168,23 +169,27 @@ class ComponentCollector {
    *   NULL if the data is a duplicate set. Note that nothing needs to be done
    *   with the return; the generator gets added to $this->component_collection.
    */
-  protected function getComponentsFromData($name, DataItem $component_data, $requesting_component) {
+  protected function getComponentsFromData(DataItem $component_data, $requesting_component) {
+    $name = $component_data->getName();
+
     // Debugging: record the chain of how we get here each time.
     static $chain;
     $chain[] = $name;
     // $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
 
     $component_type = $component_data->getComponentType();
-    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
+    // $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
     // Acquire data from the requesting component. We call this even if there
     // isn't a requesting component, as in that case, an exception is thrown
     // if an acquisition is attempted.
-    $this->acquireDataFromRequestingComponent($component_data, $component_data_info, $requesting_component);
+    // NOT NEEDED - can be done with defaults??
+    // $this->acquireDataFromRequestingComponent($component_data, $component_data_info, $requesting_component);
 
     // Process the component's data.
     //dump($component_data);
-    $this->processComponentData($component_data, $component_data_info);
+    // TODO: restore!
+    // $this->processComponentData($component_data);
 
     // Instantiate the generator in question.
     // We always pass in the root component.
@@ -235,6 +240,24 @@ class ComponentCollector {
 
     // Pick out any data properties which are components themselves, and create the
     // child components.
+    foreach ($component_data as $name => $data_item) {
+      // We're only interested in component properties.
+      if (!($data_item->getDefinition() instanceof GeneratorDefinition)) {
+        continue;
+      }
+
+      if ($data_item->isEmpty()) {
+        continue;
+      }
+
+      // Get the component type.
+      // TODO: mutable types might have different component type per variant!!
+      $item_component_type = $data_item->getComponentType();
+
+      $this->getComponentsFromData($data_item, $generator);
+    }
+
+    /*
     foreach ($component_data_info as $property_name => $property_info) {
       // We're only interested in component properties.
       if (!isset($property_info['component_type'])) {
@@ -305,8 +328,11 @@ class ComponentCollector {
           break;
       }
     }
+    */
 
     // Ask the generator for its required components.
+    /*
+    // TODO: lots to figure out here!
     $item_required_subcomponent_list = $generator->requiredComponents();
 
     // Collect the resulting components so we can set IDs for containment.
@@ -330,6 +356,7 @@ class ComponentCollector {
 
     $this->debug($chain, "done");
     array_pop($chain);
+    */
 
     return $generator;
   }
@@ -430,11 +457,12 @@ class ComponentCollector {
    *  The component data info for the data being processed. Passed by reference,
    *  to allow property processing callbacks to make changes.
    */
-  protected function processComponentData(&$component_data, &$component_data_info) {
+  protected function processComponentData($component_data, &$component_data_info) {
     // Work over each property.
     foreach ($component_data_info as $property_name => &$property_info) {
       // Set defaults for properties that don't have a value yet.
-      $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+      // NO- defaults are done earlier by validation.
+      // $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
 
       // Set values from a preset.
       // We do this after defaults, so preset properties can have a default
