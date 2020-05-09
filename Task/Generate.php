@@ -125,7 +125,6 @@ class Generate extends Base {
     // Language functions.
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($data_definition);
 
-
     // dump($data_definition);
 
     return $data;
@@ -222,13 +221,8 @@ class Generate extends Base {
    *   Throws an exception if the given data is invalid.
    */
   public function generateComponent(DataItem $component_data, $existing_module_files = []) {
-
-    // // Add the top-level component to the data.
-    // $component_type = $this->base;
-    // $component_data['base'] = $component_type;
-
-    // The component name is just the same as the type for the base generator.
-    $component_name = $component_type;
+    // Validate to ensure defaults are filled in.
+    $component_data->validate();
 
     // Assemble the component list from the request data.
     $component_collection = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
