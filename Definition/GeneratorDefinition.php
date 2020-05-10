@@ -2,8 +2,6 @@
 
 namespace DrupalCodeBuilder\Definition;
 
-use MutableTypedData\Definition\PropertyDefinition;
-
 // we need this because we want to be able to selectively upgrade some generator
 // classes to have their own getPropertyDefinition() method.
 class GeneratorDefinition extends PropertyDefinition {
