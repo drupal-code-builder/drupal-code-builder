@@ -194,6 +194,7 @@ abstract class BaseGenerator {
 
         $property_definition = $generator_class::getPropertyDefinition();
 
+        // ermmmm TODO really, always?
         $converted_defs[$name] = $property_definition->setMultiple(TRUE);
       }
       else {
