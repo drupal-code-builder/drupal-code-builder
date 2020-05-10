@@ -4,9 +4,9 @@ namespace DrupalCodeBuilder\Generator;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\PropertyDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 
 /**

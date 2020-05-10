@@ -3,9 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Definition\PropertyDefinition;
 
 /**
  * Abstract base Generator for components.

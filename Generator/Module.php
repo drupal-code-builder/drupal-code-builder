@@ -3,9 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use MutableTypedData\Definition\PropertyDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Component generator: module.

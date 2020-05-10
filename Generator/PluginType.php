@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 
 /**

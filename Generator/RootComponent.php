@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
-use MutableTypedData\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Abstract Generator for root components.
