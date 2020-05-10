@@ -214,7 +214,6 @@ abstract class BaseGenerator {
             break;
 
           case 'array':
-            // BUT! don't want a multi-value multiple!!! ARGH! Want a textarea!
             $converted_defs[$name] = PropertyDefinition::create('string')
               ->setMultiple(TRUE);
             break;
