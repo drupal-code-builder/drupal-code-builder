@@ -624,7 +624,7 @@ abstract class BaseGenerator {
    * @see ComponentCollection::assembleComponentTree()
    */
   function containingComponent() {
-    return $this->component_data['containing_component'] ?? NULL;
+    return $this->component_data->containing_component->value ?? NULL;
   }
 
   /**
