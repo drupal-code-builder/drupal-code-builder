@@ -154,6 +154,9 @@ abstract class BaseGenerator {
     return $definition;
   }
 
+  // backwards compatiblity shim.
+  // process the old array property info and add it to the property definition
+  // for this generator.
   protected static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
