@@ -6,6 +6,7 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Abstract base Generator for components.
@@ -118,7 +119,7 @@ abstract class BaseGenerator {
    * @param $component_data
    *   An array of data for the component.
    */
-  function __construct($component_data) {
+  function __construct(DataItem $component_data) {
     $this->component_data = $component_data;
 
     // Set the type. This is the short class name without the numeric version
