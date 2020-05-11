@@ -134,13 +134,13 @@ class Module extends RootComponent {
         'default' => function($component_data) {
           return ucwords(str_replace('_', ' ', $component_data['root_name']));
         },
-        'required' => FALSE,
+        'required' => TRUE,
         'process_default' => TRUE,
       ),
       'short_description' => array(
         'label' => 'Module .info file description',
         'default' => 'TODO: Description of module',
-        'required' => FALSE,
+        'required' => TRUE,
         'process_default' => TRUE,
       ),
       'module_package' => array(
