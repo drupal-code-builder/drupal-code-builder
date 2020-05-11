@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Data\DataItem;
 
@@ -171,15 +172,16 @@ abstract class BaseGenerator {
 
       $generate_task->prepareComponentDataProperty($name, $def, $dummy_component_data);
 
-      if (!empty($def['computed'])) {
-        continue;
-      }
-      if (!empty($def['internal'])) {
-        continue;
-      }
-      if (!empty($def['acquired'])) {
-        continue;
-      }
+      // no, we need thse, just hide them!
+      // if (!empty($def['computed'])) {
+      //   continue;
+      // }
+      // if (!empty($def['internal'])) {
+      //   continue;
+      // }
+      // if (!empty($def['acquired'])) {
+      //   continue;
+      // }
 
       // Add defaults.
       $def += array(
@@ -226,6 +228,36 @@ abstract class BaseGenerator {
           default:
             $converted_defs[$name] = PropertyDefinition::create('string');
 
+        }
+      }
+
+      if (!empty($def['computed'])) {
+        $converted_defs[$name]->setInternal(TRUE);
+      }
+      if (!empty($def['internal'])) {
+        $converted_defs[$name]->setInternal(TRUE);
+      }
+      if (!empty($def['acquired'])) {
+        // QUICK HACK!
+        // 'acquired_alias' is actually only used for ONE property, so hardcode
+        // that here.
+        if ($name == 'root_component_name') {
+          $expression = "requester.root_name.value";
+        }
+        else {
+          $expression = "requester.{$name}.value";
+        }
+
+        $converted_defs[$name]->setAcquiringExpression($expression);
+      }
+
+      if (isset($def['default'])) {
+        if (is_string($def['default'])) {
+          $converted_defs[$name]->setDefault(DefaultDefinition::create()
+            ->setLiteral($def['default'])
+            // TODO
+            // ->setDependencies('..:plugin_name')
+          );
         }
       }
 
