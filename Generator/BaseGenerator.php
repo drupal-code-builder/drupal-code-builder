@@ -279,7 +279,9 @@ abstract class BaseGenerator {
 
       */
 
-      $converted_defs[$name]->setLabel($def['label']);
+      if (isset($def['label'])) {
+        $converted_defs[$name]->setLabel($def['label']);
+      }
 
       if (isset($def['description'])) {
         $converted_defs[$name]->setDescription($def['description']);
