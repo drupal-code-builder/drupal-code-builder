@@ -184,7 +184,7 @@ class ComponentCollector {
     // isn't a requesting component, as in that case, an exception is thrown
     // if an acquisition is attempted.
     // NOT NEEDED - can be done with defaults??
-    // $this->acquireDataFromRequestingComponent($component_data, $component_data_info, $requesting_component);
+    $this->acquireDataFromRequestingComponent($component_data, $requesting_component);
 
     // Process the component's data.
     //dump($component_data);
@@ -379,11 +379,11 @@ class ComponentCollector {
    *   Throws an exception if a property has the 'acquired' attribute, but
    *   there is no requesting component present.
    */
-  protected function acquireDataFromRequestingComponent(&$component_data, $component_data_info, $requesting_component) {
-    // Get the requesting component's data info.
-    if ($requesting_component) {
-      $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
-    }
+  protected function acquireDataFromRequestingComponent(DataItem $component_data, $requesting_component) {
+    // // Get the requesting component's data info.
+    // if ($requesting_component) {
+    //   $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
+    // }
 
     // Initialize a map of property acquisition aliases in the requesting
     // component. This is lazily computed if we find no other way to find the
@@ -391,14 +391,20 @@ class ComponentCollector {
     $requesting_component_alias_map = NULL;
 
     // Allow the new generator to acquire properties from the requester.
-    foreach ($component_data_info as $property_name => $property_info) {
-      if (empty($property_info['acquired'])) {
+    foreach ($component_data->getProperties() as $property_name => $property_info) {
+      if (!$property_info->isAcquired()) {
         continue;
       }
 
       if (!$requesting_component) {
         throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
       }
+
+      // SIMPLIFY FOR NOW! TODO!
+      $component_data->{$property_name}->set($requesting_component->getComponentDataValue($property_name));
+      return;
+
+
 
       $acquired_value = NULL;
       if (isset($property_info['acquired_from'])) {
