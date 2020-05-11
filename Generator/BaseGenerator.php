@@ -297,6 +297,10 @@ abstract class BaseGenerator {
         }
       }
 
+      if ($def['required']) {
+        $converted_defs[$name]->setRequired(TRUE);
+      }
+
       $converted_defs[$name]->setMachineName($name);
 
       $definition->addProperty($converted_defs[$name]);
