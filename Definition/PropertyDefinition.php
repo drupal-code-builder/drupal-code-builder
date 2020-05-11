@@ -9,7 +9,7 @@ class PropertyDefinition extends OriginalPropertyDefinition {
   protected $internal = FALSE;
 
   // TODO: can this be done with defaults instead??
-  protected $acquired = FALSE;
+  protected $acquiringExpression = FALSE;
 
   public function setInternal(bool $internal) :self {
     $this->internal = $internal;
@@ -21,18 +21,18 @@ class PropertyDefinition extends OriginalPropertyDefinition {
     return $this->internal;
   }
 
-  public function setAcquired(bool $acquired) :self {
-    $this->acquired = $acquired;
+  // note there's no way to REMOVE acquired status, but this should be fine.
+  // TODO!
+  public function setAcquiringExpression(string $expression) :self {
+    $this->acquiringExpression = $expression;
 
-    if ($acquired) {
-      $this->internal = TRUE;
-    }
+    $this->internal = TRUE;
 
     return $this;
   }
 
-  public function isAcquired() :bool {
-    return $this->acquired;
+  public function getAcquiringExpression() :?string {
+    return $this->acquiringExpression;
   }
 
 

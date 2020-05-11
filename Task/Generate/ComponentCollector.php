@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Generator\RootComponent;
 use MutableTypedData\Data\DataItem;
 
@@ -392,7 +393,7 @@ class ComponentCollector {
 
     // Allow the new generator to acquire properties from the requester.
     foreach ($component_data->getProperties() as $property_name => $property_info) {
-      if (!$property_info->isAcquired()) {
+      if (!$property_info->getAcquiringExpression()) {
         continue;
       }
 
@@ -401,7 +402,20 @@ class ComponentCollector {
       }
 
       // SIMPLIFY FOR NOW! TODO!
-      $component_data->{$property_name}->set($requesting_component->getComponentDataValue($property_name));
+
+      // ->setExpression("getItemValue(item, 'complex_data:scalar_default') ~ '-suffix'")
+      $expression_language = DrupalCodeBuilderDataItemFactory::getExpressionLanguage();
+
+      $expression = $property_info->getAcquiringExpression();
+      dump($expression);
+      dump($requesting_component->component_data->export());
+
+      $acquired_value = $expression_language->evaluate($expression, [
+        'requester' => $requesting_component->component_data,
+      ]);
+      dump($acquired_value);
+
+      $component_data->{$property_name}->set($acquired_value);
       return;
 
 
