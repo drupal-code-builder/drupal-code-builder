@@ -401,63 +401,19 @@ class ComponentCollector {
         throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
       }
 
-      // SIMPLIFY FOR NOW! TODO!
-
-      // ->setExpression("getItemValue(item, 'complex_data:scalar_default') ~ '-suffix'")
       $expression_language = DrupalCodeBuilderDataItemFactory::getExpressionLanguage();
 
       $expression = $property_info->getAcquiringExpression();
-      dump($expression);
-      dump($requesting_component->component_data->export());
+      // dump("ACQUURING for $property_name");
+      // dump($expression);
+      // dump($requesting_component->component_data->export());
 
       $acquired_value = $expression_language->evaluate($expression, [
         'requester' => $requesting_component->component_data,
       ]);
-      dump($acquired_value);
+      // dump($acquired_value);
 
       $component_data->{$property_name}->set($acquired_value);
-      return;
-
-
-
-      $acquired_value = NULL;
-      if (isset($property_info['acquired_from'])) {
-        // If the current property says it is acquired from something else,
-        // use that.
-        $acquired_value = $requesting_component->getComponentDataValue($property_info['acquired_from']);
-      }
-      elseif (array_key_exists($property_name, $requesting_component_data_info)) {
-        // Get the value from the property of the same name, if one exists.
-        $acquired_value = $requesting_component->getComponentDataValue($property_name);
-      }
-      else {
-        // Finally, try to find an acquisition alias.
-        if (is_null($requesting_component_alias_map)) {
-          // Lazily build a map of aliases that exist in the requesting
-          // component's data info, now that we need it.
-          $requesting_component_alias_map = [];
-
-          foreach ($requesting_component_data_info as $requesting_component_property_name => $requesting_component_property_info) {
-            if (!isset($requesting_component_property_info['acquired_alias'])) {
-              continue;
-            }
-
-            // Create a map of the current data's property name => the
-            // requesting component's property name.
-            $requesting_component_alias_map[$requesting_component_property_info['acquired_alias']] = $requesting_component_property_name;
-          }
-        }
-
-        if (isset($requesting_component_alias_map[$property_name])) {
-          $acquired_value = $requesting_component->getComponentDataValue($requesting_component_alias_map[$property_name]);
-        }
-      }
-
-      if (!isset($acquired_value)) {
-        throw new \Exception("Unable to acquire value for property $property_name.");
-      }
-
-      $component_data[$property_name] = $acquired_value;
     }
   }
 
