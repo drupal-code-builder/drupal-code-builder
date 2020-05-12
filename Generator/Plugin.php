@@ -91,7 +91,7 @@ class Plugin extends PHPClassFileWithInjection {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
-    $definition = GeneratorDefinition::create('mutable')
+    $definition = GeneratorDefinition::createFromGeneratorType('Plugin', 'mutable')
       ->setProperties([
         'type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')

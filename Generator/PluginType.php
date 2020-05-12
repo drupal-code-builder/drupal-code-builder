@@ -18,7 +18,7 @@ class PluginType extends BaseGenerator {
 
 
   public static function getPropertyDefinition() :PropertyDefinition {
-    $definition = GeneratorDefinition::create('mutable')
+    $definition = GeneratorDefinition::createFromGeneratorType('PluginType', 'mutable')
       ->setProperties([
         'discovery_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin discovery type')
