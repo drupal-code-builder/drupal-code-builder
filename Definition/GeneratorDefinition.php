@@ -23,11 +23,13 @@ class GeneratorDefinition extends PropertyDefinition {
   /**
    * Constructor.
    *
+   * @param string $type
+   *   The data type.
    * @param string $generator_type
    *   The generator type.
    */
-  public function __construct(string $generator_type) {
-    parent::__construct($generator_type);
+  public function __construct(string $type, string $generator_type) {
+    parent::__construct($type);
 
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
@@ -41,12 +43,14 @@ class GeneratorDefinition extends PropertyDefinition {
    * @param string $generator_type
    *   The generator type; that is, the short class name without the version
    *   number.
+   * @param string $type
+   *   (optional) The data type. Defaults to 'complex'.
    *
    * @return self
    *   The new definition.
    */
-  static public function createFromGeneratorType(string $generator_type): self {
-    return new static($generator_type);
+  static public function createFromGeneratorType(string $generator_type, string $type = 'complex'): self {
+    return new static($type, $generator_type);
   }
 
   public function getComponentType() :string {
