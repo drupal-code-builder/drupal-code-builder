@@ -2,10 +2,10 @@
 
 namespace DrupalCodeBuilder\MutableTypedData\Data;
 
-use MutableTypedData\Data\ComplexData;
+use MutableTypedData\Data\MutableData;
 
 // shim to reduce the amount of array access that I have to convert to OO!
-class ComplexDataWithArrayAccess extends ComplexData implements \ArrayAccess {
+class MutableDataWithArrayAccess extends MutableData implements \ArrayAccess {
 
   use DataItemArrayAccessTrait;
 

@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\MutableTypedData;
 
 use DrupalCodeBuilder\ExpressionLanguage\ChangeCaseExpressionLanguageProvider;
 use DrupalCodeBuilder\MutableTypedData\Data\ComplexDataWithArrayAccess;
+use DrupalCodeBuilder\MutableTypedData\Data\MutableDataWithArrayAccess;
 use MutableTypedData\Data\StringData;
 use MutableTypedData\Data\BooleanData;
 use MutableTypedData\Data\ArrayData;
@@ -27,7 +28,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     'boolean' => BooleanData::class,
     // Override!!
     'complex' => ComplexDataWithArrayAccess::class,
-    'mutable' => MutableData::class,
+    'mutable' => MutableDataWithArrayAccess::class,
   ];
 
   /**
