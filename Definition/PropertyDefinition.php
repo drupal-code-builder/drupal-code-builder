@@ -21,8 +21,20 @@ class PropertyDefinition extends OriginalPropertyDefinition {
     return $this->internal;
   }
 
-  // note there's no way to REMOVE acquired status, but this should be fine.
-  // TODO!
+  /**
+   * Sets the expression to acquire a value from the requesting component.
+   *
+   * Note there is no way to REMOVE acquired status, but this should be fine.
+   *
+   * @param string $expression
+   *   An Expression Language expression. This should use object notation and
+   *   does not need to bother with getItemValue(), since there is no need for
+   *   JavaScript interpretation. Available variables:
+   *    - requester: The requesting component.
+   *
+   * @return self
+   *   Returns the definition, for chaining.
+   */
   public function setAcquiringExpression(string $expression) :self {
     $this->acquiringExpression = $expression;
 
