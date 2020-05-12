@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator base class for module info file.
  */
@@ -40,6 +42,13 @@ class Info extends File {
         'acquired' => TRUE,
       ];
     }
+
+    // This can't rely on the property definition created in
+    // addArrayPropertyInfoToDefinition() as it's multiple-valued and can't use
+    // the default acquiring expression.
+    $data_definition['module_dependencies'] = PropertyDefinition::create('string')
+      ->setMultiple(TRUE)
+      ->setAcquiringExpression('requester.module_dependencies.export()');
 
     return $data_definition;
   }
