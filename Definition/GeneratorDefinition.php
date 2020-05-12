@@ -27,7 +27,7 @@ class GeneratorDefinition extends PropertyDefinition {
    *   The generator type.
    */
   public function __construct(string $generator_type) {
-    parent::__construct('complex');
+    parent::__construct($generator_type);
 
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
