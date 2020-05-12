@@ -255,7 +255,14 @@ class ComponentCollector {
       // TODO: mutable types might have different component type per variant!!
       $item_component_type = $data_item->getComponentType();
 
-      $this->getComponentsFromData($data_item, $generator);
+      if ($data_item->isMultiple()) {
+        foreach ($data_item as $delta_item) {
+          $this->getComponentsFromData($delta_item, $generator);
+        }
+      }
+      else {
+        $this->getComponentsFromData($data_item, $generator);
+      }
     }
 
     /*
