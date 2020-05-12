@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -90,7 +91,7 @@ class Plugin extends PHPClassFileWithInjection {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
-    $definition = PropertyDefinition::create('mutable')
+    $definition = GeneratorDefinition::create('mutable')
       ->setProperties([
         'type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')

@@ -6,6 +6,7 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 
 /**
@@ -17,7 +18,7 @@ class PluginType extends BaseGenerator {
 
 
   public static function getPropertyDefinition() :PropertyDefinition {
-    $definition = PropertyDefinition::create('mutable')
+    $definition = GeneratorDefinition::create('mutable')
       ->setProperties([
         'discovery_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin discovery type')
