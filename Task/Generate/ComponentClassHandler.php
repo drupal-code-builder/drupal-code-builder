@@ -16,10 +16,10 @@ class ComponentClassHandler {
    */
   protected $classes = [];
 
-  public function getComponentData($component_type) {
+  public function getComponentPropertyDefinition($component_type) {
     $class = $this->getGeneratorClass($component_type);
 
-    return $class::componentData();
+    return $class::getPropertyDefinition()->setMachineName(strtolower($component_type));
   }
 
   /**
