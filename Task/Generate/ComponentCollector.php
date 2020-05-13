@@ -89,6 +89,16 @@ class ComponentCollector {
    */
   protected $requested_data_record = [];
 
+  /**
+   * The expression language to use for acquiring data from requesters.
+   *
+   * Acquiring data uses a separate expression language from the typed data
+   * defaults system, because it doesn't need the Javascript compatibility, and
+   * instead needs a dedicated custom function for handling the
+   * root_name/root_component_name switcheroo,.
+   *
+   * @var \Symfony\Component\ExpressionLanguage\ExpressionLanguage
+   */
   protected $acquisitionExpressionLanguage;
 
   /**
