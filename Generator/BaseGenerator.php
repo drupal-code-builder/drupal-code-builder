@@ -254,7 +254,7 @@ abstract class BaseGenerator {
         // 'acquired_alias' is actually only used for ONE property, so hardcode
         // that here.
         if ($name == 'root_component_name') {
-          $expression = "requester.root_name.value";
+          $expression = "getRootComponentName(requester)";
         }
         else {
           $expression = "requester.{$name}.value";
