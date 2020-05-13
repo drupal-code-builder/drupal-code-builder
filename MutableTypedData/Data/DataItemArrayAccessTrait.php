@@ -2,6 +2,9 @@
 
 namespace DrupalCodeBuilder\MutableTypedData\Data;
 
+/**
+ * Allows array access of complex data.
+ */
 trait DataItemArrayAccessTrait {
 
   public function offsetExists($offset) {
