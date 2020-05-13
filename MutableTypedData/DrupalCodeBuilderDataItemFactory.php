@@ -26,7 +26,9 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   static protected $types = [] + [
     'string' => StringData::class,
     'boolean' => BooleanData::class,
-    // Override!!
+    // Override to allow array access as a backwards-compatibility shim. This
+    // is basically just to save having to immediately convert ALL of the code
+    // in Generator classes that accesses component data.
     'complex' => ComplexDataWithArrayAccess::class,
     'mutable' => MutableDataWithArrayAccess::class,
   ];
