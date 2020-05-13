@@ -4,9 +4,11 @@ namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Generator\RootComponent;
 use MutableTypedData\Data\DataItem;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Task helper for collecting components recursively.
@@ -86,6 +88,8 @@ class ComponentCollector {
    * requested by different things.
    */
   protected $requested_data_record = [];
+
+  protected $acquisitionExpressionLanguage;
 
   /**
    * Constructs a new ComponentCollector.
@@ -388,6 +392,11 @@ class ComponentCollector {
    *   there is no requesting component present.
    */
   protected function acquireDataFromRequestingComponent(DataItem $component_data, $requesting_component) {
+    if (!isset($this->acquisitionExpressionLanguage)) {
+      $this->acquisitionExpressionLanguage = new ExpressionLanguage();
+      $this->acquisitionExpressionLanguage->registerProvider(new AcquisitionExpressionLanguageProvider());
+    }
+
     // // Get the requesting component's data info.
     // if ($requesting_component) {
     //   $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
@@ -408,14 +417,12 @@ class ComponentCollector {
         throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
       }
 
-      $expression_language = DrupalCodeBuilderDataItemFactory::getExpressionLanguage();
-
       $expression = $property_info->getAcquiringExpression();
       // dump("ACQUURING for $property_name");
       // dump($expression);
       // dump($requesting_component->component_data->export());
 
-      $acquired_value = $expression_language->evaluate($expression, [
+      $acquired_value = $this->acquisitionExpressionLanguage->evaluate($expression, [
         'requester' => $requesting_component->component_data,
       ]);
       // dump($acquired_value);
