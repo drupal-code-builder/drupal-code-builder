@@ -131,7 +131,16 @@ abstract class BaseGenerator {
     $this->type = preg_replace('@\d+$@', '', $short_class);
   }
 
-  protected static function deriveType(string $class) {
+  /**
+   * Gets the type for a class.
+   *
+   * @param string $class
+   *   The fully-qualified class name.
+   *
+   * @return string
+   *   The component type.
+   */
+  protected static function deriveType(string $class) :string {
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     return preg_replace('@\d+$@', '', $short_class);
