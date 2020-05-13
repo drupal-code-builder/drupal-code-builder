@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\NestedArray;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for general YML files.
@@ -27,11 +28,9 @@ class YMLFile extends File {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'yaml_data' => [
-        'label' => 'The data for the YAML file.',
-        'format' => 'array',
-        'internal' => TRUE,
-      ],
+      'yaml_data' => PropertyDefinition::create('mapping')
+        ->setLabel('The data for the YAML file')
+        ->setInternal(TRUE),
       'yaml_inline_level' => [
         'label' => 'The level at which to switch YAML properties to inline formatting.',
         'format' => 'string',

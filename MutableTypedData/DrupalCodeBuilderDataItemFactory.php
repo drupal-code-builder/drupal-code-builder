@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\MutableTypedData;
 use DrupalCodeBuilder\ExpressionLanguage\ChangeCaseExpressionLanguageProvider;
 use DrupalCodeBuilder\MutableTypedData\Data\ComplexDataWithArrayAccess;
 use DrupalCodeBuilder\MutableTypedData\Data\MutableDataWithArrayAccess;
+use DrupalCodeBuilder\MutableTypedData\Data\MappingData;
 use MutableTypedData\Data\StringData;
 use MutableTypedData\Data\BooleanData;
 use MutableTypedData\Data\ArrayData;
@@ -31,6 +32,9 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     // in Generator classes that accesses component data.
     'complex' => ComplexDataWithArrayAccess::class,
     'mutable' => MutableDataWithArrayAccess::class,
+    // Mapping data stored arbitrary arrays that don't need to have their
+    // structure defined. This is basically for the YAML data.
+    'mapping' => MappingData::class,
   ];
 
   /**
