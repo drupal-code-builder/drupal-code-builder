@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Data\DataItem;
@@ -316,6 +317,14 @@ abstract class BaseGenerator {
     }
 
     // $definition->setProperties($converted_defs);
+  }
+
+  // helper for requiredComponents()
+  protected function getDataForGenerator() {
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $definition = $class_handler->getComponentPropertyDefinition('ConfigSchema');
+    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    return $data;
   }
 
   /**
