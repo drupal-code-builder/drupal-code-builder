@@ -4,6 +4,9 @@ namespace DrupalCodeBuilder\MutableTypedData\Data;
 
 /**
  * Allows array access of complex data.
+ *
+ * This is a shim to allow 3.x code that access component data as an array to
+ * still work, so conversion can be done gradually.
  */
 trait DataItemArrayAccessTrait {
 
@@ -13,16 +16,30 @@ trait DataItemArrayAccessTrait {
 
   public function offsetGet($offset) {
     // An array access on this is old code trying to work with array data, and
-    // so we return the scalar value rather than the chid data item.
-    return $this->value[$offset]->value;
+    // so we return the raw values rather than the chid data item.
+    if ($this->properties[$offset]->getType() == 'complex' || $this->properties[$offset]->isMultiple()) {
+        return $this->value[$offset]->export();
+    }
+    else {
+      // Provide more detail if MTB throws an Exception.
+      try {
+        return $this->value[$offset]->value;
+      }
+      catch (\Exception $e) {
+        dump($this->export());
+        dump($this->properties[$offset]->getType());
+        dump($this->value[$offset]->export());
+        throw $e;
+      }
+    }
   }
 
   public function offsetSet($offset, $value) {
-    throw new \Exception();
+    throw new \Exception("Attempt to set array key $offset.");
   }
 
-  public function offsetUnset($delta) {
-    throw new \Exception();
+  public function offsetUnset($offset) {
+    throw new \Exception("Attempt to unset array key $offset.");
   }
 
 }
