@@ -91,6 +91,9 @@ class Plugin extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   public static function getPropertyDefinition() :PropertyDefinition {
+    $parent_definition = PHPClassFileWithInjection::getPropertyDefinition();
+    // $parent_definition
+
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
