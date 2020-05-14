@@ -124,6 +124,7 @@ class Module extends RootComponent {
         'internal' => TRUE,
         'default' => 'module',
         'process_default' => TRUE,
+        'required' => TRUE,
       ],
       'root_name' => array(
         'label' => 'Module machine name',
