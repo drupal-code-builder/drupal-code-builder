@@ -120,6 +120,7 @@ class Generate extends Base {
   public function getRootComponentData() {
     $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
     $data_definition = $class::getPropertyDefinition();
+    // dump($data_definition);
 
     // We use a custom data item factory so we can add custom Expression
     // Language functions.
@@ -224,9 +225,13 @@ class Generate extends Base {
     // Validate to ensure defaults are filled in.
     $component_data->validate();
 
+    // WTF validate not filling in module name etc/??????
+    // dump($component_data->export());
+    // return;
+
     // Assemble the component list from the request data.
     $component_collection = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
-    return;
+    // return;
 
     // Backward-compatiblity.
     // TODO: replace this.
@@ -236,7 +241,8 @@ class Generate extends Base {
 
     // Let each component detect whether it already exists in the given module
     // files.
-    $this->detectExistence($this->component_list, $existing_module_files);
+    // TODO: temp bypass!
+    // $this->detectExistence($this->component_list, $existing_module_files);
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array

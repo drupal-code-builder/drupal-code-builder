@@ -155,6 +155,8 @@ class ComponentCollector {
     // name of the Drupal extension.
     $this->getComponentsFromData($component_data, NULL);
 
+    // dump($this->component_collection->dumpStructure());
+
     return $this->component_collection;
   }
 
@@ -185,7 +187,17 @@ class ComponentCollector {
    *   with the return; the generator gets added to $this->component_collection.
    */
   protected function getComponentsFromData(DataItem $component_data, $requesting_component) {
+    dump(sprintf("STARTING getComponentsFromData with %s requested by %s",
+      $component_data->getAddress(),
+      $requesting_component ? $requesting_component->component_data->getAddress() : 'nothing'
+    ));
     $name = $component_data->getName();
+
+    // dump("getComponentsFromDataItem");
+    // dump($component_data->export());
+    // dump($name);
+
+
 
     // Debugging: record the chain of how we get here each time.
     static $chain;
@@ -202,7 +214,9 @@ class ComponentCollector {
     $this->acquireDataFromRequestingComponent($component_data, $requesting_component);
 
     // Process the component's data.
-    //dump($component_data);
+    dump("GOING TO MAKE $component_type with this data:");
+    // dump($component_data->export());
+    // dump(array_keys($component_data->getProperties()));
     // TODO: restore!
     // $this->processComponentData($component_data);
 
@@ -256,14 +270,18 @@ class ComponentCollector {
     // Pick out any data properties which are components themselves, and create the
     // child components.
     foreach ($component_data as $name => $data_item) {
+      // dump("spawn $name?");
       // We're only interested in component properties.
       if (!($data_item->getDefinition() instanceof GeneratorDefinition)) {
+        // dump("NO spawn $name? not gen");
         continue;
       }
 
       if ($data_item->isEmpty()) {
         continue;
       }
+
+      dump("YES spawn $name?");
 
       // Get the component type.
       // TODO: mutable types might have different component type per variant!!
@@ -353,7 +371,6 @@ class ComponentCollector {
     */
 
     // Ask the generator for its required components.
-    /*
     // TODO: lots to figure out here!
     $item_required_subcomponent_list = $generator->requiredComponents();
 
@@ -366,6 +383,11 @@ class ComponentCollector {
       // Validate so defaults are filled in.
       $required_item_data->validate();
 
+      dump("VALIDATE!");
+      dump($required_item_data->export());
+      dump(array_keys($required_item_data->getProperties()));
+
+
       // Guard against a clash of required item key.
       // In other words, a key in requiredComponents() can't be the same as a
       // property name.
@@ -375,13 +397,14 @@ class ComponentCollector {
 
       $local_names[$required_item_name] = TRUE;
 
-      $main_required_component = $this->getComponentsFromData($required_item_name, $required_item_data, $generator);
+      dump($required_item_data);
+
+      $main_required_component = $this->getComponentsFromData($required_item_data, $generator);
       $required_components[$required_item_name] = $main_required_component;
     }
 
     $this->debug($chain, "done");
     array_pop($chain);
-    */
 
     return $generator;
   }
@@ -405,6 +428,9 @@ class ComponentCollector {
    *   there is no requesting component present.
    */
   protected function acquireDataFromRequestingComponent(DataItem $component_data, $requesting_component) {
+    // dump("acquireDataFromRequestingComponent! -- " . $component_data->getMachineName());
+    // dump($component_data->getDefinition());
+
     if (!isset($this->acquisitionExpressionLanguage)) {
       $this->acquisitionExpressionLanguage = new ExpressionLanguage();
       $this->acquisitionExpressionLanguage->registerProvider(new AcquisitionExpressionLanguageProvider());
@@ -431,13 +457,22 @@ class ComponentCollector {
       }
 
       $expression = $property_info->getAcquiringExpression();
-      // dump("ACQUURING for $property_name");
+      $add = $component_data->getAddress();
+      dump("ACQUIRING for $add - $property_name on with '$expression'");
       // dump($expression);
       // dump($requesting_component->component_data->export());
+      dump(get_class($requesting_component->component_data));
 
-      $acquired_value = $this->acquisitionExpressionLanguage->evaluate($expression, [
-        'requester' => $requesting_component->component_data,
-      ]);
+      try {
+        $acquired_value = $this->acquisitionExpressionLanguage->evaluate($expression, [
+          'requester' => $requesting_component->component_data,
+        ]);
+      }
+      catch (\RuntimeException $e) {
+        dump("Unable to evaluate expression '$expression'.");
+        dump($requesting_component->component_data->export());
+        throw $e;
+      }
       // dump($acquired_value);
 
       $component_data->{$property_name}->set($acquired_value);

@@ -143,7 +143,7 @@ class ComponentCollection implements \IteratorAggregate {
   public function getComponentKey(BaseGenerator $component) {
     // TODO: Change this to the more succinct spl_object_id() once we drop
     // support for PHP < 7.2.
-    return spl_object_hash($component);
+    return spl_object_id($component);
   }
 
   /**
@@ -560,7 +560,7 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Dumps the data structures of the collection for debugging.
    */
-  private function dumpStructure() {
+  public function dumpStructure() {
     dump("Requesters:");
     dump($this->requesters);
 

@@ -6,6 +6,7 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 
 /**
  * Component generator: module.
@@ -171,43 +172,45 @@ class Module extends RootComponent {
         'default' => NULL,
         'required' => FALSE,
       ),
-      'settings_form' => array(
-        'label' => "Admin settings form",
-        'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
-        'required' => FALSE,
-        'format' => 'compound',
-        'cardinality' => 1,
-        'component_type' => 'AdminSettingsForm',
-      ),
-      'forms' => array(
-        'label' => "Forms",
-        'description' => "The forms for this module to provide.",
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Form',
-      ),
-      'services' => array(
-        'label' => "Services",
-        'description' => 'The services for this module to provide.',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Service',
-      ),
-      'service_provider' => [
-        'label' => "Service provider",
-        'description' => 'A service provider alters existing services or defines services dynamically.',
-        'required' => FALSE,
-        'default' => FALSE,
-        'format' => 'boolean',
-        'component_type' => 'ServiceProvider',
-      ],
-      'permissions' => array(
-        'label' => "Permissions",
-        'description' => 'The permissions for this module to provide.',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Permission',
-      ),
+      // TODO: comment out for now while working on conversion of Plugins
+      // ALSO faffy special case as compound AND single-valued.
+      // 'settings_form' => array(
+      //   'label' => "Admin settings form",
+      //   'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'cardinality' => 1,
+      //   'component_type' => 'AdminSettingsForm',
+      // ),
+      // 'forms' => array(
+      //   'label' => "Forms",
+      //   'description' => "The forms for this module to provide.",
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'Form',
+      // ),
+      // 'services' => array(
+      //   'label' => "Services",
+      //   'description' => 'The services for this module to provide.',
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'Service',
+      // ),
+      // 'service_provider' => [
+      //   'label' => "Service provider",
+      //   'description' => 'A service provider alters existing services or defines services dynamically.',
+      //   'required' => FALSE,
+      //   'default' => FALSE,
+      //   'format' => 'boolean',
+      //   'component_type' => 'ServiceProvider',
+      // ],
+      // 'permissions' => array(
+      //   'label' => "Permissions",
+      //   'description' => 'The permissions for this module to provide.',
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'Permission',
+      // ),
       'module_hook_presets' => array(
         'label' => 'Hook preset groups',
         'required' => FALSE,
@@ -305,21 +308,23 @@ class Module extends RootComponent {
           $component_data['hooks'] = $hooks;
         }
       ),
-      'content_entity_types' => array(
-        'label' => 'Content entity types',
-        'required' => FALSE,
-        'format' => 'compound',
-        // This tells the system that this is a request for generator
-        // components, and the input data should be placed in a nested array in
-        // the module data.
-        'component_type' => 'ContentEntityType',
-      ),
-      'config_entity_types' => array(
-        'label' => 'Config entity types',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'ConfigEntityType',
-      ),
+      // TODO too much stuff in debug output!
+      // 'content_entity_types' => array(
+      //   'label' => 'Content entity types',
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   // This tells the system that this is a request for generator
+      //   // components, and the input data should be placed in a nested array in
+      //   // the module data.
+      //   'component_type' => 'ContentEntityType',
+      // ),
+      // 'config_entity_types' => array(
+      //   'label' => 'Config entity types',
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'ConfigEntityType',
+      // ),
+
       // TODO: come up with a way to generalize this if more plugin discovery
       // types become common.
       // TODO: rename this to 'plugins_annotated'.
@@ -332,67 +337,68 @@ class Module extends RootComponent {
         // the module data.
         'component_type' => 'Plugin',
       ),
-      'plugins_yaml' => [
-        'label' => 'Plugins (YAML)',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'PluginYAML',
-      ],
+      // 'plugins_yaml' => [
+      //   'label' => 'Plugins (YAML)',
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'PluginYAML',
+      // ],
       'plugin_types' => array(
         'label' => 'Plugin types',
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'PluginType',
       ),
-      'theme_hooks' => array(
-        'label' => "Theme hooks",
-        'description' => "The name of theme hooks, without the leading 'theme_'.",
-        'required' => FALSE,
-        'format' => 'array',
-        'component_type' => 'ThemeHook',
-      ),
-      'router_items' => array(
-        'label' => "Routes",
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'RouterItem',
-      ),
-      'library' => [
-        'label' => "Library",
-        'description' => 'A collection of CSS and JS assets, declared in a libraries.yml file.',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Library',
-      ],
-      'api' => array(
-        'label' => "api.php file",
-        'description' => 'An api.php file documents hooks and callbacks that this module invents.',
-        'required' => FALSE,
-        'default' => FALSE,
-        'format' => 'boolean',
-        'component_type' => 'API',
-      ),
-      'readme' => array(
-        'label' => "README file",
-        'required' => FALSE,
-        'default' => TRUE,
-        'format' => 'boolean',
-        'component_type' => 'Readme',
-      ),
-      'phpunit_tests' => array(
-        'label' => "PHPUnit test case class",
-        'format' => 'compound',
-        'component_type' => 'PHPUnitTest',
-        'required' => FALSE,
-      ),
-      'tests' => array(
-        'label' => "Simpletest test case class",
-        'description' => 'NOTICE: These are deprecated in Drupal 8.',
-        'required' => FALSE,
-        'default' => FALSE,
-        'format' => 'boolean',
-        'component_type' => 'Tests',
-      ),
+      // TODO: SIMPLIFY DEBUG OUTPUT!!
+      // 'theme_hooks' => array(
+      //   'label' => "Theme hooks",
+      //   'description' => "The name of theme hooks, without the leading 'theme_'.",
+      //   'required' => FALSE,
+      //   'format' => 'array',
+      //   'component_type' => 'ThemeHook',
+      // ),
+      // 'router_items' => array(
+      //   'label' => "Routes",
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'RouterItem',
+      // ),
+      // 'library' => [
+      //   'label' => "Library",
+      //   'description' => 'A collection of CSS and JS assets, declared in a libraries.yml file.',
+      //   'required' => FALSE,
+      //   'format' => 'compound',
+      //   'component_type' => 'Library',
+      // ],
+      // 'api' => array(
+      //   'label' => "api.php file",
+      //   'description' => 'An api.php file documents hooks and callbacks that this module invents.',
+      //   'required' => FALSE,
+      //   'default' => FALSE,
+      //   'format' => 'boolean',
+      //   'component_type' => 'API',
+      // ),
+      // 'readme' => array(
+      //   'label' => "README file",
+      //   'required' => FALSE,
+      //   'default' => TRUE,
+      //   'format' => 'boolean',
+      //   'component_type' => 'Readme',
+      // ),
+      // 'phpunit_tests' => array(
+      //   'label' => "PHPUnit test case class",
+      //   'format' => 'compound',
+      //   'component_type' => 'PHPUnitTest',
+      //   'required' => FALSE,
+      // ),
+      // 'tests' => array(
+      //   'label' => "Simpletest test case class",
+      //   'description' => 'NOTICE: These are deprecated in Drupal 8.',
+      //   'required' => FALSE,
+      //   'default' => FALSE,
+      //   'format' => 'boolean',
+      //   'component_type' => 'Tests',
+      // ),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
@@ -418,7 +424,25 @@ class Module extends RootComponent {
    * {@inheritdoc}
    */
   public function requiredComponents() {
-    $components = array();
+    $components = [];
+
+    // Argh, need to instantiate the class handler outside of the Generate
+    // task... time for a proper service architecture?
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $definition = $class_handler->getComponentPropertyDefinition('Info');
+    // dump($definition);
+    // exit();
+
+
+
+    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    $components['info'] = $data;
+
+    return $components;
+
+    // getComponentPropertyDefinition('Info');
+
+
 
     // Turn the hooks property into the Hooks component.
     if (!$this->component_data->hooks->isEmpty()) {

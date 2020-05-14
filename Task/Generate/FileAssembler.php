@@ -36,9 +36,10 @@ class FileAssembler {
     $files = $this->collectFiles($component_collection);
 
     // Filter files according to the requested build list.
-    if (isset($component_data['requested_build'])) {
-      $component_collection->getRootComponent()->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
-    }
+    // TODO: TEMP!
+    // if (isset($component_data['requested_build'])) {
+    //   $component_collection->getRootComponent()->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
+    // }
 
     // Then we assemble the files into a simple array of full filename and
     // contents.

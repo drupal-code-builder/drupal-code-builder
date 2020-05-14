@@ -71,9 +71,9 @@ class Plugin extends PHPClassFileWithInjection {
    */
   function __construct($component_data) {
     // Set some default properties.
-    $component_data += array(
-      'injected_services' => [],
-    );
+    // $component_data += array(
+    //   'injected_services' => [],
+    // );
 
     $plugin_type = $component_data->type->value;
 
@@ -113,6 +113,7 @@ class Plugin extends PHPClassFileWithInjection {
             'plugin_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin ID')
               ->setRequired(TRUE),
+              // ->setProcessing(static::class . '::processingPluginName'),
             'plugin_class_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin class name')
               // ->setRequired(TRUE)
@@ -141,6 +142,24 @@ class Plugin extends PHPClassFileWithInjection {
       ]);
 
     return $definition;
+  }
+
+  public static function processingPluginName($data_item) {
+    return;
+    // Prepend the module name.
+    if (strpos($value, ':') !== FALSE) {
+      // Don't if the plugin ID is a derivative.
+      return;
+    }
+
+    $module_name = $component_data['root_component_name'];
+
+    if (strpos($value, $module_name . '_') === 0) {
+      // Don't if the plugin ID already has the module name as a prefix.
+      return;
+    }
+
+    $component_data['plugin_name'] = $module_name . '_' . $component_data['plugin_name'];
   }
 
   /**
@@ -336,18 +355,34 @@ class Plugin extends PHPClassFileWithInjection {
       $schema_id = $this->plugin_type_data['config_schema_prefix']
         . $this->component_data['plugin_name'];
 
-      $components["config/schema/%module.schema.yml"] = [
-        'component_type' => 'ConfigSchema',
-        'yaml_data' => [
-           $schema_id => [
-            'type' => 'mapping',
-            'label' => $this->component_data['plugin_name'],
-            'mapping' => [
+      // TODO: wrap this up!
+      // $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+      // $definition = $class_handler->getComponentPropertyDefinition('ConfigSchema');
+      // $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
-            ],
-          ],
+      $data = $this->getDataForGenerator('ConfigSchema');
+      $data->yaml_data->set([
+        $schema_id => [
+          'type' => 'mapping',
+          'label' => $this->component_data['plugin_name'],
+          'mapping' => [],
         ],
-      ];
+      ]);
+
+      $components["config/schema/%module.schema.yml"] = $data;
+
+      // $components["config/schema/%module.schema.yml"] = [
+      //   'component_type' => 'ConfigSchema',
+      //   'yaml_data' => [
+      //      $schema_id => [
+      //       'type' => 'mapping',
+      //       'label' => $this->component_data['plugin_name'],
+      //       'mapping' => [
+
+      //       ],
+      //     ],
+      //   ],
+      // ];
     }
 
     if (!empty($this->component_data['replace_parent_plugin'])) {

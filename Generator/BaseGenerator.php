@@ -98,7 +98,9 @@ abstract class BaseGenerator {
   public $type;
 
   /**
-   * The data for the component.
+   * The data item for the component.
+   *
+   * TODO
    *
    * On the base component (e.g., 'Module'), this is the entirety of the data
    * requested by the user.
@@ -122,6 +124,9 @@ abstract class BaseGenerator {
    *   An array of data for the component.
    */
   function __construct(DataItem $component_data) {
+    dump("CONSTRUCT!");
+    dump(static::class);
+    dump($component_data->export());
     $this->component_data = $component_data;
 
     // Set the type. This is the short class name without the numeric version
@@ -147,12 +152,14 @@ abstract class BaseGenerator {
     return preg_replace('@\d+$@', '', $short_class);
   }
 
+  // TODO: need way to not show internals to UIs!!
   public static function getPropertyDefinition() :PropertyDefinition {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $type = static::deriveType(static::class);
 
-    $array_property_info = $generate_task->getComponentDataInfo($type);
+    // ARGH we're calling a method meant for the ROOT only!
+    $array_property_info = $generate_task->getComponentDataInfo($type, TRUE);
     // dump($array_property_info);
 
     $definition = GeneratorDefinition::createFromGeneratorType($type);

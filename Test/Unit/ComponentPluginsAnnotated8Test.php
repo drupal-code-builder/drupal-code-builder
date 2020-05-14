@@ -31,6 +31,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $component_data = $mb_task_handler_generate->getRootComponentData();
 
+    // dump($component_data->getDefinition());
     // dump($component_data);
     // $component_data->plugins;
     $component_data->plugins[0]->type = 'block';
@@ -38,11 +39,14 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // Instantiate to set the default.
     $component_data->plugins[0]->plugin_class_name;
 
+    // dump($component_data);
+
     // $component_data->
     // dump($component_data->plugins);
     // ARGH need a dumper that removes the parent.
 
     $files = $mb_task_handler_generate->generateComponent($component_data);
+    dump($files);
 
   }
 
