@@ -125,7 +125,9 @@ class Plugin extends PHPClassFileWithInjection {
                 ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
                 ->setMultiple(TRUE)
                 ->setOptionsArray($services_data_task->listServiceNamesOptionsAll())
-            ]),
+            ]
+            + $parent_definition->getProperties()
+          ),
         'yaml' => VariantDefinition::create()
           ->setLabel('YAML plugin')
           ->setProperties([
