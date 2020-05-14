@@ -421,7 +421,7 @@ class Module extends RootComponent {
     $components = array();
 
     // Turn the hooks property into the Hooks component.
-    if (!empty($this->component_data['hooks'])) {
+    if (!$this->component_data->hooks->isEmpty()) {
       $components['hooks'] = array(
         'component_type' => 'Hooks',
         'hooks' => $this->component_data['hooks'],
@@ -434,7 +434,7 @@ class Module extends RootComponent {
     ];
 
     // Add hook_help if help text is given.
-    if (!empty($this->component_data['module_help_text'])) {
+    if (!$this->component_data->module_help_text->isEmpty()) {
       if (isset($components['hooks'])) {
         $components['hooks']['hooks']['hook_help'] = TRUE;
       }
