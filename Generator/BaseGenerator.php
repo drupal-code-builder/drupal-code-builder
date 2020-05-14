@@ -320,7 +320,9 @@ abstract class BaseGenerator {
       // The 'process_default' attribute basically means a default should be
       // filled in. This is the same as a data item being required and having a
       // default, since validation fills the default in.
-      if (!empty($def['process_default'])) {
+      // Note however that defaults for multi-valued data are not yet supported
+      // in MTB.
+      if (!empty($def['process_default']) && !$converted_defs[$name]->isMultiple()) {
         $converted_defs[$name]->setRequired(TRUE);
       }
 
