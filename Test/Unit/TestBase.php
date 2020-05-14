@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHP_CodeSniffer;
@@ -17,6 +19,8 @@ use PHP_CodeSniffer;
  * Contains helper methods and assertions.
  */
 abstract class TestBase extends TestCase {
+
+  use VarDumperSetupTrait;
 
   /**
    * The Drupal core major version to set up for this test.
@@ -29,6 +33,8 @@ abstract class TestBase extends TestCase {
    * This expects the class property $drupalMajorVersion to be defined.
    */
   protected function setUp() {
+    $this->setUpVarDumper();
+
     $this->setupDrupalCodeBuilder($this->drupalMajorVersion);
   }
 
@@ -45,6 +51,38 @@ abstract class TestBase extends TestCase {
     $version_helper->setFakeCoreMajorVersion($version);
 
     \DrupalCodeBuilder\Factory::setEnvironment($environment)->setCoreVersionHelper($version_helper);
+  }
+
+  /**
+   * Gets the empty data item for the root component.
+   *
+   * @param string $type
+   *   The component type.
+   *   TODO: make this optional in getTask()?
+   *
+   * @return \MutableTypedData\Data\DataItem
+   *   The data item.
+   */
+  protected function getRootComponentBlankData(string $type) :DataItem {
+    $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $type);
+    $component_data = $task_handler_generate->getRootComponentData();
+    return $component_data;
+  }
+
+  /**
+   * Generate module files from component data.
+   *
+   * @param \MutableTypedData\Data\DataItem $component_data
+   *  The data for the generator.
+   *
+   * @param
+   *  An array of files.
+   */
+  protected function generateComponentFilesFromData(DataItem $component_data) {
+    $component_data->validate();
+    $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $component_data->base->value);
+    $files = $task_handler_generate->generateComponent($component_data);
+    return $files;
   }
 
   /**

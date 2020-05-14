@@ -5,7 +5,6 @@ namespace DrupalCodeBuilder\Test\Unit;
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
-use MutableTypedData\Test\VarDumperSetupTrait;
 
 /**
  * Tests the Plugins generator class.
@@ -13,8 +12,6 @@ use MutableTypedData\Test\VarDumperSetupTrait;
  * @group yaml
  */
 class ComponentPluginsAnnotated8Test extends TestBase {
-
-  use VarDumperSetupTrait;
 
   /**
    * The Drupal core major version to set up for this test.
@@ -25,11 +22,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   // TEMPORARY! FOLD INTO OTHERS ONCE THEY ARE CONVERTED
   public function testPluginDataDefinition() {
-    // TODO; move to setup!
-    $this->setUpVarDumper();
-
-    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-    $component_data = $mb_task_handler_generate->getRootComponentData();
+    $component_data = $this->getRootComponentBlankData('module');
 
     // dump($component_data->getDefinition());
     // dump($component_data);
@@ -45,7 +38,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // dump($component_data->plugins);
     // ARGH need a dumper that removes the parent.
 
-    $files = $mb_task_handler_generate->generateComponent($component_data);
+    $files = $this->generateComponentFilesFromData($component_data);
     dump($files);
 
   }
