@@ -12,6 +12,9 @@ use MutableTypedData\Definition\VariantDefinition;
 
 /**
  * Generator for a plugin.
+ *
+ * TODO: probably doesn't extend PHPClassFileWithInjection - since also
+ * YAML plugins now!
  */
 class Plugin extends PHPClassFileWithInjection {
 
