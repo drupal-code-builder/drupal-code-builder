@@ -323,7 +323,8 @@ class Plugin extends PHPClassFileWithInjection {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    foreach ($this->component_data['injected_services'] as $service_id) {
+    // TODO: really need a way to iterate over the scalar values!
+    foreach ($this->component_data->injected_services->export() as $service_id) {
       $components['service_' . $service_id] = array(
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
