@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for PHP class files.
@@ -91,11 +92,9 @@ class PHPClassFile extends PHPFile {
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
-      'class_docblock_lines' => [
-        'format' => 'array',
-        'internal' => TRUE,
+      'class_docblock_lines' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
         // No default, as most generators don't use this yet.
-      ],
       'abstract' => [
         'label' => 'Abstract',
         'format' => 'boolean',
