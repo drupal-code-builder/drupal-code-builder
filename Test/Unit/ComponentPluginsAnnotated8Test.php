@@ -27,7 +27,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // dump($component_data->getDefinition());
     // dump($component_data);
     // $component_data->plugins;
-    $component_data->plugins[0]->type = 'block';
+    $component_data->plugins[0]->plugin_type = 'block';
     $component_data->plugins[0]->plugin_name = 'my_block';
     // Instantiate to set the default.
     $component_data->plugins[0]->plugin_class_name;
