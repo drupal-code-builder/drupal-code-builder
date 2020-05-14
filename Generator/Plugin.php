@@ -72,14 +72,14 @@ class Plugin extends PHPClassFileWithInjection {
       'injected_services' => [],
     );
 
-    $plugin_type = $component_data['plugin_type'];
+    $plugin_type = $component_data->type->value;
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
 
     // The plugin type has already been validated by the plugin_type property's
     // processing.
-    $component_data['plugin_type_data'] = $plugin_types_data[$plugin_type];
+    $this->plugin_type_data = $plugin_types_data[$plugin_type];
 
     parent::__construct($component_data);
   }
@@ -291,7 +291,7 @@ class Plugin extends PHPClassFileWithInjection {
     $data_definition['relative_class_name']['default'] = function($component_data) {
       return array_merge(
         // Plugin subdirectory.
-        self::pathToNamespacePieces($component_data['plugin_type_data']['subdir']),
+        self::pathToNamespacePieces($plugin_type_data['subdir']),
         // Plugin class name.
         [ $component_data['plugin_class_name'] ]
       );
@@ -323,8 +323,8 @@ class Plugin extends PHPClassFileWithInjection {
       );
     }
 
-    if (!empty($this->component_data['plugin_type_data']['config_schema_prefix'])) {
-      $schema_id = $this->component_data['plugin_type_data']['config_schema_prefix']
+    if (!empty($this->plugin_type_data['config_schema_prefix'])) {
+      $schema_id = $this->plugin_type_data['config_schema_prefix']
         . $this->component_data['plugin_name'];
 
       $components["config/schema/%module.schema.yml"] = [
@@ -342,8 +342,8 @@ class Plugin extends PHPClassFileWithInjection {
     }
 
     if (!empty($this->component_data['replace_parent_plugin'])) {
-      if (!empty($this->component_data['plugin_type_data']['alter_hook_name'])) {
-        $alter_hook_name = 'hook_' . $this->component_data['plugin_type_data']['alter_hook_name'];
+      if (!empty($this->plugin_type_data['alter_hook_name'])) {
+        $alter_hook_name = 'hook_' . $this->plugin_type_data['alter_hook_name'];
 
         $components['hooks'] = [
           'component_type' => 'Hooks',
@@ -402,11 +402,11 @@ class Plugin extends PHPClassFileWithInjection {
    *   An array of lines suitable for docBlock().
    */
   function classAnnotation() {
-    $annotation_class_path = explode('\\', $this->component_data['plugin_type_data']['plugin_definition_annotation_name']);
+    $annotation_class_path = explode('\\', $this->plugin_type_data['plugin_definition_annotation_name']);
     $annotation_class = array_pop($annotation_class_path);
 
     // Special case: annotation that's just the plugin ID.
-    if (!empty($this->component_data['plugin_type_data']['annotation_id_only'])) {
+    if (!empty($this->plugin_type_data['annotation_id_only'])) {
       $annotation = ClassAnnotation::{$annotation_class}($this->component_data['plugin_name']);
 
       $annotation_lines = $annotation->render();
@@ -414,7 +414,7 @@ class Plugin extends PHPClassFileWithInjection {
       return $annotation_lines;
     }
 
-    $annotation_variables = $this->component_data['plugin_type_data']['plugin_properties'];
+    $annotation_variables = $this->plugin_type_data['plugin_properties'];
 
     $annotation_data = [];
     foreach ($annotation_variables as $annotation_variable => $annotation_variable_info) {
@@ -445,10 +445,10 @@ class Plugin extends PHPClassFileWithInjection {
    */
   function class_declaration() {
     if (isset($this->component_data['parent_plugin_class'])) {
-      $this->component_data['parent_class_name'] = '\\' . $this->component_data['parent_plugin_class'];
+      $this->component_data->parent_class_name->value = '\\' . $this->component_data['parent_plugin_class'];
     }
-    elseif (isset($this->component_data['plugin_type_data']['base_class'])) {
-      $this->component_data['parent_class_name'] = '\\' . $this->component_data['plugin_type_data']['base_class'];
+    elseif (isset($this->plugin_type_data['base_class'])) {
+      $this->component_data->parent_class_name->value = '\\' . $this->plugin_type_data['base_class'];
     }
 
     // Set the DI interface if needed.
@@ -458,7 +458,7 @@ class Plugin extends PHPClassFileWithInjection {
     if (!empty($this->injectedServices)) {
       $use_di_interface = TRUE;
 
-      if (!empty($this->component_data['plugin_type_data']['base_class_has_di'])) {
+      if (!empty($this->plugin_type_data['base_class_has_di'])) {
         // No need to implement the interface if the base class already
         // implements it.
         $use_di_interface = FALSE;
@@ -470,7 +470,7 @@ class Plugin extends PHPClassFileWithInjection {
           $use_di_interface = FALSE;
         }
       }
-      elseif (!empty($this->component_data['plugin_type_data']['construction'])) {
+      elseif (!empty($this->plugin_type_data['construction'])) {
         $use_di_interface = FALSE;
       }
     }
@@ -489,19 +489,19 @@ class Plugin extends PHPClassFileWithInjection {
     $this->collectSectionBlocksForDependencyInjection();
 
     // TODO: move this to a component.
-    $this->createBlocksFromMethodData($this->component_data['plugin_type_data']['plugin_interface_methods']);
+    $this->createBlocksFromMethodData($this->plugin_type_data['plugin_interface_methods']);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getConstructBaseParameters() {
-    if (isset($this->component_data['plugin_type_data']['constructor_fixed_parameters'])) {
+    if (isset($this->plugin_type_data['constructor_fixed_parameters'])) {
       // Plugin type has non-standard constructor fixed parameters.
       // Argh, the data for this is in a different format: type / typehint.
       // TODO: clean up this WTF.
       $parameters = [];
-      foreach ($this->component_data['plugin_type_data']['constructor_fixed_parameters'] as $i => $param) {
+      foreach ($this->plugin_type_data['constructor_fixed_parameters'] as $i => $param) {
         $typehint = $param['type'];
         if (!empty($typehint) && !in_array($typehint, ['array', 'string', 'bool', 'mixed', 'int'])) {
           // Class typehints need an initial '\'.
@@ -543,8 +543,8 @@ class Plugin extends PHPClassFileWithInjection {
     if (isset($this->component_data['parent_plugin_class'])) {
       $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
     }
-    elseif (isset($this->component_data['plugin_type_data']['construction'])) {
-      $parent_construction_parameters = $this->component_data['plugin_type_data']['construction'];
+    elseif (isset($this->plugin_type_data['construction'])) {
+      $parent_construction_parameters = $this->plugin_type_data['construction'];
     }
 
     // The parameters for the base class's constructor.
