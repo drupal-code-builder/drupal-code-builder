@@ -75,7 +75,7 @@ class Plugin extends PHPClassFileWithInjection {
     //   'injected_services' => [],
     // );
 
-    $plugin_type = $component_data->type->value;
+    $plugin_type = $component_data->plugin_type->value;
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
@@ -99,7 +99,7 @@ class Plugin extends PHPClassFileWithInjection {
 
     $definition = GeneratorDefinition::createFromGeneratorType('Plugin', 'mutable')
       ->setProperties([
-        'type' => PropertyDefinition::create('string')
+        'plugin_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')
           ->setOptionsArray(
             $plugin_data_task->listPluginNamesOptions()
