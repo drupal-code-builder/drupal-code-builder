@@ -379,13 +379,13 @@ class Module extends RootComponent {
       //   'format' => 'boolean',
       //   'component_type' => 'API',
       // ),
-      // 'readme' => array(
-      //   'label' => "README file",
-      //   'required' => FALSE,
-      //   'default' => TRUE,
-      //   'format' => 'boolean',
-      //   'component_type' => 'Readme',
-      // ),
+      'readme' => array(
+        'label' => "README file",
+        'required' => FALSE,
+        'default' => TRUE,
+        'format' => 'boolean',
+        'component_type' => 'Readme',
+      ),
       // 'phpunit_tests' => array(
       //   'label' => "PHPUnit test case class",
       //   'format' => 'compound',
