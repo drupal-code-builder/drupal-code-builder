@@ -116,7 +116,7 @@ class Plugin extends PHPClassFileWithInjection {
               // ->setProcessing(static::class . '::processingPluginName'),
             'plugin_class_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin class name')
-              // ->setRequired(TRUE)
+              ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
                 ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
                 ->setDependencies('..:plugin_name')
