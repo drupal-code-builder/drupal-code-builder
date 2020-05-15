@@ -187,10 +187,6 @@ class ComponentCollector {
    *   with the return; the generator gets added to $this->component_collection.
    */
   protected function getComponentsFromData(DataItem $component_data, $requesting_component) {
-    dump(sprintf("STARTING getComponentsFromData with %s requested by %s",
-      $component_data->getAddress(),
-      $requesting_component ? $requesting_component->component_data->getAddress() : 'nothing'
-    ));
     $name = $component_data->getName();
 
     // Prepend the parent name to array data items, as their name is just the
@@ -198,6 +194,12 @@ class ComponentCollector {
     if (is_numeric($name)) {
       $name = $component_data->getParent()->getName() . '_' . $name;
     }
+
+    dump(sprintf("STARTING getComponentsFromData with %s %s requested by %s",
+      $name,
+      $component_data->getAddress(),
+      $requesting_component ? $requesting_component->component_data->getAddress() : 'nothing'
+    ));
 
     // dump("getComponentsFromDataItem");
     // dump($component_data->export());
