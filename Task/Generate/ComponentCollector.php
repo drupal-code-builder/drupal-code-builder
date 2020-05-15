@@ -193,6 +193,12 @@ class ComponentCollector {
     ));
     $name = $component_data->getName();
 
+    // Prepend the parent name to array data items, as their name is just the
+    // delta and that's not unique within the requester.
+    if (is_numeric($name)) {
+      $name = $component_data->getParent()->getName() . '_' . $name;
+    }
+
     // dump("getComponentsFromDataItem");
     // dump($component_data->export());
     // dump($name);
