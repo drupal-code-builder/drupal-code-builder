@@ -325,6 +325,11 @@ abstract class BaseGenerator {
       if (!empty($def['process_default']) && !$converted_defs[$name]->isMultiple()) {
         $converted_defs[$name]->setRequired(TRUE);
       }
+      // Computed values need to be required so that the default gets filled in
+      // on validation. They're basically just default + required + internal.
+      if (!empty($def['computed'])) {
+        $converted_defs[$name]->setRequired(TRUE);
+      }
 
       $converted_defs[$name]->setMachineName($name);
 
