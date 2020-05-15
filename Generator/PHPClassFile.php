@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -22,18 +23,13 @@ class PHPClassFile extends PHPFile {
         'internal' => TRUE,
       ],
       // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
-      'qualified_class_name_pieces' => [
-        'computed' => TRUE,
-        'format' => 'array',
-        'default' => function($component_data) {
-          $class_name_pieces = array_merge([
-            'Drupal',
-            '%module',
-          ], $component_data['relative_class_name']);
-
-          return $class_name_pieces;
-        },
-      ],
+      'qualified_class_name_pieces' => PropertyDefinition::create('string')
+        ->setRequired(TRUE)
+        ->setMultiple(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("arrayAppend(['Drupal', '%module], 'parent.relative_class_name.value')")
+          ->setDependencies('..:relative_class_name')
+      ),
       // E.g. 'Drupal\my_module\Form\MyFormClass'
       'qualified_class_name' => [
         'computed' => TRUE,
