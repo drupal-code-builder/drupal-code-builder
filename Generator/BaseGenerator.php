@@ -124,9 +124,9 @@ abstract class BaseGenerator {
    *   An array of data for the component.
    */
   function __construct(DataItem $component_data) {
-    dump("CONSTRUCT!");
-    dump(static::class);
-    dump($component_data->export());
+    // dump("CONSTRUCT!");
+    // dump(static::class);
+    // dump($component_data->export());
     $this->component_data = $component_data;
 
     // Set the type. This is the short class name without the numeric version
