@@ -23,7 +23,9 @@ trait DataItemArrayAccessTrait {
     else {
       // Provide more detail if MTB throws an Exception.
       try {
-        return $this->value[$offset]->value;
+        // We need to access the offset as a property so that magic __get() is
+        // invoked and things like defaults are applied.
+        return $this->{$offset}->value;
       }
       catch (\Exception $e) {
         dump($this->export());
