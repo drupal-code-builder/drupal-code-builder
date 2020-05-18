@@ -114,7 +114,7 @@ class Plugin extends PHPClassFileWithInjection {
               ->setLabel('Plugin ID')
               ->setRequired(TRUE),
               // ->setProcessing(static::class . '::processingPluginName'),
-            'plugin_class_name' => PropertyDefinition::create('string')
+            'plain_class_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin class name')
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
