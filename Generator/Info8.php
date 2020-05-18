@@ -53,8 +53,8 @@ class Info8 extends Info {
     $files = array_shift($args);
 
     $module_data = $this->component_data;
-    dump("FILE BODY");
-    dump($module_data->export());
+    // dump("FILE BODY");
+    // dump($module_data->export());
 
     $lines = $this->getInfoFileEmptyLines();
     $lines['name'] = $module_data->readable_name->value;
@@ -77,7 +77,7 @@ class Info8 extends Info {
     if (!empty($this->extraLines)) {
       $lines = array_merge($lines, $this->extraLines);
     }
-    dump($lines);
+    // dump($lines);
 
     $lines = array_filter($lines);
 
