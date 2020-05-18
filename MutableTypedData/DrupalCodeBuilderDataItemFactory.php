@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\MutableTypedData;
 
+use DrupalCodeBuilder\ExpressionLanguage\ArrayOperationsExpressionLanguageProvider;
 use DrupalCodeBuilder\ExpressionLanguage\ChangeCaseExpressionLanguageProvider;
 use DrupalCodeBuilder\MutableTypedData\Data\ComplexDataWithArrayAccess;
 use DrupalCodeBuilder\MutableTypedData\Data\MutableDataWithArrayAccess;
@@ -43,6 +44,9 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   static protected $expressionLanguageProviders = [
     DataAddressLanguageProvider::class,
     ChangeCaseExpressionLanguageProvider::class,
+    // This is only for internal defaults; UIs are not expected to support it.
+    // TODO: find a way to segregate this.
+    ArrayOperationsExpressionLanguageProvider::class
   ];
 
 }
