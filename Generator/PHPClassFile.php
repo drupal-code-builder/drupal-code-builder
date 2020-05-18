@@ -16,67 +16,136 @@ class PHPClassFile extends PHPFile {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'relative_class_name' => [
-        // E.g. ['Form', 'MyFormClass']
-        'label' => 'The qualifed classname pieces, relative to the module namespace.',
-        'format' => 'array',
-        'internal' => TRUE,
-      ],
-      // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
-      'qualified_class_name_pieces' => PropertyDefinition::create('string')
-        ->setRequired(TRUE)
-        ->setMultiple(TRUE)
+      // The class name properties all form an interdependent set.
+      // Typically, UIs will allow users to specify either:
+      //  - the plain class name, such as for entity classes or plugins, where
+      //    the namespace is fixed.
+      // - the relative class name, such as for services where the user might
+      //   with to put the service within a separate namespace.
+      // Internally, we typically specify the relative class name, as a mapping
+      // value rather than a string for easier manipulation.
+      // The chain of dependencies of defaults goes either:
+      /*  A. - plain_class_name -- this means it's top-level in the module namespace, OR
+              has a fixed relative namespace that comes from the generator
+            - relative_namespace - fixed. literal default may be overridden.
+            -> relative_class_name_pieces = array_append(relative_namespace_pieces, plain_class_name)
+            -> relative_class_name - implode relative_class_name_pieces
+            -> qualified_class_name_pieces - why do we need this again???
+               we only need relative_namespace_pieces to derive the path!
+            -> qualified_class_name
+         B. - relative_class_name -- such as service, controller, etc.
+            -> plain_class_name -- substring relative_class_name -- CAN'T go via relative_class_name_pieces -- circularity!
+            -> relative_class_name_pieces = relative_namespace ~ plain_class_name)
+            -> relative_namespace - from relative_class_name
+            -> qualified_class_name_pieces
+            -> qualified_class_name
+
+
+
+      */
+      // One and only one of relative_class_name and plain_class_name must be
+      // exposed; the other must be set internal.
+      'relative_class_name' => PropertyDefinition::create('string')
+        ->setLabel('The qualifed class name, relative to the module namespace, e.g. "Controller\MyController"')
         ->setDefault(DefaultDefinition::create()
-          ->setExpression("arrayAppend(['Drupal', '%module], 'parent.relative_class_name.value')")
+          // TODO: replace get() with ->value -- why not working??
+          // TODO: do we need a \ in the splice?
+          ->setExpression('relativeClassName(parent.relative_namespace.get(), parent.plain_class_name.get())')
+          ->setLazy(TRUE)
+          ->setDependencies('..:plain_class_name')
+      ),
+      'plain_class_name' => PropertyDefinition::create('string')
+        ->setLabel('The plain class name, e.g. "MyClass"')
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("plainClassNameFromQualified(parent.relative_class_name.get())")
+          ->setLazy(TRUE)
+          ->setDependencies('..:relative_class_name')
+      ),
+      // Child classes that expose 'plain_class_name' must set a non-lazy
+      // literal default for this.
+      // Should not start or end with a backslash.
+      'relative_namespace' => PropertyDefinition::create('string')
+        ->setDefault(DefaultDefinition::create()
+          ->setLiteral('')
+      ),
+      // E.g. ['Form', 'MyFormClass']
+      'relative_class_name_pieces' => PropertyDefinition::create('mapping')
+        ->setLabel('The qualifed classname pieces, relative to the module namespace')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+        // plain_class_name + relative_namespace
+          ->setExpression('explode("\\\\", parent.relative_class_name.get())')
+          ->setLazy(TRUE)
+          ->setDependencies('..:relative_class_name')
+      ),
+      // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
+      'qualified_class_name_pieces' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          // ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
+          ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
+          ->setLazy(TRUE)
           ->setDependencies('..:relative_class_name')
       ),
       // E.g. 'Drupal\my_module\Form\MyFormClass'
-      'qualified_class_name' => [
-        'computed' => TRUE,
-        'format' => 'string',
-        'default' => function($component_data) {
-          $class_name_pieces = array_merge([
-            'Drupal',
-            '%module',
-          ], $component_data['relative_class_name']);
+      'qualified_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("implode('\\\\', parent.qualified_class_name_pieces.get())")
+          ->setLazy(TRUE)
+          ->setDependencies('..:qualified_class_name_pieces')
+      ),
 
-          return self::makeQualifiedClassName($class_name_pieces);
-        },
-      ],
-      // This comes after the relative classname, since internally we usually
-      // want to specify that rather than this.
-      // For UIs though, it'll be the other way round: the user is asked the
-      // short class name, and other things should be derived from it. To do
-      // this, subclasses should add a property ahead of all these, and then
-      // derive relative_class_name.
-      'plain_class_name' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return end($component_data['qualified_class_name_pieces']);
-        },
-      ],
-      // The namespace, without the inital '\'.
-      'namespace' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          $qualified_class_name_pieces = $component_data['qualified_class_name_pieces'];
-          array_pop($qualified_class_name_pieces);
 
-          return implode('\\', $qualified_class_name_pieces);
-        },
-      ],
-      'path' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          // Lop off the initial Drupal\module and the final class name to
-          // build the path.
-          $path_pieces = array_slice($component_data['qualified_class_name_pieces'], 2, -1);
-          // Add the initial src to the front.
-          array_unshift($path_pieces, 'src');
 
-          return implode('/', $path_pieces);
-        },
-      ],
+      // [
+      //   'computed' => TRUE,
+      //   'format' => 'string',
+      //   'default' => function($component_data) {
+      //     $class_name_pieces = array_merge([
+      //       'Drupal',
+      //       '%module',
+      //     ], $component_data['relative_class_name']);
+
+      //     return self::makeQualifiedClassName($class_name_pieces);
+      //   },
+      // ],
+      // // This comes after the relative classname, since internally we usually
+      // // want to specify that rather than this.
+      // // For UIs though, it'll be the other way round: the user is asked the
+      // // short class name, and other things should be derived from it. To do
+      // // this, subclasses should add a property ahead of all these, and then
+      // // derive relative_class_name.
+      // 'plain_class_name' => [
+      //   'computed' => TRUE,
+      //   'default' => function($component_data) {
+      //     return end($component_data['qualified_class_name_pieces']);
+      //   },
+      // ],
+      // // The namespace, without the inital '\'.
+      // 'namespace' => [
+      //   'computed' => TRUE,
+      //   'default' => function($component_data) {
+      //     $qualified_class_name_pieces = $component_data['qualified_class_name_pieces'];
+      //     array_pop($qualified_class_name_pieces);
+
+      //     return implode('\\', $qualified_class_name_pieces);
+      //   },
+      // ],
+      // 'path' => [
+      //   'computed' => TRUE,
+      //   'default' => function($component_data) {
+      //     // Lop off the initial Drupal\module and the final class name to
+      //     // build the path.
+      //     $path_pieces = array_slice($component_data['qualified_class_name_pieces'], 2, -1);
+      //     // Add the initial src to the front.
+      //     array_unshift($path_pieces, 'src');
+
+      //     return implode('/', $path_pieces);
+      //   },
+      // ],
       // Deprecated: use class_docblock_lines instead.
       'docblock_first_line' => [
         'format' => 'string',
@@ -128,6 +197,7 @@ class PHPClassFile extends PHPFile {
    * Subclasses should override this to add their file data to the list.
    */
   public function getFileInfo() {
+    // dump($this->component_data->plain_class_name);
     return array(
       'path' => $this->component_data['path'],
       'filename' => $this->component_data['plain_class_name'] . '.php',
