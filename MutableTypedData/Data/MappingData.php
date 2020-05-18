@@ -28,8 +28,17 @@ class MappingData extends DataItem {
   /**
    * {@inheritdoc}
    */
+  public function set($value) {
+    $this->value = $value;
+
+    parent::set($value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isEmpty() :bool {
-    return is_empty($this->value);
+    return empty($this->value);
   }
 
 }
