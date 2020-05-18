@@ -88,6 +88,14 @@ class PHPClassFile extends PHPFile {
           ->setLazy(TRUE)
           ->setDependencies('..:relative_class_name')
       ),
+      'namespace' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("namespaceFromPieces(parent.qualified_class_name_pieces.get())")
+          ->setLazy(TRUE)
+          ->setDependencies('..:qualified_class_name_pieces')
+      ),
       // E.g. 'Drupal\my_module\Form\MyFormClass'
       'qualified_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
@@ -97,6 +105,16 @@ class PHPClassFile extends PHPFile {
           ->setLazy(TRUE)
           ->setDependencies('..:qualified_class_name_pieces')
       ),
+      'path' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("pathFromQualifiedClassNamePieces(parent.qualified_class_name_pieces.get())")
+            ->setLazy(TRUE)
+            ->setDependencies('..:qualified_class_name_pieces')
+        ),
+
 
 
 
