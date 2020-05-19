@@ -65,6 +65,7 @@ class PHPClassFile extends PHPFile {
       // literal default for this.
       // Should not start or end with a backslash.
       'relative_namespace' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setLiteral('')
       ),
