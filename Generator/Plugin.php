@@ -110,6 +110,13 @@ class Plugin extends PHPClassFileWithInjection {
         'annotation' => VariantDefinition::create()
           ->setLabel('Annotation plugin')
           ->setProperties([
+            'plugin_type_data' => PropertyDefinition::create('mapping')
+              ->setInternal(TRUE)
+              ->setDefault(
+                DefaultDefinition::create()
+                  ->setLazy(TRUE)
+                  ->setCallable([static::class, 'defaultPluginTypeData'])
+              ),
             'plugin_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin ID')
               ->setRequired(TRUE),
@@ -121,11 +128,17 @@ class Plugin extends PHPClassFileWithInjection {
                 ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
                 ->setDependencies('..:plugin_name')
               ),
-              'injected_services' => PropertyDefinition::create('string')
-                ->setLabel('Injected services')
-                ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-                ->setMultiple(TRUE)
-                ->setOptionsArray($services_data_task->listServiceNamesOptionsAll())
+            'relative_namespace' => PropertyDefinition::create('string')
+              ->setDefault(
+                DefaultDefinition::create()
+                  ->setLazy(TRUE)
+                  ->setCallable([static::class, 'defaultRelativeNamespace'])
+              ),
+            'injected_services' => PropertyDefinition::create('string')
+              ->setLabel('Injected services')
+              ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+              ->setMultiple(TRUE)
+              ->setOptionsArray($services_data_task->listServiceNamesOptionsAll())
             ]
             + $parent_definition->getProperties()
           ),
@@ -142,6 +155,20 @@ class Plugin extends PHPClassFileWithInjection {
       ]);
 
     return $definition;
+  }
+
+  public static function defaultPluginTypeData($data_item) {
+    $plugin_type = $data_item->getParent()->plugin_type->value;
+
+    $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
+    $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
+
+    return $plugin_types_data[$plugin_type];
+  }
+
+  public static function defaultRelativeNamespace($data_item) {
+    $subdir = $data_item->getParent()->plugin_type_data->value['subdir'];
+    return implode('\\', self::pathToNamespacePieces($subdir));
   }
 
   public static function processingPluginName($data_item) {
