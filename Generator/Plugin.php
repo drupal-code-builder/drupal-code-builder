@@ -120,7 +120,15 @@ class Plugin extends PHPClassFileWithInjection {
             'plugin_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin ID')
               ->setRequired(TRUE),
-              // ->setProcessing(static::class . '::processingPluginName'),
+            'prefixed_plugin_name' => PropertyDefinition::create('string')
+              ->setInternal(TRUE)
+              ->setRequired(TRUE)
+              ->setDefault(
+                DefaultDefinition::create()
+                  ->setCallable([static::class, 'processingPluginName'])
+                  ->setLazy(TRUE)
+                  ->setDependencies('..:plugin_name')
+              ),
             'plain_class_name' => PropertyDefinition::create('string')
               ->setLabel('Plugin class name')
               ->setRequired(TRUE)
@@ -172,21 +180,23 @@ class Plugin extends PHPClassFileWithInjection {
   }
 
   public static function processingPluginName($data_item) {
-    return;
+    dump(__FUNCTION__);
+    $plugin_name = $data_item->getParent()->plugin_name->value;
+
     // Prepend the module name.
-    if (strpos($value, ':') !== FALSE) {
+    if (strpos($plugin_name, ':') !== FALSE) {
       // Don't if the plugin ID is a derivative.
-      return;
+      return $plugin_name;
     }
 
-    $module_name = $component_data['root_component_name'];
+    $module_name = $data_item->getParent()->root_component_name->value;
 
-    if (strpos($value, $module_name . '_') === 0) {
+    if (strpos($plugin_name, $module_name . '_') === 0) {
       // Don't if the plugin ID already has the module name as a prefix.
       return;
     }
 
-    $component_data['plugin_name'] = $module_name . '_' . $component_data['plugin_name'];
+    return $module_name . '_' . $plugin_name;
   }
 
   /**
@@ -380,7 +390,7 @@ class Plugin extends PHPClassFileWithInjection {
 
     if (!empty($this->plugin_type_data['config_schema_prefix'])) {
       $schema_id = $this->plugin_type_data['config_schema_prefix']
-        . $this->component_data['plugin_name'];
+        . $this->component_data['prefixed_plugin_name'];
 
       // TODO: wrap this up!
       // $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
@@ -391,7 +401,7 @@ class Plugin extends PHPClassFileWithInjection {
       $data->yaml_data->set([
         $schema_id => [
           'type' => 'mapping',
-          'label' => $this->component_data['plugin_name'],
+          'label' => $this->component_data['prefixed_plugin_name'],
           'mapping' => [],
         ],
       ]);
@@ -478,7 +488,7 @@ class Plugin extends PHPClassFileWithInjection {
 
     // Special case: annotation that's just the plugin ID.
     if (!empty($this->plugin_type_data['annotation_id_only'])) {
-      $annotation = ClassAnnotation::{$annotation_class}($this->component_data['plugin_name']);
+      $annotation = ClassAnnotation::{$annotation_class}($this->component_data['prefixed_plugin_name']);
 
       $annotation_lines = $annotation->render();
 
@@ -490,7 +500,7 @@ class Plugin extends PHPClassFileWithInjection {
     $annotation_data = [];
     foreach ($annotation_variables as $annotation_variable => $annotation_variable_info) {
       if ($annotation_variable == 'id') {
-        $annotation_data['id'] = $this->component_data['plugin_name'];
+        $annotation_data['id'] = $this->component_data['prefixed_plugin_name'];
         continue;
       }
 
