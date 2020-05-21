@@ -80,6 +80,7 @@ abstract class TestBase extends TestCase {
    */
   protected function generateComponentFilesFromData(DataItem $component_data) {
     $component_data->validate();
+
     $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $component_data->base->value);
     $files = $task_handler_generate->generateComponent($component_data);
     return $files;
@@ -95,10 +96,11 @@ abstract class TestBase extends TestCase {
    *  An array of files.
    */
   protected function generateModuleFiles($module_data) {
-    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-    $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
+    $component_data = $this->getRootComponentBlankData('module');
 
-    $files = $mb_task_handler_generate->generateComponent($module_data);
+    $component_data->set($module_data);
+
+    $files = $this->generateComponentFilesFromData($component_data);
 
     return $files;
   }
