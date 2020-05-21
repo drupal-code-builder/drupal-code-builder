@@ -155,7 +155,7 @@ class ComponentCollector {
     // name of the Drupal extension.
     $this->getComponentsFromData($component_data, NULL);
 
-    // dump($this->component_collection->dumpStructure());
+    // $this->component_collection->dumpStructure();
 
     return $this->component_collection;
   }
@@ -222,7 +222,7 @@ class ComponentCollector {
     $this->acquireDataFromRequestingComponent($component_data, $requesting_component);
 
     // Process the component's data.
-    dump("GOING TO MAKE $component_type with this data:");
+    // dump("GOING TO MAKE $component_type with this data:");
     // dump($component_data->export());
     // dump(array_keys($component_data->getProperties()));
     // TODO: restore!
@@ -289,7 +289,7 @@ class ComponentCollector {
         continue;
       }
 
-      dump("YES spawn $name?");
+      // dump("YES spawn $name?");
 
       // Get the component type.
       // TODO: mutable types might have different component type per variant!!
@@ -391,9 +391,9 @@ class ComponentCollector {
       // Validate so defaults are filled in.
       $required_item_data->validate();
 
-      dump("VALIDATE!");
-      dump($required_item_data->export());
-      dump(array_keys($required_item_data->getProperties()));
+      // dump("VALIDATE!");
+      // dump($required_item_data->export());
+      // dump(array_keys($required_item_data->getProperties()));
 
 
       // Guard against a clash of required item key.
@@ -405,7 +405,7 @@ class ComponentCollector {
 
       $local_names[$required_item_name] = TRUE;
 
-      dump($required_item_data);
+      // dump($required_item_data);
 
       $main_required_component = $this->getComponentsFromData($required_item_data, $generator);
       $required_components[$required_item_name] = $main_required_component;
@@ -466,10 +466,10 @@ class ComponentCollector {
 
       $expression = $property_info->getAcquiringExpression();
       $add = $component_data->getAddress();
-      dump("ACQUIRING for $add - $property_name on with '$expression'");
+      // dump("ACQUIRING for $add - $property_name on with '$expression'");
       // dump($expression);
       // dump($requesting_component->component_data->export());
-      dump(get_class($requesting_component->component_data));
+      // dump(get_class($requesting_component->component_data));
 
       try {
         $acquired_value = $this->acquisitionExpressionLanguage->evaluate($expression, [
