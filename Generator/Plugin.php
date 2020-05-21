@@ -137,6 +137,7 @@ class Plugin extends PHPClassFileWithInjection {
                 ->setDependencies('..:plugin_name')
               ),
             'relative_namespace' => PropertyDefinition::create('string')
+              ->setInternal(TRUE)
               ->setDefault(
                 DefaultDefinition::create()
                   ->setLazy(TRUE)
@@ -146,9 +147,15 @@ class Plugin extends PHPClassFileWithInjection {
               ->setLabel('Injected services')
               ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
               ->setMultiple(TRUE)
-              ->setOptionsArray($services_data_task->listServiceNamesOptionsAll())
-            ]
-            + $parent_definition->getProperties()
+              ->setOptionsArray($services_data_task->listServiceNamesOptionsAll()),
+            'class_docblock_lines' => PropertyDefinition::create('mapping')
+              ->setInternal(TRUE)
+              ->setDefault(
+                DefaultDefinition::create()
+                  ->setLiteral(['TODO: class docs.'])
+              ),
+          ]
+          + $parent_definition->getProperties()
           ),
         'yaml' => VariantDefinition::create()
           ->setLabel('YAML plugin')
@@ -179,8 +186,10 @@ class Plugin extends PHPClassFileWithInjection {
     return implode('\\', self::pathToNamespacePieces($subdir));
   }
 
+  /**
+   * Default callback.
+   */
   public static function processingPluginName($data_item) {
-    dump(__FUNCTION__);
     $plugin_name = $data_item->getParent()->plugin_name->value;
 
     // Prepend the module name.
