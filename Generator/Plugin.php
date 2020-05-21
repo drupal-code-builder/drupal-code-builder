@@ -133,7 +133,7 @@ class Plugin extends PHPClassFileWithInjection {
               ->setLabel('Plugin class name')
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
+                ->setExpression("machineToClass(stripBefore(getChildValue(parent, 'plugin_name'), ':'))")
                 ->setDependencies('..:plugin_name')
               ),
             'relative_namespace' => PropertyDefinition::create('string')
