@@ -28,9 +28,7 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
         return CaseString::snake($str)->title();
       }),
       // Converts a machine name in snake case to a pascal case class name.
-      new ExpressionFunction('machineToClass', function ($str) {
-        return sprintf('(is_string(%1$s) ? CaseString::snake(%1$s) : %1$s)->pascal()', $str);
-      },
+      new ExpressionFunction('machineToClass', function ($str) { },
       function ($arguments, $str) {
         if (!is_string($str)) {
           return $str;
