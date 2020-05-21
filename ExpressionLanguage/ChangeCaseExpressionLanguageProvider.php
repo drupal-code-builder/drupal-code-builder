@@ -36,7 +36,15 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
 
         return CaseString::snake($str)->pascal();
       }),
+      new ExpressionFunction('stripBefore', function ($string, $marker) { },
+      function ($arguments, $string, $marker) {
+        if (strpos($string, $marker) === FALSE) {
+          return $string;
+        }
 
+        $pieces = explode($marker, $string, 2);
+        return $pieces[1];
+      })
     ];
   }
 
