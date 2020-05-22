@@ -388,6 +388,35 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
+      dump("Converting $required_item_name");
+      // Conversion to data items!
+      if (is_array($required_item_data)) {
+        $definition =  $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
+        // $definition->setMachineName($required_item_name);
+
+        unset($required_item_data['component_type']);
+
+        $required_item_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+        $required_item_data_item->set($required_item_data);
+
+        $required_item_data = $required_item_data_item;
+
+        // ARGH but the name is wrong!
+        // problem here is that MTB thinks of the name as set in the definition
+        // and unchangeable and here it's all fluffy and per-item.
+
+//         we NEED per-item because:
+
+//         "Converting %module.permissions.yml"
+// "STARTING getComponentsFromData with ymlfile ymlfile requested by module:permissions:0"
+// "adding 252 with local name ymlfile"
+
+//         we could be adding more than one local ymlfile data item!
+      }
+
+
+
       // Validate so defaults are filled in.
       $required_item_data->validate();
 
