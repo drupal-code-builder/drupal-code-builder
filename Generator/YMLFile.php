@@ -70,7 +70,7 @@ class YMLFile extends File {
     if (!empty($yaml_data)) {
       // Only zap this if children provide something, as other components still
       // set this property by request.
-      $this->component_data['yaml_data'] = $yaml_data;
+      $this->component_data->yaml_data->set($yaml_data);
     }
 
     return array();
