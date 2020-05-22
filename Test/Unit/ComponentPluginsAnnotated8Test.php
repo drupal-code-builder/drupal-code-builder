@@ -30,7 +30,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $component_data->plugins[0]->plugin_type = 'block';
     $component_data->plugins[0]->plugin_name = 'my_block';
     // Instantiate to set the default.
-    $component_data->plugins[0]->plugin_class_name;
+    $component_data->plugins[0]->plain_class_name;
 
     // dump($component_data);
 
@@ -116,7 +116,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
         0 => [
           'plugin_type' => 'block',
           'plugin_name' => 'alpha',
-          'plugin_class_name' => 'OtherClassName',
+          'plain_class_name' => 'OtherClassName',
         ],
       ),
       'readme' => FALSE,
