@@ -280,6 +280,14 @@ abstract class BaseGenerator {
             // ->setDependencies('..:plugin_name')
           );
         }
+        elseif (is_callable($def['default'])) {
+          dump($definition);
+          throw new \Exception(sprintf(
+            "Array info callable default needs to be converted at property '%s' of %s.",
+            $name,
+            $definition->getComponentType()
+        ));
+        }
       }
 
       /*
