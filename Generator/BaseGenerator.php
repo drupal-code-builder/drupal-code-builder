@@ -153,7 +153,7 @@ abstract class BaseGenerator {
   }
 
   // TODO: need way to not show internals to UIs!!
-  public static function getPropertyDefinition() :PropertyDefinition {
+  public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $type = static::deriveType(static::class);
@@ -162,7 +162,7 @@ abstract class BaseGenerator {
     $array_property_info = $generate_task->getComponentDataInfo($type, TRUE);
     // dump($array_property_info);
 
-    $definition = GeneratorDefinition::createFromGeneratorType($type);
+    $definition = GeneratorDefinition::createFromGeneratorType($type, $data_type);
 
     static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
 
@@ -209,16 +209,27 @@ abstract class BaseGenerator {
         'format' => 'string',
       );
 
-      if (isset($def['component_type']) && $def['format'] == 'compound') {
+      if (isset($def['component_type'])) {
         // Argh, need to instantiate the class handler outside of the Generate
         // task... time for a proper service architecture?
         $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
         $generator_class = $class_handler->getGeneratorClass($def['component_type']);
 
-        $property_definition = $generator_class::getPropertyDefinition();
+        switch ($def['format']) {
+          case 'compound':
+            $data_type = 'complex';
+            break;
 
-        // ermmmm TODO really, always?
-        $converted_defs[$name] = $property_definition->setMultiple(TRUE);
+          case 'boolean':
+            $data_type = 'boolean';
+            break;
+        }
+
+        $converted_defs[$name] = $generator_class::getPropertyDefinition($data_type);
+
+        if ($def['format'] == 'compound') {
+          $converted_defs[$name]->setMultiple(TRUE);
+        }
       }
       else {
         switch ($def['format']) {

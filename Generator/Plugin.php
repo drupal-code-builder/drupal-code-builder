@@ -90,7 +90,7 @@ class Plugin extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition() :PropertyDefinition {
+  public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
     $parent_definition = PHPClassFileWithInjection::getPropertyDefinition();
     // $parent_definition
 

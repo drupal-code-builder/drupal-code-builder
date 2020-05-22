@@ -91,7 +91,7 @@ class Module extends RootComponent {
     parent::__construct($component_data);
   }
 
-  public static function getPropertyDefinition() :PropertyDefinition {
+  public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
     $definition->setLabel('Module')
