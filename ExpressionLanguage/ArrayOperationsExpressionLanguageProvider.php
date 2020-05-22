@@ -67,7 +67,7 @@ class ArrayOperationsExpressionLanguageProvider implements ExpressionFunctionPro
           $path_pieces = array_slice($qualified_class_name_pieces, 2, -1);
           // Add the initial src to the front.
           array_unshift($path_pieces, 'src');
-          dump($path_pieces);
+          // dump($path_pieces);
           // crash();
 
           return implode('/', $path_pieces);
