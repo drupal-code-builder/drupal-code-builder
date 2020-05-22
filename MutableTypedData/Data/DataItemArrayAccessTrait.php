@@ -37,11 +37,19 @@ trait DataItemArrayAccessTrait {
   }
 
   public function offsetSet($offset, $value) {
-    throw new \Exception("Attempt to set array key $offset.");
+    throw new \Exception(sprintf(
+      "Attempt to set array key %s at %s.",
+      $offset,
+      $this->getAddress()
+    ));
   }
 
   public function offsetUnset($offset) {
-    throw new \Exception("Attempt to unset array key $offset.");
+    throw new \Exception(sprintf(
+      "Attempt to unset array key %s at %s.",
+      $offset,
+      $this->getAddress()
+    ));
   }
 
 }
