@@ -272,7 +272,8 @@ abstract class BaseGenerator {
       }
 
       if (isset($def['default'])) {
-        if (is_string($def['default'])) {
+        // String and numeric defaults are literal values.
+        if (is_scalar($def['default'])) {
           $converted_defs[$name]->setDefault(DefaultDefinition::create()
             ->setLiteral($def['default'])
             // TODO
