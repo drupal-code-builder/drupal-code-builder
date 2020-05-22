@@ -8,6 +8,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * Provides Expression Language custom functions for changing case.
+ *
+ * TODO: rename this so it's about common front-end/backend functions.
+ *
+ * TODO: implement compiling, as these get used LOTS!
  */
 class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
 
