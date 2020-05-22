@@ -51,9 +51,7 @@ abstract class RootComponent extends BaseGenerator {
     // inherited.
     $component_data_definition['component_base_path'] = [
       'computed' => TRUE,
-      'default' => function($component_data) {
-        return '';
-      },
+      'default' => '',
     ];
 
     return $component_data_definition;

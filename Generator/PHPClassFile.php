@@ -169,9 +169,7 @@ class PHPClassFile extends PHPFile {
       'docblock_first_line' => [
         'format' => 'string',
         'internal' => TRUE,
-        'default' => function($component_data) {
-          return 'TODO: class docs.';
-        },
+        'default' => 'TODO: class docs.',
       ],
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically

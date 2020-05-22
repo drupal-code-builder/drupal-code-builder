@@ -7,6 +7,7 @@ use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Component generator: module.
@@ -131,14 +132,14 @@ class Module extends RootComponent {
         'default' => 'my_module',
         'required' => TRUE,
       ),
-      'readable_name' => array(
-        'label' => 'Module readable name',
-        'default' => function($component_data) {
-          return ucwords(str_replace('_', ' ', $component_data['root_name']));
-        },
-        'required' => TRUE,
-        'process_default' => TRUE,
-      ),
+      'readable_name' => PropertyDefinition::create('string')
+        ->setLabel('Module readable name')
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(getChildValue(parent, 'root_name'))")
+            ->setDependencies('..:root_name')
+        ),
       'short_description' => array(
         'label' => 'Module .info file description',
         'default' => 'TODO: Description of module',
@@ -406,16 +407,16 @@ class Module extends RootComponent {
       //'hooks' => 'init',
       //'router_items' => 'path/foo path/bar',
       // The following properties shouldn't be offered as UI options.
-      'camel_case_name' =>  array(
-        // Indicates that this does not need to be obtained from the user, as it
-        // is computed from other properties.
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          $pieces = explode('_', $component_data['root_name']);
-          $pieces = array_map('ucfirst', $pieces);
-          return implode('', $pieces);
-        },
-      ),
+      'camel_case_name' => PropertyDefinition::create('string')
+        ->setLabel('Permission human-readable name. If omitted, this is derived from the machine name')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToClass(getChildValue(parent, 'root_name'))")
+            ->setLazy(TRUE)
+            ->setDependencies('..:root_name')
+        ),
     ];
 
     return $component_data_definition;
