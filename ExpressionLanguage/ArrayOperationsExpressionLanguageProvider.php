@@ -9,6 +9,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * Provides Expression Language custom functions for acquired data expressions.
+ *
+ * TODO RENAME THIS so it's backend-only EL functions
+ *
+ * TODO WTF are all these AfromB? makes no fucking sense!! AtoB surely!
  */
 class ArrayOperationsExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
 
