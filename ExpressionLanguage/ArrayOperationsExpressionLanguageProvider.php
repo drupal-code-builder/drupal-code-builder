@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\ExpressionLanguage;
 
+use CaseConverter\CaseString;
 use MutableTypedData\Data\DataItem;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
@@ -83,6 +84,15 @@ class ArrayOperationsExpressionLanguageProvider implements ExpressionFunctionPro
           return implode('\\', $path_pieces);
         }
       ),
+      new ExpressionFunction(
+        'machineFromPlainClassName',
+        function (string $plain_classname) {
+        },
+        function ($arguments, string $plain_classname) {
+          return CaseString::pascal($plain_classname)->snake();
+        }
+      ),
+      //
     ];
   }
 
