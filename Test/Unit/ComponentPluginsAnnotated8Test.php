@@ -161,12 +161,12 @@ class ComponentPluginsAnnotated8Test extends TestBase {
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
-    $file_names = array_keys($files);
 
-    $this->assertCount(3, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
-    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a schema file.");
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "config/schema/test_module.schema.yml",
+      "src/Plugin/Block/Alpha.php",
+    ], $files);
 
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
