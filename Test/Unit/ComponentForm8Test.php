@@ -31,7 +31,7 @@ class ComponentForm8Test extends TestBase {
       'short_description' => 'Test Module description',
       'forms' => array(
         0 => [
-          'form_class_name' => 'MyForm',
+          'plain_class_name' => 'MyForm',
           'injected_services' => [],
         ],
       ),
