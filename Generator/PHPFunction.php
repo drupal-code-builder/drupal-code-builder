@@ -62,6 +62,7 @@ class PHPFunction extends BaseGenerator {
         'internal' => TRUE,
       ],
       'body' => [
+        'format' => 'array',
         'internal' => TRUE,
       ],
       // Whether code lines in the 'body' property are already indented relative
