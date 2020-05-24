@@ -268,6 +268,10 @@ abstract class BaseGenerator {
         }
       }
 
+      if (empty($converted_defs[$name])) {
+        throw new \Exception("Failed to convert property $name.");
+      }
+
       if (!empty($def['computed'])) {
         $converted_defs[$name]->setInternal(TRUE);
       }
