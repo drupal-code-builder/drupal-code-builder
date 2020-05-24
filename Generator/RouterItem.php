@@ -163,14 +163,13 @@ class RouterItem extends BaseGenerator {
 
     // Add a controller class if needed.
     if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == 'controller') {
-      $controller_class_component_name = implode('\\', $controller_relative_class);
-      $components[$controller_class_component_name] = array(
+      $components['controller'] = array(
         'component_type' => 'PHPClassFile',
         'relative_class_name' => $controller_relative_class,
       );
-      $components["{$controller_class_component_name}:content"] = [
+      $components["controller:content"] = [
         'component_type' => 'PHPFunction',
-        'containing_component' => "%requester:{$controller_class_component_name}",
+        'containing_component' => "%requester:controller",
         'declaration' => 'public function content()',
         'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
       ];
