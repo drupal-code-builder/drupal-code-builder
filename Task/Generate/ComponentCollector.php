@@ -289,11 +289,22 @@ class ComponentCollector {
         continue;
       }
 
+      $item_component_type = $data_item->getComponentType();
+      if ($data_item->getType() == 'boolean') {
+        // Filthy hack.
+        // This is because on the one hand, a boolean property is just a boolean
+        // because that's what the UI needs, but the component itself has
+        // various properties that it expects to acquire.
+        $definition =  $this->classHandler->getComponentPropertyDefinition($item_component_type, $name);
+        $data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+        dump("switcheroo data item for boolean $name.");
+      }
+
       // dump("YES spawn $name?");
 
       // Get the component type.
       // TODO: mutable types might have different component type per variant!!
-      $item_component_type = $data_item->getComponentType();
 
       if ($data_item->isMultiple()) {
         foreach ($data_item as $delta_item) {
