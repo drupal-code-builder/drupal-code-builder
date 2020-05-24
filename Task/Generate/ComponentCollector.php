@@ -161,7 +161,7 @@ class ComponentCollector {
   }
 
   /**
-   * Create components from a data array.
+   * Create components from a data item.
    *
    * Provided this data does not duplicate already created components, the
    * populates the $this->component_collection property with:
