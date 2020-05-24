@@ -286,11 +286,17 @@ class ComponentCollector {
       }
 
       if ($data_item->isEmpty()) {
+        dump("not spawning $name - data is empty.");
         continue;
       }
 
       $item_component_type = $data_item->getComponentType();
       if ($data_item->getType() == 'boolean') {
+        if (!$data_item->value) {
+          dump("not spawning $name - boolean FALSE.");
+          continue;
+        }
+
         // Filthy hack.
         // This is because on the one hand, a boolean property is just a boolean
         // because that's what the UI needs, but the component itself has
