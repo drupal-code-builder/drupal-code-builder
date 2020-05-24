@@ -209,7 +209,7 @@ abstract class BaseGenerator {
         'format' => 'string',
       );
 
-      if (isset($def['component_type'])) {
+      if (isset($def['component_type']) && $def['format'] == 'compound') {
         // Argh, need to instantiate the class handler outside of the Generate
         // task... time for a proper service architecture?
         $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
@@ -220,16 +220,16 @@ abstract class BaseGenerator {
             $data_type = 'complex';
             break;
 
-          case 'boolean':
-            $data_type = 'boolean';
-            break;
+          // case 'boolean':
+          //   $data_type = 'boolean';
+          //   break;
         }
 
         $converted_defs[$name] = $generator_class::getPropertyDefinition($data_type);
 
-        if ($def['format'] == 'compound') {
-          $converted_defs[$name]->setMultiple(TRUE);
-        }
+        $converted_defs[$name]->setMultiple(TRUE);
+        // if ($def['format'] == 'compound') {
+        // }
       }
       else {
         switch ($def['format']) {
@@ -253,7 +253,13 @@ abstract class BaseGenerator {
             break;
 
           case 'boolean':
-            $converted_defs[$name] = PropertyDefinition::create('boolean');
+            // ! argh might be a generator!!
+            if (isset($def['component_type'])) {
+              $converted_defs[$name] = GeneratorDefinition::createFromGeneratorType($def['component_type'], 'boolean');
+            }
+            else {
+              $converted_defs[$name] = PropertyDefinition::create('boolean');
+            }
             break;
 
           default:
