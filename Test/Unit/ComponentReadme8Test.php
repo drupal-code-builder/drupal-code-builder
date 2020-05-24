@@ -29,9 +29,6 @@ class ComponentReadme8Test extends TestBase {
       'readme' => TRUE,
     );
     $files = $this->generateModuleFiles($module_data);
-    $file_names = array_keys($files);
-
-    $this->assertCount(2, $files, "One file is returned.");
 
     $this->assertFiles([
       'test_module.info.yml',
