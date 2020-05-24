@@ -21,9 +21,9 @@ abstract class Tests extends BaseEnvironment {
    */
   public function debug($data, $message = '') {
     if (!empty($message)) {
-      print_r($message . ':');
+      dump($message . ':');
     }
-    print_r($data);
+    dump($data);
   }
 
 }
