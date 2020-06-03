@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\StringAssembler;
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for a service.
@@ -83,7 +85,7 @@ class Service extends PHPClassFileWithInjection {
         'presets' => $presets,
         // These are for the benefit of tests, as UIs will pass in an empty
         // value.
-        'default' => '',
+        // 'default' => '',
         'process_default' => TRUE,
       ],
       'service_name' => array(
@@ -91,12 +93,15 @@ class Service extends PHPClassFileWithInjection {
         'description' => "The name of the service, without the module name prefix.",
         'required' => TRUE,
       ),
-      'prefixed_service_name' => [
-        'internal' => TRUE,
-        'default' => function($component_data) {
-          return $component_data['root_component_name'] . '.' . $component_data['service_name'];
-        },
-      ],
+      'prefixed_service_name' => PropertyDefinition::create('string')
+        ->setLabel('The plain class name, e.g. "MyClass"')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("parent.root_component_name.get() ~ '.' ~ parent.service_name.get()")
+            ->setLazy(TRUE)
+            ->setDependencies('..:root_component_name')
+        ),
       'injected_services' => array(
         'label' => 'Injected services',
         'format' => 'array',
@@ -109,20 +114,6 @@ class Service extends PHPClassFileWithInjection {
         },
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
-      'service_class_name' => [
-        'computed' => TRUE,
-        'format' => 'string',
-        'default' => function($component_data) {
-          // The service name is its ID as a service.
-          // implode and ucfirst()
-          $service_id = $component_data['service_name'];
-          $service_id_pieces = preg_split('/[\._]/', $service_id);
-          // Create an unqualified class name by turning this into pascal case.
-          $plain_class_name = (new \CaseConverter\StringAssembler($service_id_pieces))->pascal();
-
-          return $plain_class_name;
-        },
-      ],
       'tags' => [
         'internal' => TRUE,
         'format' => 'compound',
@@ -149,21 +140,35 @@ class Service extends PHPClassFileWithInjection {
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    // Take the relative class name from the service class name.
-    $data_definition['relative_class_name']['default'] = function($component_data) {
-      // Services are typically in the module's top namespace.
-      $service_class_name = $component_data['service_class_name'];
+    $data_definition['plain_class_name']->getDefault()
+      ->setCallable([static::class, 'defaultPlainClassName']);
 
-      // Quick hack!
-      // TODO remove once the processor system is done.
-      if ($component_data['service_tag_type'] == 'event_subscriber') {
-        return ['EventSubscriber', $service_class_name];
-      }
-
-      return [$service_class_name];
-    };
+    $data_definition['relative_namespace']->getDefault()
+      ->setCallable([static::class, 'defaultRelativeNamespace']);
 
     return $data_definition;
+  }
+
+  public static function defaultPlainClassName($data_item) {
+    // The service name is its ID as a service.
+    // implode and ucfirst()
+    $service_id = $data_item->getParent()->service_name->value;
+    $service_id_pieces = preg_split('/[\._]/', $service_id);
+    // Create an unqualified class name by turning this into pascal case.
+    $plain_class_name = (new \CaseConverter\StringAssembler($service_id_pieces))->pascal();
+
+    return $plain_class_name;
+  }
+
+  public static function defaultRelativeNamespace($data_item) {
+    // Quick hack!
+    // TODO remove once the processor system is done.
+    if ($data_item->getParent()->service_tag_type->value == 'event_subscriber') {
+      return 'EventSubscriber';
+    }
+    else {
+      return '';
+    }
   }
 
   /**
