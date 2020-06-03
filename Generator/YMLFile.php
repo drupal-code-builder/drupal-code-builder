@@ -43,10 +43,8 @@ class YMLFile extends File {
         'default' => FALSE,
         'internal' => TRUE,
       ],
-      'inline_levels_extra' => [
-        'default' => FALSE,
-        'internal' => TRUE,
-      ],
+      'inline_levels_extra' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
     ];
   }
 
