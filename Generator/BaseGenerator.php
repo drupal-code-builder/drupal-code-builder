@@ -611,8 +611,38 @@ abstract class BaseGenerator {
    *   Boolean indicating whether any data needed to be merged: TRUE if so,
    *   FALSE if nothing was merged because all values were the same.
    */
-  public function mergeComponentData($additional_component_data) {
+  public function mergeComponentData(DataItem $additional_component_data) {
     $differences_merged = FALSE;
+
+    $component_property_definition = static::getPropertyDefinition();
+
+    foreach ($component_property_definition as $property_name => $property_definition) {
+      // Only merge array properties.
+      if (!$property_definition->isMultiple()) {
+        // Don't merge this property, but check that we're not throwing away
+        // data from the additional data.
+        assert(
+          $this->component_data[$property_name] == $additional_component_data->{$property_name}->get(),
+          "Attempted to discard request for new component, but failed on property $property_name with existing data "
+            . print_r($this->component_data, TRUE)
+            . " and new data "
+            . print_r($additional_component_data->export(), TRUE)
+        );
+
+        continue;
+      }
+
+      if ($this->component_data[$property_name] != $additional_component_data->{$property_name}->get()) {
+        $differences_merged = TRUE;
+
+        foreach ($additional_component_data->{$property_name} as $item) {
+          $this->component_data[$property_name][] = $item->export();
+        }
+      }
+    }
+
+    return;
+
 
     // Get the property info for just this component: we don't care about
     // going into compound properties.
