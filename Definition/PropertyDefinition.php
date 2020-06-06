@@ -11,6 +11,8 @@ class PropertyDefinition extends OriginalPropertyDefinition {
   // TODO: can this be done with defaults instead??
   protected $acquiringExpression = FALSE;
 
+  protected $presets = [];
+
   public function setInternal(bool $internal) :self {
     $this->internal = $internal;
 
@@ -45,6 +47,16 @@ class PropertyDefinition extends OriginalPropertyDefinition {
 
   public function getAcquiringExpression() :?string {
     return $this->acquiringExpression;
+  }
+
+  public function setPresets(array $presets) :self {
+    $this->presets = $presets;
+
+    return $this;
+  }
+
+  public function getPresets() :array {
+    return $this->presets;
   }
 
 
