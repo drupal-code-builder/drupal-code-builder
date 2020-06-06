@@ -344,6 +344,10 @@ abstract class BaseGenerator {
         }
       }
 
+      if (isset($def['presets'])) {
+        $converted_defs[$name]->setPresets($def['presets']);
+      }
+
       if ($def['required']) {
         $converted_defs[$name]->setRequired(TRUE);
       }
