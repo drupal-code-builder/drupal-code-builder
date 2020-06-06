@@ -542,14 +542,14 @@ class ComponentCollector {
    *  - sets values forced or suggested by other properties' presets.
    *  - performs additional processing that a property may require
    *
-   * @param &$component_data
-   *  The component data array. On the first call, this is the entire array; on
+   * @param DataItem $component_data
+   *  The component data. On the first call, this is the entire array; on
    *  recursive calls this is the local data subset.
-   * @param &$component_data_info
-   *  The component data info for the data being processed. Passed by reference,
-   *  to allow property processing callbacks to make changes.
    */
-  protected function processComponentData($component_data, &$component_data_info) {
+  protected function processComponentData(DataItem $component_data) {
+    $component_data->walk([$this, 'setPresetValues']);
+    return;
+
     // Work over each property.
     foreach ($component_data_info as $property_name => &$property_info) {
       // Set defaults for properties that don't have a value yet.
@@ -602,7 +602,7 @@ class ComponentCollector {
   /**
    * Sets values from a presets property into other properties.
    *
-   * @param string $property_name
+   * @param string $property_name TODO
    *  The name of the preset property.
    * @param $component_data_info
    *  The component info array, or for child properties, the info array for the
@@ -612,18 +612,42 @@ class ComponentCollector {
    *  immediately contains the property. In other words, this array would have
    *  a key $property_name if data has been supplied for this property.
    */
-  protected function setPresetValues($property_name, &$component_data_info, &$component_data_local) {
-    if (empty($component_data_local[$property_name])) {
+  public function setPresetValues(DataItem $component_data) {
+    if (!$component_data->getPresets()) {
       return;
     }
 
+    if ($component_data->isEmpty()) {
+      return;
+    }
+
+    $presets = $component_data->getPresets();
+    dump($presets);
+    dump($component_data);
+
+    // TODO: aaaaargh just do single valued for now, expand later.
+
+    // Values which are forced by the preset.
+    foreach ($presets[$component_data->value]['data']['force'] as $forced_property_name => $forced_data) {
+      // Literal value. (This is the only type we support at the moment.)
+      if (isset($forced_data['value'])) {
+        $component_data->getParent()->{$forced_property_name}->import($forced_data['value']);
+      }
+    }
+    return;
+
+
+
+
+
     // Treat the selected preset as an array, even if it's single-valued.
-    if ($component_data_info[$property_name]['format'] == 'array') {
-      $preset_keys = $component_data_local[$property_name];
+    if ($component_data->isMultiple()) {
+      // TODO: argh, what's the way to get a flat array of multiple scalar values?
+      $preset_keys = $component_data->export();
       $multiple_presets = TRUE;
     }
     else {
-      $preset_keys = [$component_data_local[$property_name]];
+      $preset_keys = [$component_data->value];
       $multiple_presets = FALSE;
     }
 
@@ -633,7 +657,7 @@ class ComponentCollector {
     $suggested_values = [];
 
     foreach ($preset_keys as $preset_key) {
-      $selected_preset_info = $component_data_info[$property_name]['presets'][$preset_key];
+      $selected_preset_info = $presets[$preset_key];
 
       // Ensure these are both preset as at least empty arrays.
       // TODO: handle filling this in in ComponentDataInfoGatherer?
