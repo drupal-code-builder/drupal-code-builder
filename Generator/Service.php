@@ -146,7 +146,7 @@ class Service extends PHPClassFileWithInjection {
     $data_definition['plain_class_name']->getDefault()
       ->setCallable([static::class, 'defaultPlainClassName']);
 
-    $data_definition['plain_class_name']->getDefault()
+    $data_definition['relative_namespace']->getDefault()
       ->setCallable([static::class, 'defaultRelativeNamespace']);
 
     return $data_definition;
