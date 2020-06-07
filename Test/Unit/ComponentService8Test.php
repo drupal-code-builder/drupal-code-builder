@@ -57,6 +57,8 @@ class ComponentService8Test extends TestBase {
     $yaml_tester->assertHasProperty('services');
     $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
     $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
+    $yaml_tester->assertHasProperty(['services', "$module_name.my_other_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_other_service", 'class'], "Drupal\\$module_name\\MyOtherService");
 
     $service_class_file = $files["src/MyService.php"];
 
