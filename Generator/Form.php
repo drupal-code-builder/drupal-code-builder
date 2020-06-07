@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator class for forms on Drupal 8.
@@ -65,7 +67,11 @@ class Form extends PHPClassFileWithInjection {
     };
 
     // Set the parent class.
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Form\FormBase';
+    $data_definition['parent_class_name']
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLiteral('\Drupal\Core\Form\FormBase')
+      );
 
     return $data_definition;
   }

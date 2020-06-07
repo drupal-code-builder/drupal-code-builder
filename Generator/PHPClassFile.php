@@ -183,14 +183,11 @@ class PHPClassFile extends PHPFile {
         'internal' => TRUE,
         'default' => FALSE,
       ],
-      'parent_class_name' => [
-        'label' => 'The parent class name',
-        // Inconsistent with other properties, but we tend to have parents be
-        // class names from existing code.
-        'format' => 'string',
-        'internal' => TRUE,
-        'default' => '',
-      ],
+      // Inconsistent with other properties for this to be a string, but we tend
+      // to have parents be
+      'parent_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE),
       'interfaces' => [
         'label' => 'Interfaces',
         'description' => 'List of interfaces this class implements, as fully-qualified names with initial \.',
