@@ -286,7 +286,7 @@ class ComponentService8Test extends TestBase {
           'service_name' => 'my_service',
           // Properties that requesters can specify.
           'prefixed_service_name' => 'my_prefix.my_service',
-          'relative_class_name' => ['MyServiceClass'],
+          'plain_class_name' => 'MyServiceClass',
         ],
       ),
       'readme' => FALSE,
