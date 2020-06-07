@@ -620,9 +620,10 @@ abstract class BaseGenerator {
 
     $component_property_definition = static::getPropertyDefinition();
 
-    foreach ($component_property_definition as $property_name => $property_definition) {
+    foreach ($component_property_definition->getProperties() as $property_name => $property_definition) {
       // Only merge array properties.
-      if (!$property_definition->isMultiple()) {
+      // or WAIT is this only mapping properties???? or what?
+      if (!$property_definition->isMultiple() && $property_definition->getType() != 'mapping') {
         // Don't merge this property, but check that we're not throwing away
         // data from the additional data.
         assert(
@@ -639,13 +640,14 @@ abstract class BaseGenerator {
       if ($this->component_data[$property_name] != $additional_component_data->{$property_name}->get()) {
         $differences_merged = TRUE;
 
-        foreach ($additional_component_data->{$property_name} as $item) {
-          $this->component_data[$property_name][] = $item->export();
-        }
+        $this->component_data->$property_name = array_merge_recursive(
+          $this->component_data[$property_name],
+          $additional_component_data->{$property_name}->export()
+        );
       }
     }
 
-    return;
+    return $differences_merged;
 
 
     // Get the property info for just this component: we don't care about
