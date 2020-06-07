@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the README file.
+ *
+ * @group pass
  */
 class ComponentReadme8Test extends TestBase {
 
