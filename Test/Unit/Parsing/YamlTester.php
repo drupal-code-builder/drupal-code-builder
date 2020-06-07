@@ -181,7 +181,7 @@ class YamlTester {
    *   (optional) The assertion message.
    */
   public function assertPropertyIsExpanded($property_address, $message = NULL) {
-    $message = $message ?? 'The YAML property is formated as expanded.';
+    $message = $message ?? sprintf('The YAML property at %s is formated as expanded.', implode(':', $property_address));
 
     $line_index = $this->findYamlLine($property_address);
 
