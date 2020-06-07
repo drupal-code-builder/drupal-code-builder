@@ -44,12 +44,12 @@ class ComponentService8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "The expected number of files is returned.");
-
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
-    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
-    $this->assertArrayHasKey("src/MyService.php", $files, "The files list has a service class file.");
-    $this->assertArrayHasKey("src/MyOtherService.php", $files, "The files list has a service class file.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyService.php",
+      "src/MyOtherService.php",
+    ], $files);
 
     $services_file = $files["$module_name.services.yml"];
 
@@ -67,6 +67,8 @@ class ComponentService8Test extends TestBase {
 
   /**
    * Test generating a module with a service using a preset.
+   *
+   * @group presets
    */
   public function testServiceGenerationFromPreset() {
     // Assemble module data.
@@ -88,7 +90,12 @@ class ComponentService8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/BreadcrumbBuilder.php",
+    ], $files);
+
     $services_file = $files["$module_name.services.yml"];
 
     $yaml_tester = new YamlTester($services_file);
@@ -101,7 +108,6 @@ class ComponentService8Test extends TestBase {
     $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.breadcrumb_builder", 'tags', 0]);
     $yaml_tester->assertPropertyIsInlined(['services', "$module_name.breadcrumb_builder", 'tags', 0, 'name']);
 
-    $this->assertArrayHasKey("src/BreadcrumbBuilder.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/BreadcrumbBuilder.php"];
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
@@ -137,7 +143,12 @@ class ComponentService8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/EventSubscriber/EventSubscriber.php",
+    ], $files);
+
     $services_file = $files["$module_name.services.yml"];
 
     $yaml_tester = new YamlTester($services_file);
@@ -149,7 +160,6 @@ class ComponentService8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['services', 'test_module.event_subscriber', 'tags', 0, 'name'], 'event_subscriber');
     $yaml_tester->assertPropertyHasValue(['services', 'test_module.event_subscriber', 'tags', 0, 'priority'], 0);
 
-    $this->assertArrayHasKey("src/EventSubscriber/EventSubscriber.php", $files, "The files list has a service class file.");
     $service_class_file = $files["src/EventSubscriber/EventSubscriber.php"];
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
@@ -188,7 +198,11 @@ class ComponentService8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(3, $files, "Three files are returned.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyService.php",
+    ], $files);
 
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
     $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
@@ -278,7 +292,11 @@ class ComponentService8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(3, $files, "Three files are returned.");
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyServiceClass.php",
+    ], $files);
 
     $this->assertArrayHasKey("src/MyServiceClass.php", $files, "The service class file has the specified name.");
 
