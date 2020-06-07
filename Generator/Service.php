@@ -140,7 +140,9 @@ class Service extends PHPClassFileWithInjection {
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    $data_definition['plain_class_name']->getDefault()
+    // Use the relative class name so the relative namespace can be specified
+    // too.
+    $data_definition['relative_class_name']->getDefault()
       ->setCallable([static::class, 'defaultPlainClassName']);
 
     $data_definition['relative_namespace']->getDefault()
