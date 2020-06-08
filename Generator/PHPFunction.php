@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator base class for functions.
@@ -36,13 +38,9 @@ class PHPFunction extends BaseGenerator {
         'internal' => TRUE,
       ],
       'docblock_inherit' => [
+        'format' => 'boolean',
         'internal' => TRUE,
         'default' => FALSE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          if ($value) {
-            $component_data['function_docblock_lines'] = ['{@inheritdoc}'];
-          }
-        },
       ],
       // Deprecated: use function_docblock_lines instead.
       'doxygen_first' => [
@@ -51,13 +49,13 @@ class PHPFunction extends BaseGenerator {
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
-      'function_docblock_lines' => [
-        'format' => 'array',
-        'internal' => TRUE,
-        'default' => [
-          'TODO: write function documentation.',
-        ],
-      ],
+      // Or multiple string?
+      'function_docblock_lines' => PropertyDefinition::create('mapping')
+        ->setDefault(DefaultDefinition::create()
+          ->setLazy(TRUE)
+          ->setCallable([static::class, 'defaulDocblockLines'])
+          ->setDependencies('..:TODO')
+      ),
       'declaration' => [
         'internal' => TRUE,
       ],
@@ -73,6 +71,19 @@ class PHPFunction extends BaseGenerator {
         'default' => FALSE,
       ],
     ];
+  }
+
+  public static function defaulDocblockLines($data_item) {
+    if ($data_item->getParent()->docblock_inherit->value) {
+      return [
+        '{@inheritdoc}',
+      ];
+    }
+    else {
+      return [
+        'TODO: write function documentation.',
+      ];
+    }
   }
 
   /**
