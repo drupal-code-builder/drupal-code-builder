@@ -66,7 +66,7 @@ class Info8 extends Info {
       $lines['dependencies'][] = $dependency->value;
     }
 
-    if (!empty($module_data->module_package->value)) {
+    if (!$module_data->module_package->isEmpty()) {
       $lines['package'] = $module_data->module_package->value;
     }
 
