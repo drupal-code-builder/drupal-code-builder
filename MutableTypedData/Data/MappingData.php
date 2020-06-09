@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\MutableTypedData\Data;
 
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\Exception\InvalidInputException;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -29,6 +30,12 @@ class MappingData extends DataItem {
    * {@inheritdoc}
    */
   public function set($value) {
+    if (!is_array($value)) {
+      throw new InvalidInputException(sprintf("Mapping value at %s must have an array set.",
+        $this->getAddress()
+      ));
+    }
+
     $this->value = $value;
 
     parent::set($value);
