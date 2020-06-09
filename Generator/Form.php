@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -21,22 +20,34 @@ class Form extends PHPClassFileWithInjection {
    */
   public static function componentDataDefinition() {
     $data_definition = array(
-      'form_class_name' => array(
-        'label' => 'Form class name',
-        'required' => TRUE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data['form_class_name'] = ucfirst($value);
-        },
-      ),
-      'form_id' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return
-            $component_data['root_component_name']
-            . '_'
-            . CaseString::pascal($component_data['form_class_name'])->snake();
-        },
-      ],
+      // TODO; alias to form_class_name if we end up doing aliases.
+      // 'plain_class_name' => array(
+      //   'label' => 'Form class name',
+      //   'required' => TRUE,
+      //   // TODO
+      //   // 'processing' => function($value, &$component_data, $property_name, &$property_info) {
+      //   //   $component_data['form_class_name'] = ucfirst($value);
+      //   // },
+      // ),
+      // 'form_id' => [
+      //   'computed' => TRUE,
+      //   'default' => function($component_data) {
+      //     return
+      //       $component_data['root_component_name']
+      //       . '_'
+      //       . CaseString::pascal($component_data['form_class_name'])->snake();
+      //   },
+      // ],
+      'form_id' => PropertyDefinition::create('string')
+        ->setLabel('Permission human-readable name. If omitted, this is derived from the machine name')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setExpression("getChildValue(parent, 'root_component_name') ~ '_' ~ machineFromPlainClassName(getChildValue(parent, 'plain_class_name'))")
+            ->setDependencies('..:plain_class_name')
+        ),
       'injected_services' => array(
         'label' => 'Injected services',
         'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
@@ -44,10 +55,11 @@ class Form extends PHPClassFileWithInjection {
         'options' => function(&$property_info) {
           $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+          $options = $mb_task_handler_report_services->listServiceNamesOptionsAll();
 
           return $options;
         },
+        // TODO: kill
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
       'form_elements' => [
