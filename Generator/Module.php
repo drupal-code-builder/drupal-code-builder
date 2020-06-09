@@ -440,12 +440,6 @@ class Module extends RootComponent {
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $components['info'] = $data;
 
-    return $components;
-
-    // getComponentPropertyDefinition('Info');
-
-
-
     // Turn the hooks property into the Hooks component.
     if (!$this->component_data->hooks->isEmpty()) {
       $components['hooks'] = array(
@@ -453,11 +447,6 @@ class Module extends RootComponent {
         'hooks' => $this->component_data['hooks'],
       );
     }
-
-    // Modules always have a .info file.
-    $components['info'] = [
-      'component_type' => 'Info',
-    ];
 
     // Add hook_help if help text is given.
     if (!$this->component_data->module_help_text->isEmpty()) {
