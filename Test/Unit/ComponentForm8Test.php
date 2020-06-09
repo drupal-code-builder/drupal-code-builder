@@ -40,10 +40,10 @@ class ComponentForm8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "Two files are returned.");
-
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
-    $this->assertArrayHasKey("src/Form/MyForm.php", $files, "The files list has a form class file.");
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Form/MyForm.php",
+    ], $files);
 
     $form_file = $files["src/Form/MyForm.php"];
 
@@ -99,7 +99,10 @@ class ComponentForm8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "Two files are returned.");
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Form/MyForm.php",
+    ], $files);
 
     $form_file = $files["src/Form/MyForm.php"];
 
