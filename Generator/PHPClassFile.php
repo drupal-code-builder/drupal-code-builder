@@ -89,7 +89,7 @@ class PHPClassFile extends PHPFile {
           ->setLazy(TRUE)
           ->setDependencies('..:relative_class_name')
       ),
-      'namespace' => PropertyDefinition::create('mapping')
+      'namespace' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setRequired(TRUE)
         ->setDefault(DefaultDefinition::create()
