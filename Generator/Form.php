@@ -62,9 +62,8 @@ class Form extends PHPClassFileWithInjection {
     $data_definition += parent::componentDataDefinition();
 
     // Put the class in the 'Form' relative namespace.
-    $data_definition['relative_class_name']['default'] = function($component_data) {
-      return ['Form', $component_data['form_class_name']];
-    };
+    $data_definition['relative_namespace']->getDefault()
+      ->setLiteral('Form');
 
     // Set the parent class.
     $data_definition['parent_class_name']
