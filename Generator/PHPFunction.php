@@ -53,7 +53,7 @@ class PHPFunction extends BaseGenerator {
       'function_docblock_lines' => PropertyDefinition::create('mapping')
         ->setDefault(DefaultDefinition::create()
           ->setLazy(TRUE)
-          ->setCallable([static::class, 'defaulDocblockLines'])
+          ->setCallable([static::class, 'defaultDocblockLines'])
           ->setDependencies('..:TODO')
       ),
       'declaration' => [
@@ -73,7 +73,7 @@ class PHPFunction extends BaseGenerator {
     ];
   }
 
-  public static function defaulDocblockLines($data_item) {
+  public static function defaultDocblockLines($data_item) {
     if ($data_item->getParent()->docblock_inherit->value) {
       return [
         '{@inheritdoc}',
