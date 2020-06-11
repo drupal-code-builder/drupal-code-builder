@@ -2,10 +2,12 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for a content entity type.
@@ -246,7 +248,12 @@ class ContentEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_properties);
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
+    $data_definition['parent_class_name']
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLiteral('\Drupal\Core\Entity\ContentEntityBase')
+      );
+
     $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       array_unshift($value, '\Drupal\Core\Entity\ContentEntityInterface');
       $component_data[$property_name] = $value;

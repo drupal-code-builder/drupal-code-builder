@@ -2,9 +2,11 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for a config entity type.
@@ -98,7 +100,12 @@ class ConfigEntityType extends EntityTypeBase {
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Config\Entity\ConfigEntityBase';
+    $data_definition['parent_class_name']
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBase')
+      );
+
     $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
       array_unshift($value, '\Drupal\Core\Config\Entity\ConfigEntityInterface');
       $component_data[$property_name] = $value;
