@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Definition;
 
 use MutableTypedData\Definition\PropertyDefinition as OriginalPropertyDefinition;
 
-class PropertyDefinition extends OriginalPropertyDefinition {
+class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAccess {
 
   protected $internal = FALSE;
 
@@ -57,6 +57,23 @@ class PropertyDefinition extends OriginalPropertyDefinition {
 
   public function getPresets() :array {
     return $this->presets;
+  }
+
+  public function offsetExists($offset) {
+    dump($this);
+    throw new \Exception("Accessing definition $this->name as array");
+  }
+
+  public function offsetGet($offset) {
+    throw new \Exception("Accessing definition $this->name as array");
+  }
+
+  public function offsetSet($offset, $value) {
+    throw new \Exception("Accessing definition $this->name as array");
+  }
+
+  public function offsetUnset($offset){
+    throw new \Exception("Accessing definition $this->name as array");
   }
 
 
