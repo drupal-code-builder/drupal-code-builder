@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\InsertArray;
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Component generator: admin form for modules.
@@ -15,7 +17,8 @@ class AdminSettingsForm extends Form {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Form\ConfigFormBase';
+    $data_definition['parent_class_name']->getDefault()
+      ->setLiteral('\Drupal\Core\Form\ConfigFormBase');
 
     $parent_route_property['parent_route'] = [
       'label' => 'Parent menu item',
@@ -24,20 +27,19 @@ class AdminSettingsForm extends Form {
     ];
     InsertArray::insertBefore($data_definition, 'injected_services', $parent_route_property);
 
-    $data_definition['form_class_name']['internal'] = TRUE;
-    $data_definition['form_class_name']['default'] = 'AdminSettingsForm';
-    $data_definition['form_class_name']['process_default'] = TRUE;
+    $data_definition['plain_class_name']->getDefault()
+      ->setLiteral('AdminSettingsForm');
 
-    $data_definition['form_id']['default'] = function($component_data) {
-      return $component_data['root_component_name'] . '_settings_form';
-    };
+    $data_definition['form_id']->getDefault()
+      ->setExpression("getChildValue(parent, 'root_component_name') ~ '_settings_form'");
 
-    $data_definition['route_name'] = [
-      'computed' => TRUE,
-      'default' => function($component_data) {
-        return $component_data['root_component_name'] . '.settings';
-      },
-    ];
+    $data_definition['route_name'] = PropertyDefinition::create('string')
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLazy(TRUE)
+          ->setExpression("getChildValue(parent, 'root_component_name') ~ '.settings'")
+          ->setDependencies('..:root_component_name')
+      );
 
     return $data_definition;
   }
