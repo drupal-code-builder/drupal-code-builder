@@ -339,9 +339,34 @@ abstract class BaseGenerator {
       }
 
       if (isset($def['options'])) {
-        foreach ($def['options'] as $value => $label) {
-          $converted_defs[$name]->addOption(OptionDefinition::create($value, $label));
+        if (is_array($def['options'])) {
+          foreach ($def['options'] as $value => $label) {
+            $converted_defs[$name]->addOption(OptionDefinition::create($value, $label));
+          }
         }
+        elseif (is_callable($def['options'])) {
+          // The 'options' attribute is a callback that supplies the options
+          // array.
+          $options = $def['options']($property_info);
+
+          $converted_defs[$name]->setOptionsArray($options);
+        }
+        elseif (is_string($def['options']) && strpos($def['options'], ':') !== FALSE) {
+          // The 'options' attribute is in the form 'TASKNAME:METHOD', to call to
+          // get the options array.
+          list($task_name, $method) = explode(':', $def['options']);
+
+          $task_handler = \DrupalCodeBuilder\Factory::getTask($task_name);
+
+          $options = call_user_func([$task_handler, $method]);
+
+          $converted_defs[$name]->setOptionsArray($options);
+        }
+        else {
+          // The 'options' attribute format is incorrect.
+          throw new \Exception("Unable to prepare options for property $name.");
+        }
+
       }
 
       if (isset($def['presets'])) {
