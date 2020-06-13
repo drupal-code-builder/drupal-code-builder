@@ -65,14 +65,14 @@ class ConfigEntityType extends EntityTypeBase {
             'label' => 'Property name',
             'required' => TRUE,
           ],
-          'label' => [
-            'label' => 'Property label',
-            'default' => function($component_data) {
-              $entity_type_id = $component_data['name'];
-              return CaseString::snake($entity_type_id)->title();
-            },
-            'process_default' => TRUE,
-          ],
+          'label' => PropertyDefinition::create('string')
+            ->setLabel('Property label')
+            ->setRequired(TRUE)
+            ->setDefault(
+              DefaultDefinition::create()
+                ->setExpression("machineToLabel(getChildValue(parent, 'name'))")
+              ->setDependencies('..:name')
+          ),
           'type' => [
             'label' => 'Data type',
             'required' => TRUE,
