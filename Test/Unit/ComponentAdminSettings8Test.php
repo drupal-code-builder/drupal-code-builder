@@ -32,9 +32,7 @@ class ComponentAdminSettings8Test extends TestBase {
       'hooks' => array(
       ),
       'settings_form' => [
-        0 => [
-          'parent_route' => 'system.admin_config_system',
-        ],
+        'parent_route' => 'system.admin_config_system',
       ],
       'readme' => FALSE,
     );
@@ -142,9 +140,7 @@ class ComponentAdminSettings8Test extends TestBase {
         ),
       ),
       'settings_form' => [
-        0 => [
-          'parent_route' => 'system.admin_config_system',
-        ],
+        'parent_route' => 'system.admin_config_system',
       ],
       'readme' => FALSE,
     );
@@ -180,10 +176,8 @@ class ComponentAdminSettings8Test extends TestBase {
          ),
        ),
        'settings_form' => [
-        0 => [
           'parent_route' => 'system.admin_config_system',
         ],
-      ],
        'router_items' => array(
           0 => [
             'path' => 'requested/route/path',
