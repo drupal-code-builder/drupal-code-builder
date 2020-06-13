@@ -4,6 +4,7 @@
   "license": "GPL-2.0+",
   "require": {
     "php": "^7.0",
+    "symfony/expression-language": "~3.4.0",
     "joachim-n/case-converter": "^1.0"
   },
   "require-dev": {
