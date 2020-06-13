@@ -38,11 +38,11 @@ class ComponentConfigEntityType8Test extends TestBase {
           'entity_properties' => [
             0 => [
               'name' => 'breed',
-              'type' => 'string',
+              'type' => 'text',
             ],
             1 => [
               'name' => 'colour',
-              'type' => 'string',
+              'type' => 'text',
             ],
           ],
         ],
@@ -67,8 +67,8 @@ class ComponentConfigEntityType8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
     $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatInterface']);
     $php_tester->assertHasNoMethods();
-    $php_tester->assertClassHasProtectedProperty('breed', 'string', '');
-    $php_tester->assertClassHasProtectedProperty('colour', 'string', '');
+    $php_tester->assertClassHasProtectedProperty('breed', 'text', '');
+    $php_tester->assertClassHasProtectedProperty('colour', 'text', '');
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ConfigEntityType');
@@ -114,11 +114,11 @@ class ComponentConfigEntityType8Test extends TestBase {
     $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'label']);
 
     $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'breed']);
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'breed', 'type'], 'string');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'breed', 'type'], 'text');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'breed', 'label'], 'Breed');
 
     $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'colour']);
-    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'colour', 'type'], 'string');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'colour', 'type'], 'text');
     $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'mapping', 'colour', 'label'], 'Colour');
   }
 
@@ -138,7 +138,7 @@ class ComponentConfigEntityType8Test extends TestBase {
           'entity_properties' => [
             0 => [
               'name' => 'breed',
-              'type' => 'string',
+              'type' => 'text',
             ],
           ],
         ],
@@ -147,7 +147,7 @@ class ComponentConfigEntityType8Test extends TestBase {
           'entity_properties' => [
             0 => [
               'name' => 'colour',
-              'type' => 'string',
+              'type' => 'text',
             ],
           ],
         ],
@@ -279,7 +279,7 @@ class ComponentConfigEntityType8Test extends TestBase {
           'entity_properties' => [
             0 => [
               'name' => 'breed',
-              'type' => 'string',
+              'type' => 'text',
             ],
           ],
         ],
