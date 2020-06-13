@@ -2,10 +2,12 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Base generator entity types.
@@ -45,27 +47,24 @@ abstract class EntityTypeBase extends PHPClassFile {
         'required' => TRUE,
         // TODO: validation? static::ID_MAX_LENGTH
       ],
-      'entity_type_label' => [
-        'label' => 'Entity type label',
-        'description' => "The human-readable label for the entity type.",
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          $entity_type_id = $component_data['entity_type_id'];
-
-          // Convert the entity type to camel case. E.g., 'my_entity_type'
-          //  becomes 'My Entity Type'.
-          return CaseString::snake($entity_type_id)->title();
-        },
-      ],
-      'entity_class_name' => [
-        'label' => 'Entity class name',
-        'description' => "The short class name of the entity.",
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          $entity_type_id = $component_data['entity_type_id'];
-          return CaseString::snake($entity_type_id)->pascal();
-        },
-      ],
+      'entity_type_label' => PropertyDefinition::create('string')
+        ->setLabel('Entity type label')
+        ->setDescription("The human-readable label for the entity type.")
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(getChildValue(parent, 'entity_type_id'))")
+            ->setDependencies('..:entity_type_id')
+        ),
+      'entity_class_name' => PropertyDefinition::create('string')
+        ->setLabel('Entity class name')
+        ->setDescription("The short class name of the entity.")
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToClass(getChildValue(parent, 'entity_type_id'))")
+            ->setDependencies('..:entity_type_id')
+        ),
       'functionality' => [
         'label' => 'Entity functionality',
         'description' => "Characteristics of the entity type that provide different kinds of functionality.",
@@ -263,16 +262,17 @@ abstract class EntityTypeBase extends PHPClassFile {
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    // Override some parent definitions to provide computed defaults.
-    $data_definition['relative_class_name']['default'] = function ($component_data) {
-      return [
-        'Entity',
-        $component_data['entity_class_name'],
-      ];
-    };
-    $data_definition['docblock_first_line']['default'] = function ($component_data) {
-      return "Provides the {$component_data['entity_type_label']} entity.";
-    };
+    // Override some defaults.
+    // Put the class in the 'Entity' relative namespace.
+    $data_definition['relative_namespace']->getDefault()
+      ->setLiteral('Entity');
+
+    $data_definition['class_docblock_lines']
+      ->setDefault(
+        DefaultDefinition::create()
+          // Expression Language lets us define arrays, which is nice.
+          ->setExpression("['Provides the ' ~ getChildValue(parent, 'entity_type_label') ~ ' entity.']")
+      );
 
     $data_definition['interfaces']['computed'] = TRUE;
     $data_definition['interfaces']['default'] = function ($component_data) {
