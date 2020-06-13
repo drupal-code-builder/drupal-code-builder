@@ -151,18 +151,13 @@ class ContentEntityType extends EntityTypeBase {
     $bundle_entity_properties = [
       // Single place to compute a bundle entity type ID. Here rather than in
       // the bundle generator, as this component needs it too.
-      // This is always computed, even when there is no bundle entity selected.
-      'bundle_entity_type_id' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          if (!empty($component_data['entity_type_id'])) {
-            return $component_data['entity_type_id'] . '_type';
-          }
-          else {
-            return '';
-          }
-        }
-      ],
+      'bundle_entity_type_id' => PropertyDefinition::create('string')
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setExpression("getChildValue(parent, 'entity_type_id') ~ '_type'")
+            ->setDependencies('..:entity_type_id')
+        ),
       'bundle_entity' => [
         'label' => 'Bundle config entity type',
         'description' => "Creates a config entity type which provides the bundles for this entity type. "
