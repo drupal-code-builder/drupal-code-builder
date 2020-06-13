@@ -61,19 +61,19 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
 
   public function offsetExists($offset) {
     dump($this);
-    throw new \Exception("Accessing definition $this->name as array");
+    throw new \Exception("Accessing definition $this->name as array with offsetExists $offset.");
   }
 
   public function offsetGet($offset) {
-    throw new \Exception("Accessing definition $this->name as array");
+    throw new \Exception("Accessing definition $this->name as array with offsetGet $offset.");
   }
 
   public function offsetSet($offset, $value) {
-    throw new \Exception("Accessing definition $this->name as array");
+    throw new \Exception("Accessing definition $this->name as array with offsetSet $offset.");
   }
 
   public function offsetUnset($offset){
-    throw new \Exception("Accessing definition $this->name as array");
+    throw new \Exception("Accessing definition $this->name as array with offsetUnset $offset.");
   }
 
 
