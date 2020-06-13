@@ -2,6 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator class for a form's builder method.
  *
@@ -15,14 +18,20 @@ class FormBuilder extends PHPFunction {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    $data_definition['declaration']['process_default'] = TRUE;
-    $data_definition['declaration']['default'] = function($component_data) {
-      // TODO: different for Drupal 7: no 'public' (as function, not method)
-      // and no class typehint for the $form_state.
-      return "public function {$component_data['function_name']}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
-    };
+    $data_definition['declaration'] = PropertyDefinition::create('string')
+      ->setDefault(DefaultDefinition::create()
+        ->setCallable([static::class, 'defaultDeclaration'])
+        ->setLazy(TRUE)
+        ->setDependencies('..:TODO')
+    );
 
     return $data_definition;
+  }
+
+  public static function defaultDeclaration($data_item) {
+    $function_name = $data_item->getParent()->function_name->value;
+    return "public function {$function_name}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
+
   }
 
   /**
