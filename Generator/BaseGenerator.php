@@ -262,6 +262,12 @@ abstract class BaseGenerator {
             }
             break;
 
+          // This is a format that's not in 3.x, added here so various array
+          // definitions can just have their format changed.
+          case 'mapping':
+            $converted_defs[$name] = PropertyDefinition::create('mapping');
+            break;
+
           default:
             $converted_defs[$name] = PropertyDefinition::create('string');
 
