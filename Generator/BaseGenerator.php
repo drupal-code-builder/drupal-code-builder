@@ -299,8 +299,24 @@ abstract class BaseGenerator {
       }
 
       if (isset($def['default'])) {
+        $convert_literal_default = FALSE;
         // String and numeric defaults are literal values.
         if (is_scalar($def['default'])) {
+          $convert_literal_default = TRUE;
+        }
+
+        // Array defaults are ok for a multiple value.
+        // TODO: not for complex data though!
+        if (is_array($def['default']) && $converted_defs[$name]->isMultiple()) {
+          $convert_literal_default = TRUE;
+        }
+
+        // Array defaults are ok for mappings.
+        if (is_array($def['default']) && $converted_defs[$name]->getType() == 'mapping') {
+          $convert_literal_default = TRUE;
+        }
+
+        if ($convert_literal_default) {
           $converted_defs[$name]->setDefault(DefaultDefinition::create()
             ->setLiteral($def['default'])
             // TODO
@@ -308,12 +324,12 @@ abstract class BaseGenerator {
           );
         }
         elseif (is_callable($def['default'])) {
-          dump($definition);
+          dump($def);
           throw new \Exception(sprintf(
             "Array info callable default needs to be converted at property '%s' of %s.",
             $name,
             $definition->getComponentType()
-        ));
+          ));
         }
       }
 
