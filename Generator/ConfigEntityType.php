@@ -112,14 +112,10 @@ class ConfigEntityType extends EntityTypeBase {
     };
 
     // Change the computed value for entity keys.
-    $data_definition['entity_keys']['default'] = function($component_data) {
-      $keys = [
-        'id' => 'id',
-        'label' => 'label',
-      ];
-
-      return $keys;
-    };
+    $data_definition['entity_keys']['default'] = [
+      'id' => 'id',
+      'label' => 'label',
+    ];
 
     return $data_definition;
   }
