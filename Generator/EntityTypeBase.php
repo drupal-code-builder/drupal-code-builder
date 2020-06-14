@@ -404,10 +404,7 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
-      'relative_class_name' => [
-        'Entity',
-        $this->component_data['entity_interface_name'],
-      ],
+      'relative_class_name' => 'Entity\\' . $this->component_data['entity_interface_name'],
       'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
       'parent_interface_names' => $this->component_data['interface_parents'],
     ];
