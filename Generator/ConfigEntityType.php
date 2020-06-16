@@ -296,9 +296,19 @@ class ConfigEntityType extends EntityTypeBase {
         $description .= '.';
       }
 
+      // The PHP type is not the same as the config schema type!
+      switch ($schema_item['type']) {
+        case 'label':
+          $php_type = 'string';
+          break;
+
+        default:
+          $php_type = $schema_item['type'];
+      }
+
       $this->properties[] = $this->createPropertyBlock(
         $schema_item['name'],
-        $schema_item['type'], // TODO: config schema type not the same as PHP type!!!!!
+        $php_type,
         [
           'docblock_first_line' => $schema_item['label'] . '.',
         ]
