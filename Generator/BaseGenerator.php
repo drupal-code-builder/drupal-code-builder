@@ -395,6 +395,12 @@ abstract class BaseGenerator {
         $converted_defs[$name]->setPresets($def['presets']);
       }
 
+      if (isset($def['processing'])) {
+        if (!is_a($def['processing'], \Closure::class)) {
+          $converted_defs[$name]->setProcessing($def['processing']);
+        }
+      }
+
       if ($def['required']) {
         $converted_defs[$name]->setRequired(TRUE);
       }

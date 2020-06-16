@@ -13,6 +13,8 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
 
   protected $presets = [];
 
+  protected $processing;
+
   public function setInternal(bool $internal) :self {
     $this->internal = $internal;
 
@@ -57,6 +59,16 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
 
   public function getPresets() :array {
     return $this->presets;
+  }
+
+  public function setProcessing(callable $callback): self {
+    $this->processing = $callback;
+
+    return $this;
+  }
+
+  public function getProcessing(): ?callable {
+    return $this->processing;
   }
 
   public function offsetExists($offset) {
