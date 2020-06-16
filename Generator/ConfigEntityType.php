@@ -114,6 +114,13 @@ class ConfigEntityType extends EntityTypeBase {
       return;
     }
 
+    // ARGH we come here twice -- because of WTF?
+    // QUICK HACK!
+    // TODO: FIX!
+    if ($component_data[0]->name->value == 'id') {
+      return;
+    }
+
     $label = $component_data->insertBefore(0);
     $label->set([
       'name' => 'label',
