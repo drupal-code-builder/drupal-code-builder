@@ -441,7 +441,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
         'parent_class_name' => $handler_type_info['base_class'],
-        'relative_class_name' => $this->getRelativeHandlerClassNamePieces($key, $handler_type_info),
+        'relative_class_name' => implode('\\', $this->getRelativeHandlerClassNamePieces($key, $handler_type_info)),
       ];
 
       if (isset($handler_type_info['handler_properties'])) {
