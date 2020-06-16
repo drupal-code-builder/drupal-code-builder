@@ -164,7 +164,7 @@ class Generate extends Base {
    *  existing user data.
    */
   public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    return $this->getHelper('ComponentPropertyPreparer')->prepareComponentDataProperty($property_name, $property_info, $component_data);
+    // return $this->getHelper('ComponentPropertyPreparer')->prepareComponentDataProperty($property_name, $property_info, $component_data);
   }
 
   /**
