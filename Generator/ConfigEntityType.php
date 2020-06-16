@@ -6,6 +6,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -79,22 +80,8 @@ class ConfigEntityType extends EntityTypeBase {
             'options' => 'ReportDataTypes:listDataTypesOptions',
           ],
         ],
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $id_name_entity_properties = [
-            0 => [
-              'name' => 'id',
-              'label' => 'Machine name',
-              'type' => 'string',
-            ],
-            1 => [
-              'name' => 'label',
-              'label' => 'Name',
-              'type' => 'label',
-            ],
-          ];
-
-          $component_data[$property_name] = array_merge($id_name_entity_properties, $value);
-        },
+        // ARGH bug -- this gets handed down to delta items ARGH.
+        'processing' => [static::class, 'processingEntityProperties'],
         'process_empty' => TRUE,
       ],
     ];
@@ -118,6 +105,28 @@ class ConfigEntityType extends EntityTypeBase {
     ];
 
     return $data_definition;
+  }
+
+  public static function processingEntityProperties(DataItem $component_data) {
+    // ARGH workaround for properties getting handed down to delta items...
+    // TODO: fix upstream!
+    if (is_numeric($component_data->getName())) {
+      return;
+    }
+
+    $label = $component_data->insertBefore(0);
+    $label->set([
+      'name' => 'label',
+      'label' => 'Name',
+      'type' => 'label',
+    ]);
+
+    $id = $component_data->insertBefore(0);
+    $id->set([
+      'name' => 'id',
+      'label' => 'Machine name',
+      'type' => 'text',
+    ]);
   }
 
   /**
