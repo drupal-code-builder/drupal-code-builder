@@ -24,6 +24,89 @@ class ComponentConfigEntityType8Test extends TestBase {
    * Test creating a config entity type.
    */
   public function testBasicConfigEntityType() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'config_entity_types' => [
+        0 => [
+          // Use an ID string with an underscore to test class names and labels
+          // correctly have it removed.
+          'entity_type_id' => 'kitty_cat',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Entity/KittyCat.php',
+      'src/Entity/KittyCatInterface.php',
+      'config/schema/test_module.schema.yml',
+    ], $files);
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
+    $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\test_module\Entity\KittyCatInterface']);
+    $php_tester->assertHasNoMethods();
+    $php_tester->assertClassHasProtectedProperty('id', 'string', '');
+    $php_tester->assertClassHasProtectedProperty('label', 'string', '');
+
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('ConfigEntityType');
+    $annotation_tester->assertHasRootProperties([
+      'id',
+      'label',
+      'label_collection',
+      'label_singular',
+      'label_plural',
+      'label_count',
+      'entity_keys',
+      'config_export',
+    ]);
+    $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
+    $annotation_tester->assertPropertyHasValue('label', 'Kitty Cat');
+    $annotation_tester->assertPropertyHasTranslation('label');
+    $annotation_tester->assertPropertyHasValue('label_collection', 'Kitty Cats');
+    $annotation_tester->assertPropertyHasTranslation('label_collection');
+    $annotation_tester->assertPropertyHasValue('label_singular', 'kitty cat');
+    $annotation_tester->assertPropertyHasTranslation('label_singular');
+    $annotation_tester->assertPropertyHasValue('label_plural', 'kitty cats');
+    $annotation_tester->assertPropertyHasTranslation('label_plural');
+    $annotation_tester->assertPropertyHasAnnotationClass('label_count', 'PluralTranslation');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'singular'], '@count kitty cat');
+    $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'id');
+    $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'label');
+    $annotation_tester->assertPropertyHasValue('config_export', ['id', 'label']);
+
+    $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_interface_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
+
+    $schema_file = $files['config/schema/test_module.schema.yml'];
+    $yaml_tester = new YamlTester($schema_file);
+    $yaml_tester->assertHasProperty('test_module.kitty_cat.*');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'type'], 'config_entity');
+    $yaml_tester->assertPropertyHasValue(['test_module.kitty_cat.*', 'label'], 'Kitty Cat');
+
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'id']);
+    $yaml_tester->assertHasProperty(['test_module.kitty_cat.*', 'mapping', 'label']);
+  }
+
+  /**
+   * Test a config entity type with custom properties.
+   */
+  public function testConfigEntityTypeWithProperties() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
