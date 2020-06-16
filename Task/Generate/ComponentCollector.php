@@ -548,6 +548,8 @@ class ComponentCollector {
    */
   protected function processComponentData(DataItem $component_data) {
     $component_data->walk([$this, 'setPresetValues']);
+    $component_data->walk([$this, 'applyProcessing']);
+
     return;
 
     // Work over each property.
@@ -830,35 +832,29 @@ class ComponentCollector {
   }
 
   /**
-   * Applies the processing callback for a property in component data.
+   * Walk callback to apply processing callbacks to component data.
    *
-   * Helper for processComponentData().
-   *
-   * @param $property_name
-   *  The name of the property. For child properties, this is the name of just
-   *  the child property.
-   * @param &$property_info
-   *  The property info array for the property. Passed by reference, as
-   *  the processing callback takes this by reference and may make changes.
-   * @param &$component_data_local
-   *  The array of component data, or for child properties, the item array that
-   *  immediately contains the property. In other words, this array would have
-   *  a key $property_name if data has been supplied for this property.
+   * @param DataItem $component_data
+   *  The component data item.
    */
-  protected function applyComponentDataPropertyProcessing($property_name, &$property_info, &$component_data_local) {
-    if (!isset($property_info['processing'])) {
+  public function applyProcessing(DataItem $component_data) {
+    $processing = $component_data->getProcessing();
+
+    if (!$processing) {
       // No processing: nothing to do.
       return;
     }
 
-    if (empty($component_data_local[$property_name]) && empty($property_info['process_empty'])) {
-      // Don't apply to an empty property, unless forced to.
-      return;
-    }
+    // TODO: things like process empty????
 
-    $processing_callback = $property_info['processing'];
+    $processing($component_data);
 
-    $processing_callback($component_data_local[$property_name], $component_data_local, $property_name, $property_info);
+    return;
+
+    // if (empty($component_data_local[$property_name]) && empty($property_info['process_empty'])) {
+    //   // Don't apply to an empty property, unless forced to.
+    //   return;
+    // }
   }
 
   /**
