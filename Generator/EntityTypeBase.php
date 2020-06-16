@@ -56,7 +56,7 @@ abstract class EntityTypeBase extends PHPClassFile {
             ->setExpression("machineToLabel(getChildValue(parent, 'entity_type_id'))")
             ->setDependencies('..:entity_type_id')
         ),
-      'entity_class_name' => PropertyDefinition::create('string')
+      'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('Entity class name')
         ->setDescription("The short class name of the entity.")
         ->setRequired(TRUE)
@@ -107,7 +107,9 @@ abstract class EntityTypeBase extends PHPClassFile {
       'interface_parents' => [
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
-        'format' => 'array',
+        // Cheat! Make it a mapping so we can have a default value!
+        // TODO: restore this to an array, multiple values can have defaults!
+        'format' => 'mapping',
         'computed' => TRUE,
         // The basic value is set in a processing callback by the child classes,
         // so that it gets added to values from the 'functionality' preset.
@@ -115,29 +117,23 @@ abstract class EntityTypeBase extends PHPClassFile {
         'default' => [],
         // This is required so the basic value gets added even if no interfaces
         // are supplied by the 'functionality' preset.
-        'process_empty' => TRUE,
+        // 'process_empty' => TRUE,
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
-        // Note that the format here is abused: keys are used as well as values!
-        'format' => 'array',
+        'format' => 'mapping',
         'computed' => TRUE,
-        // This uses a 'processing' callback rather than 'default' to set the
-        // computed value, so that we can run after the preset values are
-        // applied to add defaults and set the ordering. Accordingly, we have
-        // to force the processing to be applied, and we need an empty array
-        // as an initial default for the processing to apply to.
-        'default' => [],
         'process_empty' => TRUE,
-        // Child classes set the processing callback.
+        // Child classes set the default value.
       ],
-      'entity_interface_name' => [
-        'label' => 'Interface',
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return $component_data['entity_class_name'] . 'Interface';
-        },
-      ],
+      'entity_interface_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setExpression("getChildValue(parent, 'plain_class_name') ~ 'Interface'")
+            ->setDependencies('..:plain_class_name')
+        ),
     ];
 
     // Create the property for the handler.
@@ -283,12 +279,12 @@ abstract class EntityTypeBase extends PHPClassFile {
           ->setExpression("['Provides the ' ~ getChildValue(parent, 'entity_type_label') ~ ' entity.']")
       );
 
-    $data_definition['interfaces']['computed'] = TRUE;
-    $data_definition['interfaces']['default'] = function ($component_data) {
-      return [
-        $component_data['entity_interface_name'],
-      ];
-    };
+    $data_definition['interfaces']->setDefault(
+      DefaultDefinition::create()
+        // Expression Language lets us define arrays, which is nice.
+        // TODO: why do we have the separate entity_interface_name??
+        ->setExpression("[getChildValue(parent, 'entity_interface_name')]")
+    );
 
     return $data_definition;
   }
@@ -636,10 +632,10 @@ abstract class EntityTypeBase extends PHPClassFile {
    */
   protected function makeShortHandlerClassName($handler_type_key, $handler_type_info) {
     if (isset($handler_type_info['class_name_suffix'])) {
-      $short_class_name = $this->component_data['entity_class_name'] .  $handler_type_info['class_name_suffix'];
+      $short_class_name = $this->component_data['plain_class_name'] .  $handler_type_info['class_name_suffix'];
     }
     else {
-      $short_class_name = $this->component_data['entity_class_name'] .  CaseString::snake($handler_type_key)->pascal();
+      $short_class_name = $this->component_data['plain_class_name'] .  CaseString::snake($handler_type_key)->pascal();
     }
 
     return $short_class_name;

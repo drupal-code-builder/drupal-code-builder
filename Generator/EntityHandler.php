@@ -20,7 +20,7 @@ class EntityHandler extends PHPClassFile {
         // requesting component.
         'acquired' => TRUE,
       ],
-      'entity_class_name' => [
+      'plain_class_name' => [
         'internal' => TRUE,
         'acquired' => TRUE,
       ],
