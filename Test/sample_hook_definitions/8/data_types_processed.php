@@ -1,13 +1,18 @@
 <?php $data =
 array (
-  'boolean' => 
+  'boolean' =>
   array (
     'type' => 'boolean',
     'label' => 'Boolean',
   ),
-  'text' => 
+  'text' =>
   array (
     'type' => 'text',
     'label' => 'Text',
+  ),
+  'label' =>
+  array(
+    'type' => 'label',
+    'label' => 'Label',
   ),
 );
