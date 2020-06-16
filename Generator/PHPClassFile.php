@@ -188,13 +188,12 @@ class PHPClassFile extends PHPFile {
       'parent_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setRequired(TRUE),
-      'interfaces' => [
-        'label' => 'Interfaces',
-        'description' => 'List of interfaces this class implements, as fully-qualified names with initial \.',
-        'format' => 'array',
-        'internal' => TRUE,
-        'default' => [],
-      ],
+      // Cheat and use mapping for now, as multi-valued properties don't do
+      // defaults. But should -- TODO.
+      // 'List of interfaces this class implements, as fully-qualified names
+      // with initial '\'.
+      'interfaces' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
       'traits' => [
         'label' => 'Traits',
         'description' => 'List of traits this class uses, as fully-qualified names with initial \.',
