@@ -2,6 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for YAML plugins.
  */
@@ -27,7 +30,7 @@ class PluginYAML extends BaseGenerator {
 
     // The plugin type has already been validated by the plugin_type property's
     // processing.
-    $component_data['plugin_type_data'] = $plugin_types_data[$plugin_type];
+    $component_data->plugin_type_data->set($plugin_types_data[$plugin_type]);
 
     parent::__construct($component_data);
   }
@@ -54,31 +57,59 @@ class PluginYAML extends BaseGenerator {
           }
         },
       ],
+      'plugin_type_data' => PropertyDefinition::create('mapping'),
       // These are different for each plugin type, so internal for now.
       // When we have dynamic defaults, populate with the default property
       // values, as an array of options?
-      'plugin_properties' => [
-        'internal' => TRUE,
-        'format' => 'array',
-        'default' => function($component_data) {
-          // Group the plugin properties into those with default values given, and
-          // those with empty defaults. We can then put the ones with defaults later,
-          // as these are the most likely to be the less frequently used ones.
-          $plugin_properties_with_defaults = [];
-          $plugin_properties_without_defaults = [];
-          $yaml_properties = $component_data['plugin_type_data']['yaml_properties'];
-          foreach ($yaml_properties as $property_name => $property_default) {
-            if (empty($property_default)) {
-              $plugin_properties_without_defaults[$property_name] = $property_default;
-            }
-            else {
-              $plugin_properties_with_defaults[$property_name] = $property_default;
-            }
-          }
-          return $plugin_properties_without_defaults + $plugin_properties_with_defaults;
-        }
-      ],
+      'plugin_properties' => PropertyDefinition::create('mapping')
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setCallable([static::class, 'defaultPluginProperties'])
+            ->setDependencies('..:TODO')
+        ),
+
+
+      // => [
+      //   'internal' => TRUE,
+      //   'format' => 'array',
+      //   'default' => function($component_data) {
+      //     // Group the plugin properties into those with default values given, and
+      //     // those with empty defaults. We can then put the ones with defaults later,
+      //     // as these are the most likely to be the less frequently used ones.
+      //     $plugin_properties_with_defaults = [];
+      //     $plugin_properties_without_defaults = [];
+      //     $yaml_properties = $component_data['plugin_type_data']['yaml_properties'];
+      //     foreach ($yaml_properties as $property_name => $property_default) {
+      //       if (empty($property_default)) {
+      //         $plugin_properties_without_defaults[$property_name] = $property_default;
+      //       }
+      //       else {
+      //         $plugin_properties_with_defaults[$property_name] = $property_default;
+      //       }
+      //     }
+      //     return $plugin_properties_without_defaults + $plugin_properties_with_defaults;
+      //   }
+      // ],
     ];
+  }
+
+  public static function defaultPluginProperties($data_item) {
+    // Group the plugin properties into those with default values given, and
+    // those with empty defaults. We can then put the ones with defaults later,
+    // as these are the most likely to be the less frequently used ones.
+    $plugin_properties_with_defaults = [];
+    $plugin_properties_without_defaults = [];
+    $yaml_properties = $data_item->getParent()->plugin_type_data->value['yaml_properties'];
+    foreach ($yaml_properties as $property_name => $property_default) {
+      if (empty($property_default)) {
+        $plugin_properties_without_defaults[$property_name] = $property_default;
+      }
+      else {
+        $plugin_properties_with_defaults[$property_name] = $property_default;
+      }
+    }
+    return $plugin_properties_without_defaults + $plugin_properties_with_defaults;
   }
 
   /**
