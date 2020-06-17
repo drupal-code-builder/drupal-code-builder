@@ -867,16 +867,11 @@ class ComponentCollector {
       return;
     }
 
-    // TODO: things like process empty????
+    // dump("PROCESS - " . $component_data->getAddress());
+    // dump($component_data->export());
 
     $processing($component_data);
-
-    return;
-
-    // if (empty($component_data_local[$property_name]) && empty($property_info['process_empty'])) {
-    //   // Don't apply to an empty property, unless forced to.
-    //   return;
-    // }
+    // dump($component_data->export());
   }
 
   /**
