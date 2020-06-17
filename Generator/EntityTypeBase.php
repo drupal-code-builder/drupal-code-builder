@@ -123,7 +123,8 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'Entity keys',
         'format' => 'mapping',
         'computed' => TRUE,
-        'process_empty' => TRUE,
+        // TODO: check if this can be removed.
+        // 'process_empty' => TRUE,
         // Child classes set the default value.
       ],
       'entity_interface_name' => PropertyDefinition::create('string')
