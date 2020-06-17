@@ -117,7 +117,7 @@ class ConfigEntityType extends EntityTypeBase {
     // ARGH we come here twice -- because of WTF?
     // QUICK HACK!
     // TODO: FIX!
-    if ($component_data[0]->name->value == 'id') {
+    if (!$component_data->isEmpty() && $component_data[0]->name->value == 'id') {
       return;
     }
 
