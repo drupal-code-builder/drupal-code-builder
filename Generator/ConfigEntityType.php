@@ -299,6 +299,7 @@ class ConfigEntityType extends EntityTypeBase {
       // The PHP type is not the same as the config schema type!
       switch ($schema_item['type']) {
         case 'label':
+        case 'text':
           $php_type = 'string';
           break;
 
