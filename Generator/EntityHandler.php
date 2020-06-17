@@ -40,7 +40,7 @@ class EntityHandler extends PHPClassFile {
     // Note that relative_class_name is given by the entity type component.
 
     $data_definition['class_docblock_lines']->setDefault(DefaultDefinition::create()
-      ->setExpression("['Provides the ' ~ getChildValue(parent, 'root_component_name') ~ ' handler for the ' ~ getChildValue(parent, 'entity_type_label') ~ ' entity.']"));
+      ->setExpression("['Provides the ' ~ getChildValue(parent, 'handler_label') ~ ' handler for the ' ~ getChildValue(parent, 'entity_type_label') ~ ' entity.']"));
 
     return $data_definition;
   }
