@@ -547,6 +547,7 @@ class ComponentCollector {
    *  recursive calls this is the local data subset.
    */
   protected function processComponentData(DataItem $component_data) {
+    $component_data->walk([$this, 'forceCreateChildren']);
     $component_data->walk([$this, 'setPresetValues']);
     $component_data->walk([$this, 'applyProcessing']);
 
@@ -602,17 +603,33 @@ class ComponentCollector {
   }
 
   /**
-   * Sets values from a presets property into other properties.
+   * Walk callback to forcibly create values if needed.
    *
-   * @param string $property_name TODO
-   *  The name of the preset property.
-   * @param $component_data_info
-   *  The component info array, or for child properties, the info array for the
-   *  current data.
-   * @param &$component_data_local
-   *  The array of component data, or for child properties, the item array that
-   *  immediately contains the property. In other words, this array would have
-   *  a key $property_name if data has been supplied for this property.
+   * @param DataItem $component_data
+   *  The component data item.
+   */
+  public function forceCreateChildren(DataItem $component_data) {
+    foreach ($component_data->getProperties() as $property_name => $property_definition) {
+      if ($property_definition->getForceCreate()) {
+        if ($component_data->isMultiple()) {
+          foreach ($component_data as $delta_item) {
+            // Access the property to instantiate its value.
+            $delta_item->{$property_name};
+          }
+        }
+        else {
+          // Access the property to instantiate its value.
+          $component_data->{$property_name};
+        }
+      }
+    }
+  }
+
+  /**
+   * Walk callback to set values from a presets property into other properties.
+   *
+   * @param DataItem $component_data
+   *  The component data item.
    */
   public function setPresetValues(DataItem $component_data) {
     if (!$component_data->getPresets()) {

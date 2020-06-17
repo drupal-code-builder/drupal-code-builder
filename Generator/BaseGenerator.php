@@ -401,6 +401,11 @@ abstract class BaseGenerator {
         }
       }
 
+      if (!empty($def['process_empty'])) {
+        $converted_defs[$name]->setForceCreate(TRUE);
+      }
+
+
       if ($def['required']) {
         $converted_defs[$name]->setRequired(TRUE);
       }
