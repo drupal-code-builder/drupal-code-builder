@@ -853,6 +853,9 @@ class ComponentCollector {
   /**
    * Walk callback to apply processing callbacks to component data.
    *
+   * Note that 'process_empty' is handled earlier, as empty values won't
+   * necessarily exist to get this walk callback applied.
+   *
    * @param DataItem $component_data
    *  The component data item.
    */
