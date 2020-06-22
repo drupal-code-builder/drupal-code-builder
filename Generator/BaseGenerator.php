@@ -396,9 +396,7 @@ abstract class BaseGenerator {
       }
 
       if (isset($def['processing'])) {
-        if (!is_a($def['processing'], \Closure::class)) {
-          $converted_defs[$name]->setProcessing($def['processing']);
-        }
+        $converted_defs[$name]->setProcessing($def['processing']);
       }
 
       if (!empty($def['process_empty'])) {
