@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Base generator entity types.
@@ -89,19 +90,21 @@ abstract class EntityTypeBase extends PHPClassFile {
           'default' => 'Default UI',
           'admin' => 'Admin UI',
         ],
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          if (!isset($component_data['handler_route_provider']) ||
-            $component_data['handler_route_provider'] != $value) {
-            $component_data['handler_route_provider'] = $value;
+        // WTF? how come working without this?!!!
+        'processing' => function(DataItem $component_data) {
+          $entity_data = $component_data->getParent();
+          if ($entity_data->handler_route_provider->isEmpty() ||
+            $entity_data->handler_route_provider->value != $component_data->value) {
+            $entity_data->handler_route_provider = $component_data->value;
           }
 
-          $component_data['handler_form_default'] = 'custom';
+          $entity_data->handler_form_default = 'custom';
 
           // The UI option sets the 'delete-form' link template, so we need to
           // set a form to handler it. The core form suffices.
-          $component_data['handler_form_delete'] = 'core';
+          $entity_data->handler_form_delete = 'core';
 
-          $component_data['handler_list_builder'] = 'custom';
+          $entity_data->handler_list_builder = 'custom';
         },
       ],
       'interface_parents' => [
@@ -179,16 +182,16 @@ abstract class EntityTypeBase extends PHPClassFile {
             // already.
             // TODO: this assumes the mode of the default handler type is
             // 'core_none'.
-            'processing' => function($value, &$component_data, $property_name, &$property_info) use ($default_handler_type) {
-              if (empty($component_data[$property_name]) || $component_data[$property_name] == 'none') {
+            'processing' => function(DataItem $component_data) use ($default_handler_type) {
+              if ($component_data->isEmpty() || $component_data->value == 'none') {
                 // Nothing to do; this isn't set to use anything.
                 return;
               }
 
               $default_handler_key = "handler_{$default_handler_type}";
 
-              if (empty($component_data[$default_handler_key]) || $component_data[$default_handler_key] == 'none') {
-                $component_data[$default_handler_key] = 'core';
+              if ($component_data->getParent()->{$default_handler_key}->isEmpty() || $component_data->getParent()->{$default_handler_key}->value == 'none') {
+                $component_data->getParent()->{$default_handler_key} = 'core';
               }
             },
           ];
@@ -455,11 +458,11 @@ abstract class EntityTypeBase extends PHPClassFile {
     // form handler if that is present.
     if (isset($components['handler_form_default'])) {
       // Hackily make the full class name here.
-      $class_name_pieces = array_merge([
-        'Drupal',
-        '%module',
-      ], $components['handler_form_default']['relative_class_name']);
-      $class_name = '\\' . self::makeQualifiedClassName($class_name_pieces);
+      // $class_name_pieces = array_merge([
+      //   'Drupal',
+      //   '%module',
+      // ], $components['handler_form_default']['relative_class_name']);
+      $class_name = '\Drupal\%module\\' . $components['handler_form_default']['relative_class_name'];
 
       foreach (['handler_form_add', 'handler_form_edit'] as $key) {
         if (isset($components[$key])) {
