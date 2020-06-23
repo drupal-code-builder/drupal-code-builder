@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for YAML plugins.
@@ -50,13 +51,23 @@ class PluginYAML extends BaseGenerator {
         'label' => 'Plugin name',
         'description' => 'The plugin name. A module name prefix is added automatically.',
         'required' => TRUE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          if ($component_data['prefix_name']) {
-            // YAML plugin names use dots as glue.
-            $component_data['plugin_name'] = $component_data['root_component_name'] . '.' . $component_data['plugin_name'];
-          }
-        },
       ],
+      'prefixed_plugin_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setCallable(function (DataItem $component_data) {
+              if ($component_data->getParent()->prefix_name->value) {
+                // YAML plugin names use dots as glue.
+                $component_data->value =
+                  $component_data->getParent()->root_component_name->value
+                  . '.' .
+                  $component_data->getParent()->plugin_name->value;
+              }
+            })
+            ->setDependencies('..:plugin_name')
+        ),
       'plugin_type_data' => PropertyDefinition::create('mapping'),
       // These are different for each plugin type, so internal for now.
       // When we have dynamic defaults, populate with the default property
@@ -141,7 +152,7 @@ class PluginYAML extends BaseGenerator {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    $plugin_name = $this->component_data['plugin_name'];
+    $plugin_name = $this->component_data['prefixed_plugin_name'];
 
     $yaml_data[$plugin_name] = $this->component_data['plugin_properties'];
 
