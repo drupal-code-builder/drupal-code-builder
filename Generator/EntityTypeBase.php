@@ -90,7 +90,6 @@ abstract class EntityTypeBase extends PHPClassFile {
           'default' => 'Default UI',
           'admin' => 'Admin UI',
         ],
-        // WTF? how come working without this?!!!
         'processing' => function(DataItem $component_data) {
           $entity_data = $component_data->getParent();
           if ($entity_data->handler_route_provider->isEmpty() ||
@@ -236,7 +235,7 @@ abstract class EntityTypeBase extends PHPClassFile {
           $entity_data->handler_form_default = 'core';
         }
 
-        if (!$entity_data->handler_list_builder->isEmpty() && $entity_data->handler_list_builder->value != 'none') {
+        if ($entity_data->handler_list_builder->value != 'custom') {
           $entity_data->handler_list_builder = 'core';
         }
       }
@@ -459,10 +458,6 @@ abstract class EntityTypeBase extends PHPClassFile {
     // form handler if that is present.
     if (isset($components['handler_form_default'])) {
       // Hackily make the full class name here.
-      // $class_name_pieces = array_merge([
-      //   'Drupal',
-      //   '%module',
-      // ], $components['handler_form_default']['relative_class_name']);
       $class_name = '\Drupal\%module\\' . $components['handler_form_default']['relative_class_name'];
 
       foreach (['handler_form_add', 'handler_form_edit'] as $key) {
