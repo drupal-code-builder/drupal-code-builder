@@ -256,18 +256,6 @@ abstract class EntityTypeBase extends PHPClassFile {
             ->setDependencies('..:entity_type_id')
         );
 
-    // $data_definition['admin_permission_name'] = [
-    //   'label' => 'Admin permission name',
-    //   'computed' => TRUE,
-    //   'default' => function ($component_data) {
-    //     if (!empty($component_data['admin_permission'])) {
-    //       $entity_type_id = $component_data['entity_type_id'];
-    //       // TODO: add a lower() to case converter!
-    //       return 'administer ' . strtolower(CaseString::snake($entity_type_id)->sentence()) . 's';
-    //     }
-    //   },
-    // ];
-
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
@@ -474,11 +462,12 @@ abstract class EntityTypeBase extends PHPClassFile {
       $components[$admin_permission_name] = array(
         'component_type' => 'Permission',
         'permission' => $admin_permission_name,
+        'title' => 'Administer ' . CaseString::snake($this->component_data->entity_type_id->value)->sentence() . ' entities',
       );
     }
 
     // Add menu plugins for the entity type if the UI option is set.
-    if (!empty($this->component_data['entity_ui'])) {
+    if ($this->component_data['entity_ui']) {
       // Add the 'add' button to appear on the collection route.
       $components['collection_menu_action' . $this->component_data['entity_type_id']] = [
         'component_type' => 'PluginYAML',
