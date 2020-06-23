@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  * Tests for Form component.
  *
  * @group form
+ * @group pass
  */
 class ComponentForm8Test extends TestBase {
 
@@ -75,7 +76,6 @@ class ComponentForm8Test extends TestBase {
    * Test Form component with injected services.
    *
    * @group di
-   * @group pass
    */
   function testFormGenerationWithServices() {
     // Assemble module data.
