@@ -98,9 +98,9 @@ class PHPFunction extends BaseGenerator {
     // Check the deprecated 'doxygen_first' property first, as code that doesn't
     // use this will have it empty.
     if (!$this->component_data->doxygen_first->isEmpty()) {
-      $lines[] = $this->component_data['doxygen_first']->value;
+      $lines[] = $this->component_data->doxygen_first->value;
     }
-    elseif (!$this->component_data->function_docblock_lines->isEmpty()) {
+    else {
       $lines = $this->component_data->function_docblock_lines->value;
 
       if (count($lines) > 1) {
