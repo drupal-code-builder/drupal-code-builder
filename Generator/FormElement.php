@@ -31,7 +31,7 @@ class FormElement extends BaseGenerator {
       // Further FormAPI attributes, without the initial '#'.
       'element_array' => [
         'internal' => TRUE,
-        'format' => 'array',
+        'format' => 'mapping',
         'default' => [],
       ],
     ];
