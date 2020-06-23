@@ -231,7 +231,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       if (!$entity_data->handler_route_provider->isEmpty() && $entity_data->handler_route_provider->value != 'none') {
         $entity_data->admin_permission = TRUE;
 
-        if (!$entity_data->handler_form_default->isEmpty() && $entity_data->handler_form_default->value != 'none') {
+        if ($entity_data->handler_form_default->value != 'custom') {
           $entity_data->handler_form_default = 'core';
         }
 
