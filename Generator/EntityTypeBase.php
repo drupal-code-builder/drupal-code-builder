@@ -227,16 +227,17 @@ abstract class EntityTypeBase extends PHPClassFile {
     //   handlers exist and crash without one.
     // This can't be done in the processing callback for those properties, as
     // processing callback is not applied to an empty property.
-    $data_definition['handler_route_provider']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      if (!empty($component_data['handler_route_provider']) && $component_data['handler_route_provider'] != 'none') {
-        $component_data['admin_permission'] = TRUE;
+    $data_definition['handler_route_provider']['processing'] = function(DataItem $component_data) {
+      $entity_data = $component_data->getParent();
+      if (!$entity_data->handler_route_provider->isEmpty() && $entity_data->handler_route_provider->value != 'none') {
+        $entity_data->admin_permission = TRUE;
 
-        if (empty($component_data['handler_form_default']) || $component_data['handler_form_default'] == 'none') {
-          $component_data['handler_form_default'] = 'core';
+        if (!$entity_data->handler_form_default->isEmpty() && $entity_data->handler_form_default->value != 'none') {
+          $entity_data->handler_form_default = 'core';
         }
 
-        if (empty($component_data['handler_list_builder']) || $component_data['handler_list_builder'] == 'none') {
-          $component_data['handler_list_builder'] = 'core';
+        if (!$entity_data->handler_list_builder->isEmpty() && $entity_data->handler_list_builder->value != 'none') {
+          $entity_data->handler_list_builder = 'core';
         }
       }
     };
