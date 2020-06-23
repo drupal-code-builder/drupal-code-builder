@@ -263,7 +263,7 @@ class ConfigEntityType extends EntityTypeBase {
     ];
 
     // Add menu plugins for the entity type if the UI option is set.
-    if (!empty($this->component_data['entity_ui'])) {
+    if ($this->component_data['entity_ui']) {
       // Name must be unique among the component type.
       $components['collection_menu_link_' . $this->component_data['entity_type_id']] = [
         'component_type' => 'PluginYAML',
