@@ -22,7 +22,7 @@ class ComponentInfo8Test extends TestBase {
   /**
    * Test generating a module info file.
    */
-  public function testModuleGenerationInfoFile() {
+  public function testBasicInfoFile() {
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
 
@@ -46,8 +46,13 @@ class ComponentInfo8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('name', 'Test Module');
     $yaml_tester->assertPropertyHasValue('type', 'module');
     $yaml_tester->assertPropertyHasValue('core', '8.x');
+  }
 
-    // Test optional info properties.
+  /**
+   * Test optional info properties.
+   */
+  public function testInfoFileOptionalProperties() {
+    $module_name = 'test_module';
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
