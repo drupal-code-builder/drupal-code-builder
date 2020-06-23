@@ -58,13 +58,11 @@ class PluginYAML extends BaseGenerator {
           DefaultDefinition::create()
             ->setLazy(TRUE)
             ->setCallable(function (DataItem $component_data) {
-              if ($component_data->getParent()->prefix_name->value) {
-                // YAML plugin names use dots as glue.
-                $component_data->value =
-                  $component_data->getParent()->root_component_name->value
-                  . '.' .
-                  $component_data->getParent()->plugin_name->value;
-              }
+              // YAML plugin names use dots as glue.
+              $component_data->value =
+                $component_data->getParent()->root_component_name->value
+                . '.' .
+                $component_data->getParent()->plugin_name->value;
             })
             ->setDependencies('..:plugin_name')
         ),
@@ -152,7 +150,12 @@ class PluginYAML extends BaseGenerator {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    $plugin_name = $this->component_data['prefixed_plugin_name'];
+    if ($this->component_data->prefix_name->value) {
+      $plugin_name = $this->component_data->prefixed_plugin_name->value;
+    }
+    else {
+      $plugin_name = $this->component_data->plugin_name->value;
+    }
 
     $yaml_data[$plugin_name] = $this->component_data['plugin_properties'];
 
