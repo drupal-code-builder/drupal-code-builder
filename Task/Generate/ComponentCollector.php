@@ -277,23 +277,23 @@ class ComponentCollector {
 
     // Pick out any data properties which are components themselves, and create the
     // child components.
-    foreach ($component_data as $name => $data_item) {
-      // dump("spawn $name?");
+    foreach ($component_data as $item_name => $data_item) {
+      // dump("spawn $item_name?");
       // We're only interested in component properties.
       if (!($data_item->getDefinition() instanceof GeneratorDefinition)) {
-        // dump("NO spawn $name? not gen");
+        // dump("not spawning $item_name - not generator.");
         continue;
       }
 
       if ($data_item->isEmpty()) {
-        dump("not spawning $name - data is empty.");
+        // dump("not spawning $item_name - data is empty.");
         continue;
       }
 
       $item_component_type = $data_item->getComponentType();
       if ($data_item->getType() == 'boolean') {
         if (!$data_item->value) {
-          dump("not spawning $name - boolean FALSE.");
+          // dump("not spawning $item_name - boolean FALSE.");
           continue;
         }
 
@@ -301,13 +301,15 @@ class ComponentCollector {
         // This is because on the one hand, a boolean property is just a boolean
         // because that's what the UI needs, but the component itself has
         // various properties that it expects to acquire.
-        $definition =  $this->classHandler->getComponentPropertyDefinition($item_component_type, $name);
+        $definition =  $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
         $data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
-        dump("switcheroo data item for boolean $name.");
+        // dump("switcheroo data item for boolean $item_name.");
       }
 
-      // dump("YES spawn $name?");
+      // dump("YES spawn $item_name?");
+      $this->debug($chain, "spawning $item_name; type: $item_component_type");
+
 
       // Get the component type.
       // TODO: mutable types might have different component type per variant!!
