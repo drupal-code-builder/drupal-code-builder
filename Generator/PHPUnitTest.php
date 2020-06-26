@@ -199,7 +199,7 @@ class PHPUnitTest extends PHPClassFile {
       ->setCallable(function (DataItem $component_data) {
         // Lop off the initial Drupal\Tests\module and the final class name to
         // build the path.
-        $path_pieces = array_slice($component_data['qualified_class_name_pieces'], 3, -1);
+        $path_pieces = array_slice($component_data->getParent()->qualified_class_name_pieces->value, 3, -1);
         // Add the initial tests/src to the front.
         array_unshift($path_pieces, 'tests/src');
 
