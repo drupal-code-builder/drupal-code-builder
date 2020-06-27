@@ -3,8 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Generator for PHP class files.
@@ -50,10 +51,18 @@ class PHPClassFile extends PHPFile {
         ->setDefault(DefaultDefinition::create()
           // TODO: replace get() with ->value -- why not working??
           // TODO: do we need a \ in the splice?
-          ->setExpression('relativeClassName(parent.relative_namespace.get(), parent.plain_class_name.get())')
           ->setLazy(TRUE)
-          ->setDependencies('..:plain_class_name')
-      ),
+          ->setCallable(function (DataItem $component_data) {
+            $class_data = $component_data->getParent();
+            $relative_namespace = $class_data->relative_namespace->value;
+            $plain_classname = $class_data->plain_class_name->value;
+
+            if ($relative_namespace) {
+              $relative_namespace .= '\\';
+            }
+            return $relative_namespace . $plain_classname;
+        })),
+      // TODO: processing for case.
       'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('The plain class name, e.g. "MyClass"')
         ->setDefault(DefaultDefinition::create()
