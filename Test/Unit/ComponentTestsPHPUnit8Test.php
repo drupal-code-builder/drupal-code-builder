@@ -46,7 +46,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'phpunit_tests' => [
         0 => [
           'test_type' => 'kernel',
-          'test_class_name' => 'MyTest',
+          'plain_class_name' => 'MyTest',
         ],
       ],
       'readme' => FALSE,
@@ -89,7 +89,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'phpunit_tests' => [
         0 => [
           'test_type' => 'unit',
-          'test_class_name' => 'MyTest',
+          'plain_class_name' => 'MyTest',
         ],
       ],
       'readme' => FALSE,
@@ -125,7 +125,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'phpunit_tests' => [
         0 => [
           'test_type' => 'kernel',
-          'test_class_name' => 'MyTest',
+          'plain_class_name' => 'MyTest',
         ],
       ],
       'readme' => FALSE,
@@ -167,7 +167,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'phpunit_tests' => [
         0 => [
           'test_type' => 'kernel',
-          'test_class_name' => 'MyTest',
+          'plain_class_name' => 'MyTest',
           'container_services' => [
             'current_user',
             'entity_type.manager',
@@ -223,7 +223,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'phpunit_tests' => [
         0 => [
           'test_type' => 'kernel',
-          'test_class_name' => 'MyTest',
+          'plain_class_name' => 'MyTest',
           'test_modules' => [
             0 => [
               'root_name' => 'test_module',
