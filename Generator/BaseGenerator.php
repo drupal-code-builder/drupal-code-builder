@@ -292,7 +292,13 @@ abstract class BaseGenerator {
           $expression = "getRootComponentName(requester)";
         }
         else {
-          $expression = "requester.{$name}.value";
+          if ($converted_defs[$name]->isMultiple()) {
+            // Urgh.
+            $expression = "requester.{$name}.export()";
+          }
+          else {
+            $expression = "requester.{$name}.value";
+          }
         }
 
         $converted_defs[$name]->setAcquiringExpression($expression);
