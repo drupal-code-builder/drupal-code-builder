@@ -54,7 +54,10 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "The expected number of files is returned.");
+    $this->assertFiles([
+      "test_module.info.yml",
+      "tests/src/Kernel/MyTest.php"
+    ], $files);
 
     $this->assertArrayHasKey("tests/src/Kernel/MyTest.php", $files, "The files list has a test class file.");
 
@@ -94,9 +97,10 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "The expected number of files is returned.");
-
-    $this->assertArrayHasKey("tests/src/Unit/MyTest.php", $files, "The files list has a test class file.");
+    $this->assertFiles([
+      "test_module.info.yml",
+      "tests/src/Unit/MyTest.php"
+    ], $files);
 
     $test_file = $files["tests/src/Unit/MyTest.php"];
 
@@ -129,9 +133,10 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "The expected number of files is returned.");
-
-    $this->assertArrayHasKey("tests/src/Kernel/MyTest.php", $files, "The files list has a test class file.");
+    $this->assertFiles([
+      "test_module.info.yml",
+      "tests/src/Kernel/MyTest.php"
+    ], $files);
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
@@ -177,9 +182,10 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "The expected number of files is returned.");
-
-    $this->assertArrayHasKey("tests/src/Kernel/MyTest.php", $files, "The files list has a test class file.");
+    $this->assertFiles([
+      "test_module.info.yml",
+      "tests/src/Kernel/MyTest.php"
+    ], $files);
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
@@ -243,13 +249,16 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     );
 
     $files = $this->generateModuleFiles($module_data);
-    $this->assertCount(7, $files, "The expected number of files is returned.");
 
-    $this->assertArrayHasKey("generated_module.info.yml", $files, "The main module has a .info.yml file.");
-    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The main module has a plugin file.");
-    $this->assertArrayHasKey("tests/src/Kernel/MyTest.php", $files, "The files list has a test class file.");
-    $this->assertArrayHasKey("tests/modules/test_module/test_module.info.yml", $files, "The test module has a .info.yml file.");
-    $this->assertArrayHasKey("tests/modules/test_module/src/Plugin/Block/Alpha.php", $files, "The test module has a plugin file.");
+    $this->assertFiles([
+      'generated_module.info.yml',
+      'src/Plugin/Block/Alpha.php',
+      'config/schema/generated_module.schema.yml',
+      'tests/src/Kernel/MyTest.php',
+      'tests/modules/test_module/test_module.info.yml',
+      'tests/modules/test_module/src/Plugin/Block/Alpha.php',
+      'tests/modules/test_module/config/schema/test_module.schema.yml',
+    ], $files);
 
     // Check the main module .info file.
     $info_file = $files["generated_module.info.yml"];
