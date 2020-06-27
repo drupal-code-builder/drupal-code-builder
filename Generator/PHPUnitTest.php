@@ -25,7 +25,7 @@ class PHPUnitTest extends PHPClassFile {
           // These are set in the process stage.
           'force' => [
             // Name of another property => Value for that property.
-            'test_namespace' => [
+            'relative_namespace' => [
               'value' => 'Unit',
             ],
             'parent_class_name' => [
@@ -38,7 +38,7 @@ class PHPUnitTest extends PHPClassFile {
         'label' => 'Kernel test',
         'data' => [
           'force' => [
-            'test_namespace' => [
+            'relative_namespace' => [
               'value' => 'Kernel',
             ],
             'parent_class_name' => [
@@ -51,7 +51,7 @@ class PHPUnitTest extends PHPClassFile {
         'label' => 'Kernel test with entity support',
         'data' => [
           'force' => [
-            'test_namespace' => [
+            'relative_namespace' => [
               'value' => 'Kernel',
             ],
             'parent_class_name' => [
@@ -64,7 +64,7 @@ class PHPUnitTest extends PHPClassFile {
         'label' => 'Browser test',
         'data' => [
           'force' => [
-            'test_namespace' => [
+            'relative_namespace' => [
               'value' => 'Functional',
             ],
             'parent_class_name' => [
@@ -77,7 +77,7 @@ class PHPUnitTest extends PHPClassFile {
         'label' => 'Javascript test',
         'data' => [
           'force' => [
-            'test_namespace' => [
+            'relative_namespace' => [
               'value' => 'FunctionalJavascript',
             ],
             'parent_class_name' => [
@@ -93,10 +93,6 @@ class PHPUnitTest extends PHPClassFile {
         'label' => 'Test type',
         'presets' => $test_type_presets,
         'required' => TRUE,
-      ],
-      'test_namespace' => [
-        'label' => "The namespace piece above the class name, e.g. 'Kernel'",
-        'internal' => TRUE,
       ],
       'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('Test class name')
