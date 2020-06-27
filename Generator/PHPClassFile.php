@@ -83,9 +83,10 @@ class PHPClassFile extends PHPFile {
         ->setLabel('The qualifed classname pieces, relative to the module namespace')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
-        // plain_class_name + relative_namespace
-          ->setExpression('explode("\\\\", parent.relative_class_name.get())')
           ->setLazy(TRUE)
+          ->setCallable(function (DataItem $component_data) {
+            return explode("\\", $component_data->getParent()->relative_class_name->value);
+          })
           ->setDependencies('..:relative_class_name')
       ),
       // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
