@@ -157,14 +157,13 @@ class PHPUnitTest extends PHPClassFile {
     // Qualified class names and paths work differently for test classes because
     // the namespace above the module is different and the path is different.
     // Treat this as relative to the \Drupal\Tests\mymodule namespace.
-    $data_definition['relative_namespace']->getDefault()
-      ->setLazy(TRUE)
-      ->setCallable(function (DataItem $component_data) {
-        return 'FOO';
-        $test_data = $component_data->getParent();
+    // $data_definition['relative_namespace']->getDefault()
+    //   ->setLazy(TRUE)
+    //   ->setCallable(function (DataItem $component_data) {
+    //     $test_data = $component_data->getParent();
 
-        return $test_data->test_namespace->value;
-      });
+    //     return $test_data->test_namespace->value;
+    //   });
 
     // $data_definition['relative_class_name']['default'] = function ($component_data) {
     //   if (isset($component_data['test_namespace'])) {
@@ -180,15 +179,19 @@ class PHPUnitTest extends PHPClassFile {
     //   }
     // };
 
-    // $data_definition['qualified_class_name_pieces']['default'] = function ($component_data) {
-    //   $class_name_pieces = array_merge([
-    //     'Drupal',
-    //     'Tests',
-    //     '%module',
-    //   ], $component_data['relative_class_name']);
+    $data_definition['qualified_class_name_pieces']->getDefault()
+      ->setCallable(function (DataItem $component_data) {
+        $class_name_pieces = array_merge(
+          [
+            'Drupal',
+            'Tests',
+            '%module',
+          ],
+          $component_data->getParent()->relative_class_name_pieces->get()
+        );
 
-    //   return $class_name_pieces;
-    // };
+      return $class_name_pieces;
+    });
 
     $data_definition['path']->getDefault()
       ->setLazy(TRUE)
