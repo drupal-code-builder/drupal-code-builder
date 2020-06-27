@@ -91,7 +91,6 @@ class PHPClassFile extends PHPFile {
       // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
       'qualified_class_name_pieces' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
-        ->setRequired(TRUE)
         ->setDefault(DefaultDefinition::create()
           // ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
           ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
