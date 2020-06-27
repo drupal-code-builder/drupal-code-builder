@@ -385,12 +385,12 @@ class Module extends RootComponent {
         'format' => 'boolean',
         'component_type' => 'Readme',
       ),
-      // 'phpunit_tests' => array(
-      //   'label' => "PHPUnit test case class",
-      //   'format' => 'compound',
-      //   'component_type' => 'PHPUnitTest',
-      //   'required' => FALSE,
-      // ),
+      'phpunit_tests' => array(
+        'label' => "PHPUnit test case class",
+        'format' => 'compound',
+        'component_type' => 'PHPUnitTest',
+        'required' => FALSE,
+      ),
       // 'tests' => array(
       //   'label' => "Simpletest test case class",
       //   'description' => 'NOTICE: These are deprecated in Drupal 8.',
