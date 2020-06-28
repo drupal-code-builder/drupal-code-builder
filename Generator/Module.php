@@ -94,8 +94,7 @@ class Module extends RootComponent {
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
-    $definition->setLabel('Module')
-      ->setMachineName('module');
+    static::baseComponentPropertyDefinitionAlter($definition);
 
     $definition->getProperty('root_name')
       ->setLabel('Module machine name');
@@ -107,6 +106,12 @@ class Module extends RootComponent {
 
     // dump($definition);
     return $definition;
+  }
+
+  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+    // This is just to allow easy skipping of this by TestModule.
+    $definition->setLabel('Module')
+      ->setMachineName('module');
   }
 
   /**
@@ -155,7 +160,6 @@ class Module extends RootComponent {
       'module_dependencies' => array(
         'label' => 'Module dependencies',
         'description' => 'The machine names of the modules this module should have as dependencies.',
-        'default' => array(),
         'required' => FALSE,
         // We need a value for this, as other generators acquire it.
         'process_default' => TRUE,

@@ -3,22 +3,28 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for a module that is used for testing.
  */
 class TestModule extends Module {
 
+  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+    // Do nothing.
+  }
+
   /**
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    $component_data_definition['test_class_name'] = [
-      'acquired' => TRUE,
-    ];
+    // $component_data_definition['test_class_name'] = [
+    //   // plain_class_name
+    //   'acquired' => TRUE,
+    // ];
 
     // Put the parent definitions after ours.
-    $component_data_definition += parent::componentDataDefinition();
+    $component_data_definition = parent::componentDataDefinition();
 
     // Remove properties for components that test modules don't need.
     foreach ([
@@ -42,9 +48,7 @@ class TestModule extends Module {
     // Don't need this, but info file generators expect it.
     $component_data_definition['module_dependencies']['internal'] = TRUE;
 
-    $component_data_definition['component_base_path']['default'] = function($component_data) {
-      return 'tests/modules/%module';
-    };
+    $component_data_definition['component_base_path']['default'] = 'tests/modules/%module';
 
     return $component_data_definition;
   }
