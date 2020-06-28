@@ -119,12 +119,11 @@ class Generate extends Base {
 
   public function getRootComponentData() {
     $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
-    $data_definition = $class::getPropertyDefinition();
     // dump($data_definition);
 
     // We use a custom data item factory so we can add custom Expression
     // Language functions.
-    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($data_definition);
+    $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
 
     // dump($data_definition);
 

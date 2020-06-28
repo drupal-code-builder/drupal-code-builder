@@ -8,7 +8,9 @@ use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Definition\PropertyDefinition as BasePropertyDefinition;
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\DefinitionProviderInterface;
 
 /**
  * Abstract base Generator for components.
@@ -83,7 +85,7 @@ use MutableTypedData\Data\DataItem;
  *
  * @see Generate::generateComponent()
  */
-abstract class BaseGenerator {
+abstract class BaseGenerator implements DefinitionProviderInterface {
 
   /**
    * Property attribute shorthand for acquired properties.
@@ -150,6 +152,15 @@ abstract class BaseGenerator {
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     return preg_replace('@\d+$@', '', $short_class);
+  }
+
+  /**
+   * Implements DefinitionProviderInterface's method.
+   *
+   * We need the base PropertyDefinition here for the interface compatibility.
+   */
+  public static function getDefinition(): BasePropertyDefinition {
+    return static::getPropertyDefinition();
   }
 
   // TODO: need way to not show internals to UIs!!
