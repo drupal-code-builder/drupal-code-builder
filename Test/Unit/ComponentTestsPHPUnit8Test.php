@@ -213,7 +213,42 @@ class ComponentTestsPHPUnit8Test extends TestBase {
    *
    * @group test
    */
-  function testModuleGenerationTestsWithTestModule() {
+  function testModuleGenerationTestsWithBasicTestModule() {
+    // Create a module.
+    $module_name = 'generated_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Generated module',
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'kernel',
+          'plain_class_name' => 'MyTest',
+          'test_modules' => [
+            0 => [
+              'root_name' => 'test_module',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'generated_module.info.yml',
+      'tests/src/Kernel/MyTest.php',
+      'tests/modules/test_module/test_module.info.yml',
+    ], $files);
+  }
+
+  /**
+   * Create a test class with a test module and module components.
+   *
+   * @group test
+   */
+  function testModuleGenerationTestsWithTestModuleComponents() {
     // Create a module.
     $module_name = 'generated_module';
     $module_data = array(
