@@ -99,10 +99,9 @@ class Module extends RootComponent {
     $definition->getProperty('root_name')
       ->setLabel('Module machine name');
 
+    // TODO: what's this here for?
     $definition->getProperty('plugins')
       ->setLabel('Plugins');
-
-    $definition->removeProperty('plugins_yaml');
 
     // dump($definition);
     return $definition;
