@@ -48,7 +48,8 @@ class TestModule extends Module {
     // Don't need this, but info file generators expect it.
     $component_data_definition['module_dependencies']['internal'] = TRUE;
 
-    $component_data_definition['component_base_path']['default'] = 'tests/modules/%module';
+    $component_data_definition['component_base_path']->getDefault()
+      ->setLiteral('tests/modules/%module');
 
     return $component_data_definition;
   }
