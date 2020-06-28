@@ -99,14 +99,15 @@ class FileAssembler {
       $file_info_item = $child_component->getFileInfo();
       if (is_array($file_info_item)) {
         // Prepend the component_base_path to the path.
-        if (!empty($child_component->component_data->component_base_path->value)) {
+        $component_base_path = $child_component->component_data->component_base_path->value;
+        if (!empty($component_base_path)) {
           if (empty($file_info_item['path'])) {
             $file_info_item['path'] = $child_component->component_data->component_base_path->value;
           }
           else {
             $file_info_item['path'] = $child_component->component_data->component_base_path->value
-              . '/'
-              . $file_info_item['path'];
+            . '/'
+            . $file_info_item['path'];
           }
         }
 
