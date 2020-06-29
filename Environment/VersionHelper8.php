@@ -57,7 +57,7 @@ class VersionHelper8 {
    *  Exception
    */
   function prepareDirectory($directory) {
-    $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $status = \Drupal::service('file_system')->prepareDirectory($directory, \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY | \Drupal\Core\File\FileSystemInterface::MODIFY_PERMISSIONS);
     if (!$status) {
       throw new \Exception();
     }
@@ -71,7 +71,7 @@ class VersionHelper8 {
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
     $files = array();
     foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
-      $files += file_scan_directory($module->getPath(), $mask, array('key' => $key));
+      $files += \Drupal::service('file_system')->scanDirectory($module->getPath(), $mask, array('key' => $key));
     }
     return $files;
   }
