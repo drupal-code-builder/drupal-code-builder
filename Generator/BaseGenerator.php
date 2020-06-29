@@ -126,9 +126,8 @@ abstract class BaseGenerator implements DefinitionProviderInterface {
    *   An array of data for the component.
    */
   function __construct(DataItem $component_data) {
-    // dump("CONSTRUCT!");
-    // dump(static::class);
-    // dump($component_data->export());
+    // dump("CONSTRUCT! " . static::class);
+    // dump($component_data);
     $this->component_data = $component_data;
 
     // Set the type. This is the short class name without the numeric version
@@ -163,8 +162,12 @@ abstract class BaseGenerator implements DefinitionProviderInterface {
     return static::getPropertyDefinition();
   }
 
+  // get the property definition for this component.
+  // NOTE! this shouldn't set things like required/multiple/etc because
+  // those depend on where it's used.
   // TODO: need way to not show internals to UIs!!
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
+    // WTF: module hardcoded!
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $type = static::deriveType(static::class);
@@ -176,8 +179,6 @@ abstract class BaseGenerator implements DefinitionProviderInterface {
     $definition = GeneratorDefinition::createFromGeneratorType($type, $data_type);
 
     static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
-
-    // dsm($definition);
 
     return $definition;
   }
@@ -311,6 +312,7 @@ abstract class BaseGenerator implements DefinitionProviderInterface {
             $expression = "requester.{$name}.value";
           }
         }
+        // dump("AQUIRE $name with $expression");
 
         $converted_defs[$name]->setAcquiringExpression($expression);
       }
@@ -341,7 +343,7 @@ abstract class BaseGenerator implements DefinitionProviderInterface {
           );
         }
         elseif (is_callable($def['default'])) {
-          dump($def);
+          // dump($def);
           throw new \Exception(sprintf(
             "Array info callable default needs to be converted at property '%s' of %s.",
             $name,
