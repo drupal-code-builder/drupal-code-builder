@@ -73,6 +73,8 @@ class Info8 extends Info {
 
     $lines['core'] = "8.x";
 
+    $lines['core_version_requirement'] = '^8 || ^9';
+
     if (!empty($this->extraLines)) {
       $lines = array_merge($lines, $this->extraLines);
     }
