@@ -1,0 +1,28 @@
+// This file defines hook preset groups for Module builder
+// Its format is JSON but with single-line comments allowed.
+// The first preset is commented as an example.
+{
+  // The machine name of the group.
+  "nodeapi":{
+    // The label shown in the UI.
+    "label": "Interact with nodes",
+    // A list of hooks.
+    // more hooks needed here...
+    "hooks": [
+      "hook_node_load"
+    ]
+  },
+  "tokens":{
+    "label": "Define tokens",
+    "hooks": [
+      "hook_token_info",
+      "hook_tokens"
+    ]
+  },
+  "views":{
+    "label": "Define views data",
+    "hooks": [
+      "hook_views_data"
+    ]
+  }
+}

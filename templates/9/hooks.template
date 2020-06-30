@@ -1,0 +1,75 @@
+
+/**
+ * @file
+ * Defines default templates for hook functions.
+ *
+ * For the tokens that may be used, see
+ * DrupalCodeBuilder\Generator\Module::getReplacements().
+ */
+
+== START hook_help ==
+  /* INFO:
+   * The help hook is for displaying helpful messages at the top of pages indicated
+   * by $section to further explain how they work. Adding certain "keywords" to the end of
+   * a given path (like admin/modules#description) will cause this text to display elsewhere
+   * in the page as well (in this case, in the description section for the given module).
+   */
+  switch ($route_name) {
+    case 'help.page.%module':
+      return t("%help");
+
+    // OPTIONAL: Add additional cases for other paths that should display
+    // help text.
+  }
+== END ==
+
+== START hook_views_data ==
+  // Define the base group of this table. Fields that don't
+  // have a group defined will go into this field by default.
+  $data['%module']['table']['group']  = t('User');
+
+  $data['%module']['table']['join'] = array(
+    'term_data' => array(
+      'left_field' => 'tid',
+      'field' => 'tid',
+    ),
+    'users' => array(
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ),
+  );
+
+  // Simple field
+  $data['%module']['tid'] = array(
+    'title' => t('LABEL'),
+    'help' => t('HELP'),
+    'field' => array(
+      'title' => t('LABEL'),
+      'help' => t('HELP'),
+      'handler' => '%module_handler_field_FIELD_tid',
+      'skip base' => '%module',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument',
+      // todo...
+      'skip base' => '%module',
+    ),
+    'filter' => array(
+      'title' => t('LABEL'),
+      'handler' => 'views_handler_filter',
+    ),
+    'relationship' => array(
+      'title' => t('LABEL'),
+      'label' => t('LABEL'),
+      'help' => t('HELP.'),
+      'base' => 'BASE',
+      'base field' => 'FIELD',
+      'handler' => 'views_handler_relationship',
+      // This allows us to not show this relationship if the base is already
+      // BASE so users won't create circular relationships.
+      'skip base' => array('BASE'),
+    ),
+  );
+
+  return $data;
+== END ==
