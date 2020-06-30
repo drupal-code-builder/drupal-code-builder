@@ -78,6 +78,10 @@ abstract class BaseEnvironment implements EnvironmentInterface {
 
     $helper_class_name = '\DrupalCodeBuilder\Environment\VersionHelper' . $major_version;
 
+    if (!class_exists($helper_class_name)) {
+      throw new \DrupalCodeBuilder\Exception\SanityException('unsupported_core_version');
+    }
+
     $this->version_helper = new $helper_class_name();
 
     return $this;
