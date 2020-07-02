@@ -165,44 +165,46 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'compound',
         'cardinality' => 1,
         'component_type' => 'ConfigBundleEntityType',
-        'default' => function($component_data) {
-          return [
-            0 => [
-              // Default values for the benefit of progressive UIs.
-              // The bundle entity type ID defaults to CONTENT_TYPE_type.
-              // Note this doesn't work in tests or non-progressive UIs!
-              'entity_type_id' => $component_data['entity_type_id'] . '_type',
-              'bundle_of_entity' => $component_data['entity_type_id'],
-            ],
-          ];
-        },
+        // TODO: This was a hack anyway!
+        // 'default' => function($component_data) {
+        //   return [
+        //     0 => [
+        //       // Default values for the benefit of progressive UIs.
+        //       // The bundle entity type ID defaults to CONTENT_TYPE_type.
+        //       // Note this doesn't work in tests or non-progressive UIs!
+        //       'entity_type_id' => $component_data['entity_type_id'] . '_type',
+        //       'bundle_of_entity' => $component_data['entity_type_id'],
+        //     ],
+        //   ];
+        // },
       ],
-      'bundle_label' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          // TODO: get the actual value of the entity_type_label property from
-          // the bundle entity -- but this is proving rather labyrinthine...
-          return CaseString::snake($component_data['bundle_entity_type_id'])->title();
-        },
-      ],
-      'field_ui_base_route' => [
-        'label' => 'Field UI base route',
+      'bundle_label' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setLazy(TRUE)
+          ->setExpression("machineToLabel(getChildValue(parent, 'bundle_entity_type_id'))")
+          ->setDependencies('..:bundle_entity_type_id')
+        ),
+      'field_ui_base_route' => PropertyDefinition::create('string')
         // TODO: expose to UI in 3.3 when we have dynamic defaults.
         // This will then be dependent on the 'fieldable' property.
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          if (!in_array('fieldable', $component_data['functionality'])) {
-            return NULL;
-          }
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setLazy(TRUE)
+          ->setCallable(function (DataItem $component_data) {
+            if (!in_array('fieldable', $component_data['functionality'])) {
+              return NULL;
+            }
 
-          if (isset($component_data['bundle_entity'][0])) {
-            return 'entity.' . $component_data['bundle_entity_type_id'] . '.edit_form';
-          }
-          else {
-            return 'entity.' . $component_data['entity_type_id'] . '.admin_form';
-          }
-        },
-      ],
+            if (isset($component_data['bundle_entity'][0])) {
+              return 'entity.' . $component_data['bundle_entity_type_id'] . '.edit_form';
+            }
+            else {
+              return 'entity.' . $component_data['entity_type_id'] . '.admin_form';
+            }
+          })
+          ->setDependencies('..:bundle_entity_type_id')
+        ),
     ];
     InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);
 
@@ -217,14 +219,15 @@ class ContentEntityType extends EntityTypeBase {
             'label' => 'Field name',
             'required' => TRUE,
           ],
-          'label' => [
-            'label' => 'Field label',
-            'default' => function($component_data) {
-              $entity_type_id = $component_data['name'];
-              return CaseString::snake($entity_type_id)->title();
-            },
-            'process_default' => TRUE,
-          ],
+          'label' => PropertyDefinition::create('string')
+            ->setLabel('Field label')
+            ->setDescription("The human-readable label for the field.")
+            ->setRequired(TRUE)
+            ->setDefault(
+              DefaultDefinition::create()
+                ->setExpression("machineToLabel(getChildValue(parent, 'name'))")
+                ->setDependencies('..:name')
+            ),
           'type' => [
             'label' => 'Field type',
             'required' => TRUE,
