@@ -1,6 +1,14 @@
 <?php $data =
 array (
-  'text' => 
+  'string' =>
+  array(
+    'type' => 'string',
+    'label' => 'Text (plain)',
+    'description' => 'A field containing a plain string value.',
+    'default_widget' => 'string_textfield',
+    'default_formatter' => 'string',
+  ),
+  'text' =>
   array (
     'type' => 'text',
     'label' => 'Text (formatted)',
