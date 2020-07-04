@@ -551,9 +551,12 @@ class PHPTester {
     $message_parent_interfaces = implode(', ', $expected_parent_interface_full_names);
     $message = $message ?? "The interface {$interface_name} inherits from the interfaces {$message_parent_interfaces}.";
 
+    $actual_parent_interface_full_names = [];
     foreach ($interface_node->extends as $parent_name_node) {
       $actual_parent_interface_full_names[] = $this->resolveImportedClassLike($parent_name_node->parts[0]);
     }
+
+    Assert::assertNotEmpty($actual_parent_interface_full_names, "The interface has parents.");
 
     // Sort both arrays, as PHPUnit does not have an order-irrelevant array
     // comparison assertion :(
