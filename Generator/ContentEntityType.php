@@ -254,7 +254,14 @@ class ContentEntityType extends EntityTypeBase {
       );
 
     $data_definition['interface_parents']['processing'] = function (DataItem $component_data) {
+      // Quick hack for child elements!
+      // TODO: override getDeltaDefinition() to remove processing from deltas!
+      if (!$component_data->isMultiple()) {
+        return;
+      }
+
       $new_item = $component_data->insertBefore(0);
+      // TODO: ARGH getting set twice???
       $new_item->value = '\Drupal\Core\Entity\ContentEntityInterface';
     };
 
