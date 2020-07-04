@@ -111,8 +111,8 @@ abstract class EntityTypeBase extends PHPClassFile {
         'description' => "The interfaces the entity interface inherits from.",
         // Cheat! Make it a mapping so we can have a default value!
         // TODO: restore this to an array, multiple values can have defaults!
-        'format' => 'mapping',
-        'computed' => TRUE,
+        'format' => 'array',
+        'internal' => TRUE,
         // The basic value is set in a processing callback by the child classes,
         // so that it gets added to values from the 'functionality' preset.
         // TODO: figure out how to have presets merge with default values.
@@ -252,6 +252,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         ->setDefault(
           DefaultDefinition::create()
             ->setLazy(TRUE)
+            // NOT WORKING IN FRONT END!
             ->setExpression("'administer ' ~ getChildValue(parent, 'entity_type_id') ~ ' entities'")
             ->setDependencies('..:entity_type_id')
         );

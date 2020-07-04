@@ -2,11 +2,13 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -158,13 +160,10 @@ class ContentEntityType extends EntityTypeBase {
             ->setExpression("getChildValue(parent, 'entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
-      'bundle_entity' => [
-        'label' => 'Bundle config entity type',
-        'description' => "Creates a config entity type which provides the bundles for this entity type. "
-          . "This is analogous to the Node Type entity type providing bundles for the Node entity type.",
-        'format' => 'compound',
-        'cardinality' => 1,
-        'component_type' => 'ConfigBundleEntityType',
+      'bundle_entity' => GeneratorDefinition::createFromGeneratorType('ConfigBundleEntityType')
+        ->setLabel('Bundle config entity type')
+        ->setDescription("Creates a config entity type which provides the bundles for this entity type. "
+          . "This is analogous to the Node Type entity type providing bundles for the Node entity type."),
         // TODO: This was a hack anyway!
         // 'default' => function($component_data) {
         //   return [
@@ -177,7 +176,6 @@ class ContentEntityType extends EntityTypeBase {
         //     ],
         //   ];
         // },
-      ],
       'bundle_label' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
@@ -192,18 +190,21 @@ class ContentEntityType extends EntityTypeBase {
         ->setDefault(DefaultDefinition::create()
           ->setLazy(TRUE)
           ->setCallable(function (DataItem $component_data) {
-            if (!in_array('fieldable', $component_data['functionality'])) {
+            $entity_data = $component_data->getParent();
+
+            if (!$entity_data->functionality->hasValue('fieldable')) {
               return NULL;
             }
 
-            if (isset($component_data['bundle_entity'][0])) {
-              return 'entity.' . $component_data['bundle_entity_type_id'] . '.edit_form';
+            // !!! TODO
+            if (!$entity_data->bundle_entity->isEmpty()) {
+              return 'entity.' . $entity_data->bundle_entity_type_id->value . '.edit_form';
             }
             else {
-              return 'entity.' . $component_data['entity_type_id'] . '.admin_form';
+              return 'entity.' . $entity_data->entity_type_id->value . '.admin_form';
             }
           })
-          ->setDependencies('..:bundle_entity_type_id')
+          ->setDependencies('..:TODO')
         ),
     ];
     InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);
@@ -252,22 +253,26 @@ class ContentEntityType extends EntityTypeBase {
           ->setLiteral('\Drupal\Core\Entity\ContentEntityBase')
       );
 
-    $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      array_unshift($value, '\Drupal\Core\Entity\ContentEntityInterface');
-      $component_data[$property_name] = $value;
+    $data_definition['interface_parents']['processing'] = function (DataItem $component_data) {
+      $new_item = $component_data->insertBefore(0);
+      $new_item->value = '\Drupal\Core\Entity\ContentEntityInterface';
     };
 
     // Set the computed value for entity keys. This is done in 'processing'
     // rather than 'default' so we can run after the preset values are applied
     // to add defaults and set the ordering.
-    $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+    $data_definition['entity_keys']['processing'] = function (DataItem $component_data) {
+      $entity_data = $component_data->getParent();
+
+      $value = $component_data->value;
+
       $value += [
-        'id' => $component_data['entity_type_id'] . '_id',
+        'id' => $entity_data->entity_type_id->value . '_id',
         'label' => 'title',
         'uuid' => 'uuid',
       ];
 
-      if (isset($component_data['bundle_entity'][0])) {
+      if (!$entity_data->bundle_entity->isEmpty()) {
         $value['bundle'] = 'type';
       }
 
@@ -293,7 +298,7 @@ class ContentEntityType extends EntityTypeBase {
         }
       }
 
-      $component_data[$property_name] = $ordered_value;
+      $component_data->value = $ordered_value;
     };
 
     return $data_definition;
