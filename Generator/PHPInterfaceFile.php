@@ -26,7 +26,6 @@ class PHPInterfaceFile extends PHPClassFile {
       'label' => 'Parent interface names',
       'format' => 'array',
       'internal' => TRUE,
-      'default' => [],
     ];
 
     return $definition;
