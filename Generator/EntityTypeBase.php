@@ -116,10 +116,10 @@ abstract class EntityTypeBase extends PHPClassFile {
         // The basic value is set in a processing callback by the child classes,
         // so that it gets added to values from the 'functionality' preset.
         // TODO: figure out how to have presets merge with default values.
-        'default' => [],
+        // 'default' => [],
         // This is required so the basic value gets added even if no interfaces
         // are supplied by the 'functionality' preset.
-        // 'process_empty' => TRUE,
+        'process_empty' => TRUE,
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
