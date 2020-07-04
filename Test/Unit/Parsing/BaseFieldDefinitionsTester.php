@@ -152,7 +152,7 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
    */
   public function assertFieldDefinitionMethodCalls($expected_calls, $field_name) {
     Assert::assertArrayHasKey($field_name, $this->baseFields, "The baseFieldDefinitions() method defines the field {$field_name}.");
-    Assert::assertEquals($expected_calls, $this->baseFieldMethodCalls[$field_name], "The definition for the field {$field_name} has the expected method calls.");
+    Assert::assertEqualsCanonicalizing($expected_calls, $this->baseFieldMethodCalls[$field_name], "The definition for the field {$field_name} has the expected method calls.");
   }
 
   /**
