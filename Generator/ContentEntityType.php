@@ -260,8 +260,12 @@ class ContentEntityType extends EntityTypeBase {
         return;
       }
 
+      // FFS we get here twice. TODO!
+      if (!$component_data->isEmpty()) {
+        return;
+      }
+
       $new_item = $component_data->insertBefore(0);
-      // TODO: ARGH getting set twice???
       $new_item->value = '\Drupal\Core\Entity\ContentEntityInterface';
     };
 
