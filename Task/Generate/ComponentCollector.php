@@ -641,27 +641,39 @@ class ComponentCollector {
    *  The component data item.
    */
   public function setPresetValues(DataItem $component_data) {
+    // Bail if this is not a data item that has presets.
     if (!$component_data->getPresets()) {
       return;
     }
 
+    // Bail if this data item has no value set.
     if ($component_data->isEmpty()) {
       return;
     }
 
     $presets = $component_data->getPresets();
-    dump($presets);
-    dump($component_data);
-
-    // TODO: aaaaargh just do single valued for now, expand later.
+    // dump("APPLYING PRESETS FOR " . $component_data->getAddress());
+    // dump($presets);
+    // dump($component_data);
 
     // Values which are forced by the preset.
-    foreach ($presets[$component_data->value]['data']['force'] as $forced_property_name => $forced_data) {
-      // Literal value. (This is the only type we support at the moment.)
-      if (isset($forced_data['value'])) {
-        $component_data->getParent()->{$forced_property_name}->import($forced_data['value']);
+    foreach ($component_data as $preset_item) {
+      $preset_item_preset_data = $presets[$preset_item->value];
+      // dump($preset_item_preset_data);
+      if (isset($preset_item_preset_data['data']['force'])) {
+        foreach ($preset_item_preset_data['data']['force'] as $forced_property_name => $forced_data) {
+          // dump("FORCING $forced_property_name");
+          // Literal value. (This is the only type we support at the moment.)
+          if (isset($forced_data['value'])) {
+            $component_data->getParent()->{$forced_property_name}->import($forced_data['value']);
+          }
+        }
       }
     }
+
+    // dump($component_data->getParent()->export());
+    // ARGH it's worked but TOO LATE after the defaults were set!?!?!? WTF
+
     return;
 
 
