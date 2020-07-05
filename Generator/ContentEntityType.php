@@ -261,7 +261,7 @@ class ContentEntityType extends EntityTypeBase {
       }
 
       // FFS we get here twice. TODO!
-      if (!$component_data->isEmpty()) {
+      if ($component_data->hasValue('\Drupal\Core\Entity\ContentEntityInterface')) {
         return;
       }
 
@@ -309,7 +309,11 @@ class ContentEntityType extends EntityTypeBase {
         }
       }
 
-      $component_data->add($ordered_value);
+      // dump($component_data);
+      // exit();
+
+      // Replace the existing value.
+      $component_data->set($ordered_value);
     };
 
     return $data_definition;
