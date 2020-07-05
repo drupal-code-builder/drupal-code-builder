@@ -555,7 +555,12 @@ class ComponentCollector {
    */
   protected function processComponentData(DataItem $component_data) {
     $component_data->walk([$this, 'forceCreateChildren']);
-    $component_data->walk([$this, 'setPresetValues']);
+
+    // Only set presets once, when processing the root data.
+    if (!$component_data->getParent()) {
+      $component_data->walk([$this, 'setPresetValues']);
+    }
+
     $component_data->walk([$this, 'applyProcessing']);
 
     return;
