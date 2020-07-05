@@ -41,6 +41,28 @@ class MappingData extends DataItem {
     parent::set($value);
   }
 
+  public function __set($name, $value) {
+    $this->set($value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function add($value) {
+    if (!is_array($value)) {
+      throw new InvalidInputException(sprintf(
+        "Mapping value at %s must have an array set.",
+        $this->getAddress()
+      ));
+    }
+
+    foreach ($value as $item_key => $item_value) {
+      $this->value[$item_key] = $item_value;
+    }
+
+    parent::set($value);
+  }
+
   /**
    * {@inheritdoc}
    */
