@@ -17,6 +17,15 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
 
   protected $forceCreate = FALSE;
 
+  public function getDeltaDefinition(): self {
+    $delta_definition = parent::getDeltaDefinition();
+
+    // Remove presets.
+    $delta_definition->setPresets([]);
+
+    return $delta_definition;
+  }
+
   public function setInternal(bool $internal) :self {
     $this->internal = $internal;
 
