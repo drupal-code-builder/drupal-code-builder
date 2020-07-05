@@ -658,20 +658,27 @@ class ComponentCollector {
 
     // Values which are forced by the preset.
     foreach ($component_data as $preset_item) {
+      // dump("DOING " . $preset_item->value);
       $preset_item_preset_data = $presets[$preset_item->value];
       // dump($preset_item_preset_data);
       if (isset($preset_item_preset_data['data']['force'])) {
         foreach ($preset_item_preset_data['data']['force'] as $forced_property_name => $forced_data) {
-          // dump("FORCING $forced_property_name");
+          // dump("FORCING $forced_property_name at address: - ");
+          // dump($component_data->getParent()->{$forced_property_name}->getAddress());
+          // dump($forced_data['value']);
           // Literal value. (This is the only type we support at the moment.)
           if (isset($forced_data['value'])) {
-            $component_data->getParent()->{$forced_property_name}->import($forced_data['value']);
+            // Append values rather than replacing them, as for a multi-valued
+            // preset, different presets may provide different values for a
+            // multi-valued target property, which should all be merged.
+            $component_data->getParent()->{$forced_property_name}->add($forced_data['value']);
           }
         }
       }
     }
 
     // dump($component_data->getParent()->export());
+    // exit();
     // ARGH it's worked but TOO LATE after the defaults were set!?!?!? WTF
 
     return;
