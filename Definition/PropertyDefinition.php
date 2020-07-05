@@ -23,6 +23,10 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
     // Remove presets.
     $delta_definition->setPresets([]);
 
+    // remove default.
+    // TODO: move upstream??
+    $delta_definition->default = NULL;
+
     return $delta_definition;
   }
 
