@@ -309,7 +309,7 @@ class ContentEntityType extends EntityTypeBase {
         }
       }
 
-      $component_data->value = $ordered_value;
+      $component_data->add($ordered_value);
     };
 
     return $data_definition;
