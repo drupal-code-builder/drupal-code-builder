@@ -130,7 +130,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue(['handlers', 'list_builder'], 'Drupal\Core\Entity\EntityListBuilder');
-    $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty cats');
+    $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty_cat entities');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
     $annotation_tester->assertHasProperties([
       'id',
