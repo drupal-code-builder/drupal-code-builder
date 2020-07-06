@@ -603,19 +603,17 @@ class ComponentContentEntityType8Test extends TestBase {
             'owner',
           ],
           'bundle_entity' => [
-            0 => [
-              // Don't specify entity_type_id, let it be derived.
-              // Request a route provider so UI features are generated.
-              'handler_route_provider' => 'admin',
-              'entity_properties' => [
-                0 => [
-                  'name' => 'foo',
-                  'type' => 'string',
-                ],
-                1 => [
-                  'name' => 'colour',
-                  'type' => 'string',
-                ],
+            // Don't specify entity_type_id, let it be derived.
+            // Request a route provider so UI features are generated.
+            'handler_route_provider' => 'admin',
+            'entity_properties' => [
+              0 => [
+                'name' => 'foo',
+                'type' => 'string',
+              ],
+              1 => [
+                'name' => 'colour',
+                'type' => 'string',
               ],
             ],
           ],
@@ -1415,18 +1413,16 @@ class ComponentContentEntityType8Test extends TestBase {
           'functionality' => [],
           'admin_permission' => FALSE,
           'bundle_entity' => [
-            0 => [
-              // Don't specify entity_type_id, let it be derived.
-              'entity_ui' => 'admin',
-              'entity_properties' => [
-                0 => [
-                  'name' => 'foo',
-                  'type' => 'string',
-                ],
-                1 => [
-                  'name' => 'colour',
-                  'type' => 'string',
-                ],
+            // Don't specify entity_type_id, let it be derived.
+            'entity_ui' => 'admin',
+            'entity_properties' => [
+              0 => [
+                'name' => 'foo',
+                'type' => 'string',
+              ],
+              1 => [
+                'name' => 'colour',
+                'type' => 'string',
               ],
             ],
           ],
@@ -1493,18 +1489,16 @@ class ComponentContentEntityType8Test extends TestBase {
           'functionality' => [],
           'entity_ui' => 'admin',
           'bundle_entity' => [
-            0 => [
-              'entity_type_id' => 'kitty_cat_type',
-              'entity_ui' => 'admin',
-              'entity_properties' => [
-                0 => [
-                  'name' => 'foo',
-                  'type' => 'string',
-                ],
-                1 => [
-                  'name' => 'colour',
-                  'type' => 'string',
-                ],
+            'entity_type_id' => 'kitty_cat_type',
+            'entity_ui' => 'admin',
+            'entity_properties' => [
+              0 => [
+                'name' => 'foo',
+                'type' => 'string',
+              ],
+              1 => [
+                'name' => 'colour',
+                'type' => 'string',
               ],
             ],
           ],
