@@ -226,7 +226,9 @@ class ComponentCollector {
     // dump($component_data->export());
     // dump(array_keys($component_data->getProperties()));
     // TODO: restore!
-    // $this->processComponentData($component_data);
+    // TODO: ARGH this causes repeat walking, since this is called on each
+    // instantiated thing, but THEN WE WALK IT!!!
+    $this->processComponentData($component_data);
 
     // Instantiate the generator in question.
     // We always pass in the root component.
