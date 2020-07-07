@@ -69,6 +69,14 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
   public function setPresets(array $presets) :self {
     $this->presets = $presets;
 
+    if ($presets) {
+      $options = [];
+      foreach ($presets as $key => $preset) {
+        $options[$key] = $preset['label'];
+      }
+      $this->setOptionsArray($options);
+    }
+
     return $this;
   }
 
