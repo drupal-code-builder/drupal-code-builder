@@ -20,6 +20,9 @@ class AdminSettingsForm extends Form {
     $data_definition['parent_class_name']->getDefault()
       ->setLiteral('\Drupal\Core\Form\ConfigFormBase');
 
+    // Make one of the basic class name properties internal.
+    $data_definition['relative_class_name']->setInternal(TRUE);
+
     $parent_route_property['parent_route'] = [
       'label' => 'Parent menu item',
       'options' => 'ReportAdminRoutes:listAdminRoutesOptions',
@@ -34,9 +37,11 @@ class AdminSettingsForm extends Form {
       ->setExpression("getChildValue(parent, 'root_component_name') ~ '_settings_form'");
 
     $data_definition['route_name'] = PropertyDefinition::create('string')
+      ->setLabel("The name of the route.")
       ->setDefault(
         DefaultDefinition::create()
           ->setLazy(TRUE)
+          // TODO: broken in JS!!
           ->setExpression("getChildValue(parent, 'root_component_name') ~ '.settings'")
           ->setDependencies('..:root_component_name')
       );
