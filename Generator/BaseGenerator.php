@@ -347,7 +347,17 @@ abstract class BaseGenerator implements DefinitionProviderInterface {
           throw new \Exception(sprintf(
             "Array info callable default needs to be converted at property '%s' of %s.",
             $name,
-            $definition->getComponentType()
+            $definition->getMachineName()
+          ));
+        }
+        elseif ($def['default'] instanceof DefaultDefinition) {
+          $converted_defs[$name]->setDefault($def['default']);
+        }
+        else {
+          throw new \Exception(sprintf(
+            "Unhandled default at property '%s' of %s.",
+            $name,
+            $definition->getMachineName()
           ));
         }
       }
