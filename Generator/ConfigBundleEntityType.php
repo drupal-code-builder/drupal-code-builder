@@ -59,7 +59,7 @@ class ConfigBundleEntityType extends ConfigEntityType {
     // for a content entity type.
     $data_definition['entity_type_id']['default'] = DefaultDefinition::create()
       // TODO: make this work in the form!
-      ->setExpression("getChildValue(parent, 'bundle_entity_type_id')");
+      ->setExpression("getChildValue(item, '..:..:bundle_entity_type_id')");
 
     // Bundle entities need to use ConfigEntityBundleBase in order to clear
     // caches and synchronize display entities.
