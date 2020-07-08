@@ -26,6 +26,17 @@ class ExportInclude extends StorageBase {
    */
   public function retrieve($key) {
     $directory = $this->environment->getHooksDirectory();
+
+    // Convert the public:// scheme to an absolute path, as using include on
+    // a stream on PHP ^7.4 causes it to call streamWrapper::stream_set_option()
+    // which for the public:// wrapper on Drupal causes a warning in
+    // LocalStream::stream_set_option().
+    $directory = str_replace(
+      "public://",
+      \Drupal::service('file_system')->realpath("public://") . '/',
+      $directory
+    );
+
     $data_file = "$directory/{$key}_processed.php";
     if (file_exists($data_file)) {
       // Don't use include_once, in case callers are neglecting to cache their

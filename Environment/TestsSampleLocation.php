@@ -10,7 +10,7 @@ class TestsSampleLocation extends Tests {
   /**
    * The short class name of the storage helper to use.
    */
-  protected $storageType = 'ExportInclude';
+  protected $storageType = 'TestExportInclude';
 
   /**
    * Set the hooks directory.

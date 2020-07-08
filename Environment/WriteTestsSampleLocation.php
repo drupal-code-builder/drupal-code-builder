@@ -12,7 +12,7 @@ class WriteTestsSampleLocation extends Drush {
   /**
    * The short class name of the storage helper to use.
    */
-  protected $storageType = 'ExportInclude';
+  protected $storageType = 'TestExportInclude';
 
   /**
    * Indicates that the Collect task should filter for sample data.
