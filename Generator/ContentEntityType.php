@@ -160,7 +160,7 @@ class ContentEntityType extends EntityTypeBase {
             ->setExpression("getChildValue(parent, 'entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
-      'bundle_entity' => GeneratorDefinition::createFromGeneratorType('ConfigBundleEntityType')
+      'bundle_entity' => GeneratorDefinition::createFromGeneratorTypeWithConversion('ConfigBundleEntityType')
         ->setLabel('Bundle config entity type')
         ->setDescription("Creates a config entity type which provides the bundles for this entity type. "
           . "This is analogous to the Node Type entity type providing bundles for the Node entity type."),
