@@ -188,7 +188,6 @@ class ContentEntityType extends EntityTypeBase {
         // This will then be dependent on the 'fieldable' property.
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
-          ->setLazy(TRUE)
           ->setCallable(function (DataItem $component_data) {
             $entity_data = $component_data->getParent();
 
@@ -196,7 +195,6 @@ class ContentEntityType extends EntityTypeBase {
               return NULL;
             }
 
-            // !!! TODO
             if (!$entity_data->bundle_entity->isEmpty()) {
               return 'entity.' . $entity_data->bundle_entity_type_id->value . '.edit_form';
             }
@@ -593,8 +591,8 @@ EOT
     $revisionable = in_array('revisionable', $this->component_data['functionality']);
     $translatable = in_array('translatable', $this->component_data['functionality']);
 
-    if (!empty($this->component_data['field_ui_base_route'])) {
-      $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
+    if ($this->component_data->field_ui_base_route->value) {
+      $annotation_data['field_ui_base_route'] = $this->component_data->field_ui_base_route->value;
     }
 
     if ($revisionable) {

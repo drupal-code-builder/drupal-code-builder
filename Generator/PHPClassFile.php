@@ -309,7 +309,7 @@ class PHPClassFile extends PHPFile {
   protected function getClassDocBlockLines() {
     $lines = [];
 
-    if (!empty($this->component_data['class_docblock_lines'])) {
+    if (!$this->component_data->class_docblock_lines->isEmpty()) {
       $lines = $this->component_data['class_docblock_lines'];
 
       if (count($lines) > 1) {
@@ -318,8 +318,13 @@ class PHPClassFile extends PHPFile {
         array_splice($lines, 1, 0, '');
       }
     }
-    elseif (!empty($this->component_data['docblock_first_line'])) {
+    elseif (!$this->component_data->docblock_first_line->isEmpty()) {
       $lines[] = $this->component_data['docblock_first_line'];
+    }
+    else {
+      // Complain here, as every class should have something for its first
+      // docblock line.
+      throw new \Exception("Missing first docblock line.");
     }
 
     return $lines;
