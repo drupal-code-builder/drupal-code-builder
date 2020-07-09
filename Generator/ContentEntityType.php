@@ -563,7 +563,7 @@ EOT
 
       // The structure of the add UI depends on whether there is a bundle
       // entity.
-      if (isset($this->component_data['bundle_entity'][0])) {
+      if (!$this->component_data->bundle_entity->isEmpty()) {
         // If there's a bundle entity, the add UI is made up of first a page to
         // select the bundle, and then a form with a bundle parameter.
         $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type_id'];
@@ -585,7 +585,7 @@ EOT
       // $annotation_data['links']["revision"] = "/$entity_path_component/{}/revisions/{media_revision}/view";
     }
 
-    if (isset($this->component_data['bundle_entity'][0])) {
+    if (!$this->component_data->bundle_entity->isEmpty()) {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type_id'];
       $annotation_data['bundle_label'] = ClassAnnotation::Translation($this->component_data['bundle_label']);
     }
