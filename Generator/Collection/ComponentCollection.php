@@ -159,7 +159,7 @@ class ComponentCollection implements \IteratorAggregate {
    *   The component that requested the component being added. May be NULL if
    *   the component being added is the root component.
    */
-  public function addComponent($local_name, GeneratorInterface $component, $requesting_component) {
+  public function addComponent(string $local_name, GeneratorInterface $component, $requesting_component) {
     // $component_address = $component->getAddress();
     // dump("adding $local_name - $component_address");
     // Components may not be added once the collection is locked.
