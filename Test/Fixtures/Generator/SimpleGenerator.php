@@ -28,4 +28,8 @@ class SimpleGenerator implements GeneratorInterface {
     return $this->componentType;
   }
 
+  public function isRootComponent(): bool {
+    return ($this->componentType == 'my_root');
+  }
+
 }

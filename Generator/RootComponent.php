@@ -60,6 +60,10 @@ abstract class RootComponent extends BaseGenerator {
     return $component_data_definition;
   }
 
+  public function isRootComponent(): bool {
+    return TRUE;
+  }
+
   /**
    * Filter the file info array to just the requested build list.
    *

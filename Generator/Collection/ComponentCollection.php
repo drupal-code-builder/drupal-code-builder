@@ -184,7 +184,7 @@ class ComponentCollection implements \IteratorAggregate {
     }
 
     // If this is *a* root, keep track of it.
-    if ($component instanceof \DrupalCodeBuilder\Generator\RootComponent) {
+    if ($component->isRootComponent()) {
       $this->roots[$key] = TRUE;
     }
 

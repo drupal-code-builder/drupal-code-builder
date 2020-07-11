@@ -458,6 +458,10 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
     // $definition->setProperties($converted_defs);
   }
 
+  public function isRootComponent(): bool {
+    return FALSE;
+  }
+
   // helper for requiredComponents()
   protected function getDataForGenerator() {
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
