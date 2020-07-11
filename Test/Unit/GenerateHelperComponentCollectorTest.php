@@ -35,29 +35,15 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'two' => 'bar',
     ]);
 
-    // Mock the ComponentCollector's injected dependencies.
+    // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
     $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
-    // Mock the root component generator, and methods on the dependencies which
-    // return things relating to it.
-    $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
-
-    $root_component->getMergeTag()->willReturn(NULL);
-    $root_component->requiredComponents()->willReturn([]);
-    $root_component->getType()->willReturn('my_root');
-
-    // The ClassHandler mock returns the generator mock.
-    $class_handler->getGenerator(
-      'my_root',
-      $component_data
-    )->willReturn($root_component->reveal());
-
-    // Create the helper, with mocks passed in.
+    // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
+      $class_handler,
       $data_info_gatherer->reveal()
     );
 
