@@ -90,7 +90,7 @@ class ConfigBundleEntityType extends ConfigEntityType {
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
-    $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
+    $annotation_data['bundle_of'] = $this->component_data->getParent()->entity_type_id->value;
 
     return $annotation_data;
   }

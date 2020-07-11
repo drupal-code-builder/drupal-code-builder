@@ -154,6 +154,7 @@ class ContentEntityType extends EntityTypeBase {
       // Single place to compute a bundle entity type ID. Here rather than in
       // the bundle generator, as this component needs it too.
       'bundle_entity_type_id' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
             ->setLazy(TRUE)
@@ -412,7 +413,7 @@ EOT
 
     // Some interface-helper traits provide helper methods to define base
     // fields.
-    foreach ($this->component_data['base_fields_helper_methods'] as $method_name) {
+    foreach ($this->component_data->base_fields_helper_methods->export() as $method_name) {
       $method_body[] = "£fields += static::$method_name(£entity_type);";
       $method_body[] = '';
     }
