@@ -2,6 +2,9 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use Prophecy\Argument;
 
 /**
@@ -20,72 +23,20 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with only the root generator, which itself has no requirements.
    */
   public function testSingleGeneratorNoRequirements() {
-    // The mocked root component's data info.
-    $root_data_info = [
-      // This property is assumed to exist by the collector.
-      'root_name' => [
-        'label' => 'Component machine name',
-        'required' => TRUE,
-      ],
-      'plain_property_string' => [
-        'format' => 'string',
-      ],
-      'plain_property_default' => [
-        'default' => 'default_value',
-      ],
-      'plain_property_process_default' => [
-        'default' => 'default_value',
-        'process_default' => TRUE,
-      ],
-      'plain_property_internal' => [
-        'default' => 'default_value',
-        'internal' => TRUE,
-      ],
-      'plain_property_computed' => [
-        'default' => 'default_value',
-        'computed' => TRUE,
-      ],
-      'plain_property_processing' => [
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data['plain_property_processing'] = 'processed_value:' . $value;
-        },
-      ],
-      // Test processing works on the default value.
-      'plain_property_process_default_processing' => [
-        'default' => 'default_value',
-        'process_default' => TRUE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data['plain_property_process_default_processing'] = 'processed_value:' . $value;
-        },
-      ],
-    ];
-    $this->componentDataInfoAddDefaults($root_data_info);
-    // The request data we pass in to the system.
-    $root_data = [
-      'base' => 'my_root',
-      'root_name' => 'my_component',
-      'plain_property_string' => 'string_value',
-      // We don't supply plain_property_default, and it does not get set.
-      // We don't supply plain_property_process_default, and because it has
-      // 'process_default' set, its value gets filled in.
-      'plain_property_processing' => 'value_for_processing',
-    ];
-    // Expected data for the root component.
-    // This is $root_data once it's been processed.
-    $root_component_construction_data = [
-      'base' => 'my_root',
-      'root_name' => 'my_component',
-      'plain_property_string' => 'string_value',
-      'plain_property_process_default' => 'default_value',
-      'plain_property_internal' => 'default_value',
-      'plain_property_computed' => 'default_value',
-      'plain_property_processing' => 'processed_value:value_for_processing',
-      'plain_property_process_default_processing' => 'processed_value:default_value',
-      'component_type' => 'my_root',
-    ];
+    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+      ->setProperties([
+        'one' => PropertyDefinition::create('string'),
+        'two' => PropertyDefinition::create('string'),
+      ]);
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+    $component_data->set([
+      'one' => 'foo',
+      'two' => 'bar',
+    ]);
 
     // Mock the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
+    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
     $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
@@ -100,11 +51,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The ClassHandler mock returns the generator mock.
     $class_handler->getGenerator(
       'my_root',
-      $root_component_construction_data
+      $component_data
     )->willReturn($root_component->reveal());
-
-    // The ComponentDataInfoGatherer mock returns the generator's info.
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
@@ -113,7 +61,9 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       $data_info_gatherer->reveal()
     );
 
-    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
+    $collection = $component_collector->assembleComponentList($component_data);
+
+    $component_paths = $collection->getComponentRequestPaths();
 
     $this->assertCount(1, $component_paths, "The expected number of components is returned.");
     $this->assertContains('root', $component_paths, "The component list has the root generator.");
