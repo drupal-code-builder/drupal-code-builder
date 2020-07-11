@@ -22,7 +22,7 @@ class TestComponentClassHandler extends ComponentClassHandler {
   public function getGenerator($component_type, $component_data = NULL) {
     if (!isset($this->map[$component_type])) {
       $generator = new \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator();
-      // $generator->setType = $component_type;
+      $generator->componentType = $component_type;
     }
     return $generator;
   }

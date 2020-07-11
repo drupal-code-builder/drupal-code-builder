@@ -5,9 +5,16 @@ namespace DrupalCodeBuilder\Test\Fixtures\Generator;
 use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**
- *  TODO.
+ *  Dummy generator class for tests.
  */
 class SimpleGenerator implements GeneratorInterface {
+
+  /**
+   * Quick hack so we can use the same class for everything.
+   *
+   * @var string
+   */
+  public $componentType;
 
   public function getMergeTag() {
     return NULL;
@@ -18,7 +25,7 @@ class SimpleGenerator implements GeneratorInterface {
   }
 
   public function getType() {
-    return 'my_root';
+    return $this->componentType;
   }
 
 }
