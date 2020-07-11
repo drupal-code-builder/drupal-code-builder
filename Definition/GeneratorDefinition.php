@@ -53,6 +53,9 @@ class GeneratorDefinition extends PropertyDefinition {
     return new static($data_type, $generator_type);
   }
 
+  // we need a separate method for this because TESTS definitely don't want to
+  // go adding the converted array defs.
+  // also so we can remove this functionality easily in future
   static public function createFromGeneratorTypeWithConversion(string $generator_type, string $data_type = 'complex'): self {
     $definition = new static($data_type, $generator_type);
 
