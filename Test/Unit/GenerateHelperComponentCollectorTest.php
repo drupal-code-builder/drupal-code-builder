@@ -56,6 +56,202 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   }
 
   /**
+   * Request with the root generator and a compound component property.
+   */
+  public function testGeneratorChildNoRequests() {
+    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+      ->setMachineName('my_root')
+      ->setProperties([
+        'one' => PropertyDefinition::create('string'),
+        'component_property_compound_single' => GeneratorDefinition::createFromGeneratorType('compound_a')
+          ->setProperties([
+            'child_one' => PropertyDefinition::create('string'),
+            'child_two' => PropertyDefinition::create('string'),
+          ]),
+        'component_property_compound_multiple' => GeneratorDefinition::createFromGeneratorType('compound_b')
+          ->setMultiple(TRUE)
+          ->setProperties([
+            'child_one' => PropertyDefinition::create('string'),
+            'child_two' => PropertyDefinition::create('string'),
+          ]),
+      ]);
+
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    $component_data->set([
+      'one' => 'foo',
+    ]);
+
+    // Mock the ComponentCollector's injected dependencies.
+    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
+
+    // Create the helper, with mocks passed in.
+    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
+      $environment->reveal(),
+      $class_handler,
+      $data_info_gatherer->reveal()
+    );
+
+    $collection = $component_collector->assembleComponentList($component_data);
+
+    $component_paths = $collection->getComponentRequestPaths();
+    $this->assertEquals(['root'], array_values($component_paths));
+
+    // Start again, with more properties set.
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    $component_data->set([
+      'one' => 'foo',
+      'component_property_compound_single' => [
+        'child_one' => 'bar',
+      ],
+    ]);
+
+    $collection = $component_collector->assembleComponentList($component_data);
+
+    $component_paths = $collection->getComponentRequestPaths();
+    $this->assertEquals(['root', 'root/component_property_compound_single'], array_values($component_paths));
+
+    // Start again, with yet more properties set.
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    $component_data->set([
+      'one' => 'foo',
+      'component_property_compound_single' => [
+        'child_one' => 'bar',
+      ],
+      'component_property_compound_multiple' => [
+        0 => [
+          'child_one' => 'bar',
+        ],
+      ],
+    ]);
+
+
+    $component_paths = $collection->getComponentRequestPaths();
+    dump($component_paths);
+
+    return;
+
+
+    // The mocked root component's data info.
+    $root_data_info = [
+      // This property is assumed to exist by the collector.
+      'root_name' => [
+        'label' => 'Component machine name',
+        'required' => TRUE,
+        'acquired_alias' => 'root_component_name',
+      ],
+      'plain_property_string' => [
+        'format' => 'string',
+      ],
+      'component_property_compound' => [
+        'format' => 'compound',
+        'component_type' => 'compound'
+      ],
+    ];
+    $this->componentDataInfoAddDefaults($root_data_info);
+    // The request data we pass in to the system.
+    $root_data = [
+      'base' => 'my_root',
+      'root_name' => 'my_component',
+      'plain_property_string' => 'string_value',
+      'component_property_compound' => [
+        0 => [
+          'child_property_string' => 'child_string_value_0',
+        ],
+        1 => [
+          'child_property_string' => 'child_string_value_1',
+        ],
+      ],
+    ];
+
+    $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
+    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
+    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
+
+    // Root component.
+    $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
+
+    $root_component->getMergeTag()->willReturn(NULL);
+    $root_component->getComponentDataValue('root_name')->willReturn($root_data['root_name']);
+    $root_component->getType()->willReturn('my_root');
+
+    $class_handler->getGenerator(
+      'my_root',
+      Argument::that(function ($arg) use ($root_data) {
+        // Use a wildcard rather than $root_data, the collector may add data.
+        // Check that the param contains all the elements of $root_data.
+        // (Can't use array_diff() that doesn't do nested arrays FFS!)
+        foreach ($root_data as $key => $value) {
+          if (!isset($arg[$key]) || $arg[$key] != $value) {
+            return FALSE;
+          }
+        }
+        return TRUE;
+      })
+    )
+      ->will(function ($args) use ($root_component) {
+        return $root_component->reveal();
+      });
+    $root_component->requiredComponents()->willReturn([]);
+
+    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
+
+    // Compound child component 0.
+    $compound_child_component_0 = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
+
+    $compound_child_component_0->getMergeTag()->willReturn(NULL);
+    $compound_child_component_0->requiredComponents()->willReturn([]);
+
+    $class_handler->getGenerator(
+      'compound',
+      [
+        "child_property_string" => "child_string_value_0",
+        "component_type" => "compound",
+        "root_component_name" => "my_component",
+      ]
+    )
+      ->willReturn($compound_child_component_0->reveal());
+
+    $data_info_gatherer->getComponentDataInfo('compound', TRUE)->willReturn([
+      'root_component_name' => [
+        'acquired' => TRUE,
+        'format' => 'string',
+      ],
+    ]);
+
+    // Compound child component 1.
+    $compound_child_component_1 = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
+
+    $compound_child_component_1->getMergeTag()->willReturn(NULL);
+    $compound_child_component_1->requiredComponents()->willReturn([]);
+
+    $class_handler->getGenerator(
+      'compound',
+      [
+        "child_property_string" => "child_string_value_1",
+        "component_type" => "compound",
+        "root_component_name" => "my_component",
+      ]
+    )
+      ->willReturn($compound_child_component_1->reveal());
+
+    // Create the helper, with mocks passed in.
+    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
+      $environment->reveal(),
+      $class_handler->reveal(),
+      $data_info_gatherer->reveal()
+    );
+
+    $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
+
+    $this->assertCount(3, $component_paths, "The expected number of components is returned.");
+    $this->assertContains('root', $component_paths, "The component list has the root generator.");
+    $this->assertContains('root/compound_0', $component_paths, "The component list has the child generator.");
+    $this->assertContains('root/compound_1', $component_paths, "The component list has the child generator.");
+  }
+
+  /**
    * Request with only the root generator, with a single-value preset.
    *
    * @group presets
