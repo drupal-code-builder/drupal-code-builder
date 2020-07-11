@@ -126,14 +126,14 @@ class ClassAnnotation {
    *
    * @param string[] &$docblock_lines
    *   The lines of code assembled so far. Further lines are added to this.
-   * @param mixed $data
+   * @param array $data
    *   The array of data.
    * @param int $nesting
    *   (optional) See render().
    * @param int $annotation_nesting
    *   (optional) See render().
    */
-  protected function renderArray(&$docblock_lines, $data, $nesting = 0, $annotation_nesting = 0) {
+  protected function renderArray(&$docblock_lines, array $data, $nesting = 0, $annotation_nesting = 0) {
     $indent = str_repeat('  ', $nesting);
 
     foreach ($data as $key => $value) {
