@@ -260,6 +260,9 @@ abstract class EntityTypeBase extends PHPClassFile {
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
+    // Make one of the basic class name properties internal.
+    $data_definition['relative_class_name']->setInternal(TRUE);
+
     // Override some defaults.
     // Put the class in the 'Entity' relative namespace.
     $data_definition['relative_namespace']->getDefault()
