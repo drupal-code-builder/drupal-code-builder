@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Task\Generate;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
+use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Generator\RootComponent;
 use MutableTypedData\Data\DataItem;
@@ -140,7 +141,7 @@ class ComponentCollector {
    * @return \DrupalCodeBuilder\Generator\Collection\ComponentCollection
    *  The collection of components.
    */
-  public function assembleComponentList(DataItem $component_data) {
+  public function assembleComponentList(DataItem $component_data): ComponentCollection {
     // Reset all class properties. We don't normally run this twice, but
     // probably needed for tests.
     $this->requested_data_record = [];
