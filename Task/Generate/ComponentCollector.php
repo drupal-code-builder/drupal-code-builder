@@ -10,6 +10,8 @@ use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Generator\RootComponent;
 use MutableTypedData\Data\DataItem;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use DrupalCodeBuilder\Generator\BaseGenerator;
+use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**
  * Task helper for collecting components recursively.
@@ -187,7 +189,7 @@ class ComponentCollector {
    *   NULL if the data is a duplicate set. Note that nothing needs to be done
    *   with the return; the generator gets added to $this->component_collection.
    */
-  protected function getComponentsFromData(DataItem $component_data, $requesting_component) {
+  protected function getComponentsFromData(DataItem $component_data, ?GeneratorInterface $requesting_component) {
     $name = $component_data->getName();
 
     // Prepend the parent name to array data items, as their name is just the
