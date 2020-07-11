@@ -15,6 +15,14 @@ trait DataItemArrayAccessTrait {
   }
 
   public function offsetGet($offset) {
+    if (!isset($this->properties[$offset])) {
+      throw new \Exception(sprintf("No property %s at address %s. Valid properties are: %s.",
+        $offset,
+        $this->getAddress(),
+        implode(', ', $this->getPropertyNames())
+      ));
+    }
+
     // An array access on this is old code trying to work with array data, and
     // so we return the raw values rather than the chid data item.
     if ($this->properties[$offset]->getType() == 'complex' || $this->properties[$offset]->isMultiple()) {
