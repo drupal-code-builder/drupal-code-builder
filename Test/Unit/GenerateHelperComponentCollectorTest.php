@@ -56,9 +56,57 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   }
 
   /**
-   * Request with the root generator and a compound component property.
+   * Data provider.
    */
-  public function testGeneratorChildNoRequests() {
+  public function providerGeneratorChildNoRequests() {
+    return [
+      'string_only' => [
+        'data_value' => [
+          'one' => 'foo',
+        ],
+        'expected_paths' => [
+          'root',
+        ],
+      ],
+      'string_and_single_compound' => [
+        'data_value' => [
+          'one' => 'foo',
+          'component_property_compound_single' => [
+            'child_one' => 'bar',
+          ],
+        ],
+        'expected_paths' => [
+          'root',
+          'root/component_property_compound_single',
+        ],
+      ],
+      'string_and_multiple_compound' => [
+        'data_value' => [
+          'one' => 'foo',
+          'component_property_compound_single' => [
+            'child_one' => 'bar',
+          ],
+          'component_property_compound_multiple' => [
+            0 => [
+              'child_one' => 'bar',
+            ],
+          ],
+        ],
+        'expected_paths' => [
+          'root',
+          'root/component_property_compound_single',
+          'root/component_property_compound_multiple',
+        ],
+      ]
+    ];
+  }
+
+  /**
+   * Request with the root generator and a compound component property.
+   *
+   * @dataProvider providerGeneratorChildNoRequests
+   */
+  public function testGeneratorChildNoRequests($data_value, $expected_paths) {
     $definition = GeneratorDefinition::createFromGeneratorType('my_root')
       ->setMachineName('my_root')
       ->setProperties([
@@ -77,9 +125,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ]);
 
     $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-    $component_data->set([
-      'one' => 'foo',
-    ]);
+    $component_data->set($data_value);
 
     // Mock the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
@@ -96,41 +142,12 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $collection = $component_collector->assembleComponentList($component_data);
 
     $component_paths = $collection->getComponentRequestPaths();
-    $this->assertEquals(['root'], array_values($component_paths));
-
-    // Start again, with more properties set.
-    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-    $component_data->set([
-      'one' => 'foo',
-      'component_property_compound_single' => [
-        'child_one' => 'bar',
-      ],
-    ]);
-
-    $collection = $component_collector->assembleComponentList($component_data);
-
-    $component_paths = $collection->getComponentRequestPaths();
-    $this->assertEquals(['root', 'root/component_property_compound_single'], array_values($component_paths));
-
-    // Start again, with yet more properties set.
-    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-    $component_data->set([
-      'one' => 'foo',
-      'component_property_compound_single' => [
-        'child_one' => 'bar',
-      ],
-      'component_property_compound_multiple' => [
-        0 => [
-          'child_one' => 'bar',
-        ],
-      ],
-    ]);
-
-
-    $component_paths = $collection->getComponentRequestPaths();
     dump($component_paths);
 
+    $this->assertEquals($expected_paths, array_values($component_paths));
+
     return;
+
 
 
     // The mocked root component's data info.
