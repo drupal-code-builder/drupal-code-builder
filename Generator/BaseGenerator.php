@@ -85,7 +85,7 @@ use MutableTypedData\Definition\DefinitionProviderInterface;
  *
  * @see Generate::generateComponent()
  */
-abstract class BaseGenerator implements DefinitionProviderInterface {
+abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderInterface {
 
   /**
    * Property attribute shorthand for acquired properties.

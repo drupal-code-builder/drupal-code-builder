@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator\Collection;
 
-use DrupalCodeBuilder\Generator\BaseGenerator;
+use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**
  * The collection of components for a generate request.
@@ -27,7 +27,7 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * These are iterated over by this class.
    *
-   * @var \DrupalCodeBuilder\Generator\BaseGenerator[]
+   * @var \DrupalCodeBuilder\Generator\GeneratorInterface[]
    */
   private $components = [];
 
@@ -134,13 +134,13 @@ class ComponentCollection implements \IteratorAggregate {
    * This is unique per component object, but does not depend on request data,
    * so it cannot be used to deduplicate different objects.
    *
-   * @param BaseGenerator $component
+   * @param GeneratorInterface $component
    *   The component.
    *
    * @return string
    *   The unique key.
    */
-  public function getComponentKey(BaseGenerator $component) {
+  public function getComponentKey(GeneratorInterface $component) {
     // TODO: Change this to the more succinct spl_object_id() once we drop
     // support for PHP < 7.2.
     return spl_object_id($component);
@@ -159,7 +159,9 @@ class ComponentCollection implements \IteratorAggregate {
    *   The component that requested the component being added. May be NULL if
    *   the component being added is the root component.
    */
-  public function addComponent($local_name, BaseGenerator $component, $requesting_component) {
+  public function addComponent($local_name, GeneratorInterface $component, $requesting_component) {
+    // $component_address = $component->getAddress();
+    // dump("adding $local_name - $component_address");
     // Components may not be added once the collection is locked.
     if ($this->locked) {
       throw new \LogicException("Attempt to add component to locked collection.");
@@ -231,7 +233,7 @@ class ComponentCollection implements \IteratorAggregate {
    * @param $requesting_component
    *   The component that requested the new component being discarded.
    */
-  public function addAliasedComponent($local_name, BaseGenerator $existing_component, BaseGenerator $requesting_component) {
+  public function addAliasedComponent($local_name, GeneratorInterface $existing_component, GeneratorInterface $requesting_component) {
     $this->localNames[$this->getComponentKey($requesting_component)][$local_name] = $this->getComponentKey($existing_component);
   }
 
@@ -451,13 +453,13 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Gets a component's children in the tree.
    *
-   * @param BaseGenerator $component
+   * @param GeneratorInterface $component
    *   The component to get children for.
    *
-   * @return BaseGenerator[]
+   * @return GeneratorInterface[]
    *   The child components, keyed by unique ID.
    */
-  public function getContainmentTreeChildren(BaseGenerator $component) {
+  public function getContainmentTreeChildren(GeneratorInterface $component) {
     $component_id = $this->getComponentKey($component);
 
     $tree = $this->getContainmentTree();
@@ -536,7 +538,7 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * This may be called before the collection is complete.
    *
-   * @param BaseGenerator $component
+   * @param GeneratorInterface $component
    *   The component to get children for.
    *
    * @return
@@ -546,7 +548,7 @@ class ComponentCollection implements \IteratorAggregate {
    *   Throws an exception if called with the root component, as in that case
    *   the answer does not make sense.
    */
-  public function getClosestRequestingRootComponent(BaseGenerator $component) {
+  public function getClosestRequestingRootComponent(GeneratorInterface $component) {
     if ($this->getComponentKey($component) === $this->rootGeneratorId) {
       throw new \LogicException("ComponentCollection::getClosestRequestingRootComponent() may not be called with the root component.");
     }
