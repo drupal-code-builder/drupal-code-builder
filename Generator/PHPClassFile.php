@@ -324,7 +324,7 @@ class PHPClassFile extends PHPFile {
     else {
       // Complain here, as every class should have something for its first
       // docblock line.
-      throw new \Exception("Missing first docblock line.");
+      assert(FALSE, "Missing first docblock line.");
     }
 
     return $lines;
@@ -396,7 +396,7 @@ class PHPClassFile extends PHPFile {
    * section types defined in classCodeBody().
    */
   protected function collectSectionBlocks() {
-    foreach ($this->component_data['traits'] as $trait) {
+    foreach ($this->component_data->traits->export() as $trait) {
       $this->traits[] = [
         "use {$trait};",
       ];
