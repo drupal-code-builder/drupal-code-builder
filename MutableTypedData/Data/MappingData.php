@@ -17,6 +17,10 @@ class MappingData extends DataItem {
 
   protected $value = [];
 
+  public static function isSimple(): bool {
+    return FALSE;
+  }
+
   /**
    * {@inheritdoc}
    */
