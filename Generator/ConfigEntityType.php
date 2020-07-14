@@ -93,10 +93,7 @@ class ConfigEntityType extends EntityTypeBase {
           ->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBase')
       );
 
-    $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      array_unshift($value, '\Drupal\Core\Config\Entity\ConfigEntityInterface');
-      $component_data[$property_name] = $value;
-    };
+    $data_definition['interface_parents']['default'] = ['\Drupal\Core\Config\Entity\ConfigEntityInterface'];
 
     // Change the computed value for entity keys.
     $data_definition['entity_keys']['default'] = [

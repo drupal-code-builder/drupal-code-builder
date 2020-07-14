@@ -109,17 +109,8 @@ abstract class EntityTypeBase extends PHPClassFile {
       'interface_parents' => [
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
-        // Cheat! Make it a mapping so we can have a default value!
-        // TODO: restore this to an array, multiple values can have defaults!
         'format' => 'array',
         'internal' => TRUE,
-        // The basic value is set in a processing callback by the child classes,
-        // so that it gets added to values from the 'functionality' preset.
-        // TODO: figure out how to have presets merge with default values.
-        // 'default' => [],
-        // This is required so the basic value gets added even if no interfaces
-        // are supplied by the 'functionality' preset.
-        'process_empty' => TRUE,
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
@@ -407,7 +398,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       'component_type' => 'PHPInterfaceFile',
       'relative_class_name' => 'Entity\\' . $this->component_data['entity_interface_name'],
       'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
-      'parent_interface_names' => $this->component_data['interface_parents'],
+      'parent_interface_names' => $this->component_data->interface_parents->values(),
     ];
 
     // Handlers.

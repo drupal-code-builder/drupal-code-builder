@@ -252,21 +252,7 @@ class ContentEntityType extends EntityTypeBase {
           ->setLiteral('\Drupal\Core\Entity\ContentEntityBase')
       );
 
-    $data_definition['interface_parents']['processing'] = function (DataItem $component_data) {
-      // Quick hack for child elements!
-      // TODO: override getDeltaDefinition() to remove processing from deltas!
-      if (!$component_data->isMultiple()) {
-        return;
-      }
-
-      // FFS we get here twice. TODO!
-      if ($component_data->hasValue('\Drupal\Core\Entity\ContentEntityInterface')) {
-        return;
-      }
-
-      $new_item = $component_data->insertBefore(0);
-      $new_item->value = '\Drupal\Core\Entity\ContentEntityInterface';
-    };
+    $data_definition['interface_parents']['default'] = ['\Drupal\Core\Entity\ContentEntityInterface'];
 
     // Set the computed value for entity keys. This is done in 'processing'
     // rather than 'default' so we can run after the preset values are applied
