@@ -186,7 +186,8 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   // backwards compatiblity shim.
   // process the old array property info and add it to the property definition
   // for this generator.
-  protected static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
+  // TODO: move this elsewhere?
+  public static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $converted_defs = [];
