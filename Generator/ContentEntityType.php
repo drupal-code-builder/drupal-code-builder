@@ -241,7 +241,7 @@ class ContentEntityType extends EntityTypeBase {
       'base_fields_helper_methods' => [
         'internal' => TRUE,
         'format' => 'array',
-        'default' => [],
+        // 'default' => [],
       ],
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_properties);
