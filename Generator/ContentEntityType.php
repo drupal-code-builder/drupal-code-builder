@@ -504,7 +504,7 @@ EOT
       // If there is a bundle entity, change the 'add' local action to go to
       // the add page route, where a bundle can be selected, rather than the
       // add form.
-      if (isset($this->component_data['bundle_entity'][0])) {
+      if (!$this->component_data->bundle_entity->isEmpty()) {
         $components['collection_menu_action' . $this->component_data['entity_type_id']]['plugin_properties']['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
       }
 
