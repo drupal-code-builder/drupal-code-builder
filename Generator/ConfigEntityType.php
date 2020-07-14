@@ -80,9 +80,6 @@ class ConfigEntityType extends EntityTypeBase {
             'options' => 'ReportDataTypes:listDataTypesOptions',
           ],
         ],
-        // ARGH bug -- this gets handed down to delta items ARGH.
-        'processing' => [static::class, 'processingEntityProperties'],
-        'process_empty' => TRUE,
       ],
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
@@ -102,35 +99,6 @@ class ConfigEntityType extends EntityTypeBase {
     ];
 
     return $data_definition;
-  }
-
-  public static function processingEntityProperties(DataItem $component_data) {
-    // ARGH workaround for properties getting handed down to delta items...
-    // TODO: fix upstream!
-    if (is_numeric($component_data->getName())) {
-      return;
-    }
-
-    // ARGH we come here twice -- because of WTF?
-    // QUICK HACK!
-    // TODO: FIX!
-    if (!$component_data->isEmpty() && $component_data[0]->name->value == 'id') {
-      return;
-    }
-
-    $label = $component_data->insertBefore(0);
-    $label->set([
-      'name' => 'label',
-      'label' => 'Name',
-      'type' => 'label',
-    ]);
-
-    $id = $component_data->insertBefore(0);
-    $id->set([
-      'name' => 'id',
-      'label' => 'Machine name',
-      'type' => 'text',
-    ]);
   }
 
   /**
@@ -162,6 +130,21 @@ class ConfigEntityType extends EntityTypeBase {
    */
   public function requiredComponents() {
     $components = parent::requiredComponents();
+
+    // Filthy hack.
+    $label = $this->component_data->entity_properties->insertBefore(0);
+    $label->set([
+      'name' => 'label',
+      'label' => 'Name',
+      'type' => 'label',
+    ]);
+
+    $id = $this->component_data->entity_properties->insertBefore(0);
+    $id->set([
+      'name' => 'id',
+      'label' => 'Machine name',
+      'type' => 'text',
+    ]);
 
     // Add form elements for the form handlers, if present.
     $form_handlers_to_add_form_elements_to = [];
