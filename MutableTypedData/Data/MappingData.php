@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\MutableTypedData\Data;
 
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\Exception\InvalidAccessException;
 use MutableTypedData\Exception\InvalidInputException;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -30,6 +31,18 @@ class MappingData extends DataItem {
     return $violations;
   }
 
+
+  public function __set($name, $value) {
+    if ($name != 'value') {
+      throw new InvalidAccessException(sprintf(
+        "Only the 'value' property may be set on simple data at address %s.",
+        $this->getAddress()
+      ));
+    }
+
+    $this->set($value);
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -44,11 +57,6 @@ class MappingData extends DataItem {
 
     parent::set($value);
   }
-
-  public function __set($name, $value) {
-    $this->set($value);
-  }
-
   /**
    * {@inheritdoc}
    */
