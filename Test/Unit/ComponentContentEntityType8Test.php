@@ -609,11 +609,11 @@ class ComponentContentEntityType8Test extends TestBase {
             'entity_properties' => [
               0 => [
                 'name' => 'foo',
-                'type' => 'string',
+                'type' => 'text',
               ],
               1 => [
                 'name' => 'colour',
-                'type' => 'string',
+                'type' => 'text',
               ],
             ],
           ],
