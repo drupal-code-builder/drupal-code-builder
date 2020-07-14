@@ -11,6 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  * @group yaml
  * @group annotation
  * @group entity
+ * @group pass
  */
 class ComponentContentEntityType8Test extends TestBase {
 
