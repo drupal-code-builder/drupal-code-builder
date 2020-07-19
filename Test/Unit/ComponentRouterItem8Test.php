@@ -22,7 +22,7 @@ class ComponentRouterItem8Test extends TestBase {
   /**
    * Test generating a module with routes.
    */
-  public function testRouteGeneration() {
+  public function testBasicRouteGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = array(
