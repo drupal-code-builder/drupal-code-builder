@@ -466,9 +466,18 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   // helper for requiredComponents()
   protected function getDataForGenerator() {
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    // WTF hardcoded!!!! TODO! BUG!
     $definition = $class_handler->getComponentPropertyDefinition('ConfigSchema');
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     return $data;
+  }
+
+  // TODO: move this to a task handler!
+  protected static function getPropertyDefinitionForGeneratorType(string $component_type) {
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $generator_class = $class_handler->getGeneratorClass($component_type);
+
+    return $generator_class::getPropertyDefinition();
   }
 
   /**
