@@ -16,7 +16,6 @@ class PluginType extends BaseGenerator {
 
   use NameFormattingTrait;
 
-
   public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
     $definition = GeneratorDefinition::createFromGeneratorType('PluginType', 'mutable')
       ->setProperties([
