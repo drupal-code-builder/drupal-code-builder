@@ -300,8 +300,7 @@ class RouterItem extends BaseGenerator {
       ];
     }
 
-    // TODO!
-    if (!empty($this->component_data['menu_link'][0])) {
+    if (!$this->component_data->menu_link->isEmpty()) {
       // Strip off the module name prefix from the route name to make the plugin
       // name, as the plugin generator will add it back again.
       $plugin_name = $this->component_data['route_name'];
@@ -312,7 +311,7 @@ class RouterItem extends BaseGenerator {
         'plugin_type' => 'menu.link',
         'plugin_name' => $plugin_name,
         'plugin_properties' => [
-          'title' => $this->component_data['menu_link'][0]['title'],
+          'title' => $this->component_data->menu_link->title->value,
           'route_name' => $this->component_data['route_name'],
         ],
       );

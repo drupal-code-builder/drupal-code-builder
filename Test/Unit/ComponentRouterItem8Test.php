@@ -111,25 +111,39 @@ class ComponentRouterItem8Test extends TestBase {
       'router_items' => [
         0 => [
           'path' => '/my/path',
-          'controller_type' => 'controller',
-          'access_type' => 'permission',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'permission',
+          ],
           'title' => 'My Page',
           'menu_link' => [
-            0 => [
-              'title' => 'My link',
-            ],
+            'title' => 'My link',
           ],
         ],
         1 => [
           'path' => 'my/other-path',
-          'controller_type' => 'controller',
-          'access_type' => 'permission',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'permission',
+          ],
         ],
       ],
       'readme' => FALSE,
     );
 
     $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/MyPathController.php",
+      "src/Controller/MyOtherPathController.php",
+      "$module_name.links.menu.yml",
+    ], $files);
 
     $this->assertCount(5, $files, "The expected number of files is returned.");
 
