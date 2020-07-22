@@ -7,6 +7,8 @@ use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\VariantDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Generator for router item on Drupal 8.
@@ -53,9 +55,53 @@ class RouterItem extends BaseGenerator {
       // TODO! how does the data type here resolve with the data type from the
       // generator class???????
       // ARGH no, 'mutable' does NOT belong here!
-      'controller' => static::getPropertyDefinitionForGeneratorType('RouteController')
-        ->setLabel('Route controller')
-        ->setDescription("The route controller."),
+      'controller' => PropertyDefinition::create('mutable')
+        ->setRequired(TRUE)
+        ->setProperties([
+          'controller_type' => PropertyDefinition::create('string')
+            ->setLabel('Controller type')
+            // ->setOptionsArray([
+            //   'controller' => 'Controller class',
+            //   'form' => 'Form',
+            //   'entity_view' => 'Entity view mode',
+            //   'entity_form' => 'Entity form',
+            //   'entity_list' => 'Entity list',
+            // ])
+        ])
+        ->setVariants([
+        'controller' => VariantDefinition::create()
+          ->setLabel('Controller class')
+          ->setProperties([
+            'controller_relative_class_name' => PropertyDefinition::create('string')
+              ->setInternal(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setLazy(TRUE)
+                ->setCallable(function (DataItem $component_data) {
+                  // Create a controller name from the route path.
+                  $path  = str_replace(['{', '}'], '', $component_data->getRelative('..:..:path')->value);
+                  $snake = str_replace(['/', '-'], '_', $path);
+                  $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
+                  return $controller_class_name;
+                }),
+              ),
+          ]),
+        'form' => VariantDefinition::create()
+          ->setLabel('Form')
+          ->setProperties([]),
+        'entity_view' => VariantDefinition::create()
+          ->setLabel('Form')
+          ->setProperties([
+            // TODO: 4.1
+            // Needs entity type data gathering!
+            // 'entity_type'
+          ]),
+        'entity_form' => VariantDefinition::create()
+          ->setLabel('Form')
+          ->setProperties([]),
+        'entity_list' => VariantDefinition::create()
+          ->setLabel('Form')
+          ->setProperties([]),
+        ]),
 
       // 'controller_plain_class_name' => PropertyDefinition::create('string')
       //   ->setDefault(
@@ -179,6 +225,7 @@ class RouterItem extends BaseGenerator {
     return "public function {$function_name}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
   }
 
+// TODO REMOVE
   public static function defaultControllerPlainClassName($data_item) {
     // Create a controller name from the route path.
     $path  = str_replace(['{', '}'], '', $component_data['path']);
@@ -202,21 +249,22 @@ class RouterItem extends BaseGenerator {
       'component_type' => 'Routing',
     );
 
-    // $controller_relative_class = $this->component_data['controller_relative_class_name_pieces'];
 
     // Add a controller class if needed.
-    // if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == 'controller') {
-    //   $components['controller'] = array(
-    //     'component_type' => 'PHPClassFile',
-    //     'plain_class_name' => $controller_relative_class,
-    //   );
-    //   $components["controller:content"] = [
-    //     'component_type' => 'PHPFunction',
-    //     'containing_component' => "%requester:controller",
-    //     'declaration' => 'public function content()',
-    //     'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
-    //   ];
-    // }
+    if ($this->component_data->controller->controller_type->value == 'controller') {
+      $controller_relative_class = $this->component_data->controller->controller_relative_class_name->value;
+
+      $components['controller'] = array(
+        'component_type' => 'PHPClassFile',
+        'relative_class_name' => $controller_relative_class,
+      );
+      $components["controller:content"] = [
+        'component_type' => 'PHPFunction',
+        'containing_component' => "%requester:controller",
+        'declaration' => 'public function content()',
+        'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
+      ];
+    }
 
     // TODO!
     if (!empty($this->component_data['menu_link'][0])) {
