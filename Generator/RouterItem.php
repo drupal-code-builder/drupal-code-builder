@@ -3,7 +3,10 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\NestedArray;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for router item on Drupal 8.
@@ -24,20 +27,13 @@ class RouterItem extends BaseGenerator {
         'description' => "The path of the route. Include the initial '/'.",
         'required' => TRUE,
       ],
-      'route_name' => [
-        'internal' => TRUE,
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          // Strip the initial slash so it's not turned into a surplus dot.
-          $trimmed_path = ltrim($component_data['path'], '/');
-
-          // Get the module name rather than using the token, to avoid the
-          // property name getting quoted.
-          $module = $component_data['root_component_name'];
-          $route_name = $module . '.' . str_replace('/', '.', $trimmed_path);
-          return $route_name;
-        },
-      ],
+      'route_name' => PropertyDefinition::create('string')
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setCallable([static::class, 'defaultRouteName'])
+            ->setLazy(TRUE)
+            ->setDependencies('..:TODO')
+        ),
       'title' => [
         'label' => "The page title for the route.",
         'default' => 'myPage',
@@ -54,94 +50,141 @@ class RouterItem extends BaseGenerator {
           ],
         ],
       ],
-      'controller_plain_class_name' => [
-        'internal' => TRUE,
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          // Create a controller name from the route path.
-          $path  = str_replace(['{', '}'], '', $component_data['path']);
-          $snake = str_replace(['/', '-'], '_', $path);
-          $controller_class_name = CaseString::snake($snake)->pascal() . 'Controller';
-          return $controller_class_name;
-        },
-      ],
-      'controller_relative_class_name_pieces' => [
-        'internal' => TRUE,
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          return ['Controller', $component_data['controller_plain_class_name']];
-        },
-      ],
-      'controller_qualified_class_name' => [
-        'internal' => TRUE,
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          return implode('\\', [
-            'Drupal',
-            '%module',
-            'Controller',
-            $component_data['controller_plain_class_name'],
-          ]);
-        },
-      ],
-      'controller_type' => [
-        'label' => "Controller type",
-        'options' => [
-          // These are all YAML keys that take an initial '_', but having that
-          // in the option key makes it harder to enter in the Drush UI.
-          'controller' => 'Controller class',
-          'form' => 'Form',
-          'entity_view' => 'Entity view mode',
-          'entity_form' => 'Entity form',
-          'entity_list' => 'Entity list',
-        ],
-        'yaml_address' => ['defaults'],
-      ],
-      // The value for the YAML property that's set in controller_type.
-      // This is a bit fiddly, but there's no UI for a key-value pair.
-      'controller_type_value' => [
-        'internal' => TRUE,
-        'default' => function ($component_data) {
-          $lookup = [
-            // This will contain a placeholder token, but it's ok to use here as
-            // the value will be quoted in the rendered YAML anyway.
-            'controller' => '\\' . $component_data['controller_qualified_class_name'] . '::content',
-            'form' => 'Drupal\%module\Form\MyFormClass',
-            'entity_view' => 'ENTITY_TYPE.VIEW_MODE',
-            'entity_form' => 'ENTITY_TYPE.FORM_MODE',
-            'entity_list' => 'ENTITY_TYPE',
-          ];
-          if (isset($component_data['controller_type'])) {
-            return $lookup[$component_data['controller_type']];
-          }
-        },
-      ],
-      'access_type' => [
-        'label' => "Access type",
-        'options' => [
-          'access' => 'No access control',
-          'permission' => 'Permission',
-          'role' => 'Role',
-          'entity_access' => 'Entity access',
-        ],
-        'yaml_address' => ['requirements'],
-      ],
-      // The value for the YAML property that's set in access_type.
-      'access_type_value' => [
-        'internal' => TRUE,
-        'default' => function ($component_data) {
-          $lookup = [
-            'access' => 'TRUE',
-            'permission' => 'TODO: set permission machine name',
-            'role' => 'authenticated',
-            'entity_access' => 'ENTITY_TYPE.OPERATION',
-          ];
-          if (!empty($component_data['access_type'])) {
-            return $lookup[$component_data['access_type']];
-          }
-        },
-      ],
+      // TODO! how does the data type here resolve with the data type from the
+      // generator class???????
+      // ARGH no, 'mutable' does NOT belong here!
+      'controller' => static::getPropertyDefinitionForGeneratorType('RouteController')
+        ->setLabel('Route controller')
+        ->setDescription("The route controller."),
+
+      // 'controller_plain_class_name' => PropertyDefinition::create('string')
+      //   ->setDefault(
+      //     DefaultDefinition::create()
+      //       ->setCallable([static::class, 'defaultControllerPlainClassName'])
+      //       ->setLazy(TRUE)
+      //       ->setDependencies('..:TODO')
+      //   ),
+      // 'controller_relative_class_name_pieces' => [
+      //   'internal' => TRUE,
+      //   'process_default' => TRUE,
+      //   'default' => function($component_data) {
+      //     return ['Controller', $component_data['controller_plain_class_name']];
+      //   },
+      // ],
+      // 'controller_qualified_class_name' => [
+      //   'internal' => TRUE,
+      //   'process_default' => TRUE,
+      //   'default' => function($component_data) {
+      //     return implode('\\', [
+      //       'Drupal',
+      //       '%module',
+      //       'Controller',
+      //       $component_data['controller_plain_class_name'],
+      //     ]);
+      //   },
+      // ],
+      // 'controller_type' => PropertyDefinition::create('string')
+      //   ->setLabel('Controller type')
+      //   ->setDescription("The way in which plugins of this type are formed.")
+      //   ->setOptions(
+      //     OptionDefinition::create(
+      //       'annotation',
+      //       'Annotation plugin',
+      //       "Plugins are classes with an annotation."
+      //     ),
+      //     OptionDefinition::create(
+      //       'yaml',
+      //       'YAML plugin',
+      //       "Plugins are declared in a single YAML file, usually sharing the same class."
+      //     )
+      //   )
+
+
+      //   'label' => "Controller type",
+      //   'options' => [
+      //     // These are all YAML keys that take an initial '_', but having that
+      //     // in the option key makes it harder to enter in the Drush UI.
+      //     'controller' => 'Controller class',
+      //     'form' => 'Form',
+      //     'entity_view' => 'Entity view mode',
+      //     'entity_form' => 'Entity form',
+      //     'entity_list' => 'Entity list',
+      //   ],
+      //   'yaml_address' => ['defaults'],
+      // ],
+      // // The value for the YAML property that's set in controller_type.
+      // // This is a bit fiddly, but there's no UI for a key-value pair.
+      // 'controller_type_value' => [
+      //   'internal' => TRUE,
+      //   'default' => function ($component_data) {
+      //     $lookup = [
+      //       // This will contain a placeholder token, but it's ok to use here as
+      //       // the value will be quoted in the rendered YAML anyway.
+      //       'controller' => '\\' . $component_data['controller_qualified_class_name'] . '::content',
+      //       'form' => 'Drupal\%module\Form\MyFormClass',
+      //       'entity_view' => 'ENTITY_TYPE.VIEW_MODE',
+      //       'entity_form' => 'ENTITY_TYPE.FORM_MODE',
+      //       'entity_list' => 'ENTITY_TYPE',
+      //     ];
+      //     if (isset($component_data['controller_type'])) {
+      //       return $lookup[$component_data['controller_type']];
+      //     }
+      //   },
+      // ],
+      // 'access_type' => [
+      //   'label' => "Access type",
+      //   'options' => [
+      //     'access' => 'No access control',
+      //     'permission' => 'Permission',
+      //     'role' => 'Role',
+      //     'entity_access' => 'Entity access',
+      //   ],
+      //   'yaml_address' => ['requirements'],
+      // ],
+      // // The value for the YAML property that's set in access_type.
+      // 'access_type_value' => [
+      //   'internal' => TRUE,
+      //   'default' => function ($component_data) {
+      //     $lookup = [
+      //       'access' => 'TRUE',
+      //       'permission' => 'TODO: set permission machine name',
+      //       'role' => 'authenticated',
+      //       'entity_access' => 'ENTITY_TYPE.OPERATION',
+      //     ];
+      //     if (!empty($component_data['access_type'])) {
+      //       return $lookup[$component_data['access_type']];
+      //     }
+      //   },
+      // ],
     ];
+  }
+
+  /**
+   * Default value callback.
+   */
+  public static function defaultRouteName($data_item) {
+    $component_data = $data_item->getParent();
+
+    // Strip the initial slash so it's not turned into a surplus dot.
+    $trimmed_path = ltrim($component_data['path'], '/');
+
+    // Get the module name rather than using the token, to avoid the
+    // property name getting quoted.
+    $module = $component_data['root_component_name'];
+    $route_name = $module . '.' . str_replace('/', '.', $trimmed_path);
+    return $route_name;
+
+    // WTF?
+    $function_name = $data_item->getParent()->function_name->value;
+    return "public function {$function_name}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
+  }
+
+  public static function defaultControllerPlainClassName($data_item) {
+    // Create a controller name from the route path.
+    $path  = str_replace(['{', '}'], '', $component_data['path']);
+    $snake = str_replace(['/', '-'], '_', $path);
+    $controller_class_name = CaseString::snake($snake)->pascal() . 'Controller';
+    return $controller_class_name;
   }
 
   /**
@@ -159,22 +202,23 @@ class RouterItem extends BaseGenerator {
       'component_type' => 'Routing',
     );
 
-    $controller_relative_class = $this->component_data['controller_relative_class_name_pieces'];
+    // $controller_relative_class = $this->component_data['controller_relative_class_name_pieces'];
 
     // Add a controller class if needed.
-    if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == 'controller') {
-      $components['controller'] = array(
-        'component_type' => 'PHPClassFile',
-        'relative_class_name' => $controller_relative_class,
-      );
-      $components["controller:content"] = [
-        'component_type' => 'PHPFunction',
-        'containing_component' => "%requester:controller",
-        'declaration' => 'public function content()',
-        'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
-      ];
-    }
+    // if (!empty($this->component_data['controller_type']) && $this->component_data['controller_type'] == 'controller') {
+    //   $components['controller'] = array(
+    //     'component_type' => 'PHPClassFile',
+    //     'plain_class_name' => $controller_relative_class,
+    //   );
+    //   $components["controller:content"] = [
+    //     'component_type' => 'PHPFunction',
+    //     'containing_component' => "%requester:controller",
+    //     'declaration' => 'public function content()',
+    //     'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
+    //   ];
+    // }
 
+    // TODO!
     if (!empty($this->component_data['menu_link'][0])) {
       // Strip off the module name prefix from the route name to make the plugin
       // name, as the plugin generator will add it back again.
