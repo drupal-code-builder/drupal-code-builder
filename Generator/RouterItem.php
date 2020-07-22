@@ -30,6 +30,7 @@ class RouterItem extends BaseGenerator {
         'required' => TRUE,
       ],
       'route_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultRouteName'])
@@ -56,6 +57,7 @@ class RouterItem extends BaseGenerator {
       // generator class???????
       // ARGH no, 'mutable' does NOT belong here!
       'controller' => PropertyDefinition::create('mutable')
+        ->setLabel('Controller type')
         ->setRequired(TRUE)
         ->setProperties([
           'controller_type' => PropertyDefinition::create('string')
@@ -69,39 +71,80 @@ class RouterItem extends BaseGenerator {
             // ])
         ])
         ->setVariants([
-        'controller' => VariantDefinition::create()
-          ->setLabel('Controller class')
-          ->setProperties([
-            'controller_relative_class_name' => PropertyDefinition::create('string')
-              ->setInternal(TRUE)
-              ->setDefault(DefaultDefinition::create()
-                ->setLazy(TRUE)
-                ->setCallable(function (DataItem $component_data) {
-                  // Create a controller name from the route path.
-                  $path  = str_replace(['{', '}'], '', $component_data->getRelative('..:..:path')->value);
-                  $snake = str_replace(['/', '-'], '_', $path);
-                  $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
-                  return $controller_class_name;
-                }),
-              ),
+          'controller' => VariantDefinition::create()
+            ->setLabel('Controller class')
+            ->setProperties([
+              'controller_relative_class_name' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setDefault(DefaultDefinition::create()
+                  ->setLazy(TRUE)
+                  ->setCallable(function (DataItem $component_data) {
+                    // Create a controller name from the route path.
+                    $path  = str_replace(['{', '}'], '', $component_data->getRelative('..:..:path')->value);
+                    $snake = str_replace(['/', '-'], '_', $path);
+                    $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
+                    return $controller_class_name;
+                  }),
+                ),
+              'routing_value' => PropertyDefinition::create('string')
+                ->setDefault(DefaultDefinition::create()
+                  ->setCallable(function (DataItem $component_data) {
+                    // AARGH HACK! Repeating the work the class component does!
+                    return '\Drupal\%module\\' . $component_data->getParent()->controller_relative_class_name->value . '::content';
+                  })
+                ),
+            ]),
+          'form' => VariantDefinition::create()
+            ->setLabel('Form')
+            ->setProperties([]),
+          'entity_view' => VariantDefinition::create()
+            ->setLabel('Entity view display')
+            ->setProperties([
+              // TODO: 4.1
+              // Needs entity type data gathering!
+              // 'entity_type'
+            ]),
+          'entity_form' => VariantDefinition::create()
+            ->setLabel('Entity form display')
+            ->setProperties([]),
+          'entity_list' => VariantDefinition::create()
+            ->setLabel('Entity list')
+            ->setProperties([]),
           ]),
-        'form' => VariantDefinition::create()
-          ->setLabel('Form')
-          ->setProperties([]),
-        'entity_view' => VariantDefinition::create()
-          ->setLabel('Form')
-          ->setProperties([
-            // TODO: 4.1
-            // Needs entity type data gathering!
-            // 'entity_type'
-          ]),
-        'entity_form' => VariantDefinition::create()
-          ->setLabel('Form')
-          ->setProperties([]),
-        'entity_list' => VariantDefinition::create()
-          ->setLabel('Form')
-          ->setProperties([]),
+      'access' => PropertyDefinition::create('mutable')
+        ->setLabel('Access type')
+        ->setRequired(TRUE)
+        ->setProperties([
+          'access_type' => PropertyDefinition::create('string')
+            ->setLabel('Access type')
+        ])
+        ->setVariants([
+          'access' => VariantDefinition::create()
+            ->setLabel('No access control')
+            ->setProperties([
+              // TODO: shorthand for setting defaults! TOO LONG!
+              'routing_value' => PropertyDefinition::create('string')->setLiteralDefault('TRUE')
+            ]),
+          'permission' => VariantDefinition::create()
+            ->setLabel('Permission')
+            ->setProperties([
+              'routing_value' => PropertyDefinition::create('string')
+                ->setLiteralDefault('TODO: set permission machine name')
+            ]),
+          'role' => VariantDefinition::create()
+            ->setLabel('Role')
+            ->setProperties([
+              'routing_value' => PropertyDefinition::create('string')
+                ->setLiteralDefault('authenticated')
+            ]),
+          'entity_access' => VariantDefinition::create()
+            ->setLabel('Entity access')
+            ->setProperties([
+              'routing_value' => PropertyDefinition::create('string')
+                ->setLiteralDefault('ENTITY_TYPE.OPERATION')
+            ]),
         ]),
+
 
       // 'controller_plain_class_name' => PropertyDefinition::create('string')
       //   ->setDefault(
@@ -225,15 +268,6 @@ class RouterItem extends BaseGenerator {
     return "public function {$function_name}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
   }
 
-// TODO REMOVE
-  public static function defaultControllerPlainClassName($data_item) {
-    // Create a controller name from the route path.
-    $path  = str_replace(['{', '}'], '', $component_data['path']);
-    $snake = str_replace(['/', '-'], '_', $path);
-    $controller_class_name = CaseString::snake($snake)->pascal() . 'Controller';
-    return $controller_class_name;
-  }
-
   /**
    * Declares the subcomponents for this component.
    *
@@ -309,32 +343,42 @@ class RouterItem extends BaseGenerator {
     $route_yaml['path'] = $path;
     $route_yaml['defaults']['_title'] = $this->component_data['title'];
 
-    // Set the YAML values that come from component data with an address.
-    $yaml_data_component_properties = [
-      'controller_type',
-      'access_type',
-    ];
-    foreach ($yaml_data_component_properties as $component_property_name) {
-      if (empty($this->component_data[$component_property_name])) {
-        continue;
-      }
+    // Controller value.
+    $controller_yaml_key = '_' . $this->component_data->controller->controller_type->value;
+    $route_yaml['defaults'][$controller_yaml_key] = $this->component_data->controller->routing_value->value;
 
-      // The value for the property is the YAML key without the initial '_'; the
-      // YAML value is given in a companion property called PROPERTY_value; the
-      // 'yaml_address' attribute in the property's info defines where in the
-      // YAML structure the key and value should be inserted.
-      $yaml_key = '_' . $this->component_data[$component_property_name];
+    // Access value.
+    $access_yaml_key = '_' . $this->component_data->access->access_type->value;
+    $route_yaml['requirements'][$access_yaml_key] = $this->component_data->access->routing_value->value;
 
-      $yaml_value = $this->component_data["{$component_property_name}_value"];
 
-      // Bit of a hack: instantiated generators don't have access to their
-      // processed data info.
-      $property_info = static::componentDataDefinition()[$component_property_name];
-      $property_address = $property_info['yaml_address'];
-      $property_address[] = $yaml_key;
 
-      NestedArray::setValue($route_yaml, $property_address, $yaml_value);
-    }
+    // // Set the YAML values that come from component data with an address.
+    // $yaml_data_component_properties = [
+    //   'controller_type',
+    //   'access_type',
+    // ];
+    // foreach ($yaml_data_component_properties as $component_property_name) {
+    //   if (empty($this->component_data[$component_property_name])) {
+    //     continue;
+    //   }
+
+    //   // The value for the property is the YAML key without the initial '_'; the
+    //   // YAML value is given in a companion property called PROPERTY_value; the
+    //   // 'yaml_address' attribute in the property's info defines where in the
+    //   // YAML structure the key and value should be inserted.
+    //   $yaml_key = '_' . $this->component_data[$component_property_name];
+
+    //   $yaml_value = $this->component_data["{$component_property_name}_value"];
+
+    //   // Bit of a hack: instantiated generators don't have access to their
+    //   // processed data info.
+    //   $property_info = static::componentDataDefinition()[$component_property_name];
+    //   $property_address = $property_info['yaml_address'];
+    //   $property_address[] = $yaml_key;
+
+    //   NestedArray::setValue($route_yaml, $property_address, $yaml_value);
+    // }
 
     $route_name = $this->component_data['route_name'];
     $routing_data[$route_name] = $route_yaml;
