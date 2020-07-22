@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests for Router item component.
  *
  * @group yaml
+ * @group pass
  */
 class ComponentRouterItem8Test extends TestBase {
 
