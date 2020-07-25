@@ -87,6 +87,7 @@ class RouterItem extends BaseGenerator {
                   }),
                 ),
               'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
                 ->setDefault(DefaultDefinition::create()
                   ->setCallable(function (DataItem $component_data) {
                     // AARGH HACK! Repeating the work the class component does!
