@@ -123,25 +123,37 @@ class RouterItem extends BaseGenerator {
           'access' => VariantDefinition::create()
             ->setLabel('No access control')
             ->setProperties([
-              // TODO: shorthand for setting defaults! TOO LONG!
-              'routing_value' => PropertyDefinition::create('string')->setLiteralDefault('TRUE')
+              // The value to use in the YAML for the key this variant provides.
+              'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setLiteralDefault('TRUE')
             ]),
           'permission' => VariantDefinition::create()
             ->setLabel('Permission')
             ->setProperties([
               'routing_value' => PropertyDefinition::create('string')
-                ->setLiteralDefault('TODO: set permission machine name')
+                ->setLabel("Permission machine name")
+                ->setRequired(TRUE)
+                ->setLiteralDefault('access content')
             ]),
           'role' => VariantDefinition::create()
             ->setLabel('Role')
             ->setProperties([
               'routing_value' => PropertyDefinition::create('string')
+                ->setLabel("User role machine name")
                 ->setLiteralDefault('authenticated')
             ]),
           'entity_access' => VariantDefinition::create()
             ->setLabel('Entity access')
             ->setProperties([
+              'entity_type_id' => PropertyDefinition::create('string')
+                ->setLabel("Entity type ID")
+                ->setRequired(TRUE),
+              'entity_access_opertaion' => PropertyDefinition::create('string')
+                ->setLabel("Access operation")
+                ->setRequired(TRUE),
               'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
                 ->setLiteralDefault('ENTITY_TYPE.OPERATION')
             ]),
         ]),
