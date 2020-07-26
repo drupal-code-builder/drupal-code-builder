@@ -53,22 +53,12 @@ class RouterItem extends BaseGenerator {
           ],
         ],
       ],
-      // TODO! how does the data type here resolve with the data type from the
-      // generator class???????
-      // ARGH no, 'mutable' does NOT belong here!
       'controller' => PropertyDefinition::create('mutable')
         ->setLabel('Controller type')
         ->setRequired(TRUE)
         ->setProperties([
           'controller_type' => PropertyDefinition::create('string')
             ->setLabel('Controller type')
-            // ->setOptionsArray([
-            //   'controller' => 'Controller class',
-            //   'form' => 'Form',
-            //   'entity_view' => 'Entity view mode',
-            //   'entity_form' => 'Entity form',
-            //   'entity_list' => 'Entity list',
-            // ])
         ])
         ->setVariants([
           'controller' => VariantDefinition::create()
