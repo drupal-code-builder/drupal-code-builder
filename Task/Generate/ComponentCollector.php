@@ -497,11 +497,6 @@ class ComponentCollector {
       $this->acquisitionExpressionLanguage->registerProvider(new AcquisitionExpressionLanguageProvider());
     }
 
-    // // Get the requesting component's data info.
-    // if ($requesting_component) {
-    //   $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
-    // }
-
     // Initialize a map of property acquisition aliases in the requesting
     // component. This is lazily computed if we find no other way to find the
     // acquired property.
