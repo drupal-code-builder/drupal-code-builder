@@ -43,6 +43,7 @@ class ArrayOperationsExpressionLanguageProvider implements ExpressionFunctionPro
       ExpressionFunction::fromPhp('implode'),
       ExpressionFunction::fromPhp('explode'),
       // FFS TEMP!
+      // TODO: REMOVE
       new ExpressionFunction(
         'relativeClassName',
         function (string $relative_namespace, string $plain_classname) {
