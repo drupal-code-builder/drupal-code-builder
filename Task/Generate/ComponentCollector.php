@@ -503,7 +503,8 @@ class ComponentCollector {
     $requesting_component_alias_map = NULL;
 
     // Allow the new generator to acquire properties from the requester.
-    foreach ($component_data->getProperties() as $property_name => $property_info) {
+    // Get all properties, including internal!
+    foreach ($component_data->getDefinition()->getProperties() as $property_name => $property_info) {
       if (!$property_info->getAcquiringExpression()) {
         continue;
       }
