@@ -149,12 +149,17 @@ class RouterItem extends BaseGenerator {
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
                 ->setRequired(TRUE),
-              'entity_access_opertaion' => PropertyDefinition::create('string')
+              'entity_access_operation' => PropertyDefinition::create('string')
                 ->setLabel("Access operation")
-                ->setRequired(TRUE),
+                ->setRequired(TRUE)
+                ->setOptionsArray([
+                  'view' => 'View',
+                  'update' => 'Update',
+                  'delete' => 'Delete',
+                ]),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
-                ->setLiteralDefault('ENTITY_TYPE.OPERATION')
+                ->setExpressionDefault("get('..:entity_type_id') ~ '.' ~ get('..:entity_access_operation')")
             ]),
         ]),
 
