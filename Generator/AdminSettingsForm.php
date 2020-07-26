@@ -40,7 +40,7 @@ class AdminSettingsForm extends Form {
       ->setLabel("The name of the route.")
       ->setDefault(
         DefaultDefinition::create()
-          ->setLazy(TRUE)
+          // ->setLazy(TRUE)
           // TODO: broken in JS!!
           ->setExpression("getChildValue(parent, 'root_component_name') ~ '.settings'")
           ->setDependencies('..:root_component_name')
@@ -107,10 +107,14 @@ class AdminSettingsForm extends Form {
       // anyway.
       'path' => $settings_form_path,
       'title' => 'Administer %lower',
-      'controller_type' => 'form',
-      'controller_type_value' => '\\' . $this->component_data['qualified_class_name'],
-      'access_type' => 'permission',
-      'access_type_value' => 'administer %module',
+      'controller' => [
+        'controller_type' => 'form',
+        'routing_value' => '\\' . $this->component_data['qualified_class_name'],
+      ],
+      'access' => [
+        'access_type' => 'permission',
+        'routing_value' => 'administer %module',
+      ],
     );
 
     $components['menu_link'] = [
