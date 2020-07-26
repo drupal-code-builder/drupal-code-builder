@@ -273,17 +273,16 @@ class RouterItem extends BaseGenerator {
     $component_data = $data_item->getParent();
 
     // Strip the initial slash so it's not turned into a surplus dot.
-    $trimmed_path = ltrim($component_data['path'], '/');
+    $path = ltrim($component_data['path'], '/');
+
+    // Remove any parameter braces.
+    $path = str_replace(['{', '}'], '', $path);
 
     // Get the module name rather than using the token, to avoid the
     // property name getting quoted.
     $module = $component_data['root_component_name'];
-    $route_name = $module . '.' . str_replace('/', '.', $trimmed_path);
+    $route_name = $module . '.' . str_replace('/', '.', $path);
     return $route_name;
-
-    // WTF?
-    $function_name = $data_item->getParent()->function_name->value;
-    return "public function {$function_name}(array £form, \Drupal\Core\Form\FormStateInterface £form_state)";
   }
 
   /**
