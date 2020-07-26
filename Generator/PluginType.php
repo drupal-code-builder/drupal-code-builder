@@ -26,12 +26,12 @@ class PluginType extends BaseGenerator {
             OptionDefinition::create(
               'annotation',
               'Annotation plugin',
-              "Plugins are classes with an annotation."
+              "Each plugins is a class with an annotation to declare the plugin data."
             ),
             OptionDefinition::create(
               'yaml',
               'YAML plugin',
-              "Plugins are declared in a single YAML file, usually sharing the same class."
+              "Plugins are declared in a single YAML file, and usually share the same class."
             )
           )
         ])
