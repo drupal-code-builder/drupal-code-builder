@@ -22,6 +22,8 @@ class ComponentRouterItem8Test extends TestBase {
 
   /**
    * Test generating a module with routes.
+   *
+   * Covers the different access types.
    */
   public function testBasicRouteGeneration() {
     // Assemble module data.
@@ -104,6 +106,89 @@ class ComponentRouterItem8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
     $php_tester->assertHasMethod('content');
+  }
+
+  /**
+   * Tests the different controller types.
+   */
+  public function testRouteControllerTypes() {
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        0 => [
+          'path' => '/my/path/controller',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        1 => [
+          'path' => '/my/path/form',
+          'controller' => [
+            'controller_type' => 'form',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        2 => [
+          'path' => '/my/path/entity-view',
+          'controller' => [
+            'controller_type' => 'entity_view',
+            'entity_type_id' => 'node',
+            'entity_view_mode' => 'teaser'
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        3 => [
+          'path' => '/my/path/entity-form',
+          'controller' => [
+            'controller_type' => 'entity_form',
+            'entity_type_id' => 'node',
+            'entity_form_mode' => 'edit'
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        4 => [
+          'path' => '/my/path/entity-list',
+          'controller' => [
+            'controller_type' => 'entity_list',
+            'entity_type_id' => 'node',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/MyPathControllerController.php",
+    ], $files);
+
+    $routing_file = $files["$module_name.routing.yml"];
+    $yaml_tester = new YamlTester($routing_file);
+
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyPathControllerController::content');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.form', 'defaults', '_form'], '\Drupal\module\Form\FormClassName');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity-view', 'defaults', '_entity_view'], 'node.teaser');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity-form', 'defaults', '_entity_form'], 'node.edit');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity-list', 'defaults', '_entity_list'], 'node');
   }
 
   /**

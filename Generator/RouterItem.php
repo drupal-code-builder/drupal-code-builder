@@ -87,20 +87,49 @@ class RouterItem extends BaseGenerator {
             ]),
           'form' => VariantDefinition::create()
             ->setLabel('Form')
-            ->setProperties([]),
+            ->setProperties([
+              'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setLiteralDefault('\Drupal\module\Form\FormClassName')
+            ]),
           'entity_view' => VariantDefinition::create()
             ->setLabel('Entity view display')
             ->setProperties([
               // TODO: 4.1
               // Needs entity type data gathering!
-              // 'entity_type'
+              'entity_type_id' => PropertyDefinition::create('string')
+                ->setLabel("Entity type ID")
+                ->setRequired(TRUE),
+              'entity_view_mode' => PropertyDefinition::create('string')
+                ->setLabel("Entity view mode")
+                ->setRequired(TRUE),
+              'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setExpressionDefault("get('..:entity_type_id') ~ '.' ~ get('..:entity_view_mode')"),
             ]),
           'entity_form' => VariantDefinition::create()
             ->setLabel('Entity form display')
-            ->setProperties([]),
+            ->setProperties([
+              'entity_type_id' => PropertyDefinition::create('string')
+                ->setLabel("Entity type ID")
+                ->setRequired(TRUE),
+              'entity_form_mode' => PropertyDefinition::create('string')
+                ->setLabel("Entity form mode")
+                ->setRequired(TRUE),
+              'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setExpressionDefault("get('..:entity_type_id') ~ '.' ~ get('..:entity_form_mode')"),
+            ]),
           'entity_list' => VariantDefinition::create()
             ->setLabel('Entity list')
-            ->setProperties([]),
+            ->setProperties([
+              'entity_type_id' => PropertyDefinition::create('string')
+                ->setLabel("Entity type ID")
+                ->setRequired(TRUE),
+              'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setExpressionDefault("get('..:entity_type_id')"),
+            ]),
           ]),
       'access' => PropertyDefinition::create('mutable')
         ->setLabel('Access type')
@@ -110,6 +139,8 @@ class RouterItem extends BaseGenerator {
             ->setLabel('Access type')
         ])
         ->setVariants([
+          // This is the 'none' option, but the YAML routing key is '_access',
+          // so the option value is weird because of this.
           'access' => VariantDefinition::create()
             ->setLabel('No access control')
             ->setProperties([
