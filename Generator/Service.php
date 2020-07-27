@@ -114,6 +114,9 @@ class Service extends PHPClassFileWithInjection {
         },
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
+      // The parent service name.
+      'parent' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
       'tags' => [
         'internal' => TRUE,
         'format' => 'compound',
@@ -207,8 +210,8 @@ class Service extends PHPClassFileWithInjection {
     }
 
     // TODO: document and declare this property!
-    if (isset($this->component_data['parent'])) {
-      $yaml_service_definition['parent'] = $this->component_data['parent'];
+    if ($this->component_data->parent->value) {
+      $yaml_service_definition['parent'] = $this->component_data->parent->value;
     }
 
     $yaml_data = [];

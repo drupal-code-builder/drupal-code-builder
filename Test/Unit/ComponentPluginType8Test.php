@@ -35,8 +35,8 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'cat_feeder',
           'discovery_type' => 'annotation',
+          'plugin_type' => 'cat_feeder',
         ]
       ),
       'readme' => FALSE,

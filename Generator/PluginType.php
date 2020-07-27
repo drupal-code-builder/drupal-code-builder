@@ -16,6 +16,7 @@ class PluginType extends BaseGenerator {
 
   use NameFormattingTrait;
 
+  // ARGH common properties! -- root name!
   public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
     $definition = GeneratorDefinition::createFromGeneratorType('PluginType', 'mutable')
       ->setProperties([
@@ -94,13 +95,82 @@ class PluginType extends BaseGenerator {
           ]),
       ]);
 
+    $common_properties = [
+      // TODO: move these 3 universal properties to a helper method.
+      'root_component_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setAcquiringExpression("getRootComponentName(requester)"),
+      'containing_component' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'component_base_path' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setAcquiringExpression("requester.component_base_path.value"),
+      'plugin_manager_service_id' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          // Namespace the service name after the prefix.
+          return
+            'plugin.manager.'
+            . $component_data->getParent()->root_component_name->value
+            . '_'
+            . $component_data->getParent()->plugin_type->value;
+        }),
+      'plugin_relative_namespace' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          // The plugin subdirectory may be nested.
+          return str_replace('/', '\\', $component_data->getParent()->plugin_subdirectory->value);
+        }),
+      'interface' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          return '\\' . self::makeQualifiedClassName([
+            'Drupal',
+            '%module',
+            'Plugin',
+            $component_data->getParent()->plugin_relative_namespace->value,
+            $component_data->getParent()->annotation_class->value . 'Interface',
+          ]);
+        }),
+      'base_class_short_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          $short_class_name = $component_data->getParent()->annotation_class->value;
+
+          // Append 'Base' to the base class name for annotation plugins, where
+          // the base class is actually a base class, but not for YAML plugins,
+          // where the base class really is the class that's mostly used for
+          // all plugins.
+          if ($component_data->getParent()->discovery_type->value == 'annotation') {
+            $short_class_name .= 'Base';
+          }
+
+          return $short_class_name;
+        }),
+      'base_class' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          return '\\' . self::makeQualifiedClassName([
+            'Drupal',
+            '%module',
+            'Plugin',
+            $component_data->getParent()->plugin_relative_namespace->value,
+            $component_data->getParent()->base_class_short_name->value,
+          ]);
+        }),
+      ];
+
+    foreach ($definition->getVariants() as $variant) {
+      $variant->addProperties($common_properties);
+    }
+
     return $definition;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function XcomponentDataDefinition() {
+  public static function XXXcomponentDataDefinition() {
     return parent::componentDataDefinition() + [
       'discovery_type' => PropertyDefinition::create('string')
         ->setLabel('Plugin discovery type')
@@ -252,9 +322,9 @@ class PluginType extends BaseGenerator {
 
     $components['manager'] = array(
       'component_type' => 'PluginTypeManager',
-      'prefixed_service_name' => $this->component_data['plugin_manager_service_id'],
+      'prefixed_service_name' => $this->component_data->plugin_manager_service_id->value,
       // Use the annotation class name as the basis for the manager class name.
-      'service_class_name' => $this->component_data['annotation_class'] . 'Manager',
+      'plain_class_name' => $this->component_data['annotation_class'] . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
     );
@@ -295,7 +365,7 @@ class PluginType extends BaseGenerator {
     if ($this->component_data['discovery_type'] == 'annotation') {
       $components['annotation'] = [
         'component_type' => 'AnnotationClass',
-        'relative_class_name' => ['Annotation', $this->component_data['annotation_class']],
+        'relative_class_name' => 'Annotation\\' . $this->component_data['annotation_class'],
         'parent_class_name' => '\Drupal\Component\Annotation\Plugin',
         'class_docblock_lines' => [
           "Defines the {$this->component_data['plugin_label']} plugin annotation object.",
@@ -309,22 +379,16 @@ class PluginType extends BaseGenerator {
 
     $components['interface'] = [
       'component_type' => 'PHPInterfaceFile',
-      'relative_class_name' => array_merge(
-        ['Plugin'],
-        $plugin_relative_namespace_pieces,
-        [$this->component_data['annotation_class'] . 'Interface']
-      ),
+      'plain_class_name' => $this->component_data['annotation_class'] . 'Interface',
+      'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'docblock_first_line' => "Interface for {$this->component_data['plugin_label']} plugins.",
       // TODO: parent interfaces.
     ];
 
     $components['base_class'] = [
       'component_type' => 'PHPClassFile',
-      'relative_class_name' => array_merge(
-        ['Plugin'],
-        $plugin_relative_namespace_pieces,
-        [$this->component_data['base_class_short_name']]
-      ),
+      'plain_class_name' => $this->component_data['base_class_short_name'],
+      'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
       'interfaces' => [
         $this->component_data['interface'],
