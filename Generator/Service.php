@@ -105,13 +105,14 @@ class Service extends PHPClassFileWithInjection {
       'injected_services' => array(
         'label' => 'Injected services',
         'format' => 'array',
-        'options' => function(&$property_info) {
+        'options' => function (&$property_info) {
           $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+          $options = $mb_task_handler_report_services->listServiceNamesOptionsAll();
 
           return $options;
         },
+        // TODO: kill
         'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
       // The parent service name.
