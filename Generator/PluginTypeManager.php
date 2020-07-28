@@ -22,7 +22,7 @@ class PluginTypeManager extends Service {
       'plugin_type',
       'plugin_label',
       'plugin_subdirectory',
-      'annotation_class',
+      'plugin_plain_class_name',
       'info_alter_hook',
       'interface',
       'base_class',
@@ -157,8 +157,9 @@ class PluginTypeManager extends Service {
         'Drupal',
         $this->component_data['root_component_name'],
         'Annotation',
-        // TODO: cleanup!
-        $this->component_data['annotation_class'],
+        // We can't acquire the annotation class name, as it's a mutable
+        // property and so not always present. Use this instead.
+        $this->component_data['plugin_plain_class_name'],
       ]) . '::class';
       $code[] = ');';
       $code[] = '';

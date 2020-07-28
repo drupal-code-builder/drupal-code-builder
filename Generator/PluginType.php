@@ -92,6 +92,20 @@ class PluginType extends BaseGenerator {
                 ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
                 ->setDependencies('..:plugin_type')
               ),
+            'plugin_subdirectory' => PropertyDefinition::create('string')
+              ->setLabel('Plugin subdirectory')
+              ->setDescription("The subdirectory within the Plugins directory for the interface and base class.")
+              ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+                ->setDependencies('..:plugin_type')),
+            'info_alter_hook' => PropertyDefinition::create('string')
+              ->setLabel('Alter hook name')
+              ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
+              ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("getChildValue(parent, 'plugin_type') ~ '_info'")
+                ->setDependencies('..:plugin_type')),
           ]),
       ]);
 
@@ -105,6 +119,12 @@ class PluginType extends BaseGenerator {
       'component_base_path' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setAcquiringExpression("requester.component_base_path.value"),
+      'plugin_plain_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+          ->setDependencies('..:plugin_type')
+        ),
       'plugin_manager_service_id' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setCallableDefault(function ($component_data) {
@@ -124,18 +144,20 @@ class PluginType extends BaseGenerator {
       'interface' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setCallableDefault(function ($component_data) {
+          $short_class_name = CaseString::snake($component_data->getParent()->plugin_type->value)->pascal();
+
           return '\\' . self::makeQualifiedClassName([
             'Drupal',
             '%module',
             'Plugin',
             $component_data->getParent()->plugin_relative_namespace->value,
-            $component_data->getParent()->annotation_class->value . 'Interface',
+            $short_class_name . 'Interface',
           ]);
         }),
       'base_class_short_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setCallableDefault(function ($component_data) {
-          $short_class_name = $component_data->getParent()->annotation_class->value;
+          $short_class_name = CaseString::snake($component_data->getParent()->plugin_type->value)->pascal();
 
           // Append 'Base' to the base class name for annotation plugins, where
           // the base class is actually a base class, but not for YAML plugins,
@@ -324,7 +346,7 @@ class PluginType extends BaseGenerator {
       'component_type' => 'PluginTypeManager',
       'prefixed_service_name' => $this->component_data->plugin_manager_service_id->value,
       // Use the annotation class name as the basis for the manager class name.
-      'plain_class_name' => $this->component_data['annotation_class'] . 'Manager',
+      'plain_class_name' => CaseString::snake($this->component_data->plugin_type->value)->pascal() . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
     );
@@ -379,7 +401,7 @@ class PluginType extends BaseGenerator {
 
     $components['interface'] = [
       'component_type' => 'PHPInterfaceFile',
-      'plain_class_name' => $this->component_data['annotation_class'] . 'Interface',
+      'plain_class_name' => $this->component_data->plugin_plain_class_name->value . 'Interface',
       'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'docblock_first_line' => "Interface for {$this->component_data['plugin_label']} plugins.",
       // TODO: parent interfaces.
