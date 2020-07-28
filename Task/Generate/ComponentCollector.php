@@ -198,11 +198,11 @@ class ComponentCollector {
       $name = $component_data->getParent()->getName() . '_' . $name;
     }
 
-    dump(sprintf("STARTING getComponentsFromData with %s %s requested by %s",
-      $name,
-      $component_data->getAddress(),
-      $requesting_component ? $requesting_component->component_data->getAddress() : 'nothing'
-    ));
+    // dump(sprintf("STARTING getComponentsFromData with %s at %s requested by %s",
+    //   $name,
+    //   $component_data->getAddress(),
+    //   $requesting_component ? $requesting_component->component_data->getAddress() : 'nothing'
+    // ));
 
     // dump("getComponentsFromDataItem");
     // dump($component_data->export());
@@ -412,7 +412,7 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
-      dump("Converting $required_item_name");
+      // dump("Converting $required_item_name");
       // Conversion to data items!
       if (is_array($required_item_data)) {
         $definition =  $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
@@ -489,7 +489,7 @@ class ComponentCollector {
    *   there is no requesting component present.
    */
   protected function acquireDataFromRequestingComponent(DataItem $component_data, $requesting_component) {
-    // dump("acquireDataFromRequestingComponent! -- " . $component_data->getMachineName());
+    // dump("acquireDataFromRequestingComponent -- for " . $component_data->getMachineName());
     // dump($component_data->getDefinition());
 
     if (!isset($this->acquisitionExpressionLanguage)) {
@@ -514,9 +514,9 @@ class ComponentCollector {
       }
 
       $expression = $property_info->getAcquiringExpression();
-      $add = $component_data->getAddress();
-      // dump("ACQUIRING for $add - $property_name on with '$expression'");
-      // dump($expression);
+      // $add = $component_data->getAddress();
+      // dump("  ACQUIRING for $add - $property_name on with '$expression'");
+      // dump("  " . $expression);
       // dump($requesting_component->component_data->export());
       // dump(get_class($requesting_component->component_data));
 
@@ -535,7 +535,6 @@ class ComponentCollector {
         dump($requesting_component->component_data->export());
         throw $e;
       }
-      // dump($acquired_value);
 
       $component_data->{$property_name}->set($acquired_value);
     }
