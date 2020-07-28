@@ -504,7 +504,7 @@ class ComponentCollector {
 
     // Allow the new generator to acquire properties from the requester.
     // Get all properties, including internal!
-    foreach ($component_data->getDefinition()->getProperties() as $property_name => $property_info) {
+    foreach ($component_data->showInternal()->getProperties() as $property_name => $property_info) {
       if (!$property_info->getAcquiringExpression()) {
         continue;
       }
