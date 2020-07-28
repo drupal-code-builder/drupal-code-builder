@@ -10,6 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  * @group di
+ * @group pass
  */
 class ComponentPluginType8Test extends TestBase {
 
@@ -188,8 +189,8 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'cat_feeder',
           'discovery_type' => 'annotation',
+          'plugin_type' => 'cat_feeder',
           'plugin_subdirectory' => 'Animals/CatFeeder'
         ]
       ),
@@ -236,8 +237,8 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'cat_feeder',
           'discovery_type' => 'yaml',
+          'plugin_type' => 'cat_feeder',
         ]
       ),
       'readme' => FALSE,
@@ -333,13 +334,13 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'alpha',
           // Use annotation type for both, as that generates more things.
           'discovery_type' => 'annotation',
+          'plugin_type' => 'alpha',
         ],
         1 => [
-          'plugin_type' => 'beta',
           'discovery_type' => 'annotation',
+          'plugin_type' => 'beta',
         ],
       ),
       'readme' => FALSE,
