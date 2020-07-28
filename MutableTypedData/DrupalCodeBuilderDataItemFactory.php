@@ -18,7 +18,7 @@ use MutableTypedData\ExpressionLanguage\DataAddressLanguageProvider;
  * Provides a custom Mutable Typed Data Item factory.
  *
  * This allows us to add our own Expression Language functions for case
- * conversions. AND replace classes!!
+ * conversions and replace data item classes.
  */
 class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
 
@@ -33,7 +33,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     // in Generator classes that accesses component data.
     'complex' => ComplexDataWithArrayAccess::class,
     'mutable' => MutableDataWithArrayAccess::class,
-    // Mapping data stored arbitrary arrays that don't need to have their
+    // Mapping data stores arbitrary arrays that don't need to have their
     // structure defined. This is basically for the YAML data.
     'mapping' => MappingData::class,
   ];
