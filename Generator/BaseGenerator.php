@@ -167,13 +167,16 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   // those depend on where it's used.
   // TODO: need way to not show internals to UIs!!
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
-    // WTF: module hardcoded!
-    $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-
     $type = static::deriveType(static::class);
 
-    // ARGH we're calling a method meant for the ROOT only!
-    $array_property_info = $generate_task->getComponentDataInfo($type, TRUE);
+    // Argh, need to instantiate the class handler outside of the Generate
+    // task... time for a proper service architecture?
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    // MESSY because this then goes and calls getPropertyDefinition() -- THIS
+    // METHOD!!! -- on the component! Which means that any generator class
+    // whose getPropertyDefinition() make a parent:: call that ends up calling
+    // this implementation will cause an infinite loop.
+    $array_property_info = $class_handler->getComponentDataDefinition($type);
     // dump($array_property_info);
 
     $definition = GeneratorDefinition::createFromGeneratorType($type, $data_type);
