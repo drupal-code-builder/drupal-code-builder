@@ -87,13 +87,13 @@ class ComponentDataInfoGatherer {
   public function getComponentDataInfo($component_type, $include_internal = FALSE) {
     $properties = $this->classHandler->getComponentDataDefinition($component_type);
 
-    $properties_processed = $this->processPropertyList($properties, $include_internal);
-
-    return $properties_processed;
+    return $properties;
   }
 
   /**
    * Process a property list to add default keys and filter out internals.
+   *
+   * TODO: CAN ALL BE REMOVED!
    *
    * @param $properties
    *   A property list, in the foramt returned from componentDataDefinition().
