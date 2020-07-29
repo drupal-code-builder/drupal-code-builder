@@ -169,15 +169,8 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $type = static::deriveType(static::class);
 
-    // Argh, need to instantiate the class handler outside of the Generate
-    // task... time for a proper service architecture?
-    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
-    // MESSY because this then goes and calls getPropertyDefinition() -- THIS
-    // METHOD!!! -- on the component! Which means that any generator class
-    // whose getPropertyDefinition() make a parent:: call that ends up calling
-    // this implementation will cause an infinite loop.
-    $array_property_info = $class_handler->getComponentDataDefinition($type);
-    // dump($array_property_info);
+    // Get the array property info from the old definition method.
+    $array_property_info = static::componentDataDefinition();
 
     $definition = GeneratorDefinition::createFromGeneratorType($type, $data_type);
 
