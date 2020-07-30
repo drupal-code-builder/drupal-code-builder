@@ -80,9 +80,7 @@ class ComponentPluginsYAML8Test extends TestBase {
           'plugin_type' => 'menu.link',
           'plugin_name' => 'beta',
         ],
-      ],
-      'plugins' => [
-        0 => [
+        2 => [
           'plugin_type' => 'block',
           'plugin_name' => 'alpha',
         ],
