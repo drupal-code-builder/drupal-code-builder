@@ -10,6 +10,7 @@ use MutableTypedData\Exception\InvalidInputException;
  * Tests the Plugins generator class.
  *
  * @group yaml
+ * @group pass
  */
 class ComponentPluginsAnnotated8Test extends TestBase {
 
@@ -19,29 +20,6 @@ class ComponentPluginsAnnotated8Test extends TestBase {
    * @var int
    */
   protected $drupalMajorVersion = 8;
-
-  // TEMPORARY! FOLD INTO OTHERS ONCE THEY ARE CONVERTED
-  public function testPluginDataDefinition() {
-    $component_data = $this->getRootComponentBlankData('module');
-
-    // dump($component_data->getDefinition());
-    // dump($component_data);
-    // $component_data->plugins;
-    $component_data->plugins[0]->plugin_type = 'block';
-    $component_data->plugins[0]->plugin_name = 'my_block';
-    // Instantiate to set the default.
-    $component_data->plugins[0]->plain_class_name;
-
-    // dump($component_data);
-
-    // $component_data->
-    // dump($component_data->plugins);
-    // ARGH need a dumper that removes the parent.
-
-    $files = $this->generateComponentFilesFromData($component_data);
-    dump($files);
-
-  }
 
   /**
    * Test Plugins component.
@@ -538,11 +516,11 @@ class ComponentPluginsAnnotated8Test extends TestBase {
           'entity_properties' => [
             0 => [
               'name' => 'filling',
-              'type' => 'string',
+              'type' => 'text',
             ],
             1 => [
               'name' => 'colour',
-              'type' => 'string',
+              'type' => 'text',
             ],
           ],
         ],

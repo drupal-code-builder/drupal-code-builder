@@ -11,23 +11,11 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
- * Generator for a plugin.
+ * Generator for an annotation plugin.
  */
-class Plugin extends BaseGenerator {
+class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
   use PluginTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $hasStaticFactoryMethod = TRUE;
-
-  /**
-   * The plugin discovery type used by the plugins this generates.
-   *
-   * @var string
-   */
-  protected static $discoveryType = 'AnnotatedClassDiscovery';
 
   /**
    * The standard fixed create() parameters.
@@ -55,17 +43,6 @@ class Plugin extends BaseGenerator {
     ]
   ];
 
-  /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   *
-   * @throws \DrupalCodeBuilder\Exception\InvalidInputException
-   */
   function __construct($component_data) {
     // Set some default properties.
     // $component_data += array(
@@ -88,34 +65,57 @@ class Plugin extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
-    $definition = GeneratorDefinition::createFromGeneratorType('Plugin', 'mutable')
-      ->setProperties([
-        'plugin_type' => PropertyDefinition::create('string')
-          ->setLabel('Plugin type')
-          ->setOptionsArray(
-            $plugin_data_task->listPluginNamesOptions()
-          )
-      ])
-      ->setVariantMapping($plugin_data_task->getPluginTypesMapping())
-      ->setVariants([
-        'annotation' => VariantGeneratorDefinition::create()
-          ->setLabel('Annotation plugin')
-          ->setGenerator('PluginAnnotationDiscovery'),
-        'yaml' => VariantGeneratorDefinition::create()
-          ->setLabel('YAML plugin')
-          ->setGenerator('PluginYamlDiscovery')
-          ->setProperties([
-            'plugin_name' => PropertyDefinition::create('string')
-              ->setLabel('Plugin ID')
-              ->setRequired(TRUE),
-            'plugin_class_name' => PropertyDefinition::create('string')
-              ->setLabel('Plugin class name')
-              ->setRequired(TRUE),
-          ]),
-      ]);
+    $definition->addProperties([
+      'plugin_type_data' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setCallable([static::class, 'defaultPluginTypeData'])
+        ),
+      'plugin_name' => PropertyDefinition::create('string')
+        ->setLabel('Plugin ID')
+        ->setRequired(TRUE),
+      'prefixed_plugin_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setCallable([static::class, 'processingPluginName'])
+            ->setLazy(TRUE)
+            ->setDependencies('..:plugin_name')
+        ),
+      'plain_class_name' => PropertyDefinition::create('string')
+        ->setLabel('Plugin class name')
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("machineToClass(stripBefore(getChildValue(parent, 'plugin_name'), ':'))")
+          ->setDependencies('..:plugin_name')
+        ),
+      'relative_namespace' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLazy(TRUE)
+            ->setCallable([static::class, 'defaultRelativeNamespace'])
+        ),
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services')
+        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+        ->setMultiple(TRUE)
+        ->setOptionsArray($services_data_task->listServiceNamesOptionsAll()),
+      'class_docblock_lines' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLiteral(['TODO: class docs.'])
+        ),
+    ]);
 
     return $definition;
   }
@@ -154,180 +154,6 @@ class Plugin extends BaseGenerator {
     }
 
     return $module_name . '_' . $plugin_name;
-  }
-
-  /**
-   * Define the component data this component needs to function.
-   */
-  public static function componentDataDefinition() {
-    $data_definition = array(
-      'plugin_type' => static::getPluginTypePropertyDefinition(),
-      'plugin_name' => array(
-        'label' => 'Plugin ID',
-        'description' => 'The module name will be prepended, unless the ID is a derivative.',
-        'required' => TRUE,
-        'default' => function($component_data) {
-          // Skip this for non-interactive UIs.
-          if (empty($component_data['plugin_type'])) {
-            return;
-          }
-
-          // Keep a running count of the plugins of each type, so we can offer
-          // a default in the form 'block_one', 'block_two'.
-          $plugin_type = $component_data['plugin_type'];
-          static $counters;
-          if (!isset($counters[$plugin_type])) {
-            $counters[$plugin_type] = 0;
-          }
-          $counters[$plugin_type]++;
-
-          $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
-
-          return $component_data['plugin_type'] . '_' . $formatter->format($counters[$plugin_type]);
-        },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          // Prepend the module name.
-          if (strpos($value, ':') !== FALSE) {
-            // Don't if the plugin ID is a derivative.
-            return;
-          }
-
-          $module_name = $component_data['root_component_name'];
-
-          if (strpos($value, $module_name . '_') === 0) {
-            // Don't if the plugin ID already has the module name as a prefix.
-            return;
-          }
-
-          $component_data['plugin_name'] = $module_name . '_' . $component_data['plugin_name'];
-        },
-      ),
-      'plugin_class_name' => [
-        'label' => 'Plugin short class name',
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          // WTF? How is this broken now when it's been working fine since
-          // this change was committed?
-          if (!isset($component_data['root_component_name'])) {
-            return '';
-          }
-
-          // Derive the plugin class from the plugin ID.
-          // Remove any derivative prefix.
-          if (strpos($component_data['plugin_name'], ':') === FALSE) {
-            $plugin_id = $component_data['plugin_name'];
-          }
-          else {
-            list (, $plugin_id) = explode(':', $component_data['plugin_name']);
-          }
-
-          // Remove the module name from the front.
-          $stripped_plugin_id = preg_replace("@^{$component_data['root_component_name']}_@", '', $plugin_id);
-
-          // Convert to pascal case.
-          return CaseString::snake($stripped_plugin_id)->pascal();
-        },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data['plugin_class_name'] = ucfirst($value);
-        },
-      ],
-      'injected_services' => array(
-        'label' => 'Injected services',
-        'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
-
-          return $options;
-        },
-        // TODO: allow this to be a callback.
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
-      ),
-      'parent_plugin_id' => [
-        'label' => 'Parent class plugin ID',
-        'description' => "Use another plugin's class as the parent class for this plugin.",
-        'validation' => function($property_name, $property_info, $component_data) {
-          if (!empty($component_data['parent_plugin_id'])) {
-            $plugin_type = $component_data['plugin_type'];
-
-            $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-            $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
-
-            // The plugin type has already been validated by the plugin_type property's
-            // processing.
-            $plugin_service_id = $plugin_types_data[$plugin_type]['service_id'];
-
-            // TODO: go via the environment for testing!
-            try {
-              $plugin_definition = \Drupal::service($plugin_service_id)->getDefinition($component_data['parent_plugin_id']);
-            }
-            catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $plugin_exception) {
-              return ["There is no plugin '@plugin-id' of type '@plugin-type'.", [
-                '@plugin-id' => $component_data['parent_plugin_id'],
-                '@plugin-type' => $component_data['plugin_type']
-              ]];
-            }
-          }
-        },
-      ],
-      'replace_parent_plugin' => [
-        'label' => 'Replace parent plugin',
-        'description' => "Replace the parent plugin's class with the generated class, rather than create a new plugin. The plugin ID value will be use to form the class name.",
-        'format' => 'boolean',
-      ],
-      'parent_plugin_class' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          if (!empty($component_data['parent_plugin_id'])) {
-            $plugin_type = $component_data['plugin_type'];
-
-            $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-            $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
-
-            // The plugin type has already been validated by the plugin_type property's
-            // processing.
-            $plugin_service_id = $plugin_types_data[$plugin_type]['service_id'];
-
-            // TODO: go via the environment for testing!
-            try {
-              $plugin_definition = \Drupal::service($plugin_service_id)->getDefinition($component_data['parent_plugin_id']);
-            }
-            catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $plugin_exception) {
-              // Rethrow as something that UIs will catch.
-              throw new InvalidInputException($plugin_exception->getMessage());
-            }
-
-            return $plugin_definition['class'];
-          }
-        },
-      ],
-    );
-
-    // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
-
-    // Put the class in the plugin's namespace.
-    $data_definition['relative_class_name']['default'] = function($component_data) {
-      return array_merge(
-        // Plugin subdirectory.
-        self::pathToNamespacePieces($plugin_type_data['subdir']),
-        // Plugin class name.
-        [ $component_data['plugin_class_name'] ]
-      );
-    };
-
-    $data_definition['class_docblock_lines']['default'] = function($component_data) {
-      if (!empty($component_data['replace_parent_plugin'])) {
-        return [
-          "Overrides the '{$component_data['parent_plugin_id']}' plugin class.",
-        ];
-      }
-    };
-
-
-    return $data_definition;
   }
 
   /**
@@ -379,6 +205,7 @@ class Plugin extends BaseGenerator {
       // ];
     }
 
+    // WARNING!!! NO TEST COVERAGE OF THIS APPARENTLY??
     if (!empty($this->component_data['replace_parent_plugin'])) {
       if (!empty($this->plugin_type_data['alter_hook_name'])) {
         $alter_hook_name = 'hook_' . $this->plugin_type_data['alter_hook_name'];
@@ -453,10 +280,14 @@ class Plugin extends BaseGenerator {
     }
 
     $annotation_variables = $this->plugin_type_data['plugin_properties'];
+    // dump($annotation_variables);
 
     $annotation_data = [];
     foreach ($annotation_variables as $annotation_variable => $annotation_variable_info) {
       if ($annotation_variable == 'id') {
+        // ARGH l
+        // CRASH
+        // lazy defaults not working with array acess thought I'd fuckkign fixed it!
         $annotation_data['id'] = $this->component_data['prefixed_plugin_name'];
         continue;
       }
