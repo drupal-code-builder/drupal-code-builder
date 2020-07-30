@@ -106,15 +106,7 @@ class Plugin extends BaseGenerator {
           ->setGenerator('PluginAnnotationDiscovery'),
         'yaml' => VariantGeneratorDefinition::create()
           ->setLabel('YAML plugin')
-          ->setGenerator('PluginYamlDiscovery')
-          ->setProperties([
-            'plugin_name' => PropertyDefinition::create('string')
-              ->setLabel('Plugin ID')
-              ->setRequired(TRUE),
-            'plugin_class_name' => PropertyDefinition::create('string')
-              ->setLabel('Plugin class name')
-              ->setRequired(TRUE),
-          ]),
+          ->setGenerator('PluginYamlDiscovery'),
       ]);
 
     return $definition;

@@ -33,7 +33,7 @@ class ComponentPluginsYAML8Test extends TestBase {
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
       'hooks' => [],
-      'plugins_yaml' => [
+      'plugins' => [
         0 => [
           'plugin_type' => 'menu.link',
           'plugin_name' => 'alpha',
