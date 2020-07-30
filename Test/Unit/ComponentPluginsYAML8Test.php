@@ -71,7 +71,7 @@ class ComponentPluginsYAML8Test extends TestBase {
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
       'hooks' => [],
-      'plugins_yaml' => [
+      'plugins' => [
         0 => [
           'plugin_type' => 'menu.link',
           'plugin_name' => 'alpha',
@@ -91,11 +91,12 @@ class ComponentPluginsYAML8Test extends TestBase {
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(4, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("$module_name.links.menu.yml", $files, "The files list has a YAML plugin file.");
-    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
-    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a schema file.");
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.links.menu.yml",
+      "src/Plugin/Block/Alpha.php",
+      "config/schema/test_module.schema.yml",
+    ], $files);
   }
 
   /**
@@ -112,7 +113,7 @@ class ComponentPluginsYAML8Test extends TestBase {
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
       'hooks' => [],
-      'plugins_yaml' => [
+      'plugins' => [
         0 => [
           'plugin_type' => 'menu.link',
           'plugin_name' => 'alpha',
