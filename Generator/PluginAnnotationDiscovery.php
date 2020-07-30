@@ -18,6 +18,11 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   use PluginTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $hasStaticFactoryMethod = TRUE;
+
+  /**
    * The standard fixed create() parameters.
    *
    * These are the parameters to create() that come after the $container
@@ -345,7 +350,9 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     }
 
     if ($use_di_interface) {
-      $this->component_data['interfaces'][] = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
+      // Numeric key will clobber, so make something up!
+      // TODO: fix!
+      $this->component_data->interfaces->add(['ContainerFactoryPluginInterface' => '\Drupal\Core\Plugin\ContainerFactoryPluginInterface']);
     }
 
     return parent::class_declaration();
