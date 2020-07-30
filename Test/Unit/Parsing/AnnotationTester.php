@@ -99,6 +99,10 @@ class AnnotationTester {
       }
     }
 
+    if (!isset($only_line) && !isset($start_index)) {
+      Assert::fail("Failed to find annotation in docblock.");
+    }
+
     // Handle the single-line case.
     if (isset($only_line)) {
       // Special case: single-line, plugin ID only annotation.
