@@ -118,7 +118,7 @@ class AdminSettingsForm extends Form {
     );
 
     $components['menu_link'] = [
-      'component_type' => 'PluginYAML',
+      'component_type' => 'Plugin',
       'plugin_type' => 'menu.link',
       'plugin_name' => 'settings',
       'plugin_properties' => [

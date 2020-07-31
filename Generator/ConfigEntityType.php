@@ -246,7 +246,7 @@ class ConfigEntityType extends EntityTypeBase {
     if ($this->component_data['entity_ui']) {
       // Name must be unique among the component type.
       $components['collection_menu_link_' . $this->component_data['entity_type_id']] = [
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.link',
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
@@ -265,7 +265,7 @@ class ConfigEntityType extends EntityTypeBase {
       ];
       foreach ($entity_tabs as $route_suffix => $title) {
         $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
-          'component_type' => 'PluginYAML',
+          'component_type' => 'Plugin',
           'plugin_type' => 'menu.local_task',
           'prefix_name' => FALSE,
           'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",

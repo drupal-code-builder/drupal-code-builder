@@ -345,7 +345,7 @@ class RouterItem extends BaseGenerator {
       $plugin_name = substr($plugin_name, strlen($this->component_data['root_component_name']) + 1);
 
       $components['menu_link'] = array(
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.link',
         'plugin_name' => $plugin_name,
         'plugin_properties' => [

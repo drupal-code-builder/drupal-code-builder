@@ -465,7 +465,7 @@ abstract class EntityTypeBase extends PHPClassFile {
     if ($this->component_data['entity_ui']) {
       // Add the 'add' button to appear on the collection route.
       $components['collection_menu_action' . $this->component_data['entity_type_id']] = [
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.local_action',
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.add",

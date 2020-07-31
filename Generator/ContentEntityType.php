@@ -488,7 +488,7 @@ EOT
       // is fixed.
       // TODO: Change this when https://www.drupal.org/project/drupal/issues/2862859
       $components['collection_menu_task' . $this->component_data['entity_type_id']] = [
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.local_task',
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
@@ -516,7 +516,7 @@ EOT
       ];
       foreach ($entity_tabs as $route_suffix => $title) {
         $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
-          'component_type' => 'PluginYAML',
+          'component_type' => 'Plugin',
           'plugin_type' => 'menu.local_task',
           'prefix_name' => FALSE,
           'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
