@@ -19,32 +19,6 @@ class ComponentModule8Test extends TestBase {
   protected $drupalMajorVersion = 8;
 
   /**
-   * Tests preparation of component properties.
-   *
-   * Tests in general don't use the prepareComponentDataProperty(), and just
-   * run generation with full values. This test checks that callbacks in the
-   * property info don't rely on things they don't have at this stage.
-   *
-   * @group prepare
-   */
-  public function testModule8PropertyPreparation() {
-    $this->task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-    $component_data_info = $this->task_handler_generate->getRootComponentDataInfo();
-
-    $values = [];
-
-    foreach ($component_data_info as $property_name => &$property_info) {
-      $this->task_handler_generate->prepareComponentDataProperty($property_name, $property_info, $values);
-    }
-
-    // Check that options got expanded at all levels.
-    $this->assertInternalType('array', $component_data_info['hooks']['options'], "The module hooks options are expanded.");
-    $this->assertInternalType('array', $component_data_info['plugins']['properties']['plugin_type']['options'], "The plugin types options are expanded.");
-    $this->assertInternalType('array', $component_data_info['content_entity_types']['properties']['functionality']['options'], "The content entity functionality options are expanded.");
-    $this->assertInternalType('array', $component_data_info['content_entity_types']['properties']['bundle_entity']['properties']['functionality']['options'], "The content entity bundle entity functionality options are expanded.");
-  }
-
-  /**
    * Tests the token replacements for modules.
    */
   public function testModule8TokenReplacements() {
