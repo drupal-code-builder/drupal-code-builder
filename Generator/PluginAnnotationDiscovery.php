@@ -18,8 +18,6 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
-  use PluginTrait;
-
   /**
    * {@inheritdoc}
    */
@@ -140,6 +138,13 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   public static function defaultRelativeNamespace($data_item) {
     $subdir = $data_item->getParent()->plugin_type_data->value['subdir'];
     return implode('\\', self::pathToNamespacePieces($subdir));
+  }
+
+  /**
+   * TODO: is there a core function for this?
+   */
+  static function pathToNamespacePieces($path) {
+    return explode('/', $path);
   }
 
   /**
