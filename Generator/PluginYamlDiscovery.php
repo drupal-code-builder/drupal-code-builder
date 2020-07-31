@@ -13,6 +13,9 @@ use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for an annotation plugin.
+ *
+ * This is a variant generator for the Plugin generator, and should not be
+ * used directly.
  */
 class PluginYamlDiscovery extends BaseGenerator {
 
