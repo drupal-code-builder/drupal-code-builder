@@ -10,6 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests the PluginYAML generator class.
  *
  * @group yaml
+ * @group plugin
  * @group pass
  */
 class ComponentPluginsYAML8Test extends TestBase {

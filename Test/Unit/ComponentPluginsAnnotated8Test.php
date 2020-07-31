@@ -10,6 +10,7 @@ use MutableTypedData\Exception\InvalidInputException;
  * Tests the Plugins generator class.
  *
  * @group yaml
+ * @group plugin
  * @group pass
  */
 class ComponentPluginsAnnotated8Test extends TestBase {
@@ -189,8 +190,11 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   /**
    * Test Plugins component using the plugin folder name.
+   *
+   * TODO: Specifying the plugin type with a folder name is temporarily removed
+   * as there aren't yet any UIs that use it.
    */
-  function testPluginsGenerationFromPluginFolder() {
+  function XtestPluginsGenerationFromPluginFolder() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
