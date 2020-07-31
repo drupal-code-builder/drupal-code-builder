@@ -16,8 +16,6 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class PluginYamlDiscovery extends BaseGenerator {
 
-  use PluginTrait;
-
   /**
    * {@inheritdoc}
    */
