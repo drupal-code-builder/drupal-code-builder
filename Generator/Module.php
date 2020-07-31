@@ -458,7 +458,7 @@ class Module extends RootComponent {
         $components['hooks'] = array(
           'component_type' => 'Hooks',
           'hooks' => array(
-            'hook_help' => TRUE,
+            'hook_help',
           ),
         );
       }
