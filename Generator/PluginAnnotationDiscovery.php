@@ -188,11 +188,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       $schema_id = $this->plugin_type_data['config_schema_prefix']
         . $this->component_data['prefixed_plugin_name'];
 
-      // TODO: wrap this up!
-      // $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
-      // $definition = $class_handler->getComponentPropertyDefinition('ConfigSchema');
-      // $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-
       $data = $this->getDataForGenerator('ConfigSchema');
       $data->yaml_data->set([
         $schema_id => [
@@ -204,6 +199,8 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
       $components["config/schema/%module.schema.yml"] = $data;
 
+      // Old style:
+      // TODO: decide whether to convert to the above syntax.
       // $components["config/schema/%module.schema.yml"] = [
       //   'component_type' => 'ConfigSchema',
       //   'yaml_data' => [
