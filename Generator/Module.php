@@ -450,7 +450,9 @@ class Module extends RootComponent {
     }
 
     // Add hook_help if help text is given.
-    if (!$this->component_data->module_help_text->isEmpty()) {
+    // TODO dirty hack because TestModule child class doesn't have this
+    // property!
+    if ($this->component_data->hasProperty('module_help_text') && !$this->component_data->module_help_text->isEmpty()) {
       if (isset($components['hooks'])) {
         $components['hooks']['hooks']['hook_help'] = TRUE;
       }
