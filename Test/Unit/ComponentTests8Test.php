@@ -52,10 +52,6 @@ class ComponentTests8Test extends TestBase {
       'hooks' => array(
       ),
       'tests' => TRUE,
-      'requested_build' => array(
-        'tests' => TRUE,
-        'info' => TRUE,
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);

@@ -394,14 +394,14 @@ class Module extends RootComponent {
         'component_type' => 'PHPUnitTest',
         'required' => FALSE,
       ),
-      // 'tests' => array(
-      //   'label' => "Simpletest test case class",
-      //   'description' => 'NOTICE: These are deprecated in Drupal 8.',
-      //   'required' => FALSE,
-      //   'default' => FALSE,
-      //   'format' => 'boolean',
-      //   'component_type' => 'Tests',
-      // ),
+      'tests' => array(
+        'label' => "Simpletest test case class",
+        'description' => 'NOTICE: These are deprecated in Drupal 8.',
+        'required' => FALSE,
+        'default' => FALSE,
+        'format' => 'boolean',
+        'component_type' => 'Tests',
+      ),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
