@@ -311,41 +311,24 @@ class Module extends RootComponent {
           $component_data['hooks'] = $hooks;
         }
       ),
-      // TODO too much stuff in debug output!
-      // 'content_entity_types' => array(
-      //   'label' => 'Content entity types',
-      //   'required' => FALSE,
-      //   'format' => 'compound',
-      //   // This tells the system that this is a request for generator
-      //   // components, and the input data should be placed in a nested array in
-      //   // the module data.
-      //   'component_type' => 'ContentEntityType',
-      // ),
-      // 'config_entity_types' => array(
-      //   'label' => 'Config entity types',
-      //   'required' => FALSE,
-      //   'format' => 'compound',
-      //   'component_type' => 'ConfigEntityType',
-      // ),
-
-      // TODO: come up with a way to generalize this if more plugin discovery
-      // types become common.
-      // TODO: rename this to 'plugins_annotated'.
-      'plugins' => array(
-        'label' => 'Plugins (annotated class)',
+      'content_entity_types' => array(
+        'label' => 'Content entity types',
         'required' => FALSE,
         'format' => 'compound',
         // This tells the system that this is a request for generator
         // components, and the input data should be placed in a nested array in
         // the module data.
-        'component_type' => 'Plugin',
+        'component_type' => 'ContentEntityType',
       ),
-      // 'plugins_yaml' => [
-      //   'label' => 'Plugins (YAML)',
-      //   'required' => FALSE,
-      //   'format' => 'compound',
-      //   'component_type' => 'PluginYAML',
-      // ],
+      'config_entity_types' => array(
+        'label' => 'Config entity types',
+        'required' => FALSE,
+        'format' => 'compound',
+        'component_type' => 'ConfigEntityType',
+      ),
+      'plugins' => static::getPropertyDefinitionForGeneratorType('Plugin')
+        ->setLabel('Plugins')
+        ->setMultiple(TRUE),
       'plugin_types' => array(
         'label' => 'Plugin types',
         'required' => FALSE,
@@ -360,12 +343,12 @@ class Module extends RootComponent {
       //   'format' => 'array',
       //   'component_type' => 'ThemeHook',
       // ),
-      // 'router_items' => array(
-      //   'label' => "Routes",
-      //   'required' => FALSE,
-      //   'format' => 'compound',
-      //   'component_type' => 'RouterItem',
-      // ),
+      'router_items' => array(
+        'label' => "Routes",
+        'required' => FALSE,
+        'format' => 'compound',
+        'component_type' => 'RouterItem',
+      ),
       'library' => [
         'label' => "Library",
         'description' => 'A collection of CSS and JS assets, declared in a libraries.yml file.',
