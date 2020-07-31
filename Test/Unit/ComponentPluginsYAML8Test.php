@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
- * Tests the PluginYAML generator class.
+ * Tests the PluginYAMLDiscovery generator class.
  *
  * @group yaml
  * @group plugin
