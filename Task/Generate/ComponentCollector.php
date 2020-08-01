@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
@@ -216,6 +217,13 @@ class ComponentCollector {
     // $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
 
     $component_type = $component_data->getComponentType();
+    // AAAAARGH should be encapsulated in the data but running out of the will
+    // to live.
+    // AND AAAARGH class check URGH.
+    if ($component_data->getVariants() && is_a($component_data->getVariantDefinition(), VariantGeneratorDefinition::class)) {
+      $component_type = $component_data->getVariantDefinition()->getComponentType();
+    }
+
     // $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
     // Acquire data from the requesting component. We call this even if there
