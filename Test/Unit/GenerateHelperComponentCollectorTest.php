@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use Prophecy\Argument;
 
 /**
@@ -18,6 +19,29 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @var int
    */
   protected $drupalMajorVersion = 8;
+
+  /**
+   * Get a component collector with mocked dependencies.
+   *
+   * This uses the TestComponentClassHandler from fixtures, which in turns
+   * returns a \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator
+   * for components.
+   */
+  protected function getComponentCollector(): ComponentCollector {
+    // Set up the ComponentCollector's injected dependencies.
+    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
+
+    // Create the helper, with dependencies passed in.
+    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
+      $environment->reveal(),
+      $class_handler,
+      $data_info_gatherer->reveal()
+    );
+
+    return $component_collector;
+  }
 
   /**
    * Request with only the root generator, which itself has no requirements.
