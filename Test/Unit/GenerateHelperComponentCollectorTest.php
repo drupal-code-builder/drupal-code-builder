@@ -222,6 +222,44 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   }
 
   /**
+   * Tests a component property that's a multi-valued string.
+   *
+   * The idea here is that the UI specifies just a list; and then a component
+   * is created for each value.
+   */
+  public function testMultipleStringGeneratorChildNoRequests() {
+    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+      ->setMachineName('my_root')
+      ->setProperties([
+        'component_property_string_multiple' => GeneratorDefinition::createFromGeneratorType('compound_a', 'string')
+          ->setMultiple(TRUE),
+      ]);
+
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+    $data_value = [
+      'component_property_string_multiple' => [
+        'foo',
+        'bar',
+      ],
+    ];
+    $component_data->set($data_value);
+
+    $component_collector = $this->getComponentCollector();
+    $collection = $component_collector->assembleComponentList($component_data);
+
+    $component_paths = $collection->getComponentRequestPaths();
+
+    $expected_paths = [
+      'root',
+      'root/component_property_string_multiple_0',
+      'root/component_property_string_multiple_1',
+    ];
+
+    $this->assertEquals($expected_paths, array_values($component_paths));
+  }
+
+  /**
    * Request with only the root generator, with a single-value preset.
    *
    * @group presets
