@@ -328,6 +328,34 @@ class ComponentCollector {
       // TODO: mutable types might have different component type per variant!!
 
       if ($data_item->isMultiple()) {
+        // Safe to check first delta; we already skipped empty things.
+        if ($data_item[0]->isSimple()) {
+          // Ugly hack switcheroo from a multi-valued simple property to
+          // compound data with a single 'primary' property. This is necessary
+          // so the generator can get acquired properties as well as the single
+          // data from the UI.
+          // TODO: make this sort of expansion internal to MTD?
+          $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+          $component_property_names = $definition->getPropertyNames();
+
+          assert(count($component_property_names) == 1);
+          $single_property_name = reset($component_property_names);
+
+          foreach ($data_item as $delta => $simple_delta_item) {
+            dump($simple_delta_item->getName());
+            $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+
+            $new_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+            $new_data_item->setParent($data_item, $delta);
+
+            $new_data_item->{$single_property_name}->value = $simple_delta_item->value;
+
+            $this->getComponentsFromData($new_data_item, $generator);
+          }
+
+          continue;
+        }
+
         foreach ($data_item as $delta_item) {
           $this->getComponentsFromData($delta_item, $generator);
         }
