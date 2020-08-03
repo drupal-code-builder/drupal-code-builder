@@ -5,7 +5,14 @@ namespace DrupalCodeBuilder\Generator\Collection;
 use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**
- * The collection of components for a generate request.
+ * The collection of components for a generate execution.
+ *
+ * Instantiated components have different relationships between them:
+ * - One component requests another; conversely, every component except for the
+ *   root has a component that is its requester.
+ * - Some components are said to contain other components. This represents where
+ *   the eventual generated code will be. For example, a class component
+ *   contains the components that are its methods.
  *
  * This holds the instantiated components, in several different structures:
  * - The linear list of components, which this class can iterate over.
@@ -69,9 +76,13 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * The list of local names.
    *
+   * A component's local name is a string which is used by its requester. This
+   * is NOT necessarily unique across all components, but IS unique within the
+   * set of the components that have the same requester.
+   *
    * An array whose keys are component unique IDs. Each item is itself an array
-   * whose keys are local names, and whose values are the unique ID of that
-   * component.
+   * whose keys are local names of the components it requests, and whose values
+   * are the unique ID of the requested component.
    *
    * @var array
    */
