@@ -336,7 +336,18 @@ class ComponentCollector {
           // data from the UI.
           // TODO: make this sort of expansion internal to MTD?
           $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
-          $component_property_names = $definition->getPropertyNames();
+
+          // Get the public property from the definition. There must be only
+          // one for this to make sense!
+          $component_properties = $definition->getProperties();
+          $component_property_names = [];
+          foreach ($component_properties as $property) {
+            if ($property->isInternal()) {
+              continue;
+            }
+
+            $component_property_names[] = $property->getMachineName();
+          }
 
           assert(count($component_property_names) == 1);
           $single_property_name = reset($component_property_names);

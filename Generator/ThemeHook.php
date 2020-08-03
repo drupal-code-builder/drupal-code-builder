@@ -12,9 +12,9 @@ class ThemeHook extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
+      // Needs to be set to public even though this is not actually seen.
       'theme_hook_name' => [
         'label' => 'The theme hook name',
-        'internal' => TRUE,
         'primary' => TRUE,
       ],
     ];
