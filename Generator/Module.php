@@ -335,14 +335,12 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component_type' => 'PluginType',
       ),
-      // TODO: SIMPLIFY DEBUG OUTPUT!!
-      // 'theme_hooks' => array(
-      //   'label' => "Theme hooks",
-      //   'description' => "The name of theme hooks, without the leading 'theme_'.",
-      //   'required' => FALSE,
-      //   'format' => 'array',
-      //   'component_type' => 'ThemeHook',
-      // ),
+      'theme_hooks' => array(
+        'label' => "Theme hooks",
+        'description' => "The name of theme hooks, without the leading 'theme_'.",
+        'format' => 'array',
+        'component_type' => 'ThemeHook',
+      ),
       'router_items' => array(
         'label' => "Routes",
         'required' => FALSE,

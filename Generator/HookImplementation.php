@@ -98,7 +98,7 @@ class HookImplementation extends PHPFunction {
     // indented.
     // TODO: clean this up!
     if (!empty($children_contents)) {
-      $this->component_data['body_indented'] = FALSE;
+      $this->component_data->body_indented = FALSE;
     }
 
     return parent::buildComponentContents($children_contents);

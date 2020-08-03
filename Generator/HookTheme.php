@@ -11,10 +11,12 @@ class HookTheme extends HookImplementation {
    * Constructor method; sets the component data.
    */
   function __construct($component_data) {
-    // Set some default properties.
-    $component_data += array(
-      'hook_name' => 'hook_theme',
-    );
+    // WTF was this for???
+    // dump($component_data);
+    // // Set some default properties.
+    // $component_data += array(
+    //   'hook_name' => 'hook_theme',
+    // );
 
     parent::__construct($component_data);
   }
@@ -31,7 +33,7 @@ class HookTheme extends HookImplementation {
 
     // Code from child components comes as arrays of code lines, so no need to
     // trim it.
-    $this->component_data['has_wrapping_newlines'] = FALSE;
+    $this->component_data->has_wrapping_newlines = FALSE;
 
     $code = array();
     $code[] = 'return [';
@@ -40,7 +42,7 @@ class HookTheme extends HookImplementation {
     }
     $code[] = '];';
 
-    $this->component_data['body'] = $code;
+    $this->component_data->body = $code;
 
     return parent::buildComponentContents($children_contents);
   }

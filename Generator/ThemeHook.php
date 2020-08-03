@@ -30,7 +30,7 @@ class ThemeHook extends BaseGenerator {
       'hooks' => array(
         'component_type' => 'Hooks',
         'hooks' => array(
-          'hook_theme' => TRUE,
+          'hook_theme',
         ),
       ),
       $twig_file_name => array(
