@@ -19,27 +19,14 @@ class Form extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
+    $parent_data_definition = parent::componentDataDefinition();
+
     $data_definition = array(
-      // TODO; alias to form_class_name if we end up doing aliases.
-      // 'plain_class_name' => array(
-      //   'label' => 'Form class name',
-      //   'required' => TRUE,
-      //   // TODO
-      //   // 'processing' => function($value, &$component_data, $property_name, &$property_info) {
-      //   //   $component_data['form_class_name'] = ucfirst($value);
-      //   // },
-      // ),
-      // 'form_id' => [
-      //   'computed' => TRUE,
-      //   'default' => function($component_data) {
-      //     return
-      //       $component_data['root_component_name']
-      //       . '_'
-      //       . CaseString::pascal($component_data['form_class_name'])->snake();
-      //   },
-      // ],
+      // Move the form class name property to the top, and override its default.
+      'plain_class_name' => $parent_data_definition['plain_class_name']
+        ->setLabel("The form class's plain class name, e.g. \"MyForm\"."),
       'form_id' => PropertyDefinition::create('string')
-        ->setLabel('Permission human-readable name. If omitted, this is derived from the machine name')
+        ->setLabel('The form ID.')
         ->setInternal(TRUE)
         ->setRequired(TRUE)
         ->setDefault(
@@ -70,6 +57,9 @@ class Form extends PHPClassFileWithInjection {
       ],
     );
 
+    // Remove the property we copied.
+    unset($parent_data_definition['plain_class_name']);
+
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
@@ -78,15 +68,13 @@ class Form extends PHPClassFileWithInjection {
       ->setLiteral('Form');
 
     $data_definition['plain_class_name']
-      ->setLabel("The form class's plain class name, e.g. \"MyForm\".")
       ->getDefault()->setLiteral('MyForm');
+
+    $data_definition['relative_class_name']->setInternal(TRUE);
 
     // Set the parent class.
     $data_definition['parent_class_name']
-      ->setDefault(
-        DefaultDefinition::create()
-          ->setLiteral('\Drupal\Core\Form\FormBase')
-      );
+      ->setLiteralDefault('\Drupal\Core\Form\FormBase');
 
     return $data_definition;
   }
