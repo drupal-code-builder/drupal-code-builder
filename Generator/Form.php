@@ -77,6 +77,10 @@ class Form extends PHPClassFileWithInjection {
     $data_definition['relative_namespace']->getDefault()
       ->setLiteral('Form');
 
+    $data_definition['plain_class_name']
+      ->setLabel("The form class's plain class name, e.g. \"MyForm\".")
+      ->getDefault()->setLiteral('MyForm');
+
     // Set the parent class.
     $data_definition['parent_class_name']
       ->setDefault(
