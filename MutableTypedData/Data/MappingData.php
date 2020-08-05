@@ -57,6 +57,7 @@ class MappingData extends DataItem {
 
     parent::set($value);
   }
+
   /**
    * {@inheritdoc}
    */
