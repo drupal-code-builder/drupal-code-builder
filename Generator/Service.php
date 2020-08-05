@@ -147,11 +147,15 @@ class Service extends PHPClassFileWithInjection {
     // Use the plain class name as the exposed property.
     // TODO: allow a relative namespace to come from a setting, so that, for
     // example, all services can be put in the \Service namespace.
-    $data_definition['plain_class_name']->getDefault()
-      ->setCallable([static::class, 'defaultPlainClassName']);
+    $data_definition['plain_class_name']
+      ->setInternal(TRUE)
+      ->getDefault()->setCallable([static::class, 'defaultPlainClassName']);
 
-    $data_definition['relative_namespace']->getDefault()
-      ->setCallable([static::class, 'defaultRelativeNamespace']);
+    $data_definition['relative_class_name']
+      ->setInternal(TRUE);
+
+    $data_definition['relative_namespace']
+      ->getDefault()->setCallable([static::class, 'defaultRelativeNamespace']);
 
     return $data_definition;
   }
