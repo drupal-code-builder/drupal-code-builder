@@ -586,7 +586,7 @@ class ComponentContentEntityType8Test extends TestBase {
   /**
    * Test creating a content entity type with a bundle entity.
    */
-  public function testEntityTypeWithBundleEntity() {
+  public function testEntityTypeWithBundleEntityNoUI() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -1398,7 +1398,84 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
-   * Test creating a content entity type with a bundle entity and UI.
+   * Tests creating a content entity with a bundle entity UI.
+   *
+   * @group entity_ui
+   * @group form
+   */
+  public function testContentEntityTypeWithBundleEntityUI() {
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'functionality' => [],
+          'admin_permission' => FALSE,
+          'bundle_entity' => [
+            0 => [
+              // Don't specify entity_type_id, let it be derived.
+              'entity_ui' => 'admin',
+              'entity_properties' => [
+                0 => [
+                  'name' => 'foo',
+                  'type' => 'string',
+                ],
+                1 => [
+                  'name' => 'colour',
+                  'type' => 'string',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Entity/Handler/KittyCatTypeListBuilder.php',
+      'src/Entity/KittyCat.php',
+      'src/Entity/KittyCatInterface.php',
+      'src/Entity/KittyCatType.php',
+      'src/Entity/KittyCatTypeInterface.php',
+      'src/Form/KittyCatTypeForm.php',
+      'test_module.links.action.yml',
+      'test_module.links.menu.yml',
+      'test_module.links.task.yml',
+      'test_module.permissions.yml',
+      'config/schema/test_module.schema.yml',
+    ], $files);
+
+    // Check the bundle entity form file.
+    $entity_type_form_file = $files['src/Form/KittyCatTypeForm.php'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_type_form_file);
+    $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    $form_builder_tester->assertElementCount(4);
+    $form_builder_tester->assertAllElementsHaveDefaultValue();
+    $form_builder_tester->assertElementType('id', 'machine_name');
+    $form_builder_tester->assertElementType('label', 'textfield');
+    $form_builder_tester->assertElementType('foo', 'textfield');
+    $form_builder_tester->assertElementType('colour', 'textfield');
+
+    // TODO: make this also assert the value is
+    // 'EntityTypeInterface::BUNDLE_MAX_LENGTH'.
+    $form_builder_tester->assertElementHasAttribute('#maxlength', 'id');
+
+    $save_method_tester = $php_tester->getMethodTester('save');
+    $save_method_tester->assertHasLine('$form_state->setRedirectUrl($this->entity->toUrl(\'collection\'));');
+  }
+
+  /**
+   * Test creating a content entity type with a bundle entity and UI for both.
    *
    * @group entity_ui
    * @group form
@@ -1419,6 +1496,16 @@ class ComponentContentEntityType8Test extends TestBase {
             0 => [
               'entity_type_id' => 'kitty_cat_type',
               'entity_ui' => 'admin',
+              'entity_properties' => [
+                0 => [
+                  'name' => 'foo',
+                  'type' => 'string',
+                ],
+                1 => [
+                  'name' => 'colour',
+                  'type' => 'string',
+                ],
+              ],
             ],
           ],
         ],
@@ -1551,12 +1638,18 @@ class ComponentContentEntityType8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Entity\BundleEntityFormBase');
     $php_tester->assertHasMethods(['form', 'submitForm']);
 
-    // Check the form elements in the bundle entity's form handler.
+    // Check the bundle entity form.
     $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
-    $form_builder_tester->assertElementCount(2);
+    $form_builder_tester->assertElementCount(4);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
     $form_builder_tester->assertElementType('id', 'machine_name');
     $form_builder_tester->assertElementType('label', 'textfield');
+    $form_builder_tester->assertElementType('foo', 'textfield');
+    $form_builder_tester->assertElementType('colour', 'textfield');
+
+    // TODO: make this also assert the value is
+    // 'EntityTypeInterface::BUNDLE_MAX_LENGTH'.
+    $form_builder_tester->assertElementHasAttribute('#maxlength', 'id');
 
     $save_method_tester = $php_tester->getMethodTester('save');
     $save_method_tester->assertHasLine('$form_state->setRedirectUrl($this->entity->toUrl(\'collection\'));');
