@@ -226,4 +226,24 @@ class FormBuilderTester extends PHPMethodTester {
     Assert::assertEquals($type, $this->formElements[$element_name]['type'], $message);
   }
 
+  /**
+   * Asserts a specified form element has an attribute.
+   *
+   * TODO: Should allow checking the value as well, but that's going to be
+   * complicated.
+   *
+   * @param string $attribute_name
+   *   The name of the expected attribute.
+   * @param string $element_name
+   *   The name of the form element
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertElementHasAttribute(string $attribute_name, string $element_name, string $message = NULL) {
+    $message = $message ?? "The form's '{$element_name}' element has the attribute '{$attribute_name}'.";
+
+    $this->assertHasElementName($element_name);
+    Assert::assertArrayHasKey($attribute_name, $this->formElements[$element_name]['attributes'], $message);
+  }
+
 }
