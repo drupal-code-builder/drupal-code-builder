@@ -15,8 +15,6 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class Plugin extends BaseGenerator {
 
-  use PluginTrait;
-
   /**
    * {@inheritdoc}
    */
