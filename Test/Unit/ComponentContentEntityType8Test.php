@@ -605,8 +605,6 @@ class ComponentContentEntityType8Test extends TestBase {
           ],
           'bundle_entity' => [
             // Don't specify entity_type_id, let it be derived.
-            // Request a route provider so UI features are generated.
-            'handler_route_provider' => 'admin',
             'entity_properties' => [
               0 => [
                 'name' => 'foo',
