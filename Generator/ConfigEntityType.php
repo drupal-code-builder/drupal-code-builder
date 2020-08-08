@@ -191,11 +191,6 @@ class ConfigEntityType extends EntityTypeBase {
           ],
         ],
       ];
-      // TODO: handle this in ConfigBundleEntityType.
-      if (isset($this->component_data['bundle_of_entity'])) {
-        $components[$data_key . ':id']['element_array']['maxlength'] =
-          '\Drupal\Core\Entity\EntityTypeInterface::BUNDLE_MAX_LENGTH';
-      }
 
       // Add a form element for each custom entity property.
       foreach ($this->component_data['entity_properties'] as $schema_item) {

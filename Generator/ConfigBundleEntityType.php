@@ -87,6 +87,23 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
+  public function requiredComponents() {
+    $components = parent::requiredComponents();
+
+    // For bundle entity types, the entity ID length is limited.
+    foreach ($components as $key => $component) {
+      if ($component['component_type'] == 'FormElement' && $component['form_key'] == 'id') {
+        $components[$key]['element_array']['maxlength'] =
+          '\Drupal\Core\Entity\EntityTypeInterface::BUNDLE_MAX_LENGTH';
+      }
+    }
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
