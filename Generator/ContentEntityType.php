@@ -165,18 +165,6 @@ class ContentEntityType extends EntityTypeBase {
         ->setLabel('Bundle config entity type')
         ->setDescription("Creates a config entity type which provides the bundles for this entity type. "
           . "This is analogous to the Node Type entity type providing bundles for the Node entity type."),
-        // TODO: This was a hack anyway!
-        // 'default' => function($component_data) {
-        //   return [
-        //     0 => [
-        //       // Default values for the benefit of progressive UIs.
-        //       // The bundle entity type ID defaults to CONTENT_TYPE_type.
-        //       // Note this doesn't work in tests or non-progressive UIs!
-        //       'entity_type_id' => $component_data['entity_type_id'] . '_type',
-        //       'bundle_of_entity' => $component_data['entity_type_id'],
-        //     ],
-        //   ];
-        // },
       'bundle_label' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()

@@ -44,12 +44,6 @@ class ConfigBundleEntityType extends ConfigEntityType {
         'internal' => TRUE,
         'acquired' => TRUE,
       ],
-      'bundle_of_entity' => [
-        'label' => 'Bundle of entity',
-        'internal' => TRUE,
-        'acquired' => TRUE,
-        'acquired_from' => 'entity_type_id',
-      ],
     ];
     // Add this right at the start, before the ID, so the ID default value
     // can depend on it.
@@ -107,6 +101,10 @@ class ConfigBundleEntityType extends ConfigEntityType {
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
+    // This is reaching into the parent, which breaks the pattern that a
+    // generator should be independent of whatever includes its data definition,
+    // but in this case, a bundle entity type is only ever going to be used by a
+    // content entity type.
     $annotation_data['bundle_of'] = $this->component_data->getParent()->entity_type_id->value;
 
     return $annotation_data;
