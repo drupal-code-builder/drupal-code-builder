@@ -8,6 +8,17 @@ namespace DrupalCodeBuilder\Generator;
 class TwigFile extends File {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function componentDataDefinition() {
+    return parent::componentDataDefinition() + [
+      'theme_hook_name' => [
+        'label' => 'The theme hook name',
+      ],
+    ];
+  }
+
+  /**
    * Return the data for the file this component provides.
    */
   public function getFileInfo() {
