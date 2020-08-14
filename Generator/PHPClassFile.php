@@ -311,7 +311,7 @@ class PHPClassFile extends PHPFile {
   protected function getClassDocBlockLines() {
     $lines = [];
 
-    if (!$this->component_data->class_docblock_lines->isEmpty()) {
+    if ($this->component_data->class_docblock_lines->value) {
       $lines = $this->component_data['class_docblock_lines'];
 
       if (count($lines) > 1) {
@@ -320,7 +320,7 @@ class PHPClassFile extends PHPFile {
         array_splice($lines, 1, 0, '');
       }
     }
-    elseif (!$this->component_data->docblock_first_line->isEmpty()) {
+    elseif ($this->component_data->docblock_first_line->value) {
       $lines[] = $this->component_data['docblock_first_line'];
     }
     else {
