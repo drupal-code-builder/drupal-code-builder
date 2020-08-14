@@ -64,6 +64,7 @@ class MappingData extends DataItem {
     }
 
     $this->value = $value;
+    $this->set = TRUE;
 
     parent::set($value);
   }
