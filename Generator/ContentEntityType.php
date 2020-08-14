@@ -191,7 +191,7 @@ class ContentEntityType extends EntityTypeBase {
               return 'entity.' . $entity_data->entity_type_id->value . '.admin_form';
             }
           })
-          ->setDependencies('..:TODO')
+          ->setDependencies('..:functionality')
         ),
     ];
     InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);

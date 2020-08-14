@@ -35,7 +35,7 @@ class RouterItem extends BaseGenerator {
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultRouteName'])
             ->setLazy(TRUE)
-            ->setDependencies('..:TODO')
+            ->setDependencies('..:path')
         ),
       'title' => [
         'label' => "The page title for the route.",

@@ -60,7 +60,7 @@ class PluginYamlDiscovery extends BaseGenerator {
           DefaultDefinition::create()
             ->setLazy(TRUE)
             ->setCallable([static::class, 'defaultPluginProperties'])
-            ->setDependencies('..:TODO')
+            ->setDependencies('..:plugin_name')
         ),
 
     ]);

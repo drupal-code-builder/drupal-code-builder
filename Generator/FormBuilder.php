@@ -22,7 +22,7 @@ class FormBuilder extends PHPFunction {
       ->setDefault(DefaultDefinition::create()
         ->setCallable([static::class, 'defaultDeclaration'])
         ->setLazy(TRUE)
-        ->setDependencies('..:TODO')
+        ->setDependencies('..:function_name')
     );
 
     return $data_definition;

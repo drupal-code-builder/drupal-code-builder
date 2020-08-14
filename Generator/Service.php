@@ -149,7 +149,9 @@ class Service extends PHPClassFileWithInjection {
     // example, all services can be put in the \Service namespace.
     $data_definition['plain_class_name']
       ->setInternal(TRUE)
-      ->getDefault()->setCallable([static::class, 'defaultPlainClassName']);
+      ->getDefault()
+        ->setCallable([static::class, 'defaultPlainClassName'])
+        ->setDependencies('..:service_name');
 
     $data_definition['relative_class_name']
       ->setInternal(TRUE);

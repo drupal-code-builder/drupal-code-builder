@@ -61,7 +61,9 @@ class PHPClassFile extends PHPFile {
               $relative_namespace .= '\\';
             }
             return $relative_namespace . $plain_classname;
-        })),
+        })
+        ->setDependencies('..:relative_namespace', '..:plain_class_name')
+      ),
       // TODO: processing for case.
       'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('The plain class name, e.g. "MyClass"')
@@ -96,7 +98,7 @@ class PHPClassFile extends PHPFile {
           // ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
           ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
           ->setLazy(TRUE)
-          ->setDependencies('..:relative_class_name')
+          ->setDependencies('..:relative_class_name_pieces')
       ),
       'namespace' => PropertyDefinition::create('string')
         ->setInternal(TRUE)

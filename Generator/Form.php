@@ -33,7 +33,7 @@ class Form extends PHPClassFileWithInjection {
           DefaultDefinition::create()
             ->setLazy(TRUE)
             ->setExpression("getChildValue(parent, 'root_component_name') ~ '_' ~ machineFromPlainClassName(getChildValue(parent, 'plain_class_name'))")
-            ->setDependencies('..:plain_class_name')
+            ->setDependencies('..:root_component_name', '..:plain_class_name')
         ),
       'injected_services' => array(
         'label' => 'Injected services',
@@ -64,11 +64,11 @@ class Form extends PHPClassFileWithInjection {
     $data_definition += parent::componentDataDefinition();
 
     // Put the class in the 'Form' relative namespace.
-    $data_definition['relative_namespace']->getDefault()
-      ->setLiteral('Form');
+    $data_definition['relative_namespace']
+      ->setLiteralDefault('Form');
 
     $data_definition['plain_class_name']
-      ->getDefault()->setLiteral('MyForm');
+      ->setLiteralDefault('MyForm');
 
     $data_definition['relative_class_name']->setInternal(TRUE);
 

@@ -30,7 +30,7 @@ class InjectedService extends BaseGenerator {
       ->setDefault(DefaultDefinition::create()
         ->setLazy(TRUE)
         ->setCallable([static::class, 'defaultServiceInfo'])
-        ->setDependencies('..:TODO')
+        ->setDependencies('..:service_id')
     );
 
     // Bit of a hack for PHPUnitTest generator's sake. Lets the requesting

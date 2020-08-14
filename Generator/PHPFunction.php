@@ -54,7 +54,6 @@ class PHPFunction extends BaseGenerator {
         ->setDefault(DefaultDefinition::create()
           ->setLazy(TRUE)
           ->setCallable([static::class, 'defaultDocblockLines'])
-          ->setDependencies('..:TODO')
       ),
       'declaration' => [
         'internal' => TRUE,
