@@ -16,19 +16,14 @@ class ServiceProvider extends PHPClassFile {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    $data_definition['relative_class_name']->getDefault()
-      ->setExpression("machineToClass(getChildValue(parent, 'root_component_name')) ~ 'ServiceProvider'");
+    $data_definition['relative_class_name']
+      ->setExpressionDefault("machineToClass(getChildValue(parent, 'root_component_name')) ~ 'ServiceProvider'");
 
     $data_definition['class_docblock_lines']
-      ->setDefault(DefaultDefinition::create()
-        ->setLiteral(['Alters services dynamically for the %sentence module.'])
-      );
+      ->setLiteralDefault(['Alters services dynamically for the %sentence module.']);
 
     $data_definition['parent_class_name']
-      ->setDefault(
-        DefaultDefinition::create()
-          ->setLiteral('\Drupal\Core\DependencyInjection\ServiceProviderBase')
-      );
+      ->setLiteralDefault('\Drupal\Core\DependencyInjection\ServiceProviderBase');
 
     return $data_definition;
   }
