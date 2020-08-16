@@ -61,6 +61,14 @@ class ContentEntityType extends EntityTypeBase {
         // is a bundle entity!
         // TODO: this would work if bundle entity is a subclass generator.
         'data' => [
+          'force' => [
+            // Argh need to set this to an empty value so processing gets
+            // applied.
+            // TODO: restore 'process empty' property?
+            'entity_keys' => [
+              'value' => []
+            ],
+          ],
         ],
       ],
       'revisionable' => [
