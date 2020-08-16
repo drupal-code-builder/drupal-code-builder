@@ -86,6 +86,7 @@ class ComponentInfo8Test extends TestBase {
       // 'version',
       'core',
       'dependencies',
+      'core_version_requirement',
     ]);
   }
 
