@@ -17,8 +17,8 @@ class AdminSettingsForm extends Form {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    $data_definition['parent_class_name']->getDefault()
-      ->setLiteral('\Drupal\Core\Form\ConfigFormBase');
+    $data_definition['parent_class_name']
+      ->setLiteralDefault('\Drupal\Core\Form\ConfigFormBase');
 
     // Make one of the basic class name properties internal.
     $data_definition['relative_class_name']->setInternal(TRUE);
@@ -30,11 +30,12 @@ class AdminSettingsForm extends Form {
     ];
     InsertArray::insertBefore($data_definition, 'injected_services', $parent_route_property);
 
-    $data_definition['plain_class_name']->getDefault()
-      ->setLiteral('AdminSettingsForm');
+    $data_definition['plain_class_name']
+      ->setLiteralDefault('AdminSettingsForm');
 
     $data_definition['form_id']->getDefault()
-      ->setExpression("getChildValue(parent, 'root_component_name') ~ '_settings_form'");
+      ->setExpression("getChildValue(parent, 'root_component_name') ~ '_settings_form'")
+      ->setDependencies('..:root_component_name');
 
     $data_definition['route_name'] = PropertyDefinition::create('string')
       ->setLabel("The name of the route.")
