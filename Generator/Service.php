@@ -157,7 +157,7 @@ class Service extends PHPClassFileWithInjection {
       ->setInternal(TRUE);
 
     $data_definition['relative_namespace']
-      ->getDefault()->setCallable([static::class, 'defaultRelativeNamespace']);
+      ->setCallableDefault([static::class, 'defaultRelativeNamespace']);
 
     return $data_definition;
   }
