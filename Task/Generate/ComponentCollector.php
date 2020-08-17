@@ -715,6 +715,9 @@ class ComponentCollector {
       // dump($preset_item_preset_data);
       if (isset($preset_item_preset_data['data']['force'])) {
         foreach ($preset_item_preset_data['data']['force'] as $forced_property_name => $forced_data) {
+          // Access the value so that the default is set.
+          $component_data->getParent()->{$forced_property_name}->access();
+
           // dump("FORCING $forced_property_name at address: - ");
           // dump($component_data->getParent()->{$forced_property_name}->getAddress());
           // dump($forced_data['value']);
