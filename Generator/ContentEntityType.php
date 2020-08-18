@@ -166,7 +166,7 @@ class ContentEntityType extends EntityTypeBase {
         ->setDefault(
           DefaultDefinition::create()
             ->setLazy(TRUE)
-            ->setExpression("getChildValue(parent, 'entity_type_id') ~ '_type'")
+            ->setExpression("get('..:entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
       'bundle_entity' => GeneratorDefinition::createFromGeneratorTypeWithConversion('ConfigBundleEntityType')
@@ -177,7 +177,7 @@ class ContentEntityType extends EntityTypeBase {
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setLazy(TRUE)
-          ->setExpression("machineToLabel(getChildValue(parent, 'bundle_entity_type_id'))")
+          ->setExpression("machineToLabel(get('..:bundle_entity_type_id'))")
           ->setDependencies('..:bundle_entity_type_id')
         ),
       'field_ui_base_route' => PropertyDefinition::create('string')
@@ -221,7 +221,7 @@ class ContentEntityType extends EntityTypeBase {
             ->setRequired(TRUE)
             ->setDefault(
               DefaultDefinition::create()
-                ->setExpression("machineToLabel(getChildValue(parent, 'name'))")
+                ->setExpression("machineToLabel(get('..:name'))")
                 ->setDependencies('..:name')
             ),
           'type' => [

@@ -71,7 +71,7 @@ class ConfigEntityType extends EntityTypeBase {
             ->setRequired(TRUE)
             ->setDefault(
               DefaultDefinition::create()
-                ->setExpression("machineToLabel(getChildValue(parent, 'name'))")
+                ->setExpression("machineToLabel(get('..:name'))")
               ->setDependencies('..:name')
           ),
           'type' => [

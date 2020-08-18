@@ -54,7 +54,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("machineToLabel(getChildValue(parent, 'entity_type_id'))")
+            ->setExpression("machineToLabel(get('..:entity_type_id'))")
             ->setDependencies('..:entity_type_id')
         ),
       'plain_class_name' => PropertyDefinition::create('string')
@@ -63,7 +63,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("machineToClass(getChildValue(parent, 'entity_type_id'))")
+            ->setExpression("machineToClass(get('..:entity_type_id'))")
             ->setDependencies('..:entity_type_id')
         ),
       'functionality' => [
@@ -125,7 +125,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         ->setDefault(
           DefaultDefinition::create()
             ->setLazy(TRUE)
-            ->setExpression("getChildValue(parent, 'plain_class_name') ~ 'Interface'")
+            ->setExpression("get('..:plain_class_name') ~ 'Interface'")
             ->setDependencies('..:plain_class_name')
         ),
     ];
@@ -244,7 +244,7 @@ abstract class EntityTypeBase extends PHPClassFile {
           DefaultDefinition::create()
             ->setLazy(TRUE)
             // NOT WORKING IN FRONT END!
-            ->setExpression("'administer ' ~ getChildValue(parent, 'entity_type_id') ~ ' entities'")
+            ->setExpression("'administer ' ~ get('..:entity_type_id') ~ ' entities'")
             ->setDependencies('..:entity_type_id')
         );
 
@@ -263,14 +263,14 @@ abstract class EntityTypeBase extends PHPClassFile {
       ->setDefault(
         DefaultDefinition::create()
           // Expression Language lets us define arrays, which is nice.
-          ->setExpression("['Provides the ' ~ getChildValue(parent, 'entity_type_label') ~ ' entity.']")
+          ->setExpression("['Provides the ' ~ get('..:entity_type_label') ~ ' entity.']")
       );
 
     $data_definition['interfaces']->setDefault(
       DefaultDefinition::create()
         // Expression Language lets us define arrays, which is nice.
         // TODO: why do we have the separate entity_interface_name??
-        ->setExpression("[getChildValue(parent, 'entity_interface_name')]")
+        ->setExpression("[get('..:entity_interface_name')]")
     );
 
     return $data_definition;
