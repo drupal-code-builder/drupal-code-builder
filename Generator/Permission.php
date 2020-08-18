@@ -25,7 +25,7 @@ class Permission extends BaseGenerator {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-          ->setExpression("machineToLabel(getChildValue(parent, 'permission'))")
+          ->setExpression("machineToLabel(get('..:permission'))")
             ->setDependencies('..:permission')
         ),
       'description' => PropertyDefinition::create('string')
@@ -33,7 +33,7 @@ class Permission extends BaseGenerator {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("getChildValue(parent, 'title')")
+            ->setExpression("get('..:title')")
             ->setDependencies('..:title')
         ),
       'restrict_access' => array(

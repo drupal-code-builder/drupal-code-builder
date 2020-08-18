@@ -32,7 +32,7 @@ class Form extends PHPClassFileWithInjection {
         ->setDefault(
           DefaultDefinition::create()
             ->setLazy(TRUE)
-            ->setExpression("getChildValue(parent, 'root_component_name') ~ '_' ~ machineFromPlainClassName(getChildValue(parent, 'plain_class_name'))")
+            ->setExpression("get('..:root_component_name') ~ '_' ~ machineFromPlainClassName(get('..:plain_class_name'))")
             ->setDependencies('..:root_component_name', '..:plain_class_name')
         ),
       'injected_services' => array(

@@ -44,7 +44,7 @@ class AdminSettingsForm extends Form {
       ->setLiteralDefault('AdminSettingsForm');
 
     $data_definition['form_id']->getDefault()
-      ->setExpression("getChildValue(parent, 'root_name') ~ '_settings_form'")
+      ->setExpression("get('..:root_name') ~ '_settings_form'")
       ->setDependencies('..:root_name');
 
     $data_definition['route_name'] = PropertyDefinition::create('string')

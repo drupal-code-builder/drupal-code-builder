@@ -49,7 +49,7 @@ class PluginType extends BaseGenerator {
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
+                ->setExpression("machineToLabel(get('..:plugin_type'))")
                 ->setDependencies('..:plugin_type')
               ),
             'plugin_subdirectory' => PropertyDefinition::create('string')
@@ -57,7 +57,7 @@ class PluginType extends BaseGenerator {
               ->setDescription("The subdirectory within the Plugins directory for plugins of this type.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+                ->setExpression("machineToClass(get('..:plugin_type'))")
                 ->setDependencies('..:plugin_type')
               ),
             // TODO: 'plugin_relative_namespace' => PropertyDefinition::create('string')
@@ -66,7 +66,7 @@ class PluginType extends BaseGenerator {
               ->setLabel('Annotation class name')
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+                ->setExpression("machineToClass(get('..:plugin_type'))")
                 ->setDependencies('..:plugin_type')
               ),
             'info_alter_hook' => PropertyDefinition::create('string')
@@ -74,7 +74,7 @@ class PluginType extends BaseGenerator {
               ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("getChildValue(parent, 'plugin_type') ~ '_info'")
+                ->setExpression("get('..:plugin_type') ~ '_info'")
                 ->setDependencies('..:plugin_type')
               ),
         ]),
@@ -89,7 +89,7 @@ class PluginType extends BaseGenerator {
               ->setLabel('Plugin type label')
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
+                ->setExpression("machineToLabel(get('..:plugin_type'))")
                 ->setDependencies('..:plugin_type')
               ),
             'plugin_subdirectory' => PropertyDefinition::create('string')
@@ -97,14 +97,14 @@ class PluginType extends BaseGenerator {
               ->setDescription("The subdirectory within the Plugins directory for the interface and base class.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+                ->setExpression("machineToClass(get('..:plugin_type'))")
                 ->setDependencies('..:plugin_type')),
             'info_alter_hook' => PropertyDefinition::create('string')
               ->setLabel('Alter hook name')
               ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("getChildValue(parent, 'plugin_type') ~ '_info'")
+                ->setExpression("get('..:plugin_type') ~ '_info'")
                 ->setDependencies('..:plugin_type')),
           ]),
       ]);
@@ -122,7 +122,7 @@ class PluginType extends BaseGenerator {
       'plugin_plain_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
-          ->setExpression("machineToClass(getChildValue(parent, 'plugin_type'))")
+          ->setExpression("machineToClass(get('..:plugin_type'))")
           ->setDependencies('..:plugin_type')
         ),
       'plugin_manager_service_id' => PropertyDefinition::create('string')
@@ -219,14 +219,14 @@ class PluginType extends BaseGenerator {
         ->setLabel('Plugin type label')
         ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
         ->setDefault(DefaultDefinition::create()
-          ->setExpression("machineToLabel(getChildValue(parent, 'plugin_type'))")
+          ->setExpression("machineToLabel(get('..:plugin_type'))")
           ->setDependencies('..:plugin_type')
         ),
       // 'plugin_subdirectory' => PropertyDefinition::create('string')
       //   ->setLabel('Plugin class name')
       //   // ->setRequired(TRUE)
       //   ->setDefault(DefaultDefinition::create()
-      //     ->setExpression("machineToClass(getChildValue(parent, 'plugin_name'))")
+      //     ->setExpression("machineToClass(get('..:plugin_name'))")
       //     ->setDependencies('..:plugin_name')
       //   ),
 

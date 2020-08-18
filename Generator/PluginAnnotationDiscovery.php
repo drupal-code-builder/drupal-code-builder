@@ -100,7 +100,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setLabel('Plugin class name')
         ->setRequired(TRUE)
         ->setDefault(DefaultDefinition::create()
-          ->setExpression("machineToClass(stripBefore(getChildValue(parent, 'plugin_name'), ':'))")
+          ->setExpression("machineToClass(stripBefore(get('..:plugin_name'), ':'))")
           ->setDependencies('..:plugin_name')
         ),
       'relative_namespace' => PropertyDefinition::create('string')

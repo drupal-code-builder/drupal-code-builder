@@ -141,7 +141,7 @@ class Module extends RootComponent {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("machineToLabel(getChildValue(parent, 'root_name'))")
+            ->setExpression("machineToLabel(get('..:root_name'))")
             ->setDependencies('..:root_name')
         ),
       'short_description' => array(

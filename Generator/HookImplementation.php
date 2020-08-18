@@ -36,7 +36,7 @@ class HookImplementation extends PHPFunction {
 
     $properties['function_docblock_lines']->getDefault()
       // Expression Language lets us define arrays, which is nice.
-      ->setExpression("['Implements ' ~ getChildValue(parent, 'hook_name') ~ '().']");
+      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
 
     // Indicates that the body includes the first and closing newlines. This is
     // because the hook sample code we get from code analysis have these, but

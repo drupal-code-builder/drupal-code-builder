@@ -17,7 +17,7 @@ class ServiceProvider extends PHPClassFile {
     $data_definition = parent::componentDataDefinition();
 
     $data_definition['relative_class_name']
-      ->setExpressionDefault("machineToClass(getChildValue(parent, 'root_component_name')) ~ 'ServiceProvider'");
+      ->setExpressionDefault("machineToClass(get('..:root_component_name')) ~ 'ServiceProvider'");
 
     $data_definition['class_docblock_lines']
       ->setLiteralDefault(['Alters services dynamically for the %sentence module.']);
