@@ -435,7 +435,8 @@ class Module extends RootComponent {
     // property!
     if ($this->component_data->hasProperty('module_help_text') && !$this->component_data->module_help_text->isEmpty()) {
       if (isset($components['hooks'])) {
-        $components['hooks']['hooks']['hook_help'] = TRUE;
+        // TODO: needs test!
+        $components['hooks']['hooks'][] = 'hook_help';
       }
       else {
         $components['hooks'] = array(
