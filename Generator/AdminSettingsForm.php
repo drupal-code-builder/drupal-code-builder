@@ -17,6 +17,16 @@ class AdminSettingsForm extends Form {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
+    // Because this component is declared in the Module root component, we
+    // need defaults to work at the UI stage, including those that depend on
+    // acquired data. However, acquisition only happens on code generation.
+    // So instead use a default here.
+    // TODO: expand this. Rethink acquisitions system? And technically, this
+    // generator's definition should not know about the parent it's within
+    $data_definition['root_name'] = PropertyDefinition::create('string')
+      ->setInternal(TRUE)
+      ->setExpressionDefault("get('..:..:root_name')");
+
     $data_definition['parent_class_name']
       ->setLiteralDefault('\Drupal\Core\Form\ConfigFormBase');
 
@@ -41,10 +51,8 @@ class AdminSettingsForm extends Form {
       ->setLabel("The name of the route.")
       ->setDefault(
         DefaultDefinition::create()
-          // ->setLazy(TRUE)
-          // TODO: broken in JS!!
-          ->setExpression("getChildValue(parent, 'root_component_name') ~ '.settings'")
-          ->setDependencies('..:root_component_name')
+          ->setExpression("get('..:root_name') ~ '.settings'")
+          ->setDependencies('..:root_name')
       );
 
     return $data_definition;
