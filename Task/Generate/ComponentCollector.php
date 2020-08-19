@@ -177,10 +177,6 @@ class ComponentCollector {
       throw new \Exception("Data for $name missing the 'component_type' property");
     }
 
-    // Keep the original component data before we add things to it.
-    // This will be used to track duplicate requests.
-    $original_component_data = $component_data;
-
     $component_type = $component_data['component_type'];
     $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
