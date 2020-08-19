@@ -44,7 +44,7 @@ class Collect8 extends Collect {
 
       switch ($class) {
         case 'HooksCollector':
-          $qualified_class .= '8';
+          $qualified_class .= $this->environment->getCoreMajorVersion();
           $helper = new $qualified_class($this->environment);
           break;
         case 'PluginTypesCollector':
