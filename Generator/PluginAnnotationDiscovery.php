@@ -76,6 +76,8 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
+    $definition->getProperty('relative_class_name')->setInternal(TRUE);
+
     $definition->addProperties([
       'plugin_type_data' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
