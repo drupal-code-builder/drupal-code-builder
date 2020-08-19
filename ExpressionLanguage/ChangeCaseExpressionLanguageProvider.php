@@ -31,6 +31,7 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
 
         return CaseString::snake($str)->title();
       }),
+
       // Converts a machine name in snake case to a pascal case class name.
       new ExpressionFunction('machineToClass', function ($str) { },
       function ($arguments, $str) {
@@ -40,6 +41,9 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
 
         return CaseString::snake($str)->pascal();
       }),
+
+      // Removes the portion of the given string before the marker.
+      // For example, from 'prefix:main' get 'main'.
       new ExpressionFunction('stripBefore', function ($string, $marker) { },
       function ($arguments, $string, $marker) {
         if (strpos($string, $marker) === FALSE) {
@@ -48,7 +52,8 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
 
         $pieces = explode($marker, $string, 2);
         return $pieces[1];
-      })
+      }),
+
     ];
   }
 
