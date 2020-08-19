@@ -161,6 +161,7 @@ class ContentEntityType extends EntityTypeBase {
     $bundle_entity_properties = [
       // Single place to compute a bundle entity type ID. Here rather than in
       // the bundle generator, as this component needs it too.
+      // TODO: REMOVE! we can reach into the child data!!
       'bundle_entity_type_id' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(
@@ -385,8 +386,6 @@ EOT
 
     $use_revisionable = in_array('revisionable', $this->component_data['functionality']);
     $use_translatable = in_array('translatable', $this->component_data['functionality']);
-
-    //dump($this->component_data);
 
     $method_body = [];
     // Calling the parent defines fields for entity keys.
