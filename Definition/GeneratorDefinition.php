@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Definition;
 
-// we need this because we want to be able to selectively upgrade some generator
-// classes to have their own getPropertyDefinition() method.
+/**
+ * Defines a data property that has an associated generator.
+ */
 class GeneratorDefinition extends PropertyDefinition {
 
   /**
@@ -68,8 +69,14 @@ class GeneratorDefinition extends PropertyDefinition {
     return $definition;
   }
 
-
+  /**
+   * Gets the component type for this property.
+   *
+   * @return string
+   *   The component type.
+   */
   public function getComponentType() :string {
+    // TODO: Handle mutable data and switch the component class here!
     return $this->componentType;
   }
 
