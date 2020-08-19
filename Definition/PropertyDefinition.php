@@ -6,8 +6,6 @@ use MutableTypedData\Definition\PropertyDefinition as OriginalPropertyDefinition
 
 class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAccess {
 
-  protected $internal = FALSE;
-
   // TODO: can this be done with defaults instead??
   protected $acquiringExpression = FALSE;
 
@@ -28,16 +26,6 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
     $delta_definition->default = NULL;
 
     return $delta_definition;
-  }
-
-  public function setInternal(bool $internal) :self {
-    $this->internal = $internal;
-
-    return $this;
-  }
-
-  public function isInternal() :bool {
-    return $this->internal;
   }
 
   /**
