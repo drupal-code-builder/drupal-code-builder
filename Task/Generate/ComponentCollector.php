@@ -150,6 +150,8 @@ class ComponentCollector {
   ) {
     $this->environment = $environment;
     $this->classHandler = $class_handler;
+    // TODO: not used, but maybe restore this to handle assembling data
+    // definitions from generator classes?
     $this->dataInfoGatherer = $data_info_gatherer;
   }
 
