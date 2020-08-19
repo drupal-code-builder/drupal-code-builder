@@ -22,13 +22,41 @@ use DrupalCodeBuilder\Generator\GeneratorInterface;
  * added to the ComponentCollection object, which keeps track of the
  * relationships between them.
  *
+ * TODO:
+ * This is all a big mess, because it's been retrofitted to work with MTD and
+ * I've got to the point where it WORKS and I am burnt out.
+ * So, things to do to clean up:
+ * - remove dead code, but figure out if there's stuff in there that's needed
+ *   first
+ * - clean up and refactor
+ * - update the documentation, which still has references to the array data
+ * - remove the processing callback system?
+ * - resolve the problem of components in the main data structure not getting
+ *   acquired data values during the UI stage, which they may need in defaults
+ *   (see AdminSettingsForm for a hack/possible solution)
+ * - possibly rethink the acquired data system entirely anyway: can it be
+ *   replaced with dynamic defaults?
+ * - resolve the weird parallel systems of main structure and requested
+ *   components which are standalone data items. Data items could have their
+ *   structure added to dynamically? Or have internal properties for components
+ *   that will get requested?
+ *
+ * Brief notes on how 4.x.x works:
+ * - Generator classes define a data structure together (which itself is an
+ *   unspeakable mess at the moment, as there's loads of array data there too
+ *   which gets converted to data definitions)
+ * - that structure defines the data which is presented to the user in the UI
+ *   for them to populate
+ * - this class does some prep work on the data (which needs cleaning up!)
+ *   and then begins instantiating generators as in 3.x: see rest of these docs.
+ *
  * Before being passed to instantiated components, the data is processed in
  * various ways:
  *  - data values can be acquired from the component that requested the current
  *    one.
  *  - preset values are expanded.
- *  - default values are filled in.
- *  - 'processing' callbacks are called for each property.
+ *  - 'processing' callbacks are called for each property TODO: not at the
+ *    moment, possibly will be removed!
  *
  * Component data arrays have their structure defined by data property info
  * arrays, which each Generator class defines in its componentDataDefinition()
