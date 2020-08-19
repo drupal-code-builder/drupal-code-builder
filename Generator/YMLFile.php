@@ -118,7 +118,6 @@ class YMLFile extends File {
       // Because the yaml is all built for us, this is just a singleton array.
       $body = array($yaml);
     }
-    //drush_print_r($yaml);
 
     return $body;
   }
