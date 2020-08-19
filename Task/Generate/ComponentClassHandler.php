@@ -16,10 +16,12 @@ class ComponentClassHandler {
    */
   protected $classes = [];
 
+  // TODO: Possibly make $machine_name non-optional? who calls this?
   public function getComponentPropertyDefinition($component_type, $machine_name = NULL) {
     $class = $this->getGeneratorClass($component_type);
 
     // Quick hack. TODO: clean up.
+    // TODO: don't always do this -- don't do this if there is one already!!!!!
     $machine_name = $machine_name ?? strtolower($component_type);
 
     return $class::getPropertyDefinition()->setMachineName($machine_name);
