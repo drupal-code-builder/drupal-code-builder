@@ -163,7 +163,7 @@ class ComponentCollection implements \IteratorAggregate {
    * @param $local_name
    *   The local name for the component, that is, the name used within the
    *   requesting components list of components to spawn, whether from
-   *   properties or from requests.
+   *   data defined with GeneratorDefinition or from requests.
    * @param $component
    *   The component to add.
    * @param $requesting_component
@@ -216,6 +216,7 @@ class ComponentCollection implements \IteratorAggregate {
       $this->requestRoots[$key] = $closest_requesting_root;
 
       // Add to the array of local names.
+      // dump("adding $key with local name $local_name");
       $this->localNames[$this->getComponentKey($requesting_component)][$local_name] = $key;
     }
 
