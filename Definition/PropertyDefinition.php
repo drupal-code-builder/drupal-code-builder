@@ -4,6 +4,9 @@ namespace DrupalCodeBuilder\Definition;
 
 use MutableTypedData\Definition\PropertyDefinition as OriginalPropertyDefinition;
 
+/**
+ * Extends the basic property definition with DCB extras.
+ */
 class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAccess {
 
   // TODO: can this be done with defaults instead??
