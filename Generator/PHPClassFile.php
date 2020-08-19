@@ -40,17 +40,12 @@ class PHPClassFile extends PHPFile {
             -> relative_namespace - from relative_class_name
             -> qualified_class_name_pieces
             -> qualified_class_name
-
-
-
       */
-      // One and only one of relative_class_name and plain_class_name must be
+      // One and *ONLY ONE* of relative_class_name and plain_class_name must be
       // exposed; the other must be set internal.
       'relative_class_name' => PropertyDefinition::create('string')
         ->setLabel('The qualifed class name, relative to the module namespace, e.g. "Controller\MyController"')
         ->setDefault(DefaultDefinition::create()
-          // TODO: replace get() with ->value -- why not working??
-          // TODO: do we need a \ in the splice?
           ->setLazy(TRUE)
           ->setCallable(function (DataItem $component_data) {
             $class_data = $component_data->getParent();
@@ -126,56 +121,6 @@ class PHPClassFile extends PHPFile {
             ->setLazy(TRUE)
             ->setDependencies('..:qualified_class_name_pieces')
         ),
-
-
-
-
-      // [
-      //   'computed' => TRUE,
-      //   'format' => 'string',
-      //   'default' => function($component_data) {
-      //     $class_name_pieces = array_merge([
-      //       'Drupal',
-      //       '%module',
-      //     ], $component_data['relative_class_name']);
-
-      //     return self::makeQualifiedClassName($class_name_pieces);
-      //   },
-      // ],
-      // // This comes after the relative classname, since internally we usually
-      // // want to specify that rather than this.
-      // // For UIs though, it'll be the other way round: the user is asked the
-      // // short class name, and other things should be derived from it. To do
-      // // this, subclasses should add a property ahead of all these, and then
-      // // derive relative_class_name.
-      // 'plain_class_name' => [
-      //   'computed' => TRUE,
-      //   'default' => function($component_data) {
-      //     return end($component_data['qualified_class_name_pieces']);
-      //   },
-      // ],
-      // // The namespace, without the inital '\'.
-      // 'namespace' => [
-      //   'computed' => TRUE,
-      //   'default' => function($component_data) {
-      //     $qualified_class_name_pieces = $component_data['qualified_class_name_pieces'];
-      //     array_pop($qualified_class_name_pieces);
-
-      //     return implode('\\', $qualified_class_name_pieces);
-      //   },
-      // ],
-      // 'path' => [
-      //   'computed' => TRUE,
-      //   'default' => function($component_data) {
-      //     // Lop off the initial Drupal\module and the final class name to
-      //     // build the path.
-      //     $path_pieces = array_slice($component_data['qualified_class_name_pieces'], 2, -1);
-      //     // Add the initial src to the front.
-      //     array_unshift($path_pieces, 'src');
-
-      //     return implode('/', $path_pieces);
-      //   },
-      // ],
       // Deprecated: use class_docblock_lines instead.
       'docblock_first_line' => [
         'format' => 'string',
@@ -195,13 +140,13 @@ class PHPClassFile extends PHPFile {
         'default' => FALSE,
       ],
       // Inconsistent with other properties for this to be a string, but we tend
-      // to have parents be
+      // to have parents be a qualified class name.
       'parent_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setRequired(TRUE),
       // Cheat and use mapping for now, as multi-valued properties don't do
       // defaults. But should -- TODO.
-      // 'List of interfaces this class implements, as fully-qualified names
+      // List of interfaces this class implements, as fully-qualified names
       // with initial '\'.
       'interfaces' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
@@ -221,7 +166,6 @@ class PHPClassFile extends PHPFile {
    * Subclasses should override this to add their file data to the list.
    */
   public function getFileInfo() {
-    // dump($this->component_data->plain_class_name);
     return array(
       'path' => $this->component_data['path'],
       'filename' => $this->component_data['plain_class_name'] . '.php',
