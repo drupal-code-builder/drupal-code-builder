@@ -24,8 +24,7 @@ class Hooks extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      // An array of requested hooks, where the keys are the long hook names and
-      // the values are TRUE.
+      // An array of requested hooks, as long hook names.
       'hooks' => [
         'label' => 'Hook implementations',
         'required' => FALSE,
