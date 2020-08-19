@@ -19,10 +19,6 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
     // Remove presets.
     $delta_definition->setPresets([]);
 
-    // remove default.
-    // TODO: move upstream??
-    $delta_definition->default = NULL;
-
     return $delta_definition;
   }
 
@@ -32,9 +28,10 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
    * Note there is no way to REMOVE acquired status, but this should be fine.
    *
    * @param string $expression
-   *   An Expression Language expression. This should use object notation and
-   *   does not need to bother with getItemValue(), since there is no need for
-   *   JavaScript interpretation. Available variables:
+   *   An Expression Language expression. This can use object notation and does
+   *   not need to bother with using custom Expression Language functions from
+   *   DataAddressLanguageProvider, since there is no need for JavaScript
+   *   interpretation. Available variables:
    *    - requester: The requesting component.
    *
    * @return self
@@ -86,16 +83,18 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
   }
 
   public function offsetGet($offset) {
+    dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetGet $offset.");
   }
 
   public function offsetSet($offset, $value) {
+    dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetSet $offset.");
   }
 
   public function offsetUnset($offset){
+    dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetUnset $offset.");
   }
-
 
 }
