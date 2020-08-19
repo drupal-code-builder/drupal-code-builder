@@ -631,8 +631,6 @@ class ComponentCollector {
    *  recursive calls this is the local data subset.
    */
   protected function processComponentData(DataItem $component_data) {
-    $component_data->walk([$this, 'forceCreateChildren']);
-
     // Only set presets once, when processing the root data.
     if (!$component_data->getParent()) {
       $component_data->walk([$this, 'setPresetValues']);
@@ -691,30 +689,7 @@ class ComponentCollector {
     }
   }
 
-  /**
-   * Walk callback to forcibly create values if needed.
-   *
-   * @param DataItem $component_data
-   *  The component data item.
-   */
-  public function forceCreateChildren(DataItem $component_data) {
-    foreach ($component_data->getProperties() as $property_name => $property_definition) {
-      if (!$property_definition->getForceCreate()) {
-        continue;
-      }
 
-      if ($component_data->isMultiple()) {
-        foreach ($component_data as $delta_item) {
-          // Access the property to instantiate its value.
-          $delta_item->{$property_name};
-        }
-      }
-      else {
-        // Access the property to instantiate its value.
-        $component_data->{$property_name};
-      }
-    }
-  }
 
   /**
    * Walk callback to set values from a presets property into other properties.

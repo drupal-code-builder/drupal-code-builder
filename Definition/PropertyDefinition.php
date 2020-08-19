@@ -13,8 +13,6 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
 
   protected $processing;
 
-  protected $forceCreate = FALSE;
-
   public function getDeltaDefinition(): self {
     $delta_definition = parent::getDeltaDefinition();
 
@@ -80,16 +78,6 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
 
   public function getProcessing(): ?callable {
     return $this->processing;
-  }
-
-  public function setForceCreate(bool $force_create): self {
-    $this->forceCreate = $force_create;
-
-    return $this;
-  }
-
-  public function getForceCreate(): bool {
-    return $this->forceCreate;
   }
 
   public function offsetExists($offset) {

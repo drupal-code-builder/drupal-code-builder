@@ -426,9 +426,8 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
       }
 
       if (!empty($def['process_empty'])) {
-        $converted_defs[$name]->setForceCreate(TRUE);
+        // We don't do anything with process_empty.
       }
-
 
       if ($def['required']) {
         $converted_defs[$name]->setRequired(TRUE);
