@@ -15,13 +15,6 @@ class GeneratorDefinition extends PropertyDefinition {
   protected $componentType;
 
   /**
-   * The full generator class for this definition.
-   *
-   * @var string
-   */
-  protected $generatorClass;
-
-  /**
    * Constructor.
    *
    * @param string $data_type
@@ -32,10 +25,7 @@ class GeneratorDefinition extends PropertyDefinition {
   public function __construct(string $data_type, string $generator_type) {
     parent::__construct($data_type);
 
-    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
-
     $this->componentType = $generator_type;
-    $this->generatorClass = $class_handler->getGeneratorClass($generator_type);
   }
 
   /**
