@@ -105,6 +105,7 @@ class ComponentDataInfoGatherer {
    *   removed if requested.
    */
   protected function processPropertyList($properties, $include_internal) {
+    return $properties;
     $return = [];
 
     // Track the primary property so we can check there is not more than one.
