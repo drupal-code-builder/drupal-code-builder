@@ -482,6 +482,12 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   /**
    * Define the component data this component needs to function.
    *
+   * This currently works with a conversion layer which processes the return
+   * of this method into PropertyDefinition objects.
+   *
+   * TODO: remove this once all definitions are converted to object-based data
+   * definitions.
+   *
    * This returns an array of data that defines the component data that
    * this component should be given to perform its work. This includes:
    *  - data that must be specified by the user
