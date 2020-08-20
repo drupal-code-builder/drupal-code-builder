@@ -162,11 +162,6 @@ class Module extends RootComponent {
         'required' => FALSE,
         // We need a value for this, as other generators acquire it.
         'process_default' => TRUE,
-        // TODO: quick fix. Should be done in Module Builder on textarea UI
-        // elements.
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data[$property_name] = array_filter($value);
-        },
         'format' => 'array',
       ),
       // If this is given, then hook_help() is automatically added to the list
