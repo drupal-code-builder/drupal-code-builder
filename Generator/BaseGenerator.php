@@ -122,12 +122,10 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   /**
    * Constructor method; sets the component data.
    *
-   * @param $component_data
+   * @param \MutableTypedData\Data\DataItem $component_data
    *   An array of data for the component.
    */
   function __construct(DataItem $component_data) {
-    // dump("CONSTRUCT! " . static::class);
-    // dump($component_data);
     $this->component_data = $component_data;
 
     // Set the type. This is the short class name without the numeric version
@@ -136,6 +134,13 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     $this->type = preg_replace('@\d+$@', '', $short_class);
+  }
+
+  /**
+   * Gets the address of this component's data.
+   */
+  public function getAddress() {
+    return $this->component_data->getAddress();
   }
 
   /**
@@ -162,10 +167,22 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
     return static::getPropertyDefinition();
   }
 
-  // get the property definition for this component.
-  // NOTE! this shouldn't set things like required/multiple/etc because
-  // those depend on where it's used.
-  // TODO: need way to not show internals to UIs!!
+  /**
+   * Gets the data definition for this component.
+   *
+   * This shouldn't set things on its root data such as required, cardinality,
+   * or label, as these may depend on where it's used.
+   *
+   * Use static::getPropertyDefinitionForGeneratorType() to use the definition
+   * from one generator inside another's.
+   *
+   * @param string $data_type
+   *   The data type.
+   *
+   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
+   *   The data definition.
+   */
+  // TODO: kill the param -- makes no sense!
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $type = static::deriveType(static::class);
 
