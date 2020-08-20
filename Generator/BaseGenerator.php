@@ -443,6 +443,10 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
       // Note however that defaults for multi-valued data are not yet supported
       // in MTB.
       if (!empty($def['process_default']) && !$converted_defs[$name]->isMultiple()) {
+        if ($converted_defs[$name]->isMultiple()) {
+          throw new \Exception("Process default and multiple property $name!");
+        }
+
         $converted_defs[$name]->setRequired(TRUE);
       }
       // Computed values need to be required so that the default gets filled in
