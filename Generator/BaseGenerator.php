@@ -244,8 +244,6 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         $converted_defs[$name] = $generator_class::getPropertyDefinition('complex');
 
         $converted_defs[$name]->setMultiple(TRUE);
-        // if ($def['format'] == 'compound') {
-        // }
       }
       else {
         switch ($def['format']) {
@@ -255,21 +253,23 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
 
             static::addArrayPropertyInfoToDefinition($converted_defs[$name], $def['properties']);
 
-            // fuck. recurse.
-            //   $definition = PropertyDefinition::create('complex')
-            //   ->setProperties($converted_defs);
-
-            // $def['properties']))
-
             break;
 
           case 'array':
-            $converted_defs[$name] = PropertyDefinition::create('string')
+            if (isset($def['component_type'])) {
+              $converted_defs[$name] = GeneratorDefinition::createFromGeneratorType($def['component_type'], 'string')
+                ->setMultiple(TRUE);
+            }
+            else {
+              $converted_defs[$name] = PropertyDefinition::create('string')
               ->setMultiple(TRUE);
+            }
+
             break;
 
           case 'boolean':
-            // ! argh might be a generator!!
+            // Some generator properties only show a boolean in the UI, as they
+            // have no public properties.
             if (isset($def['component_type'])) {
               $converted_defs[$name] = GeneratorDefinition::createFromGeneratorType($def['component_type'], 'boolean');
             }
@@ -278,7 +278,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
             }
             break;
 
-          // This is a format that's not in 3.x, added here so various array
+          // This is a format that wasn't in 3.x, added here so various array
           // definitions can just have their format changed.
           case 'mapping':
             $converted_defs[$name] = PropertyDefinition::create('mapping');
@@ -301,6 +301,8 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         $converted_defs[$name]->setInternal(TRUE);
       }
       if (!empty($def['acquired'])) {
+        $converted_defs[$name]->setInternal(TRUE);
+
         // QUICK HACK!
         // 'acquired_alias' is actually only used for ONE property, so hardcode
         // that here.
@@ -340,11 +342,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         }
 
         if ($convert_literal_default) {
-          $converted_defs[$name]->setDefault(DefaultDefinition::create()
-            ->setLiteral($def['default'])
-            // TODO
-            // ->setDependencies('..:plugin_name')
-          );
+          $converted_defs[$name]->setLiteralDefault($def['default']);
         }
         elseif (is_callable($def['default'])) {
           // dump($def);
