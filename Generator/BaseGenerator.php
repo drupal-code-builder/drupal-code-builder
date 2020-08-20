@@ -177,19 +177,18 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
    * from one generator inside another's.
    *
    * @param string $data_type
-   *   The data type.
+   *   The data type. TODO: Obsolete.
    *
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition
    *   The data definition.
    */
-  // TODO: kill the param -- makes no sense!
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $type = static::deriveType(static::class);
 
     // Get the array property info from the old definition method.
     $array_property_info = static::componentDataDefinition();
 
-    $definition = GeneratorDefinition::createFromGeneratorType($type, $data_type);
+    $definition = GeneratorDefinition::createFromGeneratorType($type, 'complex');
 
     static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
 
@@ -241,17 +240,8 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
         $generator_class = $class_handler->getGeneratorClass($def['component_type']);
 
-        switch ($def['format']) {
-          case 'compound':
-            $data_type = 'complex';
-            break;
-
-          // case 'boolean':
-          //   $data_type = 'boolean';
-          //   break;
-        }
-
-        $converted_defs[$name] = $generator_class::getPropertyDefinition($data_type);
+        // TODO: -- the GENERATOR knows what data type it is!!!
+        $converted_defs[$name] = $generator_class::getPropertyDefinition('complex');
 
         $converted_defs[$name]->setMultiple(TRUE);
         // if ($def['format'] == 'compound') {
