@@ -454,8 +454,6 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
 
       $definition->addProperty($converted_defs[$name]);
     }
-
-    // $definition->setProperties($converted_defs);
   }
 
   public function isRootComponent(): bool {
