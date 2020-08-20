@@ -401,13 +401,18 @@ class Module extends RootComponent {
   public function requiredComponents() {
     $components = [];
 
-    // Argh, need to instantiate the class handler outside of the Generate
-    // task... time for a proper service architecture?
+    // Modules always have a .info file.
+    // TODO: this was an experiment for how to do required components with
+    // DataItems and it's not very nice DX. Figure out a better way.
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
     $definition = $class_handler->getComponentPropertyDefinition('Info');
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $components['info'] = $data;
+
+    // $components['info'] = [
+    //   'component_type' => 'Info',
+    // ];
 
     // Turn the hooks property into the Hooks component.
     if (!$this->component_data->hooks->isEmpty()) {
