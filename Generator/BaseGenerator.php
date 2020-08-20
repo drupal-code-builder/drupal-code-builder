@@ -102,15 +102,13 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
   /**
    * The data item for the component.
    *
-   * TODO
-   *
    * On the base component (e.g., 'Module'), this is the entirety of the data
    * requested by the user.
    *
    * On other components (e.g., 'Routing'), this contains data from the request
    * for the component. Properties will depend on the class.
    */
-  public $component_data = array();
+  public $component_data;
 
   /**
    * Boolean to indicate whether this component already exists.
