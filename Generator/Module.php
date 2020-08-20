@@ -99,11 +99,6 @@ class Module extends RootComponent {
     $definition->getProperty('root_name')
       ->setLabel('Module machine name');
 
-    // TODO: what's this here for?
-    $definition->getProperty('plugins')
-      ->setLabel('Plugins');
-
-    // dump($definition);
     return $definition;
   }
 
@@ -231,7 +226,8 @@ class Module extends RootComponent {
         },
         // The processing callback alters the component data in place, and may
         // in fact alter another value.
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+        // TODO: restore this as validation!
+        'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
           // TODO: the options aren't there, as generateComponent() only gets
           // given data, not the component info array. However, it's probably
           // better to re-compute these lazily rather than do them all.
@@ -277,7 +273,8 @@ class Module extends RootComponent {
 
           return $hook_options;
         },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+        // TODO: restore this as validation.
+        'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
           $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
           // Get the flat list of hooks, standardized to lower case.
           $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
@@ -390,8 +387,7 @@ class Module extends RootComponent {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("machineToClass(getChildValue(parent, 'root_name'))")
-            ->setLazy(TRUE)
+            ->setExpression("machineToClass(get('..:root_name'))")
             ->setDependencies('..:root_name')
         ),
     ];
@@ -409,10 +405,6 @@ class Module extends RootComponent {
     // task... time for a proper service architecture?
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
     $definition = $class_handler->getComponentPropertyDefinition('Info');
-    // dump($definition);
-    // exit();
-
-
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $components['info'] = $data;
