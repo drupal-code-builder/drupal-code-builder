@@ -40,10 +40,9 @@ class Profile extends RootComponent {
       'process_default' => TRUE,
     ];
 
-    $component_data_definition['root_name'] = [
-      'label' => 'Profile machine name',
-      'default' => 'myprofile',
-    ] + $component_data_definition['root_name'];
+    $component_data_definition['root_name']
+      ->setLabel('Profile machine name')
+      ->setLiteralDefault('my_profile');
 
     $component_data_definition += [
       'readable_name' => array(

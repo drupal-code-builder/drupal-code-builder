@@ -36,13 +36,9 @@ abstract class RootComponent extends BaseGenerator {
     $component_data_definition = parent::componentDataDefinition();
 
     // Define this here for completeness; child classes should specialize it.
-    $component_data_definition['root_name'] = [
-      'label' => 'Extension machine name',
-      'required' => TRUE,
-      // Requested components will acquire the root name as the
-      // 'root_component_name' property.
-      'acquired_alias' => 'root_component_name',
-    ];
+    $component_data_definition['root_name'] = PropertyDefinition::create('string')
+      ->setLabel('Extension machine name')
+      ->setRequired(TRUE);
 
     // Remove the root_component_name property that's come from the parent
     // class.

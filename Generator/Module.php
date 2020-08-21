@@ -114,10 +114,9 @@ class Module extends RootComponent {
   public static function componentDataDefinition() {
     $component_data_definition = parent::componentDataDefinition();
 
-    $component_data_definition['root_name'] = [
-      'label' => 'Module machine name',
-      'default' => 'my_module',
-    ] + $component_data_definition['root_name'];
+    $component_data_definition['root_name']
+      ->setLabel('Module machine name')
+      ->setLiteralDefault('my_module');
 
     $component_data_definition += [
       'base' => [
@@ -126,11 +125,6 @@ class Module extends RootComponent {
         'process_default' => TRUE,
         'required' => TRUE,
       ],
-      'root_name' => array(
-        'label' => 'Module machine name',
-        'default' => 'my_module',
-        'required' => TRUE,
-      ),
       'readable_name' => PropertyDefinition::create('string')
         ->setLabel('Module readable name')
         ->setRequired(TRUE)
