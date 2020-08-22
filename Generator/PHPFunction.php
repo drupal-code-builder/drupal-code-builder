@@ -52,7 +52,6 @@ class PHPFunction extends BaseGenerator {
       // Or multiple string?
       'function_docblock_lines' => PropertyDefinition::create('mapping')
         ->setDefault(DefaultDefinition::create()
-          ->setLazy(TRUE)
           ->setCallable([static::class, 'defaultDocblockLines'])
       ),
       'declaration' => [

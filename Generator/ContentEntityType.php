@@ -166,7 +166,6 @@ class ContentEntityType extends EntityTypeBase {
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setLazy(TRUE)
             ->setExpression("get('..:entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
@@ -177,7 +176,6 @@ class ContentEntityType extends EntityTypeBase {
       'bundle_label' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
-          ->setLazy(TRUE)
           ->setExpression("machineToLabel(get('..:bundle_entity_type_id'))")
           ->setDependencies('..:bundle_entity_type_id')
         ),

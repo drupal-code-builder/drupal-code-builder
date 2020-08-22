@@ -45,7 +45,6 @@ class UnitDataItemArrayAccessTest extends TestCase {
             ->setDefault(
               DefaultDefinition::create()
                 ->setLiteral('lazy')
-                ->setLazy(TRUE)
             ),
         ])
 

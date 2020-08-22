@@ -149,7 +149,6 @@ class PHPUnitTest extends PHPClassFile {
     // the namespace above the module is different and the path is different.
     // Treat this as relative to the \Drupal\Tests\mymodule namespace.
     // $data_definition['relative_namespace']->getDefault()
-    //   ->setLazy(TRUE)
     //   ->setCallable(function (DataItem $component_data) {
     //     $test_data = $component_data->getParent();
 
@@ -185,7 +184,6 @@ class PHPUnitTest extends PHPClassFile {
     });
 
     $data_definition['path']->getDefault()
-      ->setLazy(TRUE)
       ->setCallable(function (DataItem $component_data) {
         // Lop off the initial Drupal\Tests\module and the final class name to
         // build the path.

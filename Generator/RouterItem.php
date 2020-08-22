@@ -34,7 +34,6 @@ class RouterItem extends BaseGenerator {
         ->setDefault(
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultRouteName'])
-            ->setLazy(TRUE)
             ->setDependencies('..:path')
         ),
       'title' => [
@@ -67,7 +66,6 @@ class RouterItem extends BaseGenerator {
               'controller_relative_class_name' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
                 ->setDefault(DefaultDefinition::create()
-                  ->setLazy(TRUE)
                   ->setCallable(function (DataItem $component_data) {
                     // Create a controller name from the route path.
                     $path  = str_replace(['{', '}'], '', $component_data->getRelative('..:..:path')->value);
@@ -189,7 +187,6 @@ class RouterItem extends BaseGenerator {
       //   ->setDefault(
       //     DefaultDefinition::create()
       //       ->setCallable([static::class, 'defaultControllerPlainClassName'])
-      //       ->setLazy(TRUE)
       //       ->setDependencies('..:TODO')
       //   ),
       // 'controller_relative_class_name_pieces' => [

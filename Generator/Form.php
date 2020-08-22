@@ -31,7 +31,6 @@ class Form extends PHPClassFileWithInjection {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setLazy(TRUE)
             ->setExpression("get('..:root_component_name') ~ '_' ~ machineFromPlainClassName(get('..:plain_class_name'))")
             ->setDependencies('..:root_component_name', '..:plain_class_name')
         ),

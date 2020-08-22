@@ -41,7 +41,6 @@ class PluginYamlDiscovery extends BaseGenerator {
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setLazy(TRUE)
             ->setCallable(function (DataItem $component_data) {
               // YAML plugin names use dots as glue.
               $component_data->value =
@@ -58,7 +57,6 @@ class PluginYamlDiscovery extends BaseGenerator {
       'plugin_properties' => PropertyDefinition::create('mapping')
         ->setDefault(
           DefaultDefinition::create()
-            ->setLazy(TRUE)
             ->setCallable([static::class, 'defaultPluginProperties'])
             ->setDependencies('..:plugin_name')
         ),

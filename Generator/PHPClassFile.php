@@ -46,7 +46,6 @@ class PHPClassFile extends PHPFile {
       'relative_class_name' => PropertyDefinition::create('string')
         ->setLabel('The qualifed class name, relative to the module namespace, e.g. "Controller\MyController"')
         ->setDefault(DefaultDefinition::create()
-          ->setLazy(TRUE)
           ->setCallable(function (DataItem $component_data) {
             $class_data = $component_data->getParent();
             $relative_namespace = $class_data->relative_namespace->value;
@@ -64,7 +63,6 @@ class PHPClassFile extends PHPFile {
         ->setLabel('The plain class name, e.g. "MyClass"')
         ->setDefault(DefaultDefinition::create()
           ->setExpression("plainClassNameFromQualified(parent.relative_class_name.get())")
-          ->setLazy(TRUE)
           ->setDependencies('..:relative_class_name')
       ),
       // Child classes that expose 'plain_class_name' must set a non-lazy
@@ -80,7 +78,6 @@ class PHPClassFile extends PHPFile {
         ->setLabel('The qualifed classname pieces, relative to the module namespace')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
-          ->setLazy(TRUE)
           ->setCallable(function (DataItem $component_data) {
             return explode("\\", $component_data->getParent()->relative_class_name->value);
           })
@@ -92,7 +89,6 @@ class PHPClassFile extends PHPFile {
         ->setDefault(DefaultDefinition::create()
           // ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
           ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
-          ->setLazy(TRUE)
           ->setDependencies('..:relative_class_name_pieces')
       ),
       'namespace' => PropertyDefinition::create('string')
@@ -100,7 +96,6 @@ class PHPClassFile extends PHPFile {
         ->setRequired(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setExpression("namespaceFromPieces(parent.qualified_class_name_pieces.get())")
-          ->setLazy(TRUE)
           ->setDependencies('..:qualified_class_name_pieces')
       ),
       // E.g. 'Drupal\my_module\Form\MyFormClass'
@@ -109,7 +104,6 @@ class PHPClassFile extends PHPFile {
         ->setRequired(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setExpression("implode('\\\\', parent.qualified_class_name_pieces.get())")
-          ->setLazy(TRUE)
           ->setDependencies('..:qualified_class_name_pieces')
       ),
       'path' => PropertyDefinition::create('string')
@@ -118,7 +112,6 @@ class PHPClassFile extends PHPFile {
         ->setDefault(
           DefaultDefinition::create()
             ->setExpression("pathFromQualifiedClassNamePieces(parent.qualified_class_name_pieces.get())")
-            ->setLazy(TRUE)
             ->setDependencies('..:qualified_class_name_pieces')
         ),
       // Deprecated: use class_docblock_lines instead.

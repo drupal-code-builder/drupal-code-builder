@@ -99,7 +99,6 @@ class Service extends PHPClassFileWithInjection {
         ->setDefault(
           DefaultDefinition::create()
             ->setExpression("parent.root_component_name.get() ~ '.' ~ parent.service_name.get()")
-            ->setLazy(TRUE)
             ->setDependencies('..:root_component_name')
         ),
       'injected_services' => array(

@@ -21,7 +21,6 @@ class FormBuilder extends PHPFunction {
     $data_definition['declaration'] = PropertyDefinition::create('string')
       ->setDefault(DefaultDefinition::create()
         ->setCallable([static::class, 'defaultDeclaration'])
-        ->setLazy(TRUE)
         ->setDependencies('..:function_name')
     );
 

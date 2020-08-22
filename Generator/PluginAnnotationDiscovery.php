@@ -83,7 +83,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setLazy(TRUE)
             ->setCallable([static::class, 'defaultPluginTypeData'])
         ),
       'plugin_name' => PropertyDefinition::create('string')
@@ -95,7 +94,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setDefault(
           DefaultDefinition::create()
             ->setCallable([static::class, 'processingPluginName'])
-            ->setLazy(TRUE)
             ->setDependencies('..:plugin_name')
         ),
       'plain_class_name' => PropertyDefinition::create('string')
@@ -109,7 +107,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setLazy(TRUE)
             ->setCallable([static::class, 'defaultRelativeNamespace'])
         ),
       'injected_services' => PropertyDefinition::create('string')

@@ -28,7 +28,6 @@ class InjectedService extends BaseGenerator {
 
     $data_definition['service_info'] = PropertyDefinition::create('mapping')
       ->setDefault(DefaultDefinition::create()
-        ->setLazy(TRUE)
         ->setCallable([static::class, 'defaultServiceInfo'])
         ->setDependencies('..:service_id')
     );
