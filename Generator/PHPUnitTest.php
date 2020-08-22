@@ -169,6 +169,8 @@ class PHPUnitTest extends PHPClassFile {
     //   }
     // };
 
+    $data_definition['relative_class_name']->setInternal(TRUE);
+
     $data_definition['qualified_class_name_pieces']->getDefault()
       ->setCallable(function (DataItem $component_data) {
         $class_name_pieces = array_merge(
