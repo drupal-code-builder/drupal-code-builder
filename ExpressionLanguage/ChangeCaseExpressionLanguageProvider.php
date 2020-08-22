@@ -42,6 +42,18 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
         return CaseString::snake($str)->pascal();
       }),
 
+      // Converts a pascal class name to a machine name in snake case.
+      // Note that this doesn't need to be implemented in Module Builder's JS
+      // (yet!) because it's only used during a form submit, in TestModule.
+      new ExpressionFunction('classToMachine', function ($str) { },
+      function ($arguments, $str) {
+        if (!is_string($str)) {
+          return $str;
+        }
+
+        return CaseString::pascal($str)->snake();
+      }),
+
       // Removes the portion of the given string before the marker.
       // For example, from 'prefix:main' get 'main'.
       new ExpressionFunction('stripBefore', function ($string, $marker) { },

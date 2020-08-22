@@ -263,7 +263,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
           'plain_class_name' => 'MyTest',
           'test_modules' => [
             0 => [
-              'root_name' => 'test_module',
+              // Don't specify root_name so the default is applied.
               // A plugin inside the test module.
               'plugins' => [
                 0 => [
@@ -292,9 +292,9 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'src/Plugin/Block/Alpha.php',
       'config/schema/generated_module.schema.yml',
       'tests/src/Kernel/MyTest.php',
-      'tests/modules/test_module/test_module.info.yml',
-      'tests/modules/test_module/src/Plugin/Block/Alpha.php',
-      'tests/modules/test_module/config/schema/test_module.schema.yml',
+      'tests/modules/my_test/my_test.info.yml',
+      'tests/modules/my_test/src/Plugin/Block/Alpha.php',
+      'tests/modules/my_test/config/schema/my_test.schema.yml',
     ], $files);
 
     // Check the main module .info file.
@@ -306,10 +306,10 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('core', '8.x');
 
     // Check the test module .info file.
-    $test_module_info_file = $files['tests/modules/test_module/test_module.info.yml'];
+    $test_module_info_file = $files['tests/modules/my_test/my_test.info.yml'];
 
     $yaml_tester = new YamlTester($test_module_info_file);
-    $yaml_tester->assertPropertyHasValue('name', 'Test Module');
+    $yaml_tester->assertPropertyHasValue('name', 'My Test');
     $yaml_tester->assertPropertyHasValue('type', 'module');
     $yaml_tester->assertPropertyHasValue('package', 'Testing');
     $yaml_tester->assertPropertyHasValue('core', '8.x');
@@ -323,11 +323,11 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
 
     // Check the test module plugin file.
-    $test_plugin_file = $files["tests/modules/test_module/src/Plugin/Block/Alpha.php"];
+    $test_plugin_file = $files["tests/modules/my_test/src/Plugin/Block/Alpha.php"];
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $test_plugin_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertHasClass('Drupal\my_test\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
@@ -338,7 +338,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'system',
       'user',
       'generated_module',
-      'test_module',
+      'my_test',
     ];
     $php_tester->assertClassHasPublicProperty('modules', 'array', $expected_modules_property_value);
   }

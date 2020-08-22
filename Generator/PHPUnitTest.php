@@ -134,20 +134,11 @@ class PHPUnitTest extends PHPClassFile {
         'format' => 'array',
         'acquired' => TRUE,
       ],
-      // KILL THIS FOR NOW
-      // 'test_modules' => [
-      //   'label' => 'Test modules',
-      //   'format' => 'compound',
-      //   'component_type' => 'TestModule',
-      //   'default' => function($component_data) {
-      //     return [
-      //       0 => [
-      //         // Create a default module name from the requesting test class name.
-      //         'root_name' => CaseString::pascal($component_data['test_class_name'])->snake(),
-      //       ],
-      //     ];
-      //   },
-      // ],
+      'test_modules' => [
+        'label' => 'Test modules',
+        'format' => 'compound',
+        'component_type' => 'TestModule',
+      ],
     ];
 
     // Put the parent definitions after ours.
