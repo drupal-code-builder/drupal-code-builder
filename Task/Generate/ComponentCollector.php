@@ -383,7 +383,6 @@ class ComponentCollector {
           $single_property_name = reset($component_property_names);
 
           foreach ($data_item as $delta => $simple_delta_item) {
-            dump($simple_delta_item->getName());
             $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
 
             $new_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
@@ -953,7 +952,6 @@ class ComponentCollector {
       return;
     }
 
-    // dump("PROCESS - " . $component_data->getAddress());
     // dump($component_data->export());
 
     $processing($component_data);
