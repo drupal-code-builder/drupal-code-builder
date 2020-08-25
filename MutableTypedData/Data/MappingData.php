@@ -28,7 +28,7 @@ class MappingData extends DataItem {
   /**
    * {@inheritdoc}
    */
-  public function getItems(): array {
+  public function items(): array {
     return [$this];
   }
 
