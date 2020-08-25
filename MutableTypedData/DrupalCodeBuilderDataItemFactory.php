@@ -25,7 +25,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   /**
    * {@inheritdoc}
    */
-  static protected $types = [] + [
+  static protected $types = [
     'string' => StringData::class,
     'boolean' => BooleanData::class,
     // Override to allow array access as a backwards-compatibility shim. This
