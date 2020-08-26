@@ -5,8 +5,6 @@ namespace DrupalCodeBuilder\MutableTypedData\Data;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Exception\InvalidAccessException;
 use MutableTypedData\Exception\InvalidInputException;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Represents arbitrarily-structured data.
