@@ -21,9 +21,7 @@ class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProvider
   public function getFunctions() {
     return [
       // Converts a machine name in snake case to a label in title case.
-      new ExpressionFunction('machineToLabel', function ($str) {
-        return sprintf('(is_string(%1$s) ? CaseString::snake(%1$s) : %1$s)->title()', $str);
-      },
+      new ExpressionFunction('machineToLabel', function ($str) { },
       function ($arguments, $str) {
         if (!is_string($str)) {
           return $str;
