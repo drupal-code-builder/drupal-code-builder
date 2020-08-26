@@ -35,10 +35,8 @@ class MappingData extends DataItem {
   /**
    * {@inheritdoc}
    */
-  public function validate() :ConstraintViolationListInterface {
-    $violations = new ConstraintViolationList();
-    // There are no possible violations.
-    return $violations;
+  public function validate(): array {
+    return [];
   }
 
 
