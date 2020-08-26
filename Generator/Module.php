@@ -125,6 +125,7 @@ class Module extends RootComponent {
         'process_default' => TRUE,
         'required' => TRUE,
       ],
+      // TODO: move to RootComponent.
       'readable_name' => PropertyDefinition::create('string')
         ->setLabel('Module readable name')
         ->setRequired(TRUE)
@@ -477,7 +478,7 @@ class Module extends RootComponent {
 
     return array(
       '%module'       => $module_data['root_name'],
-      '%readable'     => str_replace("'", "\'", $module_data['readable_name']),
+      '%readable'     => str_replace("'", "\'", $module_data->readable_name->value),
       '%Module'       => CaseString::title($module_data['readable_name'])->title(),
       '%sentence'     => CaseString::title($module_data['readable_name'])->sentence(),
       '%lower'        => strtolower($module_data['readable_name']),
