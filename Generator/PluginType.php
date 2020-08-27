@@ -43,7 +43,8 @@ class PluginType extends BaseGenerator {
             'plugin_type' => PropertyDefinition::create('string')
               ->setLabel('Plugin type ID')
               ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
-              ->setRequired(TRUE),
+              ->setRequired(TRUE)
+              ->setValidators('machine_name'),
             'plugin_label' => PropertyDefinition::create('string')
               ->setLabel('Plugin type label')
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
@@ -77,7 +78,8 @@ class PluginType extends BaseGenerator {
               ->setDefault(DefaultDefinition::create()
                 ->setExpression("get('..:plugin_type') ~ '_info'")
                 ->setDependencies('..:plugin_type')
-              ),
+              )
+              ->setValidators('machine_name'),
         ]),
         'yaml' => VariantDefinition::create()
           ->setLabel('Annotation plugin')
@@ -85,7 +87,8 @@ class PluginType extends BaseGenerator {
             'plugin_type' => PropertyDefinition::create('string')
               ->setLabel('Plugin type ID')
               ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
-              ->setRequired(TRUE),
+              ->setRequired(TRUE)
+              ->setValidators('machine_name'),
             'plugin_label' => PropertyDefinition::create('string')
               ->setLabel('Plugin type label')
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
@@ -106,7 +109,9 @@ class PluginType extends BaseGenerator {
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
                 ->setExpression("get('..:plugin_type') ~ '_info'")
-                ->setDependencies('..:plugin_type')),
+                ->setDependencies('..:plugin_type')
+              )
+              ->setValidators('machine_name'),
           ]),
       ]);
 

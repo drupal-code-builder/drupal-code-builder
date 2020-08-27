@@ -30,10 +30,12 @@ class PluginYamlDiscovery extends BaseGenerator {
     $definition->addProperties([
       'plugin_name' => PropertyDefinition::create('string')
         ->setLabel('Plugin ID')
-        ->setRequired(TRUE),
+        ->setRequired(TRUE)
+        ->setValidators('machine_name'),
       'plugin_class_name' => PropertyDefinition::create('string')
         ->setLabel('Plugin common class name')
-        ->setRequired(TRUE),
+        ->setRequired(TRUE)
+        ->setValidators('class_name'),
       'prefix_name' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
         ->setLiteralDefault(TRUE),
