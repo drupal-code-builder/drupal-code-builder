@@ -42,12 +42,12 @@ abstract class EntityTypeBase extends PHPClassFile {
    */
   public static function componentDataDefinition() {
     $data_definition = [
-      'entity_type_id' => [
-        'label' => 'Entity type ID',
-        'description' => "The identifier of the entity type.",
-        'required' => TRUE,
+      'entity_type_id' => PropertyDefinition::create('string')
+        ->setLabel('Entity type ID')
+        ->setDescription("The identifier of the entity type.")
+        ->setRequired(TRUE)
+        ->setValidators('machine_name'),
         // TODO: validation? static::ID_MAX_LENGTH
-      ],
       'entity_type_label' => PropertyDefinition::create('string')
         ->setLabel('Entity type label')
         ->setDescription("The human-readable label for the entity type.")
