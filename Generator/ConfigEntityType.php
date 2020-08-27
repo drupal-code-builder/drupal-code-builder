@@ -62,10 +62,10 @@ class ConfigEntityType extends EntityTypeBase {
         'description' => "The config properties that are stored for each entity of this type. An ID and label property are provided automatically.",
         'format' => 'compound',
         'properties' => [
-          'name' => [
-            'label' => 'Property name',
-            'required' => TRUE,
-          ],
+          'name' => PropertyDefinition::create('string')
+            ->setLabel('Property name')
+            ->setRequired(TRUE)
+            ->setValidators('machine_name'),
           'label' => PropertyDefinition::create('string')
             ->setLabel('Property label')
             ->setRequired(TRUE)

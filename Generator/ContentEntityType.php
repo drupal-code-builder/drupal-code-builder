@@ -210,10 +210,10 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'compound',
         // TODO: default, populated by things such as interface choice!
         'properties' => [
-          'name' => [
-            'label' => 'Field name',
-            'required' => TRUE,
-          ],
+          'name' => PropertyDefinition::create('string')
+            ->setLabel('Field name')
+            ->setRequired(TRUE)
+            ->setValidators('machine_name'),
           'label' => PropertyDefinition::create('string')
             ->setLabel('Field label')
             ->setDescription("The human-readable label for the field.")
