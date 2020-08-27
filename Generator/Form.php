@@ -24,7 +24,8 @@ class Form extends PHPClassFileWithInjection {
     $data_definition = array(
       // Move the form class name property to the top, and override its default.
       'plain_class_name' => $parent_data_definition['plain_class_name']
-        ->setLabel("The form class's plain class name, e.g. \"MyForm\"."),
+        ->setLabel("Form class name.")
+        ->setDescription("The form class's plain class name, e.g. \"MyForm\"."),
       'form_id' => PropertyDefinition::create('string')
         ->setLabel('The form ID.')
         ->setInternal(TRUE)
