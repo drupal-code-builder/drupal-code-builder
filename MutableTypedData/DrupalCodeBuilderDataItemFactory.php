@@ -9,6 +9,7 @@ use DrupalCodeBuilder\MutableTypedData\Data\MutableDataWithArrayAccess;
 use DrupalCodeBuilder\MutableTypedData\Data\MappingData;
 use DrupalCodeBuilder\MutableTypedData\Validator\ClassName;
 use DrupalCodeBuilder\MutableTypedData\Validator\MachineName;
+use DrupalCodeBuilder\MutableTypedData\Validator\ServiceName;
 use MutableTypedData\Data\StringData;
 use MutableTypedData\Data\BooleanData;
 use MutableTypedData\Data\ArrayData;
@@ -57,6 +58,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   static protected $validators = [
     'class_name' => ClassName::class,
     'machine_name' => MachineName::class,
+    'service_name' => ServiceName::class,
   ];
 
 }

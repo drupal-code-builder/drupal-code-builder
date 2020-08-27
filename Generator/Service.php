@@ -88,11 +88,11 @@ class Service extends PHPClassFileWithInjection {
         // 'default' => '',
         'process_default' => TRUE,
       ],
-      'service_name' => array(
-        'label' => 'Service name',
-        'description' => "The name of the service, without the module name prefix.",
-        'required' => TRUE,
-      ),
+      'service_name' => PropertyDefinition::create('string')
+        ->setLabel('Service name')
+        ->setDescription("The name of the service, without the module name prefix.")
+        ->setRequired(TRUE)
+        ->setValidators('service_name'),
       'prefixed_service_name' => PropertyDefinition::create('string')
         ->setLabel('The plain class name, e.g. "MyClass"')
         ->setInternal(TRUE)
