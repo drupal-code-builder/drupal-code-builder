@@ -64,7 +64,8 @@ class PHPClassFile extends PHPFile {
         ->setDefault(DefaultDefinition::create()
           ->setExpression("plainClassNameFromQualified(parent.relative_class_name.get())")
           ->setDependencies('..:relative_class_name')
-      ),
+        )
+        ->setValidators('class_name'),
       // Child classes that expose 'plain_class_name' must set a non-lazy
       // literal default for this.
       // Should not start or end with a backslash.

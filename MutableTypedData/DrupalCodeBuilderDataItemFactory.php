@@ -7,6 +7,7 @@ use DrupalCodeBuilder\ExpressionLanguage\ChangeCaseExpressionLanguageProvider;
 use DrupalCodeBuilder\MutableTypedData\Data\ComplexDataWithArrayAccess;
 use DrupalCodeBuilder\MutableTypedData\Data\MutableDataWithArrayAccess;
 use DrupalCodeBuilder\MutableTypedData\Data\MappingData;
+use DrupalCodeBuilder\MutableTypedData\Validator\ClassName;
 use MutableTypedData\Data\StringData;
 use MutableTypedData\Data\BooleanData;
 use MutableTypedData\Data\ArrayData;
@@ -47,6 +48,13 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     // This is only for internal defaults; UIs are not expected to support it.
     // TODO: find a way to segregate this.
     ArrayOperationsExpressionLanguageProvider::class
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  static protected $validators = [
+    'class_name' => ClassName::class,
   ];
 
 }
