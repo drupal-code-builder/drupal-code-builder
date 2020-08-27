@@ -13,10 +13,11 @@ class ThemeHook extends BaseGenerator {
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
       // Needs to be set to public even though this is not actually seen.
-      'theme_hook_name' => [
-        'label' => 'The theme hook name',
-        'primary' => TRUE,
-      ],
+      'theme_hook_name' => PropertyDefinition::create('string')
+        ->setLabel('Theme hook name')
+        ->setRequired(TRUE)
+        // TODO: doesn't work in UI!
+        ->setValidators('machine_name'),
     ];
   }
 
