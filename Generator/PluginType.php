@@ -68,7 +68,8 @@ class PluginType extends BaseGenerator {
               ->setDefault(DefaultDefinition::create()
                 ->setExpression("machineToClass(get('..:plugin_type'))")
                 ->setDependencies('..:plugin_type')
-              ),
+              )
+              ->setValidators('class_name'),
             'info_alter_hook' => PropertyDefinition::create('string')
               ->setLabel('Alter hook name')
               ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
