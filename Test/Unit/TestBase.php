@@ -79,7 +79,15 @@ abstract class TestBase extends TestCase {
    *  An array of files.
    */
   protected function generateComponentFilesFromData(DataItem $component_data) {
-    $component_data->validate();
+    $violations = $component_data->validate();
+
+    if ($violations) {
+      $message = [];
+      foreach ($violations as $address => $address_violations) {
+        $message[] = $address . ': ' . implode(',', $address_violations);
+      }
+      throw new \DrupalCodeBuilder\Test\Exception\ValidationException(implode('; ', $message));
+    }
 
     $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $component_data->base->value);
     $files = $task_handler_generate->generateComponent($component_data);

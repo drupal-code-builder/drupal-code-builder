@@ -266,7 +266,7 @@ class ComponentService8Test extends TestBase {
       'readme' => FALSE,
     );
 
-    $this->expectException(InvalidInputException::class);
+    $this->expectException(\DrupalCodeBuilder\Test\Exception\ValidationException::class);
 
     $files = $this->generateModuleFiles($module_data);
   }
