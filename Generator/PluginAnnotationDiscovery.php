@@ -88,7 +88,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       'plugin_name' => PropertyDefinition::create('string')
         ->setLabel('Plugin ID')
         ->setRequired(TRUE)
-        ->setValidators('machine_name'),
+        ->setValidators('plugin_name'),
       'prefixed_plugin_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setRequired(TRUE)
