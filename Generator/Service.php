@@ -83,10 +83,6 @@ class Service extends PHPClassFileWithInjection {
       'service_tag_type' => [
         'label' => 'Service type preset',
         'presets' => $presets,
-        // These are for the benefit of tests, as UIs will pass in an empty
-        // value.
-        // 'default' => '',
-        'process_default' => TRUE,
       ],
       'service_name' => PropertyDefinition::create('string')
         ->setLabel('Service name')
