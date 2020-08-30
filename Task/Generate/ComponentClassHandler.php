@@ -23,6 +23,9 @@ class ComponentClassHandler {
     // Quick hack. TODO: clean up.
     // TODO: don't always do this -- don't do this if there is one already!!!!!
     $machine_name = $machine_name ?? strtolower($component_type);
+    // TODO: argh! some component types contain ':' characters!!
+    // DIRTY HACK.
+    $machine_name = str_replace(':', '-', $machine_name);
 
     return $class::getPropertyDefinition()->setMachineName($machine_name);
   }

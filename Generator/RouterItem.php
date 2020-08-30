@@ -327,7 +327,7 @@ class RouterItem extends BaseGenerator {
         'component_type' => 'PHPClassFile',
         'relative_class_name' => $controller_relative_class,
       );
-      $components["controller:content"] = [
+      $components["controller-content"] = [
         'component_type' => 'PHPFunction',
         'containing_component' => "%requester:controller",
         'declaration' => 'public function content()',

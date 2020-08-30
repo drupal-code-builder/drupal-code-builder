@@ -164,7 +164,7 @@ class ConfigEntityType extends EntityTypeBase {
 
     foreach ($form_handlers_to_add_form_elements_to as $data_key) {
       // Special handling for the id and label properties.
-      $components[$data_key . ':label'] = [
+      $components[$data_key . '-label'] = [
         'component_type' => 'FormElement',
         'containing_component' => "%requester:{$data_key}:form",
         'form_key' => 'label',
@@ -176,7 +176,7 @@ class ConfigEntityType extends EntityTypeBase {
         ],
       ];
 
-      $components[$data_key . ':id'] = [
+      $components[$data_key . '-id'] = [
         'component_type' => 'FormElement',
         'containing_component' => "%requester:{$data_key}:form",
         'form_key' => 'id',
