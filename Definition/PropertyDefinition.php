@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Definition;
 
 use MutableTypedData\Definition\PropertyDefinition as OriginalPropertyDefinition;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Extends the basic property definition with DCB extras.
@@ -58,9 +59,10 @@ class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAcc
     if ($presets) {
       $options = [];
       foreach ($presets as $key => $preset) {
-        $options[$key] = $preset['label'];
+        $option = OptionDefinition::create($key, $preset['label'], $preset['description'] ?? NULL);
+        $options[] = $option;
       }
-      $this->setOptionsArray($options);
+      $this->setOptions(...$options);
     }
 
     return $this;
