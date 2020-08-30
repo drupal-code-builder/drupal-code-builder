@@ -54,9 +54,8 @@ class ContentEntityType extends EntityTypeBase {
     // Set up the entity type functionality preset options.
     $data_definition['functionality']['presets'] = [
       'fieldable' => [
-        'label' => 'Fieldable - allows custom fields',
-        // TODO: Not supported yet; will work on 3.3.x.
-        'description' => "Whether this entity type allows custom fields.",
+        'label' => 'Fieldable',
+        'description' => "Allows the entity type to have fields.",
         // No actual data, as the field_ui_base_route depends on whether this
         // is a bundle entity!
         // TODO: this would work if bundle entity is a subclass generator.
@@ -72,7 +71,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'revisionable' => [
-        'label' => 'Revisionable - entities can have multiple revisions',
+        'label' => 'Revisionable',
+        'description' => "Allows the entities to have multiple revisions.",
         'data' => [
           'force' => [
             'entity_keys' => [
@@ -84,7 +84,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'translatable' => [
-        'label' => 'Translatable - entities can be translated',
+        'label' => 'Translatable',
+        'description' => "Allows the entities to be translated.",
         'data' => [
           'force' => [
             'entity_keys' => [
@@ -96,7 +97,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'changed' => [
-        'label' => "Changed - entities store a timetamp for their last change; implement EntityChangedInterface",
+        'label' => "Changed",
+        'description' => "Entities store a timetamp for their last change. Entity class implements EntityChangedInterface.",
         'data' => [
           'force' => [
             'interface_parents' => [
@@ -109,7 +111,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'owner' => [
-        'label' => "Owner - entities each have an owner; implement EntityOwnerInterface",
+        'label' => "Owner",
+        'description' => "Entities have an owner. Entity class implements EntityOwnerInterface.",
         'data' => [
           'force' => [
             'interface_parents' => [
@@ -131,7 +134,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'published' => [
-        'label' => "Published - entities have a field indicating whether they are published or not; implement EntityPublishedInterface",
+        'label' => "Published",
+        'description' => "Entities have a field indicating whether they are published or not. Entity class implements EntityPublishedInterface.",
         'data' => [
           'force' => [
             'interface_parents' => [
