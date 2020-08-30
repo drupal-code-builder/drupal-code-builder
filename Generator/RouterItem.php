@@ -68,7 +68,7 @@ class RouterItem extends BaseGenerator {
                 ->setDefault(DefaultDefinition::create()
                   ->setCallable(function (DataItem $component_data) {
                     // Create a controller name from the route path.
-                    $path  = str_replace(['{', '}'], '', $component_data->getRelative('..:..:path')->value);
+                    $path  = str_replace(['{', '}'], '', $component_data->getItem('..:..:path')->value);
                     $snake = str_replace(['/', '-'], '_', $path);
                     $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
                     return $controller_class_name;
