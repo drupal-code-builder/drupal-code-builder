@@ -10,6 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  * @group entity
+ * @group pass
  */
 class ComponentConfigEntityType8Test extends TestBase {
 
@@ -421,9 +422,9 @@ class ComponentConfigEntityType8Test extends TestBase {
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
+    $yaml_tester->assertHasProperty('administer kitty_cat entities', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'title'], 'Administer Kitty cat entities', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'description'], 'Administer Kitty cat entities', "The permission has the expected description.");
 
     // Check the menu links file.
     $menu_links_file = $files["test_module.links.menu.yml"];

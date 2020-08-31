@@ -26,7 +26,6 @@ class PHPInterfaceFile extends PHPClassFile {
       'label' => 'Parent interface names',
       'format' => 'array',
       'internal' => TRUE,
-      'default' => [],
     ];
 
     return $definition;
@@ -38,7 +37,7 @@ class PHPInterfaceFile extends PHPClassFile {
   function class_declaration() {
     $line = '';
     $line .= "interface {$this->component_data['plain_class_name']}";
-    if ($this->component_data['parent_interface_names']) {
+    if (!$this->component_data->parent_interface_names->isEmpty()) {
       $line .= ' extends ';
       $line .= implode(', ', $this->component_data['parent_interface_names']);
     }

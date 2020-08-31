@@ -2,14 +2,16 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+use MutableTypedData\Exception\InvalidInputException;
 
 /**
  * Tests the Plugins generator class.
  *
  * @group yaml
+ * @group plugin
+ * @group pass
  */
 class ComponentPluginsAnnotated8Test extends TestBase {
 
@@ -93,7 +95,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
         0 => [
           'plugin_type' => 'block',
           'plugin_name' => 'alpha',
-          'plugin_class_name' => 'OtherClassName',
+          'plain_class_name' => 'OtherClassName',
         ],
       ),
       'readme' => FALSE,
@@ -138,12 +140,12 @@ class ComponentPluginsAnnotated8Test extends TestBase {
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
-    $file_names = array_keys($files);
 
-    $this->assertCount(3, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
-    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a schema file.");
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "config/schema/test_module.schema.yml",
+      "src/Plugin/Block/Alpha.php",
+    ], $files);
 
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
@@ -188,8 +190,11 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
   /**
    * Test Plugins component using the plugin folder name.
+   *
+   * TODO: Specifying the plugin type with a folder name is temporarily removed
+   * as there aren't yet any UIs that use it.
    */
-  function testPluginsGenerationFromPluginFolder() {
+  function XtestPluginsGenerationFromPluginFolder() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = array(
@@ -515,11 +520,11 @@ class ComponentPluginsAnnotated8Test extends TestBase {
           'entity_properties' => [
             0 => [
               'name' => 'filling',
-              'type' => 'string',
+              'type' => 'text',
             ],
             1 => [
               'name' => 'colour',
-              'type' => 'string',
+              'type' => 'text',
             ],
           ],
         ],

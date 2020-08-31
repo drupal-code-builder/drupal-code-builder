@@ -10,6 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  * @group di
+ * @group pass
  */
 class ComponentPluginType8Test extends TestBase {
 
@@ -35,8 +36,8 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'cat_feeder',
           'discovery_type' => 'annotation',
+          'plugin_type' => 'cat_feeder',
         ]
       ),
       'readme' => FALSE,
@@ -121,7 +122,7 @@ class ComponentPluginType8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Component\Annotation\Plugin');
     $php_tester->assertClassHasPublicProperty('id', 'string');
     $php_tester->assertClassHasPublicProperty('label', 'Drupal\Core\Annotation\Translation');
-    $php_tester->assertClassDocBlockHasLine('Defines the Cat feeder plugin annotation object.');
+    $php_tester->assertClassDocBlockHasLine('Defines the Cat Feeder plugin annotation object.');
     $php_tester->assertClassDocBlockHasLine('Plugin namespace: CatFeeder.');
     $php_tester->assertClassDocBlockHasLine('@Annotation');
 
@@ -168,7 +169,7 @@ class ComponentPluginType8Test extends TestBase {
 
     $yaml_tester = new YamlTester($plugin_type_file);
     $yaml_tester->assertHasProperty('test_module.cat_feeder');
-    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'label'], 'Cat feeder');
+    $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'label'], 'Cat Feeder');
     $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'plugin_manager_service_id'], 'plugin.manager.test_module_cat_feeder');
     $yaml_tester->assertPropertyHasValue(['test_module.cat_feeder', 'plugin_definition_decorator_class'], 'Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator');
   }
@@ -188,8 +189,8 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'cat_feeder',
           'discovery_type' => 'annotation',
+          'plugin_type' => 'cat_feeder',
           'plugin_subdirectory' => 'Animals/CatFeeder'
         ]
       ),
@@ -236,8 +237,8 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'cat_feeder',
           'discovery_type' => 'yaml',
+          'plugin_type' => 'cat_feeder',
         ]
       ),
       'readme' => FALSE,
@@ -333,13 +334,13 @@ class ComponentPluginType8Test extends TestBase {
       ),
       'plugin_types' => array(
         0 => [
-          'plugin_type' => 'alpha',
           // Use annotation type for both, as that generates more things.
           'discovery_type' => 'annotation',
+          'plugin_type' => 'alpha',
         ],
         1 => [
-          'plugin_type' => 'beta',
           'discovery_type' => 'annotation',
+          'plugin_type' => 'beta',
         ],
       ),
       'readme' => FALSE,

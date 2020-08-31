@@ -4,6 +4,7 @@
   "license": "GPL-2.0+",
   "require": {
     "php": "^7.0",
+    "joachim-n/mutable-typed-data": "^1.0",
     "joachim-n/case-converter": "^1.0"
   },
   "require-dev": {

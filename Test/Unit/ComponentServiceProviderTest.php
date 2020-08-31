@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests for Service provider component.
+ *
+ * @group pass
  */
 class ComponentServiceProviderTest extends TestBase {
 

@@ -3,6 +3,14 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\DefinitionProviderInterface;
 
 /**
  * Abstract base Generator for components.
@@ -77,7 +85,7 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
  *
  * @see Generate::generateComponent()
  */
-abstract class BaseGenerator {
+abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderInterface {
 
   /**
    * Property attribute shorthand for acquired properties.
@@ -92,7 +100,7 @@ abstract class BaseGenerator {
   public $type;
 
   /**
-   * The data for the component.
+   * The data item for the component.
    *
    * On the base component (e.g., 'Module'), this is the entirety of the data
    * requested by the user.
@@ -100,7 +108,7 @@ abstract class BaseGenerator {
    * On other components (e.g., 'Routing'), this contains data from the request
    * for the component. Properties will depend on the class.
    */
-  public $component_data = array();
+  public $component_data;
 
   /**
    * Boolean to indicate whether this component already exists.
@@ -112,10 +120,10 @@ abstract class BaseGenerator {
   /**
    * Constructor method; sets the component data.
    *
-   * @param $component_data
+   * @param \MutableTypedData\Data\DataItem $component_data
    *   An array of data for the component.
    */
-  function __construct($component_data) {
+  function __construct(DataItem $component_data) {
     $this->component_data = $component_data;
 
     // Set the type. This is the short class name without the numeric version
@@ -127,7 +135,352 @@ abstract class BaseGenerator {
   }
 
   /**
+   * Gets the address of this component's data.
+   */
+  public function getAddress() {
+    return $this->component_data->getAddress();
+  }
+
+  /**
+   * Gets the type for a class.
+   *
+   * @param string $class
+   *   The fully-qualified class name.
+   *
+   * @return string
+   *   The component type.
+   */
+  protected static function deriveType(string $class) :string {
+    $class_pieces = explode('\\', $class);
+    $short_class = array_pop($class_pieces);
+    return preg_replace('@\d+$@', '', $short_class);
+  }
+
+  /**
+   * Implements DefinitionProviderInterface's method.
+   *
+   * We need the base PropertyDefinition here for the interface compatibility.
+   */
+  public static function getDefinition(): BasePropertyDefinition {
+    return static::getPropertyDefinition();
+  }
+
+  /**
+   * Gets the data definition for this component.
+   *
+   * This shouldn't set things on its root data such as required, cardinality,
+   * or label, as these may depend on where it's used.
+   *
+   * Use static::getPropertyDefinitionForGeneratorType() to use the definition
+   * from one generator inside another's.
+   *
+   * @param string $data_type
+   *   The data type. TODO: Obsolete.
+   *
+   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
+   *   The data definition.
+   */
+  public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
+    $type = static::deriveType(static::class);
+
+    // Get the array property info from the old definition method.
+    $array_property_info = static::componentDataDefinition();
+
+    $definition = GeneratorDefinition::createFromGeneratorType($type, 'complex');
+
+    static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
+
+    return $definition;
+  }
+
+  // backwards compatiblity shim.
+  // process the old array property info and add it to the property definition
+  // for this generator.
+  // TODO: move this elsewhere?
+  public static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
+    $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
+
+    $converted_defs = [];
+
+    $dummy_component_data = [];
+
+    foreach ($array_property_info as $name => $def) {
+      // Allow some definitions to be updated to PropertyDefinitions.
+      if ($def instanceof PropertyDefinition) {
+        $def->setMachineName($name);
+        $definition->addProperty($def);
+
+        continue;
+      }
+
+      // no, we need thse, just hide them!
+      // if (!empty($def['computed'])) {
+      //   continue;
+      // }
+      // if (!empty($def['internal'])) {
+      //   continue;
+      // }
+      // if (!empty($def['acquired'])) {
+      //   continue;
+      // }
+
+      // Add defaults.
+      $def += array(
+        'required' => FALSE,
+        'format' => 'string',
+      );
+
+      if (isset($def['component_type']) && $def['format'] == 'compound') {
+        // Argh, need to instantiate the class handler outside of the Generate
+        // task... time for a proper service architecture?
+        $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+        $generator_class = $class_handler->getGeneratorClass($def['component_type']);
+
+        // TODO: -- the GENERATOR knows what data type it is!!!
+        $converted_defs[$name] = $generator_class::getPropertyDefinition('complex');
+
+        $converted_defs[$name]->setMultiple(TRUE);
+      }
+      else {
+        switch ($def['format']) {
+          case 'compound':
+            $converted_defs[$name] = PropertyDefinition::create('complex')
+              ->setMultiple(TRUE);
+
+            static::addArrayPropertyInfoToDefinition($converted_defs[$name], $def['properties']);
+
+            break;
+
+          case 'array':
+            if (isset($def['component_type'])) {
+              $converted_defs[$name] = GeneratorDefinition::createFromGeneratorType($def['component_type'], 'string')
+                ->setMultiple(TRUE);
+            }
+            else {
+              $converted_defs[$name] = PropertyDefinition::create('string')
+              ->setMultiple(TRUE);
+            }
+
+            break;
+
+          case 'boolean':
+            // Some generator properties only show a boolean in the UI, as they
+            // have no public properties.
+            if (isset($def['component_type'])) {
+              $converted_defs[$name] = GeneratorDefinition::createFromGeneratorType($def['component_type'], 'boolean');
+            }
+            else {
+              $converted_defs[$name] = PropertyDefinition::create('boolean');
+            }
+            break;
+
+          // This is a format that wasn't in 3.x, added here so various array
+          // definitions can just have their format changed.
+          case 'mapping':
+            $converted_defs[$name] = PropertyDefinition::create('mapping');
+            break;
+
+          default:
+            $converted_defs[$name] = PropertyDefinition::create('string');
+
+        }
+      }
+
+      if (empty($converted_defs[$name])) {
+        throw new \Exception("Failed to convert property $name.");
+      }
+
+      if (!empty($def['computed'])) {
+        $converted_defs[$name]->setInternal(TRUE);
+      }
+      if (!empty($def['internal'])) {
+        $converted_defs[$name]->setInternal(TRUE);
+      }
+      if (!empty($def['acquired'])) {
+        $converted_defs[$name]->setInternal(TRUE);
+
+        // QUICK HACK!
+        // 'acquired_alias' is actually only used for ONE property, so hardcode
+        // that here.
+        if ($name == 'root_component_name') {
+          $expression = "getRootComponentName(requester)";
+        }
+        else {
+          if ($converted_defs[$name]->isMultiple()) {
+            // Urgh.
+            $expression = "requester.{$name}.export()";
+          }
+          else {
+            $expression = "requester.{$name}.value";
+          }
+        }
+        // dump("AQUIRE $name with $expression");
+
+        $converted_defs[$name]->setAcquiringExpression($expression);
+      }
+
+      if (isset($def['default'])) {
+        $convert_literal_default = FALSE;
+        // String and numeric defaults are literal values.
+        if (is_scalar($def['default'])) {
+          $convert_literal_default = TRUE;
+        }
+
+        // Array defaults are ok for a multiple value.
+        // TODO: not for complex data though!
+        if (is_array($def['default']) && $converted_defs[$name]->isMultiple()) {
+          $convert_literal_default = TRUE;
+        }
+
+        // Array defaults are ok for mappings.
+        if (is_array($def['default']) && $converted_defs[$name]->getType() == 'mapping') {
+          $convert_literal_default = TRUE;
+        }
+
+        if ($convert_literal_default) {
+          $converted_defs[$name]->setLiteralDefault($def['default']);
+        }
+        elseif (is_callable($def['default'])) {
+          // dump($def);
+          throw new \Exception(sprintf(
+            "Array info callable default needs to be converted at property '%s' of %s.",
+            $name,
+            $definition->getName()
+          ));
+        }
+        elseif ($def['default'] instanceof DefaultDefinition) {
+          $converted_defs[$name]->setDefault($def['default']);
+        }
+        else {
+          throw new \Exception(sprintf(
+            "Unhandled default at property '%s' of %s.",
+            $name,
+            $definition->getName()
+          ));
+        }
+      }
+
+      /*
+      special cases:
+
+      - textarea for multi-valued string
+      - autocomplete for services
+      - hooks!
+      - hook groups
+      - dropdowns everywhere instead of radios?
+
+      Broken:
+
+      - Entity functionality item -- 'presets' not converted to options!
+
+      */
+
+      if (isset($def['label'])) {
+        $converted_defs[$name]->setLabel($def['label']);
+      }
+
+      if (isset($def['description'])) {
+        $converted_defs[$name]->setDescription($def['description']);
+      }
+
+      if (isset($def['cardinality'])) {
+        $converted_defs[$name]->setMaxCardinality($def['cardinality']);
+      }
+
+      if (isset($def['options'])) {
+        if (is_array($def['options'])) {
+          foreach ($def['options'] as $value => $label) {
+            $converted_defs[$name]->addOption(OptionDefinition::create($value, $label));
+          }
+        }
+        elseif (is_callable($def['options'])) {
+          // The 'options' attribute is a callback that supplies the options
+          // array.
+          $options = $def['options']($property_info);
+
+          $converted_defs[$name]->setOptionsArray($options);
+        }
+        elseif (is_string($def['options']) && strpos($def['options'], ':') !== FALSE) {
+          // The 'options' attribute is in the form 'TASKNAME:METHOD', to call to
+          // get the options array.
+          list($task_name, $method) = explode(':', $def['options']);
+
+          $task_handler = \DrupalCodeBuilder\Factory::getTask($task_name);
+
+          $options = call_user_func([$task_handler, $method]);
+
+          $converted_defs[$name]->setOptionsArray($options);
+        }
+        else {
+          // The 'options' attribute format is incorrect.
+          throw new \Exception("Unable to prepare options for property $name.");
+        }
+
+      }
+
+      if (isset($def['presets'])) {
+        $converted_defs[$name]->setPresets($def['presets']);
+      }
+
+      if (isset($def['processing'])) {
+        $converted_defs[$name]->setProcessing($def['processing']);
+      }
+
+      if (!empty($def['process_empty'])) {
+        // We don't do anything with process_empty.
+      }
+
+      if ($def['required']) {
+        $converted_defs[$name]->setRequired(TRUE);
+      }
+      // The 'process_default' attribute basically means a default should be
+      // filled in. This is the same as a data item being required and having a
+      // default, since validation fills the default in.
+      // Note however that defaults for multi-valued data are not yet supported
+      // in MTB.
+      if (!empty($def['process_default']) && !$converted_defs[$name]->isMultiple()) {
+        if ($converted_defs[$name]->isMultiple()) {
+          throw new \Exception("Process default and multiple property $name!");
+        }
+
+        // TODO: probably no longer needed as defaults are always filled in!
+        $converted_defs[$name]->setRequired(TRUE);
+      }
+
+      $converted_defs[$name]->setMachineName($name);
+
+      $definition->addProperty($converted_defs[$name]);
+    }
+  }
+
+  public function isRootComponent(): bool {
+    return FALSE;
+  }
+
+  // helper for requiredComponents()
+  protected function getDataForGenerator(string $generator_type) {
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $definition = $class_handler->getComponentPropertyDefinition($generator_type);
+    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    return $data;
+  }
+
+  // TODO: move this to a task handler!
+  protected static function getPropertyDefinitionForGeneratorType(string $component_type) {
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $generator_class = $class_handler->getGeneratorClass($component_type);
+
+    return $generator_class::getPropertyDefinition();
+  }
+
+  /**
    * Define the component data this component needs to function.
+   *
+   * This currently works with a conversion layer which processes the return
+   * of this method into PropertyDefinition objects.
+   *
+   * TODO: remove this once all definitions are converted to object-based data
+   * definitions.
    *
    * This returns an array of data that defines the component data that
    * this component should be given to perform its work. This includes:
@@ -360,8 +713,40 @@ abstract class BaseGenerator {
    *   Boolean indicating whether any data needed to be merged: TRUE if so,
    *   FALSE if nothing was merged because all values were the same.
    */
-  public function mergeComponentData($additional_component_data) {
+  public function mergeComponentData(DataItem $additional_component_data) {
     $differences_merged = FALSE;
+
+    $component_property_definition = static::getPropertyDefinition();
+
+    foreach ($component_property_definition->getProperties() as $property_name => $property_definition) {
+      // Only merge array properties.
+      // or WAIT is this only mapping properties???? or what?
+      if (!$property_definition->isMultiple() && $property_definition->getType() != 'mapping') {
+        // Don't merge this property, but check that we're not throwing away
+        // data from the additional data.
+        assert(
+          $this->component_data[$property_name] == $additional_component_data->{$property_name}->get(),
+          "Attempted to discard request for new component, but failed on property $property_name with existing data "
+            . print_r($this->component_data, TRUE)
+            . " and new data "
+            . print_r($additional_component_data->export(), TRUE)
+        );
+
+        continue;
+      }
+
+      if ($this->component_data[$property_name] != $additional_component_data->{$property_name}->get()) {
+        $differences_merged = TRUE;
+
+        $this->component_data->$property_name = array_merge_recursive(
+          $this->component_data[$property_name],
+          $additional_component_data->{$property_name}->export()
+        );
+      }
+    }
+
+    return $differences_merged;
+
 
     // Get the property info for just this component: we don't care about
     // going into compound properties.
@@ -441,7 +826,7 @@ abstract class BaseGenerator {
    * @see ComponentCollection::assembleComponentTree()
    */
   function containingComponent() {
-    return $this->component_data['containing_component'] ?? NULL;
+    return $this->component_data->containing_component->value ?? NULL;
   }
 
   /**

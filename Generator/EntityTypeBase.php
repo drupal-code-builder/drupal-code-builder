@@ -2,10 +2,13 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Base generator entity types.
@@ -39,33 +42,30 @@ abstract class EntityTypeBase extends PHPClassFile {
    */
   public static function componentDataDefinition() {
     $data_definition = [
-      'entity_type_id' => [
-        'label' => 'Entity type ID',
-        'description' => "The identifier of the entity type.",
-        'required' => TRUE,
+      'entity_type_id' => PropertyDefinition::create('string')
+        ->setLabel('Entity type ID')
+        ->setDescription("The identifier of the entity type.")
+        ->setRequired(TRUE)
+        ->setValidators('machine_name'),
         // TODO: validation? static::ID_MAX_LENGTH
-      ],
-      'entity_type_label' => [
-        'label' => 'Entity type label',
-        'description' => "The human-readable label for the entity type.",
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          $entity_type_id = $component_data['entity_type_id'];
-
-          // Convert the entity type to camel case. E.g., 'my_entity_type'
-          //  becomes 'My Entity Type'.
-          return CaseString::snake($entity_type_id)->title();
-        },
-      ],
-      'entity_class_name' => [
-        'label' => 'Entity class name',
-        'description' => "The short class name of the entity.",
-        'process_default' => TRUE,
-        'default' => function($component_data) {
-          $entity_type_id = $component_data['entity_type_id'];
-          return CaseString::snake($entity_type_id)->pascal();
-        },
-      ],
+      'entity_type_label' => PropertyDefinition::create('string')
+        ->setLabel('Entity type label')
+        ->setDescription("The human-readable label for the entity type.")
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(get('..:entity_type_id'))")
+            ->setDependencies('..:entity_type_id')
+        ),
+      'plain_class_name' => PropertyDefinition::create('string')
+        ->setLabel('Entity class name')
+        ->setDescription("The short class name of the entity.")
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToClass(get('..:entity_type_id'))")
+            ->setDependencies('..:entity_type_id')
+        ),
       'functionality' => [
         'label' => 'Entity functionality',
         'description' => "Characteristics of the entity type that provide different kinds of functionality.",
@@ -90,55 +90,43 @@ abstract class EntityTypeBase extends PHPClassFile {
           'default' => 'Default UI',
           'admin' => 'Admin UI',
         ],
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          if (!isset($component_data['handler_route_provider']) ||
-            $component_data['handler_route_provider'] != $value) {
-            $component_data['handler_route_provider'] = $value;
+        'processing' => function(DataItem $component_data) {
+          $entity_data = $component_data->getParent();
+          if ($entity_data->handler_route_provider->isEmpty() ||
+            $entity_data->handler_route_provider->value != $component_data->value) {
+            $entity_data->handler_route_provider = $component_data->value;
           }
 
-          $component_data['handler_form_default'] = 'custom';
+          $entity_data->handler_form_default = 'custom';
 
           // The UI option sets the 'delete-form' link template, so we need to
           // set a form to handler it. The core form suffices.
-          $component_data['handler_form_delete'] = 'core';
+          $entity_data->handler_form_delete = 'core';
 
-          $component_data['handler_list_builder'] = 'custom';
+          $entity_data->handler_list_builder = 'custom';
         },
       ],
       'interface_parents' => [
         'label' => 'Interface parents',
         'description' => "The interfaces the entity interface inherits from.",
         'format' => 'array',
-        'computed' => TRUE,
-        // The basic value is set in a processing callback by the child classes,
-        // so that it gets added to values from the 'functionality' preset.
-        // TODO: figure out how to have presets merge with default values.
-        'default' => [],
-        // This is required so the basic value gets added even if no interfaces
-        // are supplied by the 'functionality' preset.
-        'process_empty' => TRUE,
+        'internal' => TRUE,
       ],
       'entity_keys' => [
         'label' => 'Entity keys',
-        // Note that the format here is abused: keys are used as well as values!
-        'format' => 'array',
+        'format' => 'mapping',
         'computed' => TRUE,
-        // This uses a 'processing' callback rather than 'default' to set the
-        // computed value, so that we can run after the preset values are
-        // applied to add defaults and set the ordering. Accordingly, we have
-        // to force the processing to be applied, and we need an empty array
-        // as an initial default for the processing to apply to.
-        'default' => [],
-        'process_empty' => TRUE,
-        // Child classes set the processing callback.
+        // TODO: check if this can be removed.
+        // 'process_empty' => TRUE,
+        // Child classes set the default value.
       ],
-      'entity_interface_name' => [
-        'label' => 'Interface',
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return $component_data['entity_class_name'] . 'Interface';
-        },
-      ],
+      'entity_interface_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("get('..:plain_class_name') ~ 'Interface'")
+            ->setDependencies('..:plain_class_name')
+        ),
     ];
 
     // Create the property for the handler.
@@ -183,16 +171,16 @@ abstract class EntityTypeBase extends PHPClassFile {
             // already.
             // TODO: this assumes the mode of the default handler type is
             // 'core_none'.
-            'processing' => function($value, &$component_data, $property_name, &$property_info) use ($default_handler_type) {
-              if (empty($component_data[$property_name]) || $component_data[$property_name] == 'none') {
+            'processing' => function(DataItem $component_data) use ($default_handler_type) {
+              if ($component_data->isEmpty() || $component_data->value == 'none') {
                 // Nothing to do; this isn't set to use anything.
                 return;
               }
 
               $default_handler_key = "handler_{$default_handler_type}";
 
-              if (empty($component_data[$default_handler_key]) || $component_data[$default_handler_key] == 'none') {
-                $component_data[$default_handler_key] = 'core';
+              if ($component_data->getParent()->{$default_handler_key}->isEmpty() || $component_data->getParent()->{$default_handler_key}->value == 'none') {
+                $component_data->getParent()->{$default_handler_key} = 'core';
               }
             },
           ];
@@ -228,16 +216,17 @@ abstract class EntityTypeBase extends PHPClassFile {
     //   handlers exist and crash without one.
     // This can't be done in the processing callback for those properties, as
     // processing callback is not applied to an empty property.
-    $data_definition['handler_route_provider']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      if (!empty($component_data['handler_route_provider']) && $component_data['handler_route_provider'] != 'none') {
-        $component_data['admin_permission'] = TRUE;
+    $data_definition['handler_route_provider']['processing'] = function(DataItem $component_data) {
+      $entity_data = $component_data->getParent();
+      if (!$entity_data->handler_route_provider->isEmpty() && $entity_data->handler_route_provider->value != 'none') {
+        $entity_data->admin_permission = TRUE;
 
-        if (empty($component_data['handler_form_default']) || $component_data['handler_form_default'] == 'none') {
-          $component_data['handler_form_default'] = 'core';
+        if ($entity_data->handler_form_default->value != 'custom') {
+          $entity_data->handler_form_default = 'core';
         }
 
-        if (empty($component_data['handler_list_builder']) || $component_data['handler_list_builder'] == 'none') {
-          $component_data['handler_list_builder'] = 'core';
+        if ($entity_data->handler_list_builder->value != 'custom') {
+          $entity_data->handler_list_builder = 'core';
         }
       }
     };
@@ -248,38 +237,38 @@ abstract class EntityTypeBase extends PHPClassFile {
       'description' => "Whether to provide an admin permission. (Always set if a route provider handler is used.)",
       'format' => 'boolean',
     ];
-    $data_definition['admin_permission_name'] = [
-      'label' => 'Admin permission name',
-      'computed' => TRUE,
-      'default' => function ($component_data) {
-        if (!empty($component_data['admin_permission'])) {
-          $entity_type_id = $component_data['entity_type_id'];
-          // TODO: add a lower() to case converter!
-          return 'administer ' . strtolower(CaseString::snake($entity_type_id)->sentence()) . 's';
-        }
-      },
-    ];
+    $data_definition['admin_permission_name'] = PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("'administer ' ~ get('..:entity_type_id') ~ ' entities'")
+            ->setDependencies('..:entity_type_id')
+        );
 
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
-    // Override some parent definitions to provide computed defaults.
-    $data_definition['relative_class_name']['default'] = function ($component_data) {
-      return [
-        'Entity',
-        $component_data['entity_class_name'],
-      ];
-    };
-    $data_definition['docblock_first_line']['default'] = function ($component_data) {
-      return "Provides the {$component_data['entity_type_label']} entity.";
-    };
+    // Make one of the basic class name properties internal.
+    $data_definition['relative_class_name']->setInternal(TRUE);
 
-    $data_definition['interfaces']['computed'] = TRUE;
-    $data_definition['interfaces']['default'] = function ($component_data) {
-      return [
-        $component_data['entity_interface_name'],
-      ];
-    };
+    // Override some defaults.
+    // Put the class in the 'Entity' relative namespace.
+    $data_definition['relative_namespace']->getDefault()
+      ->setLiteral('Entity');
+
+    $data_definition['class_docblock_lines']
+      ->setDefault(
+        DefaultDefinition::create()
+          // Expression Language lets us define arrays, which is nice.
+          ->setExpression("['Provides the ' ~ get('..:entity_type_label') ~ ' entity.']")
+      );
+
+    $data_definition['interfaces']->setDefault(
+      DefaultDefinition::create()
+        // Expression Language lets us define arrays, which is nice.
+        // TODO: why do we have the separate entity_interface_name??
+        ->setExpression("[get('..:entity_interface_name')]")
+    );
 
     return $data_definition;
   }
@@ -400,16 +389,11 @@ abstract class EntityTypeBase extends PHPClassFile {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
-    //dump($this->component_data);
-
     $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
-      'relative_class_name' => [
-        'Entity',
-        $this->component_data['entity_interface_name'],
-      ],
+      'relative_class_name' => 'Entity\\' . $this->component_data['entity_interface_name'],
       'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
-      'parent_interface_names' => $this->component_data['interface_parents'],
+      'parent_interface_names' => $this->component_data->interface_parents->values(),
     ];
 
     // Handlers.
@@ -439,7 +423,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
         'parent_class_name' => $handler_type_info['base_class'],
-        'relative_class_name' => $this->getRelativeHandlerClassNamePieces($key, $handler_type_info),
+        'relative_class_name' => implode('\\', $this->getRelativeHandlerClassNamePieces($key, $handler_type_info)),
       ];
 
       if (isset($handler_type_info['handler_properties'])) {
@@ -452,11 +436,7 @@ abstract class EntityTypeBase extends PHPClassFile {
     // form handler if that is present.
     if (isset($components['handler_form_default'])) {
       // Hackily make the full class name here.
-      $class_name_pieces = array_merge([
-        'Drupal',
-        '%module',
-      ], $components['handler_form_default']['relative_class_name']);
-      $class_name = '\\' . self::makeQualifiedClassName($class_name_pieces);
+      $class_name = '\Drupal\%module\\' . $components['handler_form_default']['relative_class_name'];
 
       foreach (['handler_form_add', 'handler_form_edit'] as $key) {
         if (isset($components[$key])) {
@@ -466,20 +446,21 @@ abstract class EntityTypeBase extends PHPClassFile {
     }
 
     // Admin permission.
-    if ($this->component_data['admin_permission_name']) {
+    if ($this->component_data['admin_permission']) {
       $admin_permission_name = $this->component_data['admin_permission_name'];
 
       $components[$admin_permission_name] = array(
         'component_type' => 'Permission',
         'permission' => $admin_permission_name,
+        'title' => 'Administer ' . CaseString::snake($this->component_data->entity_type_id->value)->sentence() . ' entities',
       );
     }
 
     // Add menu plugins for the entity type if the UI option is set.
-    if (!empty($this->component_data['entity_ui'])) {
+    if ($this->component_data['entity_ui']) {
       // Add the 'add' button to appear on the collection route.
       $components['collection_menu_action' . $this->component_data['entity_type_id']] = [
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.local_action',
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.add",
@@ -610,7 +591,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       $annotation_data['handlers'] = $handler_data;
     }
 
-    if ($this->component_data['admin_permission_name']) {
+    if ($this->component_data['admin_permission']) {
       $annotation_data['admin_permission'] = $this->component_data['admin_permission_name'];
     }
 
@@ -630,10 +611,10 @@ abstract class EntityTypeBase extends PHPClassFile {
    */
   protected function makeShortHandlerClassName($handler_type_key, $handler_type_info) {
     if (isset($handler_type_info['class_name_suffix'])) {
-      $short_class_name = $this->component_data['entity_class_name'] .  $handler_type_info['class_name_suffix'];
+      $short_class_name = $this->component_data['plain_class_name'] .  $handler_type_info['class_name_suffix'];
     }
     else {
-      $short_class_name = $this->component_data['entity_class_name'] .  CaseString::snake($handler_type_key)->pascal();
+      $short_class_name = $this->component_data['plain_class_name'] .  CaseString::snake($handler_type_key)->pascal();
     }
 
     return $short_class_name;

@@ -2,10 +2,14 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for a content entity type.
@@ -50,17 +54,25 @@ class ContentEntityType extends EntityTypeBase {
     // Set up the entity type functionality preset options.
     $data_definition['functionality']['presets'] = [
       'fieldable' => [
-        'label' => 'Fieldable - allows custom fields',
-        // TODO: Not supported yet; will work on 3.3.x.
-        'description' => "Whether this entity type allows custom fields.",
+        'label' => 'Fieldable',
+        'description' => "Allows the entity type to have fields.",
         // No actual data, as the field_ui_base_route depends on whether this
         // is a bundle entity!
         // TODO: this would work if bundle entity is a subclass generator.
         'data' => [
+          'force' => [
+            // Argh need to set this to an empty value so processing gets
+            // applied.
+            // TODO: restore 'process empty' property?
+            'entity_keys' => [
+              'value' => []
+            ],
+          ],
         ],
       ],
       'revisionable' => [
-        'label' => 'Revisionable - entities can have multiple revisions',
+        'label' => 'Revisionable',
+        'description' => "Allows the entities to have multiple revisions.",
         'data' => [
           'force' => [
             'entity_keys' => [
@@ -72,7 +84,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'translatable' => [
-        'label' => 'Translatable - entities can be translated',
+        'label' => 'Translatable',
+        'description' => "Allows the entities to be translated.",
         'data' => [
           'force' => [
             'entity_keys' => [
@@ -84,7 +97,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'changed' => [
-        'label' => "Changed - entities store a timetamp for their last change; implement EntityChangedInterface",
+        'label' => "Changed",
+        'description' => "Entities store a timetamp for their last change. Entity class implements EntityChangedInterface.",
         'data' => [
           'force' => [
             'interface_parents' => [
@@ -97,7 +111,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'owner' => [
-        'label' => "Owner - entities each have an owner; implement EntityOwnerInterface",
+        'label' => "Owner",
+        'description' => "Entities have an owner. Entity class implements EntityOwnerInterface.",
         'data' => [
           'force' => [
             'interface_parents' => [
@@ -119,7 +134,8 @@ class ContentEntityType extends EntityTypeBase {
         ],
       ],
       'published' => [
-        'label' => "Published - entities have a field indicating whether they are published or not; implement EntityPublishedInterface",
+        'label' => "Published",
+        'description' => "Entities have a field indicating whether they are published or not. Entity class implements EntityPublishedInterface.",
         'data' => [
           'force' => [
             'interface_parents' => [
@@ -149,63 +165,45 @@ class ContentEntityType extends EntityTypeBase {
     $bundle_entity_properties = [
       // Single place to compute a bundle entity type ID. Here rather than in
       // the bundle generator, as this component needs it too.
-      // This is always computed, even when there is no bundle entity selected.
-      'bundle_entity_type_id' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          if (!empty($component_data['entity_type_id'])) {
-            return $component_data['entity_type_id'] . '_type';
-          }
-          else {
-            return '';
-          }
-        }
-      ],
-      'bundle_entity' => [
-        'label' => 'Bundle config entity type',
-        'description' => "Creates a config entity type which provides the bundles for this entity type. "
-          . "This is analogous to the Node Type entity type providing bundles for the Node entity type.",
-        'format' => 'compound',
-        'cardinality' => 1,
-        'component_type' => 'ConfigBundleEntityType',
-        'default' => function($component_data) {
-          return [
-            0 => [
-              // Default values for the benefit of progressive UIs.
-              // The bundle entity type ID defaults to CONTENT_TYPE_type.
-              // Note this doesn't work in tests or non-progressive UIs!
-              'entity_type_id' => $component_data['entity_type_id'] . '_type',
-              'bundle_of_entity' => $component_data['entity_type_id'],
-            ],
-          ];
-        },
-      ],
-      'bundle_label' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          // TODO: get the actual value of the entity_type_label property from
-          // the bundle entity -- but this is proving rather labyrinthine...
-          return CaseString::snake($component_data['bundle_entity_type_id'])->title();
-        },
-      ],
-      'field_ui_base_route' => [
-        'label' => 'Field UI base route',
-        // TODO: expose to UI in 3.3 when we have dynamic defaults.
+      // TODO: REMOVE! we can reach into the child data!!
+      'bundle_entity_type_id' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("get('..:entity_type_id') ~ '_type'")
+            ->setDependencies('..:entity_type_id')
+        ),
+      'bundle_entity' => GeneratorDefinition::createFromGeneratorTypeWithConversion('ConfigBundleEntityType')
+        ->setLabel('Bundle config entity type')
+        ->setDescription("Creates a config entity type which provides the bundles for this entity type. "
+          . "This is analogous to the Node Type entity type providing bundles for the Node entity type."),
+      'bundle_label' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("machineToLabel(get('..:bundle_entity_type_id'))")
+          ->setDependencies('..:bundle_entity_type_id')
+        ),
+      'field_ui_base_route' => PropertyDefinition::create('string')
+        // TODO: expose to UI when we have dynamic defaults.
         // This will then be dependent on the 'fieldable' property.
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          if (!in_array('fieldable', $component_data['functionality'])) {
-            return NULL;
-          }
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable(function (DataItem $component_data) {
+            $entity_data = $component_data->getParent();
 
-          if (isset($component_data['bundle_entity'][0])) {
-            return 'entity.' . $component_data['bundle_entity_type_id'] . '.edit_form';
-          }
-          else {
-            return 'entity.' . $component_data['entity_type_id'] . '.admin_form';
-          }
-        },
-      ],
+            if (!$entity_data->functionality->hasValue('fieldable')) {
+              return NULL;
+            }
+
+            if (!$entity_data->bundle_entity->isEmpty()) {
+              return 'entity.' . $entity_data->bundle_entity_type_id->value . '.edit_form';
+            }
+            else {
+              return 'entity.' . $entity_data->entity_type_id->value . '.admin_form';
+            }
+          })
+          ->setDependencies('..:functionality')
+        ),
     ];
     InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);
 
@@ -216,18 +214,19 @@ class ContentEntityType extends EntityTypeBase {
         'format' => 'compound',
         // TODO: default, populated by things such as interface choice!
         'properties' => [
-          'name' => [
-            'label' => 'Field name',
-            'required' => TRUE,
-          ],
-          'label' => [
-            'label' => 'Field label',
-            'default' => function($component_data) {
-              $entity_type_id = $component_data['name'];
-              return CaseString::snake($entity_type_id)->title();
-            },
-            'process_default' => TRUE,
-          ],
+          'name' => PropertyDefinition::create('string')
+            ->setLabel('Field name')
+            ->setRequired(TRUE)
+            ->setValidators('machine_name'),
+          'label' => PropertyDefinition::create('string')
+            ->setLabel('Field label')
+            ->setDescription("The human-readable label for the field.")
+            ->setRequired(TRUE)
+            ->setDefault(
+              DefaultDefinition::create()
+                ->setExpression("machineToLabel(get('..:name'))")
+                ->setDependencies('..:name')
+            ),
           'type' => [
             'label' => 'Field type',
             'required' => TRUE,
@@ -241,28 +240,34 @@ class ContentEntityType extends EntityTypeBase {
       'base_fields_helper_methods' => [
         'internal' => TRUE,
         'format' => 'array',
-        'default' => [],
+        // 'default' => [],
       ],
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_properties);
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Entity\ContentEntityBase';
-    $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      array_unshift($value, '\Drupal\Core\Entity\ContentEntityInterface');
-      $component_data[$property_name] = $value;
-    };
+    $data_definition['parent_class_name']
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLiteral('\Drupal\Core\Entity\ContentEntityBase')
+      );
+
+    $data_definition['interface_parents']['default'] = ['\Drupal\Core\Entity\ContentEntityInterface'];
 
     // Set the computed value for entity keys. This is done in 'processing'
     // rather than 'default' so we can run after the preset values are applied
     // to add defaults and set the ordering.
-    $data_definition['entity_keys']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
+    $data_definition['entity_keys']['processing'] = function (DataItem $component_data) {
+      $entity_data = $component_data->getParent();
+
+      $value = $component_data->value;
+
       $value += [
-        'id' => $component_data['entity_type_id'] . '_id',
+        'id' => $entity_data->entity_type_id->value . '_id',
         'label' => 'title',
         'uuid' => 'uuid',
       ];
 
-      if (isset($component_data['bundle_entity'][0])) {
+      if (!$entity_data->bundle_entity->isEmpty()) {
         $value['bundle'] = 'type';
       }
 
@@ -288,7 +293,11 @@ class ContentEntityType extends EntityTypeBase {
         }
       }
 
-      $component_data[$property_name] = $ordered_value;
+      // dump($component_data);
+      // exit();
+
+      // Replace the existing value.
+      $component_data->set($ordered_value);
     };
 
     return $data_definition;
@@ -380,8 +389,6 @@ EOT
     $use_revisionable = in_array('revisionable', $this->component_data['functionality']);
     $use_translatable = in_array('translatable', $this->component_data['functionality']);
 
-    //dump($this->component_data);
-
     $method_body = [];
     // Calling the parent defines fields for entity keys.
     $method_body[] = '$fields = parent::baseFieldDefinitions($entity_type);';
@@ -389,7 +396,7 @@ EOT
 
     // Some interface-helper traits provide helper methods to define base
     // fields.
-    foreach ($this->component_data['base_fields_helper_methods'] as $method_name) {
+    foreach ($this->component_data->base_fields_helper_methods->export() as $method_name) {
       $method_body[] = "£fields += static::$method_name(£entity_type);";
       $method_body[] = '';
     }
@@ -478,7 +485,7 @@ EOT
       // is fixed.
       // TODO: Change this when https://www.drupal.org/project/drupal/issues/2862859
       $components['collection_menu_task' . $this->component_data['entity_type_id']] = [
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.local_task',
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
@@ -494,7 +501,7 @@ EOT
       // If there is a bundle entity, change the 'add' local action to go to
       // the add page route, where a bundle can be selected, rather than the
       // add form.
-      if (isset($this->component_data['bundle_entity'][0])) {
+      if (!$this->component_data->bundle_entity->isEmpty()) {
         $components['collection_menu_action' . $this->component_data['entity_type_id']]['plugin_properties']['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
       }
 
@@ -506,7 +513,7 @@ EOT
       ];
       foreach ($entity_tabs as $route_suffix => $title) {
         $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
-          'component_type' => 'PluginYAML',
+          'component_type' => 'Plugin',
           'plugin_type' => 'menu.local_task',
           'prefix_name' => FALSE,
           'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
@@ -538,7 +545,7 @@ EOT
 
       // The structure of the add UI depends on whether there is a bundle
       // entity.
-      if (isset($this->component_data['bundle_entity'][0])) {
+      if (!$this->component_data->bundle_entity->isEmpty()) {
         // If there's a bundle entity, the add UI is made up of first a page to
         // select the bundle, and then a form with a bundle parameter.
         $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type_id'];
@@ -560,7 +567,7 @@ EOT
       // $annotation_data['links']["revision"] = "/$entity_path_component/{}/revisions/{media_revision}/view";
     }
 
-    if (isset($this->component_data['bundle_entity'][0])) {
+    if (!$this->component_data->bundle_entity->isEmpty()) {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type_id'];
       $annotation_data['bundle_label'] = ClassAnnotation::Translation($this->component_data['bundle_label']);
     }
@@ -568,8 +575,8 @@ EOT
     $revisionable = in_array('revisionable', $this->component_data['functionality']);
     $translatable = in_array('translatable', $this->component_data['functionality']);
 
-    if (!empty($this->component_data['field_ui_base_route'])) {
-      $annotation_data['field_ui_base_route'] = $this->component_data['field_ui_base_route'];
+    if ($this->component_data->field_ui_base_route->value) {
+      $annotation_data['field_ui_base_route'] = $this->component_data->field_ui_base_route->value;
     }
 
     if ($revisionable) {

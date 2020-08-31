@@ -2,7 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator class for forms on Drupal 8.
@@ -18,23 +19,22 @@ class Form extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
+    $parent_data_definition = parent::componentDataDefinition();
+
     $data_definition = array(
-      'form_class_name' => array(
-        'label' => 'Form class name',
-        'required' => TRUE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data['form_class_name'] = ucfirst($value);
-        },
-      ),
-      'form_id' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return
-            $component_data['root_component_name']
-            . '_'
-            . CaseString::pascal($component_data['form_class_name'])->snake();
-        },
-      ],
+      // Move the form class name property to the top, and override its default.
+      'plain_class_name' => $parent_data_definition['plain_class_name']
+        ->setLabel("Form class name.")
+        ->setDescription("The form class's plain class name, e.g. \"MyForm\"."),
+      'form_id' => PropertyDefinition::create('string')
+        ->setLabel('The form ID.')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("get('..:root_component_name') ~ '_' ~ machineFromPlainClassName(get('..:plain_class_name'))")
+            ->setDependencies('..:root_component_name', '..:plain_class_name')
+        ),
       'injected_services' => array(
         'label' => 'Injected services',
         'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
@@ -42,11 +42,10 @@ class Form extends PHPClassFileWithInjection {
         'options' => function(&$property_info) {
           $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
+          $options = $mb_task_handler_report_services->listServiceNamesOptionsAll();
 
           return $options;
         },
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
       'form_elements' => [
         // Internal for now. TODO: expose to the UI.
@@ -56,16 +55,24 @@ class Form extends PHPClassFileWithInjection {
       ],
     );
 
+    // Remove the property we copied.
+    unset($parent_data_definition['plain_class_name']);
+
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
 
     // Put the class in the 'Form' relative namespace.
-    $data_definition['relative_class_name']['default'] = function($component_data) {
-      return ['Form', $component_data['form_class_name']];
-    };
+    $data_definition['relative_namespace']
+      ->setLiteralDefault('Form');
+
+    $data_definition['plain_class_name']
+      ->setLiteralDefault('MyForm');
+
+    $data_definition['relative_class_name']->setInternal(TRUE);
 
     // Set the parent class.
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Form\FormBase';
+    $data_definition['parent_class_name']
+      ->setLiteralDefault('\Drupal\Core\Form\FormBase');
 
     return $data_definition;
   }

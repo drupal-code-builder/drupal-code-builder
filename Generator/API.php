@@ -30,7 +30,7 @@ class API extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $module_root_name = $this->component_data['root_component_name'];
+    $module_root_name = $this->component_data->root_component_name->value;
 
     return array(
       'path' => '', // Means base folder.

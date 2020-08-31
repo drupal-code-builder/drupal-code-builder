@@ -11,6 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  * @group yaml
  * @group annotation
  * @group entity
+ * @group pass
  */
 class ComponentContentEntityType8Test extends TestBase {
 
@@ -130,7 +131,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue(['handlers', 'list_builder'], 'Drupal\Core\Entity\EntityListBuilder');
-    $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty cats');
+    $annotation_tester->assertPropertyHasValue('admin_permission', 'administer kitty_cat entities');
     $annotation_tester->assertPropertyHasValue('field_ui_base_route', 'entity.kitty_cat.admin_form');
     $annotation_tester->assertHasProperties([
       'id',
@@ -154,9 +155,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
+    $yaml_tester->assertHasProperty('administer kitty_cat entities', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'title'], 'Administer Kitty cat entities', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'description'], 'Administer Kitty cat entities', "The permission has the expected description.");
   }
 
   /**
@@ -603,19 +604,17 @@ class ComponentContentEntityType8Test extends TestBase {
             'owner',
           ],
           'bundle_entity' => [
-            0 => [
-              // Don't specify entity_type_id, let it be derived.
-              // Request a route provider so UI features are generated.
-              'handler_route_provider' => 'admin',
-              'entity_properties' => [
-                0 => [
-                  'name' => 'foo',
-                  'type' => 'string',
-                ],
-                1 => [
-                  'name' => 'colour',
-                  'type' => 'string',
-                ],
+            // Don't specify entity_type_id, let it be derived.
+            // TODO: remove this to simplify the test.
+            'handler_route_provider' => 'admin',
+            'entity_properties' => [
+              0 => [
+                'name' => 'foo',
+                'type' => 'text',
+              ],
+              1 => [
+                'name' => 'colour',
+                'type' => 'text',
               ],
             ],
           ],
@@ -742,9 +741,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer kitty cat types', "The permissions file declares the entity admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'title'], 'Administer kitty cat types', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'description'], 'Administer kitty cat types', "The permission has the expected description.");
+    $yaml_tester->assertHasProperty('administer kitty_cat_type entities', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat_type entities', 'title'], 'Administer Kitty cat type entities', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat_type entities', 'description'], 'Administer Kitty cat type entities', "The permission has the expected description.");
   }
 
   /**
@@ -1349,9 +1348,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer kitty cats', "The permissions file declares the entity admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'title'], 'Administer kitty cats', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cats', 'description'], 'Administer kitty cats', "The permission has the expected description.");
+    $yaml_tester->assertHasProperty('administer kitty_cat entities', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'title'], 'Administer Kitty cat entities', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'description'], 'Administer Kitty cat entities', "The permission has the expected description.");
 
     // Check the tasks plugin file.
     $tasks_file = $files["$module_name.links.task.yml"];
@@ -1415,18 +1414,16 @@ class ComponentContentEntityType8Test extends TestBase {
           'functionality' => [],
           'admin_permission' => FALSE,
           'bundle_entity' => [
-            0 => [
-              // Don't specify entity_type_id, let it be derived.
-              'entity_ui' => 'admin',
-              'entity_properties' => [
-                0 => [
-                  'name' => 'foo',
-                  'type' => 'string',
-                ],
-                1 => [
-                  'name' => 'colour',
-                  'type' => 'string',
-                ],
+            // Don't specify entity_type_id, let it be derived.
+            'entity_ui' => 'admin',
+            'entity_properties' => [
+              0 => [
+                'name' => 'foo',
+                'type' => 'text',
+              ],
+              1 => [
+                'name' => 'colour',
+                'type' => 'text',
               ],
             ],
           ],
@@ -1493,18 +1490,16 @@ class ComponentContentEntityType8Test extends TestBase {
           'functionality' => [],
           'entity_ui' => 'admin',
           'bundle_entity' => [
-            0 => [
-              'entity_type_id' => 'kitty_cat_type',
-              'entity_ui' => 'admin',
-              'entity_properties' => [
-                0 => [
-                  'name' => 'foo',
-                  'type' => 'string',
-                ],
-                1 => [
-                  'name' => 'colour',
-                  'type' => 'string',
-                ],
+            'entity_type_id' => 'kitty_cat_type',
+            'entity_ui' => 'admin',
+            'entity_properties' => [
+              0 => [
+                'name' => 'foo',
+                'type' => 'text',
+              ],
+              1 => [
+                'name' => 'colour',
+                'type' => 'text',
               ],
             ],
           ],
@@ -1583,9 +1578,9 @@ class ComponentContentEntityType8Test extends TestBase {
     $permissions_file = $files["$module_name.permissions.yml"];
     $yaml_tester = new YamlTester($permissions_file);
 
-    $yaml_tester->assertHasProperty('administer kitty cat types', "The permissions file declares the entity admin permission.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'title'], 'Administer kitty cat types', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty cat types', 'description'], 'Administer kitty cat types', "The permission has the expected description.");
+    $yaml_tester->assertHasProperty('administer kitty_cat_type entities', "The permissions file declares the entity admin permission.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat_type entities', 'title'], 'Administer Kitty cat type entities', "The permission has the expected title.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat_type entities', 'description'], 'Administer Kitty cat type entities', "The permission has the expected description.");
 
     // Check the menu links file.
     $menu_links_file = $files["test_module.links.menu.yml"];

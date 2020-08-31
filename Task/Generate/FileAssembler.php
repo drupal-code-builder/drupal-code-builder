@@ -36,9 +36,10 @@ class FileAssembler {
     $files = $this->collectFiles($component_collection);
 
     // Filter files according to the requested build list.
-    if (isset($component_data['requested_build'])) {
-      $component_collection->getRootComponent()->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
-    }
+    // TODO: TEMP!
+    // if (isset($component_data['requested_build'])) {
+    //   $component_collection->getRootComponent()->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
+    // }
 
     // Then we assemble the files into a simple array of full filename and
     // contents.
@@ -98,14 +99,15 @@ class FileAssembler {
       $file_info_item = $child_component->getFileInfo();
       if (is_array($file_info_item)) {
         // Prepend the component_base_path to the path.
-        if (!empty($child_component->component_data['component_base_path'])) {
+        $component_base_path = $child_component->component_data->component_base_path->value;
+        if (!empty($component_base_path)) {
           if (empty($file_info_item['path'])) {
-            $file_info_item['path'] = $child_component->component_data['component_base_path'];
+            $file_info_item['path'] = $child_component->component_data->component_base_path->value;
           }
           else {
-            $file_info_item['path'] = $child_component->component_data['component_base_path']
-              . '/'
-              . $file_info_item['path'];
+            $file_info_item['path'] = $child_component->component_data->component_base_path->value
+            . '/'
+            . $file_info_item['path'];
           }
         }
 

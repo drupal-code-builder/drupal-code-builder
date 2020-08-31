@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\NestedArray;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for general YML files.
@@ -27,11 +28,9 @@ class YMLFile extends File {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'yaml_data' => [
-        'label' => 'The data for the YAML file.',
-        'format' => 'array',
-        'internal' => TRUE,
-      ],
+      'yaml_data' => PropertyDefinition::create('mapping')
+        ->setLabel('The data for the YAML file')
+        ->setInternal(TRUE),
       'yaml_inline_level' => [
         'label' => 'The level at which to switch YAML properties to inline formatting.',
         'format' => 'string',
@@ -44,10 +43,8 @@ class YMLFile extends File {
         'default' => FALSE,
         'internal' => TRUE,
       ],
-      'inline_levels_extra' => [
-        'default' => FALSE,
-        'internal' => TRUE,
-      ],
+      'inline_levels_extra' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
     ];
   }
 
@@ -71,7 +68,7 @@ class YMLFile extends File {
     if (!empty($yaml_data)) {
       // Only zap this if children provide something, as other components still
       // set this property by request.
-      $this->component_data['yaml_data'] = $yaml_data;
+      $this->component_data->yaml_data->set($yaml_data);
     }
 
     return array();
@@ -121,7 +118,6 @@ class YMLFile extends File {
       // Because the yaml is all built for us, this is just a singleton array.
       $body = array($yaml);
     }
-    //drush_print_r($yaml);
 
     return $body;
   }

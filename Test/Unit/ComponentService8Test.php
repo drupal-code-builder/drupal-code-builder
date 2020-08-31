@@ -2,14 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+use MutableTypedData\Exception\InvalidInputException;
 
 /**
  * Tests for Service component.
  *
  * @group yaml
+ * @group pass
  */
 class ComponentService8Test extends TestBase {
 
@@ -265,7 +266,7 @@ class ComponentService8Test extends TestBase {
       'readme' => FALSE,
     );
 
-    $this->expectException(InvalidInputException::class);
+    $this->expectException(\DrupalCodeBuilder\Test\Exception\ValidationException::class);
 
     $files = $this->generateModuleFiles($module_data);
   }
@@ -286,7 +287,7 @@ class ComponentService8Test extends TestBase {
           'service_name' => 'my_service',
           // Properties that requesters can specify.
           'prefixed_service_name' => 'my_prefix.my_service',
-          'relative_class_name' => ['MyServiceClass'],
+          'plain_class_name' => 'MyServiceClass',
         ],
       ),
       'readme' => FALSE,

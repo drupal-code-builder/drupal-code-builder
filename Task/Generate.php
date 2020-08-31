@@ -7,6 +7,9 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Data\DataItem;
+
 /**
  * Task handler for generating a component.
  */
@@ -69,114 +72,27 @@ class Generate extends Base {
   }
 
   /**
-   * Get a list of the properties that the root component should be given.
+   * Gets the data object for the component.
    *
-   * UIs may use this to present the options to the user. Each property should
-   * be passed to prepareComponentDataProperty(), to set any option lists and
-   * allow defaults to build up incrementally.
-   *
-   * The array with the complete data collected from the user should then be
-   * passed to generateComponent() to generate the code.
-   *
-   * @param $include_computed
-   *  (optional) Boolean indicating whether to include computed properties.
-   *  Default value is FALSE, as UIs don't need to work with these.
-   *  TODO: Deprecate this parameter, it is not used in any calls we make.
-   *
-   * @return
-   *  An array containing information about the properties our root component
-   *  needs in the $component_data array to pass to generateComponent(). Keys
-   *  are the names of properties. Each value is an array of information for the
-   *  property. Of interest to UIs calling this are:
-   *  - 'label': A human-readable label for the property.
-   *  - 'description': (optional) A longer description.
-   *  - 'format': Specifies the expected format for the property. One of
-   *    'string', 'array', 'boolean', or 'compound'.
-   *  - 'cardinality': (optional) For properties with format 'array' or
-   *    'compound', specifies the maximum number of values. If omitted,
-   *    unlimited values are allowed.
-   *  - 'properties': If the format is 'compound', this will be an array of
-   *    child properties, in the same format at the overall array.
-   *  - 'required': Boolean indicating whether this property must be provided.
-   *  - 'default': A default value for the property. Progressive UIs that
-   *    process user input incrementally will get default values that are
-   *    based on the user input so far.
-   * For the full documentation for all properties, see
-   * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
+   * UIs should use this to present the options to the user.
    */
-  public function getRootComponentDataInfo($include_computed = FALSE) {
-    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($this->base, $include_computed);
+  public function getRootComponentData() {
+    $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
+
+    // We use a custom data item factory so we can add custom Expression
+    // Language functions.
+    $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
+
+    return $data;
   }
 
   /**
-   * Prepares a property in the component data with default value and options.
+   * @internal
    *
-   * This should be called for each property in the component data info that is
-   * obtained from getRootComponentDataInfo(), in the order given in that array.
-   * This allows UIs to present default values to the user in a progressive
-   * manner. For example, the Drush interactive mode may present a default value
-   * for the module human name based on the value the user has already entered
-   * for the machine name.
-   *
-   * The default value is placed into $component_data[$property_name]; the
-   * options if any are placed into $property_info['options'].
-   *
-   * Compound properties can either be called as a single property, in which
-   * case only the options will be set, or can be called for each child property
-   * with a child item data array for $component_data. This may be repeated for
-   * multiple child items.
-   *
-   * @param $property_name
-   *  The name of the property.
-   * @param &$property_info
-   *  The definition for this property, from getRootComponentDataInfo().
-   *  If the property has options, this will get its 'options' key set, as an
-   *  array of the format VALUE => LABEL.
-   * @param &$component_data
-   *  An array of component data that is being assembled to eventually pass to
-   *  generateComponent(). This should contain property data that has been
-   *  obtained from the user so far, as a property may depend on input for
-   *  earlier properties. This will get its $property_name key set with the
-   *  default value for the property, which may be calculated based on the
-   *  existing user data.
+   * TODO: remove this!
    */
-  public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    return $this->getHelper('ComponentPropertyPreparer')->prepareComponentDataProperty($property_name, $property_info, $component_data);
-  }
-
-  /**
-   * Validates a value for a property.
-   *
-   * Validation is optional; UIs may perform it if it improves UX to do so as
-   * a separate step from calling generateComponent().
-   *
-   * Note that this does not recurse; UIs should take care of this.
-   *
-   * @param $property_name
-   *  The name of the property.
-   * @param $property_info
-   *  The definition for this property, from getRootComponentDataInfo().
-   * @param $component_data
-   *  The array of component data for the component that the property is a part
-   *  of.
-   *
-   * @return array|null
-   *   If validation failed, an array whose first element is a message string,
-   *   and whose second element is an array of translation placeholders (which
-   *   may be empty). If the validation succeeded, NULL is returned.
-   */
-  public function validateComponentDataValue($property_name, $property_info, $component_data) {
-    if (isset($property_info['validation'])) {
-      $validate_callback = $property_info['validation'];
-      $result = $validate_callback($property_name, $property_info, $component_data);
-
-      // Fill in the placeholder array if the callback returned just a string.
-      if (is_string($result)) {
-        $result = [$result, []];
-      }
-
-      return $result;
-    }
+  public function getComponentDataInfo($component_type, $include_internal = FALSE) {
+    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($component_type, $include_internal);
   }
 
   /**
@@ -198,16 +114,18 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.
    */
-  public function generateComponent($component_data, $existing_module_files = []) {
-    // Add the top-level component to the data.
-    $component_type = $this->base;
-    $component_data['base'] = $component_type;
+  public function generateComponent(DataItem $component_data, $existing_module_files = []) {
+    // Validate to ensure defaults are filled in.
+    $component_data->validate();
 
-    // The component name is just the same as the type for the base generator.
-    $component_name = $component_type;
+    // WTF validate not filling in module name etc/??????
+    // dump($component_data->export());
+    // return;
 
     // Assemble the component list from the request data.
     $component_collection = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
+    // return;
+
     // Backward-compatiblity.
     // TODO: replace this.
     $this->component_list = $component_collection->getComponents();
@@ -216,7 +134,8 @@ class Generate extends Base {
 
     // Let each component detect whether it already exists in the given module
     // files.
-    $this->detectExistence($this->component_list, $existing_module_files);
+    // TODO: temp bypass!
+    // $this->detectExistence($this->component_list, $existing_module_files);
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array

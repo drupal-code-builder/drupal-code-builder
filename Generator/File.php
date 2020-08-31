@@ -15,6 +15,7 @@ class File extends BaseGenerator {
       // The name of the file, without the path.
       'filename' => [
         'internal' => TRUE,
+        'required' => TRUE,
       ],
     ];
   }

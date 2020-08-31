@@ -6,6 +6,9 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the theme hook generator class.
+ *
+ * @group pass
+ * @group hooks
  */
 class ComponentThemeHook8Test extends TestBase {
 

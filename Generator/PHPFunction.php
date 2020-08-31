@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator base class for functions.
@@ -36,13 +38,9 @@ class PHPFunction extends BaseGenerator {
         'internal' => TRUE,
       ],
       'docblock_inherit' => [
+        'format' => 'boolean',
         'internal' => TRUE,
         'default' => FALSE,
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          if ($value) {
-            $component_data['function_docblock_lines'] = ['{@inheritdoc}'];
-          }
-        },
       ],
       // Deprecated: use function_docblock_lines instead.
       'doxygen_first' => [
@@ -51,17 +49,16 @@ class PHPFunction extends BaseGenerator {
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
-      'function_docblock_lines' => [
-        'format' => 'array',
-        'internal' => TRUE,
-        'default' => [
-          'TODO: write function documentation.',
-        ],
-      ],
+      // Or multiple string?
+      'function_docblock_lines' => PropertyDefinition::create('mapping')
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable([static::class, 'defaultDocblockLines'])
+      ),
       'declaration' => [
         'internal' => TRUE,
       ],
       'body' => [
+        'format' => 'array',
         'internal' => TRUE,
       ],
       // Whether code lines in the 'body' property are already indented relative
@@ -72,6 +69,19 @@ class PHPFunction extends BaseGenerator {
         'default' => FALSE,
       ],
     ];
+  }
+
+  public static function defaultDocblockLines($data_item) {
+    if ($data_item->getParent()->docblock_inherit->value) {
+      return [
+        '{@inheritdoc}',
+      ];
+    }
+    else {
+      return [
+        'TODO: write function documentation.',
+      ];
+    }
   }
 
   /**
@@ -85,11 +95,11 @@ class PHPFunction extends BaseGenerator {
 
     // Check the deprecated 'doxygen_first' property first, as code that doesn't
     // use this will have it empty.
-    if (!empty($this->component_data['doxygen_first'])) {
-      $lines[] = $this->component_data['doxygen_first'];
+    if (!$this->component_data->doxygen_first->isEmpty()) {
+      $lines[] = $this->component_data->doxygen_first->value;
     }
-    elseif (!empty($this->component_data['function_docblock_lines'])) {
-      $lines = $this->component_data['function_docblock_lines'];
+    else {
+      $lines = $this->component_data->function_docblock_lines->value;
 
       if (count($lines) > 1) {
         // If there is more than one line, splice in a blank line after the

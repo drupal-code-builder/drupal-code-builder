@@ -2,6 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for module permissions on Drupal 8.
  */
@@ -17,24 +20,22 @@ class Permission extends BaseGenerator {
         'default' => 'access my_module',
         'required' => TRUE,
       ),
-      'title' => [
-        'label' => 'Permission human-readable name. If omitted, this is derived from the machine name.',
-        'default' => function($component_data) {
-          if (isset($component_data['permission'])) {
-            return ucfirst(str_replace('_', ' ', $component_data['permission']));
-          }
-        },
-        'process_default' => TRUE,
-      ],
-      'description' => array(
-        'label' => 'Permission description',
-        'default' => function($component_data) {
-          if (isset($component_data['title'])) {
-            return $component_data['title'];
-          }
-        },
-        'process_default' => TRUE,
-      ),
+      'title' => PropertyDefinition::create('string')
+        ->setLabel('Permission human-readable name')
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+          ->setExpression("machineToLabel(get('..:permission'))")
+            ->setDependencies('..:permission')
+        ),
+      'description' => PropertyDefinition::create('string')
+        ->setLabel('Permission description')
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("get('..:title')")
+            ->setDependencies('..:title')
+        ),
       'restrict_access' => array(
         'label' => 'Access warning',
         'description' => 'Whether the permission should show a warning that it should be granted with care.',

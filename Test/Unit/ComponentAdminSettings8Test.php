@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests the AdminSettingsForm generator class.
  *
  * @group form
+ * @group pass
  */
 class ComponentAdminSettings8Test extends TestBase {
 
@@ -32,9 +33,7 @@ class ComponentAdminSettings8Test extends TestBase {
       'hooks' => array(
       ),
       'settings_form' => [
-        0 => [
-          'parent_route' => 'system.admin_config_system',
-        ],
+        'parent_route' => 'system.admin_config_system',
       ],
       'readme' => FALSE,
     );
@@ -137,14 +136,12 @@ class ComponentAdminSettings8Test extends TestBase {
       'hooks' => array(
       ),
       'permissions' => array(
-        1 => array(
+        0 => [
           'permission' => 'access test_module',
-        ),
+        ],
       ),
       'settings_form' => [
-        0 => [
-          'parent_route' => 'system.admin_config_system',
-        ],
+        'parent_route' => 'system.admin_config_system',
       ],
       'readme' => FALSE,
     );
@@ -175,18 +172,22 @@ class ComponentAdminSettings8Test extends TestBase {
        'hooks' => array(
        ),
        'permissions' => array(
-         1 => array(
+         0 => [
            'permission' => 'access test_module',
-         ),
+         ],
        ),
        'settings_form' => [
-        0 => [
           'parent_route' => 'system.admin_config_system',
         ],
-      ],
        'router_items' => array(
           0 => [
             'path' => 'requested/route/path',
+            'controller' => [
+              'controller_type' => 'controller',
+            ],
+            'access' => [
+              'access_type' => 'permission',
+            ],
           ],
        ),
        'readme' => FALSE,

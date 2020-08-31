@@ -31,11 +31,12 @@ class HookImplementation extends PHPFunction {
     ];
     // Insert the hook_name property before the doxygen_first property, as that
     // depends on it.
+    // TODO: still needed???
     InsertArray::insertBefore($properties, 'doxygen_first', $hook_name_property);
 
-    $properties['doxygen_first']['default'] = function($component_data) {
-      return "Implements {$component_data['hook_name']}().";
-    };
+    $properties['function_docblock_lines']->getDefault()
+      // Expression Language lets us define arrays, which is nice.
+      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
 
     // Indicates that the body includes the first and closing newlines. This is
     // because the hook sample code we get from code analysis have these, but
@@ -91,13 +92,13 @@ class HookImplementation extends PHPFunction {
    */
   protected function buildComponentContents($children_contents) {
     // Replace the 'hook_' part of the function declaration.
-    $this->component_data['declaration'] = preg_replace('/(?<=function )hook/', '%module', $this->component_data['declaration']);
+    $this->component_data->declaration->value = preg_replace('/(?<=function )hook/', '%module', $this->component_data->declaration->value);
 
     // Allow for subclasses that provide their own body code, which is not
     // indented.
     // TODO: clean this up!
     if (!empty($children_contents)) {
-      $this->component_data['body_indented'] = FALSE;
+      $this->component_data->body_indented = FALSE;
     }
 
     return parent::buildComponentContents($children_contents);

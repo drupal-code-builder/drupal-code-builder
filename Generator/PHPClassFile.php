@@ -3,6 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Generator for PHP class files.
@@ -14,109 +17,133 @@ class PHPClassFile extends PHPFile {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'relative_class_name' => [
-        // E.g. ['Form', 'MyFormClass']
-        'label' => 'The qualifed classname pieces, relative to the module namespace.',
-        'format' => 'array',
-        'internal' => TRUE,
-      ],
+      // The class name properties all form an interdependent set.
+      // Typically, UIs will allow users to specify either:
+      //  - the plain class name, such as for entity classes or plugins, where
+      //    the namespace is fixed.
+      // - the relative class name, such as for services where the user might
+      //   with to put the service within a separate namespace.
+      // Internally, we typically specify the relative class name, as a mapping
+      // value rather than a string for easier manipulation.
+      // The chain of dependencies of defaults goes either:
+      /*  A. - plain_class_name -- this means it's top-level in the module namespace, OR
+              has a fixed relative namespace that comes from the generator
+            - relative_namespace - fixed. literal default may be overridden.
+            -> relative_class_name_pieces = array_append(relative_namespace_pieces, plain_class_name)
+            -> relative_class_name - implode relative_class_name_pieces
+            -> qualified_class_name_pieces - why do we need this again???
+               we only need relative_namespace_pieces to derive the path!
+            -> qualified_class_name
+         B. - relative_class_name -- such as service, controller, etc.
+            -> plain_class_name -- substring relative_class_name -- CAN'T go via relative_class_name_pieces -- circularity!
+            -> relative_class_name_pieces = relative_namespace ~ plain_class_name)
+            -> relative_namespace - from relative_class_name
+            -> qualified_class_name_pieces
+            -> qualified_class_name
+      */
+      // One and *ONLY ONE* of relative_class_name and plain_class_name must be
+      // exposed; the other must be set internal.
+      'relative_class_name' => PropertyDefinition::create('string')
+        ->setLabel('The qualifed class name, relative to the module namespace, e.g. "Controller\MyController"')
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable(function (DataItem $component_data) {
+            $class_data = $component_data->getParent();
+            $relative_namespace = $class_data->relative_namespace->value;
+            $plain_classname = $class_data->plain_class_name->value;
+
+            if ($relative_namespace) {
+              $relative_namespace .= '\\';
+            }
+            return $relative_namespace . $plain_classname;
+        })
+        ->setDependencies('..:relative_namespace', '..:plain_class_name')
+      ),
+      // TODO: processing for case.
+      'plain_class_name' => PropertyDefinition::create('string')
+        ->setLabel('The plain class name, e.g. "MyClass"')
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("plainClassNameFromQualified(parent.relative_class_name.get())")
+          ->setDependencies('..:relative_class_name')
+        )
+        ->setValidators('class_name'),
+      // Child classes that expose 'plain_class_name' must set a non-lazy
+      // literal default for this.
+      // Should not start or end with a backslash.
+      'relative_namespace' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setLiteral('')
+      ),
+      // E.g. ['Form', 'MyFormClass']
+      'relative_class_name_pieces' => PropertyDefinition::create('mapping')
+        ->setLabel('The qualifed classname pieces, relative to the module namespace')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable(function (DataItem $component_data) {
+            return explode("\\", $component_data->getParent()->relative_class_name->value);
+          })
+          ->setDependencies('..:relative_class_name')
+      ),
       // E.g. ['Drupal', 'my_module', 'Form', 'MyFormClass']
-      'qualified_class_name_pieces' => [
-        'computed' => TRUE,
-        'format' => 'array',
-        'default' => function($component_data) {
-          $class_name_pieces = array_merge([
-            'Drupal',
-            '%module',
-          ], $component_data['relative_class_name']);
-
-          return $class_name_pieces;
-        },
-      ],
+      'qualified_class_name_pieces' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          // ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
+          ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
+          ->setDependencies('..:relative_class_name_pieces')
+      ),
+      'namespace' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("namespaceFromPieces(parent.qualified_class_name_pieces.get())")
+          ->setDependencies('..:qualified_class_name_pieces')
+      ),
       // E.g. 'Drupal\my_module\Form\MyFormClass'
-      'qualified_class_name' => [
-        'computed' => TRUE,
-        'format' => 'string',
-        'default' => function($component_data) {
-          $class_name_pieces = array_merge([
-            'Drupal',
-            '%module',
-          ], $component_data['relative_class_name']);
-
-          return self::makeQualifiedClassName($class_name_pieces);
-        },
-      ],
-      // This comes after the relative classname, since internally we usually
-      // want to specify that rather than this.
-      // For UIs though, it'll be the other way round: the user is asked the
-      // short class name, and other things should be derived from it. To do
-      // this, subclasses should add a property ahead of all these, and then
-      // derive relative_class_name.
-      'plain_class_name' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          return end($component_data['qualified_class_name_pieces']);
-        },
-      ],
-      // The namespace, without the inital '\'.
-      'namespace' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          $qualified_class_name_pieces = $component_data['qualified_class_name_pieces'];
-          array_pop($qualified_class_name_pieces);
-
-          return implode('\\', $qualified_class_name_pieces);
-        },
-      ],
-      'path' => [
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          // Lop off the initial Drupal\module and the final class name to
-          // build the path.
-          $path_pieces = array_slice($component_data['qualified_class_name_pieces'], 2, -1);
-          // Add the initial src to the front.
-          array_unshift($path_pieces, 'src');
-
-          return implode('/', $path_pieces);
-        },
-      ],
+      'qualified_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("implode('\\\\', parent.qualified_class_name_pieces.get())")
+          ->setDependencies('..:qualified_class_name_pieces')
+      ),
+      'path' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("pathFromQualifiedClassNamePieces(parent.qualified_class_name_pieces.get())")
+            ->setDependencies('..:qualified_class_name_pieces')
+        ),
       // Deprecated: use class_docblock_lines instead.
       'docblock_first_line' => [
         'format' => 'string',
         'internal' => TRUE,
-        'default' => function($component_data) {
-          return 'TODO: class docs.';
-        },
+        'default' => 'TODO: class docs.',
       ],
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
-      'class_docblock_lines' => [
-        'format' => 'array',
-        'internal' => TRUE,
+      'class_docblock_lines' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
         // No default, as most generators don't use this yet.
-      ],
       'abstract' => [
         'label' => 'Abstract',
         'format' => 'boolean',
         'internal' => TRUE,
         'default' => FALSE,
       ],
-      'parent_class_name' => [
-        'label' => 'The parent class name',
-        // Inconsistent with other properties, but we tend to have parents be
-        // class names from existing code.
-        'format' => 'string',
-        'internal' => TRUE,
-        'default' => '',
-      ],
-      'interfaces' => [
-        'label' => 'Interfaces',
-        'description' => 'List of interfaces this class implements, as fully-qualified names with initial \.',
-        'format' => 'array',
-        'internal' => TRUE,
-        'default' => [],
-      ],
+      // Inconsistent with other properties for this to be a string, but we tend
+      // to have parents be a qualified class name.
+      'parent_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE),
+      // Cheat and use mapping for now, as multi-valued properties don't do
+      // defaults. But should -- TODO.
+      // List of interfaces this class implements, as fully-qualified names
+      // with initial '\'.
+      'interfaces' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
       'traits' => [
         'label' => 'Traits',
         'description' => 'List of traits this class uses, as fully-qualified names with initial \.',
@@ -222,7 +249,7 @@ class PHPClassFile extends PHPFile {
   protected function getClassDocBlockLines() {
     $lines = [];
 
-    if (!empty($this->component_data['class_docblock_lines'])) {
+    if ($this->component_data->class_docblock_lines->value) {
       $lines = $this->component_data['class_docblock_lines'];
 
       if (count($lines) > 1) {
@@ -231,8 +258,13 @@ class PHPClassFile extends PHPFile {
         array_splice($lines, 1, 0, '');
       }
     }
-    elseif (!empty($this->component_data['docblock_first_line'])) {
+    elseif ($this->component_data->docblock_first_line->value) {
       $lines[] = $this->component_data['docblock_first_line'];
+    }
+    else {
+      // Complain here, as every class should have something for its first
+      // docblock line.
+      assert(FALSE, "Missing first docblock line.");
     }
 
     return $lines;
@@ -304,7 +336,7 @@ class PHPClassFile extends PHPFile {
    * section types defined in classCodeBody().
    */
   protected function collectSectionBlocks() {
-    foreach ($this->component_data['traits'] as $trait) {
+    foreach ($this->component_data->traits->export() as $trait) {
       $this->traits[] = [
         "use {$trait};",
       ];

@@ -55,7 +55,7 @@ class AnnotationTester {
    * @param string $docblock_text
    *   The docblock text that should be tested.
    */
-  public function __construct($docblock_text) {
+  public function __construct(string $docblock_text) {
     $this->docblockText = $docblock_text;
 
     $this->parseAnnotation($docblock_text);
@@ -74,7 +74,7 @@ class AnnotationTester {
    * @param string $docblock_text
    *   The docblock text that should be tested.
    */
-  protected function parseAnnotation($docblock_text) {
+  protected function parseAnnotation(string $docblock_text) {
     $lines = explode("\n", $docblock_text);
 
     // We assemble two structures:

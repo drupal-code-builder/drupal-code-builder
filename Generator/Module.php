@@ -3,6 +3,11 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\VariantDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Component generator: module.
@@ -86,40 +91,53 @@ class Module extends RootComponent {
     parent::__construct($component_data);
   }
 
+  public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    static::baseComponentPropertyDefinitionAlter($definition);
+
+    $definition->getProperty('root_name')
+      ->setLabel('Module machine name');
+
+    return $definition;
+  }
+
+  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+    // This is just to allow easy skipping of this by TestModule.
+    $definition->setLabel('Module')
+      ->setMachineName('module');
+  }
+
   /**
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
     $component_data_definition = parent::componentDataDefinition();
 
-    $component_data_definition['root_name'] = [
-      'label' => 'Module machine name',
-      'default' => 'my_module',
-    ] + $component_data_definition['root_name'];
+    $component_data_definition['root_name']
+      ->setLabel('Module machine name')
+      ->setLiteralDefault('my_module');
 
     $component_data_definition += [
       'base' => [
         'internal' => TRUE,
         'default' => 'module',
         'process_default' => TRUE,
-      ],
-      'root_name' => array(
-        'label' => 'Module machine name',
-        'default' => 'my_module',
         'required' => TRUE,
-      ),
-      'readable_name' => array(
-        'label' => 'Module readable name',
-        'default' => function($component_data) {
-          return ucwords(str_replace('_', ' ', $component_data['root_name']));
-        },
-        'required' => FALSE,
-        'process_default' => TRUE,
-      ),
+      ],
+      // TODO: move to RootComponent.
+      'readable_name' => PropertyDefinition::create('string')
+        ->setLabel('Module readable name')
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(get('..:root_name'))")
+            ->setDependencies('..:root_name')
+        ),
       'short_description' => array(
         'label' => 'Module .info file description',
         'default' => 'TODO: Description of module',
-        'required' => FALSE,
+        'required' => TRUE,
         'process_default' => TRUE,
       ),
       'module_package' => array(
@@ -131,15 +149,9 @@ class Module extends RootComponent {
       'module_dependencies' => array(
         'label' => 'Module dependencies',
         'description' => 'The machine names of the modules this module should have as dependencies.',
-        'default' => array(),
         'required' => FALSE,
         // We need a value for this, as other generators acquire it.
         'process_default' => TRUE,
-        // TODO: quick fix. Should be done in Module Builder on textarea UI
-        // elements.
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $component_data[$property_name] = array_filter($value);
-        },
         'format' => 'array',
       ),
       // If this is given, then hook_help() is automatically added to the list
@@ -209,7 +221,8 @@ class Module extends RootComponent {
         },
         // The processing callback alters the component data in place, and may
         // in fact alter another value.
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+        // TODO: restore this as validation!
+        'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
           // TODO: the options aren't there, as generateComponent() only gets
           // given data, not the component info array. However, it's probably
           // better to re-compute these lazily rather than do them all.
@@ -255,7 +268,8 @@ class Module extends RootComponent {
 
           return $hook_options;
         },
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
+        // TODO: restore this as validation.
+        'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
           $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
           // Get the flat list of hooks, standardized to lower case.
           $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
@@ -299,24 +313,9 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component_type' => 'ConfigEntityType',
       ),
-      // TODO: come up with a way to generalize this if more plugin discovery
-      // types become common.
-      // TODO: rename this to 'plugins_annotated'.
-      'plugins' => array(
-        'label' => 'Plugins (annotated class)',
-        'required' => FALSE,
-        'format' => 'compound',
-        // This tells the system that this is a request for generator
-        // components, and the input data should be placed in a nested array in
-        // the module data.
-        'component_type' => 'Plugin',
-      ),
-      'plugins_yaml' => [
-        'label' => 'Plugins (YAML)',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'PluginYAML',
-      ],
+      'plugins' => static::getPropertyDefinitionForGeneratorType('Plugin')
+        ->setLabel('Plugins')
+        ->setMultiple(TRUE),
       'plugin_types' => array(
         'label' => 'Plugin types',
         'required' => FALSE,
@@ -326,7 +325,6 @@ class Module extends RootComponent {
       'theme_hooks' => array(
         'label' => "Theme hooks",
         'description' => "The name of theme hooks, without the leading 'theme_'.",
-        'required' => FALSE,
         'format' => 'array',
         'component_type' => 'ThemeHook',
       ),
@@ -378,16 +376,15 @@ class Module extends RootComponent {
       //'hooks' => 'init',
       //'router_items' => 'path/foo path/bar',
       // The following properties shouldn't be offered as UI options.
-      'camel_case_name' =>  array(
-        // Indicates that this does not need to be obtained from the user, as it
-        // is computed from other properties.
-        'computed' => TRUE,
-        'default' => function($component_data) {
-          $pieces = explode('_', $component_data['root_name']);
-          $pieces = array_map('ucfirst', $pieces);
-          return implode('', $pieces);
-        },
-      ),
+      'camel_case_name' => PropertyDefinition::create('string')
+        ->setLabel('Module human-readable name')
+        ->setInternal(TRUE)
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToClass(get('..:root_name'))")
+            ->setDependencies('..:root_name')
+        ),
     ];
 
     return $component_data_definition;
@@ -397,31 +394,42 @@ class Module extends RootComponent {
    * {@inheritdoc}
    */
   public function requiredComponents() {
-    $components = array();
+    $components = [];
+
+    // Modules always have a .info file.
+    // TODO: this was an experiment for how to do required components with
+    // DataItems and it's not very nice DX. Figure out a better way.
+    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $definition = $class_handler->getComponentPropertyDefinition('Info');
+
+    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    $components['info'] = $data;
+
+    // $components['info'] = [
+    //   'component_type' => 'Info',
+    // ];
 
     // Turn the hooks property into the Hooks component.
-    if (!empty($this->component_data['hooks'])) {
+    if (!$this->component_data->hooks->isEmpty()) {
       $components['hooks'] = array(
         'component_type' => 'Hooks',
         'hooks' => $this->component_data['hooks'],
       );
     }
 
-    // Modules always have a .info file.
-    $components['info'] = [
-      'component_type' => 'Info',
-    ];
-
     // Add hook_help if help text is given.
-    if (!empty($this->component_data['module_help_text'])) {
+    // TODO dirty hack because TestModule child class doesn't have this
+    // property!
+    if ($this->component_data->hasProperty('module_help_text') && !$this->component_data->module_help_text->isEmpty()) {
       if (isset($components['hooks'])) {
-        $components['hooks']['hooks']['hook_help'] = TRUE;
+        // TODO: needs test!
+        $components['hooks']['hooks'][] = 'hook_help';
       }
       else {
         $components['hooks'] = array(
           'component_type' => 'Hooks',
           'hooks' => array(
-            'hook_help' => TRUE,
+            'hook_help',
           ),
         );
       }
@@ -470,7 +478,7 @@ class Module extends RootComponent {
 
     return array(
       '%module'       => $module_data['root_name'],
-      '%readable'     => str_replace("'", "\'", $module_data['readable_name']),
+      '%readable'     => str_replace("'", "\'", $module_data->readable_name->value),
       '%Module'       => CaseString::title($module_data['readable_name'])->title(),
       '%sentence'     => CaseString::title($module_data['readable_name'])->sentence(),
       '%lower'        => strtolower($module_data['readable_name']),

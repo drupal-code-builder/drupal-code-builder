@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHP_CodeSniffer;
@@ -17,6 +19,8 @@ use PHP_CodeSniffer;
  * Contains helper methods and assertions.
  */
 abstract class TestBase extends TestCase {
+
+  use VarDumperSetupTrait;
 
   /**
    * The Drupal core major version to set up for this test.
@@ -29,6 +33,8 @@ abstract class TestBase extends TestCase {
    * This expects the class property $drupalMajorVersion to be defined.
    */
   protected function setUp() {
+    $this->setUpVarDumper();
+
     $this->setupDrupalCodeBuilder($this->drupalMajorVersion);
   }
 
@@ -48,6 +54,47 @@ abstract class TestBase extends TestCase {
   }
 
   /**
+   * Gets the empty data item for the root component.
+   *
+   * @param string $type
+   *   The component type.
+   *   TODO: make this optional in getTask()?
+   *
+   * @return \MutableTypedData\Data\DataItem
+   *   The data item.
+   */
+  protected function getRootComponentBlankData(string $type) :DataItem {
+    $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $type);
+    $component_data = $task_handler_generate->getRootComponentData();
+    return $component_data;
+  }
+
+  /**
+   * Generate module files from component data.
+   *
+   * @param \MutableTypedData\Data\DataItem $component_data
+   *  The data for the generator.
+   *
+   * @param
+   *  An array of files.
+   */
+  protected function generateComponentFilesFromData(DataItem $component_data) {
+    $violations = $component_data->validate();
+
+    if ($violations) {
+      $message = [];
+      foreach ($violations as $address => $address_violations) {
+        $message[] = $address . ': ' . implode(',', $address_violations);
+      }
+      throw new \DrupalCodeBuilder\Test\Exception\ValidationException(implode('; ', $message));
+    }
+
+    $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $component_data->base->value);
+    $files = $task_handler_generate->generateComponent($component_data);
+    return $files;
+  }
+
+  /**
    * Generate module files from a data array.
    *
    * @param $module_data
@@ -57,10 +104,11 @@ abstract class TestBase extends TestCase {
    *  An array of files.
    */
   protected function generateModuleFiles($module_data) {
-    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-    $component_data_info = $mb_task_handler_generate->getRootComponentDataInfo();
+    $component_data = $this->getRootComponentBlankData('module');
 
-    $files = $mb_task_handler_generate->generateComponent($module_data);
+    $component_data->set($module_data);
+
+    $files = $this->generateComponentFilesFromData($component_data);
 
     return $files;
   }
@@ -99,6 +147,7 @@ abstract class TestBase extends TestCase {
     sort($filenames);
     sort($actual_file_names);
 
+    // TODO! min PHPUnit 7.5?
     $this->assertEquals($filenames, $actual_file_names, "The expected files were generated.");
   }
 

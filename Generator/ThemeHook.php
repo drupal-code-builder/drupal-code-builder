@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a theme hook in a module, i.e. a themeable element.
  */
@@ -12,11 +14,12 @@ class ThemeHook extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'theme_hook_name' => [
-        'label' => 'The theme hook name',
-        'internal' => TRUE,
-        'primary' => TRUE,
-      ],
+      // Needs to be set to public even though this is not actually seen.
+      'theme_hook_name' => PropertyDefinition::create('string')
+        ->setLabel('Theme hook name')
+        ->setRequired(TRUE)
+        // TODO: doesn't work in UI!
+        ->setValidators('machine_name'),
     ];
   }
 
@@ -30,7 +33,7 @@ class ThemeHook extends BaseGenerator {
       'hooks' => array(
         'component_type' => 'Hooks',
         'hooks' => array(
-          'hook_theme' => TRUE,
+          'hook_theme',
         ),
       ),
       $twig_file_name => array(

@@ -2,8 +2,17 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
+use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Generator\RootComponent;
+use MutableTypedData\Data\DataItem;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use DrupalCodeBuilder\Generator\BaseGenerator;
+use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**
  * Task helper for collecting components recursively.
@@ -13,13 +22,41 @@ use DrupalCodeBuilder\Generator\RootComponent;
  * added to the ComponentCollection object, which keeps track of the
  * relationships between them.
  *
+ * TODO:
+ * This is all a big mess, because it's been retrofitted to work with MTD and
+ * I've got to the point where it WORKS and I am burnt out.
+ * So, things to do to clean up:
+ * - remove dead code, but figure out if there's stuff in there that's needed
+ *   first
+ * - clean up and refactor
+ * - update the documentation, which still has references to the array data
+ * - remove the processing callback system?
+ * - resolve the problem of components in the main data structure not getting
+ *   acquired data values during the UI stage, which they may need in defaults
+ *   (see AdminSettingsForm for a hack/possible solution)
+ * - possibly rethink the acquired data system entirely anyway: can it be
+ *   replaced with dynamic defaults?
+ * - resolve the weird parallel systems of main structure and requested
+ *   components which are standalone data items. Data items could have their
+ *   structure added to dynamically? Or have internal properties for components
+ *   that will get requested?
+ *
+ * Brief notes on how 4.x.x works:
+ * - Generator classes define a data structure together (which itself is an
+ *   unspeakable mess at the moment, as there's loads of array data there too
+ *   which gets converted to data definitions)
+ * - that structure defines the data which is presented to the user in the UI
+ *   for them to populate
+ * - this class does some prep work on the data (which needs cleaning up!)
+ *   and then begins instantiating generators as in 3.x: see rest of these docs.
+ *
  * Before being passed to instantiated components, the data is processed in
  * various ways:
  *  - data values can be acquired from the component that requested the current
  *    one.
  *  - preset values are expanded.
- *  - default values are filled in.
- *  - 'processing' callbacks are called for each property.
+ *  - 'processing' callbacks are called for each property TODO: not at the
+ *    moment, possibly will be removed!
  *
  * Component data arrays have their structure defined by data property info
  * arrays, which each Generator class defines in its componentDataDefinition()
@@ -85,6 +122,18 @@ class ComponentCollector {
   protected $requested_data_record = [];
 
   /**
+   * The expression language to use for acquiring data from requesters.
+   *
+   * Acquiring data uses a separate expression language from the typed data
+   * defaults system, because it doesn't need the Javascript compatibility, and
+   * instead needs a dedicated custom function for handling the
+   * root_name/root_component_name switcheroo,.
+   *
+   * @var \Symfony\Component\ExpressionLanguage\ExpressionLanguage
+   */
+  protected $acquisitionExpressionLanguage;
+
+  /**
    * Constructs a new ComponentCollector.
    *
    * @param EnvironmentInterface $environment
@@ -101,6 +150,8 @@ class ComponentCollector {
   ) {
     $this->environment = $environment;
     $this->classHandler = $class_handler;
+    // TODO: not used, but maybe restore this to handle assembling data
+    // definitions from generator classes?
     $this->dataInfoGatherer = $data_info_gatherer;
   }
 
@@ -123,7 +174,7 @@ class ComponentCollector {
    * @return \DrupalCodeBuilder\Generator\Collection\ComponentCollection
    *  The collection of components.
    */
-  public function assembleComponentList($component_data) {
+  public function assembleComponentList(DataItem $component_data): ComponentCollection {
     // Reset all class properties. We don't normally run this twice, but
     // probably needed for tests.
     $this->requested_data_record = [];
@@ -131,18 +182,20 @@ class ComponentCollector {
     $this->component_collection = new \DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 
     // Fiddly different handling for the type in the root component...
-    $component_type = $component_data['base'];
-    $component_data['component_type'] = $component_type;
+    // $component_type = $component_data->getName();
+    // $component_data['component_type'] = $component_type;
 
     // The name for the root component is its root name, which will be the
     // name of the Drupal extension.
-    $this->getComponentsFromData($component_data['root_name'], $component_data, NULL);
+    $this->getComponentsFromData($component_data, NULL);
+
+    // $this->component_collection->dumpStructure();
 
     return $this->component_collection;
   }
 
   /**
-   * Create components from a data array.
+   * Create components from a data item.
    *
    * Provided this data does not duplicate already created components, the
    * populates the $this->component_collection property with:
@@ -167,27 +220,56 @@ class ComponentCollector {
    *   NULL if the data is a duplicate set. Note that nothing needs to be done
    *   with the return; the generator gets added to $this->component_collection.
    */
-  protected function getComponentsFromData($name, $component_data, $requesting_component) {
+  protected function getComponentsFromData(DataItem $component_data, ?GeneratorInterface $requesting_component) {
+    $name = $component_data->getName();
+
+    // Prepend the parent name to array data items, as their name is just the
+    // delta and that's not unique within the requester.
+    if (is_numeric($name)) {
+      $name = $component_data->getParent()->getName() . '_' . $name;
+    }
+
+    // dump(sprintf("STARTING getComponentsFromData with %s at %s requested by %s",
+    //   $name,
+    //   $component_data->getAddress(),
+    //   $requesting_component ? $requesting_component->component_data->getAddress() : 'nothing'
+    // ));
+
+    // dump("getComponentsFromDataItem");
+    // dump($component_data->export());
+    // dump($name);
+
+
+
     // Debugging: record the chain of how we get here each time.
     static $chain;
     $chain[] = $name;
-    $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
+    // $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
 
-    if (empty($component_data['component_type'])) {
-      throw new \Exception("Data for $name missing the 'component_type' property");
+    $component_type = $component_data->getComponentType();
+    // AAAAARGH should be encapsulated in the data but running out of the will
+    // to live.
+    // AND AAAARGH class check URGH.
+    if ($component_data->getVariants() && is_a($component_data->getVariantDefinition(), VariantGeneratorDefinition::class)) {
+      $component_type = $component_data->getVariantDefinition()->getComponentType();
     }
 
-    $component_type = $component_data['component_type'];
-    $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
+    // $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
     // Acquire data from the requesting component. We call this even if there
     // isn't a requesting component, as in that case, an exception is thrown
     // if an acquisition is attempted.
-    $this->acquireDataFromRequestingComponent($component_data, $component_data_info, $requesting_component);
+    // NOT NEEDED - can be done with defaults??
+    $this->acquireDataFromRequestingComponent($component_data, $requesting_component);
 
     // Process the component's data.
-    //dump($component_data);
-    $this->processComponentData($component_data, $component_data_info);
+    // dump("GOING TO MAKE $component_type with this data:");
+    // dump($component_data->export());
+    // dump(array_keys($component_data->getProperties()));
+    // TODO: restore!
+    // TODO: ARGH this causes repeat walking, since this is called on each
+    // instantiated thing, but THEN WE WALK IT!!!
+    $this->processComponentData($component_data);
 
     // Instantiate the generator in question.
     // We always pass in the root component.
@@ -238,6 +320,92 @@ class ComponentCollector {
 
     // Pick out any data properties which are components themselves, and create the
     // child components.
+    foreach ($component_data as $item_name => $data_item) {
+      // dump("spawn $item_name?");
+      // We're only interested in component properties.
+      if (!($data_item->getDefinition() instanceof GeneratorDefinition)) {
+        // dump("not spawning $item_name - not generator.");
+        continue;
+      }
+
+      if ($data_item->isEmpty()) {
+        // dump("not spawning $item_name - data is empty.");
+        continue;
+      }
+
+      $item_component_type = $data_item->getComponentType();
+      if ($data_item->getType() == 'boolean') {
+        if (!$data_item->value) {
+          // dump("not spawning $item_name - boolean FALSE.");
+          continue;
+        }
+
+        // Filthy hack.
+        // This is because on the one hand, a boolean property is just a boolean
+        // because that's what the UI needs, but the component itself has
+        // various properties that it expects to acquire.
+        $definition =  $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+        $data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+        // dump("switcheroo data item for boolean $item_name.");
+      }
+
+      // dump("YES spawn $item_name?");
+      $this->debug($chain, "spawning $item_name; type: $item_component_type");
+
+
+      // Get the component type.
+      // TODO: mutable types might have different component type per variant!!
+
+      if ($data_item->isMultiple()) {
+        // Safe to check first delta; we already skipped empty things.
+        if ($data_item[0]->isSimple()) {
+          // Ugly hack switcheroo from a multi-valued simple property to
+          // compound data with a single 'primary' property. This is necessary
+          // so the generator can get acquired properties as well as the single
+          // data from the UI.
+          // TODO: make this sort of expansion internal to MTD?
+          $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+
+          // Get the public property from the definition. There must be only
+          // one for this to make sense!
+          $component_properties = $definition->getProperties();
+          $component_property_names = [];
+          foreach ($component_properties as $property) {
+            if ($property->isInternal()) {
+              continue;
+            }
+
+            $component_property_names[] = $property->getName();
+          }
+
+          assert(count($component_property_names) == 1);
+          $single_property_name = reset($component_property_names);
+
+          foreach ($data_item as $delta => $simple_delta_item) {
+            $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+
+            $new_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+            $new_data_item->setParent($data_item, $delta);
+
+            $new_data_item->{$single_property_name}->value = $simple_delta_item->value;
+
+            $this->getComponentsFromData($new_data_item, $generator);
+          }
+
+          continue;
+        }
+
+        foreach ($data_item as $delta_item) {
+          $this->getComponentsFromData($delta_item, $generator);
+        }
+      }
+      else {
+        $this->getComponentsFromData($data_item, $generator);
+      }
+    }
+
+    /*
     foreach ($component_data_info as $property_name => $property_info) {
       // We're only interested in component properties.
       if (!isset($property_info['component_type'])) {
@@ -308,8 +476,10 @@ class ComponentCollector {
           break;
       }
     }
+    */
 
     // Ask the generator for its required components.
+    // TODO: lots to figure out here!
     $item_required_subcomponent_list = $generator->requiredComponents();
 
     // Collect the resulting components so we can set IDs for containment.
@@ -318,6 +488,39 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
+      // dump("Converting $required_item_name");
+      // Conversion to data items!
+      if (is_array($required_item_data)) {
+        $definition =  $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
+        // $definition->setMachineName($required_item_name);
+
+        unset($required_item_data['component_type']);
+
+        $required_item_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+        try {
+          $required_item_data_item->set($required_item_data);
+        }
+        catch (\MutableTypedData\Exception\InvalidInputException $e) {
+          throw new \Exception(sprintf("Invalid input when trying to set data on required item %s for generator at %s.",
+            $required_item_data_item->getAddress(),
+            $generator->component_data->getAddress()
+          ));
+        }
+
+        $required_item_data = $required_item_data_item;
+
+        // ARGH but the name is wrong!
+        // problem here is that MTB thinks of the name as set in the definition
+        // and unchangeable and here it's all fluffy and per-item.
+
+        // we NEED per-item because:
+        // we could be adding more than one local ymlfile data item!
+      }
+
+      // Validate so defaults are filled in.
+      $required_item_data->validate();
+
       // Guard against a clash of required item key.
       // In other words, a key in requiredComponents() can't be the same as a
       // property name.
@@ -327,7 +530,9 @@ class ComponentCollector {
 
       $local_names[$required_item_name] = TRUE;
 
-      $main_required_component = $this->getComponentsFromData($required_item_name, $required_item_data, $generator);
+      // dump($required_item_data);
+
+      $main_required_component = $this->getComponentsFromData($required_item_data, $generator);
       $required_components[$required_item_name] = $main_required_component;
     }
 
@@ -355,10 +560,13 @@ class ComponentCollector {
    *   Throws an exception if a property has the 'acquired' attribute, but
    *   there is no requesting component present.
    */
-  protected function acquireDataFromRequestingComponent(&$component_data, $component_data_info, $requesting_component) {
-    // Get the requesting component's data info.
-    if ($requesting_component) {
-      $requesting_component_data_info = $this->dataInfoGatherer->getComponentDataInfo($requesting_component->getType(), TRUE);
+  protected function acquireDataFromRequestingComponent(DataItem $component_data, $requesting_component) {
+    // dump("acquireDataFromRequestingComponent -- for " . $component_data->getName());
+    // dump($component_data->getDefinition());
+
+    if (!isset($this->acquisitionExpressionLanguage)) {
+      $this->acquisitionExpressionLanguage = new ExpressionLanguage();
+      $this->acquisitionExpressionLanguage->registerProvider(new AcquisitionExpressionLanguageProvider());
     }
 
     // Initialize a map of property acquisition aliases in the requesting
@@ -367,8 +575,9 @@ class ComponentCollector {
     $requesting_component_alias_map = NULL;
 
     // Allow the new generator to acquire properties from the requester.
-    foreach ($component_data_info as $property_name => $property_info) {
-      if (empty($property_info['acquired'])) {
+    // Get all properties, including internal!
+    foreach ($component_data->showInternal()->getProperties() as $property_name => $property_info) {
+      if (!$property_info->getAcquiringExpression()) {
         continue;
       }
 
@@ -376,44 +585,30 @@ class ComponentCollector {
         throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
       }
 
-      $acquired_value = NULL;
-      if (isset($property_info['acquired_from'])) {
-        // If the current property says it is acquired from something else,
-        // use that.
-        $acquired_value = $requesting_component->getComponentDataValue($property_info['acquired_from']);
+      $expression = $property_info->getAcquiringExpression();
+      // $add = $component_data->getAddress();
+      // dump("  ACQUIRING for $add - $property_name on with '$expression'");
+      // dump("  " . $expression);
+      // dump($requesting_component->component_data->export());
+      // dump(get_class($requesting_component->component_data));
+
+      try {
+        $acquired_value = $this->acquisitionExpressionLanguage->evaluate($expression, [
+          'requester' => $requesting_component->component_data,
+        ]);
       }
-      elseif (array_key_exists($property_name, $requesting_component_data_info)) {
-        // Get the value from the property of the same name, if one exists.
-        $acquired_value = $requesting_component->getComponentDataValue($property_name);
+      catch (\RuntimeException $e) {
+        dump("Unable to evaluate expression '$expression'.");
+        dump($requesting_component->component_data->export());
+        throw $e;
       }
-      else {
-        // Finally, try to find an acquisition alias.
-        if (is_null($requesting_component_alias_map)) {
-          // Lazily build a map of aliases that exist in the requesting
-          // component's data info, now that we need it.
-          $requesting_component_alias_map = [];
-
-          foreach ($requesting_component_data_info as $requesting_component_property_name => $requesting_component_property_info) {
-            if (!isset($requesting_component_property_info['acquired_alias'])) {
-              continue;
-            }
-
-            // Create a map of the current data's property name => the
-            // requesting component's property name.
-            $requesting_component_alias_map[$requesting_component_property_info['acquired_alias']] = $requesting_component_property_name;
-          }
-        }
-
-        if (isset($requesting_component_alias_map[$property_name])) {
-          $acquired_value = $requesting_component->getComponentDataValue($requesting_component_alias_map[$property_name]);
-        }
+      catch (\MutableTypedData\Exception\InvalidAccessException $e) {
+        dump("Unable to evaluate expression '$expression'.");
+        dump($requesting_component->component_data->export());
+        throw $e;
       }
 
-      if (!isset($acquired_value)) {
-        throw new \Exception("Unable to acquire value for property $property_name.");
-      }
-
-      $component_data[$property_name] = $acquired_value;
+      $component_data->{$property_name}->set($acquired_value);
     }
   }
 
@@ -426,87 +621,137 @@ class ComponentCollector {
    *  - sets values forced or suggested by other properties' presets.
    *  - performs additional processing that a property may require
    *
-   * @param &$component_data
-   *  The component data array. On the first call, this is the entire array; on
+   * @param DataItem $component_data
+   *  The component data. On the first call, this is the entire array; on
    *  recursive calls this is the local data subset.
-   * @param &$component_data_info
-   *  The component data info for the data being processed. Passed by reference,
-   *  to allow property processing callbacks to make changes.
    */
-  protected function processComponentData(&$component_data, &$component_data_info) {
-    // Work over each property.
-    foreach ($component_data_info as $property_name => &$property_info) {
-      // Set defaults for properties that don't have a value yet.
-      $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
-
-      // Set values from a preset.
-      // We do this after defaults, so preset properties can have a default
-      // value. Note this means that presets can only affect properties that
-      // come after them in the property info order.
-      if (isset($property_info['presets'])) {
-        $this->setPresetValues($property_name, $component_data_info, $component_data);
-      }
-
-      // Allow each property to apply its processing callback. Note that this
-      // may set or alter other properties in the component data array, and may
-      // also make changes to the property info.
-      $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
+  protected function processComponentData(DataItem $component_data) {
+    // Only set presets once, when processing the root data.
+    if (!$component_data->getParent()) {
+      $component_data->walk([$this, 'setPresetValues']);
     }
-    // Clear the loop reference, otherwise PHP does Bad Things.
-    unset($property_info);
 
-    // Recurse into compound properties.
-    // We do this last to allow the parent property to have default and
-    // processing applied to the child data as a whole.
-    // (TODO: test this!)
-    foreach ($component_data_info as $property_name => $property_info) {
-      // Only work with compound properties.
-      if ($property_info['format'] != 'compound') {
-        continue;
-      }
+    $component_data->walk([$this, 'applyProcessing']);
 
-      // Don't work with component child properties, as the generator will
-      // handle this.
-      if (isset($property_info['component_type'])) {
-        continue;
-      }
-
-      if (!isset($component_data[$property_name])) {
-        // Skip if no data for this property.
-        continue;
-      }
-
-      foreach ($component_data[$property_name] as $delta => &$item_data) {
-        $this->processComponentData($item_data, $property_info['properties']);
-      }
-    }
+    return;
   }
 
+    // // Work over each property.
+    // foreach ($component_data->getProperties() as $property_name => $property_definition) {
+    //   // Set defaults for properties that don't have a value yet.
+    //   // NO- defaults are done earlier by validation.
+    //   // $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
+
+    //   // Set values from a preset.
+    //   // We do this after defaults, so preset properties can have a default
+    //   // value. Note this means that presets can only affect properties that
+    //   // come after them in the property info order.
+    //   if ($property_definition->getPresets()) {
+    //     $this->setPresetValues($component_data->{$property_name});
+    //   }
+
+    //   // Allow each property to apply its processing callback. Note that this
+    //   // may set or alter other properties in the component data array, and may
+    //   // also make changes to the property info.
+    //   // $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
+    // }
+
+    // // Recurse into compound properties.
+    // // We do this last to allow the parent property to have default and
+    // // processing applied to the child data as a whole.
+    // // (TODO: test this!)
+    // foreach ($component_data->getProperties() as $property_name => $property_definition) {
+
+    //   // Only work with compound properties.
+    //   if ($property_info['format'] != 'compound') {
+    //     continue;
+    //   }
+
+    //   // Don't work with component child properties, as the generator will
+    //   // handle this.
+    //   if (isset($property_info['component_type'])) {
+    //     continue;
+    //   }
+
+    //   if (!isset($component_data[$property_name])) {
+    //     // Skip if no data for this property.
+    //     continue;
+    //   }
+
+    //   foreach ($component_data[$property_name] as $delta => &$item_data) {
+    //     $this->processComponentData($item_data, $property_info['properties']);
+    //   }
+    // }
+
   /**
-   * Sets values from a presets property into other properties.
+   * Walk callback to set values from a presets property into other properties.
    *
-   * @param string $property_name
-   *  The name of the preset property.
-   * @param $component_data_info
-   *  The component info array, or for child properties, the info array for the
-   *  current data.
-   * @param &$component_data_local
-   *  The array of component data, or for child properties, the item array that
-   *  immediately contains the property. In other words, this array would have
-   *  a key $property_name if data has been supplied for this property.
+   * @param DataItem $component_data
+   *  The component data item.
    */
-  protected function setPresetValues($property_name, &$component_data_info, &$component_data_local) {
-    if (empty($component_data_local[$property_name])) {
+  public function setPresetValues(DataItem $component_data) {
+    // Bail if this is not a data item that has presets.
+    if (!$component_data->getPresets()) {
       return;
     }
 
+    // Bail if this data item has no value set.
+    if ($component_data->isEmpty()) {
+      return;
+    }
+
+    // dump($component_data->getParent()->export());
+
+
+    $presets = $component_data->getPresets();
+    // dump("APPLYING PRESETS FOR " . $component_data->getAddress());
+    // dump($presets);
+    // dump($componpent_data);
+
+    // Values which are forced by the preset.
+    foreach ($component_data->items() as $preset_item) {
+      // dump("DOING " . $preset_item->value);
+      // dump($preset_item);
+      $preset_item_preset_data = $presets[$preset_item->value];
+      // dump($preset_item_preset_data);
+      if (isset($preset_item_preset_data['data']['force'])) {
+        foreach ($preset_item_preset_data['data']['force'] as $forced_property_name => $forced_data) {
+          // Access the value so that the default is set.
+          $component_data->getParent()->{$forced_property_name}->access();
+
+          // dump("FORCING $forced_property_name at address: - ");
+          // dump($component_data->getParent()->{$forced_property_name}->getAddress());
+          // dump($component_data->getParent()->{$forced_property_name}->export());
+          // dump($forced_data['value']);
+          // Literal value. (This is the only type we support at the moment.)
+          if (isset($forced_data['value'])) {
+            // Append values rather than replacing them, as for a multi-valued
+            // preset, different presets may provide different values for a
+            // multi-valued target property, which should all be merged.
+            $component_data->getParent()->{$forced_property_name}->add($forced_data['value']);
+          }
+        }
+      }
+    }
+
+    // dump($component_data->getParent()->export());
+    // exit();
+    // ARGH it's worked but TOO LATE after the defaults were set!?!?!? WTF
+
+    return;
+
+
+
+
+
     // Treat the selected preset as an array, even if it's single-valued.
-    if ($component_data_info[$property_name]['format'] == 'array') {
-      $preset_keys = $component_data_local[$property_name];
+    if ($component_data->isMultiple()) {
+      // TODO: argh, what's the way to get a flat array of multiple scalar values?
+      $preset_keys = $component_data->export();
       $multiple_presets = TRUE;
     }
     else {
-      $preset_keys = [$component_data_local[$property_name]];
+      $preset_keys = [$component_data->value];
       $multiple_presets = FALSE;
     }
 
@@ -516,7 +761,7 @@ class ComponentCollector {
     $suggested_values = [];
 
     foreach ($preset_keys as $preset_key) {
-      $selected_preset_info = $component_data_info[$property_name]['presets'][$preset_key];
+      $selected_preset_info = $presets[$preset_key];
 
       // Ensure these are both preset as at least empty arrays.
       // TODO: handle filling this in in ComponentDataInfoGatherer?
@@ -689,35 +934,26 @@ class ComponentCollector {
   }
 
   /**
-   * Applies the processing callback for a property in component data.
+   * Walk callback to apply processing callbacks to component data.
    *
-   * Helper for processComponentData().
+   * Note that 'process_empty' is handled earlier, as empty values won't
+   * necessarily exist to get this walk callback applied.
    *
-   * @param $property_name
-   *  The name of the property. For child properties, this is the name of just
-   *  the child property.
-   * @param &$property_info
-   *  The property info array for the property. Passed by reference, as
-   *  the processing callback takes this by reference and may make changes.
-   * @param &$component_data_local
-   *  The array of component data, or for child properties, the item array that
-   *  immediately contains the property. In other words, this array would have
-   *  a key $property_name if data has been supplied for this property.
+   * @param DataItem $component_data
+   *  The component data item.
    */
-  protected function applyComponentDataPropertyProcessing($property_name, &$property_info, &$component_data_local) {
-    if (!isset($property_info['processing'])) {
+  public function applyProcessing(DataItem $component_data) {
+    $processing = $component_data->getProcessing();
+
+    if (!$processing) {
       // No processing: nothing to do.
       return;
     }
 
-    if (empty($component_data_local[$property_name]) && empty($property_info['process_empty'])) {
-      // Don't apply to an empty property, unless forced to.
-      return;
-    }
+    // dump($component_data->export());
 
-    $processing_callback = $property_info['processing'];
-
-    $processing_callback($component_data_local[$property_name], $component_data_local, $property_name, $property_info);
+    $processing($component_data);
+    // dump($component_data->export());
   }
 
   /**

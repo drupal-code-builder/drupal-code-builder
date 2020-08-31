@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\InsertArray;
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Component generator: admin form for modules.
@@ -15,7 +17,21 @@ class AdminSettingsForm extends Form {
   public static function componentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Form\ConfigFormBase';
+    // Because this component is declared in the Module root component, we
+    // need defaults to work at the UI stage, including those that depend on
+    // acquired data. However, acquisition only happens on code generation.
+    // So instead use a default here.
+    // TODO: expand this. Rethink acquisitions system? And technically, this
+    // generator's definition should not know about the parent it's within
+    $data_definition['root_name'] = PropertyDefinition::create('string')
+      ->setInternal(TRUE)
+      ->setExpressionDefault("get('..:..:root_name')");
+
+    $data_definition['parent_class_name']
+      ->setLiteralDefault('\Drupal\Core\Form\ConfigFormBase');
+
+    // Make one of the basic class name properties internal.
+    $data_definition['relative_class_name']->setInternal(TRUE);
 
     $parent_route_property['parent_route'] = [
       'label' => 'Parent menu item',
@@ -24,20 +40,20 @@ class AdminSettingsForm extends Form {
     ];
     InsertArray::insertBefore($data_definition, 'injected_services', $parent_route_property);
 
-    $data_definition['form_class_name']['internal'] = TRUE;
-    $data_definition['form_class_name']['default'] = 'AdminSettingsForm';
-    $data_definition['form_class_name']['process_default'] = TRUE;
+    $data_definition['plain_class_name']
+      ->setLiteralDefault('AdminSettingsForm');
 
-    $data_definition['form_id']['default'] = function($component_data) {
-      return $component_data['root_component_name'] . '_settings_form';
-    };
+    $data_definition['form_id']->getDefault()
+      ->setExpression("get('..:root_name') ~ '_settings_form'")
+      ->setDependencies('..:root_name');
 
-    $data_definition['route_name'] = [
-      'computed' => TRUE,
-      'default' => function($component_data) {
-        return $component_data['root_component_name'] . '.settings';
-      },
-    ];
+    $data_definition['route_name'] = PropertyDefinition::create('string')
+      ->setLabel("The name of the route.")
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setExpression("get('..:root_name') ~ '.settings'")
+          ->setDependencies('..:root_name')
+      );
 
     return $data_definition;
   }
@@ -100,14 +116,18 @@ class AdminSettingsForm extends Form {
       // anyway.
       'path' => $settings_form_path,
       'title' => 'Administer %lower',
-      'controller_type' => 'form',
-      'controller_type_value' => '\\' . $this->component_data['qualified_class_name'],
-      'access_type' => 'permission',
-      'access_type_value' => 'administer %module',
+      'controller' => [
+        'controller_type' => 'form',
+        'routing_value' => '\\' . $this->component_data['qualified_class_name'],
+      ],
+      'access' => [
+        'access_type' => 'permission',
+        'routing_value' => 'administer %module',
+      ],
     );
 
     $components['menu_link'] = [
-      'component_type' => 'PluginYAML',
+      'component_type' => 'Plugin',
       'plugin_type' => 'menu.link',
       'plugin_name' => 'settings',
       'plugin_properties' => [

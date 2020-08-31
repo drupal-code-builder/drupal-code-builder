@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for entity handler classes.
@@ -20,7 +21,7 @@ class EntityHandler extends PHPClassFile {
         // requesting component.
         'acquired' => TRUE,
       ],
-      'entity_class_name' => [
+      'plain_class_name' => [
         'internal' => TRUE,
         'acquired' => TRUE,
       ],
@@ -38,9 +39,8 @@ class EntityHandler extends PHPClassFile {
 
     // Note that relative_class_name is given by the entity type component.
 
-    $data_definition['docblock_first_line']['default'] = function ($component_data) {
-      return "Provides the {$component_data['handler_label']} handler for the {$component_data['entity_type_label']} entity.";
-    };
+    $data_definition['class_docblock_lines']->setDefault(DefaultDefinition::create()
+      ->setExpression("['Provides the ' ~ get('..:handler_label') ~ ' handler for the ' ~ get('..:entity_type_label') ~ ' entity.']"));
 
     return $data_definition;
   }

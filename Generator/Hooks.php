@@ -24,8 +24,7 @@ class Hooks extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      // An array of requested hooks, where the keys are the long hook names and
-      // the values are TRUE.
+      // An array of requested hooks, as long hook names.
       'hooks' => [
         'label' => 'Hook implementations',
         'required' => FALSE,
@@ -66,8 +65,9 @@ class Hooks extends BaseGenerator {
     // file it requires to the component list.
     $components = array();
 
-    // Just translate the variable for easier frankencoding for now!
-    $requested_hook_list = $this->component_data['hooks'];
+    // Convert the input data to the right format.
+    // TODO: clean this up -- it used to be handled in property processing.
+    $requested_hook_list = array_fill_keys($this->component_data['hooks'], TRUE);
 
     // Get a set of hook declarations and function body templates for the hooks
     // we want. This is of the form:

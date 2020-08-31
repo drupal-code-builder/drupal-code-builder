@@ -2,9 +2,12 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for a config entity type.
@@ -59,60 +62,41 @@ class ConfigEntityType extends EntityTypeBase {
         'description' => "The config properties that are stored for each entity of this type. An ID and label property are provided automatically.",
         'format' => 'compound',
         'properties' => [
-          'name' => [
-            'label' => 'Property name',
-            'required' => TRUE,
-          ],
-          'label' => [
-            'label' => 'Property label',
-            'default' => function($component_data) {
-              $entity_type_id = $component_data['name'];
-              return CaseString::snake($entity_type_id)->title();
-            },
-            'process_default' => TRUE,
-          ],
+          'name' => PropertyDefinition::create('string')
+            ->setLabel('Property name')
+            ->setRequired(TRUE)
+            ->setValidators('machine_name'),
+          'label' => PropertyDefinition::create('string')
+            ->setLabel('Property label')
+            ->setRequired(TRUE)
+            ->setDefault(
+              DefaultDefinition::create()
+                ->setExpression("machineToLabel(get('..:name'))")
+              ->setDependencies('..:name')
+          ),
           'type' => [
             'label' => 'Data type',
             'required' => TRUE,
             'options' => 'ReportDataTypes:listDataTypesOptions',
           ],
         ],
-        'processing' => function($value, &$component_data, $property_name, &$property_info) {
-          $id_name_entity_properties = [
-            0 => [
-              'name' => 'id',
-              'label' => 'Machine name',
-              'type' => 'string',
-            ],
-            1 => [
-              'name' => 'label',
-              'label' => 'Name',
-              'type' => 'label',
-            ],
-          ];
-
-          $component_data[$property_name] = array_merge($id_name_entity_properties, $value);
-        },
-        'process_empty' => TRUE,
       ],
     ];
     InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
 
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Config\Entity\ConfigEntityBase';
-    $data_definition['interface_parents']['processing'] = function($value, &$component_data, $property_name, &$property_info) {
-      array_unshift($value, '\Drupal\Core\Config\Entity\ConfigEntityInterface');
-      $component_data[$property_name] = $value;
-    };
+    $data_definition['parent_class_name']
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBase')
+      );
+
+    $data_definition['interface_parents']['default'] = ['\Drupal\Core\Config\Entity\ConfigEntityInterface'];
 
     // Change the computed value for entity keys.
-    $data_definition['entity_keys']['default'] = function($component_data) {
-      $keys = [
-        'id' => 'id',
-        'label' => 'label',
-      ];
-
-      return $keys;
-    };
+    $data_definition['entity_keys']['default'] = [
+      'id' => 'id',
+      'label' => 'label',
+    ];
 
     return $data_definition;
   }
@@ -147,6 +131,21 @@ class ConfigEntityType extends EntityTypeBase {
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
+    // Filthy hack.
+    $label = $this->component_data->entity_properties->insertBefore(0);
+    $label->set([
+      'name' => 'label',
+      'label' => 'Name',
+      'type' => 'label',
+    ]);
+
+    $id = $this->component_data->entity_properties->insertBefore(0);
+    $id->set([
+      'name' => 'id',
+      'label' => 'Machine name',
+      'type' => 'text',
+    ]);
+
     // Add form elements for the form handlers, if present.
     $form_handlers_to_add_form_elements_to = [];
     if (isset($components['handler_form_default'])) {
@@ -165,7 +164,7 @@ class ConfigEntityType extends EntityTypeBase {
 
     foreach ($form_handlers_to_add_form_elements_to as $data_key) {
       // Special handling for the id and label properties.
-      $components[$data_key . ':label'] = [
+      $components[$data_key . '-label'] = [
         'component_type' => 'FormElement',
         'containing_component' => "%requester:{$data_key}:form",
         'form_key' => 'label',
@@ -177,7 +176,7 @@ class ConfigEntityType extends EntityTypeBase {
         ],
       ];
 
-      $components[$data_key . ':id'] = [
+      $components[$data_key . '-id'] = [
         'component_type' => 'FormElement',
         'containing_component' => "%requester:{$data_key}:form",
         'form_key' => 'id',
@@ -192,11 +191,6 @@ class ConfigEntityType extends EntityTypeBase {
           ],
         ],
       ];
-      // TODO: handle this in ConfigBundleEntityType.
-      if (isset($this->component_data['bundle_of_entity'])) {
-        $components[$data_key . ':id']['element_array']['maxlength'] =
-          '\Drupal\Core\Entity\EntityTypeInterface::BUNDLE_MAX_LENGTH';
-      }
 
       // Add a form element for each custom entity property.
       foreach ($this->component_data['entity_properties'] as $schema_item) {
@@ -244,10 +238,10 @@ class ConfigEntityType extends EntityTypeBase {
     ];
 
     // Add menu plugins for the entity type if the UI option is set.
-    if (!empty($this->component_data['entity_ui'])) {
+    if ($this->component_data['entity_ui']) {
       // Name must be unique among the component type.
       $components['collection_menu_link_' . $this->component_data['entity_type_id']] = [
-        'component_type' => 'PluginYAML',
+        'component_type' => 'Plugin',
         'plugin_type' => 'menu.link',
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
@@ -266,7 +260,7 @@ class ConfigEntityType extends EntityTypeBase {
       ];
       foreach ($entity_tabs as $route_suffix => $title) {
         $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
-          'component_type' => 'PluginYAML',
+          'component_type' => 'Plugin',
           'plugin_type' => 'menu.local_task',
           'prefix_name' => FALSE,
           'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",

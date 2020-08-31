@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\InsertArray;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for a config entity type that is a content entity type's bundle.
@@ -42,12 +44,6 @@ class ConfigBundleEntityType extends ConfigEntityType {
         'internal' => TRUE,
         'acquired' => TRUE,
       ],
-      'bundle_of_entity' => [
-        'label' => 'Bundle of entity',
-        'internal' => TRUE,
-        'acquired' => TRUE,
-        'acquired_from' => 'entity_type_id',
-      ],
     ];
     // Add this right at the start, before the ID, so the ID default value
     // can depend on it.
@@ -55,15 +51,17 @@ class ConfigBundleEntityType extends ConfigEntityType {
 
     // Allow the entity type ID to be derived from the entity it's a bundle
     // for a content entity type.
-    $data_definition['entity_type_id']['default'] = function($component_data) {
-      // For non-progressive UIs, acquired properties won't be set yet.
-      return $component_data['bundle_entity_type_id'] ?? '';
-    };
-    $data_definition['entity_type_id']['process_default'] = TRUE;
+    $data_definition['entity_type_id']->setDefault(
+      DefaultDefinition::create()
+        // TODO: make this work in the form!
+        ->setExpression("get('..:..:bundle_entity_type_id')")
+    );
 
     // Bundle entities need to use ConfigEntityBundleBase in order to clear
     // caches and synchronize display entities.
-    $data_definition['parent_class_name']['default'] = '\Drupal\Core\Config\Entity\ConfigEntityBundleBase';
+    $data_definition['parent_class_name']->setDefault(
+      DefaultDefinition::create()->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBundleBase')
+    );
 
     return $data_definition;
   }
@@ -85,10 +83,31 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
+  public function requiredComponents() {
+    $components = parent::requiredComponents();
+
+    // For bundle entity types, the entity ID length is limited.
+    foreach ($components as $key => $component) {
+      if ($component['component_type'] == 'FormElement' && $component['form_key'] == 'id') {
+        $components[$key]['element_array']['maxlength'] =
+          '\Drupal\Core\Entity\EntityTypeInterface::BUNDLE_MAX_LENGTH';
+      }
+    }
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
-    $annotation_data['bundle_of'] = $this->component_data['bundle_of_entity'];
+    // This is reaching into the parent, which breaks the pattern that a
+    // generator should be independent of whatever includes its data definition,
+    // but in this case, a bundle entity type is only ever going to be used by a
+    // content entity type.
+    $annotation_data['bundle_of'] = $this->component_data->getParent()->entity_type_id->value;
 
     return $annotation_data;
   }

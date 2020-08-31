@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Generator\PHPFile;
 
 /**
  * Tests the PHP File generator class.
+ *
+ * @group pass
  */
 class ComponentPHPFile8Test extends TestBase {
 
@@ -40,7 +42,8 @@ class ComponentPHPFile8Test extends TestBase {
     $method->setAccessible(TRUE);
 
     // Create a PHP file generator with some dummy constructor parameters.
-    $php_file_generator = new PHPFile('name', [], 'fake_generator');
+    $data_item = $this->prophesize(\MutableTypedData\Data\DataItem::class);
+    $php_file_generator = new PHPFile($data_item->reveal());
 
     // Our code is a single line, but the method expects an array of lines.
     $code_lines = [$code];

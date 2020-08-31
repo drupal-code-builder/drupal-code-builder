@@ -2,6 +2,10 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
+
 /**
  * Abstract Generator for root components.
  *
@@ -32,13 +36,9 @@ abstract class RootComponent extends BaseGenerator {
     $component_data_definition = parent::componentDataDefinition();
 
     // Define this here for completeness; child classes should specialize it.
-    $component_data_definition['root_name'] = [
-      'label' => 'Extension machine name',
-      'required' => TRUE,
-      // Requested components will acquire the root name as the
-      // 'root_component_name' property.
-      'acquired_alias' => 'root_component_name',
-    ];
+    $component_data_definition['root_name'] = PropertyDefinition::create('string')
+      ->setLabel('Extension machine name')
+      ->setRequired(TRUE);
 
     // Remove the root_component_name property that's come from the parent
     // class.
@@ -46,14 +46,18 @@ abstract class RootComponent extends BaseGenerator {
 
     // Override the component_base_path property to be computed rather than
     // inherited.
-    $component_data_definition['component_base_path'] = [
-      'computed' => TRUE,
-      'default' => function($component_data) {
-        return '';
-      },
-    ];
+    $component_data_definition['component_base_path'] = PropertyDefinition::create('string')
+      ->setInternal(TRUE)
+      ->setDefault(
+        DefaultDefinition::create()
+          ->setLiteral('')
+      );
 
     return $component_data_definition;
+  }
+
+  public function isRootComponent(): bool {
+    return TRUE;
   }
 
   /**
