@@ -377,7 +377,7 @@ class Module extends RootComponent {
       //'router_items' => 'path/foo path/bar',
       // The following properties shouldn't be offered as UI options.
       'camel_case_name' => PropertyDefinition::create('string')
-        ->setLabel('Permission human-readable name. If omitted, this is derived from the machine name')
+        ->setLabel('Module human-readable name')
         ->setInternal(TRUE)
         ->setRequired(TRUE)
         ->setDefault(
