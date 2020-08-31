@@ -147,6 +147,7 @@ abstract class TestBase extends TestCase {
     sort($filenames);
     sort($actual_file_names);
 
+    // TODO! min PHPUnit 7.5?
     $this->assertEquals($filenames, $actual_file_names, "The expected files were generated.");
   }
 
