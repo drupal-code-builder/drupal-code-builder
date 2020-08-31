@@ -498,7 +498,15 @@ class ComponentCollector {
 
         $required_item_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
-        $required_item_data_item->set($required_item_data);
+        try {
+          $required_item_data_item->set($required_item_data);
+        }
+        catch (\MutableTypedData\Exception\InvalidInputException $e) {
+          throw new \Exception(sprintf("Invalid input when trying to set data on required item %s for generator at %s.",
+            $required_item_data_item->getAddress(),
+            $generator->component_data->getAddress()
+          ));
+        }
 
         $required_item_data = $required_item_data_item;
 
