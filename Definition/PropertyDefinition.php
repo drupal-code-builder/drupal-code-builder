@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Definition;
 
-use MutableTypedData\Definition\PropertyDefinition as OriginalPropertyDefinition;
+use MutableTypedData\Definition\PropertyDefinition as BasePropertyDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Extends the basic property definition with DCB extras.
  */
-class PropertyDefinition extends OriginalPropertyDefinition implements \ArrayAccess {
+class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess {
 
   // TODO: can this be done with defaults instead??
   protected $acquiringExpression = FALSE;
