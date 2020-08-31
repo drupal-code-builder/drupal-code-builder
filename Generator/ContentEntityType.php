@@ -184,7 +184,7 @@ class ContentEntityType extends EntityTypeBase {
           ->setDependencies('..:bundle_entity_type_id')
         ),
       'field_ui_base_route' => PropertyDefinition::create('string')
-        // TODO: expose to UI in 3.3 when we have dynamic defaults.
+        // TODO: expose to UI when we have dynamic defaults.
         // This will then be dependent on the 'fieldable' property.
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()

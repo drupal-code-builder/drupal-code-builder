@@ -241,7 +241,6 @@ abstract class EntityTypeBase extends PHPClassFile {
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            // TODO NOT WORKING IN FRONT END!
             ->setExpression("'administer ' ~ get('..:entity_type_id') ~ ' entities'")
             ->setDependencies('..:entity_type_id')
         );
