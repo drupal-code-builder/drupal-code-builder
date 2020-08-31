@@ -182,7 +182,7 @@ class ComponentCollector {
     $this->component_collection = new \DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 
     // Fiddly different handling for the type in the root component...
-    // $component_type = $component_data->getMachineName();
+    // $component_type = $component_data->getName();
     // $component_data['component_type'] = $component_type;
 
     // The name for the root component is its root name, which will be the
@@ -376,7 +376,7 @@ class ComponentCollector {
               continue;
             }
 
-            $component_property_names[] = $property->getMachineName();
+            $component_property_names[] = $property->getName();
           }
 
           assert(count($component_property_names) == 1);
@@ -565,7 +565,7 @@ class ComponentCollector {
    *   there is no requesting component present.
    */
   protected function acquireDataFromRequestingComponent(DataItem $component_data, $requesting_component) {
-    // dump("acquireDataFromRequestingComponent -- for " . $component_data->getMachineName());
+    // dump("acquireDataFromRequestingComponent -- for " . $component_data->getName());
     // dump($component_data->getDefinition());
 
     if (!isset($this->acquisitionExpressionLanguage)) {

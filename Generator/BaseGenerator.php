@@ -347,7 +347,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
           throw new \Exception(sprintf(
             "Array info callable default needs to be converted at property '%s' of %s.",
             $name,
-            $definition->getMachineName()
+            $definition->getName()
           ));
         }
         elseif ($def['default'] instanceof DefaultDefinition) {
@@ -357,7 +357,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
           throw new \Exception(sprintf(
             "Unhandled default at property '%s' of %s.",
             $name,
-            $definition->getMachineName()
+            $definition->getName()
           ));
         }
       }
