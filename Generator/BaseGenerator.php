@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Definition\PropertyDefinition as BasePropertyDefinition;
+use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefinitionProviderInterface;
 

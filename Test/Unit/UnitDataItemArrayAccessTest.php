@@ -11,7 +11,7 @@ use MutableTypedData\Data\MutableData;
 use MutableTypedData\DataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DataDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Test\VarDumperSetupTrait;
@@ -32,16 +32,16 @@ class UnitDataItemArrayAccessTest extends TestCase {
    */
   public function testDataItem() {
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition(
-      PropertyDefinition::create('complex')
+      DataDefinition::create('complex')
         ->setMachineName('root')
         ->setProperties([
-          'plain' => PropertyDefinition::create('string'),
-          'default' => PropertyDefinition::create('string')
+          'plain' => DataDefinition::create('string'),
+          'default' => DataDefinition::create('string')
             ->setDefault(
               DefaultDefinition::create()
                 ->setLiteral("foo")
             ),
-          'lazy_default' => PropertyDefinition::create('string')
+          'lazy_default' => DataDefinition::create('string')
             ->setDefault(
               DefaultDefinition::create()
                 ->setLiteral('lazy')

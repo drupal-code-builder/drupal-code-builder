@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Definition;
 
-use MutableTypedData\Definition\PropertyDefinition as BasePropertyDefinition;
+use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 
 /**

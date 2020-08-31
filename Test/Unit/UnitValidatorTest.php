@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use MutableTypedData\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DataDefinition;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -40,7 +40,7 @@ class UnitValidatorTest extends TestCase {
     $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\ClassName();
 
     $data = \DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory::createFromDefinition(
-      PropertyDefinition::create('string')
+      DataDefinition::create('string')
     );
 
     $data->value = $value;
@@ -91,7 +91,7 @@ class UnitValidatorTest extends TestCase {
     $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\MachineName();
 
     $data = \DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory::createFromDefinition(
-      PropertyDefinition::create('string')
+      DataDefinition::create('string')
     );
 
     $data->value = $value;
