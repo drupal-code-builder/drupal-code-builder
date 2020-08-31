@@ -21,7 +21,7 @@ class Permission extends BaseGenerator {
         'required' => TRUE,
       ),
       'title' => PropertyDefinition::create('string')
-        ->setLabel('Permission human-readable name. If omitted, this is derived from the machine name')
+        ->setLabel('Permission human-readable name')
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
