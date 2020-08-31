@@ -514,24 +514,12 @@ class ComponentCollector {
         // problem here is that MTB thinks of the name as set in the definition
         // and unchangeable and here it's all fluffy and per-item.
 
-//         we NEED per-item because:
-
-//         "Converting %module.permissions.yml"
-// "STARTING getComponentsFromData with ymlfile ymlfile requested by module:permissions:0"
-// "adding 252 with local name ymlfile"
-
-//         we could be adding more than one local ymlfile data item!
+        // we NEED per-item because:
+        // we could be adding more than one local ymlfile data item!
       }
-
-
 
       // Validate so defaults are filled in.
       $required_item_data->validate();
-
-      // dump("VALIDATE!");
-      // dump($required_item_data->export());
-      // dump(array_keys($required_item_data->getProperties()));
-
 
       // Guard against a clash of required item key.
       // In other words, a key in requiredComponents() can't be the same as a
@@ -646,57 +634,54 @@ class ComponentCollector {
     $component_data->walk([$this, 'applyProcessing']);
 
     return;
-
-    // Work over each property.
-    foreach ($component_data_info as $property_name => &$property_info) {
-      // Set defaults for properties that don't have a value yet.
-      // NO- defaults are done earlier by validation.
-      // $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
-
-      // Set values from a preset.
-      // We do this after defaults, so preset properties can have a default
-      // value. Note this means that presets can only affect properties that
-      // come after them in the property info order.
-      if (isset($property_info['presets'])) {
-        $this->setPresetValues($property_name, $component_data_info, $component_data);
-      }
-
-      // Allow each property to apply its processing callback. Note that this
-      // may set or alter other properties in the component data array, and may
-      // also make changes to the property info.
-      $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
-    }
-    // Clear the loop reference, otherwise PHP does Bad Things.
-    unset($property_info);
-
-    // Recurse into compound properties.
-    // We do this last to allow the parent property to have default and
-    // processing applied to the child data as a whole.
-    // (TODO: test this!)
-    foreach ($component_data_info as $property_name => $property_info) {
-      // Only work with compound properties.
-      if ($property_info['format'] != 'compound') {
-        continue;
-      }
-
-      // Don't work with component child properties, as the generator will
-      // handle this.
-      if (isset($property_info['component_type'])) {
-        continue;
-      }
-
-      if (!isset($component_data[$property_name])) {
-        // Skip if no data for this property.
-        continue;
-      }
-
-      foreach ($component_data[$property_name] as $delta => &$item_data) {
-        $this->processComponentData($item_data, $property_info['properties']);
-      }
-    }
   }
 
+    // // Work over each property.
+    // foreach ($component_data->getProperties() as $property_name => $property_definition) {
+    //   // Set defaults for properties that don't have a value yet.
+    //   // NO- defaults are done earlier by validation.
+    //   // $this->setComponentDataPropertyDefault($property_name, $property_info, $component_data);
 
+    //   // Set values from a preset.
+    //   // We do this after defaults, so preset properties can have a default
+    //   // value. Note this means that presets can only affect properties that
+    //   // come after them in the property info order.
+    //   if ($property_definition->getPresets()) {
+    //     $this->setPresetValues($component_data->{$property_name});
+    //   }
+
+    //   // Allow each property to apply its processing callback. Note that this
+    //   // may set or alter other properties in the component data array, and may
+    //   // also make changes to the property info.
+    //   // $this->applyComponentDataPropertyProcessing($property_name, $property_info, $component_data);
+    // }
+
+    // // Recurse into compound properties.
+    // // We do this last to allow the parent property to have default and
+    // // processing applied to the child data as a whole.
+    // // (TODO: test this!)
+    // foreach ($component_data->getProperties() as $property_name => $property_definition) {
+
+    //   // Only work with compound properties.
+    //   if ($property_info['format'] != 'compound') {
+    //     continue;
+    //   }
+
+    //   // Don't work with component child properties, as the generator will
+    //   // handle this.
+    //   if (isset($property_info['component_type'])) {
+    //     continue;
+    //   }
+
+    //   if (!isset($component_data[$property_name])) {
+    //     // Skip if no data for this property.
+    //     continue;
+    //   }
+
+    //   foreach ($component_data[$property_name] as $delta => &$item_data) {
+    //     $this->processComponentData($item_data, $property_info['properties']);
+    //   }
+    // }
 
   /**
    * Walk callback to set values from a presets property into other properties.
@@ -715,14 +700,18 @@ class ComponentCollector {
       return;
     }
 
+    // dump($component_data->getParent()->export());
+
+
     $presets = $component_data->getPresets();
     // dump("APPLYING PRESETS FOR " . $component_data->getAddress());
     // dump($presets);
-    // dump($component_data);
+    // dump($componpent_data);
 
     // Values which are forced by the preset.
-    foreach ($component_data as $preset_item) {
+    foreach ($component_data->items() as $preset_item) {
       // dump("DOING " . $preset_item->value);
+      // dump($preset_item);
       $preset_item_preset_data = $presets[$preset_item->value];
       // dump($preset_item_preset_data);
       if (isset($preset_item_preset_data['data']['force'])) {
@@ -732,6 +721,7 @@ class ComponentCollector {
 
           // dump("FORCING $forced_property_name at address: - ");
           // dump($component_data->getParent()->{$forced_property_name}->getAddress());
+          // dump($component_data->getParent()->{$forced_property_name}->export());
           // dump($forced_data['value']);
           // Literal value. (This is the only type we support at the moment.)
           if (isset($forced_data['value'])) {
