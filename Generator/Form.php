@@ -46,8 +46,6 @@ class Form extends PHPClassFileWithInjection {
 
           return $options;
         },
-        // TODO: kill
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
       'form_elements' => [
         // Internal for now. TODO: expose to the UI.

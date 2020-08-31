@@ -108,8 +108,6 @@ class Service extends PHPClassFileWithInjection {
 
           return $options;
         },
-        // TODO: kill
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ),
       // The parent service name.
       'parent' => PropertyDefinition::create('string')

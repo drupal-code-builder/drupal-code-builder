@@ -115,7 +115,6 @@ class PHPUnitTest extends PHPClassFile {
 
           return $options;
         },
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ],
       'mocked_services' => [
         'label' => 'Services to mock',
@@ -128,7 +127,6 @@ class PHPUnitTest extends PHPClassFile {
 
           return $options;
         },
-        'options_extra' => \DrupalCodeBuilder\Factory::getTask('ReportServiceData')->listServiceNamesOptionsAll(),
       ],
       'module_dependencies' => [
         'format' => 'array',
