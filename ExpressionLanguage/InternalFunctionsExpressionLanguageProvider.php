@@ -8,13 +8,11 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
- * Provides Expression Language custom functions for acquired data expressions.
- *
- * TODO RENAME THIS so it's backend-only EL functions
+ * Provides Expression Language custom functions for internal expressions.
  *
  * TODO WTF are all these AfromB? makes no fucking sense!! AtoB surely!
  */
-class ArrayOperationsExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
+class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
 
   /**
    * {@inheritdoc}
@@ -42,19 +40,6 @@ class ArrayOperationsExpressionLanguageProvider implements ExpressionFunctionPro
        }),
       ExpressionFunction::fromPhp('implode'),
       ExpressionFunction::fromPhp('explode'),
-      // FFS TEMP!
-      // TODO: REMOVE
-      new ExpressionFunction(
-        'relativeClassName',
-        function (string $relative_namespace, string $plain_classname) {
-        },
-        function ($arguments, string $relative_namespace, string $plain_classname) {
-          if ($relative_namespace) {
-            $relative_namespace .= '\\';
-          }
-          return $relative_namespace . $plain_classname;
-        }
-      ),
       // TODO: rename this class operations, and change all functions from
       // array-ish to class name manipulation??
       // This also works with relative qualified class names.

@@ -7,13 +7,11 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
- * Provides Expression Language custom functions for changing case.
- *
- * TODO: rename this so it's about common front-end/backend functions.
+ * Provides Expression Language custom functions that front ends may implement.
  *
  * TODO: implement compiling, as these get used LOTS!
  */
-class ChangeCaseExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
+class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
 
   /**
    * {@inheritdoc}
