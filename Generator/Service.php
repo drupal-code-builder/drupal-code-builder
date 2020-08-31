@@ -81,7 +81,8 @@ class Service extends PHPClassFileWithInjection {
 
     $data_definition = array(
       'service_tag_type' => [
-        'label' => 'Service type preset',
+        'label' => 'Service type',
+        'description' => 'Tags this service for a particular purpose and implements the interface.',
         'presets' => $presets,
       ],
       'service_name' => PropertyDefinition::create('string')
