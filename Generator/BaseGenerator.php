@@ -445,6 +445,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
           throw new \Exception("Process default and multiple property $name!");
         }
 
+        // TODO: probably no longer needed as defaults are always filled in!
         $converted_defs[$name]->setRequired(TRUE);
       }
 
