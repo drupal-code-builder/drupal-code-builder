@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
