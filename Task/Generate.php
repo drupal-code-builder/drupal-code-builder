@@ -131,41 +131,6 @@ class Generate extends Base {
   }
 
   /**
-   * Validates a value for a property.
-   *
-   * Validation is optional; UIs may perform it if it improves UX to do so as
-   * a separate step from calling generateComponent().
-   *
-   * Note that this does not recurse; UIs should take care of this.
-   *
-   * @param $property_name
-   *  The name of the property.
-   * @param $property_info
-   *  The definition for this property, from getRootComponentDataInfo().
-   * @param $component_data
-   *  The array of component data for the component that the property is a part
-   *  of.
-   *
-   * @return array|null
-   *   If validation failed, an array whose first element is a message string,
-   *   and whose second element is an array of translation placeholders (which
-   *   may be empty). If the validation succeeded, NULL is returned.
-   */
-  public function validateComponentDataValue($property_name, $property_info, $component_data) {
-    if (isset($property_info['validation'])) {
-      $validate_callback = $property_info['validation'];
-      $result = $validate_callback($property_name, $property_info, $component_data);
-
-      // Fill in the placeholder array if the callback returned just a string.
-      if (is_string($result)) {
-        $result = [$result, []];
-      }
-
-      return $result;
-    }
-  }
-
-  /**
    * Generate the files for a component.
    *
    * @param $component_data
