@@ -7,10 +7,8 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use DrupalCodeBuilder\ExpressionLanguage\ChangeCaseExpressionLanguageProvider;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Task handler for generating a component.
