@@ -74,60 +74,27 @@ class Generate extends Base {
   }
 
   /**
-   * Get a list of the properties that the root component should be given.
+   * Gets the data object for the component.
    *
-   * UIs may use this to present the options to the user. Each property should
-   * be passed to prepareComponentDataProperty(), to set any option lists and
-   * allow defaults to build up incrementally.
-   *
-   * The array with the complete data collected from the user should then be
-   * passed to generateComponent() to generate the code.
-   *
-   * @param $include_computed
-   *  (optional) Boolean indicating whether to include computed properties.
-   *  Default value is FALSE, as UIs don't need to work with these.
-   *  TODO: Deprecate this parameter, it is not used in any calls we make.
-   *
-   * @return
-   *  An array containing information about the properties our root component
-   *  needs in the $component_data array to pass to generateComponent(). Keys
-   *  are the names of properties. Each value is an array of information for the
-   *  property. Of interest to UIs calling this are:
-   *  - 'label': A human-readable label for the property.
-   *  - 'description': (optional) A longer description.
-   *  - 'format': Specifies the expected format for the property. One of
-   *    'string', 'array', 'boolean', or 'compound'.
-   *  - 'cardinality': (optional) For properties with format 'array' or
-   *    'compound', specifies the maximum number of values. If omitted,
-   *    unlimited values are allowed.
-   *  - 'properties': If the format is 'compound', this will be an array of
-   *    child properties, in the same format at the overall array.
-   *  - 'required': Boolean indicating whether this property must be provided.
-   *  - 'default': A default value for the property. Progressive UIs that
-   *    process user input incrementally will get default values that are
-   *    based on the user input so far.
-   * For the full documentation for all properties, see
-   * DrupalCodeBuilder\Generator\RootComponent\componentDataDefinition().
+   * UIs should use this to present the options to the user.
    */
-  public function getRootComponentDataInfo($include_computed = FALSE) {
-    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($this->base, $include_computed);
-  }
-
-  public function getComponentDataInfo($component_type, $include_internal = FALSE) {
-    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($component_type, $include_internal);
-  }
-
   public function getRootComponentData() {
     $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
-    // dump($data_definition);
 
     // We use a custom data item factory so we can add custom Expression
     // Language functions.
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
 
-    // dump($data_definition);
-
     return $data;
+  }
+
+  /**
+   * @internal
+   *
+   * TODO: remove this!
+   */
+  public function getComponentDataInfo($component_type, $include_internal = FALSE) {
+    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($component_type, $include_internal);
   }
 
   /**
