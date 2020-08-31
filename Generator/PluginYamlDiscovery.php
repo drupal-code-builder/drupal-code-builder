@@ -48,11 +48,13 @@ class PluginYamlDiscovery extends BaseGenerator {
             })
             ->setDependencies('..:plugin_name')
         ),
-      'plugin_type_data' => PropertyDefinition::create('mapping'),
+      'plugin_type_data' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
       // These are different for each plugin type, so internal for now.
       // When we have dynamic defaults, populate with the default property
       // values, as an array of options?
       'plugin_properties' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultPluginProperties'])
