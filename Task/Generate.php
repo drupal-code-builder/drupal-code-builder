@@ -131,42 +131,6 @@ class Generate extends Base {
   }
 
   /**
-   * Prepares a property in the component data with default value and options.
-   *
-   * This should be called for each property in the component data info that is
-   * obtained from getRootComponentDataInfo(), in the order given in that array.
-   * This allows UIs to present default values to the user in a progressive
-   * manner. For example, the Drush interactive mode may present a default value
-   * for the module human name based on the value the user has already entered
-   * for the machine name.
-   *
-   * The default value is placed into $component_data[$property_name]; the
-   * options if any are placed into $property_info['options'].
-   *
-   * Compound properties can either be called as a single property, in which
-   * case only the options will be set, or can be called for each child property
-   * with a child item data array for $component_data. This may be repeated for
-   * multiple child items.
-   *
-   * @param $property_name
-   *  The name of the property.
-   * @param &$property_info
-   *  The definition for this property, from getRootComponentDataInfo().
-   *  If the property has options, this will get its 'options' key set, as an
-   *  array of the format VALUE => LABEL.
-   * @param &$component_data
-   *  An array of component data that is being assembled to eventually pass to
-   *  generateComponent(). This should contain property data that has been
-   *  obtained from the user so far, as a property may depend on input for
-   *  earlier properties. This will get its $property_name key set with the
-   *  default value for the property, which may be calculated based on the
-   *  existing user data.
-   */
-  public function prepareComponentDataProperty($property_name, &$property_info, &$component_data) {
-    // return $this->getHelper('ComponentPropertyPreparer')->prepareComponentDataProperty($property_name, $property_info, $component_data);
-  }
-
-  /**
    * Validates a value for a property.
    *
    * Validation is optional; UIs may perform it if it improves UX to do so as

@@ -213,8 +213,6 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         continue;
       }
 
-      $generate_task->prepareComponentDataProperty($name, $def, $dummy_component_data);
-
       // no, we need thse, just hide them!
       // if (!empty($def['computed'])) {
       //   continue;
