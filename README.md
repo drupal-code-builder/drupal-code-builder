@@ -8,8 +8,8 @@ This is a library, and has no UI of its own. It can be used in several ways:
 - with the [Drush command
   extension](https://github.com/drupal-code-builder/drupal-code-builder-drush).
 
-Drupal Code Builder can be used for any current version of Drupal (7, 8). Older
-versions are unsupported, but it should produce code for 5 and 6 also.
+Drupal Code Builder can be used for any current version of Drupal (7, 8, 9).
+Older versions are unsupported, but it should produce code for 5 and 6 also.
 
 Tests powered by PHPUnit ensure that the generated PHP code passes PHP linting,
 and adheres to Drupal Coding Standards, as enforced by PHP CodeSniffer.
