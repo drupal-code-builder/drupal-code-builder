@@ -98,11 +98,9 @@ class Generate extends Base {
   /**
    * Generate the files for a component.
    *
-   * @param $component_data
-   *  An associative array of data for the component. Values depend on the
-   *  component class. For details, see the constructor of the generator, of the
-   *  form DrupalCodeBuilder\Generator\COMPONENT, e.g.
-   *  DrupalCodeBuilder\Generator\Module::__construct().
+   * @param \MutableTypedData\Data\DataItem $component_data
+   *  The data for the component. This is defined by the generator class; see
+   *  RootGenerator::getPropertyDefinition().
    * @param $existing_module_files
    *  (optional) An array of existing files for this module. Keys should be
    *  file paths relative to the module, values absolute paths.
