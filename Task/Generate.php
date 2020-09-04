@@ -75,9 +75,13 @@ class Generate extends Base {
    * Gets the data object for the component.
    *
    * UIs should use this to present the options to the user.
+   *
+   * @param string $component_type
+   *   (optional) The component type.
+   *   NOTE: the default value will be removed in 5.0.0.
    */
-  public function getRootComponentData() {
-    $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass('module');
+  public function getRootComponentData($component_type = 'module') {
+    $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass($component_type);
 
     // We use a custom data item factory so we can add custom Expression
     // Language functions.
