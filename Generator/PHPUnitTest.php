@@ -307,11 +307,10 @@ class PHPUnitTest extends PHPClassFile {
     $setup_lines = $this->buildMethodHeader('setUp', [], ['inheritdoc' => TRUE, 'prefixes' => ['protected']]);
     // TODO: WTF should not need to manually indent!
     $setup_lines[] = '  parent::setUp();';
+    $setup_lines[] = '';
 
     // Container services setup.
     if (!empty($this->childContentsGrouped['service_container'])) {
-      $setup_lines[] = '';
-
       // Use the main service infor rather than 'container_extraction', as
       // that is intended for use in an array and so has a terminal comma.
       // TODO: remove the terminal comma so we can use it here!
