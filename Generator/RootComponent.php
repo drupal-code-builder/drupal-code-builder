@@ -44,6 +44,8 @@ abstract class RootComponent extends BaseGenerator {
    */
   public static function configurationDefinition(): PropertyDefinition {
     // Return an empty data definition by default.
+    // NOTE: this can't have a root name set because it's also embedded into
+    // data by self::componentDataDefinition().
     return PropertyDefinition::create('complex');
   }
 
@@ -70,6 +72,10 @@ abstract class RootComponent extends BaseGenerator {
         DefaultDefinition::create()
           ->setLiteral('')
       );
+
+      // Add the configuration data definition as internal.
+      $component_data_definition['configuration'] = static::configurationDefinition()
+        ->setInternal(TRUE);
 
     return $component_data_definition;
   }
