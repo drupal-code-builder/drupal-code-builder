@@ -30,6 +30,24 @@ abstract class RootComponent extends BaseGenerator {
   }
 
   /**
+   * Defines the data for this root component's configuration.
+   *
+   * Configuration data is intended to be used by UIs to allow users to store
+   * their preferences in a persistent fashion.
+   *
+   * The properties here are merged into the main data by
+   * componentDataDefinition(), as child properties of a 'configuration' complex
+   * property.
+   *
+   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
+   *   The data definition.
+   */
+  public static function configurationDefinition(): PropertyDefinition {
+    // Return an empty data definition by default.
+    return PropertyDefinition::create('complex');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
