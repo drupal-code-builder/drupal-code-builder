@@ -217,7 +217,7 @@ class ComponentRouterItem8Test extends TestBase {
           ],
         ],
         1 => [
-          'path' => 'my/other-path',
+          'path' => '/my/other-path',
           'controller' => [
             'controller_type' => 'controller',
           ],

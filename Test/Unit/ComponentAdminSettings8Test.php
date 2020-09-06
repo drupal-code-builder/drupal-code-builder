@@ -181,7 +181,7 @@ class ComponentAdminSettings8Test extends TestBase {
         ],
        'router_items' => array(
           0 => [
-            'path' => 'requested/route/path',
+            'path' => '/requested/route/path',
             'controller' => [
               'controller_type' => 'controller',
             ],
