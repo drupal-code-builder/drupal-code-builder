@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Definition;
 
 use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Exception\InvalidDefinitionException;
 
 /**
  * Extends the basic property definition with DCB extras.
@@ -17,6 +18,8 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
   protected $processing;
 
+  protected $optionsProvider;
+
   public function getDeltaDefinition(): self {
     $delta_definition = parent::getDeltaDefinition();
 
@@ -24,6 +27,33 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     $delta_definition->setPresets([]);
 
     return $delta_definition;
+  }
+
+  // TODO: move all options provider stuff upstream.
+  public function setOptionsProvider(OptionsProviderInterface $provider): self {
+    $this->optionsProvider = $provider;
+
+    return $this;
+  }
+
+  public function addOption(OptionDefinition $option): self {
+    if ($this->optionsProvider) {
+      throw new InvalidDefinitionException("Can't add options if using an options provider.");
+    }
+
+    return parent::addOption($option);
+  }
+
+  public function hasOptions(): bool {
+    return !empty($this->options) || !empty($this->optionsProvider);
+  }
+
+  public function getOptions(): array {
+    if (!$this->options && $this->optionsProvider) {
+      $this->options = $this->optionsProvider->getOptions();
+    }
+
+    return parent::getOptions();
   }
 
   /**
