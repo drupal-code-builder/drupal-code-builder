@@ -115,7 +115,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setLabel('Injected services')
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
-        ->setOptionsArray($services_data_task->listServiceNamesOptionsAll()),
+        ->setOptionsProvider($services_data_task),
       'class_docblock_lines' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
         ->setDefault(

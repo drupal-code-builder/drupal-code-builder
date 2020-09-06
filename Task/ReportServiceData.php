@@ -7,15 +7,30 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionDefinition;
+
 /**
  * Task handler for reporting on service data.
  */
-class ReportServiceData extends ReportHookDataFolder {
+class ReportServiceData extends ReportHookDataFolder implements OptionsProviderInterface {
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    $options = [];
+    foreach ($this->listServiceNamesOptionsAll() as $value => $label) {
+      $options[$value] = OptionDefinition::create($value, $label);
+    }
+
+    return $options;
+  }
 
   /**
    * Get the list of Service data.

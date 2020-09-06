@@ -35,18 +35,11 @@ class Form extends PHPClassFileWithInjection {
             ->setExpression("get('..:root_component_name') ~ '_' ~ machineFromPlainClassName(get('..:plain_class_name'))")
             ->setDependencies('..:root_component_name', '..:plain_class_name')
         ),
-      'injected_services' => array(
-        'label' => 'Injected services',
-        'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-
-          $options = $mb_task_handler_report_services->listServiceNamesOptionsAll();
-
-          return $options;
-        },
-      ),
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services')
+        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'form_elements' => [
         // Internal for now. TODO: expose to the UI.
         'internal' => TRUE,
