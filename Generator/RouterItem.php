@@ -24,11 +24,11 @@ class RouterItem extends BaseGenerator {
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
-      'path' => [
-        'label' => "Route path",
-        'description' => "The path of the route. Include the initial '/'.",
-        'required' => TRUE,
-      ],
+      'path' => PropertyDefinition::create('string')
+        ->setLabel("Route path")
+        ->setDescription("The path of the route. Include the initial '/'.")
+        ->setRequired(TRUE)
+        ->setValidators('path'),
       'route_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(

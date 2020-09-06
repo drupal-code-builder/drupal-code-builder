@@ -101,4 +101,27 @@ class UnitValidatorTest extends TestCase {
     $this->assertEquals($expected_pass, $result);
   }
 
+  /**
+   * Tests the path validator.
+   */
+  public function testPathValidator() {
+    $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\Path();
+
+    $data = \DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory::createFromDefinition(
+      DataDefinition::create('string')
+    );
+
+    $data->value = 'no_slash/at/start';
+
+    $result = $validator->validate($data);
+
+    $this->assertEquals(FALSE, $result);
+
+    $data->value = '/has/slash';
+
+    $result = $validator->validate($data);
+
+    $this->assertEquals(TRUE, $result);
+  }
+
 }

@@ -9,6 +9,7 @@ use DrupalCodeBuilder\MutableTypedData\Data\MutableDataWithArrayAccess;
 use DrupalCodeBuilder\MutableTypedData\Data\MappingData;
 use DrupalCodeBuilder\MutableTypedData\Validator\ClassName;
 use DrupalCodeBuilder\MutableTypedData\Validator\MachineName;
+use DrupalCodeBuilder\MutableTypedData\Validator\Path;
 use DrupalCodeBuilder\MutableTypedData\Validator\PluginName;
 use DrupalCodeBuilder\MutableTypedData\Validator\ServiceName;
 use MutableTypedData\Data\StringData;
@@ -61,6 +62,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     'machine_name' => MachineName::class,
     'plugin_name' => PluginName::class,
     'service_name' => ServiceName::class,
+    'path' => Path::class,
   ];
 
 }
