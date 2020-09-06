@@ -50,9 +50,9 @@ class RouterItem7 extends BaseGenerator {
     $return = array(
       'hooks' => array(
         'component_type' => 'Hooks',
-        'hooks' => array(
-          'hook_menu' => TRUE,
-        ),
+        'hooks' => [
+          'hook_menu',
+        ],
       ),
     );
 
