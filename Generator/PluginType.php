@@ -186,7 +186,11 @@ class PluginType extends BaseGenerator {
             $component_data->getParent()->base_class_short_name->value,
           ]);
         }),
-      ];
+      // Experimental. Define the data here that will then be set by
+      // self::requiredComponents().
+      'manager' => GeneratorDefinition::createFromGeneratorTypeWithConversion('PluginTypeManager')
+        ->setInternal(TRUE),
+    ];
 
     foreach ($definition->getVariants() as $variant) {
       $variant->addProperties($common_properties);
@@ -348,8 +352,13 @@ class PluginType extends BaseGenerator {
 
     $plugin_type = $this->component_data['plugin_type'];
 
+    // Experimental. This corresponse to a property defined in the main data.
+    // This is needed so that the PluginTypeManager generator has access to
+    // the whole data structure, in particular, to access generation
+    // configuration.
     $components['manager'] = array(
       'component_type' => 'PluginTypeManager',
+      'use_data_definition' => TRUE,
       'prefixed_service_name' => $this->component_data->plugin_manager_service_id->value,
       // Use the annotation class name as the basis for the manager class name.
       'plain_class_name' => CaseString::snake($this->component_data->plugin_type->value)->pascal() . 'Manager',

@@ -175,7 +175,7 @@ class Service extends PHPClassFileWithInjection {
       return 'EventSubscriber';
     }
     else {
-      return '';
+      return $data_item->getItem('module:configuration:service_namespace')->value;
     }
   }
 

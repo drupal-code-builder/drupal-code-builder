@@ -91,6 +91,20 @@ class Module extends RootComponent {
     parent::__construct($component_data);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function configurationDefinition(): PropertyDefinition {
+    return PropertyDefinition::create('complex')
+      ->setLabel("Module settings")
+      ->setProperties([
+        'service_namespace' => PropertyDefinition::create('string')
+          ->setLabel("Service class namespace")
+          ->setDescription("The relative namespace within a module in which to place services. Do not include '\\' at either end. Leave empty to place in the module namespace.")
+          ->setLiteralDefault(''),
+      ]);
+  }
+
   public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 

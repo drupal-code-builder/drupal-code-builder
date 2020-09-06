@@ -69,6 +69,86 @@ class ComponentService8Test extends TestBase {
   }
 
   /**
+   * Test configuration for service generation.
+   */
+  public function testServiceGenerationWithConfiguration() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_name' => 'my_service',
+        ],
+        1 => [
+          'service_name' => 'my_other_service',
+        ],
+      ),
+      'readme' => FALSE,
+      'configuration' => [
+        'service_namespace' => 'Cake',
+      ],
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/Cake/MyService.php",
+      "src/Cake/MyOtherService.php",
+    ], $files);
+
+    $services_file = $files["$module_name.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\Cake\\MyService");
+    $yaml_tester->assertHasProperty(['services', "$module_name.my_other_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_other_service", 'class'], "Drupal\\$module_name\\Cake\\MyOtherService");
+
+    $service_class_file = $files["src/Cake/MyService.php"];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Cake\MyService');
+
+    // Test with an empty string for the configuration value.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_name' => 'my_service',
+        ],
+        1 => [
+          'service_name' => 'my_other_service',
+        ],
+      ),
+      'readme' => FALSE,
+      'configuration' => [
+        'service_namespace' => '',
+      ],
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyService.php",
+      "src/MyOtherService.php",
+    ], $files);
+  }
+
+  /**
    * Test generating a module with a service using a preset.
    *
    * @group presets
