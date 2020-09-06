@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Utility\InsertArray;
 
 /**
@@ -23,16 +24,7 @@ class HookImplementation extends PHPFunction {
       'default' => '%module.module',
     ];
 
-    $hook_name_property = [
-      // The full name of the hook.
-      'hook_name' => [
-        'internal' => TRUE,
-      ],
-    ];
-    // Insert the hook_name property before the doxygen_first property, as that
-    // depends on it.
-    // TODO: still needed???
-    InsertArray::insertBefore($properties, 'doxygen_first', $hook_name_property);
+    $properties['hook_name'] = PropertyDefinition::create('string');
 
     $properties['function_docblock_lines']->getDefault()
       // Expression Language lets us define arrays, which is nice.

@@ -7,24 +7,12 @@ namespace DrupalCodeBuilder\Generator;
  */
 class HookPermission extends HookImplementation {
 
-  /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   *   Valid properties are:
-   *      - 'permissions': (optional) An array of permission names.
-   */
-  function __construct($component_data) {
-    // Set some default properties.
-    $component_data += array(
-      'hook_name' => 'hook_permission',
-    );
+  public static function componentDataDefinition() {
+    $definition = parent::componentDataDefinition();
 
-    parent::__construct($component_data);
+    $definition['hook_name']->setLiteralDefault('hook_permission');
+
+    return $definition;
   }
 
   /**

@@ -7,16 +7,12 @@ namespace DrupalCodeBuilder\Generator;
  */
 class HookMenu extends HookImplementation {
 
-  /**
-   * Constructor method; sets the component data.
-   */
-  function __construct($component_data) {
-    // Set some default properties.
-    $component_data += array(
-      'hook_name' => 'hook_menu',
-    );
+  public static function componentDataDefinition() {
+    $definition = parent::componentDataDefinition();
 
-    parent::__construct($component_data);
+    $definition['hook_name']->setLiteralDefault('hook_menu');
+
+    return $definition;
   }
 
   /**
@@ -31,7 +27,7 @@ class HookMenu extends HookImplementation {
 
     // Code from child components comes as arrays of code lines, so no need to
     // trim it.
-    $this->component_data['has_wrapping_newlines'] = FALSE;
+    $this->component_data->has_wrapping_newlines = FALSE;
 
     $code = array();
     $code[] = '£items = array();';
@@ -41,7 +37,7 @@ class HookMenu extends HookImplementation {
     $code[] = '';
     $code[] = 'return £items;';
 
-    $this->component_data['body'] = $code;
+    $this->component_data->body = $code;
 
     return parent::buildComponentContents($children_contents);
   }
