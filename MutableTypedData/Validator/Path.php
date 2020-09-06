@@ -22,7 +22,7 @@ class Path implements ValidatorInterface {
    * {@inheritdoc}
    */
   public function message(DataItem $data): string {
-    return "The @label be a path starting with a '/'.";
+    return "The @label must begin with a '/'.";
   }
 
 }
