@@ -20,6 +20,8 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
   protected $optionsProvider;
 
+  protected $variantMappingProvider;
+
   public function getDeltaDefinition(): self {
     $delta_definition = parent::getDeltaDefinition();
 
@@ -55,6 +57,24 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
     return parent::getOptions();
   }
+
+  public function setVariantMappingProvider(VariantMappingProviderInterface $provider): self {
+    $this->variantMappingProvider = $provider;
+    return $this;
+  }
+
+  public function hasVariantMapping(): bool {
+    return !is_null($this->variantMapping) || $this->variantMappingProvider;
+  }
+
+  public function getVariantMapping(): ?array {
+    if (!$this->variantMapping && $this->variantMappingProvider) {
+      $this->variantMapping = $this->variantMappingProvider->getVariantMapping();
+    }
+
+    return parent::getVariantMapping();
+  }
+
 
   /**
    * Sets the expression to acquire a value from the requesting component.
