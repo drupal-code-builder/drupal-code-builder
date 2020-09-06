@@ -25,9 +25,7 @@ class Plugin extends BaseGenerator {
       ->setProperties([
         'plugin_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')
-          ->setOptionsArray(
-            $plugin_data_task->listPluginNamesOptions()
-          )
+          ->setOptionsProvider($plugin_data_task)
 
         // TODO: contains the code to support using the plugin folder name.
         // TODO: restore this later, but currently there's no CLI UI for this
@@ -67,7 +65,7 @@ class Plugin extends BaseGenerator {
         // ];
 
       ])
-      ->setVariantMapping($plugin_data_task->getPluginTypesMapping())
+      ->setVariantMappingProvider($plugin_data_task)
       ->setVariants([
         'annotation' => VariantGeneratorDefinition::create()
           ->setLabel('Annotation plugin')

@@ -7,18 +7,41 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
+use MutableTypedData\Definition\OptionDefinition;
+
 /**
  * Task handler for reporting on hook data.
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  * Consider merging into a ReportComponentData Task.
  */
-class ReportPluginData extends ReportHookDataFolder {
+class ReportPluginData extends ReportHookDataFolder implements OptionsProviderInterface, VariantMappingProviderInterface {
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    $options = [];
+    foreach ($this->listPluginNamesOptions() as $value => $label) {
+      $options[$value] = OptionDefinition::create($value, $label);
+    }
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVariantMapping(): array {
+    return $this->getPluginTypesMapping();
+  }
 
   /**
    * Get the list of plugin data.
