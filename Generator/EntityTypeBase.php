@@ -335,7 +335,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'default'],
         'class_name_suffix' => 'Form',
-        'class_namespace' => ['Form'],
+        'class_namespace' => 'Form',
         'mode' => 'core_none',
         // base_class for all form handlers is set by child classes.
       ],
@@ -345,7 +345,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'add'],
         'class_name_suffix' => 'AddForm',
-        'class_namespace' => ['Form'],
+        'class_namespace' => 'Form',
         'mode' => 'custom_default',
         'default_type' => 'form_default',
       ],
@@ -355,7 +355,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'edit'],
         'class_name_suffix' => 'EditForm',
-        'class_namespace' => ['Form'],
+        'class_namespace' => 'Form',
         'mode' => 'custom_default',
         'default_type' => 'form_default',
       ],
@@ -363,7 +363,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'label' => 'delete form',
         'description' => "The entity form class for the 'delete' operation.",
         'class_name_suffix' => 'DeleteForm',
-        'class_namespace' => ['Form'],
+        'class_namespace' => 'Form',
         'property_path' => ['form', 'delete'],
         'mode' => 'core_none',
       ],
@@ -423,7 +423,11 @@ abstract class EntityTypeBase extends PHPClassFile {
         'handler_type' => $key,
         'handler_label' => $handler_type_info['label'],
         'parent_class_name' => $handler_type_info['base_class'],
-        'relative_class_name' => implode('\\', $this->getRelativeHandlerClassNamePieces($key, $handler_type_info)),
+        'plain_class_name' =>  $this->makeShortHandlerClassName($key, $handler_type_info),
+        'relative_namespace' =>
+          $handler_type_info['class_namespace']
+          ??
+          $this->component_data->getItem('module:configuration:entity_handler_namespace')->value,
       ];
 
       if (isset($handler_type_info['handler_properties'])) {
@@ -436,7 +440,10 @@ abstract class EntityTypeBase extends PHPClassFile {
     // form handler if that is present.
     if (isset($components['handler_form_default'])) {
       // Hackily make the full class name here.
-      $class_name = '\Drupal\%module\\' . $components['handler_form_default']['relative_class_name'];
+      $class_name = '\Drupal\%module\\'
+        . $components['handler_form_default']['relative_namespace']
+        . '\\'
+        . $components['handler_form_default']['plain_class_name'];
 
       foreach (['handler_form_add', 'handler_form_edit'] as $key) {
         if (isset($components[$key])) {
@@ -635,15 +642,17 @@ abstract class EntityTypeBase extends PHPClassFile {
   protected function getRelativeHandlerClassNamePieces($handler_type_key, $handler_type_info) {
     $handler_short_class_name = $this->makeShortHandlerClassName($handler_type_key, $handler_type_info);
     if (isset($handler_type_info['class_namespace'])) {
-      $handler_relative_class_name = $handler_type_info['class_namespace'];
+      $handler_relative_class_name = [$handler_type_info['class_namespace']];
       $handler_relative_class_name[] = $handler_short_class_name;
     }
     else {
       $handler_relative_class_name = [
-        'Entity',
-        'Handler',
-        $handler_short_class_name,
+        $this->component_data->getItem('module:configuration:entity_handler_namespace')->value,
+        $handler_short_class_name
       ];
+
+      // The config value might be an empty string, so filter.
+      $handler_relative_class_name = array_filter($handler_relative_class_name);
     }
 
     return $handler_relative_class_name;

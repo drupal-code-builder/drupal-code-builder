@@ -1290,6 +1290,79 @@ class ComponentContentEntityType8Test extends TestBase {
   }
 
   /**
+   * Tests the handler namespace configuration setting.
+   */
+  public function testContentEntityTypeHandlerNamespaceConfiguration() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'admin_permission' => FALSE,
+          'handler_access' => TRUE,
+          'handler_form_default' => 'custom',
+        ],
+      ],
+      'readme' => FALSE,
+      'configuration' => [
+        'entity_handler_namespace' => 'Cake',
+      ]
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey('src/Cake/KittyCatAccess.php', $files);
+    $this->assertArrayHasKey('src/Form/KittyCatForm.php', $files, 'The form handler is not affected.');
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $files['src/Cake/KittyCatAccess.php']);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Cake\KittyCatAccess');
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Cake\KittyCatAccess');
+
+    // Test the special case where the configuration value is an empty string.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'admin_permission' => FALSE,
+          'handler_access' => TRUE,
+          'handler_form_default' => 'custom',
+        ],
+      ],
+      'readme' => FALSE,
+      'configuration' => [
+        'entity_handler_namespace' => '',
+      ]
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey('src/KittyCatAccess.php', $files);
+    $this->assertArrayHasKey('src/Form/KittyCatForm.php', $files, 'The form handler is not affected.');
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $files['src/KittyCatAccess.php']);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\KittyCatAccess');
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\KittyCatAccess');
+  }
+
+  /**
    * Tests creating a content entity with a UI.
    *
    * @group entity_ui

@@ -102,6 +102,10 @@ class Module extends RootComponent {
           ->setLabel("Service class namespace")
           ->setDescription("The relative namespace within a module in which to place services. Do not include '\\' at either end. Leave empty to place in the module namespace.")
           ->setLiteralDefault(''),
+        'entity_handler_namespace' => PropertyDefinition::create('string')
+          ->setLabel("Entity handler class namespace")
+          ->setDescription("The relative namespace within a module in which to place entity handlers. Do not include '\\' at either end. Leave empty to place in the module namespace.")
+          ->setLiteralDefault('Entity\Handler'),
       ]);
   }
 
