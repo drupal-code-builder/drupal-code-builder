@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the Simpletest test class generator.
+ *
+ * @group pass
  */
 class ComponentTests7Test extends TestBase {
 
@@ -48,15 +50,15 @@ class ComponentTests7Test extends TestBase {
       'hooks' => array(
       ),
       'tests' => TRUE,
-      'requested_build' => array(
-        'tests' => TRUE,
-        'info' => TRUE,
-      ),
       'readme' => FALSE,
     );
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertCount(2, $files, "Two files are returned.");
+    $this->assertFiles([
+      "test_module.module",
+      "$module_name.info",
+      "tests/$module_name.test",
+    ], $files);
 
     // Check the .test file.
     $tests_file = $files["tests/$module_name.test"];
