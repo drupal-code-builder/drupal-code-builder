@@ -491,24 +491,39 @@ class ComponentCollector {
       // dump("Converting $required_item_name");
       // Conversion to data items!
       if (is_array($required_item_data)) {
-        $definition =  $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
-        // $definition->setMachineName($required_item_name);
+        // Allow the required item data to get set on a property on the
+        // component data.
+        // This has to be requested explicitly rather than relying on matching
+        // property names, as there are too many that happen to coincide.
+        if (!empty($required_item_data['use_data_definition'])) {
+          unset($required_item_data['component_type']);
+          unset($required_item_data['use_data_definition']);
 
-        unset($required_item_data['component_type']);
+          $component_data->{$required_item_name}->set($required_item_data);
 
-        $required_item_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-
-        try {
-          $required_item_data_item->set($required_item_data);
+          $required_item_data = $component_data->{$required_item_name};
         }
-        catch (\MutableTypedData\Exception\InvalidInputException $e) {
-          throw new \Exception(sprintf("Invalid input when trying to set data on required item %s for generator at %s.",
-            $required_item_data_item->getAddress(),
-            $generator->component_data->getAddress()
-          ));
-        }
+        else {
+          // Build a standalone data item from the array data.
+          $definition = $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
+          // $definition->setMachineName($required_item_name);
 
-        $required_item_data = $required_item_data_item;
+          unset($required_item_data['component_type']);
+
+          $required_item_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+          try {
+            $required_item_data_item->set($required_item_data);
+          }
+          catch (\MutableTypedData\Exception\InvalidInputException $e) {
+            throw new \Exception(sprintf("Invalid input when trying to set data on required item %s for generator at %s.",
+              $required_item_data_item->getAddress(),
+              $generator->component_data->getAddress()
+            ));
+          }
+
+          $required_item_data = $required_item_data_item;
+        }
 
         // ARGH but the name is wrong!
         // problem here is that MTB thinks of the name as set in the definition
