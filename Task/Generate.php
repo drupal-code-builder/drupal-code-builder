@@ -108,6 +108,11 @@ class Generate extends Base {
    * @param $existing_module_files
    *  (optional) An array of existing files for this module. Keys should be
    *  file paths relative to the module, values absolute paths.
+   * @param \MutableTypedData\Data\DataItem $configuration
+   *  (optional) Configuration data for the component. This should be the same
+   *  data object as returned by
+   *  \DrupalCodeBuilder\Task\Configuration::getConfigurationData(), with user
+   *  values set on it.
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -116,9 +121,16 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.
    */
-  public function generateComponent(DataItem $component_data, $existing_module_files = []) {
+  public function generateComponent(DataItem $component_data, $existing_module_files = [], DataItem $configuration = NULL) {
     // Validate to ensure defaults are filled in.
     $component_data->validate();
+
+    // Put the configuration data into the main data.
+    if ($configuration) {
+      foreach ($configuration as $configuration_property_name => $configuration_data_item) {
+        $component_data->configuration->{$configuration_property_name} = $configuration_data_item->value;
+      }
+    }
 
     // WTF validate not filling in module name etc/??????
     // dump($component_data->export());
