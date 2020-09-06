@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a router item.
  *
@@ -11,45 +13,30 @@ namespace DrupalCodeBuilder\Generator;
 class RouterItem7 extends BaseGenerator {
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the component. Any missing properties
-   *   (or all if this is entirely omitted) are given default values.
-   *   Valid properties are:
-   *      - 'title': The title for the item.
-   *      - TODO: further properties such as access!
-   */
-  function __construct($component_data) {
-    // Set some default properties.
-    // This allows the user to leave off specifying details like title and
-    // access, and get default strings in place that they can replace in
-    // generated module code.
-    $component_data += array(
-      // Use a default that can be selected with a single double-click, to make
-      // it easy to replace.
-      'title' => 'myPage',
-      'page callback' => 'example_page',
-      // These have to be a code string, not an actual array!
-      'page arguments' => "array()",
-      'access arguments' => "array('access content')",
-    );
-
-    parent::__construct($component_data);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function componentDataDefinition() {
     return parent::componentDataDefinition() + [
       'path' => [
         'label' => 'The menu item path',
-        'internal' => TRUE,
         'primary' => TRUE,
       ],
+      'title' => [
+        'label' => "The page title for the route.",
+        'default' => 'myPage',
+        'process_default' => TRUE,
+        'internal' => TRUE,
+      ],
+      'page callback' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('example_page'),
+      'page arguments' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        // These have to be a code string, not an actual array!
+        ->setLiteralDefault("array()"),
+      'access arguments' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault("array('access content')"),
     ];
   }
 
