@@ -27,7 +27,7 @@ class HookPermission extends HookImplementation {
 
     // Code from child components comes as arrays of code lines, so no need to
     // trim it.
-    $this->component_data['has_wrapping_newlines'] = FALSE;
+    $this->component_data->has_wrapping_newlines = FALSE;
 
     $code = array();
     $code[] = '£permissions = array();';
@@ -37,7 +37,7 @@ class HookPermission extends HookImplementation {
     $code[] = '';
     $code[] = 'return £permissions;';
 
-    $this->component_data['body'] = $code;
+    $this->component_data->body = $code;
 
     return parent::buildComponentContents($children_contents);
   }
