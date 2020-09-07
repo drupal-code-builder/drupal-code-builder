@@ -20,6 +20,54 @@ class ComponentModule8Test extends TestBase {
   protected $drupalMajorVersion = 8;
 
   /**
+   * Tests a UI can access all of the necessary methods on component data.
+   */
+  public function testUiAccess() {
+    $component_data = $this->getRootComponentBlankData('module');
+
+    $this->simulateUiWalk($component_data);
+
+    $this->assertTrue(TRUE, 'We made it without crashing!');
+  }
+
+  /**
+   * Helper for testUi().
+   *
+   * Recursively accesses label, descriptions, options on data items, creating
+   * them as it goes to cover the whole data structure.
+   *
+   * TODO: doesn't handle mutable!
+   */
+  protected function simulateUiWalk($data_item) {
+    // Get the label and description.
+    // If these are not properly defined, MTD will throw exceptions.
+    $data_item->getLabel();
+    $data_item->getDescription();
+
+    if ($data_item->hasOptions()) {
+      $options = $data_item->getOptions();
+      foreach ($options as $value => $option) {
+        // Get the label and description for the option.
+        // If these are not properly defined, MTD will throw exceptions.
+        $option->getLabel();
+        $option->getDescription();
+      }
+    }
+
+    // Recurse.
+    foreach ($data_item as $property => $property_data_item) {
+      // Ensure that data is created for complex properties and a single delta.
+      $property_data_item->access();
+
+      if ($property_data_item->isMultiple()) {
+        $property_data_item->createItem();
+      }
+
+      $this->simulateUiWalk($property_data_item);
+    }
+  }
+
+  /**
    * Tests the token replacements for modules.
    */
   public function testModule8TokenReplacements() {
