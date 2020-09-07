@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\DefaultDefinition;
+
 /**
  * Component generator: admin form for modules.
  */
@@ -15,9 +17,11 @@ class AdminSettingsForm7 extends Form7 {
 
     $data_definition['code_file']['default'] = '%module.admin.inc';
 
-    $data_definition['form_id']['default'] = function($component_data) {
-      return $component_data['root_component_name'] . '_settings_form';
-    };
+    $data_definition['form_id']->setDefault(
+      DefaultDefinition::create()
+        ->setExpression("get('..:root_component_name') ~ '_settings_form'")
+        ->setDependencies('..:root_component_name')
+      );
 
     return $data_definition;
   }

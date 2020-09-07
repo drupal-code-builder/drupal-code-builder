@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator class for forms.
  *
@@ -21,11 +23,8 @@ class Form7 extends BaseGenerator {
         'internal' => TRUE,
         'default' => '%module.module',
       ],
-      'form_id' => [
-        'computed' => TRUE,
-        // TODO: not yet in use.
-        'default' => '',
-      ],
+      'form_id' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
     ];
   }
 
