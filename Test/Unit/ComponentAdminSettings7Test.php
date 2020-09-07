@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the AdminSettingsForm generator class.
+ *
+ * @group pass
  */
 class ComponentAdminSettings7Test extends TestBase {
 

@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests for Router item component.
+ *
+ * @group pass
  */
 class ComponentRouterItem7Test extends TestBase {
 
