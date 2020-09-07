@@ -17,29 +17,6 @@ class ComponentModule7Test extends TestBase {
   protected $drupalMajorVersion = 7;
 
   /**
-   * Tests preparation of component properties.
-   *
-   * Tests in general don't use the prepareComponentDataProperty(), and just
-   * run generation with full values. This test checks that callbacks in the
-   * property info don't rely on things they don't have at this stage.
-   *
-   * @group prepare
-   */
-  public function testModule7PropertyPreparation() {
-    $this->task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-    $component_data_info = $this->task_handler_generate->getRootComponentDataInfo();
-
-    $values = [];
-
-    foreach ($component_data_info as $property_name => &$property_info) {
-      $this->task_handler_generate->prepareComponentDataProperty($property_name, $property_info, $values);
-    }
-
-    // Check that options got expanded.
-    $this->assertInternalType('array', $component_data_info['hooks']['options'], "The module hooks options are expanded.");
-  }
-
-  /**
    * Test requesting a module with no options produces basic files.
    */
   function testNoOptions() {
