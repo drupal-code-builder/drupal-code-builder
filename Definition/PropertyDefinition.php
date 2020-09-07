@@ -8,6 +8,9 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 
 /**
  * Extends the basic property definition with DCB extras.
+ *
+ * TODO: replace return type with 'self' when PHP 7.4 is the minimum; it's
+ * broken in PHP 7.3.
  */
 class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess {
 
@@ -22,7 +25,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
   protected $variantMappingProvider;
 
-  public function getDeltaDefinition(): self {
+  public function getDeltaDefinition(): BasePropertyDefinition {
     $delta_definition = parent::getDeltaDefinition();
 
     // Remove presets.
@@ -32,13 +35,13 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
   }
 
   // TODO: move all options provider stuff upstream.
-  public function setOptionsProvider(OptionsProviderInterface $provider): self {
+  public function setOptionsProvider(OptionsProviderInterface $provider): BasePropertyDefinition {
     $this->optionsProvider = $provider;
 
     return $this;
   }
 
-  public function addOption(OptionDefinition $option): self {
+  public function addOption(OptionDefinition $option): BasePropertyDefinition {
     if ($this->optionsProvider) {
       throw new InvalidDefinitionException("Can't add options if using an options provider.");
     }
@@ -58,7 +61,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return parent::getOptions();
   }
 
-  public function setVariantMappingProvider(VariantMappingProviderInterface $provider): self {
+  public function setVariantMappingProvider(VariantMappingProviderInterface $provider): BasePropertyDefinition {
     $this->variantMappingProvider = $provider;
     return $this;
   }
@@ -122,7 +125,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return $this->presets;
   }
 
-  public function setProcessing(callable $callback): self {
+  public function setProcessing(callable $callback): BasePropertyDefinition {
     $this->processing = $callback;
 
     return $this;
