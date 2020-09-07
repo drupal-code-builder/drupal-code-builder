@@ -27,6 +27,10 @@ class RouterItem7 extends BaseGenerator {
         'process_default' => TRUE,
         'internal' => TRUE,
       ],
+      'description' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'file' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
       'page callback' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setLiteralDefault('example_page'),
