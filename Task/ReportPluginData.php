@@ -136,7 +136,11 @@ class ReportPluginData extends ReportHookDataFolder implements OptionsProviderIn
     ];
 
     foreach ($data as $plugin_type_name => $plugin_type_info) {
-      $mapping[$plugin_type_name] = $types[$plugin_type_info['discovery']];
+      // Quick hack: default to 'yaml' variant, as so far there's only
+      // migrations that we don't handle, which are YAML.
+      // TODO: when this is done in analysis, types we don't support should be
+      // filtered out.
+      $mapping[$plugin_type_name] = $types[$plugin_type_info['discovery']] ?? 'yaml';
     }
 
     return $mapping;
