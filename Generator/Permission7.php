@@ -15,7 +15,7 @@ class Permission7 extends Permission {
       'hooks' => array(
         'component_type' => 'Hooks',
         'hooks' => array(
-          'hook_permission' => TRUE,
+          'hook_permission',
         ),
       ),
     );
