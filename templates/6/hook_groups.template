@@ -29,7 +29,7 @@
   "block":{
     "label": "Add blocks to your module",
     "hooks": [
-      "hook_block",
+      "hook_block"
     ]
   }
 }
