@@ -30,7 +30,7 @@ class ComponentPermissions7Test extends TestBase {
       'hooks' => array(
       ),
       'permissions' => array(
-        1 => array(
+        0 => array(
           'permission' => $permission_name,
         ),
       ),
