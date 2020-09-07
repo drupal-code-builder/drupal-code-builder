@@ -74,7 +74,7 @@ class ComponentAdminSettings7Test extends TestBase {
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
       'hooks' => array(
-        'init'
+        'hook_init'
       ),
       'settings_form' => TRUE,
       'readme' => FALSE,
@@ -103,7 +103,7 @@ class ComponentAdminSettings7Test extends TestBase {
       'hooks' => array(
       ),
       'permissions' => array(
-        1 => array(
+        0 => array(
           'permission' => 'access testmodule',
         ),
       ),
