@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests basic module generation.
+ *
+ * @group pass
  */
 class ComponentModule6Test extends TestBase {
 
