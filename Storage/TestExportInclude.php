@@ -20,6 +20,14 @@ class TestExportInclude extends ExportInclude {
     $data_file = "$directory/{$key}_processed.php";
 
     if (!file_exists($data_file)) {
+      // For a temporary file, behave normally, and return empty data if it
+      // doesn't exist.
+      if (strpos($key, 'temporary') !== FALSE) {
+        return [];
+      }
+
+      // For a permanent file, throw an exception, because in this case
+      // something is wrong and tests should fail.
       throw new StorageException("Data file {$data_file} does not exist.");
     }
 
