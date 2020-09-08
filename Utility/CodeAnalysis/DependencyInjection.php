@@ -56,7 +56,7 @@ class DependencyInjection {
     $parameters = explode(',', $matches[1]);
 
     $create_container_extractions = [];
-    foreach (array_slice($parameters, 3) as $i => $parameter) {
+    foreach (array_slice($parameters, $fixed_parameter_count) as $i => $parameter) {
       $injection_parameter_data[$i]['extraction'] = trim($parameter);
     }
 
