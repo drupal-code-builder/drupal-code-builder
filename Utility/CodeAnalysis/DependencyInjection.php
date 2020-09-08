@@ -15,10 +15,10 @@ class DependencyInjection {
    * @param int $fixed_parameter_count
    *   The number of fixed parameters which are independent of dependency
    *   injection. These are the parameters which get passed to __construct()
-   *
+   *   before the injected services.
    *
    * @return
-   *   An numeric array where each item is data for a parameter, containing:
+   *   A numeric array where each item is data for a parameter, containing:
    *    - 'type': The typehint for the parameter.
    *    - 'name': The name of the parameter without the leading '$'.
    *    - 'extraction': The code snippet used in the create() method to extract
