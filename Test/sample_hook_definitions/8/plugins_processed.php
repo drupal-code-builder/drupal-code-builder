@@ -16,6 +16,7 @@ array (
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
+    'base_class_has_di' => false,
     'config_schema_prefix' => 'block.settings.',
     'plugin_properties' => 
     array (
@@ -36,6 +37,18 @@ array (
         'name' => 'category',
         'description' => 'The category in the admin UI where the block will be listed.',
         'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'context' => 
+      array (
+        'name' => 'context',
+        'description' => 'An array of context definitions describing the context used by the plugin.',
+        'type' => '\\Drupal\\Core\\Annotation\\ContextDefinition[]',
+      ),
+      'context_definitions' => 
+      array (
+        'name' => 'context_definitions',
+        'description' => 'An array of context definitions describing the context used by the plugin.',
+        'type' => '\\Drupal\\Core\\Annotation\\ContextDefinition[]',
       ),
     ),
     'plugin_interface_methods' => 
@@ -133,6 +146,7 @@ array (
     'service_class_name' => 'Drupal\\Core\\Render\\ElementInfoManager',
     'service_component_namespace' => 'Drupal\\Core\\Render',
     'type_label' => 'element_info',
+    'alter_hook_name' => 'element_plugin_alter',
     'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
     'subdir' => 'Element',
     'plugin_interface' => 'Drupal\\Core\\Render\\Element\\ElementInterface',
@@ -141,6 +155,7 @@ array (
     'yaml_properties' => NULL,
     'annotation_id_only' => true,
     'base_class' => 'Drupal\\Core\\Render\\Element\\RenderElement',
+    'base_class_has_di' => false,
     'plugin_properties' => 
     array (
       'value' => 
@@ -188,6 +203,7 @@ array (
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
     'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
+    'base_class_has_di' => true,
     'config_schema_prefix' => 'field.formatter.settings.',
     'constructor_fixed_parameters' => 
     array (
@@ -365,6 +381,7 @@ array (
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
     'base_class' => 'Drupal\\image\\ImageEffectBase',
+    'base_class_has_di' => true,
     'config_schema_prefix' => 'image.effect.',
     'construction' => 
     array (
@@ -486,6 +503,7 @@ array (
     ),
     'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\MenuLinkBase',
+    'base_class_has_di' => false,
     'plugin_properties' => 
     array (
     ),
@@ -524,6 +542,7 @@ array (
     ),
     'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
+    'base_class_has_di' => true,
     'construction' => 
     array (
       0 => 
@@ -570,6 +589,7 @@ array (
     ),
     'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
+    'base_class_has_di' => false,
     'plugin_properties' => 
     array (
     ),

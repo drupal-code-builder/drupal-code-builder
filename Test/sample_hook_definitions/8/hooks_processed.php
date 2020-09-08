@@ -14,7 +14,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
       'body' => '
   // Remove the contextual links on all blocks that provide them.
   if (isset($build[\'#contextual_links\'])) {
@@ -34,7 +34,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
       'body' => '
   // Change the title of the specific block.
   $build[\'#title\'] = t(\'New title of the block\');
@@ -52,10 +52,10 @@ array (
       ),
       'group' => 'block',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
       'body' => '
   // Add the \'user\' cache context to some blocks.
-  if ($some_condition) {
+  if ($block->label() === \'some condition\') {
     $build[\'#cache\'][\'contexts\'][] = \'user\';
   }
 ',
@@ -72,7 +72,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
       'body' => '
   // Explicitly enable placeholdering of the specific block.
   $build[\'#create_placeholder\'] = TRUE;
@@ -90,16 +90,16 @@ array (
       ),
       'group' => 'block',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/block.api.php',
       'body' => '
   // Example code that would prevent displaying the \'Powered by Drupal\' block in
   // a region different than the footer.
   if ($operation == \'view\' && $block->getPluginId() == \'system_powered_by_block\') {
-    return AccessResult::forbiddenIf($block->getRegion() != \'footer\')->addCacheableDependency($block);
+    return \\Drupal\\Core\\Access\\AccessResult::forbiddenIf($block->getRegion() != \'footer\')->addCacheableDependency($block);
   }
 
   // No opinion.
-  return AccessResult::neutral();
+  return \\Drupal\\Core\\Access\\AccessResult::neutral();
 ',
     ),
   ),
@@ -119,7 +119,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
   $node_storage = \\Drupal::entityTypeManager()->getStorage(\'node\');
   $database = \\Drupal::database();
@@ -174,7 +174,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
   if ($success) {
     // Here we do something meaningful with the results.
@@ -185,8 +185,8 @@ array (
       \'#theme\' => \'item_list\',
       \'#items\' => $results,
     ];
-    $message .= drupal_render($list);
-    drupal_set_message($message);
+    $message .= \\Drupal::service(\'renderer\')->render($list);
+    \\Drupal::messenger()->addStatus($message);
   }
   else {
     // An error occurred.
@@ -194,9 +194,9 @@ array (
     $error_operation = reset($operations);
     $message = t(\'An error occurred while processing %error_operation with arguments: @arguments\', [
       \'%error_operation\' => $error_operation[0],
-      \'@arguments\' => print_r($error_operation[1], TRUE)
+      \'@arguments\' => print_r($error_operation[1], TRUE),
     ]);
-    drupal_set_message($message, \'error\');
+    \\Drupal::messenger()->addError($message);
   }
 ',
     ),
@@ -212,7 +212,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
   // Inject any new status messages into the content area.
   $status_messages = [\'#type\' => \'status_messages\'];
@@ -232,7 +232,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
   if (isset($form[\'type\']) && $form[\'type\'][\'#value\'] . \'_node_settings\' == $form_id) {
     $upload_enabled_types = \\Drupal::config(\'mymodule.settings\')->get(\'upload_enabled_types\');
@@ -259,7 +259,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
   // Modification for the form with the given form ID goes here. For example, if
   // FORM_ID is "user_register_form" this code would run only on the user
@@ -285,7 +285,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
   // Modification for the form with the given BASE_FORM_ID goes here. For
   // example, if BASE_FORM_ID is "node_form", this code would run on every
@@ -311,7 +311,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/form.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_form.api.php',
       'body' => '
 ',
     ),
@@ -330,7 +330,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   $hooks[\'token_info\'] = [
     \'group\' => \'tokens\',
@@ -353,7 +353,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   if ($hook == \'form_alter\') {
     // Move my_module_form_alter() to the end of the list.
@@ -379,7 +379,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Only fill this in if the .info.yml file does not define a \'datestamp\'.
   if (empty($info[\'datestamp\'])) {
@@ -399,7 +399,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   mymodule_cache_clear();
 ',
@@ -416,7 +416,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   if (in_array(\'lousy_module\', $modules)) {
     \\Drupal::state()->set(\'mymodule.lousy_module_compatibility\', TRUE);
@@ -435,11 +435,11 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Create the styles directory and ensure it\'s writable.
-  $directory = file_default_scheme() . \'://styles\';
-  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  $directory = \\Drupal::config(\'system.file\')->get(\'default_scheme\') . \'://styles\';
+  \\Drupal::service(\'file_system\')->prepareDirectory($directory, \\Drupal\\Core\\File\\FileSystemInterface::CREATE_DIRECTORY | \\Drupal\\Core\\File\\FileSystemInterface::MODIFY_PERMISSIONS);
 ',
     ),
     'hook_module_preuninstall' => 
@@ -454,7 +454,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   mymodule_cache_clear();
 ',
@@ -471,7 +471,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   if (in_array(\'lousy_module\', $modules)) {
     \\Drupal::state()->delete(\'mymodule.lousy_module_compatibility\');
@@ -491,10 +491,10 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Remove the styles directory and generated images.
-  file_unmanaged_delete_recursive(file_default_scheme() . \'://styles\');
+  \\Drupal::service(\'file_system\')->deleteRecursive(\\Drupal::config(\'system.file\')->get(\'default_scheme\') . \'://styles\');
 ',
     ),
     'hook_install_tasks' => 
@@ -509,7 +509,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
@@ -583,7 +583,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Replace the entire site configuration form provided by Drupal core
   // with a custom callback function defined by this installation profile.
@@ -603,7 +603,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // For non-batch updates, the signature can simply be:
   // function hook_update_N() {
@@ -616,12 +616,12 @@ array (
     \'length\' => 20,
     \'not null\' => FALSE,
   ];
-  $schema = Database::getConnection()->schema();
+  $schema = \\Drupal\\Core\\Database\\Database::getConnection()->schema();
   $schema->addField(\'mytable1\', \'newcol\', $spec);
 
   // Example of what to do if there is an error during your update.
   if ($some_error_condition_met) {
-    throw new UpdateException(\'Something went wrong; here is what you should do.\');
+    throw new \\Drupal\\Core\\Utility\\UpdateException(\'Something went wrong; here is what you should do.\');
   }
 
   // Example function body for a batch update. In this example, the values in
@@ -630,11 +630,11 @@ array (
     // This must be the first run. Initialize the sandbox.
     $sandbox[\'progress\'] = 0;
     $sandbox[\'current_pk\'] = 0;
-    $sandbox[\'max\'] = Database::getConnection()->query(\'SELECT COUNT(myprimarykey) FROM {mytable1}\')->fetchField() - 1;
+    $sandbox[\'max\'] = \\Drupal\\Core\\Database\\Database::getConnection()->query(\'SELECT COUNT(myprimarykey) FROM {mytable1}\')->fetchField();
   }
 
   // Update in chunks of 20.
-  $records = Database::getConnection()->select(\'mytable1\', \'m\')
+  $records = \\Drupal\\Core\\Database\\Database::getConnection()->select(\'mytable1\', \'m\')
     ->fields(\'m\', [\'myprimarykey\', \'otherfield\'])
     ->condition(\'myprimarykey\', $sandbox[\'current_pk\'], \'>\')
     ->range(0, 20)
@@ -643,7 +643,7 @@ array (
   foreach ($records as $record) {
     // Here, you would make an update something related to this record. In this
     // example, some text is added to the other field.
-    Database::getConnection()->update(\'mytable1\')
+    \\Drupal\\Core\\Database\\Database::getConnection()->update(\'mytable1\')
       ->fields([\'otherfield\' => $record->otherfield . \'-suffix\'])
       ->condition(\'myprimarykey\', $record->myprimarykey)
       ->execute();
@@ -668,10 +668,11 @@ array (
       'destination' => '%module.module',
       'dependencies' => 
       array (
+        0 => 'callback_batch_operation',
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Example of updating some content.
   $node = \\Drupal\\node\\Entity\\Node::load(123);
@@ -687,7 +688,7 @@ array (
   $block_update_8001 = \\Drupal::keyValue(\'update_backup\')->get(\'block_update_8001\', []);
 
   $block_ids = array_keys($block_update_8001);
-  $block_storage = \\Drupal::entityManager()->getStorage(\'block\');
+  $block_storage = \\Drupal::entityTypeManager()->getStorage(\'block\');
   $blocks = $block_storage->loadMultiple($block_ids);
   /** @var $blocks \\Drupal\\block\\BlockInterface[] */
   foreach ($blocks as $block) {
@@ -704,6 +705,27 @@ array (
   return $result;
 ',
     ),
+    'hook_removed_post_updates' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_removed_post_updates',
+      'definition' => 'function hook_removed_post_updates()',
+      'description' => 'Return an array of removed hook_post_update_NAME() function names.',
+      'destination' => '%module.module',
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:module',
+      'core' => true,
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
+      'body' => '
+  return [
+    \'mymodule_post_update_foo\' => \'8.x-2.0\',
+    \'mymodule_post_update_bar\' => \'8.x-3.0\',
+    \'mymodule_post_update_baz\' => \'8.x-3.0\',
+  ];
+',
+    ),
     'hook_update_dependencies' => 
     array (
       'type' => 'hook',
@@ -716,7 +738,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Indicate that the mymodule_update_8001() function provided by this module
   // must run after the another_module_update_8003() function provided by the
@@ -749,7 +771,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // We\'ve removed the 8.x-1.x version of mymodule, including database updates.
   // The next update function is mymodule_update_8200().
@@ -768,7 +790,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   return [
     \'module\' => [
@@ -796,7 +818,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   // Adjust weight so that the theme Updater gets a chance to handle a given
   // update task before module updaters.
@@ -815,7 +837,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/module.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_module.api.php',
       'body' => '
   $requirements = [];
 
@@ -824,14 +846,14 @@ array (
     $requirements[\'drupal\'] = [
       \'title\' => t(\'Drupal\'),
       \'value\' => \\Drupal::VERSION,
-      \'severity\' => REQUIREMENT_INFO
+      \'severity\' => REQUIREMENT_INFO,
     ];
   }
 
   // Test PHP version
   $requirements[\'php\'] = [
     \'title\' => t(\'PHP\'),
-    \'value\' => ($phase == \'runtime\') ? \\Drupal::l(phpversion(), new Url(\'system.php\')) : phpversion(),
+    \'value\' => ($phase == \'runtime\') ? \\Drupal\\Core\\Link::fromTextAndUrl(phpversion(), \\Drupal\\Core\\Url::fromRoute(\'system.php\'))->toString() : phpversion(),
   ];
   if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
     $requirements[\'php\'][\'description\'] = t(\'Your PHP installation is too old. Drupal requires at least PHP %version.\', [\'%version\' => DRUPAL_MINIMUM_PHP]);
@@ -853,7 +875,7 @@ array (
       ];
     }
 
-    $requirements[\'cron\'][\'description\'] .= \' \' . t(\'You can <a href=":cron">run cron manually</a>.\', [\':cron\' => \\Drupal::url(\'system.run_cron\')]);
+    $requirements[\'cron\'][\'description\'] .= \' \' . t(\'You can <a href=":cron">run cron manually</a>.\', [\':cron\' => \\Drupal\\Core\\Url::fromRoute(\'system.run_cron\')->toString()]);
 
     $requirements[\'cron\'][\'title\'] = t(\'Cron maintenance tasks\');
   }
@@ -876,7 +898,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Add a checkbox to toggle the breadcrumb trail.
   $form[\'toggle_breadcrumb\'] = [
@@ -899,7 +921,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   static $hooks;
 
@@ -946,7 +968,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // This example is from rdf_preprocess_image(). It adds an RDF attribute
   // to the image hook\'s variables.
@@ -965,7 +987,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   $suggestions = [];
 
@@ -986,7 +1008,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Add an interface-language specific suggestion to all theme hooks.
   $suggestions[] = $hook . \'__\' . \\Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -1004,10 +1026,10 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   if (empty($variables[\'header\'])) {
-    $suggestions[] = \'hookname__\' . \'no_header\';
+    $suggestions[] = \'hookname__no_header\';
   }
 ',
     ),
@@ -1023,7 +1045,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   foreach ($theme_list as $theme) {
     block_theme_initialize($theme);
@@ -1042,7 +1064,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Remove some state entries depending on the theme.
   foreach ($themes as $theme) {
@@ -1062,7 +1084,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Extension for template base names in Twig.
   return \'.html.twig\';
@@ -1080,7 +1102,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   $twig_service = \\Drupal::service(\'twig\');
 
@@ -1099,12 +1121,30 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Decrease the default size of textfields.
   if (isset($info[\'textfield\'][\'#size\'])) {
     $info[\'textfield\'][\'#size\'] = 40;
   }
+',
+    ),
+    'hook_element_plugin_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_element_plugin_alter',
+      'definition' => 'function hook_element_plugin_alter(array &$definitions)',
+      'description' => 'Alter Element plugin definitions.',
+      'destination' => '%module.module',
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:theme',
+      'core' => true,
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
+      'body' => '
+  // Use a custom class for the LayoutBuilder element.
+  $definitions[\'layout_builder\'][\'class\'] = \'\\Drupal\\mymodule\\Element\\MyLayoutBuilderElement\';
 ',
     ),
     'hook_js_alter' => 
@@ -1119,7 +1159,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Swap out jQuery to use an updated version of the library.
   $javascript[\'core/assets/vendor/jquery/jquery.min.js\'][\'data\'] = drupal_get_path(\'module\', \'jquery_update\') . \'/jquery.js\';
@@ -1137,7 +1177,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   $libraries = [];
   // Add a library whose information changes depending on certain conditions.
@@ -1206,7 +1246,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Manipulate settings.
   if (isset($settings[\'dialog\'])) {
@@ -1226,7 +1266,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Add settings.
   $settings[\'user\'][\'uid\'] = \\Drupal::currentUser();
@@ -1249,7 +1289,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Update Farbtastic to version 2.0.
   if ($extension == \'core\' && isset($libraries[\'jquery.farbtastic\'])) {
@@ -1293,7 +1333,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Remove defaults.css file.
   unset($css[drupal_get_path(\'module\', \'system\') . \'/defaults.css\']);
@@ -1311,10 +1351,10 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Unconditionally attach an asset to the page.
-  $attachments[\'#attached\'][\'library\'][] = \'core/domready\';
+  $attachments[\'#attached\'][\'library\'][] = \'core/drupalSettings\';
 
   // Conditionally attach an asset to the page.
   if (!\\Drupal::currentUser()->hasPermission(\'may pet kittens\')) {
@@ -1334,7 +1374,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Conditionally remove an asset.
   if (in_array(\'core/jquery\', $attachments[\'#attached\'][\'library\'])) {
@@ -1355,7 +1395,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   $page_top[\'mymodule\'] = [\'#markup\' => \'This is the top.\'];
 ',
@@ -1372,7 +1412,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   $page_bottom[\'mymodule\'] = [\'#markup\' => \'This is the bottom.\'];
 ',
@@ -1389,7 +1429,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   return [
     \'forum_display\' => [
@@ -1420,7 +1460,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   // Kill the next/previous forum topic navigation links.
   foreach ($theme_registry[\'forum_topic_navigation\'][\'preprocess functions\'] as $key => $value) {
@@ -1442,7 +1482,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/theme.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_theme.api.php',
       'body' => '
   $variables[\'is_admin\'] = \\Drupal::currentUser()->hasPermission(\'access administration pages\');
 ',
@@ -1462,7 +1502,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/token.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_token.api.php',
       'body' => '
   $token_service = \\Drupal::token();
 
@@ -1492,18 +1532,18 @@ array (
           break;
 
         case \'edit-url\':
-          $replacements[$original] = $node->url(\'edit-form\', $url_options);
+          $replacements[$original] = $node->toUrl(\'edit-form\', $url_options)->toString();
           break;
 
         // Default values for the chained tokens handled below.
         case \'author\':
-          $account = $node->getOwner() ? $node->getOwner() : User::load(0);
+          $account = $node->getOwner() ? $node->getOwner() : \\Drupal\\user\\Entity\\User::load(0);
           $replacements[$original] = $account->label();
           $bubbleable_metadata->addCacheableDependency($account);
           break;
 
         case \'created\':
-          $replacements[$original] = format_date($node->getCreatedTime(), \'medium\', \'\', NULL, $langcode);
+          $replacements[$original] = \\Drupal::service(\'date.formatter\')->format($node->getCreatedTime(), \'medium\', \'\', NULL, $langcode);
           break;
       }
     }
@@ -1532,7 +1572,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/token.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_token.api.php',
       'body' => '
   $options = $context[\'options\'];
 
@@ -1551,7 +1591,7 @@ array (
     // of a field (field_title).
     if (isset($context[\'tokens\'][\'title\'])) {
       $title = $node->field_title->view(\'default\');
-      $replacements[$context[\'tokens\'][\'title\']] = drupal_render($title);
+      $replacements[$context[\'tokens\'][\'title\']] = \\Drupal::service(\'renderer\')->render($title);
     }
   }
 ',
@@ -1568,7 +1608,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/token.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_token.api.php',
       'body' => '
   $type = [
     \'name\' => t(\'Nodes\'),
@@ -1617,7 +1657,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/token.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/CORE_token.api.php',
       'body' => '
   // Modify description of node tokens for our site.
   $data[\'tokens\'][\'node\'][\'nid\'] = [
@@ -1652,12 +1692,12 @@ array (
       ),
       'group' => 'help',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/help.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/help.api.php',
       'body' => '
   switch ($route_name) {
     // Main module help for the block module.
     case \'help.page.block\':
-      return \'<p>\' . t(\'Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "Sidebar first", "Sidebar second", "Featured", "Content", "Header", "Footer", etc., and a block may appear in any one of these areas. The <a href=":blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.\', [\':blocks\' => \\Drupal::url(\'block.admin_display\')]) . \'</p>\';
+      return \'<p>\' . t(\'Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "Sidebar first", "Sidebar second", "Featured", "Content", "Header", "Footer", etc., and a block may appear in any one of these areas. The <a href=":blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.\', [\':blocks\' => \\Drupal\\Core\\Url::fromRoute(\'block.admin_display\')->toString()]) . \'</p>\';
 
     // Help for another path in the block module.
     case \'block.admin_display\':
@@ -1669,7 +1709,7 @@ array (
     array (
       'type' => 'hook',
       'name' => 'hook_help_section_info_alter',
-      'definition' => 'function hook_help_section_info_alter(&$info)',
+      'definition' => 'function hook_help_section_info_alter(array &$info)',
       'description' => 'Perform alterations on help page section plugin definitions.',
       'destination' => '%module.module',
       'dependencies' => 
@@ -1677,10 +1717,12 @@ array (
       ),
       'group' => 'help',
       'core' => true,
-      'file_path' => '/Users/joachim/Sites/8-drupal/vendor/drupal-code-builder/drupal-code-builder/Test/sample_hook_definitions/8/help.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb/repo/drupal-code-builder/Test/sample_hook_definitions/8/help.api.php',
       'body' => '
   // Alter the header for the module overviews section.
-  $info[\'hook_help\'][\'header\'] = t(\'Overviews of modules\');
+  $info[\'hook_help\'][\'title\'] = t(\'Overviews of modules\');
+  // Move the module overviews section to the end.
+  $info[\'hook_help\'][\'weight\'] = 500;
 ',
     ),
   ),

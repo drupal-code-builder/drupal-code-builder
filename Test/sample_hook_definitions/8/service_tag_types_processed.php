@@ -3,6 +3,7 @@ array (
   'breadcrumb_builder' => 
   array (
     'label' => 'Breadcrumb Builder',
+    'collector_type' => 'service_collector',
     'interface' => 'Drupal\\Core\\Breadcrumb\\BreadcrumbBuilderInterface',
     'methods' => 
     array (

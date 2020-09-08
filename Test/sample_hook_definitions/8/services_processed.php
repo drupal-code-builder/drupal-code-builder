@@ -20,7 +20,7 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
     ),
-    'module_handler' =>
+    'module_handler' => 
     array (
       'id' => 'module_handler',
       'label' => 'Module handler',
@@ -32,6 +32,15 @@ array (
   ),
   'all' => 
   array (
+    'cache.discovery' => 
+    array (
+      'id' => 'cache.discovery',
+      'label' => 'Cache backend',
+      'static_method' => '',
+      'class' => '\\Drupal\\Core\\Cache\\CacheBackendInterface',
+      'interface' => '',
+      'description' => 'The Cache backend service',
+    ),
     'current_user' => 
     array (
       'id' => 'current_user',
@@ -50,7 +59,7 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
     ),
-    'module_handler' =>
+    'module_handler' => 
     array (
       'id' => 'module_handler',
       'label' => 'Module handler',
@@ -59,22 +68,12 @@ array (
       'interface' => '\\Drupal\\Core\\Extension\\ModuleHandlerInterface',
       'description' => 'The module handler',
     ),
-    'cache.discovery' =>
-    array (
-      'id' => 'cache.discovery',
-      'label' => 'Cache Backend Interface',
-      'static_method' => '',
-      'class' => '\\Drupal\\Core\\Cache\\CacheBackendInterface',
-      'interface' => '',
-      'description' => 'The Cache Backend Interface service',
-    ),
-    'storage:node' =>
+    'storage:node' => 
     array (
       'id' => 'storage:node',
       'label' => 'Content storage',
       'static_method' => '',
-      'class' => "FOO",
-      'interface' => '\Drupal\Core\Entity\EntityStorageInterface',
+      'interface' => '\\Drupal\\Core\\Entity\\EntityStorageInterface',
       'description' => 'The node storage handler',
     ),
   ),
