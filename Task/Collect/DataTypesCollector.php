@@ -26,6 +26,7 @@ class DataTypesCollector extends CollectorBase {
   protected $testingDataTypes = [
     'text' => TRUE,
     'boolean' => TRUE,
+    'label' => TRUE,
   ];
 
   /**

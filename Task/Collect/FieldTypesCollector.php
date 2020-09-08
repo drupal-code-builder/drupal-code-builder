@@ -25,6 +25,7 @@ class FieldTypesCollector extends CollectorBase  {
   protected $testingFieldTypes = [
     'text' => TRUE,
     'boolean' => TRUE,
+    'string' => TRUE,
   ];
 
   /**
