@@ -915,7 +915,7 @@ class PluginTypesCollector extends CollectorBase  {
       return;
     }
 
-    if (!class_exists($data['plugin_interface'])) {
+    if (!interface_exists($data['plugin_interface'])) {
       // Some contrib modules declare the interface but don't define it...
       return;
     }
