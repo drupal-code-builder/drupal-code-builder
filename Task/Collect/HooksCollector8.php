@@ -10,6 +10,23 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 class HooksCollector8 extends HooksCollector {
 
   /**
+   * The names of api.php files to collect for testing sample data.
+   */
+  protected $testingApiFiles = [
+    'block.api.php' => TRUE,
+    // Need this for hook_install().
+    'CORE_module.api.php' => TRUE,
+    // Need this for hook_form_alter().
+    'CORE_form.api.php' => TRUE,
+    // Need this for hook_tokens().
+    'CORE_token.api.php' => TRUE,
+    // Need this for hook_help().
+    'help.api.php' => TRUE,
+    // Need this for ThemeHook component.
+    'CORE_theme.api.php' => TRUE,
+];
+
+  /**
    * {@inheritdoc}
    */
   public function getJobList() {
@@ -129,6 +146,11 @@ class HooksCollector8 extends HooksCollector {
     // We now have the basics.
     // We should now see if some modules have extra information for us.
     $this->getHookDestinations($hook_files);
+
+    // Filter for testing sample data collection.
+    if (!empty($this->environment->sample_data_write)) {
+      $hook_files = array_intersect_key($hook_files, $this->testingApiFiles);
+    }
 
     return $hook_files;
   }
