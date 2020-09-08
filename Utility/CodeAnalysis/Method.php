@@ -50,9 +50,10 @@ class Method extends PHPReflectionMethod {
       // and interface typehints and 'array'. If that gets nothing, we scrape
       // it from the docblock so that we have something to generate docblocks
       // with.
-      $type = (string) $parameter_reflection->getType();
-
-      if (empty($type)) {
+      if ($parameter_reflection->hasType()) {
+        $type = $parameter_reflection->getType()->getName();
+      }
+      else {
         if (isset($docblock_types[$name])) {
           $type = $docblock_types[$name];
         }

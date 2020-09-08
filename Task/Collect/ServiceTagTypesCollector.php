@@ -141,7 +141,7 @@ class ServiceTagTypesCollector extends CollectorBase  {
           // TODO: skip if more than 1 param.
           // getNumberOfParameters
 
-          $collected_services_interface = (string) $collecting_method_paramR[0]->getType();
+          $collected_services_interface = $collecting_method_paramR[0]->getType()->getName();
 
           if (!interface_exists($collected_services_interface)) {
             // Shouldn't happen, as the typehint will be an interface the
