@@ -455,9 +455,9 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Field\FormatterBase');
 
     // Check service injection.
-    $php_tester->assertClassHasInterfaces([
+    $php_tester->assertClassHasNotInterfaces([
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
-    ]);
+    ], "The DI interface is not used by the class because the base class already implements it.");
 
     $create_tester = $php_tester->getMethodTester('create');
     $create_tester->assertHasParameters([
