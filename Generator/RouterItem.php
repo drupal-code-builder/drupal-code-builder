@@ -72,7 +72,7 @@ class RouterItem extends BaseGenerator {
                     $snake = str_replace(['/', '-'], '_', $path);
                     $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
                     return $controller_class_name;
-                  }),
+                  })
                 ),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
