@@ -28,6 +28,19 @@ class CollectPluginInfoTest extends KernelTestBase {
 
     $this->environment = \DrupalCodeBuilder\Factory::getEnvironment();
 
+    $this->pluginTypesCollector = new \DrupalCodeBuilder\Task\Collect\PluginTypesCollector(
+      \DrupalCodeBuilder\Factory::getEnvironment(),
+      new \DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter,
+      new \DrupalCodeBuilder\Task\Collect\MethodCollector,
+      new \DrupalCodeBuilder\Task\Collect\CodeAnalyser($this->environment)
+    );
+
+    // Hack the task handler so we can call the processing method with a subset
+    // of plugin manager service IDs.
+    $class = new \ReflectionObject($this->pluginTypesCollector);
+    $this->gatherPluginTypeInfoMethod = $class->getMethod('gatherPluginTypeInfo');
+    $this->gatherPluginTypeInfoMethod->setAccessible(TRUE);
+
     parent::setUp();
   }
 
@@ -44,49 +57,24 @@ class CollectPluginInfoTest extends KernelTestBase {
     'aggregator',
   ];
 
+  protected function getPluginTypeInfoFromCollector($job) {
+    return $this->gatherPluginTypeInfoMethod->invoke($this->pluginTypesCollector, [$job]);
+  }
+
   /**
-   * Tests collection of plugin type info
+   * Tests collection of plugin type info.
    */
   public function testPluginTypesInfoCollection() {
-    $plugin_types_collector = new \DrupalCodeBuilder\Task\Collect\PluginTypesCollector(
-      \DrupalCodeBuilder\Factory::getEnvironment(),
-      new \DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter,
-      new \DrupalCodeBuilder\Task\Collect\MethodCollector,
-      new \DrupalCodeBuilder\Task\Collect\CodeAnalyser($this->environment)
-    );
-
-    // Hack the task handler so we can call the processing method with a subset
-    // of plugin manager service IDs.
-    $class = new \ReflectionObject($plugin_types_collector);
-    $method = $class->getMethod('gatherPluginTypeInfo');
-    $method->setAccessible(TRUE);
-
-    $test_plugin_jobs = [
-      // In Core, and other modules provide plugins.
+    // In Core, and other modules provide plugins.
+    $plugin_types_info = $this->getPluginTypeInfoFromCollector(
       [
         'service_id' => 'plugin.manager.queue_worker',
         'type_id' => 'queue_worker',
       ],
-      // In Core, and our name doesn't match Plugin module's name.
-      [
-        'service_id' => 'plugin.manager.field.field_type',
-        'type_id' => 'field.field_type',
-      ],
-      // In a module, and other modules provide plugins.
-      [
-        'service_id' => 'plugin.manager.help_section',
-        'type_id' => 'help_section',
-      ]
-    ];
+    );
 
-    $plugin_types_info = $method->invoke($plugin_types_collector, $test_plugin_jobs);
-
-    $this->assertCount(3, $plugin_types_info);
     $this->assertArrayHasKey('queue_worker', $plugin_types_info, "The plugin types list has the queue_worker plugin type.");
-    $this->assertArrayHasKey('field.field_type', $plugin_types_info, "The plugin types list has the field.field_type plugin type.");
-    $this->assertArrayHasKey('help_section', $plugin_types_info, "The plugin types list has the help_section plugin type.");
 
-    // Check the info for the queue worker plugin type.
     $queue_worker_type_info = $plugin_types_info['queue_worker'];
     $this->assertEquals('queue_worker', $queue_worker_type_info['type_id']);
     $this->assertEquals('queue_worker', $queue_worker_type_info['type_label']);
@@ -108,7 +96,16 @@ class CollectPluginInfoTest extends KernelTestBase {
     $this->assertArrayHasKey('title', $plugin_properties);
     $this->assertArrayHasKey('cron', $plugin_properties);
 
-    // Check the info for the field type plugin type.
+    // In Core, and our name doesn't match Plugin module's name.
+    $plugin_types_info = $this->getPluginTypeInfoFromCollector(
+      [
+        'service_id' => 'plugin.manager.field.field_type',
+        'type_id' => 'field.field_type',
+      ],
+    );
+
+    $this->assertArrayHasKey('field.field_type', $plugin_types_info, "The plugin types list has the field.field_type plugin type.");
+
     $field_type_info = $plugin_types_info['field.field_type'];
     $this->assertEquals('field.field_type', $field_type_info['type_id']);
     $this->assertEquals('field.field_type', $field_type_info['type_label']);
@@ -138,7 +135,16 @@ class CollectPluginInfoTest extends KernelTestBase {
     $this->assertArrayHasKey('default_formatter', $plugin_properties);
     // ... TODO loads more!
 
-    // Check the info for the help section type plugin type.
+    // In a module, and other modules provide plugins.
+    $plugin_types_info = $this->getPluginTypeInfoFromCollector(
+      [
+        'service_id' => 'plugin.manager.help_section',
+        'type_id' => 'help_section',
+      ],
+    );
+
+    $this->assertArrayHasKey('help_section', $plugin_types_info, "The plugin types list has the help_section plugin type.");
+
     $help_section_type_info = $plugin_types_info['help_section'];
     $this->assertEquals('help_section', $help_section_type_info['type_id']);
     $this->assertEquals('help_section', $help_section_type_info['type_label']);
