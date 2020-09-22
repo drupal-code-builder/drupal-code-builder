@@ -21,7 +21,7 @@ if [ "$TESTTYPE" = "drupal" ]; then
   mysql -e 'create database dcb'
 
   # Download Drupal 8 core.
-  git clone --branch 8.5.x --depth 1 http://git.drupal.org/project/drupal.git
+  git clone --branch 8.9.x --depth 1 http://git.drupal.org/project/drupal.git
   cd drupal
   composer install -n
 
