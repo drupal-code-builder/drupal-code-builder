@@ -12,6 +12,8 @@ jobs:
     - env: TESTTYPE=dcb
 
     - env: TESTTYPE=drupal
+      services:
+        - mysql
 
 install:
   # Remove xdebug. We aren't generating code coverage, and it slows down Composer.
