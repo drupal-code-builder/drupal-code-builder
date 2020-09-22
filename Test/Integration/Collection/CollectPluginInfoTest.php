@@ -70,7 +70,7 @@ class CollectPluginInfoTest extends KernelTestBase {
       [
         'service_id' => 'plugin.manager.queue_worker',
         'type_id' => 'queue_worker',
-      ],
+      ]
     );
 
     $this->assertArrayHasKey('queue_worker', $plugin_types_info, "The plugin types list has the queue_worker plugin type.");
@@ -101,7 +101,7 @@ class CollectPluginInfoTest extends KernelTestBase {
       [
         'service_id' => 'plugin.manager.field.field_type',
         'type_id' => 'field.field_type',
-      ],
+      ]
     );
 
     $this->assertArrayHasKey('field.field_type', $plugin_types_info, "The plugin types list has the field.field_type plugin type.");
@@ -140,7 +140,7 @@ class CollectPluginInfoTest extends KernelTestBase {
       [
         'service_id' => 'plugin.manager.help_section',
         'type_id' => 'help_section',
-      ],
+      ]
     );
 
     $this->assertArrayHasKey('help_section', $plugin_types_info, "The plugin types list has the help_section plugin type.");
