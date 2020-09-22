@@ -3,12 +3,15 @@ language: php
 php:
   - 7.4
 
-env:
-  # Whether to run DCB's internal tests, or integration tests that require a
-  # Drupal build.
-  # See https://gist.github.com/jamesarosen/e29076bd81a099f0f72e
-  - TESTTYPE=dcb
-  - TESTTYPE=drupal
+# Whether to run DCB's internal tests, or integration tests that require a
+# Drupal build.
+# Use an environment variable so we can switch on it later for more complex
+# setup. See https://gist.github.com/jamesarosen/e29076bd81a099f0f72e
+jobs:
+  include:
+    - env: TESTTYPE=dcb
+
+    - env: TESTTYPE=drupal
 
 install:
   # Remove xdebug. We aren't generating code coverage, and it slows down Composer.
