@@ -1,8 +1,7 @@
 # See https://github.com/travis-ci/travis.rb for linting.
 language: php
 php:
-  # No PHP 5, as phpunit does not support it.
-  - 7.1
+  - 7.4
 
 env:
   # Whether to run DCB's internal tests, or integration tests that require a
