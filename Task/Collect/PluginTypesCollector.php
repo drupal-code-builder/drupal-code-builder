@@ -575,13 +575,57 @@ class PluginTypesCollector extends CollectorBase  {
    *  The data for a single plugin type.
    */
   protected function addPluginBaseClass(&$data) {
-    $base_class = $this->analysePluginTypeBaseClass($data);
+    $base_class = $this->analysePluginTypeBaseClassFromDefiningModule($data);
+
+    if (!$base_class) {
+      $base_class = $this->analysePluginTypeBaseClassFromPlugins($data);
+    }
+
     if ($base_class) {
       $data['base_class'] = $base_class;
 
       // Determine whether the base class has dependency injection.
       $data['base_class_has_di'] = is_a($base_class, \Drupal\Core\Plugin\ContainerFactoryPluginInterface::class, TRUE);
     }
+  }
+
+  /**
+   * Attempts to find a plugin base class in the same location as the interface.
+   *
+   * Given a plugin interface FooInterface, this tries to find a class called
+   * FooBase in the same location.
+   *
+   * @param array $data
+   *   The array of data for the plugin type.
+   *
+   * @return string|null
+   *   The base class to use when generating plugins of this type, or NULL if
+   *   this cannot be determined.
+   */
+  protected function analysePluginTypeBaseClassFromDefiningModule($data) {
+    // Bail if the interface doesn't have an 'Interface' suffix.
+    if (!preg_match('@Interface$@', $data['plugin_interface'])) {
+      return;
+    }
+
+    // Look for a base class in the same folder as the interface.
+    $plugin_interface_reflection = new \ReflectionClass($data['plugin_interface']);
+    $plugin_interface_filename = $plugin_interface_reflection->getFileName();
+    $possible_base_class_filename = preg_replace('@Interface.php$@', 'Base.php', $plugin_interface_filename);
+
+    // Bail if there's no class of that name in the same place.
+    if (!file_exists($possible_base_class_filename)) {
+      return;
+    }
+
+    $plugin_base_class = preg_replace('@Interface$@', 'Base', $data['plugin_interface']);
+
+    // Bail if it's not actually a plugin base class.
+    if (!is_subclass_of($plugin_base_class, \Drupal\Component\Plugin\PluginBase::class)) {
+      return;
+    }
+
+    return $plugin_base_class;
   }
 
   /**
@@ -594,7 +638,7 @@ class PluginTypesCollector extends CollectorBase  {
    *   The base class to use when generating plugins of this type, or NULL if
    *   this cannot be determined.
    */
-  protected function analysePluginTypeBaseClass(&$data) {
+  protected function analysePluginTypeBaseClassFromPlugins(&$data) {
     // Work over each plugin of this type, finding a suitable candidate for
     // base class with each one.
     $potential_base_classes = [];

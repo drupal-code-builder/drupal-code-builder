@@ -1,0 +1,4 @@
+services:
+  plugin.manager.test_generated_plugin_type_test_annotation_plugin:
+    class: Drupal\test_generated_plugin_type\TestAnnotationPluginManager
+    parent: default_plugin_manager

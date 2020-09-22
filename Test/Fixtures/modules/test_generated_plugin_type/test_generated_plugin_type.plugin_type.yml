@@ -1,0 +1,4 @@
+test_generated_plugin_type.test_annotation_plugin:
+  label: 'Test Annotation Plugin'
+  plugin_manager_service_id: plugin.manager.test_generated_plugin_type_test_annotation_plugin
+  plugin_definition_decorator_class: Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
