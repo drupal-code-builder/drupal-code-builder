@@ -1,3 +1,8 @@
 services:
+  # Service name ends in 'service' to test this doens't get appended again.
   test_services.combobulating_service:
     class: Drupal\test_services\CombobulatingService
+
+  test_services.slash_prefix:
+    # Service class definition has an initial backslash.
+    class: \Drupal\test_services\SlashPrefix

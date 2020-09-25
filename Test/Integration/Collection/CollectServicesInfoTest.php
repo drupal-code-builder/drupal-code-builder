@@ -81,14 +81,20 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->installFixtureModule('test_services');
 
     $complete_service_info = $this->servicesCollector->collect();
-    $this->assertNotEmpty($complete_service_info['all']['test_services.combobulating_service']);
 
     // A service whose name has a 'service' prefix doesn't get it repeated in
     // the description.
+    $this->assertNotEmpty($complete_service_info['all']['test_services.combobulating_service']);
     $test_service_info = $complete_service_info['all']['test_services.combobulating_service'];
     $this->assertEquals('\Drupal\test_services\CombobulatingService', $test_service_info['class']);
     $this->assertEquals('Combobulating service', $test_service_info['label']);
     $this->assertEquals('The Combobulating service', $test_service_info['description']);
+
+    $this->assertNotEmpty($complete_service_info['all']['test_services.slash_prefix']);
+    $test_service_info = $complete_service_info['all']['test_services.slash_prefix'];
+    $this->assertEquals('\Drupal\test_services\SlashPrefix', $test_service_info['class']);
+    $this->assertEquals('Slash prefix', $test_service_info['label']);
+    $this->assertEquals('The Slash prefix service', $test_service_info['description']);
   }
 
   protected function installFixtureModule(string $module) {

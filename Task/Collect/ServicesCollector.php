@@ -221,11 +221,16 @@ class ServicesCollector extends CollectorBase  {
         $description = "The {$label} service";
       }
 
+      // Prefix the class with a backslash if it doesn't already have it.
+      if (substr($service_class, 0, 1) != '\\') {
+        $service_class = '\\' . $service_class;
+      }
+
       $data[$service_id] = [
         'id' => $service_id,
         'label' => $label,
         'static_method' => '', // Not used.
-        'class' => '\\' . $service_class,
+        'class' => $service_class,
         'interface' => $this->getServiceInterface($service_class),
         'description' => $description,
       ];
