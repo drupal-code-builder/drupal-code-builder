@@ -81,7 +81,7 @@ class ServicesCollector extends CollectorBase  {
    *    - 'interface': The fully-qualified interface that the service class
    *      implements, with the initial '\'.
    */
-  public function collect($job_list) {
+  public function collect($job_list = NULL) {
     $all_services = $this->getAllServices();
     $static_container_services = $this->getStaticContainerServices();
 
@@ -214,13 +214,20 @@ class ServicesCollector extends CollectorBase  {
 
       $label = CaseString::pascal($service_short_class)->sentence();
 
+      if (preg_match('@service$@', $label)) {
+        $description = "The {$label}";
+      }
+      else {
+        $description = "The {$label} service";
+      }
+
       $data[$service_id] = [
         'id' => $service_id,
         'label' => $label,
         'static_method' => '', // Not used.
         'class' => '\\' . $service_class,
         'interface' => $this->getServiceInterface($service_class),
-        'description' => "The {$label} service",
+        'description' => $description,
       ];
     }
 

@@ -1,0 +1,3 @@
+services:
+  test_services.combobulating_service:
+    class: Drupal\test_services\CombobulatingService
