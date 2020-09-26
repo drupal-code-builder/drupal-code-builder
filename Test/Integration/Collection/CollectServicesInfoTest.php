@@ -67,6 +67,14 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('\Drupal\Core\Entity\EntityTypeManagerInterface', $entity_type_manager_info['interface']);
     $this->assertEquals('Entity type manager', $entity_type_manager_info['label']);
     $this->assertEquals('The entity type manager', $entity_type_manager_info['description']);
+
+    // Proxy services get the original class.
+    $this->assertNotEmpty($complete_service_info['all']['lock.persistent']);
+    $service_info = $complete_service_info['all']['lock.persistent'];
+    $this->assertEquals('\Drupal\Core\Lock\PersistentDatabaseLockBackend', $service_info['class']);
+    $this->assertEquals('', $service_info['interface']);
+    $this->assertEquals('Persistent database lock backend', $service_info['label']);
+    $this->assertEquals('The Persistent database lock backend service', $service_info['description']);
   }
 
   /**

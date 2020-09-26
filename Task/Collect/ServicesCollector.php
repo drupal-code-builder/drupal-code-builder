@@ -160,11 +160,6 @@ class ServicesCollector extends CollectorBase  {
         continue;
       }
 
-      // Skip proxy services.
-      if (substr($service_id, 0, strlen('drupal.proxy_original_service.')) == 'drupal.proxy_original_service.') {
-        continue;
-      }
-
       // Skip any services which are tagged for a collector, as they should not
       // be directly used by anything else.
       if (array_intersect_key($collector_tags, $definition->getTags())) {
@@ -186,6 +181,17 @@ class ServicesCollector extends CollectorBase  {
       // Skip if no class defined, class_loader apparently, WTF?!.
       if (empty($service_class)) {
         continue;
+      }
+
+      // Skip a proxied service: we use the renamed original instead; see below.
+      // @see \Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass
+      if (preg_match('@ProxyClass@', $service_class)) {
+        continue;
+      }
+
+      // Unproxy an original service that's been proxied.
+      if (substr($service_id, 0, strlen('drupal.proxy_original_service.')) == 'drupal.proxy_original_service.') {
+        $service_id = substr($service_id, strlen('drupal.proxy_original_service.'));
       }
 
       // Skip if the class isn't loadable by PHP without causing a fatal, as we
