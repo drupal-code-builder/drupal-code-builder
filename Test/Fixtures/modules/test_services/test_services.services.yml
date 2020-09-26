@@ -6,3 +6,6 @@ services:
   test_services.slash_prefix:
     # Service class definition has an initial backslash.
     class: \Drupal\test_services\SlashPrefix
+
+  test_services.fq_interface:
+    class: Drupal\test_services\UsesFullyQualifedInterface

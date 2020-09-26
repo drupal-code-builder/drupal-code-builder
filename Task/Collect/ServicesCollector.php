@@ -251,7 +251,7 @@ class ServicesCollector extends CollectorBase  {
    * This expects a service to only implement a single interface.
    *
    * @param string $service_class
-   *   The fully-qualified class name of the service.
+   *   The fully-qualified class name of the service, with an initial '\'.
    *
    * @return string
    *   The fully-qualified name of the interface with the initial '\', or an
@@ -277,10 +277,17 @@ class ServicesCollector extends CollectorBase  {
     // Extract the interface from the declaration. We expect a service class
     // to only name one interface in its declaration!
     $matches = [];
-    preg_match("@implements (\w+)@", $service_declaration_line, $matches);
+    preg_match("@implements ([\w\\\\]+)@", $service_declaration_line, $matches);
 
     if (!isset($matches[1])) {
       return '';
+    }
+
+    // If the interface wasn't imported, but is fully-qualified, we're done.
+    // WARNING: this doesn't handle a class that has part of its namespace
+    // imported!
+    if (substr($matches[1], 0, 1) == '\\') {
+      return $matches[1];
     }
 
     $interface_short_name = $matches[1];

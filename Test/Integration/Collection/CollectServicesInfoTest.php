@@ -103,6 +103,14 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('\Drupal\test_services\SlashPrefix', $test_service_info['class']);
     $this->assertEquals('Slash prefix', $test_service_info['label']);
     $this->assertEquals('The Slash prefix service', $test_service_info['description']);
+
+    $this->assertNotEmpty($complete_service_info['all']['test_services.fq_interface']);
+    $test_service_info = $complete_service_info['all']['test_services.fq_interface'];
+    $this->assertEquals('\Drupal\test_services\UsesFullyQualifedInterface', $test_service_info['class']);
+    $this->assertEquals('\Drupal\test_services\ServiceInterface\FullyQualifedInterface', $test_service_info['interface']);
+    // TODO: bug? Should not trim 'interface'?
+    $this->assertEquals('Uses fully qualifed', $test_service_info['label']);
+    $this->assertEquals('The Uses fully qualifed service', $test_service_info['description']);
   }
 
   protected function installFixtureModule(string $module) {
