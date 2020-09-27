@@ -2,10 +2,19 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Drupal 7 version of component.
  */
 class Module7 extends Module {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function configurationDefinition(): PropertyDefinition {
+    return PropertyDefinition::create('complex');
+  }
 
   /**
    * {@inheritdoc}
