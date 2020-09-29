@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Environment\BaseEnvironment;
+
 /**
  * Base class for Tasks.
  *
@@ -36,7 +38,7 @@ class Base {
    * @param $environment
    *  The current environment handler.
    */
-  function __construct($environment) {
+  function __construct(BaseEnvironment $environment) {
     $this->environment = $environment;
   }
 
