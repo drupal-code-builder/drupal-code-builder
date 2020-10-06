@@ -68,6 +68,19 @@ class ComponentModule8Test extends TestBase {
   }
 
   /**
+   * Tests getting module configuration data.
+   *
+   * @group config
+   */
+  public function testConfiguration() {
+    $config_data = \DrupalCodeBuilder\Factory::getTask('Configuration')->getConfigurationData('module');
+    $properties = $config_data->getProperties();
+
+    $this->assertArrayHasKey('service_namespace', $properties);
+    $this->assertArrayHasKey('entity_handler_namespace', $properties);
+  }
+
+  /**
    * Tests the token replacements for modules.
    */
   public function testModule8TokenReplacements() {
