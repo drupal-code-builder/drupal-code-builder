@@ -8,6 +8,7 @@
 namespace DrupalCodeBuilder;
 
 use DrupalCodeBuilder\Exception\InvalidInputException;
+use CaseConverter\CaseString;
 
 // Include the Composer autoloader for our classes.
 // We use this if we're not being used as a Composer library, for example if
@@ -48,12 +49,38 @@ if (!class_exists('\DrupalCodeBuilder\Environment\BaseEnvironment')) {
 class Factory {
 
   /**
+   * The service container.
+   *
+   * @var \Psr\Container\ContainerInterface
+   */
+  protected static $container;
+
+  /**
    * The current environment object; subclass of DrupalCodeBuilderEnvironmentBase.
    *
    * @see setEnvironmentLocalClass()
    * @see getEnvironment()
    */
   protected static $environment;
+
+  /**
+   * Gets the container.
+   */
+  public static function getContainer() {
+    if (!static::$container) {
+      $cached_file = realpath('DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
+      if (file_exists($cached_file)) {
+        include_once($cached_file);
+
+        static::$container = new \DrupalCodeBuilderCompiledContainer();
+      }
+      else {
+        static::$container = \DrupalCodeBuilder\DependencyInjection\ContainerBuilder::buildContainer();
+      }
+    }
+
+    return static::$container;
+  }
 
   /**
    * Set the environment object.
@@ -66,6 +93,17 @@ class Factory {
    *  called on it.
    */
   public static function setEnvironment($environment) {
+    // Zap an existing container, as that will have instantiated
+    // version-specific services.
+    static::$container = NULL;
+
+    $container = static::getContainer();
+
+    // Set the environment on the container, but not that it is not ready yet
+    // because setEnvironment() is typically called without the version helper
+    // having been set on it yet.
+    $container->set('environment', $environment);
+
     self::$environment = $environment;
     return self::$environment;
   }
@@ -90,9 +128,11 @@ class Factory {
   public static function setEnvironmentLocalClass($environment_class) {
     // Create the environment handler and set it on the factory.
     $environment_class = '\DrupalCodeBuilder\Environment\\' . $environment_class;
-    self::$environment = new $environment_class;
+    $environment = new $environment_class;
 
-    return self::$environment;
+    // Call setEnvironment(), as that takes care of setting the environment on
+    // the container.
+    return self::setEnvironment($environment);
   }
 
   /**

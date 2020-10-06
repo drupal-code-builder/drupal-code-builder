@@ -21,5 +21,8 @@
     "psr-4": {
       "DrupalCodeBuilder\\": ""
     }
+  },
+  "scripts": {
+    "cr": "DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder::rebuildCachedContainer"
   }
 }
