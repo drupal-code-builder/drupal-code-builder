@@ -7,6 +7,9 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Task\Collect\HooksCollector;
+
 /**
  * Task handler for collecting and processing definitions for Drupal components.
  *
@@ -33,11 +36,25 @@ class Collect extends Base {
   ];
 
   /**
-   *  Helper objects.
+   * The helper objects.
    *
    * @var array
    */
   protected $helpers = [];
+
+  /**
+   * Constructor.
+   */
+  function __construct(
+    EnvironmentInterface $environment,
+    HooksCollector $hooks_collector
+  ) {
+    $this->environment = $environment;
+
+    $this->collectors = [
+      'Collect\HooksCollector' => $hooks_collector,
+    ];
+  }
 
   /**
    * Get the list of analysis jobs, to use for incremental analysis.
