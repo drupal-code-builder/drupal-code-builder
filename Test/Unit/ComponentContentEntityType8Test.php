@@ -1291,6 +1291,8 @@ class ComponentContentEntityType8Test extends TestBase {
 
   /**
    * Tests the handler namespace configuration setting.
+   *
+   * @group config
    */
   public function testContentEntityTypeHandlerNamespaceConfiguration() {
     // Create a module.

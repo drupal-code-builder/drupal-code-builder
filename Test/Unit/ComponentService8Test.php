@@ -70,6 +70,8 @@ class ComponentService8Test extends TestBase {
 
   /**
    * Test configuration for service generation.
+   *
+   * @group config
    */
   public function testServiceGenerationWithConfiguration() {
     // Assemble module data.
