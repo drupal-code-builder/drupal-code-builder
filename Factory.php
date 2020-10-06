@@ -178,6 +178,11 @@ class Factory {
       throw new \Exception("Environment not set.");
     }
 
+    // Tasks that don't have constructor options are services in the container.
+    if (empty($task_options)) {
+      return static::getContainer()->get($task_type);
+    }
+
     $task_class = self::getTaskClass($task_type);
 
     // Set the environment handler on the task handler too.
