@@ -96,16 +96,7 @@ class ComponentModule8Test extends TestBase {
     $component_data = $this->getRootComponentBlankData('module');
     $component_data->set($module_data);
 
-    $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-
-    // Hack into the generator to get the task helper. We need to get the task
-    // helper itself so we can get the component collection.
-    $class = new \ReflectionClass($task_handler_generate);
-    $method = $class->getMethod('getHelper');
-    $method->setAccessible(TRUE);
-
-    $component_collector = $method->invokeArgs($task_handler_generate, ['ComponentCollector']);
-
+    $component_collector = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentCollector');
     $component_collection = $component_collector->assembleComponentList($component_data);
 
     $module_component = $component_collection->getRootComponent();
