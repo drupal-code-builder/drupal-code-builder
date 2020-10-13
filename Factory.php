@@ -65,6 +65,8 @@ class Factory {
 
   /**
    * Gets the container.
+   *
+   * @internal
    */
   public static function getContainer() {
     if (!static::$container) {
