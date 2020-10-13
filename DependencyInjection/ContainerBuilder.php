@@ -1,0 +1,148 @@
+<?php
+
+namespace DrupalCodeBuilder\DependencyInjection;
+
+use Psr\Container\ContainerInterface;
+
+/**
+ * Service container builder.
+ *
+ * This uses php-di/php-di rather than symfony/dependency_injection, because
+ * we need the DCB package to run on both Drupal 8 and 9, and those use
+ * different versions of Symfony. The DI component is sufficiently different
+ * in versions 3 and 4 of Symfony to make this impossible. Therefore the
+ * simplest solution is to use a completely different DI package.
+ */
+class ContainerBuilder {
+
+  /**
+   * Composer script callback to rebuild the cached container.
+   */
+  public static function rebuildCachedContainer() {
+    $cached_file = realpath('DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
+    if (file_exists($cached_file)) {
+      unlink($cached_file);
+    }
+
+    // Include PHP-DI's functions, as Composer scripts don't autoload these.
+    require_once("vendor/php-di/php-di/src/functions.php");
+
+    static::buildContainer();
+  }
+
+  /**
+   * Builds the container.
+   */
+  public static function buildContainer() {
+    $builder = new \DI\ContainerBuilder();
+
+    $builder->addDefinitions([
+      'environment' => \DI\create(\DrupalCodeBuilder\Environment\DefaultEnvironment::class),
+      // Alias the environment to the interface, so autowiring picks up the
+      // environment parameter type.
+      \DrupalCodeBuilder\Environment\EnvironmentInterface::class => \DI\get('environment'),
+    ]);
+
+    $services = [];
+    $versioned_services = [];
+    // Get files in the Task folder and its immediate subfolders.
+    $task_files = glob('{Task,Task/*}/*.php', GLOB_BRACE);
+    foreach ($task_files as $task_file) {
+      $matches = [];
+      preg_match('@Task/((?:\w+/)?\w+).php@', $task_file, $matches);
+      $trimmed_file_name = $matches[1];
+
+      // The service name is a partial class name, starting with the 'Task'
+      // namespace, so for example, 'Task\ReportSummary',
+      // 'Task\Generate\ComponentCollector'.
+      $service_name = str_replace('/', '\\', $trimmed_file_name);
+
+      $class_name = '\DrupalCodeBuilder\Task\\' . $service_name;
+
+      // With versioned classes, keep track of the base unversioned name, as
+      // these should not be registered in the bulk list.
+      if (is_numeric(substr($service_name, -1))) {
+        $unversioned_service_name = preg_replace('@\d+$@', '', $service_name);
+        $versioned_services[$unversioned_service_name] = TRUE;
+      }
+
+      // Don't register abtract classes.
+      $reflector = new \ReflectionClass($class_name);
+      if ($reflector->isAbstract()) {
+        continue;
+      }
+
+      // Don't register 'Generate' yet -- it's complicated.
+      if ($service_name == 'Generate') {
+        continue;
+      }
+
+      $services[$service_name] = $class_name;
+    }
+
+    $definitions = [];
+
+    // Define the services.
+    foreach ($services as $service_name => $class_name) {
+      if (!isset($versioned_services[$service_name])) {
+        // Autowire anything that's not versioned.
+        $definitions[$service_name] = \DI\autowire($class_name);
+      }
+    }
+
+    // Define the versioned services. This needs a separate loop because some
+    // of these classe are abstract, and so not in $services.
+    foreach (array_keys($versioned_services) as $service_name) {
+      // These can all use the same factory because the versioned class is also
+      // a service, that gets autowired and the factory doesn't need to worry
+      // about it.
+      $definitions[$service_name] = \DI\factory([static::class, 'createVersioned']);
+
+      if (isset($services[$service_name])) {
+        // Create a normal autowired version of the unversioned service name, so
+        // the factory can request it without circularity in the case that there
+        // is no versioned service.
+        $definitions[$service_name . '.unversioned'] = \DI\autowire($services[$service_name]);
+      }
+    }
+
+    $builder->addDefinitions($definitions);
+
+    // Wot no namespace for the compiled container? We're prefixing the class
+    // name like PHP 5 savages??
+    $builder->enableCompilation(__DIR__ . '/cache', 'DrupalCodeBuilderCompiledContainer');
+
+    $container = $builder->build();
+
+    return $container;
+  }
+
+  /**
+   * Factory for versioned services which have no construction parameters.
+   *
+   * @param \Psr\Container\ContainerInterface $container
+   *   The container.
+   * @param \DI\Factory\RequestedEntry $entry
+   *   The requested service name.
+   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
+   *   The environment.
+   */
+  public static function createVersioned(
+    ContainerInterface $container,
+    \DI\Factory\RequestedEntry $entry,
+    \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
+  ) {
+    $requested_name = $entry->getName();
+    $versioned_name = $requested_name . $environment->getCoreMajorVersion();
+
+    if ($container->has($versioned_name)) {
+      return $container->get($versioned_name);
+    }
+    else {
+      // Get the plain version of the requested service, as otherwise we'd just
+      // be requesting the service that brought us here.
+      return $container->get($requested_name . '.unversioned');
+    }
+  }
+
+}
