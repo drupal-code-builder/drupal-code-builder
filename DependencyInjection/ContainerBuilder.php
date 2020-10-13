@@ -106,6 +106,12 @@ class ContainerBuilder {
       }
     }
 
+    // AAARGH. This needs to be aliased, because autowiring finds this class
+    // but tries to instantiate it because there's no declaration for it!
+    // TODO: do this properly: for all abstract and unversioned classes,
+    // register them as an alias for the short name.
+    $definitions['DrupalCodeBuilder\Task\Collect\HooksCollector'] = \DI\get('Collect\HooksCollector');
+
     $builder->addDefinitions($definitions);
 
     // Wot no namespace for the compiled container? We're prefixing the class
