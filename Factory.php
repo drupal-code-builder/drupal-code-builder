@@ -169,7 +169,7 @@ class Factory {
    *  nature (or necessity) depends on the task.
    *
    * @return
-   *  A new task handler object, which implements DrupalCodeBuilderTaskInterface.
+   *  The new task handler object.
    *
    * @throws \DrupalCodeBuilder\Exception\SanityException
    *  Throws an exception if the environment is not in a state that is ready for
