@@ -159,17 +159,18 @@ class Factory {
    *
    * @param $task_type
    *  The type of task. This should the the name of a class in the
-   *  DrupalCodeBuilder\Task namespace, without the Drupal core version suffix.
-   *  May be one of:
-   *    - 'Collect': Collect and process data on available hooks.
-   *    - 'ReportHookData':
-   *    - ... others TODO.
+   *  DrupalCodeBuilder\Task namespace or a child namespace, with that namespace
+   *  prefix removed and without any Drupal core version suffix.
+   *  For example:
+   *    - 'Collect'
+   *    - 'ReportHookData'
+   *    - 'Generate\ComponentClassHandler'
    * @param $task_options
    *  (optional) A further parameter to pass to the task's constructor. Its
    *  nature (or necessity) depends on the task.
    *
    * @return
-   *  The new task handler object.
+   *  The task handler object.
    *
    * @throws \DrupalCodeBuilder\Exception\SanityException
    *  Throws an exception if the environment is not in a state that is ready for
@@ -182,20 +183,23 @@ class Factory {
 
     // Tasks that don't have constructor options are services in the container.
     if (empty($task_options)) {
-      return static::getContainer()->get($task_type);
+      $task_handler = static::getContainer()->get($task_type);
+    }
+    else {
+      $task_class = self::getTaskClass($task_type);
+
+      // Set the environment handler on the task handler too.
+      $task_handler = new $task_class(self::$environment, $task_options);
     }
 
-    $task_class = self::getTaskClass($task_type);
+    // Base-level tasks get their sanity checked.
+    if (is_a($task_handler, \DrupalCodeBuilder\Task\Base::class, TRUE)) {
+      // Find out what sanity level the task handler needs.
+      $required_sanity = $task_handler->getSanityLevel();
 
-    // Set the environment handler on the task handler too.
-    $task_handler = new $task_class(self::$environment, $task_options);
-
-    // Find out what sanity level the task handler needs.
-    $required_sanity = $task_handler->getSanityLevel();
-    //dsm($required_sanity);
-
-    // Check the environment for the required sanity level.
-    self::$environment->verifyEnvironment($required_sanity);
+      // Check the environment for the required sanity level.
+      self::$environment->verifyEnvironment($required_sanity);
+    }
 
     return $task_handler;
   }
