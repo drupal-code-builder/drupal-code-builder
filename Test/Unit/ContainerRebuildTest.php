@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
  * Tests rebuilding the cached container.
  *
  * @group pass
+ * @group container
  */
 class ContainerRebuildTest extends TestCase {
 

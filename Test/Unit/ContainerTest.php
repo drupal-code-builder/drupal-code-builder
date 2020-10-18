@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
  * container's versionned services.
  *
  * @group pass
+ * @group container
  */
 class ContainerTest extends TestCase {
 
