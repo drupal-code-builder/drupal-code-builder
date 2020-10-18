@@ -70,7 +70,7 @@ class Factory {
    */
   public static function getContainer() {
     if (!static::$container) {
-      $cached_file = realpath('DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
+      $cached_file = realpath(__DIR__ . '/DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
       if (file_exists($cached_file)) {
         include_once($cached_file);
 
