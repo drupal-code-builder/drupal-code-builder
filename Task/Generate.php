@@ -81,7 +81,7 @@ class Generate extends Base {
    *   NOTE: the default value will be removed in 5.0.0.
    */
   public function getRootComponentData($component_type = 'module') {
-    $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass($component_type);
+    $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass($this->base);
 
     // We use a custom data item factory so we can add custom Expression
     // Language functions.
