@@ -7,6 +7,20 @@ use Psr\Container\ContainerInterface;
 /**
  * Service container builder.
  *
+ * The following services are registered:
+ * - The environment, as 'environment'.
+ * - All classes in the \DrupalCodeBuilder\Task namespace except 'Generate',
+ *   with as their service name the partial class name starting with the 'Task'
+ *   namespace, so for example, 'Task\ReportSummary',
+ *   'Task\Generate\ComponentCollector'.
+ * - The Generate task with a suffix for the root component type, in the form
+ *   'Generate|component_type', for example, 'Generate|module'.
+ *
+ * Requesting a task class service will produce the versioned class based on the
+ * environment's current Drupal major version number, so for example, if a task
+ * class 'Foo7' exists, then requesting 'Foo' while running on Drupal 7 will
+ * return a 'Foo7' object.
+ *
  * This uses php-di/php-di rather than symfony/dependency_injection, because
  * we need the DCB package to run on both Drupal 8 and 9, and those use
  * different versions of Symfony. The DI component is sufficiently different

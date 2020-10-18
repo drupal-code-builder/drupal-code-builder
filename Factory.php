@@ -153,8 +153,13 @@ class Factory {
   /**
    * Get a new task handler.
    *
-   * This creates a new task handler object as requested, sets the environment
-   * handler on it, then checks the environment for the environment level the
+   * This creates a new task handler object as requested.
+   *
+   * If a class exists named '$task_typeX' where X is the Drupal core major
+   * version number set in the environment, then that class is returned instead
+   * of the unversioned class.
+   *
+   * Base tasks have the environment checked for the environment level the
    * task declares that it needs.
    *
    * @param $task_type
@@ -208,6 +213,9 @@ class Factory {
 
   /**
    * Helper function to get the desired Task class.
+   *
+   * @deprecated
+   *   Will be removed in 5.0.0.
    *
    * @param $task_type
    *  The type of the task. This is the class name without the Drupal core
