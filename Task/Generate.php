@@ -9,6 +9,10 @@ namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
+use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+use DrupalCodeBuilder\Task\Generate\ComponentCollector;
+use DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer;
+use DrupalCodeBuilder\Task\Generate\FileAssembler;
 
 /**
  * Task handler for generating a component.
@@ -51,8 +55,19 @@ class Generate extends Base {
    *  A component type. Currently supports 'module' and 'theme'.
    *  (We need this early on so we can use it to determine our sanity level.)
    */
-  public function __construct($environment, $component_type) {
+  public function __construct(
+    $environment,
+    $component_type,
+    ComponentClassHandler $class_handler,
+    ComponentDataInfoGatherer $info_gatherer,
+    ComponentCollector $component_collector,
+    FileAssembler $file_assembler
+  ) {
     $this->environment = $environment;
+    $this->classHandler = $class_handler;
+    $this->infoGatherer = $info_gatherer;
+    $this->componentCollector = $component_collector;
+    $this->fileAssembler = $file_assembler;
 
     $this->base = $component_type;
   }

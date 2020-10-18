@@ -189,16 +189,26 @@ class ContainerBuilder {
   /**
    * Factory for flavours of the Generate task.
    *
+   * @param \Psr\Container\ContainerInterface $container
+   *   The container.
    * @param string $root_component_type
    *   The root component type.
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
    *   The environment.
    */
   public static function createGenerator(
+    ContainerInterface $container,
     string $root_component_type,
     \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
   ) {
-    return new \DrupalCodeBuilder\Task\Generate($environment, $root_component_type);
+    return new \DrupalCodeBuilder\Task\Generate(
+      $environment,
+      $root_component_type,
+      $container->get('Generate\ComponentClassHandler'),
+      $container->get('Generate\ComponentDataInfoGatherer'),
+      $container->get('Generate\ComponentCollector'),
+      $container->get('Generate\FileAssembler'),
+    );
   }
 
 }

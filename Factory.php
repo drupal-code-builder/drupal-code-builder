@@ -181,15 +181,17 @@ class Factory {
       throw new \Exception("Environment not set.");
     }
 
-    // Tasks that don't have constructor options are services in the container.
-    if (empty($task_options)) {
-      $task_handler = static::getContainer()->get($task_type);
+    // The Generate task is handled specially, as it needs the component type
+    // passing to the container.
+    if ($task_type == 'Generate') {
+      $component_type = $task_options;
+      $task_handler = static::getContainer()->get('Generate|' . $component_type);
     }
     else {
-      $task_class = self::getTaskClass($task_type);
+      // Only the Generate task should be using this parameter.
+      assert(is_null($task_options));
 
-      // Set the environment handler on the task handler too.
-      $task_handler = new $task_class(self::$environment, $task_options);
+      $task_handler = static::getContainer()->get($task_type);
     }
 
     // Base-level tasks get their sanity checked.
