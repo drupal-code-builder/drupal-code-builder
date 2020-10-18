@@ -96,7 +96,7 @@ class Generate extends Base {
    *   NOTE: the default value will be removed in 5.0.0.
    */
   public function getRootComponentData($component_type = 'module') {
-    $class = $this->getHelper('ComponentClassHandler')->getGeneratorClass($this->base);
+    $class = $this->classHandler->getGeneratorClass($this->base);
 
     // We use a custom data item factory so we can add custom Expression
     // Language functions.
@@ -111,7 +111,7 @@ class Generate extends Base {
    * TODO: remove this!
    */
   public function getComponentDataInfo($component_type, $include_internal = FALSE) {
-    return $this->getHelper('ComponentDataInfoGatherer')->getRootComponentDataInfo($component_type, $include_internal);
+    return $this->infoGatherer->getRootComponentDataInfo($component_type, $include_internal);
   }
 
   /**
@@ -152,7 +152,7 @@ class Generate extends Base {
     // return;
 
     // Assemble the component list from the request data.
-    $component_collection = $this->getHelper('ComponentCollector')->assembleComponentList($component_data);
+    $component_collection = $this->componentCollector->assembleComponentList($component_data);
     // return;
 
     // Backward-compatiblity.
@@ -174,7 +174,7 @@ class Generate extends Base {
 
     \DrupalCodeBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
-    $files_assembled = $this->component_list = $this->getHelper('FileAssembler')->generateFiles(
+    $files_assembled = $this->component_list = $this->fileAssembler->generateFiles(
       $component_data,
       $component_collection
     );
@@ -227,7 +227,7 @@ class Generate extends Base {
    * @deprecated
    */
   public function getGenerator($component_type, $component_name, $component_data = array()) {
-    return $this->getHelper('ComponentClassHandler')->getGenerator($component_type, $component_data);
+    return $this->classHandler->getGenerator($component_type, $component_data);
   }
 
   /**
@@ -245,42 +245,7 @@ class Generate extends Base {
    * @deprecated
    */
   public function getGeneratorClass($type) {
-    return $this->getHelper('ComponentClassHandler')->getGeneratorClass($type);
-  }
-
-  /**
-   * Returns the helper for the given short class name.
-   *
-   * @param $class
-   *   The short class name.
-   *
-   * @return
-   *   The helper object.
-   */
-  protected function getHelper($class) {
-    if (!isset($this->helpers[$class])) {
-      $qualified_class = '\DrupalCodeBuilder\Task\Generate\\' . $class;
-
-      switch ($class) {
-        case 'ComponentDataInfoGatherer':
-          $helper = new $qualified_class($this->getHelper('ComponentClassHandler'));
-          break;
-        case 'ComponentCollector':
-          $helper = new $qualified_class(
-            $this->environment,
-            $this->getHelper('ComponentClassHandler'),
-            $this->getHelper('ComponentDataInfoGatherer')
-          );
-          break;
-        default:
-          $helper = new $qualified_class();
-          break;
-      }
-
-      $this->helpers[$class] = $helper;
-    }
-
-    return $this->helpers[$class];
+    return $this->classHandler->getGeneratorClass($type);
   }
 
 }
