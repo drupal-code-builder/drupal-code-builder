@@ -48,6 +48,22 @@ class ContainerTest extends TestCase {
     $this->assertEquals(\DrupalCodeBuilder\Task\ReportPluginData::class, get_class($container->get('ReportPluginData')));
     $this->assertEquals(\DrupalCodeBuilder\Task\Collect8::class, get_class($container->get('Collect')));
     $this->assertEquals(\DrupalCodeBuilder\Task\Collect\HooksCollector8::class, get_class($container->get('Collect\HooksCollector')));
+
+    $generate_module = $container->get('Generate|module');
+    $this->assertEquals(\DrupalCodeBuilder\Task\Generate::class, get_class($generate_module));
+
+    $r = new \ReflectionObject($generate_module);
+    $p = $r->getProperty('base');
+    $p->setAccessible(TRUE);
+    $this->assertEquals('module', $p->getValue($generate_module));
+
+    $generate_profile = $container->get('Generate|profile');
+    $this->assertEquals(\DrupalCodeBuilder\Task\Generate::class, get_class($generate_profile));
+
+    $r = new \ReflectionObject($generate_profile);
+    $p = $r->getProperty('base');
+    $p->setAccessible(TRUE);
+    $this->assertEquals('profile', $p->getValue($generate_profile));
   }
 
 }

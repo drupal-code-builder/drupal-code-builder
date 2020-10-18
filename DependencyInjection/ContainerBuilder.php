@@ -90,6 +90,38 @@ class ContainerBuilder {
       }
     }
 
+    // Define flavours of the Generate task.
+    // Each of these needs to be its own service, as the Generate task gets
+    // the root component as a construction parameter so different root
+    // components need a different instance of the task.
+    $class_loader = require('vendor/autoload.php');
+    // WARNING! This requires the Composer class loader to be up to date and
+    // generated with `composer dump --optimise`.
+    foreach ($class_loader->getClassMap() as $class_name => $class_filename) {
+      if (strpos($class_name, 'DrupalCodeBuilder\Generator') !== 0) {
+        continue;
+      }
+
+      require_once $class_filename;
+      $reflection_class = new \ReflectionClass($class_name);
+
+      if (!$reflection_class->getParentClass()) {
+        continue;
+      }
+
+      // Note that this also eliminates versioned root components, such as
+      // 'Module7' as they will inherit from the unversioned class.
+      if ($reflection_class->getParentClass()->getShortName() != 'RootComponent') {
+        continue;
+      }
+
+      $root_component_type = strtolower($reflection_class->getShortName());
+      $service_name = 'Generate|' . $root_component_type;
+
+      $definitions[$service_name] = \DI\factory([static::class, 'createGenerator'])
+        ->parameter('root_component_type', $root_component_type);
+    }
+
     // Define the versioned services. This needs a separate loop because some
     // of these classe are abstract, and so not in $services.
     foreach (array_keys($versioned_services) as $service_name) {
@@ -149,6 +181,21 @@ class ContainerBuilder {
       // be requesting the service that brought us here.
       return $container->get($requested_name . '.unversioned');
     }
+  }
+
+  /**
+   * Factory for flavours of the Generate task.
+   *
+   * @param string $root_component_type
+   *   The root component type.
+   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
+   *   The environment.
+   */
+  public static function createGenerator(
+    string $root_component_type,
+    \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
+  ) {
+    return new \DrupalCodeBuilder\Task\Generate($environment, $root_component_type);
   }
 
 }
