@@ -360,21 +360,6 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         }
       }
 
-      /*
-      special cases:
-
-      - textarea for multi-valued string
-      - autocomplete for services
-      - hooks!
-      - hook groups
-      - dropdowns everywhere instead of radios?
-
-      Broken:
-
-      - Entity functionality item -- 'presets' not converted to options!
-
-      */
-
       if (isset($def['label'])) {
         $converted_defs[$name]->setLabel($def['label']);
       }
