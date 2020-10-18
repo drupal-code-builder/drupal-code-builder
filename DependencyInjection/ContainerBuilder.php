@@ -12,6 +12,9 @@ use Psr\Container\ContainerInterface;
  * different versions of Symfony. The DI component is sufficiently different
  * in versions 3 and 4 of Symfony to make this impossible. Therefore the
  * simplest solution is to use a completely different DI package.
+ *
+ * This should only be used locally; the compiled container is committed to
+ * the codebase repository.
  */
 class ContainerBuilder {
 
