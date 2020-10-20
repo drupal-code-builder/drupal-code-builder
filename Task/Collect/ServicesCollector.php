@@ -133,7 +133,7 @@ class ServicesCollector extends CollectorBase  {
    *
    * @return [type] [description]
    */
-  protected function getAllServices() {
+  protected function getAllServices(): array {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
     $definitions = $container_builder->getDefinitions();
 
@@ -319,7 +319,7 @@ class ServicesCollector extends CollectorBase  {
    * @return array
    *   An array of service data.
    */
-  protected function getStaticContainerServices() {
+  protected function getStaticContainerServices(): array {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
 
     // We can get service IDs from the container,
