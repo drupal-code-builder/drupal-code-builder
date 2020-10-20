@@ -837,13 +837,22 @@ class PHPTester {
     $construct_node = $this->parser_nodes['methods']['__construct'];
 
     // Constructor parameters and container extraction much match the same
-    // order.
+    // order, but taking into account that:
+    //  - there could be initial constructor parameters that aren't injections,
+    //    which we should ignore
+    //  - there could be pseudoservices which are not injected: this is
+    //    indicated in the details with the 'extracted_from_other_service'
+    //    attribute.
+    $expected_injected_services_constructor_params = array_filter($injected_services, function ($item) {
+      return empty($item['extracted_from_other_service']);
+    });
+
     // Slice the construct method params to the count of services.
-    $construct_service_params = array_slice($construct_node->params, - $service_count);
+    $construct_service_params = array_slice($construct_node->params, - count($expected_injected_services_constructor_params));
     // Check that the constructor has parameters for all the services, after
     // any basic parameters.
     foreach ($construct_service_params as $index => $param) {
-      Assert::assertEquals($injected_services[$index]['parameter_name'], $param->name);
+      Assert::assertEquals($expected_injected_services_constructor_params[$index]['parameter_name'], $param->name);
     }
 
     // TODO: should check that __construct() calls its parent, though this is
@@ -854,7 +863,14 @@ class PHPTester {
     foreach ($construct_node->stmts as $stmt_node) {
       if (get_class($stmt_node) == \PhpParser\Node\Expr\Assign::class) {
         Assert::assertEquals($injected_services[$assign_index]['property_name'], $stmt_node->var->name);
-        Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $stmt_node->expr->name);
+        if (isset($injected_services[$assign_index]['extraction_method'])) {
+          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $stmt_node->expr->var->name);
+          Assert::assertEquals($injected_services[$assign_index]['extraction_method'], $stmt_node->expr->name);
+          Assert::assertEquals($injected_services[$assign_index]['extraction_method_param'], $stmt_node->expr->args[0]->value->value);
+        }
+        else {
+          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $stmt_node->expr->name);
+        }
 
         $assign_index++;
       }

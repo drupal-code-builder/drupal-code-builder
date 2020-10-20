@@ -64,13 +64,13 @@ class InjectedService extends BaseGenerator {
       // is, not an actual service but something else injectable.
       [$pseudo_service_type, $variant] = explode(':', $service_id);
 
-      $service_info['type'] = 'storage';
-
-      if ($pseudo_service_type != 'storage') {
-        throw new InvalidInputException("Pseudoservice {$service_id} not found.");
-      }
-
+      $service_info['type']           = 'pseudoservice';
       $service_info['variant']        = $variant;
+      $service_info['real_service']   = $services_data[$service_id]['real_service'];
+      $service_info['service_method'] = $services_data[$service_id]['service_method'];
+
+      $real_service_info = $services_data[$services_data[$service_id]['real_service']];
+      $service_info['real_service_variable_name'] = $real_service_info['variable_name'];
     }
 
     // If the service has no interface, typehint on the class.
@@ -85,11 +85,27 @@ class InjectedService extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     $service_info = $this->component_data['service_info'];
 
+    $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
+
     if ($service_info['type'] == 'service') {
       $container_extraction = "\$container->get('{$service_info['id']}'),";
+
+      $property_assignment = [
+        'id'            => $service_info['id'],
+        'property_name' => $service_info['property_name'],
+        'variable_name' => $service_info['variable_name'],
+      ];
     }
     else {
-      $container_extraction = "\$container->get('entity_type.manager')->getStorage('{$service_info['variant']}'),";
+      // Pseudoservice: needs to be extracted from a real service.
+      $container_extraction = "\$container->get('{$service_info['real_service']}')->{$service_info['service_method']}('{$service_info['variant']}'),";
+
+      $property_assignment = [
+        'id'            => $service_info['id'],
+        'property_name' => $service_info['property_name'],
+        'variable_name' => $service_info['variable_name'],
+        'parameter_extraction' => "{$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}')",
+      ];
     }
 
     $contents = [
@@ -117,15 +133,13 @@ class InjectedService extends BaseGenerator {
           'name'        => $service_info['variable_name'],
           'typehint'    => $service_info['typehint'],
           'description' => $service_info['description'] . '.',
+          'type'        => $service_type,
+          // 'container_extraction' => $container_extraction,
         ],
       ],
       'property_assignment' => [
         'role' => 'property_assignment',
-        'content' => [
-          'id'            => $service_info['id'],
-          'property_name' => $service_info['property_name'],
-          'variable_name' => $service_info['variable_name'],
-        ],
+        'content' => $property_assignment,
       ],
     ];
 

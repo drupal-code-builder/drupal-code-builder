@@ -182,6 +182,15 @@ class PHPClassFileWithInjection extends PHPClassFile {
     $parameters = array_merge($parameters, $parent_injected_services);
 
     foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+      // Don't repeat parameters. This can be possible with pseudoservices.
+      if (in_array($service_parameter, $parameters)) {
+        continue;
+      }
+
+      if (!$this->hasStaticFactoryMethod && $service_parameter['type'] == 'pseudoservice') {
+        continue;
+      }
+
       $parameters[] = $service_parameter;
     }
 
@@ -215,7 +224,17 @@ class PHPClassFileWithInjection extends PHPClassFile {
     }
 
     foreach ($this->childContentsGrouped['property_assignment'] as $content) {
-      $code[] = "  \$this->{$content['property_name']} = \${$content['variable_name']};";
+      if (!$this->hasStaticFactoryMethod && isset($content['parameter_extraction'])) {
+        // There is no static factory, so the constructor receives the real
+        // service. We have to extract it here.
+        $code[] = "  \$this->{$content['property_name']} = \${$content['parameter_extraction']};";
+      }
+      else {
+        // The static factory method has got the pseudoservice object from the
+        // real service, and passes it to the constructor.
+        $code[] = "  \$this->{$content['property_name']} = \${$content['variable_name']};";
+      }
+
     }
     $code[] = '}';
 

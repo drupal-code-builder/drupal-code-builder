@@ -100,7 +100,7 @@ class Service extends PHPClassFileWithInjection {
         ),
       'injected_services' => array(
         'label' => 'Injected services',
-        'description' => 'Services to inject.',
+        'description' => 'Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.',
         'format' => 'array',
         'options' => function (&$property_info) {
           $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
@@ -194,7 +194,21 @@ class Service extends PHPClassFileWithInjection {
       );
 
       // Add the service ID to the arguments in the YAML data.
-      $yaml_data_arguments[] = '@' . $service_id;
+      if (substr_count($service_id, ':') != 0) {
+        $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+        $services_data = $task_handler_report_services->listServiceData();
+        $real_service_id = $services_data[$service_id]['real_service'];
+
+        if (in_array("@{$real_service_id}", $yaml_data_arguments)) {
+          // Don't repeat it!
+          continue;
+        }
+
+        $yaml_data_arguments[] = '@' . $real_service_id;
+      }
+      else {
+        $yaml_data_arguments[] = '@' . $service_id;
+      }
     }
 
     $yaml_service_definition = [
