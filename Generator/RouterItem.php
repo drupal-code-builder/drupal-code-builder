@@ -296,6 +296,9 @@ class RouterItem extends BaseGenerator {
     // Remove any parameter braces.
     $path = str_replace(['{', '}'], '', $path);
 
+    // Convert hyphens to underscores.
+    $path = str_replace('-', '_', $path);
+
     // Get the module name rather than using the token, to avoid the
     // property name getting quoted.
     $module = $component_data['root_component_name'];

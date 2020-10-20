@@ -88,11 +88,11 @@ class ComponentRouterItem8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'defaults', '_title'], 'myPage', "The routing file declares the route title.");
     $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'requirements', '_permission'], 'access content', "The routing file declares the route permission.");
 
-    $yaml_tester->assertHasProperty('test_module.my.other-path', "The routing file has the property for the route.");
-    $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'path'], '/my/other-path', "The routing file declares the route path.");
-    $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyOtherPathController::content', "The routing file declares the route controller.");
-    $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'defaults', '_title'], 'My Other Page', "The routing file declares the route title.");
-    $yaml_tester->assertPropertyHasValue(['test_module.my.other-path', 'requirements', '_role'], 'authenticated', "The routing file declares the route role.");
+    $yaml_tester->assertHasProperty('test_module.my.other_path', "The routing file has the property for the route.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.other_path', 'path'], '/my/other-path', "The routing file declares the route path.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.other_path', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyOtherPathController::content', "The routing file declares the route controller.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.other_path', 'defaults', '_title'], 'My Other Page', "The routing file declares the route title.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.other_path', 'requirements', '_role'], 'authenticated', "The routing file declares the route role.");
 
     $yaml_tester->assertHasProperty('test_module.my.parameter.path', "The routing file has the property for the route.");
     $yaml_tester->assertPropertyHasValue(['test_module.my.parameter.path', 'path'], '/my/{parameter}/path', "The routing file declares the route path.");
@@ -186,9 +186,9 @@ class ComponentRouterItem8Test extends TestBase {
 
     $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyPathControllerController::content');
     $yaml_tester->assertPropertyHasValue(['test_module.my.path.form', 'defaults', '_form'], '\Drupal\module\Form\FormClassName');
-    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity-view', 'defaults', '_entity_view'], 'node.teaser');
-    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity-form', 'defaults', '_entity_form'], 'node.edit');
-    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity-list', 'defaults', '_entity_list'], 'node');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity_view', 'defaults', '_entity_view'], 'node.teaser');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity_form', 'defaults', '_entity_form'], 'node.edit');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.entity_list', 'defaults', '_entity_list'], 'node');
   }
 
   /**
