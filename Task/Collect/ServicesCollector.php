@@ -83,6 +83,9 @@ class ServicesCollector extends CollectorBase  {
    *      implements, with the initial '\'.
    *    - 'variable_name': The string to use as the name of a variable holding
    *      the service.
+   *    - 'real_service': Set only for pseudoservices, which are not actual
+   *      services but things that can be injected into class. In this case,
+   *      this value is the ID of the actual service to get from the container.
    */
   public function collect($job_list = NULL) {
     $all_services = $this->getAllServices();
@@ -440,6 +443,8 @@ class ServicesCollector extends CollectorBase  {
         // TODO; no don't use labels in code.
         'description' => "The {$entity_type_id} storage handler",
         'variable_name' => "{$entity_type_id}_storage",
+        'real_service' => 'entity_type.manager',
+        'service_method' => 'getStorage',
       ];
     }
 

@@ -108,6 +108,8 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('Content storage', $service_info['label']);
     $this->assertEquals('The node storage handler', $service_info['description']);
     $this->assertEquals('node_storage', $service_info['variable_name']);
+    $this->assertEquals('entity_type.manager', $service_info['real_service']);
+    $this->assertEquals('getStorage', $service_info['service_method']);
   }
 
   /**
