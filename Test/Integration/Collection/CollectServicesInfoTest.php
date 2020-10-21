@@ -52,6 +52,15 @@ class CollectServicesInfoTest extends KernelTestBase {
 
     $complete_service_info = $this->servicesCollector->collect();
 
+    // Service detected from the \Drupal class's static methods.
+    $this->assertNotEmpty($complete_service_info['all']['entity_type.manager']);
+    $entity_type_manager_info = $complete_service_info['all']['entity_type.manager'];
+    $this->assertEquals('\Drupal\Core\Entity\EntityTypeManager', $entity_type_manager_info['class']);
+    $this->assertEquals('\Drupal\Core\Entity\EntityTypeManagerInterface', $entity_type_manager_info['interface']);
+    $this->assertEquals('Entity type manager', $entity_type_manager_info['label']);
+    $this->assertEquals('The entity type manager', $entity_type_manager_info['description']);
+
+    // Service obtained from the container.
     $this->assertNotEmpty($complete_service_info['all']['entity_type.bundle.info']);
     $entity_type_bundle_info = $complete_service_info['all']['entity_type.bundle.info'];
     $this->assertEquals('\Drupal\Core\Entity\EntityTypeBundleInfo', $entity_type_bundle_info['class']);
