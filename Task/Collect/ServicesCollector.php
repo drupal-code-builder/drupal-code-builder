@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use CaseConverter\CaseString;
+use CaseConverter\StringAssembler;
 
 /**
  * Task helper for collecting data on services.
@@ -80,6 +81,8 @@ class ServicesCollector extends CollectorBase  {
    *    - 'class': The fully-qualified class that is defined for the service.
    *    - 'interface': The fully-qualified interface that the service class
    *      implements, with the initial '\'.
+   *    - 'variable_name': The string to use as the name of a variable holding
+   *      the service.
    */
   public function collect($job_list = NULL) {
     $all_services = $this->getAllServices();
@@ -236,6 +239,25 @@ class ServicesCollector extends CollectorBase  {
         $service_class = '\\' . $service_class;
       }
 
+      if (substr_count($service_id, '.') == 0) {
+        // If the service name does not contain any dots, in particular,
+        // 'current_user', then use that, as it's usually clearer than the
+        // class name.
+        $service_id_pieces = preg_split('@[_.]@', $service_id);
+        $variable_name = (new StringAssembler($service_id_pieces))->snake();
+      }
+      else {
+        // Otherwise, use the service class name.
+        $class_pieces = explode('\\', $service_class);
+        $short_class = array_pop($class_pieces);
+
+        // Trim an 'Interface' suffix from the class in case it's actually an
+        // interface. This is the case for cache services.
+        $short_class = preg_replace('@Interface$@', '', $short_class);
+
+        $variable_name = CaseString::pascal($short_class)->snake();
+      }
+
       $data[$service_id] = [
         'id' => $service_id,
         'label' => $label,
@@ -243,6 +265,7 @@ class ServicesCollector extends CollectorBase  {
         'class' => $service_class,
         'interface' => $this->getServiceInterface($service_class),
         'description' => $description,
+        'variable_name' => $variable_name,
       ];
     }
 
@@ -416,6 +439,7 @@ class ServicesCollector extends CollectorBase  {
         'interface' => '\Drupal\Core\Entity\EntityStorageInterface',
         // TODO; no don't use labels in code.
         'description' => "The {$entity_type_id} storage handler",
+        'variable_name' => "{$entity_type_id}_storage",
       ];
     }
 

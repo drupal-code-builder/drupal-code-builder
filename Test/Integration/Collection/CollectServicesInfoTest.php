@@ -59,6 +59,7 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('\Drupal\Core\Entity\EntityTypeManagerInterface', $entity_type_manager_info['interface']);
     $this->assertEquals('Entity type manager', $entity_type_manager_info['label']);
     $this->assertEquals('The entity type manager', $entity_type_manager_info['description']);
+    $this->assertEquals('entity_type_manager', $entity_type_manager_info['variable_name']);
 
     // Service obtained from the container.
     $this->assertNotEmpty($complete_service_info['all']['entity_type.bundle.info']);
@@ -68,6 +69,7 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('Entity type bundle info', $entity_type_bundle_info['label']);
     // TODO: why does this get uppercase 'Entity'??
     $this->assertEquals('The Entity type bundle info service', $entity_type_bundle_info['description']);
+    $this->assertEquals('entity_type_bundle_info', $entity_type_bundle_info['variable_name']);
 
     // A 'manager' doesn't get called 'service'.
     $this->assertNotEmpty($complete_service_info['all']['config.manager']);
@@ -76,6 +78,7 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('\Drupal\Core\Config\ConfigManagerInterface', $config_manager_info['interface']);
     $this->assertEquals('Config manager', $config_manager_info['label']);
     $this->assertEquals('The Config manager', $config_manager_info['description']);
+    $this->assertEquals('config_manager', $config_manager_info['variable_name']);
 
     // Proxy services get the original class.
     $this->assertNotEmpty($complete_service_info['all']['lock.persistent']);
@@ -84,6 +87,27 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('', $service_info['interface']);
     $this->assertEquals('Persistent database lock backend', $service_info['label']);
     $this->assertEquals('The Persistent database lock backend service', $service_info['description']);
+    // A service ID with a '.' in it has the variable name derived from the
+    // class name instead of the service ID.
+    $this->assertEquals('persistent_database_lock_backend', $service_info['variable_name']);
+
+    // Services whose declared class is actually an interface get a variable
+    // name that doesn't include 'interface'.
+    $this->assertNotEmpty($complete_service_info['all']['cache.discovery']);
+    $service_info = $complete_service_info['all']['cache.discovery'];
+    $this->assertEquals('\Drupal\Core\Cache\CacheBackendInterface', $service_info['class']);
+    $this->assertEquals('cache_backend', $service_info['variable_name']);
+
+    // Storage pseudoservices.
+    $this->assertNotEmpty($complete_service_info['all']['storage:node']);
+    $service_info = $complete_service_info['all']['storage:node'];
+    $this->assertArrayNotHasKey('class', $service_info);
+    $this->assertEquals('\Drupal\Core\Entity\EntityStorageInterface', $service_info['interface']);
+    // TODO: Fix this to use the machine name, not the label.
+    // See https://github.com/drupal-code-builder/drupal-code-builder/issues/211.
+    $this->assertEquals('Content storage', $service_info['label']);
+    $this->assertEquals('The node storage handler', $service_info['description']);
+    $this->assertEquals('node_storage', $service_info['variable_name']);
   }
 
   /**
