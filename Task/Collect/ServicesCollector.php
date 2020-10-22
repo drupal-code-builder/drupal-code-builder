@@ -220,7 +220,10 @@ class ServicesCollector extends CollectorBase  {
 
       $label = CaseString::pascal($service_short_class)->sentence();
 
-      if (preg_match('@service$@', $label)) {
+      // Append 'service' to the description, unless:
+      //  - the label already contains 'service'
+      //  - the label calls the service a 'manager'
+      if (preg_match('@(service|manager)$@', $label)) {
         $description = "The {$label}";
       }
       else {

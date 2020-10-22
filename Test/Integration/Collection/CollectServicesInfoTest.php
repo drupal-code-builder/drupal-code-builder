@@ -61,12 +61,12 @@ class CollectServicesInfoTest extends KernelTestBase {
     $this->assertEquals('The Entity type bundle info service', $entity_type_bundle_info['description']);
 
     // A 'manager' doesn't get called 'service'.
-    $this->assertNotEmpty($complete_service_info['all']['entity_type.manager']);
-    $entity_type_manager_info = $complete_service_info['all']['entity_type.manager'];
-    $this->assertEquals('\Drupal\Core\Entity\EntityTypeManager', $entity_type_manager_info['class']);
-    $this->assertEquals('\Drupal\Core\Entity\EntityTypeManagerInterface', $entity_type_manager_info['interface']);
-    $this->assertEquals('Entity type manager', $entity_type_manager_info['label']);
-    $this->assertEquals('The entity type manager', $entity_type_manager_info['description']);
+    $this->assertNotEmpty($complete_service_info['all']['config.manager']);
+    $config_manager_info = $complete_service_info['all']['config.manager'];
+    $this->assertEquals('\Drupal\Core\Config\ConfigManager', $config_manager_info['class']);
+    $this->assertEquals('\Drupal\Core\Config\ConfigManagerInterface', $config_manager_info['interface']);
+    $this->assertEquals('Config manager', $config_manager_info['label']);
+    $this->assertEquals('The Config manager', $config_manager_info['description']);
 
     // Proxy services get the original class.
     $this->assertNotEmpty($complete_service_info['all']['lock.persistent']);
