@@ -387,6 +387,16 @@ class ServicesCollector extends CollectorBase  {
     return $service_definitions;
   }
 
+  /**
+   * Define pseudo-services.
+   *
+   * These are not actual services in the container, but objects that are
+   * commonly injected into classes.
+   *
+   * Their IDs in the data are of the form TYPE:VARIANT, where TYPE identifies
+   * the type of pseudoservice, such as 'storage' and variant gives the
+   * specific object, such as 'node'.
+   */
   protected function getPseudoServices() {
     $entity_type_manager = \Drupal::service('entity_type.manager');
     $entity_types = $entity_type_manager->getDefinitions();
