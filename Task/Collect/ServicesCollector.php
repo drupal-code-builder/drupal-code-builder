@@ -91,8 +91,9 @@ class ServicesCollector extends CollectorBase  {
 
     // Replace the definitions from the container with the hopefully better
     // data from the static Drupal class.
-    $all_services = array_merge($all_services, $static_container_services);
-
+    foreach ($static_container_services as $service_id => $static_container_service) {
+      $all_services[$service_id] = $static_container_service + $all_services[$service_id];
+    }
 
     $pseudo_services = $this->getPseudoServices();
     $all_services = array_merge($all_services, $pseudo_services);
