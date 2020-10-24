@@ -83,6 +83,8 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityStorageInterface',
       'description' => 'The node storage handler',
       'variable_name' => 'node_storage',
+      'real_service' => 'entity_type.manager',
+      'service_method' => 'getStorage',
     ),
   ),
 );
