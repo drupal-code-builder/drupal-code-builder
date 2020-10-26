@@ -100,7 +100,7 @@ class Service extends PHPClassFileWithInjection {
         ),
       'injected_services' => array(
         'label' => 'Injected services',
-        'description' => 'Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.',
+        'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
         'format' => 'array',
         'options' => function (&$property_info) {
           $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
