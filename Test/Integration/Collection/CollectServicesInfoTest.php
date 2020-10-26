@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
 use Drupal\KernelTests\KernelTestBase;
+use DrupalCodeBuilder\Test\Fixtures\Drupal\TestModuleExtensionList;
 
 /**
  * Tests services collection.
@@ -189,32 +190,6 @@ class CollectServicesInfoTest extends KernelTestBase {
     $module_installer = $this->container->get('module_installer');
     $result = $module_installer->install([$module]);
     $this->assertTrue($result);
-  }
-
-}
-
-/**
- * Module List which allows the discovery to be set.
- */
-class TestModuleExtensionList extends \Drupal\Core\Extension\ModuleExtensionList {
-
-  /**
-   * @var \Drupal\Core\Extension\ExtensionDiscovery|null
-   */
-  protected $extensionDiscovery;
-
-  /**
-   * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
-   */
-  public function setExtensionDiscovery(\Drupal\Core\Extension\ExtensionDiscovery $extension_discovery) {
-    $this->extensionDiscovery = $extension_discovery;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExtensionDiscovery() {
-    return $this->extensionDiscovery ?: parent::getExtensionDiscovery();
   }
 
 }
