@@ -37,4 +37,6 @@ script:
   - if [ "$TESTTYPE" = "drupal" ]; then cd ../..; ls; cd drupal; fi
   # Only run the collection test for now; the installation tests have been
   # broken by changes in Drupal core.
-  - if [ "$TESTTYPE" = "drupal" ]; then ./vendor/bin/phpunit -c core ../drupal-code-builder/drupal-code-builder/Test/Integration/Collection; fi
+  # Note that we run the DCB tests that are within the Drupal project's DCB
+  # package, as that's known to the project's autoloader.
+  - if [ "$TESTTYPE" = "drupal" ]; then ./vendor/bin/phpunit  ./vendor/drupal-code-builder/drupal-code-builder/Test/Integration/Collection; fi
