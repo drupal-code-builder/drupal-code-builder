@@ -4,6 +4,9 @@
 # This is a workaround for multiline conditionals not working properly inside
 # the .travis.yml file.
 
+# Get output from this script in Travis.
+set -x
+
 if [ "$TESTTYPE" = "dcb" ]; then
   composer install;
 fi
