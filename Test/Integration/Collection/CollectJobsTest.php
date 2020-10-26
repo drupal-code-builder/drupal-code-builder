@@ -9,6 +9,10 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class CollectJobsTest extends KernelTestBase {
 
+  public static $modules = [
+    'system',
+  ];
+
   /**
    * Tests collecting all the data.
    */
