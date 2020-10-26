@@ -167,31 +167,17 @@ class CollectServicesInfoTest extends KernelTestBase {
     // Mock the discovery to return only our fixture module.
     $extension_discovery = $this->prophesize(\Drupal\Core\Extension\ExtensionDiscovery::class);
 
-    // The location of the fixture module relative to Drupal depends on the
-    // test environment, unfortunately.
-    if (getenv('TESTTYPE')) {
-      // Travis version -- detect the environment variable that's set in
-      // travis.yml. The DCB package is not in the vendor folder for these, but
-      // outside of Drupal completely.
-      $extension_scan_result[$module] = new \Drupal\Core\Extension\Extension(
-        \Drupal::root(),
-        $module,
-        "../drupal-code-builder/drupal-code-builder/TEST/Fixtures/modules/$module/$module.info.yml"
-      );
-    }
-    else {
-      // Local version. We expect DCB to be in the vendor folder.
-      $extension_scan_result[$module] = new \Drupal\Core\Extension\Extension(
-        // Our module is outside of the Drupal root, but we have to specify it
-        // as ModuleInstaller::install() assumes it when it constructs the
-        // Extension object again later.
-        \Drupal::root(),
-        $module,
-        // This has to be a path relative to the given root in the first
-        // parameter.
-        "../vendor/drupal-code-builder/drupal-code-builder/Test/Fixtures/modules/$module/$module.info.yml"
-      );
-    }
+    // We expect DCB to be in the vendor folder.
+    $extension_scan_result[$module] = new \Drupal\Core\Extension\Extension(
+      // Our module is outside of the Drupal root, but we have to specify it
+      // as ModuleInstaller::install() assumes it when it constructs the
+      // Extension object again later.
+      \Drupal::root(),
+      $module,
+      // This has to be a path relative to the given root in the first
+      // parameter.
+      "../vendor/drupal-code-builder/drupal-code-builder/Test/Fixtures/modules/$module/$module.info.yml"
+    );
     $extension_discovery->scan('module')->willReturn($extension_scan_result);
 
     // Set the discovery on the module list and set it into the container.
