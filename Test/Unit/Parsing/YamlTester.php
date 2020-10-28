@@ -278,6 +278,12 @@ class YamlTester {
       else {
         // String property.
         foreach ($yaml_string_lines_slice_to_search as $line_key => $line) {
+          // An empty YAML line is just formatting, and doesn't necessarily mean
+          // we've gone back up a level, so just ignore it.
+          if (empty($line)) {
+            continue;
+          }
+
           if (!preg_match("@^ {{$indent_count}}@", $line)) {
             // We've reached a line that is not a child of the previous property:
             // we've failed to find the current one as a child of it.
