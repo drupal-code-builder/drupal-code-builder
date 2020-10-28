@@ -149,6 +149,32 @@ class YamlTester {
   }
 
   /**
+   * Asserts the YAML property is formatted without a blank line before it.
+   *
+   * @param mixed $property_address
+   *   The address of the property. An array address for the property; may be
+   *   a scalar string for a top-level property.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertPropertyHasNoBlankLineBefore($property_address, $message = NULL) {
+    if (!is_array($property_address)) {
+      $property_address = [$property_address];
+    }
+
+    $property_string = $this->getPropertyString($property_address);
+    $message = $message ?? "The property $property_string does not have a blank line before it.";
+
+    $this->assertHasProperty($property_address);
+
+    $line_index = $this->findYamlLine($property_address);
+
+    $previous_line = $this->originalYamlLines[$line_index - 1];
+
+    Assert::assertNotEmpty($previous_line, $message);
+  }
+
+  /**
    * Assert the YAML property has the given value.
    *
    * @param mixed $property_address

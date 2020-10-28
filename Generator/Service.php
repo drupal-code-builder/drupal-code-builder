@@ -235,6 +235,13 @@ class Service extends PHPClassFileWithInjection {
       $this->component_data['prefixed_service_name'] => $yaml_service_definition,
     ];
 
+    if ($this->component_data->getItem('module:configuration:service_linebreaks')->value) {
+      $line_break_between_blocks_level = 1;
+    }
+    else {
+      $line_break_between_blocks_level = NULL;
+    }
+
     $components['%module.services.yml'] = [
       'component_type' => 'YMLFile',
       'filename' => '%module.services.yml',
@@ -247,6 +254,7 @@ class Service extends PHPClassFileWithInjection {
           'level' => 4,
         ],
       ],
+      'line_break_between_blocks_level' => $line_break_between_blocks_level,
     ];
 
     return $components;

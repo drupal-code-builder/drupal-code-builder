@@ -37,12 +37,13 @@ class YMLFile extends File {
         'default' => 6,
         'internal' => TRUE,
       ],
-      'line_break_between_blocks' => [
-        'label' => 'Whether to add line breaks between the top-level properties.',
-        'format' => 'boolean',
-        'default' => FALSE,
-        'internal' => TRUE,
-      ],
+      // The YAML data level at which to add linebreaks.
+      //  - integer to add a linebreak between every element at this depth. May
+      //    be 0. Note this is level, not number of indentation spaces.
+      //  - NULL to add no linebreaks.
+      // TODO: fix data type!
+      'line_break_between_blocks_level' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
       'inline_levels_extra' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
     ];
@@ -99,24 +100,31 @@ class YMLFile extends File {
 
     $yaml_parser_inline_switch_level = $this->component_data['yaml_inline_level'];
 
-    if ($this->component_data['line_break_between_blocks']) {
+    $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, static::YAML_INDENT);
+
+    $this->expandInlineItems($yaml_data_array, $yaml);
+
+    $yaml_lines = explode("\n", $yaml);
+
+    if (!is_null($this->component_data['line_break_between_blocks_level'])) {
+      // $indent = str_repeat('  ', $this->component_data['line_break_between_blocks_level']);
+      $line_break_indent = $this->component_data['line_break_between_blocks_level'] * 2;
+
       $body = [];
+      $line_indent = NULL;
+      foreach ($yaml_lines as $index => $line) {
+        $previous_line_indent = $line_indent;
+        $line_indent = strlen($line) - strlen(ltrim($line));
 
-      foreach (range(0, count($yaml_data_array) -1 ) as $index) {
-        $yaml_slice = array_slice($yaml_data_array, $index, 1);
+        if ($line_indent == $line_break_indent && $previous_line_indent > $line_indent) {
+          $body[] = '';
+        }
 
-        // Each YAML piece comes with a terminal newline, so when these are
-        // joined there will be the desired blank line between each section.
-        $body[] = $yaml_parser->dump($yaml_slice, $yaml_parser_inline_switch_level, static::YAML_INDENT);
+        $body[] = $line;
       }
     }
     else {
-      $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, static::YAML_INDENT);
-
-      $this->expandInlineItems($yaml_data_array, $yaml);
-
-      // Because the yaml is all built for us, this is just a singleton array.
-      $body = array($yaml);
+      $body = $yaml_lines;
     }
 
     return $body;

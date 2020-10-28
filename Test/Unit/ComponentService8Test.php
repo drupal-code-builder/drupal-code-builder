@@ -69,11 +69,11 @@ class ComponentService8Test extends TestBase {
   }
 
   /**
-   * Test configuration for service generation.
+   * Test namespace configuration for service generation.
    *
    * @group config
    */
-  public function testServiceGenerationWithConfiguration() {
+  public function testServiceGenerationNamespaceConfiguration() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = array(
@@ -148,6 +148,46 @@ class ComponentService8Test extends TestBase {
       "src/MyService.php",
       "src/MyOtherService.php",
     ], $files);
+  }
+
+  /**
+   * Test YAML linebreaks configuration for service generation.
+   *
+   * @group config
+   */
+  public function testServiceGenerationYamlLinebreaksConfiguration() {
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_name' => 'my_service',
+        ],
+        1 => [
+          'service_name' => 'my_other_service',
+        ],
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    $services_file = $files['test_module.services.yml'];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertPropertyHasNoBlankLineBefore(['services', 'test_module.my_other_service']);
+
+    $module_data['configuration'] = [
+      'service_linebreaks' => TRUE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $services_file = $files['test_module.services.yml'];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertPropertyHasBlankLineBefore(['services', 'test_module.my_other_service']);
   }
 
   /**

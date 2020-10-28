@@ -102,6 +102,10 @@ class Module extends RootComponent {
           ->setLabel("Service class namespace")
           ->setDescription("The relative namespace within a module in which to place services. Do not include '\\' at either end. Leave empty to place in the module namespace.")
           ->setLiteralDefault(''),
+        'service_linebreaks' => PropertyDefinition::create('boolean')
+          ->setLabel("Linebreak between service definitions")
+          ->setDescription("Whether to put a blank line between each service definition in a services.yml file.")
+          ->setLiteralDefault(FALSE),
         'entity_handler_namespace' => PropertyDefinition::create('string')
           ->setLabel("Entity handler class namespace")
           ->setDescription("The relative namespace within a module in which to place entity handlers. Do not include '\\' at either end. Leave empty to place in the module namespace.")
