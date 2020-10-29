@@ -40,6 +40,12 @@ abstract class TestBase extends TestCase {
   protected function setUp() {
     $this->setUpVarDumper();
 
+    if (empty($this->drupalMajorVersion)) {
+      throw new \Exception(sprintf("Drupal major version not set on test class %s.",
+        static::class
+      ));
+    }
+
     $this->setupDrupalCodeBuilder($this->drupalMajorVersion);
     $this->container = \DrupalCodeBuilder\Factory::getContainer();
   }
