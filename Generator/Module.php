@@ -106,6 +106,10 @@ class Module extends RootComponent {
           ->setLabel("Linebreak between service definitions")
           ->setDescription("Whether to put a blank line between each service definition in a services.yml file.")
           ->setLiteralDefault(FALSE),
+        'service_parameters_linebreaks' => PropertyDefinition::create('boolean')
+          ->setLabel("Service parameters on separate lines")
+          ->setDescription("Whether to put service parameters in a services.yml file each on their own line.")
+          ->setLiteralDefault(FALSE),
         'entity_handler_namespace' => PropertyDefinition::create('string')
           ->setLabel("Entity handler class namespace")
           ->setDescription("The relative namespace within a module in which to place entity handlers. Do not include '\\' at either end. Leave empty to place in the module namespace.")

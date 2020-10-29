@@ -191,6 +191,50 @@ class ComponentService8Test extends TestBase {
   }
 
   /**
+   * Test service parameter expansion configuration.
+   *
+   * @group config
+   */
+  public function testServiceGenerationYamlParameterLinebreaksConfiguration() {
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => array(
+        0 => [
+          'service_name' => 'my_service',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+    $files = $this->generateModuleFiles($module_data);
+
+    $services_file = $files['test_module.services.yml'];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertPropertyIsInlined(['services', 'test_module.my_service', 'arguments', 0]);
+    $yaml_tester->assertPropertyIsInlined(['services', 'test_module.my_service', 'arguments', 1]);
+
+    $module_data['configuration'] = [
+      'service_parameters_linebreaks' => TRUE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $services_file = $files['test_module.services.yml'];
+
+    $yaml_tester = new YamlTester($services_file);
+
+    $yaml_tester->assertPropertyIsExpanded(['services', 'test_module.my_service', 'arguments', 0]);
+    $yaml_tester->assertPropertyIsExpanded(['services', 'test_module.my_service', 'arguments', 1]);
+  }
+
+  /**
    * Test generating a module with a service using a preset.
    *
    * @group presets

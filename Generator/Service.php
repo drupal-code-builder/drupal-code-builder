@@ -242,18 +242,29 @@ class Service extends PHPClassFileWithInjection {
       $line_break_between_blocks_level = NULL;
     }
 
+    $yaml_inline_levels = [
+      // Expand the tags property further than the others.
+      'tags' => [
+        'address' => ['services', '*', 'tags'],
+        'level' => 4,
+      ],
+    ];
+
+    if ($this->component_data->getItem('module:configuration:service_parameters_linebreaks')->value) {
+      $yaml_inline_levels += [
+        'arguments' => [
+          'address' => ['services', '*', 'arguments'],
+          'level' => 4,
+        ],
+      ];
+    }
+
     $components['%module.services.yml'] = [
       'component_type' => 'YMLFile',
       'filename' => '%module.services.yml',
       'yaml_data' => $yaml_data,
       'yaml_inline_level' => 3,
-      // Expand the tags property further than the others.
-      'inline_levels_extra' => [
-        'tags' => [
-          'address' => ['services', '*', 'tags'],
-          'level' => 4,
-        ],
-      ],
+      'inline_levels_extra' => $yaml_inline_levels,
       'line_break_between_blocks_level' => $line_break_between_blocks_level,
     ];
 
