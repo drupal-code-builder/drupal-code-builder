@@ -386,6 +386,10 @@ EOT;
         $this->fail("The assertion {$assertion_name}() should pass with the following parameters: {$message_parameters}");
       }
     }
+
+    // This is just to stop PHPUnit complaining that the test does not perform
+    // any assertions.
+    $this->assertTrue(TRUE);
   }
 
 }
