@@ -16,6 +16,8 @@ class ModuleRequestedBuildTest extends TestBase {
    * Test build request functionality.
    */
   function testModuleGenerationBuildRequest() {
+    $this->markTestSkipped("Requested feature is possibly obsolete.");
+
     // Create a module, specifying limited build.
     // It is crucial to create a new module name, as we eval() the generated
     // code!

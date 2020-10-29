@@ -265,6 +265,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @group presets
    */
   public function testSingleGeneratorSinglePresetsNoRequirements() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -390,6 +392,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @group presets
    */
   public function testSingleGeneratorMultiPresetsNoRequirements() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -536,6 +540,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with only the root generator, which has a child requirement.
    */
   public function testSingleGeneratorChildRequirements() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -617,6 +623,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with only the root generator, which has grandchild requirements.
    */
   public function testSingleGeneratorGrandchildRequirements() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -724,6 +732,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with the root generator and a boolean component property.
    */
   public function testBooleanChildComponentNoRequests() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -814,6 +824,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with the root generator and an array component property.
    */
   public function testArrayChildComponentNoRequests() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -934,6 +946,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with the root generator and a compound component property.
    */
   public function testCompoundChildPropertyNoRequests() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
@@ -1066,6 +1080,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Test acquired property values.
    */
   public function testAcquiredValues() {
+    $this->markTestSkipped();
+
     // The mocked root component's data info.
     $root_data_info = [
       // This property is assumed to exist by the collector.
