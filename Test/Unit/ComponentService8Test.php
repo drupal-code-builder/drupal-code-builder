@@ -10,7 +10,6 @@ use MutableTypedData\Exception\InvalidInputException;
  * Tests for Service component.
  *
  * @group yaml
- * @group pass
  */
 class ComponentService8Test extends TestBase {
 

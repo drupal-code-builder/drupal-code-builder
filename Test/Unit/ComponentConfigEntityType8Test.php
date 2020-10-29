@@ -10,7 +10,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  * @group entity
- * @group pass
  */
 class ComponentConfigEntityType8Test extends TestBase {
 

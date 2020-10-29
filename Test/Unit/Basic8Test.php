@@ -4,8 +4,6 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 /**
  * Basic test class.
- *
- * @group pass
  */
 class Basic8Test extends TestBase {
 

@@ -14,8 +14,6 @@ namespace DrupalCodeBuilder\Test\Unit;
  * @code
  *   vendor/phpunit/phpunit/phpunit Test/Basic7Test.php
  * @endcode
- *
- * @group pass
  */
 class Basic7Test extends TestBase {
 

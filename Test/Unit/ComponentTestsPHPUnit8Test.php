@@ -7,8 +7,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the PHPUnit test class generator.
- *
- * @group pass
  */
 class ComponentTestsPHPUnit8Test extends TestBase {
 

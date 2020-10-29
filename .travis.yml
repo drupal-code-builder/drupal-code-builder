@@ -29,8 +29,7 @@ install:
 
 script:
   # Run the unit tests.
-  # TODO: remove the group filter once all tests pass again!!
-  - if [ "$TESTTYPE" = "dcb" ]; then vendor/phpunit/phpunit/phpunit Test/Unit --group=pass; fi
+  - if [ "$TESTTYPE" = "dcb" ]; then vendor/phpunit/phpunit/phpunit Test/Unit; fi
 
   # Run the integration tests with Drupal's PHPUnit.
   # First, drop back to the build directory and go into drupal.

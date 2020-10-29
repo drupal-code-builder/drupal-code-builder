@@ -8,8 +8,6 @@ use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Tests the PHP Class File generator class.
- *
- * @group pass
  */
 class ComponentPHPClassFile8Test extends TestBase {
 

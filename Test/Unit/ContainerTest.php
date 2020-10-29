@@ -10,8 +10,6 @@ use PHPUnit\Framework\TestCase;
  * In particular, this needs to test that two separate test cases with different
  * core major versions set on the environment don't cross-pollute the
  * container's versionned services.
- *
- * @group pass
  * @group container
  */
 class ContainerTest extends TestCase {

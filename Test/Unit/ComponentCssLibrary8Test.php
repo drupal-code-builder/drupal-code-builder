@@ -8,7 +8,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests for library generation.
  *
  * @group yaml
- * @group pass
  */
 class ComponentCssLibrary8Test extends TestBase {
 

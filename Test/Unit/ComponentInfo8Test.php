@@ -8,7 +8,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests for Info component.
  *
  * @group yaml
- * @group pass
  */
 class ComponentInfo8Test extends TestBase {
 

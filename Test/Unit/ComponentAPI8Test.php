@@ -6,8 +6,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the API documentation file component.
- *
- * @group pass
  */
 class ComponentAPI8Test extends TestBase {
 

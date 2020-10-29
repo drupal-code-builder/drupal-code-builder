@@ -6,8 +6,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the Simpletest test class generator.
- *
- * @group pass
  */
 class ComponentTests7Test extends TestBase {
 

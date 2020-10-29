@@ -8,7 +8,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  * Tests basic module generation.
  *
  * @group hooks
- * @group pass
  */
 class ComponentModule7Test extends TestBase {
 

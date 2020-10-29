@@ -6,8 +6,6 @@ use DrupalCodeBuilder\Generator\PHPFile;
 
 /**
  * Tests the PHP File generator class.
- *
- * @group pass
  */
 class ComponentPHPFile8Test extends TestBase {
 

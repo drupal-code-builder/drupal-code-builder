@@ -11,7 +11,6 @@ use MutableTypedData\Exception\InvalidInputException;
  *
  * @group yaml
  * @group plugin
- * @group pass
  */
 class ComponentPluginsAnnotated8Test extends TestBase {
 

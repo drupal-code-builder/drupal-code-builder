@@ -8,7 +8,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests the Permissions generator class.
  *
  * @group yaml
- * @group pass
  */
 class ComponentPermissions8Test extends TestBase {
 

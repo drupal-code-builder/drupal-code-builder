@@ -8,7 +8,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  * Tests for Hooks component.
  *
  * @group hooks
- * @group pass
  */
 class ComponentHooks7Test extends TestBase {
 
