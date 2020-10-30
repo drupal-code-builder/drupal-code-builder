@@ -30,6 +30,8 @@ class ComponentPHPClassFile8Test extends TestBase {
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
+    $data->root_component_name->value = '%module';
+
     // Set the plain class name, relying on the relative namespace to be empty.
     $data->plain_class_name->value = 'MyClass';
 
@@ -51,6 +53,8 @@ class ComponentPHPClassFile8Test extends TestBase {
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
+    $data->root_component_name->value = '%module';
+
     // Set the plain class name, relying on the relative namespace to be empty.
     $data->plain_class_name->value = 'MyClass';
 
@@ -61,7 +65,10 @@ class ComponentPHPClassFile8Test extends TestBase {
 
     // Set the relative class name.
     $definition = PHPClassFile::getPropertyDefinition();
+
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+
+    $data->root_component_name->value = '%module';
 
     $data->relative_class_name->value = 'Name\Space\MyClass';
     $this->assertEquals('Name\Space\MyClass', $data->relative_class_name->value);

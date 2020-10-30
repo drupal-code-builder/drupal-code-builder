@@ -440,7 +440,9 @@ abstract class EntityTypeBase extends PHPClassFile {
     // form handler if that is present.
     if (isset($components['handler_form_default'])) {
       // Hackily make the full class name here.
-      $class_name = '\Drupal\%module\\'
+      $class_name = '\Drupal\\'
+        . $this->component_data->root_component_name->value
+        . '\\'
         . $components['handler_form_default']['relative_namespace']
         . '\\'
         . $components['handler_form_default']['plain_class_name'];
@@ -673,7 +675,7 @@ abstract class EntityTypeBase extends PHPClassFile {
     $relative_name_pieces = $this->getRelativeHandlerClassNamePieces($handler_type_key, $handler_type_info);
     $name_pieces = array_merge([
       'Drupal',
-      '%module',
+      $this->component_data->root_component_name->value,
     ], $relative_name_pieces);
 
 
