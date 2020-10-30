@@ -79,7 +79,10 @@ class RouterItem extends BaseGenerator {
                 ->setDefault(DefaultDefinition::create()
                   ->setCallable(function (DataItem $component_data) {
                     // AARGH HACK! Repeating the work the class component does!
-                    return '\Drupal\%module\\' . $component_data->getParent()->controller_relative_class_name->value . '::content';
+                    return
+                      '\Drupal\\'
+                      . $component_data->getParent()->root_component_name->value . '\\'
+                      . $component_data->getParent()->controller_relative_class_name->value . '::content';
                   })
                 ),
             ]),

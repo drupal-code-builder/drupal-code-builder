@@ -88,8 +88,7 @@ class PHPClassFile extends PHPFile {
       'qualified_class_name_pieces' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
-          // ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
-          ->setExpression("arrayMerge(['Drupal', '%module'], parent.relative_class_name_pieces.get())")
+          ->setExpression("arrayMerge(['Drupal', parent.root_component_name.get()], parent.relative_class_name_pieces.get())")
           ->setDependencies('..:relative_class_name_pieces')
       ),
       'namespace' => PropertyDefinition::create('string')
