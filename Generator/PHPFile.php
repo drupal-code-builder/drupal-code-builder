@@ -156,15 +156,16 @@ class PHPFile extends File {
         continue;
       }
 
+      $module_name = end($current_namespace_pieces);
       $matches = [];
       // Do not match after a ' or ", as then the class name is a quoted string
       // and should be left alone.
       // Do not match after a letter, as then that's also part of the namespace
       // and we shouldn't be matching only the tail end.
-      // Allow a match of '%module' for a namespace piece, for cases where we
+      // Allow a match of $module_name for a namespace piece, for cases where we
       // refer to something we are also in the process of generating, e.g. a
       // plugin base class referencing a plugin interface.
-      if (preg_match_all('@(?<![\'"[:alpha:]])(?:\\\\(\w+|%module)){2,}@', $line, $matches, PREG_SET_ORDER)) {
+      if (preg_match_all('@(?<![\'"[:alpha:]])(?:\\\\(\w+|' . $module_name . ')){2,}@', $line, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];
