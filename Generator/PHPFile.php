@@ -196,7 +196,7 @@ class PHPFile extends File {
 
     if ($imported_classes) {
       // Sort the imported classes. todo sort AFTER removing the \\ !!
-      sort($imported_classes);
+      sort($imported_classes, SORT_NATURAL | SORT_FLAG_CASE);
 
       foreach ($imported_classes as $fully_qualified_class_name) {
         $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
