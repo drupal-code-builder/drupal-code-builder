@@ -154,7 +154,7 @@ class PluginType extends BaseGenerator {
 
           return '\\' . self::makeQualifiedClassName([
             'Drupal',
-            '%module',
+            $component_data->getParent()->root_component_name->value,
             'Plugin',
             $component_data->getParent()->plugin_relative_namespace->value,
             $short_class_name . 'Interface',
@@ -180,7 +180,7 @@ class PluginType extends BaseGenerator {
         ->setCallableDefault(function ($component_data) {
           return '\\' . self::makeQualifiedClassName([
             'Drupal',
-            '%module',
+            $component_data->getParent()->root_component_name->value,
             'Plugin',
             $component_data->getParent()->plugin_relative_namespace->value,
             $component_data->getParent()->base_class_short_name->value,
