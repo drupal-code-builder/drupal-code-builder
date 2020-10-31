@@ -81,7 +81,12 @@ class RouterItem extends BaseGenerator {
                     // AARGH HACK! Repeating the work the class component does!
                     return
                       '\Drupal\\'
-                      . $component_data->getParent()->root_component_name->value . '\\'
+                      // Quick hack - need to ascend to a component that's
+                      // created from user-given data, as ComponentCollector
+                      // doesn't handle data acquisition properties on
+                      // components from requestedComponents().
+                      // TODO: fix!
+                      . $component_data->getParent()->getParent()->root_component_name->value . '\\'
                       . $component_data->getParent()->controller_relative_class_name->value . '::content';
                   })
                 ),
