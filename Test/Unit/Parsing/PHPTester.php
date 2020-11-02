@@ -434,9 +434,10 @@ class PHPTester {
       return implode('\\', $use_node->uses[0]->name->parts);
     }, $this->parser_nodes['imports']);
     $sorted = $seen;
-    sort($sorted, SORT_NATURAL | SORT_FLAG_CASE);
-
-    Assert::assertEquals($sorted, $seen, $message);
+    natcasesort($sorted);
+    // Warning: natcasesort() preserves keys association, we must reset keys to
+    // ensure proper verification.
+    Assert::assertEquals(array_values($sorted), $seen, $message);
   }
 
   /**
