@@ -52,45 +52,7 @@ class CollectPluginInfoDummyModulesTest extends CollectionTestBase {
    * be updated at the same time as test sample data.
    */
   public function testObviousBaseClassDetection() {
-    // Create a module list service, using our subclass that lets us hack in
-    // the discovery.
-    $module_list = new TestModuleExtensionList(
-      $this->container->get('app.root'),
-      'module',
-      $this->container->get('cache.default'),
-      $this->container->get('info_parser'),
-      $this->container->get('module_handler'),
-      $this->container->get('state'),
-      $this->container->get('config.factory'),
-      $this->container->get('extension.list.profile'),
-      $this->container->getParameter('install_profile'),
-      $this->container->getParameter('container.modules')
-    );
-
-    // Mock the discovery to return only our fixture module.
-    $extension_discovery = $this->prophesize(\Drupal\Core\Extension\ExtensionDiscovery::class);
-
-    // We expect DCB to be in the vendor folder.
-    $extension_scan_result['test_generated_plugin_type'] = new \Drupal\Core\Extension\Extension(
-      // Our module is outside of the Drupal root, but we have to specify it
-      // as ModuleInstaller::install() assumes it when it constructs the
-      // Extension object again later.
-      \Drupal::root(),
-      'test_generated_plugin_type',
-      // This has to be a path relative to the given root in the first
-      // parameter.
-      '../vendor/drupal-code-builder/drupal-code-builder/Test/Fixtures/modules/test_generated_plugin_type/test_generated_plugin_type.info.yml'
-    );
-    $extension_discovery->scan('module')->willReturn($extension_scan_result);
-
-    // Set the discovery on the module list and set it into the container.
-    $module_list->setExtensionDiscovery($extension_discovery->reveal());
-    $module_list->reset();
-    $this->container->set('extension.list.module', $module_list);
-
-    // Install our module.
-    $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['test_generated_plugin_type']);
+    $this->installFixtureModule('test_generated_plugin_type');
 
     $plugin_types_info = $this->getPluginTypeInfoFromCollector(
       [
