@@ -2,23 +2,27 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
-use Drupal\KernelTests\KernelTestBase;
-
 /**
  * Tests collecting data from a Drupal site.
  */
-class CollectJobsTest extends KernelTestBase {
+class CollectJobsTest extends CollectionTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    \DrupalCodeBuilder\Factory::getEnvironment()
+      // Use the memory storage so we don't write any files.
+      // TODO: make the storage a service, so we can mock it.
+      ->setStorageLocalClass('Memory');
+  }
 
   /**
    * Tests collecting all the data.
    */
   public function testJobList() {
-    \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
-      ->setCoreVersionNumber(8)
-      // Use the memory storage so we don't write any files.
-      // TODO: make the storage a service, so we can mock it.
-      ->setStorageLocalClass('Memory');
-
     $task_handler_collect = \DrupalCodeBuilder\Factory::getTask('Collect');
     $job_list = $task_handler_collect->getJobList();
 

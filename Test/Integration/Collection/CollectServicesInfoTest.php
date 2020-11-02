@@ -2,13 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
-use Drupal\KernelTests\KernelTestBase;
 use DrupalCodeBuilder\Test\Fixtures\Drupal\TestModuleExtensionList;
 
 /**
  * Tests services collection.
  */
-class CollectServicesInfoTest extends KernelTestBase {
+class CollectServicesInfoTest extends CollectionTestBase {
 
   /**
    * The modules to enable.
@@ -24,18 +23,13 @@ class CollectServicesInfoTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
-      ->setCoreVersionNumber(\Drupal::VERSION);
-
-    $this->environment = \DrupalCodeBuilder\Factory::getEnvironment();
+    parent::setUp();
 
     $this->servicesCollector = new \DrupalCodeBuilder\Task\Collect\ServicesCollector(
       \DrupalCodeBuilder\Factory::getEnvironment(),
       new \DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter,
       new \DrupalCodeBuilder\Task\Collect\CodeAnalyser($this->environment)
     );
-
-    parent::setUp();
   }
 
   /**

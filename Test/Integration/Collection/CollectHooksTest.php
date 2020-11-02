@@ -2,34 +2,10 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
-use Drupal\KernelTests\KernelTestBase;
-
 /**
- * Integration tests test aspects that need a working Drupal site.
- *
- * These need to be run from Drupal's PHPUnit, rather than ours:
- * @code
- *  [drupal]/core $ ../vendor/bin/phpunit ../vendor/drupal-code-builder/drupal-code-builder/Test/Integration/Collection/CollectHooksTest.php
- * @endcode
- *
- * Note that a common base class won't work for these tests, as when Travis
- * runs integration tests, Drupal doesn't have the DCB classes in its
- * autoloader, and so a base class for the collection test classes can't be
- * loaded.
+ * Tests collecting data on hooks from Drupal.
  */
-class CollectHooksTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
-      ->setCoreVersionNumber(\Drupal::VERSION);
-
-    $this->environment = \DrupalCodeBuilder\Factory::getEnvironment();
-
-    parent::setUp();
-  }
+class CollectHooksTest extends CollectionTestBase {
 
   /**
    * Tests collection of hooks info.

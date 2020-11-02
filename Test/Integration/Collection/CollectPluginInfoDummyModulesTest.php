@@ -2,13 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
-use Drupal\KernelTests\KernelTestBase;
 use DrupalCodeBuilder\Test\Fixtures\Drupal\TestModuleExtensionList;
 
 /**
  * Tests plugin collection with a dummy module.
  */
-class CollectPluginInfoDummyModulesTest extends KernelTestBase {
+class CollectPluginInfoDummyModulesTest extends CollectionTestBase {
 
   /**
    * The modules to enable.
@@ -24,10 +23,7 @@ class CollectPluginInfoDummyModulesTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
-      ->setCoreVersionNumber(\Drupal::VERSION);
-
-    $this->environment = \DrupalCodeBuilder\Factory::getEnvironment();
+    parent::setUp();
 
     $this->pluginTypesCollector = new \DrupalCodeBuilder\Task\Collect\PluginTypesCollector(
       \DrupalCodeBuilder\Factory::getEnvironment(),
@@ -41,8 +37,6 @@ class CollectPluginInfoDummyModulesTest extends KernelTestBase {
     $class = new \ReflectionObject($this->pluginTypesCollector);
     $this->gatherPluginTypeInfoMethod = $class->getMethod('gatherPluginTypeInfo');
     $this->gatherPluginTypeInfoMethod->setAccessible(TRUE);
-
-    parent::setUp();
   }
 
   protected function getPluginTypeInfoFromCollector($job) {
