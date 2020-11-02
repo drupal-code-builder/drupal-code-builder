@@ -51,8 +51,14 @@ class CollectionTestBase extends KernelTestBase {
       $this->container->getParameter('container.modules')
     );
 
-    // Mock the discovery to return only our fixture module.
+    // Mock the discovery to return our fixture module.
     $extension_discovery = $this->prophesize(\Drupal\Core\Extension\ExtensionDiscovery::class);
+
+    // Keep the real scan result, as in at least once case, core components
+    // have a hidden dependency on system module.
+    // See https://www.drupal.org/project/drupal/issues/3179090.
+    $real_extension_discovery = new \Drupal\Core\Extension\ExtensionDiscovery(\Drupal::root());
+    $extension_scan_result = $real_extension_discovery->scan('module');
 
     // We expect DCB to be in the vendor folder.
     $extension_scan_result[$module] = new \Drupal\Core\Extension\Extension(
@@ -65,6 +71,7 @@ class CollectionTestBase extends KernelTestBase {
       // parameter.
       "../vendor/drupal-code-builder/drupal-code-builder/Test/Fixtures/modules/$module/$module.info.yml"
     );
+
     $extension_discovery->scan('module')->willReturn($extension_scan_result);
 
     // Set the discovery on the module list and set it into the container.
