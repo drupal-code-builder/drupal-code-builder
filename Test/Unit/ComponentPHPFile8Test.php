@@ -175,9 +175,11 @@ class ComponentPHPFile8Test extends TestBase {
           // Module classes.
           $ground_almonds = new \Drupal\beta_module\Almonds;
           $sugar = new \Drupal\alpha_module\Sugar;
-          // Drupal core component classes.
+          // Drupal core and component classes.
           $cinammon = new \Drupal\Core\Spices\Cinammon;
           $chocolate = new \Drupal\Core\Chocolate\Dark;
+          $apricots = new \Drupal\Component\Fruit\DriedApricots;
+          $yeast = new \Drupal\Component\Baking\Yeast;
           // Last line gets trimmed.
         EOT,
       ],
