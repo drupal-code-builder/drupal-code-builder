@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Generator\PHPFile;
+use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the PHP File generator class.
@@ -144,6 +145,64 @@ class ComponentPHPFile8Test extends TestBase {
         NULL,
       ],
     ];
+  }
+
+  /**
+   * Tests the ordering of class imports.
+   */
+  public function testClassImportsOrder() {
+    // We want to get a bunch of fully-qualified class names into a generated
+    // PHP file. The simplest way to do this (probably!) is to mock a hook
+    // definition with the classes we want in the hook's sample code. When we
+    // request this hook, its sample code is used in the generated PHP file,
+    // and the fully-qualified class names will be extracted and sorted.
+    $report_hook_data = $this->prophesize(get_class($this->container->get('ReportHookData')));
+    $report_hook_data->getSanityLevel()->willReturn('none');
+    $report_hook_data->getHookDeclarations()->willReturn([
+      'cake' => [
+        'type' => 'hook',
+        'name' => 'hook_cake',
+        'definition' => 'function hook_cake()',
+        'description' => 'Makes cake',
+        'destination' => '%module.module',
+        'body' => <<<'EOT'
+          // First line gets trimmed.
+          // Class names, intentionally put in the wrong order here so it's not
+          // just accidental that they end up in the expected order.
+          // Vendor classes.
+          $eggs = new \Beta\Eggs;
+          $flour = new \Alpha\Flour;
+          // Module classes.
+          $ground_almonds = new \Drupal\beta_module\Almonds;
+          $sugar = new \Drupal\alpha_module\Sugar;
+          // Drupal core component classes.
+          $cinammon = new \Drupal\Core\Spices\Cinammon;
+          $chocolate = new \Drupal\Core\Chocolate\Dark;
+          // Last line gets trimmed.
+        EOT,
+      ],
+    ]);
+    $report_hook_data->listHookNamesOptions()->willReturn([
+      'cake' => 'hook_cake()',
+    ]);
+
+    $this->container->set('ReportHookData', $report_hook_data->reveal());
+
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+        'cake',
+      ],
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $module_file = $files['test_module.module'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester->assertImportsSorted();
   }
 
 }
