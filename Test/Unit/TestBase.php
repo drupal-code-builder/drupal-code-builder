@@ -23,6 +23,11 @@ abstract class TestBase extends TestCase {
   use VarDumperSetupTrait;
 
   /**
+   * The service container.
+   */
+  protected $container;
+
+  /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
@@ -36,6 +41,7 @@ abstract class TestBase extends TestCase {
     $this->setUpVarDumper();
 
     $this->setupDrupalCodeBuilder($this->drupalMajorVersion);
+    $this->container = \DrupalCodeBuilder\Factory::getContainer();
   }
 
   /**
