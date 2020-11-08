@@ -383,6 +383,8 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
           // array.
           $options = $def['options']($property_info);
 
+          assert(is_array($options), "Options callback for $name did not return an array.");
+
           $converted_defs[$name]->setOptionsArray($options);
         }
         elseif (is_string($def['options']) && strpos($def['options'], ':') !== FALSE) {
