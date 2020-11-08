@@ -428,16 +428,14 @@ class PHPTester {
    *  (optional) The assertion message.
    */
   public function assertImportsSorted($message = NULL) {
-    $message = $message ?? 'The use statements are sorted in a case-insensitive manner.';
+    $message = $message ?? 'The use statements are sorted in a case-sensitive manner.';
 
     $seen = array_map(function ($use_node) {
       return implode('\\', $use_node->uses[0]->name->parts);
     }, $this->parser_nodes['imports']);
     $sorted = $seen;
-    natcasesort($sorted);
-    // Warning: natcasesort() preserves keys association, we must reset keys to
-    // ensure proper verification.
-    Assert::assertEquals(array_values($sorted), $seen, $message);
+    sort($sorted);
+    Assert::assertEquals($sorted, $seen, $message);
   }
 
   /**

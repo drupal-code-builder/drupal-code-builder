@@ -201,7 +201,7 @@ class PHPFile extends File {
       }
 
       // Sort the imported classes.
-      natcasesort($imports);
+      sort($imports);
 
       $imports[] = '';
     }
