@@ -172,6 +172,8 @@ class ComponentPHPFile8Test extends TestBase {
           // Vendor classes.
           $eggs = new \Beta\Eggs;
           $flour = new \Alpha\Flour;
+          $pistachios = new \Zeta\Pistachios;
+          $marzipan = new \Mu\Marzipan;
           // Module classes.
           $ground_almonds = new \Drupal\beta_module\Almonds;
           $sugar = new \Drupal\alpha_module\Sugar;
