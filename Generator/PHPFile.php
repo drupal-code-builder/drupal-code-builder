@@ -129,6 +129,10 @@ class PHPFile extends File {
   /**
    * Remove fully-qualified classnames, extracting them to an array.
    *
+   * It is assummed that %-style tokens are *not* used in the fully qualified
+   * classname, as the extracted values will be used for sorting the imports
+   * section of the file; @see self::imports().
+   *
    * @param &$class_code
    *  An array of PHP code lines to work on. All namespaced classes will be
    *  replaced with plain classes.
@@ -161,10 +165,7 @@ class PHPFile extends File {
       // and should be left alone.
       // Do not match after a letter, as then that's also part of the namespace
       // and we shouldn't be matching only the tail end.
-      // Allow a match of '%module' for a namespace piece, for cases where we
-      // refer to something we are also in the process of generating, e.g. a
-      // plugin base class referencing a plugin interface.
-      if (preg_match_all('@(?<![\'"[:alpha:]])(?:\\\\(\w+|%module)){2,}@', $line, $matches, PREG_SET_ORDER)) {
+      if (preg_match_all('@(?<![\'"[:alpha:]])(?:\\\\(\w+)){2,}@', $line, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];
@@ -194,13 +195,13 @@ class PHPFile extends File {
     $imports = [];
 
     if ($imported_classes) {
-      // Sort the imported classes.
-      sort($imported_classes);
-
       foreach ($imported_classes as $fully_qualified_class_name) {
         $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
         $imports[] = "use $fully_qualified_class_name;";
       }
+
+      // Sort the imported classes.
+      sort($imports);
 
       $imports[] = '';
     }

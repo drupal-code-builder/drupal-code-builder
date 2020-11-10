@@ -178,12 +178,12 @@ class ComponentPluginType8Test extends TestBase {
    */
   function testAnnotationPluginTypeGenerationWithNestedFolder() {
     // Create a module.
-    $module_name = 'test_module';
+    $module_name = 'a_test_module';
     $module_data = array(
       'base' => 'module',
       'root_name' => $module_name,
-      'readable_name' => 'Test module',
-      'short_description' => 'Test Module description',
+      'readable_name' => 'A test module',
+      'short_description' => 'A Test Module description',
       'hooks' => array(
       ),
       'plugin_types' => array(
@@ -202,7 +202,8 @@ class ComponentPluginType8Test extends TestBase {
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
+    $php_tester->assertImportsSorted();
+    $php_tester->assertHasClass('Drupal\a_test_module\CatFeederManager');
 
     // Check the files that go in the nested folder.
     // Check the plugin base class file.
@@ -210,15 +211,15 @@ class ComponentPluginType8Test extends TestBase {
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_base_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederBase');
-    $php_tester->assertClassHasInterfaces(['Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface']);
+    $php_tester->assertHasClass('Drupal\a_test_module\Plugin\Animals\CatFeeder\CatFeederBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\a_test_module\Plugin\Animals\CatFeeder\CatFeederInterface']);
 
     // Check the plugin interface file.
     $plugin_interface_file = $files["src/Plugin/Animals/CatFeeder/CatFeederInterface.php"];
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_interface_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasInterface('Drupal\test_module\Plugin\Animals\CatFeeder\CatFeederInterface');
+    $php_tester->assertHasInterface('Drupal\a_test_module\Plugin\Animals\CatFeeder\CatFeederInterface');
   }
 
   /**
@@ -270,6 +271,7 @@ class ComponentPluginType8Test extends TestBase {
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertImportsSorted();
     $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
     $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
 
