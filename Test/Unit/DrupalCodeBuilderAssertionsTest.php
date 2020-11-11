@@ -3,20 +3,14 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the custom assertions in our base tests class.
  *
  * @see http://stackoverflow.com/questions/12412601/phpunit-writing-tests-for-custom-assertions
  */
-class DrupalCodeBuilderAssertionsTest extends TestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setupDrupalCodeBuilder($version) {
-    // Do nothing; we don't need to set up DCB.
-  }
+class DrupalCodeBuilderAssertionsTest extends TestCase {
 
   /**
    * Tests the assertNoTrailingWhitespace() assertion.
@@ -30,7 +24,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
    */
   public function testAssertNoTrailingWhitespace($code, $pass) {
     try {
-      $this->assertNoTrailingWhitespace($code);
+      TestBase::assertNoTrailingWhitespace($code);
       // Assertion passed.
       if (!$pass) {
         self::fail("assertNoTrailingWhitespace() should fail for '$code'");
@@ -69,7 +63,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
    */
   public function testAssertFunctionParameter($code, $pass) {
     try {
-      $this->assertFunctionParameter('', $code);
+      TestBase::assertFunctionParameter('', $code);
       // Assertion passed.
       if (!$pass) {
         self::fail("assertFunctionParameter() should fail for '$code'");
@@ -116,7 +110,7 @@ class DrupalCodeBuilderAssertionsTest extends TestBase {
    */
   public function testAssertDocBlock($lines, $code, $indent, $pass) {
     try {
-      $this->assertDocBlock($lines, $code, '', $indent);
+      TestBase::assertDocBlock($lines, $code, '', $indent);
       // Assertion passed.
       if (!$pass) {
         self::fail("assertDocBlock() should fail for '$code'");
@@ -265,7 +259,7 @@ EOT
    */
   public function testAssertFunction($code, $pass) {
     try {
-      $this->assertFunction('do_the_thing', $code);
+      TestBase::assertFunction('do_the_thing', $code);
       // Assertion passed.
       if (!$pass) {
         self::fail("assertFunction() should fail for '$code'");
