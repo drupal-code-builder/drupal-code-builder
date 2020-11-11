@@ -132,11 +132,11 @@ abstract class TestBase extends TestCase {
    * @param string $message
    *   (optional) The assertion message.
    */
-  protected function assertFileCount($expected_count, $actual_files_array, $message = NULL) {
+  public static function assertFileCount($expected_count, $actual_files_array, $message = NULL) {
     $message = $message ?? "Expected number of files is returned:";
     $message .= ' ' . print_r(array_keys($actual_files_array), TRUE);
 
-    $this->assertCount($expected_count, $actual_files_array, $message);
+    static::assertCount($expected_count, $actual_files_array, $message);
   }
 
   /**
@@ -147,14 +147,14 @@ abstract class TestBase extends TestCase {
    * @param array $actual_files
    *   The array of files returned from the generator.
    */
-  protected function assertFiles($filenames, $actual_files) {
+  public static function assertFiles($filenames, $actual_files) {
     $actual_file_names = array_keys($actual_files);
 
     sort($filenames);
     sort($actual_file_names);
 
     // TODO! min PHPUnit 7.5?
-    $this->assertEquals($filenames, $actual_file_names, "The expected files were generated.");
+    static::assertEquals($filenames, $actual_file_names, "The expected files were generated.");
   }
 
   /**
@@ -165,12 +165,12 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  protected function assertNoTrailingWhitespace($code, $message = NULL) {
+  public static function assertNoTrailingWhitespace($code, $message = NULL) {
     $message = $message ?? "The code has no trailing whitespace.";
 
     $whitespace_regex = "[( +)$]m";
 
-    $this->assertNotRegExp($whitespace_regex, $code, $message);
+    static::assertNotRegExp($whitespace_regex, $code, $message);
   }
 
   /**
@@ -185,13 +185,13 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  protected function assertClassFileFormatting($code) {
+  public static function assertClassFileFormatting($code) {
     $lines = explode("\n", $code);
 
     $empty_line_regex = '[^$]';
 
-    $this->assertRegExp("@^<\?php@", array_shift($lines), 'The first line of the file is the PHP open tag.');
-    $this->assertRegExp($empty_line_regex, array_shift($lines), 'The second line of the file is empty.');
+    static::assertRegExp("@^<\?php@", array_shift($lines), 'The first line of the file is the PHP open tag.');
+    static::assertRegExp($empty_line_regex, array_shift($lines), 'The second line of the file is empty.');
 
     $docblock_regexes = [
       'start'   => '@^/\*\*@',
@@ -201,8 +201,8 @@ abstract class TestBase extends TestCase {
       'end'     => '@^ \*/@',
     ];
 
-    $this->assertRegExp('@^namespace @', array_shift($lines), 'The file has a namespace declaration.');
-    $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the namespace.');
+    static::assertRegExp('@^namespace @', array_shift($lines), 'The file has a namespace declaration.');
+    static::assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the namespace.');
 
     // Import statements are optional.
     $import_regexes = [
@@ -215,7 +215,7 @@ abstract class TestBase extends TestCase {
     // Class docblock.
     $this->helperRegexBlockLines($lines, $docblock_regexes, 'docblock');
 
-    $this->assertRegExp('@^class @', array_shift($lines), 'The file has a class declaration.');
+    static::assertRegExp('@^class @', array_shift($lines), 'The file has a class declaration.');
 
     // Multiple class body lines.
     $class_regexes = [
@@ -225,9 +225,9 @@ abstract class TestBase extends TestCase {
     ];
     $this->helperRegexpRepeatedLines($lines, $class_regexes, ['expect_end_if_empty' => TRUE], 'class');
 
-    $this->assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the class.');
+    static::assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the class.');
 
-    $this->assertEmpty($lines, "The end of the lines was reached.");
+    static::assertEmpty($lines, "The end of the lines was reached.");
   }
 
   /**
@@ -273,7 +273,7 @@ abstract class TestBase extends TestCase {
     // the shifted line may be empty.
     while (!is_null($line = array_shift($lines))) {
       try {
-        $this->assertRegExp($regexes['repeated'], $line, "The line index $lines_count of the $block_name is as expected.");
+        static::assertRegExp($regexes['repeated'], $line, "The line index $lines_count of the $block_name is as expected.");
         // Count a successful line.
         $lines_count++;
       }
@@ -286,7 +286,7 @@ abstract class TestBase extends TestCase {
     }
 
     // Check we get the expected minimum of repeated lines.
-    $this->assertGreaterThanOrEqual($options['min_count'], $lines_count, "The $block_name has at least {$options['min_count']} middle line");
+    static::assertGreaterThanOrEqual($options['min_count'], $lines_count, "The $block_name has at least {$options['min_count']} middle line");
 
     // Test the terminal line regex if there is one and it's expected.
     // An end line is only expected if a regex was given for it.
@@ -300,7 +300,7 @@ abstract class TestBase extends TestCase {
     }
 
     if ($expect_end_line) {
-      $this->assertRegExp($regexes['end'], array_shift($lines), "The end line of the $block_name is as expected.");
+      static::assertRegExp($regexes['end'], array_shift($lines), "The end line of the $block_name is as expected.");
     }
   }
 
@@ -323,13 +323,13 @@ abstract class TestBase extends TestCase {
    */
   protected function helperRegexBlockLines(&$lines, $regexes, $block_name = 'block') {
     if (!empty($regexes['start'])) {
-      $this->assertRegExp($regexes['start'], array_shift($lines), "The first line of the $block_name is as expected.");
+      static::assertRegExp($regexes['start'], array_shift($lines), "The first line of the $block_name is as expected.");
     }
 
     $middle_lines_count = 0;
     while ($line = array_shift($lines)) {
       try {
-        $this->assertRegExp($regexes['middle'], $line, "The intermediate line of the $block_name is as expected.");
+        static::assertRegExp($regexes['middle'], $line, "The intermediate line of the $block_name is as expected.");
         // Count a successful middle line.
         $middle_lines_count++;
       }
@@ -341,11 +341,11 @@ abstract class TestBase extends TestCase {
     }
 
     // There should be at least one middle line.
-    $this->assertGreaterThanOrEqual(1, $middle_lines_count, "The $block_name has at least one middle line");
+    static::assertGreaterThanOrEqual(1, $middle_lines_count, "The $block_name has at least one middle line");
 
     // Test the line that failed the middle regex, but this time against the end
     // regex.
-    $this->assertRegExp($regexes['end'], $line, "The last line of the $block_name is as expected.");
+    static::assertRegExp($regexes['end'], $line, "The last line of the $block_name is as expected.");
   }
 
   /**
@@ -364,7 +364,7 @@ abstract class TestBase extends TestCase {
    *  (optional) The number of spaces the expected docblock is indented by.
    *  Internal use only. Defaults to 0.
    */
-  function assertDocBlock($lines, $string, $message = NULL, $indent = 0) {
+  public static function assertDocBlock($lines, $string, $message = NULL, $indent = 0) {
     if (!isset($message)) {
       $message = "Code contains a docblock with the expected lines.";
     }
@@ -392,7 +392,7 @@ abstract class TestBase extends TestCase {
     // Wrap the regex.
     $expected_regex = '[' . $expected_regex . ']';
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -408,8 +408,8 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  function assertDocBlockInClass($lines, $string, $message = NULL) {
-    $this->assertDocBlock($lines, $string, $message, 2);
+  public static function assertDocBlockInClass($lines, $string, $message = NULL) {
+    static::assertDocBlock($lines, $string, $message, 2);
   }
 
   /**
@@ -423,7 +423,7 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertFileHeader($string, $message = NULL) {
+  public static function assertFileHeader($string, $message = NULL) {
     $expected_regex =
       "[" .
       "^<\?php\n" .
@@ -434,7 +434,7 @@ abstract class TestBase extends TestCase {
       " \*/\n" .
       "]";
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -449,10 +449,10 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertClass($class_name, $string, $message = NULL) {
+  public static function assertClass($class_name, $string, $message = NULL) {
     $expected_regex = "@^class {$class_name}@m";
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -465,12 +465,12 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertNamespace($namespace_pieces, $string, $message = NULL) {
+  public static function assertNamespace($namespace_pieces, $string, $message = NULL) {
     $namespace = implode('\\', $namespace_pieces);
     $namespace = preg_quote($namespace);
     $expected_regex = "@^namespace {$namespace};@m";
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -484,12 +484,12 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  function assertClassImport($qualified_class_pieces, $string, $message = NULL) {
+  public static function assertClassImport($qualified_class_pieces, $string, $message = NULL) {
     $qualified_class = implode('\\', $qualified_class_pieces);
     $qualified_class = preg_quote($qualified_class);
     $expected_regex = "@^use {$qualified_class};@m";
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -506,7 +506,7 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertClassAnnotation($annotation_class, $annotation_values, $string, $message = NULL) {
+  public static function assertClassAnnotation($annotation_class, $annotation_values, $string, $message = NULL) {
     // First, check the class has something that looks like an annotation.
     $annotation_regex = "[
     ^ /\*\* \\n # Open docblock.
@@ -518,7 +518,7 @@ abstract class TestBase extends TestCase {
     ^ \ \* / \\n # Close docblock.
     ^ class
     ]mx";
-    $this->assertRegExp($annotation_regex, $string, $message);
+    static::assertRegExp($annotation_regex, $string, $message);
 
     // Now check the annotation properties and values.
     $matches = [];
@@ -536,11 +536,11 @@ abstract class TestBase extends TestCase {
     }
 
     foreach ($annotation_values as $expected_key => $expected_value) {
-      $this->assertArrayHasKey($expected_key, $found_annotation_values, "The annotation has the property $expected_key.");
+      static::assertArrayHasKey($expected_key, $found_annotation_values, "The annotation has the property $expected_key.");
 
       if (!is_null($expected_value)) {
         $found_value = trim($found_annotation_values[$expected_key], '"\'');
-        $this->assertEquals($expected_value, $found_value, "The annotation has the expected value for the property $expected_key.");
+        static::assertEquals($expected_value, $found_value, "The annotation has the expected value for the property $expected_key.");
       }
     }
   }
@@ -555,7 +555,7 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertClassProperty($property_name, $string, $message = NULL) {
+  public static function assertClassProperty($property_name, $string, $message = NULL) {
     $expected_regex =
       "[" .
       "  /\*\*\n" .
@@ -566,7 +566,7 @@ abstract class TestBase extends TestCase {
       '  (public|protected|private)? \\$' . $property_name . ";\n" .
       "]";
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
   /**
@@ -582,7 +582,7 @@ abstract class TestBase extends TestCase {
    *  (optional) The number of spaces the function declaration is indented by.
    *  Internal use only. Defaults to 0.
    */
-  function assertFunction($function_name, $string, $message = NULL, $indent = 0) {
+  public static function assertFunction($function_name, $string, $message = NULL, $indent = 0) {
     if (empty($message)) {
       $message = "The code string contains the function $function_name().";
     }
@@ -595,7 +595,7 @@ abstract class TestBase extends TestCase {
       (?<modifiers> \w+ \ ) *
       function \  {$function_name} \( (?<params> .* ) \)
     ]mx";
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
 
     // Run the regex again so that we can pull out matches.
     $matches = array();
@@ -606,7 +606,7 @@ abstract class TestBase extends TestCase {
       $parameters = explode(', ', $matches['params']);
 
       foreach ($parameters as $parameter) {
-        $this->assertFunctionParameter('', $parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
+        static::assertFunctionParameter('', $parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
       }
     }
   }
@@ -626,7 +626,7 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  public function assertFunctionHasParameters($function_name, $parameters, $string, $message = NULL) {
+  public static function assertFunctionHasParameters($function_name, $parameters, $string, $message = NULL) {
     $function_capturing_regex = "[function {$function_name}\((?<params>.*)\)]";
     $matches = array();
     $match = preg_match($function_capturing_regex, $string, $matches);
@@ -637,11 +637,11 @@ abstract class TestBase extends TestCase {
 
     $found_parameters = explode(', ', $matches['params']);
 
-    $this->assertEquals(count($parameters), count($found_parameters), "The expected number of parameters was found.");
+    static::assertEquals(count($parameters), count($found_parameters), "The expected number of parameters was found.");
 
     foreach ($parameters as $parameter) {
       $found_parameter = array_shift($found_parameters);
-      $this->assertFunctionParameter($parameter, $found_parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
+      static::assertFunctionParameter($parameter, $found_parameter, "Function parameter '$parameter' for $function_name() is correctly formed.");
     }
   }
 
@@ -656,7 +656,7 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  (optional) The assertion message.
    */
-  protected function assertFunctionParameter($expected_parameter_name, $parameter, $message = NULL) {
+  public static function assertFunctionParameter($expected_parameter_name, $parameter, $message = NULL) {
     if (empty($message)) {
       $message = "Function parameter '$parameter' is correctly formed.";
     }
@@ -683,10 +683,10 @@ abstract class TestBase extends TestCase {
       $match = preg_match($param_regex, $parameter, $matches);
       $found_parameter_name = $matches['parameter'];
 
-      $this->assertEquals($expected_parameter_name, $found_parameter_name, "The function parameter $expected_parameter_name has the expected name.");
+      static::assertEquals($expected_parameter_name, $found_parameter_name, "The function parameter $expected_parameter_name has the expected name.");
     }
 
-    $this->assertRegExp($param_regex, $parameter, $message);
+    static::assertRegExp($param_regex, $parameter, $message);
   }
 
   /**
@@ -699,8 +699,8 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertMethod($function_name, $string, $message = NULL) {
-    $this->assertFunction($function_name, $string, $message, 2);
+  public static function assertMethod($function_name, $string, $message = NULL) {
+    static::assertFunction($function_name, $string, $message, 2);
   }
 
   /**
@@ -717,7 +717,7 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertFunctionCode($string, $function_name, $function_code, $message = NULL) {
+  public static function assertFunctionCode($string, $function_name, $function_code, $message = NULL) {
     if (empty($message)) {
       $message = "Expected function code was found in $function_name().";
     }
@@ -732,7 +732,7 @@ abstract class TestBase extends TestCase {
 
     // Run the regex again as an assertion so if the function isn't found, the
     // test fails.
-    $this->assertRegExp("[$function_body_regex]ms", $string, "The function is found in the string");
+    static::assertRegExp("[$function_body_regex]ms", $string, "The function is found in the string");
 
     $function_body = $matches[1];
 
@@ -740,7 +740,7 @@ abstract class TestBase extends TestCase {
     $function_code = preg_quote($function_code);
     $expected_regex = "[$function_code]";
 
-    $this->assertRegExp($expected_regex, $function_body, $message);
+    static::assertRegExp($expected_regex, $function_body, $message);
   }
 
   /**
@@ -755,11 +755,11 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertHookImplementation($code, $hook_name, $module_name, $message = NULL) {
+  public static function assertHookImplementation($code, $hook_name, $module_name, $message = NULL) {
     $hook_short_name = substr($hook_name, 5);
     $function_name = $module_name . '_' . $hook_short_name;
 
-    $this->assertFunction($function_name, $code, $message);
+    static::assertFunction($function_name, $code, $message);
   }
 
   /**
@@ -774,13 +774,13 @@ abstract class TestBase extends TestCase {
    * @param $message = NULL
    *  The assertion message.
    */
-  function assertInfoLine($string, $property, $value, $message = NULL) {
+  public static function assertInfoLine($string, $property, $value, $message = NULL) {
     // Quote the given strings, as they may contain regex characters.
     $property = preg_quote($property);
     $value    = preg_quote($value);
     $expected_regex = "@^{$property} = {$value}$@m";
 
-    $this->assertRegExp($expected_regex, $string, $message);
+    static::assertRegExp($expected_regex, $string, $message);
   }
 
 }
