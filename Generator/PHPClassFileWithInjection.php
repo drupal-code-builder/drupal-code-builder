@@ -187,11 +187,19 @@ class PHPClassFileWithInjection extends PHPClassFile {
         continue;
       }
 
-      if (!$this->hasStaticFactoryMethod && $service_parameter['type'] == 'pseudoservice') {
-        continue;
+      // If this class needs to perform pseudoservice extraction in the
+      // constructor (because it has no static create() method), then switch in
+      // the real service's info, because the constructor parameter needs to be
+      // the real service.
+      if (!$this->hasStaticFactoryMethod && !empty($service_parameter['real_name'])) {
+        $service_parameter['name'] = $service_parameter['real_name'];
+        $service_parameter['description'] = $service_parameter['real_description'];
+        $service_parameter['typehint'] = $service_parameter['real_typehint'];
       }
 
-      $parameters[] = $service_parameter;
+      // Key by the parameter name to prevent duplicates of a parameter that
+      // is for pseudoservices and the real service.
+      $parameters[$service_parameter['name']] = $service_parameter;
     }
 
     // Build the docblock and declaration for the method.
