@@ -340,12 +340,102 @@ class ComponentService8Test extends TestBase {
   }
 
   /**
+   * Data provider for testServiceGenerationWithServices().
+   */
+  public function providerServiceGenerationWithServices() {
+    return [
+      // Pseudoservice with the real service also present as a parameter.
+      'pseudo-with-real' => [
+        '$injected_services' => [
+          'current_user',
+          'entity_type.manager',
+          'storage:node',
+        ],
+        '$yaml_arguments' => [
+          0 => '@current_user',
+          1 => '@entity_type.manager',
+        ],
+        '$assert_injected_services' => [
+          [
+            'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+            'service_name' => 'current_user',
+            'property_name' => 'currentUser',
+            'parameter_name' => 'current_user',
+          ],
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'entityTypeManager',
+            'parameter_name' => 'entity_type_manager',
+          ],
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'nodeStorage',
+            'parameter_name' => 'entity_type_manager',
+            // This isn't passed in as a __construct() parameter.
+            'extracted_from_other_service' => TRUE,
+            'extraction_method' => 'getStorage',
+            'extraction_method_param' => 'node',
+          ],
+        ],
+      ],
+      // Pseudoservice without the real service also as a parameter.
+      'pseudo-without-real' => [
+        '$injected_services' => [
+          'current_user',
+          'storage:node',
+        ],
+        '$yaml_arguments' => [
+          0 => '@current_user',
+          1 => '@entity_type.manager',
+        ],
+        '$assert_injected_services' => [
+          [
+            'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+            'service_name' => 'current_user',
+            'property_name' => 'currentUser',
+            'parameter_name' => 'current_user',
+          ],
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'nodeStorage',
+            'parameter_name' => 'entity_type_manager',
+            'extraction_method' => 'getStorage',
+            'extraction_method_param' => 'node',
+          ],
+        ],
+      ],
+      'pseudo-only' => [
+        '$injected_services' => [
+          'storage:node',
+        ],
+        '$yaml_arguments' => [
+          0 => '@entity_type.manager',
+        ],
+        '$assert_injected_services' => [
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'nodeStorage',
+            'parameter_name' => 'entity_type_manager',
+            'extraction_method' => 'getStorage',
+            'extraction_method_param' => 'node',
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
    * Test a service with with injected services.
    *
    * @group di
+   *
+   * @dataProvider providerServiceGenerationWithServices
    */
-  function testServiceGenerationWithServices() {
-    // Pseudoservice with the real service also present as a parameter.
+  function testServiceGenerationWithServices($injected_services, $yaml_arguments, $assert_injected_services) {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = array(
@@ -356,11 +446,7 @@ class ComponentService8Test extends TestBase {
       'services' => array(
         0 => [
           'service_name' => 'my_service',
-          'injected_services' => [
-            'current_user',
-            'entity_type.manager',
-            'storage:node',
-          ],
+          'injected_services' => $injected_services,
         ],
       ),
       'readme' => FALSE,
@@ -384,8 +470,9 @@ class ComponentService8Test extends TestBase {
     $yaml_tester->assertHasProperty('services');
     $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
     $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 0], '@current_user');
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 1], '@entity_type.manager');
+    foreach ($yaml_arguments as $index => $argument) {
+      $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', $index], $argument);
+    }
 
     $service_class_file = $files["src/MyService.php"];
 
@@ -394,129 +481,7 @@ class ComponentService8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\MyService');
 
     // Check service injection.
-    $php_tester->assertInjectedServices([
-      [
-        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
-        'service_name' => 'current_user',
-        'property_name' => 'currentUser',
-        'parameter_name' => 'current_user',
-      ],
-      [
-        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
-        'service_name' => 'entity_type.manager',
-        'property_name' => 'entityTypeManager',
-        'parameter_name' => 'entity_type_manager',
-      ],
-      [
-        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
-        'service_name' => 'entity_type.manager',
-        'property_name' => 'nodeStorage',
-        'parameter_name' => 'entity_type_manager',
-        // This isn't passed in as a __construct() parameter.
-        'extracted_from_other_service' => TRUE,
-        'extraction_method' => 'getStorage',
-        'extraction_method_param' => 'node',
-      ],
-    ]);
-
-    // Pseudoservice without the real service also as a parameter.
-    $module_data = array(
-      'base' => 'module',
-      'root_name' => $module_name,
-      'readable_name' => 'Test Module',
-      'short_description' => 'Test Module description',
-      'services' => array(
-        0 => [
-          'service_name' => 'my_service',
-          'injected_services' => [
-            'current_user',
-            'storage:node',
-          ],
-        ],
-      ),
-      'readme' => FALSE,
-    );
-
-    $files = $this->generateModuleFiles($module_data);
-
-    $services_file = $files["$module_name.services.yml"];
-
-    $yaml_tester = new YamlTester($services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 0], '@current_user');
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 1], '@entity_type.manager');
-
-    $service_class_file = $files["src/MyService.php"];
-
-    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
-    $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\MyService');
-
-    // Check service injection.
-    $php_tester->assertInjectedServices([
-      [
-        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
-        'service_name' => 'current_user',
-        'property_name' => 'currentUser',
-        'parameter_name' => 'current_user',
-      ],
-      [
-        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
-        'service_name' => 'entity_type.manager',
-        'property_name' => 'nodeStorage',
-        'parameter_name' => 'entity_type_manager',
-        'extraction_method' => 'getStorage',
-        'extraction_method_param' => 'node',
-      ],
-    ]);
-
-    // Just a pseudoservice.
-    $module_data = array(
-      'base' => 'module',
-      'root_name' => $module_name,
-      'readable_name' => 'Test Module',
-      'short_description' => 'Test Module description',
-      'services' => array(
-        0 => [
-          'service_name' => 'my_service',
-          'injected_services' => [
-            'storage:node',
-          ],
-        ],
-      ),
-      'readme' => FALSE,
-    );
-
-    $files = $this->generateModuleFiles($module_data);
-
-    $services_file = $files["$module_name.services.yml"];
-
-    $yaml_tester = new YamlTester($services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
-    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'arguments', 0], '@entity_type.manager');
-
-    $service_class_file = $files["src/MyService.php"];
-    dump($service_class_file);
-
-    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
-    $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\MyService');
-
-    // Check service injection.
-    $php_tester->assertInjectedServices([
-      [
-        'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
-        'service_name' => 'entity_type.manager',
-        'property_name' => 'nodeStorage',
-        'parameter_name' => 'entity_type_manager',
-        'extraction_method' => 'getStorage',
-        'extraction_method_param' => 'node',
-      ],
-    ]);
+    $php_tester->assertInjectedServices($assert_injected_services);
   }
 
   /**
