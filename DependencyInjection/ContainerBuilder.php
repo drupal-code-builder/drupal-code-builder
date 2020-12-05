@@ -10,8 +10,8 @@ use Psr\Container\ContainerInterface;
  * The following services are registered:
  * - The environment, as 'environment'.
  * - All classes in the \DrupalCodeBuilder\Task namespace except 'Generate',
- *   with as their service name the partial class name starting with the 'Task'
- *   namespace, so for example, 'Task\ReportSummary',
+ *   with as their service name the partial class name starting with the
+ *   namespace below the 'Task' namespace, so for example, 'Task\ReportSummary',
  *   'Task\Generate\ComponentCollector'.
  * - The Generate task with a suffix for the root component type, in the form
  *   'Generate|component_type', for example, 'Generate|module'.
