@@ -70,6 +70,15 @@ abstract class BaseEnvironment implements EnvironmentInterface {
   protected $version_helper;
 
   /**
+   * Reached sanity levels.
+   *
+   * Keys are levels, values are TRUE.
+   *
+   * @var array
+   */
+  protected $reachedSanityLevels = [];
+
+  /**
    * {@inheritdoc}
    */
   public function setCoreVersionNumber($drupal_core_version) {
@@ -158,6 +167,11 @@ abstract class BaseEnvironment implements EnvironmentInterface {
       return;
     }
 
+    // Don't check again if we've already checked the required sanity level.
+    if (!empty($this->reachedSanityLevels[$sanity_level])) {
+      return;
+    }
+
     // Read the hooks directory from settings.
     $this->getHooksDirectorySetting();
 
@@ -173,6 +187,8 @@ abstract class BaseEnvironment implements EnvironmentInterface {
       }
     }
 
+    $this->reachedSanityLevels['data_directory_exists'] = TRUE;
+
     // This is as far as we need to go for the hooks_directory level.
     if ($sanity_level == 'data_directory_exists') {
       return;
@@ -183,6 +199,8 @@ abstract class BaseEnvironment implements EnvironmentInterface {
     if (!file_exists($hooks_processed)) {
       throw new \DrupalCodeBuilder\Exception\SanityException('component_data_processed');
     }
+
+    $this->reachedSanityLevels['component_data_processed'] = TRUE;
 
     // This is as far as we need to go for the hook_data level.
     if ($sanity_level == 'component_data_processed') {
