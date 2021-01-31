@@ -35,6 +35,7 @@ class AnalyzeModule extends Base {
     //chdir($filepath);
     $files = scandir($filepath);
 
+    $module_files = [];
     foreach ($files as $filename) {
       $ext = substr(strrchr($filename, '.'), 1);
       if (in_array($ext, array('module', 'install', 'inc'))) {
