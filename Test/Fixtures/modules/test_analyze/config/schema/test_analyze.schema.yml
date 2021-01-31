@@ -1,0 +1,5 @@
+block.settings.test_analyze_block:
+  type: mapping
+  label: test_analyze_block
+  mapping: {  }
+

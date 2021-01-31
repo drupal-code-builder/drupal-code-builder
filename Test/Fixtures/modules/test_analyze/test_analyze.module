@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the test_analyze module.
+ */
+
+use Drupal\Core\Block\BlockPluginInterface;
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function test_analyze_block_view_alter(array &$build, BlockPluginInterface $block) {
+  // Remove the contextual links on all blocks that provide them.
+  if (isset($build['#contextual_links'])) {
+    unset($build['#contextual_links']);
+  }
+}

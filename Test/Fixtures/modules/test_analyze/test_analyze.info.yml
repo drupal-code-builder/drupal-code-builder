@@ -1,0 +1,5 @@
+name: test_analyze
+type: module
+description: 'Test module for UnitAnalyzeModuleTest'
+core: 8.x
+core_version_requirement: '^8 || ^9'

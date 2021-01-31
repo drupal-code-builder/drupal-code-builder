@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_analyze
+name: test_analyze
+data:
+  short_description: 'TODO: Description of module'
+  module_package: ''
+  hooks:
+    - hook_views_pre_view
+    - hook_tokens
+    - hook_install
+    - hook_block_view_alter
+  services:
+    -
+      service_name: service
+  service_provider: false
+  api: false
+  readme: false
+  plugins:
+    -
+      plugin_type: filter
+      plugin_name: filter
+      plain_class_name: Filter

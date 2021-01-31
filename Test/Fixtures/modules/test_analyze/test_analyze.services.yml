@@ -1,0 +1,3 @@
+services:
+  test_analyze.service:
+    class: Drupal\test_analyze\Service

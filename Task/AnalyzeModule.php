@@ -96,8 +96,8 @@ class AnalyzeModule extends Base {
     // module follows the convention of using its name as a prefix.
     $hook_prefix = $module_root_name . '_';
 
-    foreach ($this->getFolderIterator($module_folder) as $filename => $object) {
-      //print_r("$filename\n");
+    $module_files_iterator = ComponentFolderRecursiveFilterIterator::factory($module_folder);
+    foreach ($module_files_iterator as $filename => $object) {
       $contents = file_get_contents("$filename");
 
       // List of patterns to match on.
@@ -203,35 +203,34 @@ class AnalyzeModule extends Base {
     return $hooks;
   }
 
-  /**
-   * Get an iterator for all (interesting) files in a component folder.
-   *
-   * @param
-   *  The path to the folder.
-   *
-   * @return
-   *  A RecursiveIteratorIterator for all the files in the component folder.
-   *  Hidden files, and patch files and associated cruft are skipped.
-   */
-  protected function getFolderIterator($component_folder) {
-    $iterator = new \RecursiveDirectoryIterator($component_folder);
-    $filter = new ComponentFolderRecursiveFilterIterator($iterator);
-    $all_files  = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
-
-    return $all_files;
-  }
-
 }
 
 /**
  * Recursive filter iterator to skip unwanted files from folder iteration.
  *
  * @see http://stackoverflow.com/questions/18270629/php-recursive-directory-iterator-ignore-certain-files
+ * @see http://paulyg.github.io/blog/2014/01/31/using-phps-recursivefilteriterator.html
  */
 class ComponentFolderRecursiveFilterIterator extends \RecursiveFilterIterator {
 
+    public static function factory($dir) {
+        return new \RecursiveIteratorIterator(
+            new static(
+                new \RecursiveDirectoryIterator(
+                    $dir,
+                    \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS
+                )
+            )
+        );
+    }
+
   public function accept() {
     $current_filename = $this->current()->getFilename();
+
+    if (is_dir($current_filename)) {
+      return TRUE;
+    }
+
     $current_filename_extension = pathinfo($current_filename, PATHINFO_EXTENSION);
 
     // Filter out hidden files: don't want to be scanning .git folders!

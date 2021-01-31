@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * TODO: Enter file description here.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Implements hook_install().
+ */
+function test_analyze_install() {
+  // Create the styles directory and ensure it's writable.
+  $directory = \Drupal::config('system.file')->get('default_scheme') . '://styles';
+  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+}
