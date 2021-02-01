@@ -101,7 +101,7 @@ class Factory {
 
     $container = static::getContainer();
 
-    // Set the environment on the container, but not that it is not ready yet
+    // Set the environment on the container, but note that it is not ready yet
     // because setEnvironment() is typically called without the version helper
     // having been set on it yet.
     $container->set('environment', $environment);
