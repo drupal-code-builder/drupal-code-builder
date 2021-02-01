@@ -73,6 +73,9 @@ class Plugin extends BaseGenerator {
         'yaml' => VariantGeneratorDefinition::create()
           ->setLabel('YAML plugin')
           ->setGenerator('PluginYamlDiscovery'),
+        'validation.constraint' => VariantGeneratorDefinition::create()
+          ->setLabel('Validaton constraint')
+          ->setGenerator('PluginValidationConstraint'),
       ]);
 
     return $definition;

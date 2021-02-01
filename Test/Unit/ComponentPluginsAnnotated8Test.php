@@ -549,4 +549,39 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // TODO: assert deeper into the YAML.
   }
 
+  /**
+   * Test validation constraint plugin generation.
+   */
+  function testValidationConstraint() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'validation.constraint',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Plugin/Validation/Constraint/Alpha.php",
+      "src/Plugin/Validation/Constraint/AlphaValidator.php",
+    ], $files);
+
+    $validator = $files["src/Plugin/Validation/Constraint/AlphaValidator.php"];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $validator);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\AlphaValidator');
+    $php_tester->assertClassHasParent('Symfony\Component\Validator\ConstraintValidator');
+    $php_tester->assertHasMethod('validate');
+  }
+
 }

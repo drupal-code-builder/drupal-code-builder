@@ -143,6 +143,9 @@ class ReportPluginData extends ReportHookDataFolder implements OptionsProviderIn
       $mapping[$plugin_type_name] = $types[$plugin_type_info['discovery']] ?? 'yaml';
     }
 
+    // Special case for validation constraint plugins.
+    $mapping['validation.constraint'] = 'validation.constraint';
+
     return $mapping;
   }
 
