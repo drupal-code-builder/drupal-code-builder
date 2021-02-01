@@ -12,6 +12,10 @@ use Drupal\user\Entity\User;
  * Implements hook_tokens().
  */
 function test_analyze_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  module_invoke_all('test_analyze_tokens_all', $param);
+  module_invoke('other_module', 'test_analyze_tokens_single', $param);
+  drupal_alter('test_analyze_tokens_alter', $param);
+
   $token_service = \Drupal::token();
 
   $url_options = ['absolute' => TRUE];

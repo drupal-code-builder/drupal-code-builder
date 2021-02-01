@@ -11,6 +11,11 @@ use Drupal\Core\File\FileSystemInterface;
  * Implements hook_install().
  */
 function test_analyze_install() {
+  $param = '';
+  module_invoke_all('test_analyze_install_all', $param);
+  module_invoke('other_module', 'test_analyze_install_single', $param);
+  drupal_alter('test_analyze_install_alter', $param);
+
   // Create the styles directory and ensure it's writable.
   $directory = \Drupal::config('system.file')->get('default_scheme') . '://styles';
   \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
