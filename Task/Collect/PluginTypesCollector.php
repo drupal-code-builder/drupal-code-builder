@@ -44,6 +44,8 @@ class PluginTypesCollector extends CollectorBase  {
     'plugin.manager.menu.link',
     'plugin.manager.menu.local_task',
     'plugin.manager.menu.local_action',
+    // Special case plugin type.
+    'validation.constraint',
   ];
 
   /**

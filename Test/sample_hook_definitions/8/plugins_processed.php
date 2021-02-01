@@ -597,4 +597,46 @@ array (
     array (
     ),
   ),
+  'validation.constraint' => 
+  array (
+    'type_id' => 'validation.constraint',
+    'service_id' => 'validation.constraint',
+    'service_class_name' => 'Drupal\\Core\\Validation\\ConstraintManager',
+    'service_component_namespace' => 'Drupal\\Core\\Validation',
+    'type_label' => 'validation.constraint',
+    'alter_hook_name' => 'validation_constraint_alter',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'subdir' => 'Plugin/Validation/Constraint',
+    'plugin_interface' => NULL,
+    'plugin_definition_annotation_name' => 'Drupal\\Core\\Validation\\Annotation\\Constraint',
+    'yaml_file_suffix' => NULL,
+    'yaml_properties' => NULL,
+    'annotation_id_only' => false,
+    'base_class' => 'Drupal\\Core\\Validation\\Plugin\\Validation\\Constraint\\UniqueFieldConstraint',
+    'base_class_has_di' => false,
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The constraint plugin ID.',
+        'type' => 'string',
+      ),
+      'label' => 
+      array (
+        'name' => 'label',
+        'description' => 'The human-readable name of the constraint plugin.',
+        'type' => 'string|\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'type' => 
+      array (
+        'name' => 'type',
+        'description' => 'An array of DataType plugin IDs for which this constraint applies. Valid',
+        'type' => 'string|string[]|false',
+      ),
+    ),
+    'plugin_interface_methods' => 
+    array (
+    ),
+  ),  
 );
