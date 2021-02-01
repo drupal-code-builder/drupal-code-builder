@@ -612,7 +612,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
-    'base_class' => 'Drupal\\Core\\Validation\\Plugin\\Validation\\Constraint\\UniqueFieldConstraint',
+    'base_class' => 'Symfony\\Component\\Validator\\Constraint',
     'base_class_has_di' => false,
     'plugin_properties' => 
     array (

@@ -315,6 +315,8 @@ class PluginTypesCollector extends CollectorBase  {
     // data.
     $this->addPluginModuleData($plugin_type_data);
 
+    $this->addSpecialCases($plugin_type_data);
+
     //drush_print_r($plugin_type_data);
 
     return $plugin_type_data;
@@ -1220,6 +1222,21 @@ class PluginTypesCollector extends CollectorBase  {
       // Replace the default label with the one from Plugin module, casting it
       // to a string so we don't have to deal with TranslatableMarkup objects.
       $plugin_type_data[$plugin_type_id]['type_label'] = (string) $plugin_type->getLabel();
+    }
+  }
+
+  /**
+   * Adds data for special cases that can't be detected.
+   *
+   * @param &$plugin_type_data
+   *  The array of data for all plugin types.
+   */
+  protected function addSpecialCases(&$plugin_type_data) {
+    if (isset($plugin_type_data['validation.constraint'])) {
+      // The base class analysis picks up Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint
+      // because two plugins have it as a parent, and disregarding that for a
+      // class outside the component will be incorrect for typical plugins.
+      $plugin_type_data['validation.constraint']['base_class'] = 'Symfony\Component\Validator\Constraint';
     }
   }
 

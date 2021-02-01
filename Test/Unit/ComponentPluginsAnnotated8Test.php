@@ -575,6 +575,12 @@ class ComponentPluginsAnnotated8Test extends TestBase {
       "src/Plugin/Validation/Constraint/AlphaValidator.php",
     ], $files);
 
+    $plugin = $files['src/Plugin/Validation/Constraint/Alpha.php'];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\Alpha');
+    $php_tester->assertClassHasParent('Symfony\Component\Validator\Constraint');
+
     $validator = $files["src/Plugin/Validation/Constraint/AlphaValidator.php"];
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $validator);
