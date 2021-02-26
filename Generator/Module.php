@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -276,54 +277,52 @@ class Module extends RootComponent {
           }
         },
       ),
-      'hooks' => array(
-        'label' => 'Hook implementations',
-        'required' => FALSE,
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
+      'hooks' => PropertyDefinition::create('string')
+        ->setLabel('Hook implementations')
+        ->setMultiple(TRUE)
+        ->setOptions(...array_map(
+          function($hook_data_item) {
+            return OptionDefinition::create(
+              $hook_data_item['name'],
+              $hook_data_item['name'],
+              $hook_data_item['description'] ?? ''
+            );
+          },
+          // ARGH PITA that we have to zap out the keys here for the splat to
+          // work!
+          // TODO: make the API actually be what we need here!
+          array_values(\DrupalCodeBuilder\Factory::getTask('ReportHookData')->getHookDeclarations())
+        )),
+      //   // TODO: restore this as validation.
+      //   'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
+      //     $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
+      //     // Get the flat list of hooks, standardized to lower case.
+      //     $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
 
-          $hook_options = $mb_task_handler_report_hooks->listHookNamesOptions();
+      //     $hooks = array();
+      //     foreach ($component_data['hooks'] as $hook_name) {
+      //       // Standardize to lowercase.
+      //       $hook_name = strtolower($hook_name);
 
-          return $hook_options;
-        },
-        'options_structured' => function(&$property_info) {
-          $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
+      //       // By default, accept the short definition of hooks, ie 'boot' for 'hook_boot'.
+      //       if (isset($hook_definitions["hook_$hook_name"])) {
+      //         $hooks["hook_$hook_name"] = TRUE;
+      //       }
+      //       // Also fall back to allowing full names. This is handy if you're copy-pasting
+      //       // from an existing module and want the same hooks.
+      //       // In theory there won't be any clashes; only hook_hook_info() is weird.
+      //       elseif (isset($hook_definitions[$hook_name])) {
+      //         $hooks[$hook_name] = TRUE;
+      //       }
+      //     }
 
-          $hook_options = $mb_task_handler_report_hooks->listHookOptionsStructured();
+      //     // Filter out empty values, in case Drupal UI forms haven't done so.
+      //     $hooks = array_filter($hooks);
 
-          return $hook_options;
-        },
-        // TODO: restore this as validation.
-        'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
-          $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
-          // Get the flat list of hooks, standardized to lower case.
-          $hook_definitions = array_change_key_case($mb_task_handler_report_hooks->getHookDeclarations());
-
-          $hooks = array();
-          foreach ($component_data['hooks'] as $hook_name) {
-            // Standardize to lowercase.
-            $hook_name = strtolower($hook_name);
-
-            // By default, accept the short definition of hooks, ie 'boot' for 'hook_boot'.
-            if (isset($hook_definitions["hook_$hook_name"])) {
-              $hooks["hook_$hook_name"] = TRUE;
-            }
-            // Also fall back to allowing full names. This is handy if you're copy-pasting
-            // from an existing module and want the same hooks.
-            // In theory there won't be any clashes; only hook_hook_info() is weird.
-            elseif (isset($hook_definitions[$hook_name])) {
-              $hooks[$hook_name] = TRUE;
-            }
-          }
-
-          // Filter out empty values, in case Drupal UI forms haven't done so.
-          $hooks = array_filter($hooks);
-
-          // Set the processed hooks list back into the component data.
-          $component_data['hooks'] = $hooks;
-        }
-      ),
+      //     // Set the processed hooks list back into the component data.
+      //     $component_data['hooks'] = $hooks;
+      //   }
+      // ),
       'content_entity_types' => array(
         'label' => 'Content entity types',
         'required' => FALSE,
