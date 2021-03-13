@@ -725,6 +725,10 @@ class ComponentCollector {
 
     // Values which are forced by the preset.
     foreach ($component_data->items() as $preset_item) {
+      if (empty($preset_item->value)) {
+        continue;
+      }
+
       // dump("DOING " . $preset_item->value);
       // dump($preset_item);
       $preset_item_preset_data = $presets[$preset_item->value];
