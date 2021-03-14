@@ -14,7 +14,7 @@ class ContainerRebuildTest extends TestCase {
    * Test rebuilding the cached container.
    */
   public function testRebuildContainer() {
-    $cached_file = realpath('DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
+    $cached_file = realpath(__DIR__ . '/../../DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
     $this->assertTrue(file_exists($cached_file));
 
     $original_cached_container_timestamp = filemtime($cached_file);
