@@ -159,7 +159,7 @@ class ComponentPHPFile8Test extends TestBase {
     $report_hook_data = $this->prophesize(get_class($this->container->get('ReportHookData')));
     $report_hook_data->getSanityLevel()->willReturn('none');
     $report_hook_data->getHookDeclarations()->willReturn([
-      'cake' => [
+      'hook_cake' => [
         'type' => 'hook',
         'name' => 'hook_cake',
         'definition' => 'function hook_cake()',
@@ -198,7 +198,7 @@ class ComponentPHPFile8Test extends TestBase {
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
       'hooks' => [
-        'cake',
+        'hook_cake',
       ],
     ];
     $files = $this->generateModuleFiles($module_data);
