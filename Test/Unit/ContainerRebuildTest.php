@@ -19,7 +19,10 @@ class ContainerRebuildTest extends TestCase {
 
     $original_cached_container_timestamp = filemtime($cached_file);
 
-    unlink($cached_file);
+    // Move the original cached container so we can restore it at the end of the
+    // test, and so not leave the codebase broken.
+    // TODO: add a parameter for the cached container filename?
+    rename($cached_file, $cached_file . '-temp');
 
     $environment = new \DrupalCodeBuilder\Environment\TestsSampleLocation;
     $version_helper = new \DrupalCodeBuilder\Environment\VersionHelperTestsPHPUnit;
@@ -31,6 +34,10 @@ class ContainerRebuildTest extends TestCase {
     $new_cached_container_timestamp = filemtime($cached_file);
 
     $this->assertNotEquals($original_cached_container_timestamp, $new_cached_container_timestamp);
+
+    // Restore the cached container so the codebase is left in its original
+    // state.
+    rename($cached_file . '-temp', $cached_file);
   }
 
 }
