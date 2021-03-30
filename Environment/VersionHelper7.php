@@ -18,6 +18,18 @@ class VersionHelper7 extends VersionHelper8 {
     return drupal_system_listing($mask, $directory, $key, $min_depth);
   }
 
+  /**
+   * Check that the directory exists and is writable, creating it if needed.
+   *
+   * @throws
+   *  Exception
+   */
+  function prepareDirectory($directory) {
+    $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    if (!$status) {
+      throw new \Exception();
+    }
+  }
 
   /**
    * Invoke hook_module_builder_info().
