@@ -416,6 +416,7 @@ class PHPTester {
 
     // Add the seen array, as PHPUnit doesn't output the searched array when
     // assertContains() fails.
+    // TODO: is this still true with assertContains()?
     $message .= "\n" . print_r($seen, TRUE);
 
     Assert::assertContains($class_name, $seen, $message);
@@ -816,11 +817,11 @@ class PHPTester {
 
     if (ucfirst($typehint) == $typehint) {
       // The typehint is a class, e.g. 'Drupal\foo', or 'Exception'.
-      Assert::assertContains("@var \\{$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
+      Assert::assertStringContainsString("@var \\{$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
     }
     else {
       // The typehint is a primitive, e.g. 'string'.
-      Assert::assertContains("@var {$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
+      Assert::assertStringContainsString("@var {$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
     }
   }
 
@@ -1290,6 +1291,7 @@ class PHPTester {
 
     // Work around assertContains() not outputting the array on failure by
     // putting it in the message.
+    // TODO: still needed with assertContains()?
     $message .= " Given docblock was: " . print_r($docblock_lines, TRUE);
 
     Assert::assertContains($line, $docblock_lines, $message);

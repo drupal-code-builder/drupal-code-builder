@@ -12,6 +12,7 @@ use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHP_CodeSniffer;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Base class for unit tests that work with the generator system.
@@ -20,6 +21,7 @@ use PHP_CodeSniffer;
  */
 abstract class TestBase extends TestCase {
 
+  use ProphecyTrait;
   use VarDumperSetupTrait;
 
   /**
@@ -37,7 +39,7 @@ abstract class TestBase extends TestCase {
   /**
    * This expects the class property $drupalMajorVersion to be defined.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->setUpVarDumper();
 
     if (empty($this->drupalMajorVersion)) {
@@ -176,7 +178,7 @@ abstract class TestBase extends TestCase {
 
     $whitespace_regex = "[( +)$]m";
 
-    static::assertNotRegExp($whitespace_regex, $code, $message);
+    static::assertDoesNotMatchRegularExpression($whitespace_regex, $code, $message);
   }
 
   /**
@@ -196,8 +198,8 @@ abstract class TestBase extends TestCase {
 
     $empty_line_regex = '[^$]';
 
-    static::assertRegExp("@^<\?php@", array_shift($lines), 'The first line of the file is the PHP open tag.');
-    static::assertRegExp($empty_line_regex, array_shift($lines), 'The second line of the file is empty.');
+    static::assertMatchesRegularExpression("@^<\?php@", array_shift($lines), 'The first line of the file is the PHP open tag.');
+    static::assertMatchesRegularExpression($empty_line_regex, array_shift($lines), 'The second line of the file is empty.');
 
     $docblock_regexes = [
       'start'   => '@^/\*\*@',
@@ -207,8 +209,8 @@ abstract class TestBase extends TestCase {
       'end'     => '@^ \*/@',
     ];
 
-    static::assertRegExp('@^namespace @', array_shift($lines), 'The file has a namespace declaration.');
-    static::assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the namespace.');
+    static::assertMatchesRegularExpression('@^namespace @', array_shift($lines), 'The file has a namespace declaration.');
+    static::assertMatchesRegularExpression($empty_line_regex, array_shift($lines), 'There is a blank line after the namespace.');
 
     // Import statements are optional.
     $import_regexes = [
@@ -221,7 +223,7 @@ abstract class TestBase extends TestCase {
     // Class docblock.
     $this->helperRegexBlockLines($lines, $docblock_regexes, 'docblock');
 
-    static::assertRegExp('@^class @', array_shift($lines), 'The file has a class declaration.');
+    static::assertMatchesRegularExpression('@^class @', array_shift($lines), 'The file has a class declaration.');
 
     // Multiple class body lines.
     $class_regexes = [
@@ -231,7 +233,7 @@ abstract class TestBase extends TestCase {
     ];
     $this->helperRegexpRepeatedLines($lines, $class_regexes, ['expect_end_if_empty' => TRUE], 'class');
 
-    static::assertRegExp($empty_line_regex, array_shift($lines), 'There is a blank line after the class.');
+    static::assertMatchesRegularExpression($empty_line_regex, array_shift($lines), 'There is a blank line after the class.');
 
     static::assertEmpty($lines, "The end of the lines was reached.");
   }
@@ -279,7 +281,7 @@ abstract class TestBase extends TestCase {
     // the shifted line may be empty.
     while (!is_null($line = array_shift($lines))) {
       try {
-        static::assertRegExp($regexes['repeated'], $line, "The line index $lines_count of the $block_name is as expected.");
+        static::assertMatchesRegularExpression($regexes['repeated'], $line, "The line index $lines_count of the $block_name is as expected.");
         // Count a successful line.
         $lines_count++;
       }
@@ -306,7 +308,7 @@ abstract class TestBase extends TestCase {
     }
 
     if ($expect_end_line) {
-      static::assertRegExp($regexes['end'], array_shift($lines), "The end line of the $block_name is as expected.");
+      static::assertMatchesRegularExpression($regexes['end'], array_shift($lines), "The end line of the $block_name is as expected.");
     }
   }
 
@@ -329,13 +331,13 @@ abstract class TestBase extends TestCase {
    */
   protected function helperRegexBlockLines(&$lines, $regexes, $block_name = 'block') {
     if (!empty($regexes['start'])) {
-      static::assertRegExp($regexes['start'], array_shift($lines), "The first line of the $block_name is as expected.");
+      static::assertMatchesRegularExpression($regexes['start'], array_shift($lines), "The first line of the $block_name is as expected.");
     }
 
     $middle_lines_count = 0;
     while ($line = array_shift($lines)) {
       try {
-        static::assertRegExp($regexes['middle'], $line, "The intermediate line of the $block_name is as expected.");
+        static::assertMatchesRegularExpression($regexes['middle'], $line, "The intermediate line of the $block_name is as expected.");
         // Count a successful middle line.
         $middle_lines_count++;
       }
@@ -351,7 +353,7 @@ abstract class TestBase extends TestCase {
 
     // Test the line that failed the middle regex, but this time against the end
     // regex.
-    static::assertRegExp($regexes['end'], $line, "The last line of the $block_name is as expected.");
+    static::assertMatchesRegularExpression($regexes['end'], $line, "The last line of the $block_name is as expected.");
   }
 
   /**
@@ -398,7 +400,7 @@ abstract class TestBase extends TestCase {
     // Wrap the regex.
     $expected_regex = '[' . $expected_regex . ']';
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
   /**
@@ -440,7 +442,7 @@ abstract class TestBase extends TestCase {
       " \*/\n" .
       "]";
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
   /**
@@ -458,7 +460,7 @@ abstract class TestBase extends TestCase {
   public static function assertClass($class_name, $string, $message = NULL) {
     $expected_regex = "@^class {$class_name}@m";
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
   /**
@@ -476,7 +478,7 @@ abstract class TestBase extends TestCase {
     $namespace = preg_quote($namespace);
     $expected_regex = "@^namespace {$namespace};@m";
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
   /**
@@ -495,7 +497,7 @@ abstract class TestBase extends TestCase {
     $qualified_class = preg_quote($qualified_class);
     $expected_regex = "@^use {$qualified_class};@m";
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
   /**
@@ -524,7 +526,7 @@ abstract class TestBase extends TestCase {
     ^ \ \* / \\n # Close docblock.
     ^ class
     ]mx";
-    static::assertRegExp($annotation_regex, $string, $message);
+    static::assertMatchesRegularExpression($annotation_regex, $string, $message);
 
     // Now check the annotation properties and values.
     $matches = [];
@@ -572,7 +574,7 @@ abstract class TestBase extends TestCase {
       '  (public|protected|private)? \\$' . $property_name . ";\n" .
       "]";
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
   /**
@@ -601,7 +603,7 @@ abstract class TestBase extends TestCase {
       (?<modifiers> \w+ \ ) *
       function \  {$function_name} \( (?<params> .* ) \)
     ]mx";
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
 
     // Run the regex again so that we can pull out matches.
     $matches = array();
@@ -692,7 +694,7 @@ abstract class TestBase extends TestCase {
       static::assertEquals($expected_parameter_name, $found_parameter_name, "The function parameter $expected_parameter_name has the expected name.");
     }
 
-    static::assertRegExp($param_regex, $parameter, $message);
+    static::assertMatchesRegularExpression($param_regex, $parameter, $message);
   }
 
   /**
@@ -738,7 +740,7 @@ abstract class TestBase extends TestCase {
 
     // Run the regex again as an assertion so if the function isn't found, the
     // test fails.
-    static::assertRegExp("[$function_body_regex]ms", $string, "The function is found in the string");
+    static::assertMatchesRegularExpression("[$function_body_regex]ms", $string, "The function is found in the string");
 
     $function_body = $matches[1];
 
@@ -746,7 +748,7 @@ abstract class TestBase extends TestCase {
     $function_code = preg_quote($function_code);
     $expected_regex = "[$function_code]";
 
-    static::assertRegExp($expected_regex, $function_body, $message);
+    static::assertMatchesRegularExpression($expected_regex, $function_body, $message);
   }
 
   /**
@@ -786,7 +788,7 @@ abstract class TestBase extends TestCase {
     $value    = preg_quote($value);
     $expected_regex = "@^{$property} = {$value}$@m";
 
-    static::assertRegExp($expected_regex, $string, $message);
+    static::assertMatchesRegularExpression($expected_regex, $string, $message);
   }
 
 }

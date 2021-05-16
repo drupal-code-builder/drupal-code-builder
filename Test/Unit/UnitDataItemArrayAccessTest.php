@@ -23,7 +23,7 @@ class UnitDataItemArrayAccessTest extends TestCase {
 
   use VarDumperSetupTrait;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->setUpVarDumper();
   }
 

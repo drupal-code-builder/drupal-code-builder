@@ -366,7 +366,7 @@ class PHPMethodTester {
   public function assertHasLine($code_line, $message = NULL) {
     $message = $message ?? "The method {$this->methodName} contains the line '{$code_line}'.";
 
-    Assert::assertRegExp('@^\s*' . preg_quote($code_line) . '@m', $this->methodBody, $message . ' ' . print_r($this->methodBody, TRUE));
+    Assert::assertMatchesRegularExpression('@^\s*' . preg_quote($code_line) . '@m', $this->methodBody, $message . ' ' . print_r($this->methodBody, TRUE));
   }
 
 }

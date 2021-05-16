@@ -20,7 +20,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->servicesCollector = new \DrupalCodeBuilder\Task\Collect\ServicesCollector(
