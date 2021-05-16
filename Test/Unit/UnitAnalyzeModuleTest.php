@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Tests the AnalyzeModule task.
@@ -11,6 +12,7 @@ use Prophecy\Argument;
  * This uses the test_analyze fixture module in Test/Fixtures/modules.
  */
 class UnitAnalyzeModuleTest extends TestCase {
+  use ProphecyTrait;
 
   /**
    * Test extraction of invented hooks.

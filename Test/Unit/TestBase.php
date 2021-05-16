@@ -12,6 +12,7 @@ use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHP_CodeSniffer;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Base class for unit tests that work with the generator system.
@@ -20,6 +21,7 @@ use PHP_CodeSniffer;
  */
 abstract class TestBase extends TestCase {
 
+  use ProphecyTrait;
   use VarDumperSetupTrait;
 
   /**

@@ -3,11 +3,13 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Tests the CodeAnalyser task helper.
  */
 class UnitCodeAnalyserTest extends TestCase {
+  use ProphecyTrait;
 
   /**
    * Tests the CodeAnalyser task helper.
