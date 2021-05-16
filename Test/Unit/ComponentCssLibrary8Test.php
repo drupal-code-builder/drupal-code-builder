@@ -96,9 +96,9 @@ class ComponentCssLibrary8Test extends TestBase {
 
     $js_file = $files['js/js_one.js'];
     // Some crude testing of the JS file.
-    $this->assertContains("Defines Javascript behaviors for the Test Module module.", $js_file);
-    $this->assertContains("Drupal.behaviors.testModule =", $js_file);
-    $this->assertContains("attach: function (context, settings)", $js_file);
+    $this->assertStringContainsString("Defines Javascript behaviors for the Test Module module.", $js_file);
+    $this->assertStringContainsString("Drupal.behaviors.testModule =", $js_file);
+    $this->assertStringContainsString("attach: function (context, settings)", $js_file);
   }
 
 }

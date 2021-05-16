@@ -37,8 +37,8 @@ class ComponentReadme8Test extends TestBase {
 
     $readme_file = $files['README.txt'];
 
-    $this->assertContains("Test module", $readme_file);
-    $this->assertContains("TODO: write some documentation.", $readme_file);
+    $this->assertStringContainsString("Test module", $readme_file);
+    $this->assertStringContainsString("TODO: write some documentation.", $readme_file);
   }
 
 }

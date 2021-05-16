@@ -40,9 +40,9 @@ class ComponentModule6Test extends TestBase {
     // Check the info file.
     $info_file = $files['test_module.info'];
 
-    $this->assertContains("name = Test module\n", $info_file);
-    $this->assertContains("description = Test Module description\n", $info_file);
-    $this->assertContains("core = 6.x\n", $info_file);
+    $this->assertStringContainsString("name = Test module\n", $info_file);
+    $this->assertStringContainsString("description = Test Module description\n", $info_file);
+    $this->assertStringContainsString("core = 6.x\n", $info_file);
 
     // Check the module file.
     $module_file = $files["test_module.module"];
