@@ -12,7 +12,7 @@ use DrupalCodeBuilder\Generator\RootComponent;
  */
 class UnitComponentCollectionTest extends TestCase {
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->markTestSkipped();
   }
 
