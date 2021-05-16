@@ -94,6 +94,10 @@ class PHPTester {
     // TODO: restore this as part of #170.
     $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
 
+    // Exclude TODO standards, as we use 'TODO' and not '@todo' and we want that
+    // to stand out.
+    $excluded_sniffs[] = 'Drupal.Commenting.TodoComment.TodoFormat';
+
     $phpcs_runner = $this->setUpPHPCS($excluded_sniffs);
 
     // Process the file with PHPCS.
