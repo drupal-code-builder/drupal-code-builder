@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+
 /**
  * Tests the preparation step of component data.
  *
@@ -9,6 +11,7 @@ namespace DrupalCodeBuilder\Test\Unit;
  * data info, options and defaults are properly set up.
  */
 class GenerateHelperComponentPropertyPreparerTest extends TestBase {
+  use ArraySubsetAsserts;
 
   /**
    * The Drupal core major version to set up for this test.
