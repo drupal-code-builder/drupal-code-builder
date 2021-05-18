@@ -809,7 +809,7 @@ class PHPTester {
       $property_default_php = end($property_default_php_lines);
 
       // Prepend a return to the value so eval() returns it.
-      $property_default_php = 'return ' . $property_default_php;
+      $property_default_php = 'return ' . $property_default_php . ';';
 
       // Get the actual value.
       $property_default_value = eval($property_default_php);
