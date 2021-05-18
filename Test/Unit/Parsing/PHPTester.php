@@ -989,7 +989,7 @@ class PHPTester {
 
     // The first statement in the __construct() should be parent call, with
     // the base parameters.
-    $parent_call_node = $this->parser_nodes['methods']['__construct']->stmts[0];
+    $parent_call_node = $this->parser_nodes['methods']['__construct']->stmts[0]->expr;
     Assert::assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $parent_call_node);
     Assert::assertEquals('parent', $parent_call_node->class->parts[0]);
     Assert::assertEquals('__construct', $parent_call_node->name);
@@ -1316,9 +1316,11 @@ class PHPTester {
     $message = $message ?? "The {$method_name} method's statement index {$statement_index} is a parent call.";
 
     $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
-    Assert::assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $statement_node, $message);
-    Assert::assertCount(1, $statement_node->class->parts);
-    Assert::assertEquals('parent', $statement_node->class->parts[0]);
+    Assert::assertInstanceOf(\PhpParser\Node\Stmt\Expression::class, $statement_node, $message);
+    $expression = $statement_node->expr;
+    Assert::assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $expression, $message);
+    Assert::assertCount(1, $expression->class->parts);
+    Assert::assertEquals('parent', $expression->class->parts[0]);
   }
 
   /**
@@ -1341,10 +1343,11 @@ class PHPTester {
     $message = $message ?? "The {$method_name} method's statement index {$statement_index} is a method call to {$called_method_name}.";
 
     $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
-    Assert::assertInstanceOf(\PhpParser\Node\Expr\MethodCall::class, $statement_node, $message);
-    Assert::assertInstanceOf(\PhpParser\Node\Expr\Variable::class, $statement_node->var, $message);
-    Assert::assertEquals('this', $statement_node->var->name);
-    Assert::assertEquals($called_method_name, $statement_node->name, $message);
+    $expression = $statement_node->expr;
+    Assert::assertInstanceOf(\PhpParser\Node\Expr\MethodCall::class, $expression, $message);
+    Assert::assertInstanceOf(\PhpParser\Node\Expr\Variable::class, $expression->var, $message);
+    Assert::assertEquals('this', $expression->var->name);
+    Assert::assertEquals($called_method_name, $expression->name, $message);
   }
 
   /**
@@ -1363,14 +1366,16 @@ class PHPTester {
    */
   public function assertCallHasArgs($expected_args, $method_name, $statement_index, $message = NULL) {
     $statement_node = $this->parser_nodes['methods'][$method_name]->stmts[$statement_index];
+    Assert::assertInstanceOf(\PhpParser\Node\Stmt\Expression::class, $statement_node);
+    $expression = $statement_node->expr;
 
-    Assert::assertEquals(count($expected_args), count($statement_node->args), "The call has the expected number of arguments.");
+    Assert::assertEquals(count($expected_args), count($expression->args), "The call has the expected number of arguments.");
 
     $index = 0;
     foreach ($expected_args as $expected_arg_name => $expected_arg_type) {
-      Assert::assertArrayHasKey($index, $statement_node->args, "The statement has an argument at index {$index}.");
+      Assert::assertArrayHasKey($index, $expression->args, "The statement has an argument at index {$index}.");
 
-      $actual_arg = $statement_node->args[$index];
+      $actual_arg = $expression->args[$index];
 
       switch ($expected_arg_type) {
         case 'variable':

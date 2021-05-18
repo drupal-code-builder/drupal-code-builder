@@ -95,7 +95,7 @@ class FormBuilderTester extends PHPMethodTester {
     // Check the submit button, if one is expected.
     if ($expect_submit_button_element) {
       $submit_button_element_statement = array_pop($form_element_statements);
-      $submit_button_element_data = $this->analyseElementArrayNode($submit_button_element_statement->expr);
+      $submit_button_element_data = $this->analyseElementArrayNode($submit_button_element_statement->expr->expr);
       Assert::assertEquals('submit', $submit_button_element_data['type'], "The last form element is a submit button.");
       Assert::assertArrayHasKey('#value', $submit_button_element_data['attributes'], "The submit button has a value attribute.");
     }
@@ -108,19 +108,21 @@ class FormBuilderTester extends PHPMethodTester {
       ];
 
       // The statement sets a value in the $form array.
-      Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($statement));
-      Assert::assertEquals(\PhpParser\Node\Expr\ArrayDimFetch::class, get_class($statement->var));
-      Assert::assertEquals(\PhpParser\Node\Expr\Variable::class, get_class($statement->var->var));
-      Assert::assertEquals('form', $statement->var->var->name);
+      Assert::assertEquals(\PhpParser\Node\Stmt\Expression::class, get_class($statement));
+      $assignment = $statement->expr;
+      Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($assignment));
+      Assert::assertEquals(\PhpParser\Node\Expr\ArrayDimFetch::class, get_class($assignment->var));
+      Assert::assertEquals(\PhpParser\Node\Expr\Variable::class, get_class($assignment->var->var));
+      Assert::assertEquals('form', $assignment->var->var->name);
 
       // Get the key in the form array that is set.
-      Assert::assertEquals(\PhpParser\Node\Scalar\String_::class, get_class($statement->var->dim));
-      $form_element_name = $statement->var->dim->value;
+      Assert::assertEquals(\PhpParser\Node\Scalar\String_::class, get_class($assignment->var->dim));
+      $form_element_name = $assignment->var->dim->value;
       $form_element_data['name'] = $form_element_name;
 
       // Analyse the element array.
-      Assert::assertEquals(\PhpParser\Node\Expr\Array_::class, get_class($statement->expr));
-      $array_node = $statement->expr;
+      Assert::assertEquals(\PhpParser\Node\Expr\Array_::class, get_class($assignment->expr));
+      $array_node = $assignment->expr;
       foreach ($array_node->items as $array_item_node) {
         if ($array_item_node->key->value == '#type') {
           Assert::assertEquals(\PhpParser\Node\Scalar\String_::class, get_class($array_item_node->value));

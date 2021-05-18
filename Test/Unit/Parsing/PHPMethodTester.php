@@ -312,19 +312,21 @@ class PHPMethodTester {
 
     $statements = $this->methodNode->getStmts();
     $statement = $statements[$index];
+    Assert::assertEquals(\PhpParser\Node\Stmt\Expression::class, get_class($statement), $message);
 
-    Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($statement), $message);
+    $expression = $statement->expr;
+    Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($expression), $message);
 
-    Assert::assertObjectHasAttribute('var', $statement, $message);
-    Assert::assertObjectHasAttribute('name', $statement->var, $message);
-    Assert::assertEquals($assigned_variable, $statement->var->name, "The variable $assigned_variable is assigned by the parent call.");
+    Assert::assertObjectHasAttribute('var', $expression, $message);
+    Assert::assertObjectHasAttribute('name', $expression->var, $message);
+    Assert::assertEquals($assigned_variable, $expression->var->name, "The variable $assigned_variable is assigned by the parent call.");
 
-    Assert::assertObjectHasAttribute('expr', $statement, $message);
-    Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($statement->expr), $message);
-    Assert::assertObjectHasAttribute('class', $statement->expr, $message);
-    Assert::assertObjectHasAttribute('parts', $statement->expr->class, $message);
-    Assert::assertEquals('parent', $statement->expr->class->parts[0], $message);
-    Assert::assertEquals($this->methodName, $statement->expr->name, $message);
+    Assert::assertObjectHasAttribute('expr', $expression, $message);
+    Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($expression->expr), $message);
+    Assert::assertObjectHasAttribute('class', $expression->expr, $message);
+    Assert::assertObjectHasAttribute('parts', $expression->expr->class, $message);
+    Assert::assertEquals('parent', $expression->expr->class->parts[0], $message);
+    Assert::assertEquals($this->methodName->toString(), $expression->expr->name->toString(), $message);
 
     // TODO: check the method parameter names match the method call arguments.
   }
