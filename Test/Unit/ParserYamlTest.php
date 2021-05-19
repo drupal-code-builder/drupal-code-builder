@@ -18,23 +18,23 @@ class ParserYamlTest extends TestCase {
    */
   public function testAssertHasProperty($property, $pass) {
     $yaml = <<<EOT
-alpha:
-  one:
-    1: value
-  two:
-    - value
-    -
-      x: value
-      y: value
-  three:
-    x: value
-beta:
-  one: value
-  two:
-    1: value
-  three_beta:
-    x: value
-EOT;
+      alpha:
+        one:
+          1: value
+        two:
+          - value
+          -
+            x: value
+            y: value
+        three:
+          x: value
+      beta:
+        one: value
+        two:
+          1: value
+        three_beta:
+          x: value
+      EOT;
 
     $yaml_tester = new YamlTester($yaml);
 
@@ -92,20 +92,20 @@ EOT;
    */
   public function testAssertPropertyExpandedInline($property, $expanded) {
     $yaml = <<<EOT
-services:
-  test_module.alpha:
-    class: Drupal\test_module\Alpha
-    arguments:
-      - '@current_user'
-      - '@entity_type.manager'
-    tags:
-      - { name: foo, priority: 0 }
-  test_module.beta:
-    class: Drupal\test_module\Alpha
-    arguments: ['@current_user']
-    tags:
-      - { name: bar, priority: 0 }
-EOT;
+      services:
+        test_module.alpha:
+          class: Drupal\test_module\Alpha
+          arguments:
+            - '@current_user'
+            - '@entity_type.manager'
+          tags:
+            - { name: foo, priority: 0 }
+        test_module.beta:
+          class: Drupal\test_module\Alpha
+          arguments: ['@current_user']
+          tags:
+            - { name: bar, priority: 0 }
+      EOT;
 
     $yaml_tester = new YamlTester($yaml);
 

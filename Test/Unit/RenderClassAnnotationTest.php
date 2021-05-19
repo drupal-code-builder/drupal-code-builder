@@ -54,31 +54,31 @@ class RenderClassAnnotationTest extends TestCase {
     $annotation_text = $this->renderDocblock($annotation_lines);
 
     $expected_annotation = <<<EOT
- * @ContentEntityType(
- *   id = "cat",
- *   label = @Translation("Cat"),
- *   label_count = @PluralTranslation(
- *     singular = "@count content item",
- *     plural = "@count content items",
- *   ),
- *   handlers = {
- *     "storage" = "Drupal\cat\CatStorage",
- *     "form" = {
- *       "default" = "Drupal\cat\CatForm",
- *       "delete" = "Drupal\cat\Form\CatDeleteForm",
- *     },
- *     "list_builder" = "Drupal\cat\CatListBuilder",
- *   },
- *   entity_keys = {
- *     "id" = "nid",
- *     "bundle" = "type",
- *   },
- *   config_export = {
- *     "whiskers",
- *     "paws",
- *   },
- * )
-EOT;
+     * @ContentEntityType(
+     *   id = "cat",
+     *   label = @Translation("Cat"),
+     *   label_count = @PluralTranslation(
+     *     singular = "@count content item",
+     *     plural = "@count content items",
+     *   ),
+     *   handlers = {
+     *     "storage" = "Drupal\cat\CatStorage",
+     *     "form" = {
+     *       "default" = "Drupal\cat\CatForm",
+     *       "delete" = "Drupal\cat\Form\CatDeleteForm",
+     *     },
+     *     "list_builder" = "Drupal\cat\CatListBuilder",
+     *   },
+     *   entity_keys = {
+     *     "id" = "nid",
+     *     "bundle" = "type",
+     *   },
+     *   config_export = {
+     *     "whiskers",
+     *     "paws",
+     *   },
+     * )
+    EOT;
 
     $this->assertEquals($expected_annotation, $annotation_text);
   }

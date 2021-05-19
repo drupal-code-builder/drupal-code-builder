@@ -35,21 +35,21 @@ class TwigFile extends File {
     $theme_hook_name = $this->component_data['theme_hook_name'];
 
     $twig = <<<EOT
-{#
-/**
- * @file
- * Default theme implementation to display a $theme_hook_name.
- *
- * Available variables:
- * - todo:
- *
- * @ingroup themeable
- */
-#}
-<article>
-  Content here.
-</article>
-EOT;
+      {#
+      /**
+       * @file
+       * Default theme implementation to display a $theme_hook_name.
+       *
+       * Available variables:
+       * - todo:
+       *
+       * @ingroup themeable
+       */
+      #}
+      <article>
+        Content here.
+      </article>
+      EOT;
 
     return $twig;
   }

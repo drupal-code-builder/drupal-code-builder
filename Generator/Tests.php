@@ -67,42 +67,42 @@ class Tests extends PHPFile {
     $module_readable_name = $this->component_data['readable_name'];
 
     $code = <<<EOT
-/**
- * Test case.
- */
-class {$module_camel_case}TestCase extends DrupalWebTestCase {
+      /**
+       * Test case.
+       */
+      class {$module_camel_case}TestCase extends DrupalWebTestCase {
 
-  /**
-   * Implements getInfo().
-   */
-  public static function getInfo() {
-    return array(
-      'name' => t('$module_readable_name tests'),
-      'description' => t('TODO: write me.'),
-      'group' => t('$module_readable_name'),
-    );
-  }
+        /**
+         * Implements getInfo().
+         */
+        public static function getInfo() {
+          return array(
+            'name' => t('$module_readable_name tests'),
+            'description' => t('TODO: write me.'),
+            'group' => t('$module_readable_name'),
+          );
+        }
 
-  /**
-   * Implements setUp().
-   */
-  function setUp() {
-    // Call the parent with an array of modules to enable for the test.
-    parent::setUp(array('$module_root_name'));
+        /**
+         * Implements setUp().
+         */
+        function setUp() {
+          // Call the parent with an array of modules to enable for the test.
+          parent::setUp(array('$module_root_name'));
 
-    // TODO: perform additional setup tasks here if required.
-  }
+          // TODO: perform additional setup tasks here if required.
+        }
 
-  /**
-   * Test the module's functionality.
-   */
-  function testTodoChangeThisName() {
-    // TODO: write test!
-  }
+        /**
+         * Test the module's functionality.
+         */
+        function testTodoChangeThisName() {
+          // TODO: write test!
+        }
 
-}
+      }
 
-EOT;
+      EOT;
 
     return array($code);
   }

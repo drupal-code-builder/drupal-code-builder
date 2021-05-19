@@ -27,21 +27,21 @@ class JavaScriptFile extends AssetFile {
     $camel_name = CaseString::snake($this->component_data['root_component_name'])->camel();
 
     $body = <<<EOT
-/**
- * @file
- * Defines Javascript behaviors for the {$this->component_data['readable_name']} module.
- */
+      /**
+       * @file
+       * Defines Javascript behaviors for the {$this->component_data['readable_name']} module.
+       */
 
-(function ($, Drupal, drupalSettings) {
-  'use strict';
+      (function ($, Drupal, drupalSettings) {
+        'use strict';
 
-  Drupal.behaviors.{$camel_name} = {
-    attach: function (context, settings) {
-    }
-  };
-})(jQuery, Drupal, drupalSettings);
+        Drupal.behaviors.{$camel_name} = {
+          attach: function (context, settings) {
+          }
+        };
+      })(jQuery, Drupal, drupalSettings);
 
-EOT;
+      EOT;
 
     return [
       'path' => '', // Means base folder.

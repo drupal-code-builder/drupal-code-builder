@@ -370,12 +370,11 @@ class ContentEntityType extends EntityTypeBase {
         // compensate. Not worth fixing properly as this will get removed in
         // the near future.
         <<<EOT
-// TODO: If using Drupal core prior to 8.6.x, methods from interface
-  // \Drupal\user\EntityOwnerInterface must be implemented, the owner base field
-  // defined, and EntityOwnerTrait and the call to ownerBaseFieldDefinitions()
-  // removed. See https://www.drupal.org/project/drupal/issues/2949964.
-EOT
-        ,
+        // TODO: If using Drupal core prior to 8.6.x, methods from interface
+          // \Drupal\user\EntityOwnerInterface must be implemented, the owner base field
+          // defined, and EntityOwnerTrait and the call to ownerBaseFieldDefinitions()
+          // removed. See https://www.drupal.org/project/drupal/issues/2949964.
+        EOT,
       ]], $this->functions);
     }
   }

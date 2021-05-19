@@ -32,30 +32,27 @@ class ParserPHPTest extends TestCase {
     return [
       [
         <<<EOT
-<?php
+          <?php
 
-/**
- * @file
- * This file is empty.
- */
+          /**
+           * @file
+           * This file is empty.
+           */
 
-EOT
-// Argh, comma has to be on next line. Roll on PHP 7.3!! TODO: clean up!
-,
+          EOT,
         TRUE,
       ],
       [
         <<<EOT
-<?php
+          <?php
 
-/**
- * Class documentation.
- */
-class Foo {
-}
+          /**
+           * Class documentation.
+           */
+          class Foo {
+          }
 
-EOT
-,
+          EOT,
         TRUE,
       ],
     ];
@@ -66,34 +63,34 @@ EOT
    */
   public function testAssertIsProceduralAssertion() {
     $php_procedural = <<<EOT
-<?php
+      <?php
 
-use Some\Other\Space\Namespaced;
-use Yet\Another\Space\Irrelevant;
+      use Some\Other\Space\Namespaced;
+      use Yet\Another\Space\Irrelevant;
 
-function foo() {
+      function foo() {
 
-}
+      }
 
-function bar() {
+      function bar() {
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_non_procedural = <<<EOT
-<?php
+      <?php
 
-namespace Some\Space\Namespaced;
+      namespace Some\Space\Namespaced;
 
-use Some\Other\Space\Namespaced;
-use Yet\Another\Space\Irrelevant;
+      use Some\Other\Space\Namespaced;
+      use Yet\Another\Space\Irrelevant;
 
-class Foo implements Plain, WithSpace {
+      class Foo implements Plain, WithSpace {
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php_procedural);
 
@@ -109,18 +106,18 @@ EOT;
    */
   public function testAssertClassAssertion() {
     $php = <<<EOT
-<?php
+      <?php
 
-namespace Some\Space\Namespaced;
+      namespace Some\Space\Namespaced;
 
-use Some\Other\Space\Namespaced;
-use Yet\Another\Space\Irrelevant;
+      use Some\Other\Space\Namespaced;
+      use Yet\Another\Space\Irrelevant;
 
-class Foo implements Plain, WithSpace {
+      class Foo implements Plain, WithSpace {
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 
@@ -137,17 +134,17 @@ EOT;
    */
   public function testAssertClassInterfaces($expected_interfaces, $pass_has, $pass_has_not) {
     $php = <<<EOT
-<?php
+      <?php
 
-use Some\Space\Namespaced;
-use Some\Other\Space\NamespacedOther;
-use Yet\Another\Space\Irrelevant;
+      use Some\Space\Namespaced;
+      use Some\Other\Space\NamespacedOther;
+      use Yet\Another\Space\Irrelevant;
 
-class Foo implements Plain, Namespaced, NamespacedOther {
+      class Foo implements Plain, Namespaced, NamespacedOther {
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 
@@ -227,20 +224,20 @@ EOT;
    */
   public function testAssertHasFunctionAssertion() {
     $php = <<<'EOT'
-<?php
+      <?php
 
-use Some\Other\Space\Namespaced;
-use Yet\Another\Space\Irrelevant;
+      use Some\Other\Space\Namespaced;
+      use Yet\Another\Space\Irrelevant;
 
-function foo($param) {
+      function foo($param) {
 
-}
+      }
 
-function bar() {
+      function bar() {
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 
@@ -254,28 +251,28 @@ EOT;
    */
   public function testAssertHasMethodAssertion() {
     $php = <<<'EOT'
-<?php
+      <?php
 
-use Some\Other\Space\Namespaced;
-use Yet\Another\Space\Irrelevant;
+      use Some\Other\Space\Namespaced;
+      use Yet\Another\Space\Irrelevant;
 
-class MyClass {
+      class MyClass {
 
-  function plainFunction($param) {
+        function plainFunction($param) {
 
-  }
+        }
 
-  public function publicFunction() {
+        public function publicFunction() {
 
-  }
+        }
 
-  public static function publicStaticFunction() {
+        public static function publicStaticFunction() {
 
-  }
+        }
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 
@@ -292,19 +289,19 @@ EOT;
    */
   public function testAssertClassDocblockHasLineAssertion() {
     $php = <<<EOT
-<?php
+      <?php
 
-/**
- * Class docblock.
- *
- * Further line.
- * Partial line.
- */
-class Foo {
+      /**
+       * Class docblock.
+       *
+       * Further line.
+       * Partial line.
+       */
+      class Foo {
 
-}
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 
@@ -322,23 +319,23 @@ EOT;
    */
   public function testAssertFileDocblockHasLineAssertion() {
     $php = <<<EOT
-<?php
+      <?php
 
-/**
- * @file
- * File docblock.
- *
- * Further line.
- * Partial line.
- */
+      /**
+       * @file
+       * File docblock.
+       *
+       * Further line.
+       * Partial line.
+       */
 
-/**
- * Function docblock.
- */
-function foo() {
-}
+      /**
+       * Function docblock.
+       */
+      function foo() {
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 
@@ -357,32 +354,32 @@ EOT;
    */
   public function testAssertHasHookImplementationAssertion() {
     $php = <<<EOT
-<?php
+      <?php
 
-/**
- * @file
- * File docblock.
- */
+      /**
+       * @file
+       * File docblock.
+       */
 
-/**
- * Implements hook_foo().
- */
-function my_module_foo() {
-}
+      /**
+       * Implements hook_foo().
+       */
+      function my_module_foo() {
+      }
 
-/**
- * hook_bar() has bad docblock, not properly implemented.
- */
-function my_module_bar() {
-}
+      /**
+       * hook_bar() has bad docblock, not properly implemented.
+       */
+      function my_module_bar() {
+      }
 
-/**
- * Not a hook.
- */
-function my_module_not_hook() {
-}
+      /**
+       * Not a hook.
+       */
+      function my_module_not_hook() {
+      }
 
-EOT;
+      EOT;
 
     $php_tester = new PHPTester(8, $php);
 

@@ -138,12 +138,11 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
       ],
       // docblock
       <<<'EOT'
-/**
- * Implements my_hook().
- */
+        /**
+         * Implements my_hook().
+         */
 
-EOT
-      ,
+        EOT,
       // Indent.
       0,
       // Expected result.
@@ -166,14 +165,13 @@ EOT
       ],
       // docblock
       <<<'EOT'
-/**
- * Implements my_hook().
- *
- * An extra line
- */
+        /**
+         * Implements my_hook().
+         *
+         * An extra line
+         */
 
-EOT
-      ,
+        EOT,
       // Indent.
       0,
       // Expected result.
@@ -189,12 +187,11 @@ EOT
       ],
       // docblock
       <<<'EOT'
-/**
- * Implements my_hook().
- */
+        /**
+         * Implements my_hook().
+         */
 
-EOT
-      ,
+        EOT,
       // Indent.
       0,
       // Expected result.
@@ -210,14 +207,13 @@ EOT
       ],
       // docblock
       <<<'EOT'
-  /**
-   * The foobar property.
-   *
-   * @var \Drupal\node\NodeGrantDatabaseStorageInterface
-   */
-  protected $grantStorage;
-EOT
-      ,
+        /**
+         * The foobar property.
+         *
+         * @var \Drupal\node\NodeGrantDatabaseStorageInterface
+         */
+        protected $grantStorage;
+      EOT,
       // Indent
       2,
       // Expected result.
@@ -231,13 +227,12 @@ EOT
       ],
       // docblock
       <<<'EOT'
-  /**
-   * My method.
-   */
-  function myMethod {
-  }
-EOT
-      ,
+        /**
+         * My method.
+         */
+        function myMethod {
+        }
+      EOT,
       2,
       // Expected result.
       TRUE,
@@ -290,30 +285,28 @@ EOT
     ];
     $data[2] = [
       <<<'EOT'
-function do_the_other_thing() {
+        function do_the_other_thing() {
 
-}
+        }
 
-function do_the_thing(array $param_1, &$param_2, $param_3 = 'foo') {
-  // Some code.
-}
+        function do_the_thing(array $param_1, &$param_2, $param_3 = 'foo') {
+          // Some code.
+        }
 
-EOT
-      ,
+        EOT,
       TRUE,
     ];
     $data[3] = [
       <<<'EOT'
-function do_the_other_thing() {
+        function do_the_other_thing() {
 
-}
+        }
 
-function do_the_thing(SomeClass $param_1, \Namespace\OtherClass $param_2, $param_3 = 'foo') {
-  // Some code.
-}
+        function do_the_thing(SomeClass $param_1, \Namespace\OtherClass $param_2, $param_3 = 'foo') {
+          // Some code.
+        }
 
-EOT
-      ,
+        EOT,
       TRUE,
     ];
 

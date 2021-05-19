@@ -61,12 +61,12 @@ class API extends PHPFile {
 
     // The docblock grouping.
     $code_pieces['group'] = <<<EOT
-/**
- * @addtogroup hooks
- * @{
- */
+      /**
+       * @addtogroup hooks
+       * @{
+       */
 
-EOT;
+      EOT;
 
     foreach ($hooks as $hook_short_name => $parameters) {
       $code_pieces[$hook_short_name] = $this->hook_code($hook_short_name, $parameters);
@@ -83,11 +83,11 @@ EOT;
 
     // The docblock grouping.
     $code_pieces['end_group'] = <<<EOT
-/**
- * @} End of "addtogroup hooks".
- */
+      /**
+       * @} End of "addtogroup hooks".
+       */
 
-EOT;
+      EOT;
 
     return $code_pieces;
   }
@@ -115,20 +115,20 @@ EOT;
     }
 
     return <<<EOT
-/**
- * TODO: write summary line.
- *
- * TODO: longer description.
-$parameters_doc
- *
- * @return
- *   TODO: Document return value if there is one.
- */
-function hook_$hook_short_name($parameters_string) {
-  // TODO: write sample code.
-}
+      /**
+       * TODO: write summary line.
+       *
+       * TODO: longer description.
+      $parameters_doc
+       *
+       * @return
+       *   TODO: Document return value if there is one.
+       */
+      function hook_$hook_short_name($parameters_string) {
+        // TODO: write sample code.
+      }
 
-EOT;
+      EOT;
   }
 
 }
