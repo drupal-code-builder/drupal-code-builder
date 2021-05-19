@@ -250,6 +250,42 @@ EOT;
   }
 
   /**
+   * Tests the assertHasMethod() assertion.
+   */
+  public function testAssertHasMethodAssertion() {
+    $php = <<<'EOT'
+<?php
+
+use Some\Other\Space\Namespaced;
+use Yet\Another\Space\Irrelevant;
+
+class MyClass {
+
+  function plainFunction($param) {
+
+  }
+
+  public function publicFunction() {
+
+  }
+
+  public static function publicStaticFunction() {
+
+  }
+
+}
+
+EOT;
+
+    $php_tester = new PHPTester(8, $php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasMethod', 'plainFunction');
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasMethod', 'publicFunction');
+    $this->assertAssertion(TRUE, $php_tester, 'assertHasMethod', 'publicStaticFunction');
+    $this->assertAssertion(FALSE, $php_tester, 'assertHasMethod', 'notHere');
+  }
+
+  /**
    * Tests the assertClassDocBlockHasLine() assertion.
    *
    * @group php_tester_docblocks
