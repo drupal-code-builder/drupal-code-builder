@@ -115,6 +115,9 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
           $this->baseFieldMethodCalls[$field_name] = $method_calls;
 
           break;
+
+        default:
+          Assert::fail(sprintf("Unexpected statement of class %s found.", get_class($expression)));
       }
     }
   }
