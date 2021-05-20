@@ -12,7 +12,7 @@
     "phpunit/phpunit": "^9",
     "drupal/coder": "^8.3",
     "squizlabs/php_codesniffer": "^3",
-    "nikic/php-parser": "^3.1.2",
+    "nikic/php-parser": "^4",
     "symfony/yaml": "^3.2",
     "symfony/var-dumper": "^3.2",
     "morrislaptop/var-dumper-with-context": "^0.1.0",

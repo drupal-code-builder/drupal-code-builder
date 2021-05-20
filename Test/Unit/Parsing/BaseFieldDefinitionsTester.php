@@ -67,31 +67,31 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
     // - static calls to a helper that merge $fields
     // - assignments of a new item to the $fields
     foreach ($statements as $statement) {
-      // dump($statement);
-      switch (get_class($statement)) {
+      $expression = $statement->expr;
+      switch (get_class($expression)) {
         case \PhpParser\Node\Expr\AssignOp\Plus::class:
-          Assert::assertEquals('fields', $statement->var->name, "The helper call merges the \$fields array.");
-          Assert::assertCount(1, $statement->expr->args, "The helper call has one argument.");
-          Assert::assertEquals('entity_type', $statement->expr->args[0]->value->name, "The helper call passes the \$entity_type variable.");
+          Assert::assertEquals('fields', $expression->var->name, "The helper call merges the \$fields array.");
+          Assert::assertCount(1, $expression->expr->args, "The helper call has one argument.");
+          Assert::assertEquals('entity_type', $expression->expr->args[0]->value->name, "The helper call passes the \$entity_type variable.");
 
-          $this->helperMethodCalls[] = $statement->expr->name;
+          $this->helperMethodCalls[] = $expression->expr->name;
 
           break;
 
         case \PhpParser\Node\Expr\Assign::class:
           // The statement sets a value in the $form array.
-          Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($statement), "The statement assigns a value.");
-          Assert::assertEquals(\PhpParser\Node\Expr\ArrayDimFetch::class, get_class($statement->var), "The statement assigns a value to an array key.");
-          Assert::assertEquals(\PhpParser\Node\Expr\Variable::class, get_class($statement->var->var));
-          Assert::assertEquals('fields', $statement->var->var->name, "The statement assigns to the \$fields variable.");
+          Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($expression), "The statement assigns a value.");
+          Assert::assertEquals(\PhpParser\Node\Expr\ArrayDimFetch::class, get_class($expression->var), "The statement assigns a value to an array key.");
+          Assert::assertEquals(\PhpParser\Node\Expr\Variable::class, get_class($expression->var->var));
+          Assert::assertEquals('fields', $expression->var->var->name, "The statement assigns to the \$fields variable.");
 
           // Get the key in the $fields array that is set.
-          Assert::assertEquals(\PhpParser\Node\Scalar\String_::class, get_class($statement->var->dim));
-          $field_name = $statement->var->dim->value;
+          Assert::assertEquals(\PhpParser\Node\Scalar\String_::class, get_class($expression->var->dim));
+          $field_name = $expression->var->dim->value;
 
           // Extract a list of the chained method calls.
           $method_calls = [];
-          $method_call = $statement->expr;
+          $method_call = $expression->expr;
           while (isset($method_call->var)) {
             $method_calls[] = $method_call->name;
 

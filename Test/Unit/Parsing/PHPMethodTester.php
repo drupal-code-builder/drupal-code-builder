@@ -198,15 +198,16 @@ class PHPMethodTester {
     $actual_parameter_names_slice = [];
     $actual_parameter_types_slice = [];
     foreach ($param_nodes_slice as $index => $param_node) {
-      $actual_parameter_names_slice[] = $param_node->name;
+      $actual_parameter_names_slice[] = $param_node->var->name;
 
       if (is_null($param_node->type)) {
         $actual_parameter_types_slice[] = NULL;
       }
-      elseif (is_string($param_node->type)) {
-        $actual_parameter_types_slice[] = $param_node->type;
+      elseif ($param_node->type instanceof \PhpParser\Node\Identifier) {
+        // Native type.
+        $actual_parameter_types_slice[] = $param_node->type->name;
       }
-      else {
+      elseif ($param_node->type instanceof \PhpParser\Node\Name) {
         // PHP CodeSniffer will have already caught a non-imported class, so
         // safe to assume there is only one part to the class name.
         $actual_parameter_types_slice[] = $param_node->type->parts[0];
@@ -220,7 +221,7 @@ class PHPMethodTester {
           // PhpParser\Node\Name\FullyQualified rather than a
           // PhpParser\Node\Name.
           Assert::assertInstanceOf(\PhpParser\Node\Name\FullyQualified::class, $param_node->type,
-            "The typehint for the parameter \${$param_node->name} is a fully-qualified class name.");
+            "The typehint for the parameter \${$param_node->var->name} is a fully-qualified class name.");
 
           $expected_parameter_typehints[$index] = $expected_parameter_typehints[$index];
         }
@@ -233,6 +234,9 @@ class PHPMethodTester {
           // expectations array for comparison.
           $expected_parameter_typehints[$index] = end($expected_typehint_parts);
         }
+      }
+      else {
+        Assert::fail(sprintf("Unknown parameter object at index %s of class ", $index, get_class($param_node->type)));
       }
     }
 
@@ -312,19 +316,21 @@ class PHPMethodTester {
 
     $statements = $this->methodNode->getStmts();
     $statement = $statements[$index];
+    Assert::assertEquals(\PhpParser\Node\Stmt\Expression::class, get_class($statement), $message);
 
-    Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($statement), $message);
+    $expression = $statement->expr;
+    Assert::assertEquals(\PhpParser\Node\Expr\Assign::class, get_class($expression), $message);
 
-    Assert::assertObjectHasAttribute('var', $statement, $message);
-    Assert::assertObjectHasAttribute('name', $statement->var, $message);
-    Assert::assertEquals($assigned_variable, $statement->var->name, "The variable $assigned_variable is assigned by the parent call.");
+    Assert::assertObjectHasAttribute('var', $expression, $message);
+    Assert::assertObjectHasAttribute('name', $expression->var, $message);
+    Assert::assertEquals($assigned_variable, $expression->var->name, "The variable $assigned_variable is assigned by the parent call.");
 
-    Assert::assertObjectHasAttribute('expr', $statement, $message);
-    Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($statement->expr), $message);
-    Assert::assertObjectHasAttribute('class', $statement->expr, $message);
-    Assert::assertObjectHasAttribute('parts', $statement->expr->class, $message);
-    Assert::assertEquals('parent', $statement->expr->class->parts[0], $message);
-    Assert::assertEquals($this->methodName, $statement->expr->name, $message);
+    Assert::assertObjectHasAttribute('expr', $expression, $message);
+    Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($expression->expr), $message);
+    Assert::assertObjectHasAttribute('class', $expression->expr, $message);
+    Assert::assertObjectHasAttribute('parts', $expression->expr->class, $message);
+    Assert::assertEquals('parent', $expression->expr->class->parts[0], $message);
+    Assert::assertEquals($this->methodName->toString(), $expression->expr->name->toString(), $message);
 
     // TODO: check the method parameter names match the method call arguments.
   }
