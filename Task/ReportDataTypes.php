@@ -2,15 +2,36 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Task\Report\SectionReportInterface;
+
 /**
  * Task handler for reporting on data type data.
  */
-class ReportDataTypes extends ReportHookDataFolder {
+class ReportDataTypes extends ReportHookDataFolder implements SectionReportInterface {
+  use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInfo(): array {
+    return [
+      'key' => 'data_types',
+      'label' => 'Data types',
+      'weight' => 22,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataSummary(): array {
+    return $this->listDataTypesOptions();
+  }
 
   /**
    * Get the list of data types data.

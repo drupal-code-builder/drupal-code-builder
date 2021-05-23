@@ -8,17 +8,37 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Task handler for reporting on service data.
  */
-class ReportServiceData extends ReportHookDataFolder implements OptionsProviderInterface {
+class ReportServiceData extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+  use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInfo(): array {
+    return [
+      'key' => 'services',
+      'label' => 'Services',
+      'weight' => 10,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataSummary(): array {
+    return $this->listServiceNamesOptionsAll();
+  }
 
   /**
    * {@inheritdoc}
