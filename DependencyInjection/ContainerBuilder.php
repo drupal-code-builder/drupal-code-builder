@@ -87,9 +87,15 @@ class ContainerBuilder {
         $versioned_services[$unversioned_service_name] = TRUE;
       }
 
-      // Don't register abtract classes.
+      // Don't register abtract classes, interfaces, or traits.
       $reflector = new \ReflectionClass($class_name);
       if ($reflector->isAbstract()) {
+        continue;
+      }
+      if ($reflector->isInterface()) {
+        continue;
+      }
+      if ($reflector->isTrait()) {
         continue;
       }
 
@@ -164,6 +170,23 @@ class ContainerBuilder {
     // TODO: do this properly: for all abstract and unversioned classes,
     // register them as an alias for the short name.
     $definitions['DrupalCodeBuilder\Task\Collect\HooksCollector'] = \DI\get('Collect\HooksCollector');
+
+    // Second pass to collect SectionReportInterface tasks, to pass the names as
+    // parameters to the ReportSummary.
+    $report_helper_service_ids = [];
+    foreach ($definitions as $service_name => $service_definition) {
+      // Use string matching first to narrow down to Report tasks.
+      if (preg_match('/^Report\w+/', $service_name)) {
+        $class_name = $services[$service_name];
+
+        $reflection_class = new \ReflectionClass($class_name);
+        if ($reflection_class->implementsInterface(\DrupalCodeBuilder\Task\Report\SectionReportInterface::class)) {
+          $report_helper_service_ids[] = $service_name;
+        }
+      }
+    }
+
+    $definitions['ReportSummary']->method('setReportHelpers', $report_helper_service_ids);
 
     $builder->addDefinitions($definitions);
 

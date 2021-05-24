@@ -2,8 +2,14 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
+
 /**
  * Task handler for reporting a summary of all stored analysis data.
+ *
+ * This uses a service collector pattern in the ContainerBuilder to get all
+ * services which implement
+ * \DrupalCodeBuilder\Task\Report\SectionReportInterface.
  *
  * TODO: change the base class; this only extends from ReportHookDataFolder to
  * get the lastUpdatedDate() method.
@@ -14,6 +20,40 @@ class ReportSummary extends ReportHookDataFolder {
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * Array of service names for report helpers.
+   *
+   * @var array
+   */
+  protected $helperServiceNames = [];
+
+  /**
+   * Constructor.
+   *
+   * @param $environment
+   *  The current environment handler.
+   */
+  function __construct(EnvironmentInterface $environment, \Psr\Container\ContainerInterface $container) {
+    $this->environment = $environment;
+    $this->container = $container;
+  }
+
+  /**
+   * Sets the report helper service names.
+   *
+   * Called by the container on instantiation.
+   *
+   * @param array $helper_service_names
+   *  An array of service names for the section reports. These are all the
+   *  services which implement
+   *  \DrupalCodeBuilder\Task\Report\SectionReportInterface.
+   *
+   * @see \DrupalCodeBuilder\DependencyInjection\ContainerBuilder
+   */
+  public function setReportHelpers(array $helper_service_names) {
+    $this->helperServiceNames = $helper_service_names;
+  }
 
   /**
    * Returns a listing of all stored data, with counts.
@@ -32,86 +72,23 @@ class ReportSummary extends ReportHookDataFolder {
   public function listStoredData() {
     $return = [];
 
-    // Hooks.
-    $task_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
-    $data = $task_report_hooks->listHookData();
+    // Get data from each report section helper.
+    foreach ($this->helperServiceNames as $service_name) {
+      $section_report = $this->container->get($service_name);
 
-    $item = [
-      'label' => 'Hooks',
-    ];
-    $list = [];
-    $count = 0;
-    foreach ($data as $file => $hooks) {
-      $list_group = [];
-      foreach ($hooks as $key => $hook) {
-        $list_group[$hook['name']] = $hook['description'];
-      }
+      $section_info = $section_report->getInfo();
 
-      $count += count($hooks);
-      $list["Group $file:"] = $list_group;
-    }
-    $item['list'] = $list;
-    $item['count'] = $count;
-
-    $return['hooks'] = $item;
-
-    // Services
-    $task_report_service_data = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-    $data = $task_report_service_data->listServiceNamesOptionsAll();
-
-    $return['services'] = [
-      'label' => 'Services',
-      'list' => $data,
-      'count' => count($data),
-    ];
-
-    // Tagged service types.
-    $data = $task_report_service_data->listServiceTypeData();
-    $list = [];
-    foreach ($data as $tag => $item) {
-      $list[$tag] = $item['label'];
+      $return[$section_info['key']] = [
+        'label' => $section_info['label'],
+        'list' => $section_report->getDataSummary(),
+        'count' => $section_report->getCount(),
+        'weight' => $section_info['weight'],
+      ];
     }
 
-    $return['tags'] = [
-      'label' => 'Service tag types',
-      'list' => $list,
-      'count' => count($data),
-    ];
-
-    // Plugin types.
-    $task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-    $data = $task->listPluginNamesOptions();
-
-    $return['plugins'] = [
-      'label' => 'Plugin types',
-      'list' => $data,
-      'count' => count($data),
-    ];
-
-    // Field types.
-    $task = \DrupalCodeBuilder\Factory::getTask('ReportFieldTypes');
-    $data = $task->listFieldTypesOptions();
-
-    $list = [];
-    foreach ($data as $key => $label) {
-      $list[$key] = $label;
-    }
-
-    $return['fields'] = [
-      'label' => 'Field types',
-      'list' => $task->listFieldTypesOptions(),
-      'count' => count($data),
-    ];
-
-    // Admin routes.
-    $task = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');
-    $data = $task->listAdminRoutesOptions();
-
-    $return['admin_routes'] = [
-      'label' => 'Admin routes',
-      'list' => $data,
-      'count' => count($data),
-    ];
+    uasort($return, function ($a, $b) {
+      return $a['weight'] <=> $b['weight'];
+    });
 
     return $return;
   }

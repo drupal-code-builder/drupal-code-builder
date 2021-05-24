@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Task\Report\SectionReportInterface;
+
 /**
  * Task handler for reporting on admin routes.
  *
@@ -9,12 +11,31 @@ namespace DrupalCodeBuilder\Task;
  *
  * @internal
  */
-class ReportAdminRoutes extends ReportHookDataFolder {
+class ReportAdminRoutes extends ReportHookDataFolder implements SectionReportInterface {
+  use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInfo(): array {
+    return [
+      'key' => 'admin_routes',
+      'label' => 'Admin routes',
+      'weight' => 6,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataSummary(): array {
+    return $this->listAdminRoutesOptions();
+  }
 
   /**
    * Get the list of data types data.

@@ -9,6 +9,7 @@ namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
+use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 use MutableTypedData\Definition\OptionDefinition;
 
 /**
@@ -17,12 +18,32 @@ use MutableTypedData\Definition\OptionDefinition;
  * TODO: revisit some of these and clean up names / clean up how many we have.
  * Consider merging into a ReportComponentData Task.
  */
-class ReportPluginData extends ReportHookDataFolder implements OptionsProviderInterface, VariantMappingProviderInterface {
+class ReportPluginData extends ReportHookDataFolder
+  implements OptionsProviderInterface, VariantMappingProviderInterface, SectionReportInterface {
+  use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInfo(): array {
+    return [
+      'key' => 'plugins',
+      'label' => 'Plugin types',
+      'weight' => 5,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataSummary(): array {
+    return $this->listPluginNamesOptions();
+  }
 
   /**
    * {@inheritdoc}

@@ -7,17 +7,62 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Task\Report\SectionReportInterface;
+
 /**
  * Task handler for reporting on hook data.
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  */
-class ReportHookData extends ReportHookDataFolder {
+class ReportHookData extends ReportHookDataFolder implements SectionReportInterface {
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+   /**
+   * {@inheritdoc}
+   */
+  public function getInfo(): array {
+    return [
+      'key' => 'hooks',
+      'label' => 'Hooks',
+      'weight' => 0,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataSummary(): array {
+    $data = $this->listHookData();
+
+    $list = [];
+    $count = 0;
+    foreach ($data as $file => $hooks) {
+      $list_group = [];
+      foreach ($hooks as $key => $hook) {
+        $list_group[$hook['name']] = $hook['description'];
+      }
+
+      $count += count($hooks);
+      $list["Group $file:"] = $list_group;
+    }
+
+    return $list;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCount(): int {
+    $count = 0;
+    foreach ($this->getDataSummary() as $group) {
+        $count+= count($group);
+    }
+    return $count;
+  }
 
   /**
    * The cached hook data.
