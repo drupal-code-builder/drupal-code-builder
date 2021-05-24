@@ -2,12 +2,14 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Task handler for reporting on entity types.
  */
-class ReportEntityTypes extends ReportHookDataFolder implements SectionReportInterface {
+class ReportEntityTypes extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
   use SectionReportSimpleCountTrait;
 
   protected $data;
@@ -43,6 +45,18 @@ class ReportEntityTypes extends ReportHookDataFolder implements SectionReportInt
     }
 
     return $list;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    $options = [];
+    foreach ($this->getDataSummary() as $id => $label) {
+      $options[$id] = OptionDefinition::create($id, $label);
+    }
+
+    return $options;
   }
 
 }

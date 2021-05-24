@@ -101,10 +101,9 @@ class RouterItem extends BaseGenerator {
           'entity_view' => VariantDefinition::create()
             ->setLabel('Entity view display')
             ->setProperties([
-              // TODO: 4.1
-              // Needs entity type data gathering!
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
+                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'entity_view_mode' => PropertyDefinition::create('string')
                 ->setLabel("Entity view mode")
@@ -118,6 +117,7 @@ class RouterItem extends BaseGenerator {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
+                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'entity_form_mode' => PropertyDefinition::create('string')
                 ->setLabel("Entity form mode")
@@ -131,6 +131,7 @@ class RouterItem extends BaseGenerator {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
+                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
@@ -175,6 +176,7 @@ class RouterItem extends BaseGenerator {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
+                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'entity_access_operation' => PropertyDefinition::create('string')
                 ->setLabel("Access operation")
