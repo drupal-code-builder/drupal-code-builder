@@ -87,6 +87,11 @@ abstract class BaseEnvironment implements EnvironmentInterface {
 
     $helper_class_name = '\DrupalCodeBuilder\Environment\VersionHelper' . $major_version;
 
+    if (!class_exists($helper_class_name)) {
+      // TODO: make this a sanity level UIs can handle?
+      throw new \Exception("No VersionHelper class found for Drupal major version $major_version; either you are using a version of DCB that is too old, or DCB is not yet compabible with this version.");
+    }
+
     $this->version_helper = new $helper_class_name();
 
     return $this;
