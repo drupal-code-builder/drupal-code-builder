@@ -10,7 +10,6 @@ array (
       'class' => '\\Drupal\\Core\\Session\\AccountProxy',
       'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
       'description' => 'The current active user',
-      'variable_name' => 'current_user',
     ),
     'entity_type.manager' => 
     array (
@@ -20,7 +19,6 @@ array (
       'class' => '\\Drupal\\Core\\Entity\\EntityTypeManager',
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
-      'variable_name' => 'entity_type_manager',
     ),
     'module_handler' => 
     array (
@@ -30,7 +28,6 @@ array (
       'class' => '\\Drupal\\Core\\Extension\\ModuleHandler',
       'interface' => '\\Drupal\\Core\\Extension\\ModuleHandlerInterface',
       'description' => 'The module handler',
-      'variable_name' => 'module_handler',
     ),
   ),
   'all' => 
@@ -43,7 +40,7 @@ array (
       'class' => '\\Drupal\\Core\\Cache\\CacheBackendInterface',
       'interface' => '',
       'description' => 'The Cache backend service',
-      'variable_name' => 'cache_discovery',
+      'variable_name' => 'cache_backend',
     ),
     'current_user' => 
     array (

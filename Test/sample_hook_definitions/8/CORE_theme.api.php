@@ -34,7 +34,7 @@
  * https://www.drupal.org/docs/8/theming
  *
  * For further Twig documentation see
- * http://twig.sensiolabs.org/doc/templates.html
+ * https://twig.symfony.com/doc/1.x/templates.html
  *
  * @section sec_theme_hooks Theme Hooks
  * The theme system is invoked in \Drupal\Core\Render\Renderer::doRender() by
@@ -274,9 +274,9 @@
  *   vectors while allowing a permissive list of HTML tags that are not XSS
  *   vectors. (For example, <script> and <style> are not allowed.) See
  *   \Drupal\Component\Utility\Xss::$adminTags for the list of allowed tags. If
- *   your markup needs any of the tags not in this whitelist, then you can
- *   implement a theme hook and/or an asset library. Alternatively, you can use
- *   the key #allowed_tags to alter which tags are filtered.
+ *   your markup needs any of the tags not in this list, then you can implement
+ *   a theme hook and/or an asset library. Alternatively, you can use the key
+ *   #allowed_tags to alter which tags are filtered.
  * - #plain_text: Specifies that the array provides text that needs to be
  *   escaped. This value takes precedence over #markup.
  * - #allowed_tags: If #markup is supplied, this can be used to change which
@@ -414,13 +414,16 @@
  * render array contained:
  * @code
  * $build['my_element'] = [
- *   '#attached' => ['placeholders' => ['@foo' => 'replacement']],
- *   '#markup' => ['Something about @foo'],
+ *   '#markup' => 'Something about @foo',
+ *   '#attached' => [
+ *     'placeholders' => [
+ *       '@foo' => ['#markup' => 'replacement'],
+ *     ],
  * ];
  * @endcode
  * then #markup would end up containing 'Something about replacement'.
  *
- * Note that each placeholder value can itself be a render array, which will be
+ * Note that each placeholder value *must* itself be a render array. It will be
  * rendered, and any cache tags generated during rendering will be added to the
  * cache tags for the markup.
  *
@@ -433,7 +436,7 @@
  *
  * There are in fact multiple render pipelines:
  * - Drupal always uses the Symfony render pipeline. See
- *   http://symfony.com/doc/2.7/components/http_kernel/introduction.html
+ *   https://symfony.com/doc/3.4/components/http_kernel.html
  * - Within the Symfony render pipeline, there is a Drupal render pipeline,
  *   which handles controllers that return render arrays. (Symfony's render
  *   pipeline only knows how to deal with Response objects; this pipeline
@@ -715,7 +718,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  */
 function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables) {
   if (empty($variables['header'])) {
-    $suggestions[] = 'hookname__' . 'no_header';
+    $suggestions[] = 'hookname__no_header';
   }
 }
 
@@ -725,7 +728,7 @@ function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables
  * @param array $theme_list
  *   Array containing the names of the themes being installed.
  *
- * @see \Drupal\Core\Extension\ThemeHandler::install()
+ * @see \Drupal\Core\Extension\ThemeInstallerInterface::install()
  */
 function hook_themes_installed($theme_list) {
   foreach ($theme_list as $theme) {
@@ -739,7 +742,7 @@ function hook_themes_installed($theme_list) {
  * @param array $themes
  *   Array containing the names of the themes being uninstalled.
  *
- * @see \Drupal\Core\Extension\ThemeHandler::uninstall()
+ * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall()
  */
 function hook_themes_uninstalled(array $themes) {
   // Remove some state entries depending on the theme.
@@ -764,6 +767,12 @@ function hook_extension() {
 
 /**
  * Render a template using the theme engine.
+ *
+ * It is the theme engine's responsibility to escape variables. The only
+ * exception is if a variable implements
+ * \Drupal\Component\Render\MarkupInterface. Drupal is inherently unsafe if
+ * other variables are not escaped. The helper function
+ * theme_render_and_autoescape() may be used for this.
  *
  * @param string $template_file
  *   The path (relative to the Drupal root directory) to the template to be
@@ -802,6 +811,24 @@ function hook_element_info_alter(array &$info) {
   if (isset($info['textfield']['#size'])) {
     $info['textfield']['#size'] = 40;
   }
+}
+
+/**
+ * Alter Element plugin definitions.
+ *
+ * Whenever possible, hook_element_info_alter() should be used to alter the
+ * default properties of an element type. Use this hook only when the plugin
+ * definition itself needs to be altered.
+ *
+ * @param array $definitions
+ *   An array of Element plugin definitions.
+ *
+ * @see \Drupal\Core\Render\ElementInfoManager
+ * @see \Drupal\Core\Render\Element\ElementInterface
+ */
+function hook_element_plugin_alter(array &$definitions) {
+  // Use a custom class for the LayoutBuilder element.
+  $definitions['layout_builder']['class'] = '\Drupal\mymodule\Element\MyLayoutBuilderElement';
 }
 
 /**
@@ -1016,7 +1043,7 @@ function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $asset
  */
 function hook_page_attachments(array &$attachments) {
   // Unconditionally attach an asset to the page.
-  $attachments['#attached']['library'][] = 'core/domready';
+  $attachments['#attached']['library'][] = 'core/drupalSettings';
 
   // Conditionally attach an asset to the page.
   if (!\Drupal::currentUser()->hasPermission('may pet kittens')) {
