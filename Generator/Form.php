@@ -40,12 +40,9 @@ class Form extends PHPClassFileWithInjection {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
-      'form_elements' => [
-        // Internal for now. TODO: expose to the UI.
-        'internal' => TRUE,
-        'format' => 'compound',
-        'component_type' => 'FormElement',
-      ],
+      'form_elements' => static::getPropertyDefinitionForGeneratorType('FormElement')
+        ->setLabel('Form elements')
+        ->setMultiple(TRUE),
     );
 
     // Put the rest of the parent definitions after ours.

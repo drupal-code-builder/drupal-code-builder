@@ -2,41 +2,42 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
+
 /**
  * Generator class for form elements.
  */
 class FormElement extends BaseGenerator {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition() + [
-      'form_key' => [
-        'internal' => TRUE,
-        'required' => TRUE,
-      ],
-      'element_type' => [
-        'internal' => TRUE,
-        'required' => TRUE,
-      ],
-      'element_title' => [
-        'internal' => TRUE,
-        // Not required; elements such as #machine_name don't use it.
-      ],
-      'element_description' => [
-        'internal' => TRUE,
-        'required' => TRUE,
-      ],
-      // Further FormAPI attributes, without the initial '#'.
-      'element_array' => [
-        'internal' => TRUE,
-        'format' => 'mapping',
-        'default' => [],
-      ],
-    ];
+  public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    return $data_definition;
+    $definition->addProperties([
+      'form_key' => PropertyDefinition::create('string')
+        ->setLabel('Element name')
+        ->setDescription("The element's key in the form array.")
+        ->setRequired(TRUE),
+      'element_type' => PropertyDefinition::create('string')
+        ->setLabel('Element type')
+        ->setRequired(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportElementTypes')),
+      // Not required; elements such as #machine_name don't use it.
+      'element_title' => PropertyDefinition::create('string')
+        ->setLabel('Element title')
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(get('..:form_key'))")
+            ->setDependencies('..:form_key')
+        ),
+      'element_description' => PropertyDefinition::create('string')
+        ->setLabel('Element description'),
+      'element_array' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
+        ->setLiteralDefault([]),
+    ]);
+
+    return $definition;
   }
 
   /**
