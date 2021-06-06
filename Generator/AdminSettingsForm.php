@@ -49,6 +49,7 @@ class AdminSettingsForm extends Form {
 
     $data_definition['route_name'] = PropertyDefinition::create('string')
       ->setLabel("The name of the route.")
+      ->setRequired(TRUE)
       ->setDefault(
         DefaultDefinition::create()
           ->setExpression("get('..:root_name') ~ '.settings'")
