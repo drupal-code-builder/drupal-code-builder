@@ -4,6 +4,13 @@ namespace DrupalCodeBuilder\Definition;
 
 /**
  * Defines a data property that has an associated generator.
+ *
+ * TODO: aaargh! Is this to be used in the parent generator, or the generator
+ * itself?? There are examples of both usages!! Plugin and PluginType use in the
+ * generator itself; BaseGenerator in its conversion shim code is the parent
+ * using it to define the child item. So far, the correct thing is to use
+ * BaseGenerator::getPropertyDefinitionForGeneratorType() in the parent
+ * generator case.
  */
 class GeneratorDefinition extends PropertyDefinition {
 
