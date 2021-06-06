@@ -48,11 +48,8 @@ class Form extends PHPClassFileWithInjection {
       ],
     );
 
-    // Remove the property we copied.
-    unset($parent_data_definition['plain_class_name']);
-
-    // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
+    // Put the rest of the parent definitions after ours.
+    $data_definition += $parent_data_definition;
 
     // Put the class in the 'Form' relative namespace.
     $data_definition['relative_namespace']
