@@ -31,11 +31,11 @@ class ServiceTagTypesCollector extends CollectorBase  {
   protected $containerBuilderGetter;
 
   /**
-   * The names of services to collect for testing sample data.
+   * {@inheritdoc}
    */
-  protected $testingServiceCollectorNames = [
-    'breadcrumb' => TRUE,
-    // Note that event_subscriber will also be included as it's hardcoded.
+  protected $testingIds = [
+    'breadcrumb_builder',
+    'event_subscriber',
   ];
 
   /**
@@ -215,11 +215,6 @@ class ServiceTagTypesCollector extends CollectorBase  {
     // We're going to assume that there is no collecting service that uses BOTH
     // systems to collect two tags, that would be crazy.
     $collectors_info = $service_collectors_info + $service_id_collectors_info;
-
-    // Filter for testing sample data collection.
-    if (!empty($this->environment->sample_data_write)) {
-      $collectors_info = array_intersect_key($collectors_info, $this->testingServiceCollectorNames);
-    }
 
     return $collectors_info;
   }

@@ -1,26 +1,26 @@
 <?php $data =
 array (
-  'block' =>
+  'block' => 
   array (
     'label' => 'Block',
     'group' => 'configuration',
   ),
-  'node_type' =>
+  'node_type' => 
   array (
     'label' => 'Content type',
     'group' => 'configuration',
   ),
-  'node' =>
+  'node' => 
   array (
     'label' => 'Content',
     'group' => 'content',
   ),
-  'user' =>
+  'user' => 
   array (
     'label' => 'User',
     'group' => 'content',
   ),
-  'user_role' =>
+  'user_role' => 
   array (
     'label' => 'Role',
     'group' => 'configuration',

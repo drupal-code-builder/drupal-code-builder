@@ -26,6 +26,21 @@ abstract class CollectorBase {
   protected $reportingString;
 
   /**
+   * The data from this collector to store in testing sample data.
+   *
+   * This should be an array of IDs that match keys in the array of data this
+   * collector returns from collect().
+   *
+   * Collectors that need to filter in specialised ways should leave this as an
+   * empty array.
+   *
+   * @see static::getTestingIds()
+   *
+   * @var array
+   */
+  protected $testingIds = [];
+
+  /**
    * Gets the filename key for the processed data.
    *
    * This can be used for a Storage's store() method.
@@ -43,6 +58,16 @@ abstract class CollectorBase {
    */
   public final function getReportingKey() {
     return $this->reportingString;
+  }
+
+  /**
+   * Gets the data IDs this collector should store for testing sample data.
+   *
+   * @return array
+   *   An array of data IDs to filter by.
+   */
+  public final function getTestingIds(): array {
+    return $this->testingIds;
   }
 
   /**

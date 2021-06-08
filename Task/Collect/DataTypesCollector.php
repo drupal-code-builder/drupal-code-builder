@@ -21,12 +21,12 @@ class DataTypesCollector extends CollectorBase {
   protected $reportingString = 'data types';
 
   /**
-   * The names of data types to collect for testing sample data.
+   * {@inheritdoc}
    */
-  protected $testingDataTypes = [
-    'text' => TRUE,
-    'boolean' => TRUE,
-    'label' => TRUE,
+  protected $testingIds = [
+    'text',
+    'boolean',
+    'label',
   ];
 
   /**
@@ -104,11 +104,6 @@ class DataTypesCollector extends CollectorBase {
     }
 
     ksort($data_types);
-
-    // Filter for testing sample data collection.
-    if (!empty($this->environment->sample_data_write)) {
-      $data_types = array_intersect_key($data_types, $this->testingDataTypes);
-    }
 
     return $data_types;
   }

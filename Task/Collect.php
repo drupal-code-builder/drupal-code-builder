@@ -127,6 +127,15 @@ class Collect extends Base {
 
       $incremental_data[$collector_service_name] = $collector_helper->collect($jobs);
 
+      // Filter the data if we're collecting sample data for tests.
+      if (!empty($this->environment->sample_data_write)) {
+        if ($testing_ids = $collector_helper->getTestingIds()) {
+          $filter = array_flip($testing_ids);
+
+          $incremental_data[$collector_service_name] = array_intersect_key($incremental_data[$collector_service_name], $filter);
+        }
+      }
+
       $last_job = end($jobs);
       if (!empty($last_job['last'])) {
         $final_jobs[$collector_service_name] = TRUE;

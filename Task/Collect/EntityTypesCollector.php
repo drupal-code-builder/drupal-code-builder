@@ -19,6 +19,17 @@ class EntityTypesCollector extends CollectorBase {
    */
   protected $reportingString = 'entity types';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $testingIds = [
+    'block',
+    'node_type',
+    'node',
+    'user',
+    'user_role',
+  ];
+
   public function __construct(
     EnvironmentInterface $environment
   ) {

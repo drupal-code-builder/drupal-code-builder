@@ -22,10 +22,10 @@ class FieldTypesCollector extends CollectorBase  {
   /**
    * The names of field types to collect for testing sample data.
    */
-  protected $testingFieldTypes = [
-    'text' => TRUE,
-    'boolean' => TRUE,
-    'string' => TRUE,
+  protected $testingIds = [
+    'text',
+    'boolean',
+    'string',
   ];
 
   /**
@@ -78,11 +78,6 @@ class FieldTypesCollector extends CollectorBase  {
         'default_widget' => $plugin_definition['default_widget'] ?? '',
         'default_formatter' => $plugin_definition['default_formatter'] ?? '',
       ];
-    }
-
-    // Filter for testing sample data collection.
-    if (!empty($this->environment->sample_data_write)) {
-      $field_types_data = array_intersect_key($field_types_data, $this->testingFieldTypes);
     }
 
     uasort($field_types_data, function($a, $b) {
