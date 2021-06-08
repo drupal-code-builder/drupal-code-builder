@@ -24,6 +24,13 @@ class AdminRoutesCollector extends CollectorBase  {
   /**
    * {@inheritdoc}
    */
+  protected $testingIds = [
+    'system.admin_config_system',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public function getJobList() {
     return NULL;
   }

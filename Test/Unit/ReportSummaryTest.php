@@ -38,7 +38,7 @@ class ReportSummaryTest extends TestBase {
     }
 
     $this->assertArrayHasKey('block', $data['plugins']['list']);
-    $this->assertArrayHasKey('system.admin_structure', $data['admin_routes']['list']);
+    $this->assertArrayHasKey('system.admin_config_system', $data['admin_routes']['list']);
     $this->assertArrayHasKey('entity_type.manager', $data['services']['list']);
     $this->assertArrayHasKey('breadcrumb_builder', $data['service_tag_types']['list']);
     $this->assertArrayHasKey('string', $data['field_types']['list']);
