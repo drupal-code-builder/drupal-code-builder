@@ -8,6 +8,7 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Task\Collect\ElementTypesCollector;
 use DrupalCodeBuilder\Task\Collect\EntityTypesCollector;
 use DrupalCodeBuilder\Task\Collect\HooksCollector;
 use DrupalCodeBuilder\Task\Collect\PluginTypesCollector;
@@ -37,6 +38,7 @@ class Collect8 extends Collect {
     FieldTypesCollector $field_types_collector,
     DataTypesCollector $data_types_collector,
     EntityTypesCollector $entity_types_collector,
+    ElementTypesCollector $element_types_collector,
     AdminRoutesCollector $admin_routes_collector
   ) {
     $this->environment = $environment;
@@ -49,6 +51,7 @@ class Collect8 extends Collect {
       'Collect\FieldTypesCollector' => $field_types_collector,
       'Collect\DataTypesCollector' => $data_types_collector,
       'Collect\EntityTypesCollector' => $entity_types_collector,
+      'Collect\ElementTypesCollector' => $element_types_collector,
       'Collect\AdminRoutesCollector' => $admin_routes_collector,
     ];
   }
