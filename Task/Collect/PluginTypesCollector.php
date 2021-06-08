@@ -1198,6 +1198,12 @@ class PluginTypesCollector extends CollectorBase  {
       return;
     }
 
+    // Bail if we're collecting sample data, so this is consistent whether
+    // Plugin module is present or not.
+    if (!empty($this->environment->sample_data_write)) {
+      return;
+    }
+
     // This gets us labels for the plugin types which are declared to Plugin
     // module.
     $plugin_types = \Drupal::service('plugin.plugin_type_manager')->getPluginTypes();
