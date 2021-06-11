@@ -42,7 +42,7 @@ class VersionHelper7 extends VersionHelper8 {
     $mb_files = drupal_system_listing($mask, 'modules');
     //print_r($mb_files);
 
-    $module_data = array();
+    $module_data = [];
 
     foreach ($mb_files as $file) {
       // Our system listing wrapper ensured that there is a uri property on all versions.
@@ -64,11 +64,11 @@ class VersionHelper7 extends VersionHelper8 {
    * On Drupal 7 and below, this is a wrapper around variable_get().
    */
   public function getSetting($name, $default = NULL) {
-    $setting_name_lookup = array(
+    $setting_name_lookup = [
       'data_directory'  => 'module_builder_hooks_directory',
       'detail_level'    => 'module_builder_detail',
       'footer'          => 'module_builder_footer',
-    );
+    ];
 
     if (isset($setting_name_lookup[$name])) {
       return variable_get($setting_name_lookup[$name], $default);

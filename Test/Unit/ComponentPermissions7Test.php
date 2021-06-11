@@ -22,20 +22,20 @@ class ComponentPermissions7Test extends TestBase {
 
     // Create a module.
     $module_name = 'testmodule';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'permissions' => array(
-        0 => array(
+      'hooks' => [
+      ],
+      'permissions' => [
+        0 => [
           'permission' => $permission_name,
-        ),
-      ),
+        ],
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertCount(2, $files, "Expected number of files is returned.");

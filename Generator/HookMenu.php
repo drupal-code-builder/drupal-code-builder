@@ -29,7 +29,7 @@ class HookMenu extends HookImplementation {
     // trim it.
     $this->component_data->has_wrapping_newlines = FALSE;
 
-    $code = array();
+    $code = [];
     $code[] = '£items = array();';
     foreach ($this->filterComponentContentsForRole($children_contents, 'item') as $menu_item_lines) {
       $code = array_merge($code, $menu_item_lines);

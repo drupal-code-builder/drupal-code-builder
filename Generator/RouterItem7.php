@@ -51,14 +51,14 @@ class RouterItem7 extends BaseGenerator {
    *  An array of subcomponent names and types.
    */
   public function requiredComponents() {
-    $return = array(
-      'hooks' => array(
+    $return = [
+      'hooks' => [
         'component_type' => 'Hooks',
         'hooks' => [
           'hook_menu',
         ],
-      ),
-    );
+      ],
+    ];
 
     return $return;
   }
@@ -76,7 +76,7 @@ class RouterItem7 extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     // Return code for a single menu item. Our parent in the component tree,
     // HookMenu, will merge it in its own buildComponentContents().
-    $code = array();
+    $code = [];
     $code[] = "£items['{$this->component_data['path']}'] = array(";
     $code[] = "  'title' => '{$this->component_data['title']}',";
     if (isset($this->component_data['description'])) {

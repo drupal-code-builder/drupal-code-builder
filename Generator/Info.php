@@ -57,7 +57,7 @@ class Info extends File {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    $lines = array();
+    $lines = [];
     foreach ($this->filterComponentContentsForRole($children_contents, 'infoline') as $component_name => $component_lines) {
       // Assume that children components don't tread on each others' toes and
       // provide the same property names.
@@ -72,12 +72,12 @@ class Info extends File {
    * Build the code files.
    */
   public function getFileInfo() {
-    return array(
+    return [
       'path' => '',
       'filename' => '%module.info',
       'body' => $this->file_body(),
       'build_list_tags' => ['info'],
-    );
+    ];
   }
 
   /**

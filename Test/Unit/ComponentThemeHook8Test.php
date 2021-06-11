@@ -25,18 +25,18 @@ class ComponentThemeHook8Test extends TestBase {
 
     // Create a module.
     $module_name = 'testmodule';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'theme_hooks' => array(
+      'hooks' => [
+      ],
+      'theme_hooks' => [
         $theme_hook_name,
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 

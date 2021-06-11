@@ -45,18 +45,18 @@ class Profile extends RootComponent {
       ->setLiteralDefault('my_profile');
 
     $component_data_definition += [
-      'readable_name' => array(
+      'readable_name' => [
         'label' => 'Profile readable name',
         'default' => function($component_data) {
           return ucfirst(str_replace('_', ' ', $component_data['root_name']));
         },
         'required' => FALSE,
-      ),
-      'short_description' => array(
+      ],
+      'short_description' => [
         'label' => 'Profile .info file description',
         'default' => 'TODO: Description of profile',
         'required' => FALSE,
-      ),
+      ],
     ];
     return $component_data_definition;
   }
@@ -72,10 +72,10 @@ class Profile extends RootComponent {
   public function requiredComponents() {
     $root_name = $this->component_data['root_name'];
 
-    $components = array(
+    $components = [
       "$root_name.install" => 'PHPFile',
       "$root_name.profile" => 'PHPFile',
-    );
+    ];
 
     return $components;
   }

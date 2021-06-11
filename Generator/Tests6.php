@@ -12,7 +12,7 @@ class Tests6 extends Tests7 {
    */
   public function requiredComponents() {
     // We have no subcomponents.
-    return array();
+    return [];
   }
 
 }

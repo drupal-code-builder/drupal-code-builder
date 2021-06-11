@@ -127,10 +127,10 @@ class CodeAnalyser {
     $command = "{$php} {$script_name} '{$autoloader_filepath}' {$debug_int}";
 
     // Open pipes for both input and output.
-    $descriptorspec = array(
-       0 => array("pipe", "r"),
-       1 => array("pipe", "w")
-    );
+    $descriptorspec = [
+       0 => ["pipe", "r"],
+       1 => ["pipe", "w"]
+    ];
     $this->checking_script_resource = proc_open($command, $descriptorspec, $this->pipes);
 
     if (!is_resource($this->checking_script_resource)) {

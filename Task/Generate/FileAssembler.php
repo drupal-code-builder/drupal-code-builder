@@ -81,7 +81,7 @@ class FileAssembler {
    *  An array of file info, keyed by arbitrary file ID.
    */
   protected function collectFiles(ComponentCollection $component_collection) {
-    $file_info = array();
+    $file_info = [];
 
     // Components which provide a file should have registered themselves as
     // children of the root component.
@@ -135,7 +135,7 @@ class FileAssembler {
    *  values are strings of the contents for each file.
    */
   protected function assembleFiles(ComponentCollection $component_collection, $files) {
-    $return = array();
+    $return = [];
 
     foreach ($files as $file_id => $file_info) {
       if (!empty($file_info['path'])) {

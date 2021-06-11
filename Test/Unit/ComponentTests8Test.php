@@ -44,16 +44,16 @@ class ComponentTests8Test extends TestBase {
    */
   function testModuleGenerationTests() {
     // Create a module.
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'tests' => TRUE,
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([

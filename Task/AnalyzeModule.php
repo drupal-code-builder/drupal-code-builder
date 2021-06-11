@@ -38,7 +38,7 @@ class AnalyzeModule extends Base {
     $module_files = [];
     foreach ($files as $filename) {
       $ext = substr(strrchr($filename, '.'), 1);
-      if (in_array($ext, array('module', 'install', 'inc'))) {
+      if (in_array($ext, ['module', 'install', 'inc'])) {
         $module_files[] = $filepath . '/' . $filename;
       }
     }
@@ -56,7 +56,7 @@ class AnalyzeModule extends Base {
     $code = file_get_contents($file);
     //drush_print($code);
 
-    $matches = array();
+    $matches = [];
     $pattern = "/^function (\w+)/m";
     preg_match_all($pattern, $code, $matches);
 
@@ -84,12 +84,12 @@ class AnalyzeModule extends Base {
 
     // Bail if the folder doesn't exist yet: there is nothing to do.
     if (!file_exists($module_folder)) {
-      return array();
+      return [];
     }
 
     // An array of short hook names that we'll populate from what we extract
     // from the files.
-    $hooks = array();
+    $hooks = [];
 
     // Only consider hooks which are invented by this module: it is legitimate
     // for modules to invoke hooks invented by other modules. We assume the
@@ -104,9 +104,9 @@ class AnalyzeModule extends Base {
       // They should all have capturing groups for:
       //  - 1. hook name
       //  - 2. optional parameters
-      $hook_invocation_patterns = array(
+      $hook_invocation_patterns = [
         // module_invoke_all() calls (the key here is arbitrary).
-        'module_invoke_all' => array(
+        'module_invoke_all' => [
           // The pattern for this item.
           'pattern' =>
             "/
@@ -119,9 +119,9 @@ class AnalyzeModule extends Base {
                 )
               )? # The further parameters are optional.
             /x",
-        ),
+        ],
         // module_invoke() calls.
-        'module_invoke' => array(
+        'module_invoke' => [
           'pattern' =>
             "/
             module_invoke \(
@@ -135,9 +135,9 @@ class AnalyzeModule extends Base {
                 )
               )? # The further parameters are optional.
             /x",
-        ),
+        ],
         // drupal_alter() calls.
-        'drupal_alter' => array(
+        'drupal_alter' => [
           'pattern' =>
             "/
             drupal_alter \(
@@ -155,14 +155,14 @@ class AnalyzeModule extends Base {
           'process callback' => function ($hook_name) {
             return $hook_name . '_alter';
           },
-        ),
-      );
+        ],
+      ];
 
       // Process the file for each pattern.
       foreach ($hook_invocation_patterns as $pattern_info) {
         $pattern = $pattern_info['pattern'];
 
-        $matches = array();
+        $matches = [];
         preg_match_all($pattern, $contents, $matches);
         // Matches are:
         //  - 1: the first parameter, which is the hook short name.
@@ -239,7 +239,7 @@ class ComponentFolderRecursiveFilterIterator extends \RecursiveFilterIterator {
     }
 
     // List of file extensions we should skip.
-    $unwanted_extensions = array(
+    $unwanted_extensions = [
       // Module folders (well mine at least) frequently contain patch files and
       // other associated cruft which we want to skip.
       'patch',
@@ -250,7 +250,7 @@ class ComponentFolderRecursiveFilterIterator extends \RecursiveFilterIterator {
       'png',
       'jpg',
       'jpeg',
-    );
+    ];
     if (in_array($current_filename_extension, $unwanted_extensions)) {
       return FALSE;
     }

@@ -51,14 +51,14 @@ class VersionHelperTestsPHPUnit {
    * A version-independent wrapper for drupal_system_listing().
    */
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
-    return array();
+    return [];
   }
 
   /**
    * Invoke hook_module_builder_info().
    */
   function invokeInfoHook() {
-    return array();
+    return [];
   }
 
   /**

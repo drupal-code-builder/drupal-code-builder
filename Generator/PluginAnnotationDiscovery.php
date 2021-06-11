@@ -178,11 +178,11 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
     // TODO: really need a way to iterate over the scalar values!
     foreach ($this->component_data->injected_services->export() as $service_id) {
-      $components['service_' . $service_id] = array(
+      $components['service_' . $service_id] = [
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
-      );
+      ];
     }
 
     if (!empty($this->plugin_type_data['config_schema_prefix'])) {
@@ -250,7 +250,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
     $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
 
-    return array();
+    return [];
   }
 
   /**

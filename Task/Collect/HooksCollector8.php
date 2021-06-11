@@ -52,7 +52,7 @@ class HooksCollector8 extends HooksCollector {
         $filename = basename($file);
 
         $component_name = explode('.', $filename)[0];
-        $api_files['core:' . $filename] = array(
+        $api_files['core:' . $filename] = [
           'uri' => $file,
           // Prefix the filename, to prevent file.api.php that's in core/lib
           // clobbering the one for file module (and any other such WTFs that
@@ -63,13 +63,13 @@ class HooksCollector8 extends HooksCollector {
           'module' => 'core',
           'process_label' => 'hooks',
           'item_label' => $filename,
-        );
+        ];
       }
     }
 
     // Add in core.api.php, which won't have been picked up because it's not
     // in a module!
-    $api_files['core.api.php'] = array(
+    $api_files['core.api.php'] = [
       'uri' => 'core/core.api.php',
       'filename' => 'CORE_core.api.php',
       'name' => 'core.api',
@@ -77,7 +77,7 @@ class HooksCollector8 extends HooksCollector {
       'module' => 'core',
       'process_label' => 'hooks',
       'item_label' => 'core.api.php',
-    );
+    ];
 
     // Sort by the key, which is the filename for module files, and the group
     // for core files.
@@ -122,7 +122,7 @@ class HooksCollector8 extends HooksCollector {
       // have multiple API files with suffixed names, eg Services.
       // @todo: make this more robust, somehow!
       if (!isset($file['module'])) {
-        $matches = array();
+        $matches = [];
         preg_match('@modules/(?:(?:contrib|custom)/)?(\w+)@', $file['uri'], $matches);
         //print_r($matches);
         $file['module'] = $matches[1];
@@ -133,14 +133,14 @@ class HooksCollector8 extends HooksCollector {
       // Mark core files.
       $core = (substr($file['uri'], 0, 4) == 'core');
 
-      $hook_files[$filename] = array(
+      $hook_files[$filename] = [
         'original' => $drupal_root . '/' . $file['uri'], // no idea if useful
         'path' => $directory . '/' . $file['filename'],
         'destination' => '%module.module', // Default. We override this below.
         'group'       => $file['group'],
         'module'      => $file['module'],
         'core'        => $core,
-      );
+      ];
     }
 
     // We now have the basics.
@@ -184,7 +184,7 @@ class HooksCollector8 extends HooksCollector {
       }
       // It can also (or instead) set a destination per hook.
       if (isset($module_data['hook_destinations'])) {
-        $hook_files[$filename]['hook_destinations'] = array();
+        $hook_files[$filename]['hook_destinations'] = [];
         foreach ($module_data['hook_destinations'] as $destination => $hooks) {
           $destinations[$module] = array_fill_keys($hooks, $destination);
           $hook_files[$filename]['hook_destinations'] += array_fill_keys($hooks, $destination);
@@ -216,7 +216,7 @@ class HooksCollector8 extends HooksCollector {
    */
   protected function getAdditionalHookInfo() {
     // Keys should match the filename MODULE.api.php
-    $info = array(
+    $info = [
       // Hooks on behalf of Drupal core.
       // api.php files that are in core rather than in a module have a prefix of
       // 'CORE_'.
@@ -231,18 +231,18 @@ class HooksCollector8 extends HooksCollector {
           ],
         ],
       ],
-      'CORE_module' => array(
-        'hook_destinations' => array(
-          '%module.install' => array(
+      'CORE_module' => [
+        'hook_destinations' => [
+          '%module.install' => [
             'hook_requirements',
             'hook_install',
             'hook_update_N',
             'hook_update_last_removed',
             'hook_uninstall',
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     return $info;
   }
 

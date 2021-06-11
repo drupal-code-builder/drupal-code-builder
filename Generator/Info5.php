@@ -11,7 +11,7 @@ class Info5 extends InfoIni {
    * Create lines of file body for Drupal 5.
    */
   function file_body() {
-    $lines = array();
+    $lines = [];
     $lines['name'] =  $this->component_data['readable_name'];
     $lines['description'] =  $this->component_data['short_description'];
 

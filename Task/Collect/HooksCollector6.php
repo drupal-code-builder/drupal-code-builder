@@ -66,8 +66,8 @@ class HooksCollector6 extends HooksCollector {
       $branch = $module_data['branch'];
       foreach ($module_data['hook_files'] as $hook_file => $destination) {
         $url = str_replace(
-          array('%file', '%branch'),
-          array($hook_file, $branch),
+          ['%file', '%branch'],
+          [$hook_file, $branch],
           $module_data['url']
         );
         // Create our own safe filename with module prefix.
@@ -76,7 +76,7 @@ class HooksCollector6 extends HooksCollector {
         $urls[$hook_file_safe_name]['url'] = $url;
         $urls[$hook_file_safe_name]['destination'] = $destination;
         if (isset($module_data['hook_destinations'])) {
-          $urls[$hook_file_safe_name]['hook_destinations'] = array();
+          $urls[$hook_file_safe_name]['hook_destinations'] = [];
           foreach ($module_data['hook_destinations'] as $destination => $hooks) {
             $urls[$hook_file_safe_name]['hook_destinations'] += array_fill_keys($hooks, $destination);
           }
@@ -99,44 +99,44 @@ class HooksCollector6 extends HooksCollector {
    * {@inheritdoc}
    */
   protected function getAdditionalHookInfo() {
-    $info = array(
+    $info = [
       // Hooks on behalf of Drupal core.
-      'system' => array(
+      'system' => [
         'url' => 'http://drupalcode.org/project/documentation.git/blob_plain/refs/heads/%branch:/developer/hooks/%file',
         'branch' => '6.x-1.x',
         'group' => '#filenames',
-        'hook_files' => array(
+        'hook_files' => [
           // List of files we should slurp from the url for hook defs.
           // and the destination file for processed code.
           'core.php' =>    '%module.module',
           'node.php' =>    '%module.module',
           'install.php' => '%module.install',
-        ),
-      ),
+        ],
+      ],
       // We need to do our own stuff now we have a hook!
-      'module_builder' => array(
+      'module_builder' => [
         'url' => 'http://drupalcode.org/project/module_builder.git/blob_plain/refs/heads/%branch:/hooks/%file',
         'branch' => '6.x-2.x',
         'group' => 'module builder',
-        'hook_files' => array(
+        'hook_files' => [
           'module_builder.php' => '%module.module_builder.inc',
-        ),
-      ),
+        ],
+      ],
 
       // Support for some contrib modules (the ones I use ;) -- for more please
       // file a patch either here or with the module in question.
       // Views
-      'views' => array(
+      'views' => [
         'url' => 'http://drupalcode.org/project/views.git/blob_plain/refs/heads/%branch:/docs/%file',
         'branch' => '6.x-2.x',
         'group' => 'views',
-        'hook_files' => array(
+        'hook_files' => [
           'docs.php' => '%module.module',
           // other files here: view.inc, views.default.inc
-        ),
+        ],
         // hooks that go in files other than %module.module
-        'hook_destinations' => array(
-          '%module.views.inc' => array(
+        'hook_destinations' => [
+          '%module.views.inc' => [
             'hook_views_data',
             'hook_views_data_alter',
             'hook_views_admin_links_alter',
@@ -144,61 +144,61 @@ class HooksCollector6 extends HooksCollector {
             'hook_views_plugins',
             'hook_views_preview_info_alter',
             'hook_views_query_alter',
-          ),
-          '%module.views_convert.inc' => array(
+          ],
+          '%module.views_convert.inc' => [
             'hook_views_convert',
-          ),
-          '%module.views_default.inc' => array(
+          ],
+          '%module.views_default.inc' => [
             'hook_views_default_views',
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       // Ubercart
-      'ubercart' => array(
+      'ubercart' => [
         'url' => 'http://drupalcode.org/project/ubercart.git/blob_plain/refs/heads/%branch:/docs/%file',
         'branch' => '6.x-2.x',
         'group' => 'ubercart',
-        'hook_files' => array(
+        'hook_files' => [
           'hooks.php' => '%module.module',
-        ),
-      ),
+        ],
+      ],
       // Signup
-      'signup' => array(
+      'signup' => [
         'url' => 'http://drupalcode.org/project/signup.git/blob_plain/refs/heads/%branch:/%file',
         'branch' => '6.x-2.x',
         'group' => 'signup',
-        'hook_files' => array(
+        'hook_files' => [
           'signup.api.php' => '%module.module',
-        ),
-      ),
+        ],
+      ],
       // Ctools
-      'ctools' => array(
+      'ctools' => [
         'url' => 'http://drupalcode.org/project/ctools.git/blob_plain/refs/heads/%branch:/%file',
         'branch' => '6.x-1.x',
         'group' => 'ctools',
-        'hook_files' => array(
+        'hook_files' => [
           'ctools.api.php' => '%module.module',
-        ),
-      ),
+        ],
+      ],
       // Webform
-      'webform' => array(
+      'webform' => [
         'url' => 'http://drupalcode.org/project/webform.git/blob_plain/refs/heads/%branch:/%file',
         'branch' => '6.x-3.x',
         'group' => 'webform',
-        'hook_files' => array(
+        'hook_files' => [
           'webform_hooks.php' => '%module.module',
-        ),
-      ),
+        ],
+      ],
       // Payment API
-      'pay' => array(
+      'pay' => [
         'url' => 'http://drupalcode.org/project/pay.git/blob_plain/refs/heads/%branch:/%file',
         'branch' => '6.x-1.x',
         'group' => 'pay',
-        'hook_files' => array(
+        'hook_files' => [
           'pay.api.php' => '%module.module',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     return $info;
   }
 

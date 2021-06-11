@@ -25,16 +25,16 @@ class ComponentAPI8Test extends TestBase {
 
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'readme' => FALSE,
       'api' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

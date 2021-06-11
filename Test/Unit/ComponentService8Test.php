@@ -26,21 +26,21 @@ class ComponentService8Test extends TestBase {
   public function testBasicServiceGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
         ],
         1 => [
           'service_name' => 'my_other_service',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -75,24 +75,24 @@ class ComponentService8Test extends TestBase {
   public function testServiceGenerationNamespaceConfiguration() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
         ],
         1 => [
           'service_name' => 'my_other_service',
         ],
-      ),
+      ],
       'readme' => FALSE,
       'configuration' => [
         'service_namespace' => 'Cake',
       ],
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -120,24 +120,24 @@ class ComponentService8Test extends TestBase {
 
     // Test with an empty string for the configuration value.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
         ],
         1 => [
           'service_name' => 'my_other_service',
         ],
-      ),
+      ],
       'readme' => FALSE,
       'configuration' => [
         'service_namespace' => '',
       ],
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -155,21 +155,21 @@ class ComponentService8Test extends TestBase {
    * @group config
    */
   public function testServiceGenerationYamlLinebreaksConfiguration() {
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
         ],
         1 => [
           'service_name' => 'my_other_service',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $services_file = $files['test_module.services.yml'];
@@ -195,12 +195,12 @@ class ComponentService8Test extends TestBase {
    * @group config
    */
   public function testServiceGenerationYamlParameterLinebreaksConfiguration() {
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
           'injected_services' => [
@@ -208,9 +208,9 @@ class ComponentService8Test extends TestBase {
             'entity_type.manager',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $services_file = $files['test_module.services.yml'];
@@ -241,20 +241,20 @@ class ComponentService8Test extends TestBase {
   public function testServiceGenerationFromPreset() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_tag_type' => 'breadcrumb_builder',
           // TODO: remove once the 'suggest' preset info is live.
           'service_name' => 'breadcrumb_builder',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -294,20 +294,20 @@ class ComponentService8Test extends TestBase {
   public function testServiceGenerationEventSubscriber() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_tag_type' => 'event_subscriber',
           // TODO: remove once the 'suggest' preset info is live.
           'service_name' => 'event_subscriber',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -438,19 +438,19 @@ class ComponentService8Test extends TestBase {
   function testServiceGenerationWithServices($injected_services, $yaml_arguments, $assert_injected_services) {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
           'injected_services' => $injected_services,
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -490,12 +490,12 @@ class ComponentService8Test extends TestBase {
   function testServiceGenerationWithBadService() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
           'injected_services' => [
@@ -503,9 +503,9 @@ class ComponentService8Test extends TestBase {
             'made_up',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $this->expectException(\DrupalCodeBuilder\Test\Exception\ValidationException::class);
 
@@ -518,21 +518,21 @@ class ComponentService8Test extends TestBase {
   public function testServiceGenerationWithParameters() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           'service_name' => 'my_service',
           // Properties that requesters can specify.
           'prefixed_service_name' => 'my_prefix.my_service',
           'plain_class_name' => 'MyServiceClass',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -564,12 +564,12 @@ class ComponentService8Test extends TestBase {
   public function testServiceYamlFormatting() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'services' => array(
+      'services' => [
         0 => [
           // We want both tags and services, as they need to be inlined at
           // different levels.
@@ -586,9 +586,9 @@ class ComponentService8Test extends TestBase {
             'entity_type.manager',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

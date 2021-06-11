@@ -327,19 +327,19 @@ class RouterItem extends BaseGenerator {
 
     // Each RouterItem that gets added will cause a repeat request of these
     // components.
-    $components['%module.routing.yml'] = array(
+    $components['%module.routing.yml'] = [
       'component_type' => 'Routing',
-    );
+    ];
 
 
     // Add a controller class if needed.
     if ($this->component_data->controller->controller_type->value == 'controller') {
       $controller_relative_class = $this->component_data->controller->controller_relative_class_name->value;
 
-      $components['controller'] = array(
+      $components['controller'] = [
         'component_type' => 'PHPClassFile',
         'relative_class_name' => $controller_relative_class,
-      );
+      ];
       $components["controller-content"] = [
         'component_type' => 'PHPFunction',
         'containing_component' => "%requester:controller",
@@ -354,7 +354,7 @@ class RouterItem extends BaseGenerator {
       $plugin_name = $this->component_data['route_name'];
       $plugin_name = substr($plugin_name, strlen($this->component_data['root_component_name']) + 1);
 
-      $components['menu_link'] = array(
+      $components['menu_link'] = [
         'component_type' => 'Plugin',
         'plugin_type' => 'menu.link',
         'plugin_name' => $plugin_name,
@@ -362,7 +362,7 @@ class RouterItem extends BaseGenerator {
           'title' => $this->component_data->menu_link->title->value,
           'route_name' => $this->component_data['route_name'],
         ],
-      );
+      ];
     }
 
     return $components;

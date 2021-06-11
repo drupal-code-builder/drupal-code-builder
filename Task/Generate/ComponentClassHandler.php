@@ -68,9 +68,9 @@ class ComponentClassHandler {
     $class = $this->getGeneratorClass($component_type);
 
     if (!class_exists($class)) {
-      throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Invalid component type !type.", array(
+      throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Invalid component type !type.", [
         '!type' => htmlspecialchars($component_type, ENT_QUOTES, 'UTF-8'),
-      )));
+      ]));
     }
 
     $generator = new $class($component_data);

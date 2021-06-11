@@ -37,19 +37,19 @@ class Form7 extends BaseGenerator {
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';
 
-    $components = array(
+    $components = [
       // Request the file we belong to.
       $this->component_data['code_file'] => [
         'component_type' => 'ModuleCodeFile',
         'filename' => $this->component_data['code_file'],
       ],
       // Request the form functions.
-      $form_builder => array(
+      $form_builder => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%module.module',
         'doxygen_first' => 'Form builder.',
         'declaration' => "function $form_builder(£form, &£form_state)",
-        'body' => array(
+        'body' => [
           "£form['element'] = array(",
           "  '#type' => 'textfield',",
           "  '#title' => t('Enter a value'),",
@@ -57,27 +57,27 @@ class Form7 extends BaseGenerator {
           ");",
           "",
           "return £form;",
-        ),
-      ),
-      $form_name . '_validate' => array(
+        ],
+      ],
+      $form_name . '_validate' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%module.module',
         'doxygen_first' => 'Form validate handler.',
         'declaration' => "function $form_validate(£form, &£form_state)",
-        'body' => array(
+        'body' => [
           "if (£form_state['values']['element'] != 'hello') {",
           "  form_set_error('element', t('Please say hello?'));",
           "}",
-        ),
-      ),
-      $form_name . '_submit' => array(
+        ],
+      ],
+      $form_name . '_submit' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%module.module',
         'doxygen_first' => 'Form submit handler.',
         'declaration' => "function $form_submit(£form, &£form_state)",
         'body' => '',
-      ),
-    );
+      ],
+    ];
 
     return $components;
   }

@@ -105,7 +105,7 @@ abstract class RootComponent extends BaseGenerator {
    */
   function getReplacements() {
     // Root components should override this.
-    return array();
+    return [];
   }
 
 }

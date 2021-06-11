@@ -39,16 +39,16 @@ class ComponentHooks8Test extends TestBase {
    */
   public function testSingleHook8() {
     $module_name = 'testmodule_8';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
+      'hooks' => [
         'hook_help',
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -71,12 +71,12 @@ class ComponentHooks8Test extends TestBase {
     // Note the module name must be unique across all tests, as
     // assertWellFormedPHP() uses eval() on module code files.
     $module_name = 'testmodule_8';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
+      'hooks' => [
         // These hooks will go in the .module file.
         'hook_help',
         'hook_form_alter',
@@ -84,9 +84,9 @@ class ComponentHooks8Test extends TestBase {
         'hook_tokens',
         // This goes in the .install file.
         'hook_install',
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

@@ -24,19 +24,19 @@ class ComponentForm8Test extends TestBase {
   public function testBasicFormGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'forms' => array(
+      'forms' => [
         0 => [
           'plain_class_name' => 'MyForm',
           'injected_services' => [],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -79,12 +79,12 @@ class ComponentForm8Test extends TestBase {
   function testFormGenerationWithServices() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'forms' => array(
+      'forms' => [
         0 => [
           'plain_class_name' => 'MyForm',
           'injected_services' => [
@@ -93,9 +93,9 @@ class ComponentForm8Test extends TestBase {
             'storage:node',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

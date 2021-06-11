@@ -27,21 +27,21 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testBasicPluginsGeneration() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'block',
           'plugin_name' => 'alpha',
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -83,22 +83,22 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testBasicPluginsGenerationClassName() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'block',
           'plugin_name' => 'alpha',
           'plain_class_name' => 'OtherClassName',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -123,21 +123,21 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   public function testPluginsGenerationDerivativeID() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'block',
           'plugin_name' => 'system_menu_block:alpha',
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
@@ -158,21 +158,21 @@ class ComponentPluginsAnnotated8Test extends TestBase {
    */
   function testPluginWithOnlyId() {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'element_info',
           'plugin_name' => 'alpha',
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -196,14 +196,14 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function XtestPluginsGenerationFromPluginFolder() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           // Specify the folder name rather than the plugin ID.
           'plugin_type' => 'Field/FieldFormatter',
@@ -214,9 +214,9 @@ class ComponentPluginsAnnotated8Test extends TestBase {
           'plugin_type' => 'Field\FieldFormatter',
           'plugin_name' => 'beta',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -232,21 +232,21 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testPluginsGenerationBadPluginType() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'made_up',
           'plugin_name' => 'alpha',
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $this->expectException(InvalidInputException::class);
 
@@ -261,14 +261,14 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testPluginsGenerationWithServices() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'block',
           'plugin_name' => 'alpha',
@@ -277,9 +277,9 @@ class ComponentPluginsAnnotated8Test extends TestBase {
             'storage:node',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -338,14 +338,14 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testPluginsGenerationWithExistingCreate() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'image.effect',
           'plugin_name' => 'alpha',
@@ -354,9 +354,9 @@ class ComponentPluginsAnnotated8Test extends TestBase {
             'storage:node',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -423,14 +423,14 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testPluginsGenerationWithNonstandardFixedParameters() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugins' => array(
+      'hooks' => [
+      ],
+      'plugins' => [
         0 => [
           'plugin_type' => 'field.formatter',
           'plugin_name' => 'alpha',
@@ -439,9 +439,9 @@ class ComponentPluginsAnnotated8Test extends TestBase {
             'storage:node',
           ],
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -502,7 +502,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   function testPluginsGenerationWithOtherSchema() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -529,7 +529,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 

@@ -105,12 +105,12 @@ class PluginYamlDiscovery extends BaseGenerator {
   public function requiredComponents() {
     $yaml_file_suffix = $this->component_data['plugin_type_data']['yaml_file_suffix'];
 
-    $components = array(
-      "%module.{$yaml_file_suffix}.yml" => array(
+    $components = [
+      "%module.{$yaml_file_suffix}.yml" => [
         'component_type' => 'YMLFile',
         'filename' => "%module.{$yaml_file_suffix}.yml",
-      ),
-    );
+      ],
+    ];
 
     return $components;
   }

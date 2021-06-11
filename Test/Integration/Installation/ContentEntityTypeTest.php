@@ -20,13 +20,13 @@ class ContentEntityTypeTest extends InstallationTestBase {
   public function testSimpleContentEntityType() {
     // Create a module.
     $module_name = 'dcb_test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'readme' => FALSE,
       'content_entity_types' => [
         0 => [
@@ -48,7 +48,7 @@ class ContentEntityTypeTest extends InstallationTestBase {
           ],
         ],
       ],
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->writeModuleFiles($module_name, $files);

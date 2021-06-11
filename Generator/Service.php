@@ -79,7 +79,7 @@ class Service extends PHPClassFileWithInjection {
       return strnatcasecmp($a['label'], $b['label']);
     });
 
-    $data_definition = array(
+    $data_definition = [
       'service_tag_type' => [
         'label' => 'Service type',
         'description' => 'Tags this service for a particular purpose and implements the interface.',
@@ -98,7 +98,7 @@ class Service extends PHPClassFileWithInjection {
             ->setExpression("parent.root_component_name.get() ~ '.' ~ parent.service_name.get()")
             ->setDependencies('..:root_component_name')
         ),
-      'injected_services' => array(
+      'injected_services' => [
         'label' => 'Injected services',
         'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
         'format' => 'array',
@@ -109,7 +109,7 @@ class Service extends PHPClassFileWithInjection {
 
           return $options;
         },
-      ),
+      ],
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
@@ -134,7 +134,7 @@ class Service extends PHPClassFileWithInjection {
           ],
         ],
       ],
-    );
+    ];
 
     // Put the parent definitions after ours.
     $data_definition += parent::componentDataDefinition();
@@ -187,11 +187,11 @@ class Service extends PHPClassFileWithInjection {
 
     $yaml_data_arguments = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
-      $components['service_' . $service_id] = array(
+      $components['service_' . $service_id] = [
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
-      );
+      ];
 
       // Add the service ID to the arguments in the YAML data.
       if (substr_count($service_id, ':') != 0) {
@@ -282,7 +282,7 @@ class Service extends PHPClassFileWithInjection {
 
     $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
 
-    return array();
+    return [];
   }
 
   /**

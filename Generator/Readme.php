@@ -24,14 +24,14 @@ class Readme extends File {
    * Collect the code files.
    */
   public function getFileInfo() {
-    return array(
+    return [
       'path' => '', // Means the base folder.
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
       'filename' => 'README.txt',
       'body' => $this->lines(),
       'build_list_tags' => ['readme'],
-    );
+    ];
   }
 
   /**
@@ -41,13 +41,13 @@ class Readme extends File {
    *  An array of lines of text.
    */
   function lines() {
-    return array(
+    return [
       $this->component_data['readable_name'],
       str_repeat('=', strlen($this->component_data['readable_name'])),
       '',
       'TODO: write some documentation.',
       '',
-    );
+    ];
   }
 
 }

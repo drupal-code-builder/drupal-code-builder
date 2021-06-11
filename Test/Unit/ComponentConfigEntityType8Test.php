@@ -109,7 +109,7 @@ class ComponentConfigEntityType8Test extends TestBase {
   public function testConfigEntityTypeWithProperties() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -131,7 +131,7 @@ class ComponentConfigEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -211,7 +211,7 @@ class ComponentConfigEntityType8Test extends TestBase {
   public function testConfigEntityTypeSchemaFormatting() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -236,7 +236,7 @@ class ComponentConfigEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $schema_file = $files['config/schema/test_module.schema.yml'];
@@ -252,7 +252,7 @@ class ComponentConfigEntityType8Test extends TestBase {
   public function testConfigEntityTypeWithHandlers() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -265,7 +265,7 @@ class ComponentConfigEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -344,7 +344,7 @@ class ComponentConfigEntityType8Test extends TestBase {
   public function testConfigEntityTypeWithUI() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -368,7 +368,7 @@ class ComponentConfigEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

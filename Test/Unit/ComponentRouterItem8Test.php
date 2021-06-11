@@ -27,7 +27,7 @@ class ComponentRouterItem8Test extends TestBase {
   public function testBasicRouteGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
@@ -66,7 +66,7 @@ class ComponentRouterItem8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -112,7 +112,7 @@ class ComponentRouterItem8Test extends TestBase {
    */
   public function testRouteControllerTypes() {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
@@ -170,7 +170,7 @@ class ComponentRouterItem8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -196,7 +196,7 @@ class ComponentRouterItem8Test extends TestBase {
   public function testRouteGenerationWithMenuLink() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
@@ -226,7 +226,7 @@ class ComponentRouterItem8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

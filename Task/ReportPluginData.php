@@ -136,7 +136,7 @@ class ReportPluginData extends ReportHookDataFolder
   function listPluginNamesOptions($discovery_type = NULL) {
     $data = $this->listPluginData($discovery_type);
 
-    $return = array();
+    $return = [];
     foreach ($data as $plugin_type_name => $plugin_type_info) {
       $return[$plugin_type_name] = $plugin_type_info['type_label'];
     }

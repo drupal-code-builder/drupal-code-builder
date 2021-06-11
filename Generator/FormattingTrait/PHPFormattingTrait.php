@@ -19,18 +19,18 @@ trait PHPFormattingTrait {
    */
   function docBlock($lines) {
     if (!is_array($lines)) {
-      $lines = array($lines);
+      $lines = [$lines];
     }
 
     $lines = array_merge(
-      array("/**"),
+      ["/**"],
       array_map(function ($line) {
         if (empty($line)) {
           return ' *';
         }
         return " * $line";
       }, $lines),
-      array(" */")
+      [" */"]
     );
 
     return $lines;

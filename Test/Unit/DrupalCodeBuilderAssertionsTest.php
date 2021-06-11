@@ -42,13 +42,13 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
    * Data provider for testAssertNoTrailingWhitespace().
    */
   public function providerAssertNoTrailingWhitespace() {
-    return array(
-      array("", TRUE),
-      array("code();", TRUE),
-      array("code(); ", FALSE),
-      array("code();\n \ncode();", FALSE),
-      array("code();\n\ncode();", TRUE),
-    );
+    return [
+      ["", TRUE],
+      ["code();", TRUE],
+      ["code(); ", FALSE],
+      ["code();\n \ncode();", FALSE],
+      ["code();\n\ncode();", TRUE],
+    ];
   }
 
   /**
@@ -82,18 +82,18 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
    * Data provider for testAssertFunctionParameter().
    */
   public function providerAssertFunctionParameter() {
-    return array(
-      array('$foo', TRUE),
-      array('&$foo', TRUE),
-      array('array $foo', TRUE),
-      array('Class $foo', TRUE),
-      array('\\Qualified\\Class $foo', TRUE),
-      array('$foo = NULL', TRUE),
-      array('$foo = \'\'', TRUE),
-      array('cake', FALSE),
-      array('cake = badvalue', FALSE),
-      array('Bad Class $foo', FALSE),
-    );
+    return [
+      ['$foo', TRUE],
+      ['&$foo', TRUE],
+      ['array $foo', TRUE],
+      ['Class $foo', TRUE],
+      ['\\Qualified\\Class $foo', TRUE],
+      ['$foo = NULL', TRUE],
+      ['$foo = \'\'', TRUE],
+      ['cake', FALSE],
+      ['cake = badvalue', FALSE],
+      ['Bad Class $foo', FALSE],
+    ];
   }
 
   /**

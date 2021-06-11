@@ -21,7 +21,7 @@ class Form extends PHPClassFileWithInjection {
   public static function componentDataDefinition() {
     $parent_data_definition = parent::componentDataDefinition();
 
-    $data_definition = array(
+    $data_definition = [
       // Move the form class name property to the top, and override its default.
       'plain_class_name' => $parent_data_definition['plain_class_name']
         ->setLabel("Form class name.")
@@ -43,7 +43,7 @@ class Form extends PHPClassFileWithInjection {
       'form_elements' => static::getPropertyDefinitionForGeneratorType('FormElement')
         ->setLabel('Form elements')
         ->setMultiple(TRUE),
-    );
+    ];
 
     // Put the rest of the parent definitions after ours.
     $data_definition += $parent_data_definition;
@@ -70,23 +70,23 @@ class Form extends PHPClassFileWithInjection {
   public function requiredComponents() {
     $form_name = $this->component_data['form_id'];
 
-    $components = array(
+    $components = [
       // Request the form functions.
-      'getFormId' => array(
+      'getFormId' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function getFormId()',
-        'body' => array(
+        'body' => [
           "return '$form_name';",
-        ),
-      ),
-      'buildForm' => array(
+        ],
+      ],
+      'buildForm' => [
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'function_name' => 'buildForm',
-        'body' => array(
+        'body' => [
           "// Uncomment this line if you change the base class.",
           "// £form = parent::buildForm(£form, £form_state);",
           "",
@@ -104,8 +104,8 @@ class Form extends PHPClassFileWithInjection {
           "];",
           "",
           "return £form;",
-        ),
-      ),
+        ],
+      ],
       'validateForm' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
@@ -113,21 +113,21 @@ class Form extends PHPClassFileWithInjection {
         'declaration' => 'public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
       ],
-      'submitForm' => array(
+      'submitForm' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
-      ),
-    );
+      ],
+    ];
 
     foreach ($this->component_data['injected_services'] as $service_id) {
-      $components['service_' . $service_id] = array(
+      $components['service_' . $service_id] = [
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
-      );
+      ];
     }
 
     return $components;
@@ -142,7 +142,7 @@ class Form extends PHPClassFileWithInjection {
     $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
     $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
 
-    return array();
+    return [];
   }
 
   /**

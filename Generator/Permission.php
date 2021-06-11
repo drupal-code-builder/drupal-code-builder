@@ -14,12 +14,12 @@ class Permission extends BaseGenerator {
    * Define the component data this component needs to function.
    */
   public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + array(
-      'permission' => array(
+    return parent::componentDataDefinition() + [
+      'permission' => [
         'label' => 'Permission machine-readable name',
         'default' => 'access my_module',
         'required' => TRUE,
-      ),
+      ],
       'title' => PropertyDefinition::create('string')
         ->setLabel('Permission human-readable name')
         ->setRequired(TRUE)
@@ -36,25 +36,25 @@ class Permission extends BaseGenerator {
             ->setExpression("get('..:title')")
             ->setDependencies('..:title')
         ),
-      'restrict_access' => array(
+      'restrict_access' => [
         'label' => 'Access warning',
         'description' => 'Whether the permission should show a warning that it should be granted with care.',
         'default' => FALSE,
         'format' => 'boolean',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
-    $components = array(
-      '%module.permissions.yml' => array(
+    $components = [
+      '%module.permissions.yml' => [
         'component_type' => 'YMLFile',
         'filename' => '%module.permissions.yml',
-      ),
-    );
+      ],
+    ];
 
     return $components;
   }
@@ -72,10 +72,10 @@ class Permission extends BaseGenerator {
   protected function buildComponentContents($children_contents) {
     $permission_name = $this->component_data['permission'];
 
-    $permission_info = array(
+    $permission_info = [
       'title' => $this->component_data['title'],
       'description' => $this->component_data['description'],
-    );
+    ];
     if (!empty($this->component_data['restrict_access'])) {
       $permission_info['restrict access'] = TRUE;
     }

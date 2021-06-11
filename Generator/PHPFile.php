@@ -20,7 +20,7 @@ class PHPFile extends File {
    * @see buildComponentContents()
    * @see code_body()
    */
-  protected $functions = array();
+  protected $functions = [];
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,7 @@ class PHPFile extends File {
     // TEMPORARY, until Generate task handles returned contents.
     $this->functions = $this->filterComponentContentsForRole($children_contents, 'function');
 
-    return array();
+    return [];
   }
 
   /**
@@ -80,10 +80,10 @@ class PHPFile extends File {
    * Return the file doxygen header and any custom header code.
    */
   function code_header() {
-    $lines = array(
+    $lines = [
       "@file",
       $this->fileDocblockSummary(),
-    );
+    ];
     $code = $this->docBlock($lines);
     // Blank line after the file docblock.
     $code[] = '';
@@ -97,7 +97,7 @@ class PHPFile extends File {
    *  An array of code lines.
    */
   function code_body() {
-    $code_body = array();
+    $code_body = [];
 
     // Function data has been set by buildComponentContents().
     foreach ($this->functions as $component_name => $function_lines) {

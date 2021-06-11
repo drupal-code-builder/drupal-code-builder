@@ -69,9 +69,9 @@ class VersionHelper9 {
    * Based on notes in change record at https://www.drupal.org/node/2198695.
    */
   function systemListing($mask, $directory, $key = 'name', $min_depth = 1) {
-    $files = array();
+    $files = [];
     foreach (\Drupal::moduleHandler()->getModuleList() as $name => $module) {
-      $files += \Drupal::service('file_system')->scanDirectory($module->getPath(), $mask, array('key' => $key));
+      $files += \Drupal::service('file_system')->scanDirectory($module->getPath(), $mask, ['key' => $key]);
     }
     return $files;
   }
@@ -86,7 +86,7 @@ class VersionHelper9 {
     $mask = '/\.module_builder.inc$/';
     $mb_files = $this->systemListing($mask, 'modules');
 
-    $module_data = array();
+    $module_data = [];
 
     foreach ($mb_files as $file) {
       // Our system listing wrapper ensured that there is a uri property on all versions.

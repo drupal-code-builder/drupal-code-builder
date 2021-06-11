@@ -27,7 +27,7 @@ class InfoProperty extends BaseGenerator {
    */
   public function requiredComponents() {
     // We don't need to request the .info file, as that's always required.
-    return array();
+    return [];
   }
 
   /**

@@ -109,7 +109,7 @@ class AdminSettingsForm extends Form {
 
     $settings_form_path = ltrim($parent_route_data['path'], '/') . '/%module';
 
-    $components['route'] = array(
+    $components['route'] = [
       'component_type' => 'RouterItem',
       // Specify this so we can refer to it in the menu link.
       'route_name' => $this->component_data['route_name'],
@@ -125,7 +125,7 @@ class AdminSettingsForm extends Form {
         'access_type' => 'permission',
         'routing_value' => 'administer %module',
       ],
-    );
+    ];
 
     $components['menu_link'] = [
       'component_type' => 'Plugin',
@@ -139,17 +139,17 @@ class AdminSettingsForm extends Form {
       ],
     ];
 
-    $components['administer %module'] = array(
+    $components['administer %module'] = [
       'component_type' => 'Permission',
       'permission' => 'administer %module',
       'title' => 'Administer %sentence',
-    );
+    ];
 
-    $components['info_configuration'] = array(
+    $components['info_configuration'] = [
       'component_type' => 'InfoProperty',
       'property_name' => 'configure',
       'property_value' => $this->component_data['route_name'],
-    );
+    ];
 
     $components["config/schema/%module.schema.yml"] = [
       'component_type' => 'ConfigSchema',

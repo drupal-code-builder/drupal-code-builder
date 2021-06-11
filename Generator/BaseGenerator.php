@@ -225,10 +225,10 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
       // }
 
       // Add defaults.
-      $def += array(
+      $def += [
         'required' => FALSE,
         'format' => 'string',
-      );
+      ];
 
       if (isset($def['component_type']) && $def['format'] == 'compound') {
         // Argh, need to instantiate the class handler outside of the Generate
@@ -686,7 +686,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
    * @see Generate::assembleComponentList()
    */
   public function requiredComponents() {
-    return array();
+    return [];
   }
 
   /**
@@ -833,7 +833,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
    *  return of buildComponentContents().
    */
   function buildComponentContentsIterative(ComponentCollection $component_collection) {
-    $children_contents = array();
+    $children_contents = [];
 
     // Allow each of our children to do the same as this to collect its own
     // children.
@@ -868,7 +868,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
    */
   protected function buildComponentContents($children_contents) {
     // Base does nothing.
-    return array();
+    return [];
   }
 
   /**

@@ -226,7 +226,7 @@ class Generate extends Base {
    *
    * @deprecated
    */
-  public function getGenerator($component_type, $component_name, $component_data = array()) {
+  public function getGenerator($component_type, $component_name, $component_data = []) {
     return $this->classHandler->getGenerator($component_type, $component_data);
   }
 

@@ -60,7 +60,7 @@ class YMLFile extends File {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    $yaml_data = array();
+    $yaml_data = [];
     foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {
       $yaml_data += $component_yaml_data;
     }
@@ -72,18 +72,18 @@ class YMLFile extends File {
       $this->component_data->yaml_data->set($yaml_data);
     }
 
-    return array();
+    return [];
   }
 
   /**
    * Build the code files.
    */
   public function getFileInfo() {
-    return array(
+    return [
       'path' => '', // Means base folder.
       'filename' => $this->component_data['filename'],
       'body' => $this->getYamlBody($this->component_data['yaml_data']),
-    );
+    ];
   }
 
   /**

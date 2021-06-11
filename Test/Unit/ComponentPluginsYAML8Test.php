@@ -26,7 +26,7 @@ class ComponentPluginsYAML8Test extends TestBase {
   function testBasicYAMLPluginsGeneration() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -43,7 +43,7 @@ class ComponentPluginsYAML8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -64,7 +64,7 @@ class ComponentPluginsYAML8Test extends TestBase {
   function testYAMLPluginsGenerationWithAnnotated() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -85,7 +85,7 @@ class ComponentPluginsYAML8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
@@ -104,7 +104,7 @@ class ComponentPluginsYAML8Test extends TestBase {
    */
   function testPluginsGenerationWithOtherPlugin() {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -124,7 +124,7 @@ class ComponentPluginsYAML8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     // Check the plugin file.

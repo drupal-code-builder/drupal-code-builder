@@ -27,12 +27,12 @@ class ComponentInfo8Test extends TestBase {
 
     // Test basic module info properties.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -52,7 +52,7 @@ class ComponentInfo8Test extends TestBase {
    */
   public function testInfoFileOptionalProperties() {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
@@ -60,7 +60,7 @@ class ComponentInfo8Test extends TestBase {
       'module_package' => 'Test Package',
       'module_dependencies' => ['node', 'block'],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

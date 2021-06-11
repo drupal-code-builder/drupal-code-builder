@@ -83,14 +83,14 @@ class ComponentModule8Test extends TestBase {
    * Tests the token replacements for modules.
    */
   public function testModule8TokenReplacements() {
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $component_data = $this->getRootComponentBlankData('module');
     $component_data->set($module_data);
@@ -114,15 +114,15 @@ class ComponentModule8Test extends TestBase {
   function testNoOptions() {
     // Create a module.
     $module_name = 'testmodule8a';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
@@ -138,16 +138,16 @@ class ComponentModule8Test extends TestBase {
     // Create a module.
     $module_name = 'testmodule8b';
     $help_text = 'This is the test help text';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'readme' => FALSE,
       'module_help_text' => $help_text,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 

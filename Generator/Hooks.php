@@ -63,7 +63,7 @@ class Hooks extends BaseGenerator {
     // function. From this point on, these subcomponents are the authority on
     // which hooks we generate. Each HookImplementation component will add the
     // file it requires to the component list.
-    $components = array();
+    $components = [];
 
     // Convert the input data to the right format.
     // TODO: clean this up -- it used to be handled in property processing.
@@ -97,13 +97,13 @@ class Hooks extends BaseGenerator {
           $hook_class_name = 'HookImplementation';
         }
 
-        $components[$hook['name']] = array(
+        $components[$hook['name']] = [
           'component_type' => $hook_class_name,
           'code_file' => $hook['destination'],
           'hook_name' => $hook['name'],
           'declaration' => $hook['definition'],
           'has_wrapping_newlines' => TRUE,
-        );
+        ];
 
         // The body for the hook implementation can come either from this
         // component's requester, as the 'hook_bodies' property, or from
@@ -218,7 +218,7 @@ class Hooks extends BaseGenerator {
     // eg views_api.
     // We do this by hand this time rather than array_intersect_key() so we can
     // make a list of hooks we're rejecting for (TODO!) eventual warning output.
-    $rejected_hooks = array();
+    $rejected_hooks = [];
     foreach (array_keys($requested_hook_list) as $hook_name) {
       if (!isset($hook_function_declarations[$hook_name])) {
         unset($requested_hook_list[$hook_name]);
@@ -247,18 +247,18 @@ class Hooks extends BaseGenerator {
     // in addition, a file may be overridden by being present in the user's
     // data directory. Though just what the 'data directory' means exactly is
     // not yet properly defined...
-    $template_file_names = array();
+    $template_file_names = [];
     foreach ($hook_function_declarations as $hook_name => $hook) {
       // TODO: $groupname_template = 'GROUP.hooks.template';
       $filename_template  = str_replace('%module', 'hooks', $hook['destination']) . '.template';
       // Place in each $hook_function_declarations item an ordered list of
       // potential files from best fit to fallback.
       // These are keyed by filename and all with value FALSE initially.
-      $hook_function_declarations[$hook_name]['template_files'] = array_fill_keys(array(
+      $hook_function_declarations[$hook_name]['template_files'] = array_fill_keys([
         // TODO: $groupname_template,
         $filename_template,
         'hooks.template',
-      ), FALSE);
+      ], FALSE);
 
       // Meanwhile, build up list of files we will want to check for existence and parse.
       // TODO: $template_file_names[$groupname_template] = TRUE;
@@ -287,7 +287,7 @@ class Hooks extends BaseGenerator {
     // $template_base_paths['module']
     // $template_base_paths['user']
 
-    $template_data = array();
+    $template_data = [];
     foreach (array_keys($template_file_names) as $filename) {
       $filepath = "$template_base_path_module/$filename";
       if (file_exists($filepath)) {
@@ -325,7 +325,7 @@ class Hooks extends BaseGenerator {
     // Or do we just have an overall order from the template files' order, and
     // then within that respect each of theirs, so in effect it's like
     // concatenating all the template files we use?
-    $hook_data_return = array();
+    $hook_data_return = [];
     foreach (array_keys($template_data) as $hook_name) {
       $destination = $hook_function_declarations[$hook_name]['destination'];
       // Copy over the data we already had.
@@ -373,17 +373,17 @@ class Hooks extends BaseGenerator {
    *    array('template' => TEMPLATE BODY)
    */
   function parseTemplate($file) {
-    $data = array();
+    $data = [];
 
     // Captures a template name and body from a template file.
     $pattern = '#== START (.*?) ==(.*?)== END ==#ms';
      preg_match_all($pattern, $file, $matches);
     $count = count($matches[0]);
     for ($i = 0; $i < $count; $i++) {
-      $data[$matches[1][$i]] = array(
+      $data[$matches[1][$i]] = [
         #'title' => $matches[1][$i],
         'template' => $matches[2][$i]
-      );
+      ];
       /*
       $hook_custom_declarations[] = array(
         'title' => $matches[1][$i],

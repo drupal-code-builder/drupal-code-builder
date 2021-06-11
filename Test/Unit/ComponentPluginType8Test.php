@@ -26,21 +26,21 @@ class ComponentPluginType8Test extends TestBase {
   function testAnnotationPluginTypeBasic() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugin_types' => array(
+      'hooks' => [
+      ],
+      'plugin_types' => [
         0 => [
           'discovery_type' => 'annotation',
           'plugin_type' => 'cat_feeder',
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
@@ -179,22 +179,22 @@ class ComponentPluginType8Test extends TestBase {
   function testAnnotationPluginTypeGenerationWithNestedFolder() {
     // Create a module.
     $module_name = 'a_test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'A test module',
       'short_description' => 'A Test Module description',
-      'hooks' => array(
-      ),
-      'plugin_types' => array(
+      'hooks' => [
+      ],
+      'plugin_types' => [
         0 => [
           'discovery_type' => 'annotation',
           'plugin_type' => 'cat_feeder',
           'plugin_subdirectory' => 'Animals/CatFeeder'
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     // Check the plugin manager file, as it mentions the interface.
@@ -228,21 +228,21 @@ class ComponentPluginType8Test extends TestBase {
   function testYamlPluginTypeBasic() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugin_types' => array(
+      'hooks' => [
+      ],
+      'plugin_types' => [
         0 => [
           'discovery_type' => 'yaml',
           'plugin_type' => 'cat_feeder',
         ]
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
@@ -326,14 +326,14 @@ class ComponentPluginType8Test extends TestBase {
   function testMultiplePluginTypes() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'plugin_types' => array(
+      'hooks' => [
+      ],
+      'plugin_types' => [
         0 => [
           // Use annotation type for both, as that generates more things.
           'discovery_type' => 'annotation',
@@ -343,9 +343,9 @@ class ComponentPluginType8Test extends TestBase {
           'discovery_type' => 'annotation',
           'plugin_type' => 'beta',
         ],
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $api_file = $files['test_module.api.php'];

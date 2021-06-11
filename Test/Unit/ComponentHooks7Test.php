@@ -25,12 +25,12 @@ class ComponentHooks7Test extends TestBase {
 
     // Assemble module data.
     $module_name = 'testmodule';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
+      'hooks' => [
         // These two hooks will go in the .module file.
         'hook_menu',
         'hook_block_info',
@@ -38,9 +38,9 @@ class ComponentHooks7Test extends TestBase {
         'hook_tokens',
         // This goes in the .install file.
         'hook_install',
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

@@ -31,12 +31,12 @@ class ModuleCodeFile extends PHPFile {
     // Implode whatever's left.
     $file_key_tag = implode('.', $filename_pieces);
 
-    return array(
+    return [
       'path' => '', // Means base folder.
       'filename' => $this->component_data['filename'],
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', $file_key_tag],
-    );
+    ];
   }
 
   /**

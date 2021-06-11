@@ -47,7 +47,7 @@ class ReportHookDataFolder extends Base {
   public function listHookFiles() {
     $directory = $this->environment->getHooksDirectory();
 
-    $files = array();
+    $files = [];
 
     // No need to verify $directory; our sanity check has taken care of it.
     $dh = opendir($directory);
@@ -55,7 +55,7 @@ class ReportHookDataFolder extends Base {
       // Ignore files that don't make sense to include.
       // System files and cruft.
       // TODO: replace all the .foo with one of the arcane PHP string checking functions
-      if (in_array($file, array('.', '..', '.DS_Store', 'CVS', 'hooks_processed.php'))) {
+      if (in_array($file, ['.', '..', '.DS_Store', 'CVS', 'hooks_processed.php'])) {
         continue;
       }
       // Our own processed files.

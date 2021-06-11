@@ -181,14 +181,14 @@ class PHPTester {
     $runner->config = new Config(['--']);
     $runner->config->setConfigData('installed_paths', __DIR__ . '/../../../vendor/drupal/coder/coder_sniffer');
     $runner->config->setConfigData('drupal_core_version', $this->drupalMajorVersion);
-    $runner->config->standards = array('Drupal');
+    $runner->config->standards = ['Drupal'];
     $runner->config->exclude = $excluded_sniffs;
     $runner->init();
     // Hard-code some other config settings.
     // Do this after init() so these values override anything that was set in
     // the rulesets we processed during init(). Or do this before if you want
     // to use them like defaults instead.
-    $runner->config->reports      = array('summary' => null, 'full' => null);
+    $runner->config->reports      = ['summary' => null, 'full' => null];
     $runner->config->verbosity    = 0;
     $runner->config->showProgress = false;
     $runner->config->interactive  = false;

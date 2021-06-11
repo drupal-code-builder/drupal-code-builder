@@ -48,7 +48,7 @@ class Module extends RootComponent {
    * This is initially the given data for generating the module, but other
    * generators may add data to it during the generating process.
    */
-  public $component_data = array();
+  public $component_data = [];
 
   /**
    * Constructor method; sets the component data.
@@ -161,56 +161,56 @@ class Module extends RootComponent {
             ->setExpression("machineToLabel(get('..:root_name'))")
             ->setDependencies('..:root_name')
         ),
-      'short_description' => array(
+      'short_description' => [
         'label' => 'Module .info file description',
         'default' => 'TODO: Description of module',
         'required' => TRUE,
         'process_default' => TRUE,
-      ),
-      'module_package' => array(
+      ],
+      'module_package' => [
         'label' => 'Module .info file package',
         'default' => '',
         'required' => FALSE,
         'process_default' => TRUE,
-      ),
-      'module_dependencies' => array(
+      ],
+      'module_dependencies' => [
         'label' => 'Module dependencies',
         'description' => 'The machine names of the modules this module should have as dependencies.',
         'required' => FALSE,
         // We need a value for this, as other generators acquire it.
         'process_default' => TRUE,
         'format' => 'array',
-      ),
+      ],
       // If this is given, then hook_help() is automatically added to the list
       // of required hooks.
-      'module_help_text' => array(
+      'module_help_text' => [
         'label' => 'Module help text',
         'description' => 'The text to show on the site help page. This automatically adds hook_help().',
         'default' => NULL,
         'required' => FALSE,
-      ),
-      'settings_form' => array(
+      ],
+      'settings_form' => [
         'label' => "Admin settings form",
         'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
         'required' => FALSE,
         'format' => 'compound',
         'cardinality' => 1,
         'component_type' => 'AdminSettingsForm',
-      ),
-      'forms' => array(
+      ],
+      'forms' => [
         'label' => "Forms",
         'description' => "The forms for this module to provide.",
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'Form',
-      ),
-      'services' => array(
+      ],
+      'services' => [
         'label' => "Services",
         'description' => 'The services for this module to provide.',
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'Service',
-      ),
+      ],
       'service_provider' => [
         'label' => "Service provider",
         'description' => 'A service provider alters existing services or defines services dynamically.',
@@ -219,14 +219,14 @@ class Module extends RootComponent {
         'format' => 'boolean',
         'component_type' => 'ServiceProvider',
       ],
-      'permissions' => array(
+      'permissions' => [
         'label' => "Permissions",
         'description' => 'The permissions for this module to provide.',
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'Permission',
-      ),
-      'module_hook_presets' => array(
+      ],
+      'module_hook_presets' => [
         'label' => 'Hook preset groups',
         'required' => FALSE,
         'format' => 'array',
@@ -240,7 +240,7 @@ class Module extends RootComponent {
           // TODO: this is not working! See the processing callback.
           $property_info['_presets'] = $hook_presets;
 
-          $options = array();
+          $options = [];
           foreach ($hook_presets as $name => $info) {
             $options[$name] = $info['label'];
           }
@@ -258,15 +258,15 @@ class Module extends RootComponent {
 
           foreach ($value as $given_preset_name) {
             if (!isset($hook_presets[$given_preset_name])) {
-              throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Undefined hook preset group !name", array(
+              throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Undefined hook preset group !name", [
                 '!name' => htmlspecialchars($given_preset_name, ENT_QUOTES, 'UTF-8'),
-              )));
+              ]));
             }
             // DX: check the preset is properly defined.
             if (!is_array($hook_presets[$given_preset_name]['hooks'])) {
-              throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Incorrectly defined hook preset group !name", array(
+              throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Incorrectly defined hook preset group !name", [
                 '!name' => htmlspecialchars($given_preset_name, ENT_QUOTES, 'UTF-8'),
-              )));
+              ]));
             }
 
             // Add the preset hooks list to the hooks array in the component
@@ -276,7 +276,7 @@ class Module extends RootComponent {
             //drush_print_r($component_data['hooks']);
           }
         },
-      ),
+      ],
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE)
@@ -323,7 +323,7 @@ class Module extends RootComponent {
       //     $component_data['hooks'] = $hooks;
       //   }
       // ),
-      'content_entity_types' => array(
+      'content_entity_types' => [
         'label' => 'Content entity types',
         'required' => FALSE,
         'format' => 'compound',
@@ -331,34 +331,34 @@ class Module extends RootComponent {
         // components, and the input data should be placed in a nested array in
         // the module data.
         'component_type' => 'ContentEntityType',
-      ),
-      'config_entity_types' => array(
+      ],
+      'config_entity_types' => [
         'label' => 'Config entity types',
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'ConfigEntityType',
-      ),
+      ],
       'plugins' => static::getPropertyDefinitionForGeneratorType('Plugin')
         ->setLabel('Plugins')
         ->setMultiple(TRUE),
-      'plugin_types' => array(
+      'plugin_types' => [
         'label' => 'Plugin types',
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'PluginType',
-      ),
-      'theme_hooks' => array(
+      ],
+      'theme_hooks' => [
         'label' => "Theme hooks",
         'description' => "The name of theme hooks, without the leading 'theme_'.",
         'format' => 'array',
         'component_type' => 'ThemeHook',
-      ),
-      'router_items' => array(
+      ],
+      'router_items' => [
         'label' => "Routes",
         'required' => FALSE,
         'format' => 'compound',
         'component_type' => 'RouterItem',
-      ),
+      ],
       'library' => [
         'label' => "Library",
         'description' => 'A collection of CSS and JS assets, declared in a libraries.yml file.',
@@ -366,35 +366,35 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component_type' => 'Library',
       ],
-      'api' => array(
+      'api' => [
         'label' => "api.php file",
         'description' => 'An api.php file documents hooks and callbacks that this module invents.',
         'required' => FALSE,
         'default' => FALSE,
         'format' => 'boolean',
         'component_type' => 'API',
-      ),
-      'readme' => array(
+      ],
+      'readme' => [
         'label' => "README file",
         'required' => FALSE,
         'default' => TRUE,
         'format' => 'boolean',
         'component_type' => 'Readme',
-      ),
-      'phpunit_tests' => array(
+      ],
+      'phpunit_tests' => [
         'label' => "PHPUnit test case class",
         'format' => 'compound',
         'component_type' => 'PHPUnitTest',
         'required' => FALSE,
-      ),
-      'tests' => array(
+      ],
+      'tests' => [
         'label' => "Simpletest test case class",
         'description' => 'NOTICE: These are deprecated in Drupal 8.',
         'required' => FALSE,
         'default' => FALSE,
         'format' => 'boolean',
         'component_type' => 'Tests',
-      ),
+      ],
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
@@ -436,10 +436,10 @@ class Module extends RootComponent {
 
     // Turn the hooks property into the Hooks component.
     if (!$this->component_data->hooks->isEmpty()) {
-      $components['hooks'] = array(
+      $components['hooks'] = [
         'component_type' => 'Hooks',
         'hooks' => $this->component_data['hooks'],
-      );
+      ];
     }
 
     // Add hook_help if help text is given.
@@ -451,12 +451,12 @@ class Module extends RootComponent {
         $components['hooks']['hooks'][] = 'hook_help';
       }
       else {
-        $components['hooks'] = array(
+        $components['hooks'] = [
           'component_type' => 'Hooks',
-          'hooks' => array(
+          'hooks' => [
             'hook_help',
-          ),
-        );
+          ],
+        ];
       }
     }
 
@@ -501,7 +501,7 @@ class Module extends RootComponent {
     // Get old style variable names.
     $module_data = $this->component_data;
 
-    return array(
+    return [
       '%module'       => $module_data['root_name'],
       '%readable'     => str_replace("'", "\'", $module_data->readable_name->value),
       '%Module'       => CaseString::title($module_data['readable_name'])->title(),
@@ -509,7 +509,7 @@ class Module extends RootComponent {
       '%lower'        => strtolower($module_data['readable_name']),
       '%description'  => str_replace("'", "\'", $module_data['short_description']),
       '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : 'TODO: Create admin help text.',
-    );
+    ];
   }
 
 }

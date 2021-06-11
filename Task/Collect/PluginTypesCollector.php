@@ -260,7 +260,7 @@ class PluginTypesCollector extends CollectorBase  {
   protected function gatherPluginTypeInfo($job_list) {
     // Assemble a basic array of plugin type data, that we will successively add
     // data to.
-    $plugin_type_data = array();
+    $plugin_type_data = [];
     foreach ($job_list as $job) {
       $plugin_manager_service_id = $job['service_id'];
       $plugin_type_id = $job['type_id'];
@@ -544,7 +544,7 @@ class PluginTypesCollector extends CollectorBase  {
 
     foreach ($properties_reflection as $property_reflection) {
       // Assemble data about this annotation property.
-      $annotation_property_data = array();
+      $annotation_property_data = [];
       $annotation_property_data['name'] = $property_reflection->name;
 
       // Get the docblock for the property, so we can figure out whether the

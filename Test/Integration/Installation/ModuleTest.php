@@ -20,15 +20,15 @@ class ModuleTest extends InstallationTestBase {
   public function testModule() {
     // Create a module.
     $module_name = 'dcb_test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->writeModuleFiles($module_name, $files);

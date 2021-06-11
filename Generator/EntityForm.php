@@ -29,11 +29,11 @@ class EntityForm extends EntityHandler {
    * {@inheritdoc}
    */
   public function requiredComponents() {
-    $components = array(
+    $components = [
       // Request the form functions.
       // Note that for entity forms, buildForm() shouldn't be used, but form()
       // instead. (DrupalWTF!)
-      'form' => array(
+      'form' => [
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
@@ -42,7 +42,7 @@ class EntityForm extends EntityHandler {
           '$form = parent::form($form, $form_state);',
           'return $form;',
         ],
-      ),
+      ],
       'validateForm' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
@@ -50,7 +50,7 @@ class EntityForm extends EntityHandler {
         'declaration' => 'public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => '',
       ],
-      'submitForm' => array(
+      'submitForm' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
@@ -58,7 +58,7 @@ class EntityForm extends EntityHandler {
         'body' => [
           'parent::submitForm($form, $form_state);'
         ],
-      ),
+      ],
       'save' => [
         'component_type' => 'PHPFunction',
         'containing_component' => '%requester',
@@ -71,7 +71,7 @@ class EntityForm extends EntityHandler {
           'return $saved;',
         ],
       ],
-    );
+    ];
 
     return $components;
   }

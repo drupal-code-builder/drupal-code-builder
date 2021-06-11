@@ -11,14 +11,14 @@ class Tests7 extends Tests {
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
-    $components = array();
+    $components = [];
 
     // Declare the class file in the module's .info file.
-    $components['info_class'] = array(
+    $components['info_class'] = [
       'component_type' => 'InfoProperty',
       'property_name' => 'files[]',
       'property_value' => 'tests/%module.test',
-    );
+    ];
     return $components;
   }
 

@@ -458,11 +458,11 @@ abstract class EntityTypeBase extends PHPClassFile {
     if ($this->component_data['admin_permission']) {
       $admin_permission_name = $this->component_data['admin_permission_name'];
 
-      $components[$admin_permission_name] = array(
+      $components[$admin_permission_name] = [
         'component_type' => 'Permission',
         'permission' => $admin_permission_name,
         'title' => 'Administer ' . CaseString::snake($this->component_data->entity_type_id->value)->sentence() . ' entities',
-      );
+      ];
     }
 
     // Add menu plugins for the entity type if the UI option is set.

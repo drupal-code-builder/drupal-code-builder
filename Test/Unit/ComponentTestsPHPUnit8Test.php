@@ -35,7 +35,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   function testModuleGenerationTestsWithModuleDependencies() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -50,7 +50,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -82,7 +82,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   function testModuleGenerationUnitTest() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Generated module',
@@ -93,7 +93,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -118,7 +118,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   function testModuleGenerationKernelTest() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Generated module',
@@ -129,7 +129,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -160,7 +160,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   function testModuleGenerationTestsWithServices() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Generated module',
@@ -178,7 +178,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -216,7 +216,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   function testModuleGenerationTestsWithBasicTestModule() {
     // Create a module.
     $module_name = 'generated_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Generated module',
@@ -232,7 +232,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -251,7 +251,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
   function testModuleGenerationTestsWithTestModuleComponents() {
     // Create a module.
     $module_name = 'generated_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Generated module',
@@ -281,7 +281,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

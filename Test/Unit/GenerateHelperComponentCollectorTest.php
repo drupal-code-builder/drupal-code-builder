@@ -1221,10 +1221,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    */
   protected function componentDataInfoAddDefaults(&$data_info) {
     foreach ($data_info as &$property_info) {
-      $property_info += array(
+      $property_info += [
         'required' => FALSE,
         'format' => 'string',
-      );
+      ];
 
       // Recurse into child properties.
       if (isset($property_info['properties'])) {

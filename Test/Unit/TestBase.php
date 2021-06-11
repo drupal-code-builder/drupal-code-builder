@@ -606,7 +606,7 @@ abstract class TestBase extends TestCase {
     static::assertMatchesRegularExpression($expected_regex, $string, $message);
 
     // Run the regex again so that we can pull out matches.
-    $matches = array();
+    $matches = [];
     $match = preg_match($expected_regex, $string, $matches);
 
     // Check the function parameters are properly formed.
@@ -636,7 +636,7 @@ abstract class TestBase extends TestCase {
    */
   public static function assertFunctionHasParameters($function_name, $parameters, $string, $message = NULL) {
     $function_capturing_regex = "[function {$function_name}\((?<params>.*)\)]";
-    $matches = array();
+    $matches = [];
     $match = preg_match($function_capturing_regex, $string, $matches);
 
     if (empty($matches['params'])) {
@@ -687,7 +687,7 @@ abstract class TestBase extends TestCase {
       @x';
 
     if (!empty($expected_parameter_name)) {
-      $matches = array();
+      $matches = [];
       $match = preg_match($param_regex, $parameter, $matches);
       $found_parameter_name = $matches['parameter'];
 

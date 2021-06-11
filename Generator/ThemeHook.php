@@ -29,19 +29,19 @@ class ThemeHook extends BaseGenerator {
   public function requiredComponents() {
     $twig_file_name = $declaration = str_replace('_', '-', $this->component_data['theme_hook_name']) . '.html.twig';
 
-    $components = array(
-      'hooks' => array(
+    $components = [
+      'hooks' => [
         'component_type' => 'Hooks',
-        'hooks' => array(
+        'hooks' => [
           'hook_theme',
-        ),
-      ),
-      $twig_file_name => array(
+        ],
+      ],
+      $twig_file_name => [
         'component_type' => 'TwigFile',
         'filename' => $twig_file_name,
         'theme_hook_name' => $this->component_data['theme_hook_name'],
-      ),
-    );
+      ],
+    ];
 
     return $components;
   }
@@ -60,7 +60,7 @@ class ThemeHook extends BaseGenerator {
     // Return code for a single hook_theme() item.
     $theme_hook_name = $this->component_data['theme_hook_name'];
 
-    $code = array();
+    $code = [];
 
     $code[] = "  '$theme_hook_name' => [";
     $code[] = "    'render element' => 'elements',";

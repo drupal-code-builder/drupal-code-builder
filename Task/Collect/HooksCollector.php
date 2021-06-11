@@ -183,7 +183,7 @@ abstract class HooksCollector extends CollectorBase {
     $hook_info = $this->getDrupalHookInfo();
 
     // Build list of hooks
-    $hook_groups = array();
+    $hook_groups = [];
     foreach ($hook_file_data as $file_data) {
       $hook_data_raw = $this->processHookFile($file_data['path']);
 
@@ -218,7 +218,7 @@ abstract class HooksCollector extends CollectorBase {
         }
 
         // Process hook dependendies for the file.
-        $hook_dependencies = array();
+        $hook_dependencies = [];
         if (isset($file_data['hook_dependencies'])) {
           // Incoming data is of the form:
           //  'required hook' => array('dependent hooks')
@@ -237,7 +237,7 @@ abstract class HooksCollector extends CollectorBase {
         // for the hook.
         // TODO: see if there's a way to label this in the resulting source
         // as associated with the hook that requested this.
-        $matches = array();
+        $matches = [];
         preg_match_all("@(callback_\w+)\(\)@", $hook_data_raw['documentation'][$key], $matches);
         if (!empty($matches[1])) {
           $hook_dependencies += $matches[1];
@@ -248,7 +248,7 @@ abstract class HooksCollector extends CollectorBase {
         // But if there are multiple hook files for one module / group, then
         // they will go sequentially one after the other.
         // TODO: should this be improved, eg to group also by filename?
-        $hook_groups[$group][$hook] = array(
+        $hook_groups[$group][$hook] = [
           'type' => $hook_data_raw['type'][$key],
           'name' => $hook,
           'definition'  => $hook_data_raw['definitions'][$key],
@@ -261,7 +261,7 @@ abstract class HooksCollector extends CollectorBase {
           'core'        => $file_data['core'] ?? NULL,
           'file_path'   => $file_data['path'],
           'body'        => $hook_data_raw['bodies'][$key],
-        );
+        ];
         //dsm($hook_groups);
         //drush_print_r($hook_groups);
 
@@ -331,14 +331,14 @@ abstract class HooksCollector extends CollectorBase {
     // We don't care about the full matches.
     //array_shift($matches);
 
-    $data = array(
+    $data = [
       'descriptions'  => $matches[1],
       'documentation' => $matches[2],
       'definitions'   => $matches[3],
       'names'         => $matches[4],
       'type'          => $matches[5],
       'bodies'        => $matches[6],
-    );
+    ];
 
     // Replace all the short class names in body code with fully-qualified ones.
     foreach ($data['bodies'] as &$hook_body) {
@@ -387,7 +387,7 @@ abstract class HooksCollector extends CollectorBase {
    */
   protected function getAdditionalHookInfo() {
     // Subclasses should override this.
-    return array();
+    return [];
   }
 
 }

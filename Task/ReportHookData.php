@@ -121,7 +121,7 @@ class ReportHookData extends ReportHookDataFolder implements SectionReportInterf
   function listHookNamesOptions() {
     $data = $this->getHookDeclarations();
 
-    $return = array();
+    $return = [];
     foreach ($data as $hook_name => $hook_info) {
       $return[$hook_name] = $hook_info['description'];
     }
@@ -143,14 +143,14 @@ class ReportHookData extends ReportHookDataFolder implements SectionReportInterf
   public function listHookOptionsStructured() {
     $data = $this->getHookDeclarations();
 
-    $return = array();
+    $return = [];
     foreach ($data as $hook_name => $hook_info) {
-      $return[$hook_info['group']][$hook_name] = array(
+      $return[$hook_info['group']][$hook_name] = [
         'name' => $hook_info['name'],
         'description' => $hook_info['description'],
         'type' => $hook_info['type'],
         'core' => $hook_info['core'],
-      );
+      ];
     }
 
     return $return;
@@ -179,7 +179,7 @@ class ReportHookData extends ReportHookDataFolder implements SectionReportInterf
   function getHookDeclarations() {
     $data = $this->listHookData();
 
-    $return = array();
+    $return = [];
     foreach ($data as $group => $hooks) {
       foreach ($hooks as $key => $hook) {
         // Standardize to lowercase.

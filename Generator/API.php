@@ -23,7 +23,7 @@ class API extends PHPFile {
    */
   public function requiredComponents() {
     // We have no subcomponents.
-    return array();
+    return [];
   }
 
   /**
@@ -32,12 +32,12 @@ class API extends PHPFile {
   public function getFileInfo() {
     $module_root_name = $this->component_data->root_component_name->value;
 
-    return array(
+    return [
       'path' => '', // Means base folder.
       'filename' => "$module_root_name.api.php",
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', 'api'],
-    );
+    ];
   }
 
   /**
@@ -57,7 +57,7 @@ class API extends PHPFile {
     $hooks = $mb_task_handler_analyze->getInventedHooks($this->component_data['root_component_name']);
 
     // Build an array of code pieces.
-    $code_pieces = array();
+    $code_pieces = [];
 
     // The docblock grouping.
     $code_pieces['group'] = <<<EOT
@@ -105,7 +105,7 @@ class API extends PHPFile {
    */
   function hook_code($hook_short_name, $parameters_string) {
     $parameters = explode(', ', $parameters_string);
-    $parameters_doc_lines = array();
+    $parameters_doc_lines = [];
     foreach ($parameters as $parameter) {
       $parameters_doc_lines[] = " * @param $parameter\n" .
                                 " *   TODO: document this parameter.";

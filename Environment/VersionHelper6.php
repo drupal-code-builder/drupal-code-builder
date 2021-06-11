@@ -54,9 +54,9 @@ class VersionHelper6 extends VersionHelper7 {
 
     // If we go right the way along to the base and still can't create a directory...
     if ($i == $length) {
-      throw new \Exception(strtr("The directory !path cannot be created or is not writable", array(
+      throw new \Exception(strtr("The directory !path cannot be created or is not writable", [
         '!path' => htmlspecialchars($path_slice, ENT_QUOTES, 'UTF-8'),
-      )));
+      ]));
     }
     // print "status: $status for $path_slice - i: $i\n";
 
@@ -107,7 +107,7 @@ class VersionHelper6 extends VersionHelper7 {
     $mb_files = $this->systemListing('/\.module_builder.inc$/', 'modules');
     //print_r($mb_files);
 
-    $module_data = array();
+    $module_data = [];
 
     foreach ($mb_files as $file) {
       // Our system listing wrapper ensured that there is a uri property on all versions.

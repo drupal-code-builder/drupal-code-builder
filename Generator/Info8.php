@@ -105,7 +105,7 @@ class Info8 extends Info {
     //drush_print_r($yaml);
 
     // Because the yaml is all built for us, this is just a singleton array.
-    return array($yaml);
+    return [$yaml];
   }
 
 }

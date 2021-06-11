@@ -232,7 +232,7 @@ class PHPUnitTest extends PHPClassFile {
     // TEMPORARY, until Generate task handles returned contents.
     $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
 
-    return array();
+    return [];
   }
 
   /**

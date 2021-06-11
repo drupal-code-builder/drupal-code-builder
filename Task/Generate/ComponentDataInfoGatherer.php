@@ -174,10 +174,10 @@ class ComponentDataInfoGatherer {
    *  generator, such as the 'hooks' property.
    */
   protected function componentDataInfoAddDefaults(&$property_info) {
-    $property_info += array(
+    $property_info += [
       'required' => FALSE,
       'format' => 'string',
-    );
+    ];
   }
 
 }

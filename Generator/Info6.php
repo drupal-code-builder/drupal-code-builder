@@ -11,7 +11,7 @@ class Info6 extends InfoIni {
    * Create lines of file body for Drupal 6.
    */
   function file_body() {
-    $lines = array();
+    $lines = [];
     $lines['name'] =  $this->component_data['readable_name'];
     $lines['description'] =  $this->component_data['short_description'];
     if (!empty( $this->component_data['module_dependencies'])) {

@@ -220,11 +220,11 @@ class PluginType extends BaseGenerator {
           )
         )
         ->setRequired(TRUE),
-      'plugin_type' => array(
+      'plugin_type' => [
         'label' => 'Plugin type ID',
         'description' => "The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.",
         'required' => TRUE,
-      ),
+      ],
       'plugin_label' => PropertyDefinition::create('string')
         ->setLabel('Plugin type label')
         ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
@@ -240,7 +240,7 @@ class PluginType extends BaseGenerator {
       //     ->setDependencies('..:plugin_name')
       //   ),
 
-      'plugin_subdirectory' => array(
+      'plugin_subdirectory' => [
         'label' => 'Plugin subdirectory within the Plugins directory',
         'required' => TRUE,
         'default' => function($component_data) {
@@ -251,7 +251,7 @@ class PluginType extends BaseGenerator {
           return CaseString::snake($plugin_type)->pascal();
         },
         'process_default' => TRUE,
-      ),
+      ],
       'plugin_relative_namespace' => [
         'label' => 'Plugin relative namespace',
         'computed' => TRUE,
@@ -260,7 +260,7 @@ class PluginType extends BaseGenerator {
           return str_replace('/', '\\', $component_data['plugin_subdirectory']);
         },
       ],
-      'annotation_class' => array(
+      'annotation_class' => [
         'label' => 'Annotation class name. (Only used for annotation discovery plugins.)',
         'required' => TRUE,
         'default' => function($component_data) {
@@ -271,8 +271,8 @@ class PluginType extends BaseGenerator {
           return CaseString::snake($plugin_type)->pascal();
         },
         'process_default' => TRUE,
-      ),
-      'interface' => array(
+      ],
+      'interface' => [
         'label' => 'Interface',
         'computed' => TRUE,
         'default' => function($component_data) {
@@ -284,7 +284,7 @@ class PluginType extends BaseGenerator {
             $component_data['annotation_class'] . 'Interface',
           ]);
         },
-      ),
+      ],
       // TODO: Argh, do something about this mess of relative / qualified
       // class names!
       'base_class_short_name' => [
@@ -356,7 +356,7 @@ class PluginType extends BaseGenerator {
     // This is needed so that the PluginTypeManager generator has access to
     // the whole data structure, in particular, to access generation
     // configuration.
-    $components['manager'] = array(
+    $components['manager'] = [
       'component_type' => 'PluginTypeManager',
       'use_data_definition' => TRUE,
       'prefixed_service_name' => $this->component_data->plugin_manager_service_id->value,
@@ -364,7 +364,7 @@ class PluginType extends BaseGenerator {
       'plain_class_name' => CaseString::snake($this->component_data->plugin_type->value)->pascal() . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
-    );
+    ];
 
     if ($this->component_data['discovery_type'] == 'annotation') {
       // Annotation plugin managers inherit from DefaultPluginManager.

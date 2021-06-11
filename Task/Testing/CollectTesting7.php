@@ -28,10 +28,10 @@ class CollectTesting7 extends Collect {
     // massive list of hooks.
     // TODO: this has no effect here! This method is not called here! Needs
     // to be moved to HooksCollector7!
-    $testing_files = array(
+    $testing_files = [
       'system.api.php' => TRUE,
       'block.api.php' => TRUE,
-    );
+    ];
 
     $files = array_intersect_key($files, $testing_files);
 

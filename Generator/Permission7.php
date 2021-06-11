@@ -11,14 +11,14 @@ class Permission7 extends Permission {
    * Return an array of subcomponent types.
    */
   public function requiredComponents() {
-    $components = array(
-      'hooks' => array(
+    $components = [
+      'hooks' => [
         'component_type' => 'Hooks',
-        'hooks' => array(
+        'hooks' => [
           'hook_permission',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     return $components;
   }
@@ -35,7 +35,7 @@ class Permission7 extends Permission {
    */
   protected function buildComponentContents($children_contents) {
     // Return code for a single permission item for the hook.
-    $code = array();
+    $code = [];
 
     $permission_name = $this->component_data['permission'];
     $permission_description = $this->component_data['description'];

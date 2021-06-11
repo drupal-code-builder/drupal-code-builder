@@ -22,13 +22,13 @@ class TwigFile extends File {
    * Return the data for the file this component provides.
    */
   public function getFileInfo() {
-    return array(
+    return [
       'path' => 'templates',
       'filename' => $this->component_data['filename'],
       'body' => [
         $this->getTwigContents(),
       ],
-    );
+    ];
   }
 
   protected function getTwigContents() {

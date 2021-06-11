@@ -32,7 +32,7 @@ class Tests extends PHPFile {
    */
   public function requiredComponents() {
     // We have no subcomponents.
-    return array();
+    return [];
   }
 
   /**
@@ -42,12 +42,12 @@ class Tests extends PHPFile {
     $module_root_name = $this->component_data['camel_case_name'];
     $test_file_name = $module_root_name . "Test.php";
 
-    return array(
+    return [
       'path' => 'src/Tests',
       'filename' => $test_file_name,
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', 'tests'],
-    );
+    ];
   }
 
   /**
@@ -104,7 +104,7 @@ class Tests extends PHPFile {
 
       EOT;
 
-    return array($code);
+    return [$code];
   }
 
 }

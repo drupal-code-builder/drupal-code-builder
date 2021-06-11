@@ -27,7 +27,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testBasicContentEntityType() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -54,7 +54,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -176,7 +176,7 @@ class ComponentContentEntityType8Test extends TestBase {
     $expected_extra_methods = []
   ) {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -187,7 +187,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -355,7 +355,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testEntityTypeWithTranslation() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -383,7 +383,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -473,7 +473,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testEntityTypeWithRevisions() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -501,7 +501,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -589,7 +589,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testEntityTypeWithBundleEntityNoUI() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -630,7 +630,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -755,7 +755,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testContentEntityTypeHandlers($handler_properties, $expected_handlers_annotation, $expected_files_base_classes) {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -766,7 +766,7 @@ class ComponentContentEntityType8Test extends TestBase {
         + $handler_properties,
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -1164,7 +1164,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testContentEntityTypeCustomHandlers() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -1184,7 +1184,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -1296,7 +1296,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testContentEntityTypeHandlerNamespaceConfiguration() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -1312,7 +1312,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'configuration' => [
         'entity_handler_namespace' => 'Cake',
       ]
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -1330,7 +1330,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     // Test the special case where the configuration value is an empty string.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -1346,7 +1346,7 @@ class ComponentContentEntityType8Test extends TestBase {
       'configuration' => [
         'entity_handler_namespace' => '',
       ]
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -1371,7 +1371,7 @@ class ComponentContentEntityType8Test extends TestBase {
    */
   public function testContentEntityTypeWithUI() {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -1386,7 +1386,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -1478,7 +1478,7 @@ class ComponentContentEntityType8Test extends TestBase {
    */
   public function testContentEntityTypeWithBundleEntityUI() {
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -1504,7 +1504,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -1554,7 +1554,7 @@ class ComponentContentEntityType8Test extends TestBase {
   public function testEntityTypeWithUIAndBundleEntity() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
@@ -1580,7 +1580,7 @@ class ComponentContentEntityType8Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

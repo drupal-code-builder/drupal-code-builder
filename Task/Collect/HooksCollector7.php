@@ -62,19 +62,19 @@ class HooksCollector7 extends HooksCollector {
       // We could instead assume we have MODULE.api.php, but some modules
       // have multiple API files with suffixed names, eg Services.
       // @todo: make this more robust, somehow!
-      $matches = array();
+      $matches = [];
       preg_match('@modules/(?:contrib/)?(\w+)@', $file['uri'], $matches);
       //print_r($matches);
       $module = $matches[1];
 
-      $hook_files[$filename] = array(
+      $hook_files[$filename] = [
         'original' => $drupal_root . '/' . $file['uri'], // no idea if useful
         'filename' => $filename,
         'path' => $directory . '/' . $filename,
         'destination' => '%module.module', // Default. We override this below.
         'group'       => $module, // @todo specialize this?
         'module'      => $module,
-      );
+      ];
     }
 
     // We now have the basics.
@@ -113,7 +113,7 @@ class HooksCollector7 extends HooksCollector {
       }
       // It can also (or instead) set a destination per hook.
       if (isset($module_data['hook_destinations'])) {
-        $hook_files[$filename]['hook_destinations'] = array();
+        $hook_files[$filename]['hook_destinations'] = [];
         foreach ($module_data['hook_destinations'] as $destination => $hooks) {
           $destinations[$module] = array_fill_keys($hooks, $destination);
           $hook_files[$filename]['hook_destinations'] += array_fill_keys($hooks, $destination);
@@ -134,11 +134,11 @@ class HooksCollector7 extends HooksCollector {
    */
   protected function getAdditionalHookInfo() {
     // For D7, keys should match the filename MODULE.api.php
-    $info = array(
+    $info = [
       // Hooks on behalf of Drupal core.
-      'system' => array(
-        'hook_destinations' => array(
-          '%module.install' => array(
+      'system' => [
+        'hook_destinations' => [
+          '%module.install' => [
             'hook_requirements',
             'hook_schema',
             'hook_schema_alter',
@@ -148,62 +148,62 @@ class HooksCollector7 extends HooksCollector {
             'hook_uninstall',
             'hook_enable',
             'hook_disable',
-          ),
-        ),
-      ),
-      'block' => array(
-        'hook_dependencies' => array(
-          'hook_block_info' => array(
+          ],
+        ],
+      ],
+      'block' => [
+        'hook_dependencies' => [
+          'hook_block_info' => [
             'hook_block_*',
-          ),
-        ),
-      ),
-      'field' => array(
-        'hook_destinations' => array(
-          '%module.install' => array(
+          ],
+        ],
+      ],
+      'field' => [
+        'hook_destinations' => [
+          '%module.install' => [
             'hook_field_schema',
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       // Hooks in theme.api.php. This does nothing yet!
-      'theme' => array(
+      'theme' => [
         'destination' => 'template.php',
-      ),
+      ],
       // Views
-      'views' => array(
-        'hook_destinations' => array(
-          '%module.views.inc' => array(
+      'views' => [
+        'hook_destinations' => [
+          '%module.views.inc' => [
             'hook_views_data',
             'hook_views_data_alter',
             'hook_views_plugins',
             'hook_views_plugins_alter',
             'hook_views_query_alter',
-          ),
-          '%module.views_default.inc' => array(
+          ],
+          '%module.views_default.inc' => [
             'hook_views_default_views',
-          ),
-        ),
+          ],
+        ],
         // Data about hook dependencies.
-        'hook_dependencies' => array(
+        'hook_dependencies' => [
           // A required hook.
-          'hook_views_api' => array(
+          'hook_views_api' => [
             // An array of hooks that require this, as a regex.
             // TODO!??? dependencies across different API files not yet supported!
             'hook_views_.*',
-          ),
-        ),
-      ),
-      'rules' => array(
-        'hook_destinations' => array(
-          '%module.rules.inc' => array(
+          ],
+        ],
+      ],
+      'rules' => [
+        'hook_destinations' => [
+          '%module.rules.inc' => [
             'hook_rules_action_info',
-          ),
-          '%module.rules_default.inc' => array(
+          ],
+          '%module.rules_default.inc' => [
             'hook_default_rules_configuration',
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     return $info;
   }
 

@@ -43,7 +43,7 @@ class FormBuilder extends PHPFunction {
       return parent::buildComponentContents($children_contents);
     }
 
-    $function_code = array();
+    $function_code = [];
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
     $function_code[] = $this->component_data['declaration'] . ' {';

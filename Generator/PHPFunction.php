@@ -115,7 +115,7 @@ class PHPFunction extends BaseGenerator {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    $function_code = array();
+    $function_code = [];
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
     $declaration = str_replace('£', '$', $this->component_data['declaration']);
@@ -125,7 +125,7 @@ class PHPFunction extends BaseGenerator {
     if (isset($this->component_data['body'])) {
       $body = is_array($this->component_data['body'])
         ? $this->component_data['body']
-        : array($this->component_data['body']);
+        : [$this->component_data['body']];
 
       // Little bit of sugar: to save endless escaping of $ in front of
       // variables in code body, you can use £.

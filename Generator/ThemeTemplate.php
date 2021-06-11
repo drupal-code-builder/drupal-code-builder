@@ -12,7 +12,7 @@ class ThemeTemplate extends BaseGenerator {
    */
   public function requiredComponents() {
     // We have no subcomponents. This override is here just for clarity.
-    return array();
+    return [];
   }
 
   /**
@@ -49,14 +49,14 @@ class ThemeTemplate extends BaseGenerator {
       $file_path = '';
     }
 
-    return array(
+    return [
       'path' => $file_path,
       // TODO: declare a property for this.
       'filename' => $this->name . '.tpl.php',
-      'body' => array(
+      'body' => [
         $tpl_code,
-      ),
-    );
+      ],
+    ];
   }
 
 }

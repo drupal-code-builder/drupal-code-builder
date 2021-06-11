@@ -38,10 +38,10 @@ class APIComponentDataTest extends TestBase {
 
     $module_name = 'my_test_module';
 
-    $component_data = array(
+    $component_data = [
       'base' => 'module',
       'root_name' => $module_name,
-    );
+    ];
 
     // Test the readable name default value is provided, based on the module
     // machine name.

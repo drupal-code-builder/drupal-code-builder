@@ -40,7 +40,7 @@ class AdminSettingsForm7 extends Form7 {
 
     // Override the form builder's location and code.
     $components[$form_builder]['containing_component'] = '%requester:%module.admin.inc';
-    $components[$form_builder]['body'] = array(
+    $components[$form_builder]['body'] = [
       "£form['%module_variable_foo'] = [",
       "  '#type' => 'textfield',",
       "  '#title' => t('Foo'),",
@@ -49,7 +49,7 @@ class AdminSettingsForm7 extends Form7 {
       "];",
       "",
       "return system_settings_form(£form);",
-    );
+    ];
 
     // Remove the form validation and submit handlers, as Drupal core takes care
     // of this for system settings.
@@ -57,7 +57,7 @@ class AdminSettingsForm7 extends Form7 {
     unset($components[$form_submit]);
 
     // This takes care of adding hook_menu() and so on.
-    $components['menu_item'] = array(
+    $components['menu_item'] = [
       'component_type' => 'RouterItem',
       'path' => 'admin/config/TODO-SECTION/%module',
       'title' => 'Administer %readable',
@@ -66,18 +66,18 @@ class AdminSettingsForm7 extends Form7 {
       'page arguments' => "array('{$form_name}')",
       'access arguments' => "array('administer %module')",
       'file' => '%module.admin.inc',
-    );
+    ];
 
-    $components['Permission'] = array(
+    $components['Permission'] = [
       'component_type' => 'Permission',
       'permission' => 'administer %module',
-    );
+    ];
 
-    $components['info_configuration'] = array(
+    $components['info_configuration'] = [
       'component_type' => 'InfoProperty',
       'property_name' => 'configure',
       'property_value' => 'admin/config/TODO-SECTION/%module',
-    );
+    ];
 
     return $components;
   }

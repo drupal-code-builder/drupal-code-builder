@@ -168,12 +168,12 @@ class PHPClassFile extends PHPFile {
    * Subclasses should override this to add their file data to the list.
    */
   public function getFileInfo() {
-    return array(
+    return [
       'path' => $this->component_data['path'],
       'filename' => $this->component_data['plain_class_name'] . '.php',
       'body' => $this->fileContents(),
       'build_list_tags' => ['code'],
-    );
+    ];
   }
 
   /**
@@ -190,9 +190,9 @@ class PHPClassFile extends PHPFile {
       $this->file_header(),
       $this->code_header(),
       $this->code_body(),
-      array(
+      [
         $this->code_footer(),
-      )
+      ]
     );
 
     return $file_contents;
@@ -240,7 +240,7 @@ class PHPClassFile extends PHPFile {
    * Produces the namespace and 'use' lines.
    */
   function code_namespace() {
-    $code = array();
+    $code = [];
 
     $code[] = 'namespace ' . $this->component_data['namespace'] . ';';
     $code[] = '';
@@ -306,7 +306,7 @@ class PHPClassFile extends PHPFile {
    * Return the body of the class's code.
    */
   protected function classCodeBody() {
-    $code_body = array();
+    $code_body = [];
 
     // Class body always has at least one blank line.
     $code_body[] = '';

@@ -127,7 +127,7 @@ class ComponentPropertyPreparer {
       // something basically empty.
       // (This allows UIs to rely on this and set it as their default no
       // matter what.)
-      $default_value = $property_info['format'] == 'array' ? array() : NULL;
+      $default_value = $property_info['format'] == 'array' ? [] : NULL;
       $component_data_local[$property_name] = $default_value;
     }
 

@@ -37,7 +37,7 @@ class Theme extends BaseGenerator {
    *      themeables. This is a lookup array keyed by the component names of
    *      the themeables.
    */
-  public $component_data = array();
+  public $component_data = [];
 
   /**
    * Declares the subcomponents for this component.
@@ -54,7 +54,7 @@ class Theme extends BaseGenerator {
     drupal_theme_initialize();
     $theme_registry = theme_get_registry();
 
-    $components = array();
+    $components = [];
     foreach ($this->component_data['themeables'] as $theme_hook_name) {
       $hook = $theme_hook_name;
       // Iteratively strip everything after the last '--' delimiter, until an

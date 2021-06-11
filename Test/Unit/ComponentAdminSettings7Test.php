@@ -22,16 +22,16 @@ class ComponentAdminSettings7Test extends TestBase {
   function testAdminSettingsGenerationTests() {
     // Create a module.
     $module_name = 'testmodule';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'settings_form' => TRUE,
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
@@ -68,17 +68,17 @@ class ComponentAdminSettings7Test extends TestBase {
   function testAdminSettingsOtherHooksTest() {
     // Create a module.
     $module_name = 'testmodule';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
+      'hooks' => [
         'hook_init'
-      ),
+      ],
       'settings_form' => TRUE,
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     // Check the .module file.
@@ -95,21 +95,21 @@ class ComponentAdminSettings7Test extends TestBase {
   function testAdminSettingsOtherPermsTest() {
     // Create a module.
     $module_name = 'testmodule';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'permissions' => array(
-        0 => array(
+      'hooks' => [
+      ],
+      'permissions' => [
+        0 => [
           'permission' => 'access testmodule',
-        ),
-      ),
+        ],
+      ],
       'settings_form' => TRUE,
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     // Check the .module file.

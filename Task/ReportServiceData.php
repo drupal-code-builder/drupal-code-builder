@@ -73,7 +73,7 @@ class ReportServiceData extends ReportHookDataFolder implements OptionsProviderI
   function listServiceNamesOptions() {
     $service_data = $this->loadServiceData();
 
-    $return = array();
+    $return = [];
     foreach ($service_data['primary'] as $service_id => $service_info) {
       $return[$service_id] = $service_info['label'];
     }
@@ -90,7 +90,7 @@ class ReportServiceData extends ReportHookDataFolder implements OptionsProviderI
   public function listServiceNamesOptionsAll() {
     $service_data = $this->loadServiceData();
 
-    $return = array();
+    $return = [];
     foreach ($service_data['all'] as $service_id => $service_info) {
       $return[$service_id] = $service_info['label'];
     }

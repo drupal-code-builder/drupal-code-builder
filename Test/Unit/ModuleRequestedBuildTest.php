@@ -22,12 +22,12 @@ class ModuleRequestedBuildTest extends TestBase {
     // It is crucial to create a new module name, as we eval() the generated
     // code!
     $module_name = 'testmodule2';
-    $module_data_base = array(
+    $module_data_base = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
+      'hooks' => [
         // These two hooks will go in the .module file.
         'hook_menu',
         'hook_block_info',
@@ -35,17 +35,17 @@ class ModuleRequestedBuildTest extends TestBase {
         'hook_tokens',
         // This goes in the .install file.
         'hook_install',
-      ),
+      ],
       'readme' => TRUE,
       'api' => TRUE,
       'tests' => TRUE,
-    );
+    ];
 
     // Test the 'all' build list setting.
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'all' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
@@ -61,9 +61,9 @@ class ModuleRequestedBuildTest extends TestBase {
 
     // Test the 'code' build list setting.
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'code' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
@@ -77,9 +77,9 @@ class ModuleRequestedBuildTest extends TestBase {
 
     // Test specific file requests.
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'install' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
@@ -88,9 +88,9 @@ class ModuleRequestedBuildTest extends TestBase {
     $this->assertArrayHasKey("$module_name.install", $files, "The files list has a .install file.");
 
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'module' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
@@ -99,9 +99,9 @@ class ModuleRequestedBuildTest extends TestBase {
     $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
 
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'info' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
@@ -110,9 +110,9 @@ class ModuleRequestedBuildTest extends TestBase {
     $this->assertArrayHasKey("$module_name.info", $files, "The files list has a .info file.");
 
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'tokens' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
@@ -121,9 +121,9 @@ class ModuleRequestedBuildTest extends TestBase {
     $this->assertArrayHasKey("$module_name.tokens.inc", $files, "The files list has a .tokens.inc file.");
 
     $module_data = $module_data_base;
-    $module_data['requested_build'] = array(
+    $module_data['requested_build'] = [
       'tests' => TRUE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);

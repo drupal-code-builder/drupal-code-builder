@@ -20,17 +20,17 @@ class ComponentRouterItem7Test extends TestBase {
   public function testRouteGeneration() {
     // Assemble module data.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
-      'router_items' => array(
+      'router_items' => [
         0 => 'my/path',
         1 => 'my/other-path',
-      ),
+      ],
       'readme' => FALSE,
-    );
+    ];
 
     $files = $this->generateModuleFiles($module_data);
 

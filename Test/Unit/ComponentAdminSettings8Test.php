@@ -25,17 +25,17 @@ class ComponentAdminSettings8Test extends TestBase {
   function test8AdminSettingsGenerationTest() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
+      'hooks' => [
+      ],
       'settings_form' => [
         'parent_route' => 'system.admin_config_system',
       ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
@@ -127,23 +127,23 @@ class ComponentAdminSettings8Test extends TestBase {
   function testAdminSettingsOtherPermsTest() {
     // Create a module.
     $module_name = 'test_module';
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
-      'hooks' => array(
-      ),
-      'permissions' => array(
+      'hooks' => [
+      ],
+      'permissions' => [
         0 => [
           'permission' => 'access test_module',
         ],
-      ),
+      ],
       'settings_form' => [
         'parent_route' => 'system.admin_config_system',
       ],
       'readme' => FALSE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     // Check the .permissions file.
@@ -163,22 +163,22 @@ class ComponentAdminSettings8Test extends TestBase {
    function testAdminSettingsOtherRouterItemsTest() {
      // Create a module.
      $module_name = 'test_module';
-     $module_data = array(
+     $module_data = [
        'base' => 'module',
        'root_name' => $module_name,
        'readable_name' => 'Test module',
        'short_description' => 'Test Module description',
-       'hooks' => array(
-       ),
-       'permissions' => array(
+       'hooks' => [
+       ],
+       'permissions' => [
          0 => [
            'permission' => 'access test_module',
          ],
-       ),
+       ],
        'settings_form' => [
           'parent_route' => 'system.admin_config_system',
         ],
-       'router_items' => array(
+       'router_items' => [
           0 => [
             'path' => '/requested/route/path',
             'controller' => [
@@ -188,9 +188,9 @@ class ComponentAdminSettings8Test extends TestBase {
               'access_type' => 'permission',
             ],
           ],
-       ),
+       ],
        'readme' => FALSE,
-     );
+     ];
      $files = $this->generateModuleFiles($module_data);
 
      // Check the .routing file.

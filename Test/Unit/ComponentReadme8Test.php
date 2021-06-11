@@ -21,13 +21,13 @@ class ComponentReadme8Test extends TestBase {
    */
   function test8ReadmeFile() {
     // Create a module.
-    $module_data = array(
+    $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
       'readable_name' => 'Test module',
       'short_description' => 'Test Module description',
       'readme' => TRUE,
-    );
+    ];
     $files = $this->generateModuleFiles($module_data);
 
     $this->assertFiles([
