@@ -90,19 +90,4 @@ class ComponentDataInfoGatherer {
     return $properties;
   }
 
-  /**
-   * Fill in defaults in a component property info array.
-   *
-   * @param &$property_info
-   *  A single value array from a component property info array. In other words,
-   *  the array that describes a single property that would be passed to a
-   *  generator, such as the 'hooks' property.
-   */
-  protected function componentDataInfoAddDefaults(&$property_info) {
-    $property_info += [
-      'required' => FALSE,
-      'format' => 'string',
-    ];
-  }
-
 }

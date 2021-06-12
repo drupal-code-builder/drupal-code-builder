@@ -1212,10 +1212,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   /**
    * Add in default values for property info keys.
    *
-   * This does the work of
-   * ComponentDataInfoGatherer::componentDataInfoAddDefaults() as we mock
-   * that helper.
-   *
    * @param &$data_info
    *   A data info array, passed by reference and altered in place.
    */
