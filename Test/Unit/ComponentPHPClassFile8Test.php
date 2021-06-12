@@ -26,7 +26,7 @@ class ComponentPHPClassFile8Test extends TestBase {
    */
   public function testClassNameInterdependentProperties() {
     $definition = PHPClassFile::getPropertyDefinition();
-    $definition->setMachineName('root');
+    $definition->setName('root');
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 

@@ -180,7 +180,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    */
   public function testGeneratorChildNoRequests($data_value, $expected_paths) {
     $definition = GeneratorDefinition::createFromGeneratorType('my_root')
-      ->setMachineName('my_root')
+      ->setName('my_root')
       ->setProperties([
         'one' => PropertyDefinition::create('string'),
         'component_property_compound_single' => GeneratorDefinition::createFromGeneratorType('compound_a')
@@ -229,7 +229,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    */
   public function testMultipleStringGeneratorChildNoRequests() {
     $definition = GeneratorDefinition::createFromGeneratorType('my_root')
-      ->setMachineName('my_root')
+      ->setName('my_root')
       ->setProperties([
         'component_property_string_multiple' => GeneratorDefinition::createFromGeneratorType('compound_a', 'string')
           ->setMultiple(TRUE),

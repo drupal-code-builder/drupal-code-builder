@@ -207,7 +207,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
     foreach ($array_property_info as $name => $def) {
       // Allow some definitions to be updated to PropertyDefinitions.
       if ($def instanceof PropertyDefinition) {
-        $def->setMachineName($name);
+        $def->setName($name);
         $definition->addProperty($def);
 
         continue;
@@ -434,7 +434,7 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
         $converted_defs[$name]->setRequired(TRUE);
       }
 
-      $converted_defs[$name]->setMachineName($name);
+      $converted_defs[$name]->setName($name);
 
       $definition->addProperty($converted_defs[$name]);
     }

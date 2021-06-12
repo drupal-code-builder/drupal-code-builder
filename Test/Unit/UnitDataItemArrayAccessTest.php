@@ -33,7 +33,7 @@ class UnitDataItemArrayAccessTest extends TestCase {
   public function testDataItem() {
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition(
       DataDefinition::create('complex')
-        ->setMachineName('root')
+        ->setName('root')
         ->setProperties([
           'plain' => DataDefinition::create('string'),
           'default' => DataDefinition::create('string')

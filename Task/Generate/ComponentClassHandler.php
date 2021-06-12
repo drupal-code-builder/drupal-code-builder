@@ -27,7 +27,7 @@ class ComponentClassHandler {
     // DIRTY HACK.
     $machine_name = str_replace(':', '-', $machine_name);
 
-    return $class::getPropertyDefinition()->setMachineName($machine_name);
+    return $class::getPropertyDefinition()->setName($machine_name);
   }
 
   /**

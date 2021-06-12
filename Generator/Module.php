@@ -132,7 +132,7 @@ class Module extends RootComponent {
   public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
     // This is just to allow easy skipping of this by TestModule.
     $definition->setLabel('Module')
-      ->setMachineName('module');
+      ->setName('module');
   }
 
   /**

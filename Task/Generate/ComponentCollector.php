@@ -506,7 +506,7 @@ class ComponentCollector {
         else {
           // Build a standalone data item from the array data.
           $definition = $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
-          // $definition->setMachineName($required_item_name);
+          // $definition->setName($required_item_name);
 
           unset($required_item_data['component_type']);
 
