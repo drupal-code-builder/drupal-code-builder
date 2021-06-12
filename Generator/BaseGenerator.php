@@ -8,9 +8,7 @@ use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 use MutableTypedData\Data\DataItem;
-use MutableTypedData\Definition\DefinitionProviderInterface;
 
 /**
  * Abstract base Generator for components.
@@ -85,7 +83,7 @@ use MutableTypedData\Definition\DefinitionProviderInterface;
  *
  * @see Generate::generateComponent()
  */
-abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderInterface {
+abstract class BaseGenerator implements GeneratorInterface {
 
   /**
    * Property attribute shorthand for acquired properties.
@@ -154,15 +152,6 @@ abstract class BaseGenerator implements GeneratorInterface, DefinitionProviderIn
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     return preg_replace('@\d+$@', '', $short_class);
-  }
-
-  /**
-   * Implements DefinitionProviderInterface's method.
-   *
-   * We need the base PropertyDefinition here for the interface compatibility.
-   */
-  public static function getDefinition(): BasePropertyDefinition {
-    return static::getPropertyDefinition();
   }
 
   /**

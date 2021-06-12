@@ -5,14 +5,20 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
+use MutableTypedData\Definition\DefinitionProviderInterface;
 
 /**
  * Abstract Generator for root components.
  *
  * Root components are those with which the generating process may begin, such
  * as Module and Theme.
+ *
+ * These are used by
+ * \DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory to
+ * instantiate data objects.
  */
-abstract class RootComponent extends BaseGenerator {
+abstract class RootComponent extends BaseGenerator implements DefinitionProviderInterface {
 
   /**
    * The sanity level this generator requires to operate.
@@ -47,6 +53,15 @@ abstract class RootComponent extends BaseGenerator {
     // NOTE: this can't have a root name set because it's also embedded into
     // data by self::componentDataDefinition().
     return PropertyDefinition::create('complex');
+  }
+
+  /**
+   * Implements DefinitionProviderInterface's method.
+   *
+   * We need the base PropertyDefinition here for the interface compatibility.
+   */
+  public static function getDefinition(): BasePropertyDefinition {
+    return static::getPropertyDefinition();
   }
 
   /**
