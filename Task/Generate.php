@@ -82,7 +82,7 @@ class Generate extends Base {
    *  A sanity level string to pass to the environment's verifyEnvironment().
    */
   public function getSanityLevel() {
-    $class = $this->getGeneratorClass($this->base);
+    $class = $this->classHandler->getGeneratorClass($this->base);
     return $class::getSanityLevel();
   }
 
