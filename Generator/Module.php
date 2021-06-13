@@ -118,7 +118,7 @@ class Module extends RootComponent {
       ]);
   }
 
-  public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
+  public static function getPropertyDefinition() :PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
     static::baseComponentPropertyDefinitionAlter($definition);

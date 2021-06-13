@@ -169,7 +169,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition
    *   The data definition.
    */
-  public static function getPropertyDefinition($data_type = 'complex') :PropertyDefinition {
+  public static function getPropertyDefinition() :PropertyDefinition {
     $type = static::deriveType(static::class);
 
     // Get the array property info from the old definition method.
@@ -226,7 +226,7 @@ abstract class BaseGenerator implements GeneratorInterface {
         $generator_class = $class_handler->getGeneratorClass($def['component_type']);
 
         // TODO: -- the GENERATOR knows what data type it is!!!
-        $converted_defs[$name] = $generator_class::getPropertyDefinition('complex');
+        $converted_defs[$name] = $generator_class::getPropertyDefinition();
 
         $converted_defs[$name]->setMultiple(TRUE);
       }

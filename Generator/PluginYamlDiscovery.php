@@ -21,7 +21,7 @@ class PluginYamlDiscovery extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
+  public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');

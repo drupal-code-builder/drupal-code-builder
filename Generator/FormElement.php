@@ -10,7 +10,7 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class FormElement extends BaseGenerator {
 
-  public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
+  public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([

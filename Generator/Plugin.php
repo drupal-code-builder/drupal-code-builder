@@ -17,7 +17,7 @@ class Plugin extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition($data_type = 'complex'): PropertyDefinition {
+  public static function getPropertyDefinition(): PropertyDefinition {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
