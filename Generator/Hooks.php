@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator base class for module hooks.
  *
@@ -22,22 +24,24 @@ class Hooks extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
       // An array of requested hooks, as long hook names.
-      'hooks' => [
-        'label' => 'Hook implementations',
-        'required' => FALSE,
-        'format' => 'array',
-      ],
+      'hooks' => PropertyDefinition::create('string')
+        ->setLabel('Hook implementations')
+        ->setMultiple(TRUE),
       // The body code for any hook implementations. An array whose keys are
       // the full hook names, and whose values are the value to pass on to
       // that HookImplementation component.
-      'hook_bodies' => [
-        'internal' => TRUE,
-        'format' => 'array',
-      ],
-    ];
+      'hook_bodies' => PropertyDefinition::create('string')
+        ->setLabel('Element type')
+        ->setInternal(TRUE)
+        ->setMultiple(TRUE),
+    ]);
+
+    return $definition;
   }
 
   /**
