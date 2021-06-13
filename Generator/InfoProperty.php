@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Represents a single property in a .info file.
  */
@@ -10,16 +12,21 @@ class InfoProperty extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'property_name' => [
-        'label' => 'The name of the property',
-      ],
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      // An array of requested hooks, as long hook names.
+      'property_name' => PropertyDefinition::create('string')
+        ->setLabel('The name of the property')
+        ->setInternal(TRUE),
       // Note that array values are not supported.
-      'property_value' =>  [
-        'label' => 'The value of the property',
-      ],
-    ];
+      'property_value' => PropertyDefinition::create('string')
+        ->setLabel('The value of the property')
+        ->setInternal(TRUE),
+    ]);
+
+    return $definition;
   }
 
   /**
