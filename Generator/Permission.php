@@ -11,15 +11,16 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 class Permission extends BaseGenerator {
 
   /**
-   * Define the component data this component needs to function.
+   * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'permission' => [
-        'label' => 'Permission machine-readable name',
-        'default' => 'access my_module',
-        'required' => TRUE,
-      ],
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'permission' => PropertyDefinition::create('string')
+        ->setLabel('Permission human-readable name')
+        ->setRequired(TRUE)
+        ->setLiteralDefault('access my_module'),
       'title' => PropertyDefinition::create('string')
         ->setLabel('Permission human-readable name')
         ->setRequired(TRUE)
@@ -36,13 +37,14 @@ class Permission extends BaseGenerator {
             ->setExpression("get('..:title')")
             ->setDependencies('..:title')
         ),
-      'restrict_access' => [
-        'label' => 'Access warning',
-        'description' => 'Whether the permission should show a warning that it should be granted with care.',
-        'default' => FALSE,
-        'format' => 'boolean',
-      ],
-    ];
+      'restrict_access' => PropertyDefinition::create('boolean')
+        ->setLabel('Access warning')
+        ->setDescription('Whether the permission should show a warning that it should be granted with care.')
+        ->setRequired(TRUE)
+        ->setLiteralDefault(FALSE),
+    ]);
+
+    return $definition;
   }
 
   /**
