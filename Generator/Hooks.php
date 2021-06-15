@@ -106,7 +106,6 @@ class Hooks extends BaseGenerator {
           'code_file' => $hook['destination'],
           'hook_name' => $hook['name'],
           'declaration' => $hook['definition'],
-          'has_wrapping_newlines' => TRUE,
         ];
 
         // The body for the hook implementation can come either from this

@@ -25,10 +25,6 @@ class HookPermission extends HookImplementation {
       return parent::buildComponentContents($children_contents);
     }
 
-    // Code from child components comes as arrays of code lines, so no need to
-    // trim it.
-    $this->component_data->has_wrapping_newlines = FALSE;
-
     $code = [];
     $code[] = '£permissions = array();';
     foreach ($this->filterComponentContentsForRole($children_contents, 'item') as $menu_item_lines) {
