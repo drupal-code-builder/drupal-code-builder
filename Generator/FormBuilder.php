@@ -15,16 +15,16 @@ class FormBuilder extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $data_definition['declaration'] = PropertyDefinition::create('string')
+    $definition->getProperty('declaration')
       ->setDefault(DefaultDefinition::create()
         ->setCallable([static::class, 'defaultDeclaration'])
         ->setDependencies('..:function_name')
     );
 
-    return $data_definition;
+    return $definition;
   }
 
   public static function defaultDeclaration($data_item) {

@@ -32,20 +32,18 @@ class PHPFunction extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'function_name' => [
-        'internal' => TRUE,
-      ],
-      'docblock_inherit' => [
-        'format' => 'boolean',
-        'internal' => TRUE,
-        'default' => FALSE,
-      ],
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'function_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'docblock_inherit' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
       // Deprecated: use function_docblock_lines instead.
-      'doxygen_first' => [
-        'internal' => TRUE,
-      ],
+      'doxygen_first' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
@@ -54,21 +52,19 @@ class PHPFunction extends BaseGenerator {
         ->setDefault(DefaultDefinition::create()
           ->setCallable([static::class, 'defaultDocblockLines'])
       ),
-      'declaration' => [
-        'internal' => TRUE,
-      ],
-      'body' => [
-        'format' => 'array',
-        'internal' => TRUE,
-      ],
+      'declaration' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'body' => PropertyDefinition::create('string')
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE),
       // Whether code lines in the 'body' property are already indented relative
       // to the indentation of function as a whole.
-      'body_indented' => [
-        'internal' => TRUE,
-        'format' => 'boolean',
-        'default' => FALSE,
-      ],
-    ];
+      'body_indented' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
+    ]);
+
+    return $definition;
   }
 
   public static function defaultDocblockLines($data_item) {

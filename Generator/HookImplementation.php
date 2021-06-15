@@ -15,22 +15,22 @@ class HookImplementation extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $properties = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    // The name of the file that this hook implementation should be placed into.
-    $properties['code_file'] = [
-      'internal' => TRUE,
-      'default' => '%module.module',
-    ];
+    $definition->addProperties([
+      // The name of the file that this hook implementation should be placed into.
+      'code_file' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('%module.module'),
+      'hook_name' => PropertyDefinition::create('string'),
+    ]);
 
-    $properties['hook_name'] = PropertyDefinition::create('string');
-
-    $properties['function_docblock_lines']->getDefault()
+    $definition->getProperty('function_docblock_lines')->getDefault()
       // Expression Language lets us define arrays, which is nice.
       ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
 
-    return $properties;
+    return $definition;
   }
 
   /**

@@ -2,15 +2,20 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for hook_menu() implementation.
  */
 class HookMenu extends HookImplementation {
 
-  public static function componentDataDefinition() {
-    $definition = parent::componentDataDefinition();
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $definition['hook_name']->setLiteralDefault('hook_menu');
+    $definition->getProperty('hook_name')->setLiteralDefault('hook_menu');
 
     return $definition;
   }

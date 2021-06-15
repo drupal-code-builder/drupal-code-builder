@@ -2,15 +2,20 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for hook_permission() implementation.
  */
 class HookPermission extends HookImplementation {
 
-  public static function componentDataDefinition() {
-    $definition = parent::componentDataDefinition();
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $definition['hook_name']->setLiteralDefault('hook_permission');
+    $definition->getProperty('hook_name')->setLiteralDefault('hook_permission');
 
     return $definition;
   }
