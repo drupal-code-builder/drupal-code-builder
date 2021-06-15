@@ -12,15 +12,19 @@ class ThemeHook extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
       // Needs to be set to public even though this is not actually seen.
       'theme_hook_name' => PropertyDefinition::create('string')
         ->setLabel('Theme hook name')
         ->setRequired(TRUE)
         // TODO: doesn't work in UI!
         ->setValidators('machine_name'),
-    ];
+    ]);
+
+    return $definition;
   }
 
   /**
