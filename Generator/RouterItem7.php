@@ -15,18 +15,17 @@ class RouterItem7 extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'path' => [
-        'label' => 'The menu item path',
-        'primary' => TRUE,
-      ],
-      'title' => [
-        'label' => "The page title for the route.",
-        'default' => 'myPage',
-        'process_default' => TRUE,
-        'internal' => TRUE,
-      ],
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'path' => PropertyDefinition::create('string')
+        ->setLabel("The menu item path")
+        ->setRequired(TRUE),
+      'title' => PropertyDefinition::create('string')
+        ->setLabel("The page title for the route.")
+        ->setInternal(TRUE)
+        ->setLiteralDefault('myPage'),
       'description' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
       'file' => PropertyDefinition::create('string')
@@ -41,7 +40,9 @@ class RouterItem7 extends BaseGenerator {
       'access arguments' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setLiteralDefault("array('access content')"),
-    ];
+    ]);
+
+    return $definition;
   }
 
   /**

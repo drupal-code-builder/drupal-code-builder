@@ -22,8 +22,10 @@ class RouterItem extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
       'path' => PropertyDefinition::create('string')
         ->setLabel("Route path")
         ->setDescription("The path of the route. Include the initial '/'.")
@@ -36,22 +38,16 @@ class RouterItem extends BaseGenerator {
             ->setCallable([static::class, 'defaultRouteName'])
             ->setDependencies('..:path')
         ),
-      'title' => [
-        'label' => "The page title for the route.",
-        'default' => 'myPage',
-        'process_default' => TRUE,
-      ],
-      'menu_link' => [
-        'label' => "Menu link",
-        'format' => 'compound',
-        'cardinality' => 1,
-        'properties' => [
-          'title' => [
-            'label' => "The title for the menu link.",
-            'default' => 'My Page',
-          ],
-        ],
-      ],
+      'title' => PropertyDefinition::create('string')
+        ->setLabel("The page title for the route.")
+        ->setLiteralDefault('myPage'),
+      'menu_link' => PropertyDefinition::create('complex')
+        ->setLabel("Menu link")
+        ->setProperties([
+          'title' => PropertyDefinition::create('string')
+            ->setLabel('The title for the menu link')
+            ->setLiteralDefault('My Page')
+        ]),
       'controller' => PropertyDefinition::create('mutable')
         ->setLabel('Controller type')
         ->setRequired(TRUE)
@@ -291,7 +287,9 @@ class RouterItem extends BaseGenerator {
       //     }
       //   },
       // ],
-    ];
+    ]);
+
+    return $definition;
   }
 
   /**
