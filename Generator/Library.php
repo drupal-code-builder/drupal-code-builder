@@ -52,10 +52,6 @@ class Library extends BaseGenerator {
       'readable_name' => static::PROPERTY_ACQUIRED,
     ];
 
-    $component_data_definition['filename']['default'] = '%module.libraries.yml';
-    $component_data_definition['filename']['required'] = TRUE;
-    $component_data_definition['filename']['internal'] = TRUE;
-
     return $component_data_definition;
   }
 
