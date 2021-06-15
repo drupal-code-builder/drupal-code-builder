@@ -26,17 +26,17 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
       'yaml_data' => PropertyDefinition::create('mapping')
         ->setLabel('The data for the YAML file')
         ->setInternal(TRUE),
-      'yaml_inline_level' => [
-        'label' => 'The level at which to switch YAML properties to inline formatting.',
-        'format' => 'string',
-        'default' => 6,
-        'internal' => TRUE,
-      ],
+      'yaml_inline_level' => PropertyDefinition::create('string')
+        ->setLabel('The level at which to switch YAML properties to inline formatting.')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(6),
       // The YAML data level at which to add linebreaks.
       //  - integer to add a linebreak between every element at this depth. May
       //    be 0. Note this is level, not number of indentation spaces.
@@ -46,7 +46,9 @@ class YMLFile extends File {
         ->setInternal(TRUE),
       'inline_levels_extra' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
-    ];
+    ]);
+
+    return $definition;
   }
 
   /**
