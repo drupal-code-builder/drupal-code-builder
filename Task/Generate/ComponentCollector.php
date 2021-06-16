@@ -620,7 +620,9 @@ class ComponentCollector {
       catch (\MutableTypedData\Exception\InvalidAccessException $e) {
         dump("Unable to evaluate expression '$expression'.");
         dump($requesting_component->component_data->export());
-        throw $e;
+        throw new \MutableTypedData\Exception\InvalidAccessException(
+          "Unable to evaluate acquisition expression '$expression', got error: " . $e->getMessage()
+        );
       }
 
       $component_data->{$property_name}->set($acquired_value);
