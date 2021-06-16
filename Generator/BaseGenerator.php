@@ -442,7 +442,7 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   // TODO: move this to a task handler!
-  protected static function getPropertyDefinitionForGeneratorType(string $component_type) {
+  protected static function getPropertyDefinitionForGeneratorType(string $component_type): PropertyDefinition {
     $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
     $generator_class = $class_handler->getGeneratorClass($component_type);
 
