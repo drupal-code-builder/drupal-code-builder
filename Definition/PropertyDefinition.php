@@ -25,6 +25,8 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
   protected $variantMappingProvider;
 
+  protected $autoAcquired = FALSE;
+
   public function getDeltaDefinition(): BasePropertyDefinition {
     $delta_definition = parent::getDeltaDefinition();
 
@@ -78,6 +80,28 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return parent::getVariantMapping();
   }
 
+  /**
+   * Sets this to acquire its value from the requster's same name property.
+   *
+   * Note there is no way to REMOVE acquired status, but this should be fine.
+   *
+   * @return self
+   *   Returns the definition, for chaining.
+   */
+  public function setAutoAcquiredFromRequester(): self {
+    if ($this->acquiringExpression) {
+      throw new \LogicException();
+    }
+
+    $this->setInternal(TRUE);
+
+    // Can't set the expression at this point, as typically this definition is
+    // set as one of an array and so does not have its name set yet; relying
+    // instead on its key in the containing properties array.
+    $this->autoAcquired = TRUE;
+
+    return $this;
+  }
 
   /**
    * Sets the expression to acquire a value from the requesting component.
@@ -95,6 +119,10 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
    *   Returns the definition, for chaining.
    */
   public function setAcquiringExpression(string $expression) :self {
+    if ($this->autoAcquired) {
+      throw new \LogicException();
+    }
+
     $this->acquiringExpression = $expression;
 
     $this->internal = TRUE;
@@ -103,7 +131,26 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
   }
 
   public function getAcquiringExpression() :?string {
-    return $this->acquiringExpression;
+    if ($this->autoAcquired) {
+      if ($this->name == 'root_component_name') {
+        throw new \LogicException("This case not covered here yet!");
+      }
+
+      $this->setInternal(TRUE);
+
+      if ($this->isMultiple()) {
+        // Urgh.
+        $expression = "requester.{$this->name}.export()";
+      }
+      else {
+        $expression = "requester.{$this->name}.value";
+      }
+
+      return $expression;
+    }
+    else {
+      return $this->acquiringExpression;
+    }
   }
 
   public function setPresets(array $presets) :self {
