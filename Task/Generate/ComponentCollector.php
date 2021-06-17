@@ -597,7 +597,7 @@ class ComponentCollector {
       }
 
       if (!$requesting_component) {
-        throw new \Exception("Component $name needs to acquire property '$property_name' but there is no requesting component.");
+        throw new \Exception(sprintf("Component %s needs to acquire property '$property_name' but there is no requesting component.", $component_data->getName()));
       }
 
       $expression = $property_info->getAcquiringExpression();
