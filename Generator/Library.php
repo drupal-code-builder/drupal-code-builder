@@ -2,57 +2,58 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a module library.
  */
 class Library extends BaseGenerator {
 
   /**
-   * Define the component data this component needs to function.
+   * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition() + [
-      'library_name' => [
-        'label' => 'Library machine-readable name',
-        'default' => 'my_library',
-        'required' => TRUE,
-      ],
-      'version' => [
-        'label' => 'The version number',
-        'default' => '1.x',
-        'required' => TRUE,
-      ],
-      'css_assets' => [
-        'label' => 'CSS file',
-        'format' => 'compound',
-        'component_type' => 'LibraryCSSAsset',
-      ],
-      'js_assets' => [
-        'label' => 'JS file',
-        'format' => 'compound',
-        'component_type' => 'LibraryJSAsset',
-      ],
-      'dependencies' => [
-        'label' => 'Library dependencies',
-        'description' => "The sample code in JavaScriptFile requires core/jquery and core/drupal.",
-        'format' => 'array',
-        'default' => [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'library_name' => PropertyDefinition::create('string')
+        ->setLabel("Library machine-readable name")
+        ->setLiteralDefault("my_library")
+        ->setRequired(TRUE),
+      'version' => PropertyDefinition::create('string')
+        ->setLabel("The version number")
+        ->setLiteralDefault("1.x")
+        ->setRequired(TRUE),
+      'css_assets' => static::getPropertyDefinitionForGeneratorType('LibraryCSSAsset')
+        ->setLabel("CSS file")
+        ->setMultiple(TRUE),
+      'js_assets' => static::getPropertyDefinitionForGeneratorType('LibraryJSAsset')
+        ->setLabel("JS file")
+        ->setMultiple(TRUE),
+      'dependencies' => PropertyDefinition::create('string')
+        ->setLabel("Library dependencies")
+        ->setDescription("The sample code in JavaScriptFile requires core/jquery and core/drupal.")
+        ->setMultiple(TRUE)
+        ->setLiteralDefault([
           // The sample code in JavaScriptFile assumes these dependencies.
           'core/jquery',
           'core/drupal',
-        ],
-        'required' => FALSE,
-        'process_default' => TRUE,
-      ],
-      'header' => [
-        'label' => 'Header',
-        'description' => "Whether to attach this library's JS files to the HEAD section of the page, rather than the bottom.",
-        'format' => 'boolean',
-      ],
-      'readable_name' => static::PROPERTY_ACQUIRED,
-    ];
+        ]),
+      'header' => PropertyDefinition::create('boolean')
+        ->setLabel("Header")
+        ->setDescription("Whether to attach this library's JS files to the HEAD section of the page, rather than the bottom."),
+      'readable_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            // TODO: fix this! Should NOT have to reach this high, WTF!
+            ->setExpression("machineToLabel(get('..:..:..:root_name'))")
+        ),
+    ]);
 
-    return $component_data_definition;
+    return $definition;
   }
 
   /**

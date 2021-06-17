@@ -359,13 +359,10 @@ class Module extends RootComponent {
         'format' => 'compound',
         'component_type' => 'RouterItem',
       ],
-      'library' => [
-        'label' => "Library",
-        'description' => 'A collection of CSS and JS assets, declared in a libraries.yml file.',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Library',
-      ],
+      'library' => static::getPropertyDefinitionForGeneratorType('Library')
+        ->setLabel('Libraries')
+        ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
+        ->setMultiple(TRUE),
       'api' => [
         'label' => "api.php file",
         'description' => 'An api.php file documents hooks and callbacks that this module invents.',

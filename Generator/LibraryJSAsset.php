@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a JS library asset.
  */
@@ -10,15 +12,19 @@ class LibraryJSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'filename' => [
-        'label' => 'Filename',
-        'description' => "The filename, without the extension or the subfolder.",
-        'required' => TRUE,
-      ],
-      'readable_name' => static::PROPERTY_ACQUIRED,
-    ];
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'filename' => PropertyDefinition::create('string')
+        ->setLabel('Filename')
+        ->setDescription("The filename, without the extension or the subfolder.")
+        ->setRequired(TRUE),
+      'readable_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
+
+    return $definition;
   }
 
   /**

@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a CSS library asset.
  *
@@ -12,25 +14,27 @@ class LibraryCSSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'filename' => [
-        'label' => 'Filename',
-        'description' => "The filename, without the extension or the subfolder.",
-        'required' => TRUE,
-      ],
-      'style_type' => [
-        'label' => 'Style type',
-        'options' => [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'filename' => PropertyDefinition::create('string')
+        ->setLabel('Filename')
+        ->setDescription("The filename, without the extension or the subfolder.")
+        ->setRequired(TRUE),
+      'style_type' => PropertyDefinition::create('string')
+        ->setLabel('Style type')
+        ->setOptionsArray([
           'base' => 'Base: CSS reset/normalize plus HTML element styling',
           'layout' => 'Layout: macro arrangement of a web page, including any grid systems',
           'component' => 'Component: discrete, reusable UI elements',
           'state' => 'State: styles that deal with client-side changes to components',
           'theme' => 'Theme: purely visual styling (“look-and-feel”) for a component',
-        ],
-        'required' => TRUE,
-      ],
-    ];
+        ])
+        ->setRequired(TRUE),
+    ]);
+
+    return $definition;
   }
 
   /**
