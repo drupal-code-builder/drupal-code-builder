@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Tests basic module generation.
@@ -37,7 +38,7 @@ class ComponentModule8Test extends TestBase {
    *
    * TODO: doesn't handle mutable!
    */
-  protected function simulateUiWalk($data_item) {
+  protected function simulateUiWalk(DataItem $data_item) {
     // Get the label and description.
     // If these are not properly defined, MTD will throw exceptions.
     $data_item->getLabel();
