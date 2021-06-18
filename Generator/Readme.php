@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator base class for module README file.
  *
@@ -12,12 +14,15 @@ class Readme extends File {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'readable_name' => [
-        'acquired' => TRUE,
-      ],
-    ];
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'readable_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
+
+    return $definition;
   }
 
   /**
