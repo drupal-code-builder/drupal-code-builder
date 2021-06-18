@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * JavaScript asset file generator.
@@ -14,10 +15,15 @@ class JavaScriptFile extends AssetFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'readable_name' => static::PROPERTY_ACQUIRED,
-    ];
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'readable_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
+
+    return $definition;
   }
 
   /**
