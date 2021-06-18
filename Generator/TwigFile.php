@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a twig template.
  */
@@ -10,12 +12,15 @@ class TwigFile extends File {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'theme_hook_name' => [
-        'label' => 'The theme hook name',
-      ],
-    ];
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'theme_hook_name' => PropertyDefinition::create('string')
+        ->setLabel('The theme hook name'),
+    ]);
+
+    return $definition;
   }
 
   /**
