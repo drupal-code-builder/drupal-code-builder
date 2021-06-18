@@ -18,28 +18,26 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $data_definition['service_id'] = [
-      'label' => 'Service name',
-      'required' => TRUE,
-    ];
+    $definition->addProperties([
+      'service_id' => PropertyDefinition::create('string')
+        ->setLabel('Service name')
+        ->setRequired(TRUE),
+      'service_info' => PropertyDefinition::create('mapping')
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable([static::class, 'defaultServiceInfo'])
+          ->setDependencies('..:service_id')
+      ),
+      // Bit of a hack for PHPUnitTest generator's sake. Lets the requesting
+      // generator tack a suffix onto the roles we give to component contents.
+      // PHPUnitTest needs this as it has two kinds of service.
+      'role_suffix' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+    ]);
 
-    $data_definition['service_info'] = PropertyDefinition::create('mapping')
-      ->setDefault(DefaultDefinition::create()
-        ->setCallable([static::class, 'defaultServiceInfo'])
-        ->setDependencies('..:service_id')
-    );
-
-    // Bit of a hack for PHPUnitTest generator's sake. Lets the requesting
-    // generator tack a suffix onto the roles we give to component contents.
-    // PHPUnitTest needs this as it has two kinds of service.
-    $data_definition['role_suffix'] = [
-      'internal' => TRUE,
-    ];
-
-    return $data_definition;
+    return $definition;
   }
 
   public static function defaultServiceInfo($data_item) {
