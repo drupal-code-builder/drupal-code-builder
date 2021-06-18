@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Component generator: Simpletest test class.
  */
@@ -10,21 +12,17 @@ class Tests extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    // Properties acquired from the requesting component.
-    $root_component_properties = [
-      'readable_name',
-      'camel_case_name',
-    ];
-    foreach ($root_component_properties as $property_name) {
-      $data_definition[$property_name] = [
-        'acquired' => TRUE,
-      ];
-    }
+    $definition->addProperties([
+      'readable_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+      'camel_case_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
 
-    return $data_definition;
+    return $definition;
   }
 
   /**
