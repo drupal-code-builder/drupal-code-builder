@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for a service provider.
@@ -13,19 +14,19 @@ class ServiceProvider extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $data_definition['relative_class_name']
+    $definition->getProperty('relative_class_name')
       ->setExpressionDefault("machineToClass(get('..:root_component_name')) ~ 'ServiceProvider'");
 
-    $data_definition['class_docblock_lines']
+      $definition->getProperty('class_docblock_lines')
       ->setLiteralDefault(['Alters services dynamically for the %sentence module.']);
 
-    $data_definition['parent_class_name']
+      $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\DependencyInjection\ServiceProviderBase');
 
-    return $data_definition;
+    return $definition;
   }
 
   /**
