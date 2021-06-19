@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator class for module info file for Drupal 8.
  */
@@ -10,14 +12,15 @@ class Info8 extends Info {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $data_definition['base'] = [
-      'acquired' => TRUE,
-    ];
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('base')
+      ->setAutoAcquiredFromRequester()
+    );
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

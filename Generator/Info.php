@@ -27,8 +27,8 @@ class Info extends File {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Properties acquired from the requesting root component.
     $plugin_type_properties = [
@@ -38,19 +38,22 @@ class Info extends File {
       'module_package',
     ];
     foreach ($plugin_type_properties as $property_name) {
-      $data_definition[$property_name] = [
-        'acquired' => TRUE,
-      ];
+      $definition->addProperty(PropertyDefinition::create('string')
+        ->setName($property_name)
+        ->setAutoAcquiredFromRequester()
+      );
     }
 
     // This can't rely on the property definition created in
     // addArrayPropertyInfoToDefinition() as it's multiple-valued and can't use
     // the default acquiring expression.
-    $data_definition['module_dependencies'] = PropertyDefinition::create('string')
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('module_dependencies')
       ->setMultiple(TRUE)
-      ->setAcquiringExpression('requester.module_dependencies.export()');
+      ->setAcquiringExpression('requester.module_dependencies.export()')
+    );
 
-    return $data_definition;
+    return $definition;
   }
 
   /**
