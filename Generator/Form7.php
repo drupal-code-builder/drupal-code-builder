@@ -15,17 +15,20 @@ class Form7 extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
-      'code_file' => [
-        // The code file to place the form's functions into. This may contain
-        // placeholders.
-        'internal' => TRUE,
-        'default' => '%module.module',
-      ],
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      // The code file to place the form's functions into. This may contain
+      // placeholders.
+      'code_file' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('%module.module'),
       'form_id' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
-    ];
+    ]);
+
+    return $definition;
   }
 
   /**

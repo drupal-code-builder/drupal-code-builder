@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -12,18 +13,18 @@ class AdminSettingsForm7 extends Form7 {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $data_definition['code_file']['default'] = '%module.admin.inc';
+    $definition->getProperty('code_file')->setLiteralDefault('%module.admin.inc');
 
-    $data_definition['form_id']->setDefault(
+    $definition->getProperty('form_id')->setDefault(
       DefaultDefinition::create()
         ->setExpression("get('..:root_component_name') ~ '_settings_form'")
         ->setDependencies('..:root_component_name')
       );
 
-    return $data_definition;
+    return $definition;
   }
 
   /**
