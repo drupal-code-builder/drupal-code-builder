@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for a plugin type manager service.
  *
@@ -13,8 +15,8 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Properties acquired from the requesting PluginType component.
     $plugin_type_properties = [
@@ -28,12 +30,14 @@ class PluginTypeManager extends Service {
       'base_class',
     ];
     foreach ($plugin_type_properties as $property_name) {
-      $data_definition[$property_name] = [
-        'acquired' => TRUE,
-      ];
+      $definition->addProperty(
+        PropertyDefinition::create('string')
+          ->setName($property_name)
+          ->setAutoAcquiredFromRequester()
+      );
     }
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

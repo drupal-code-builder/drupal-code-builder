@@ -16,7 +16,7 @@ class Service extends PHPClassFileWithInjection {
   /**
    * Define the component data this component needs to function.
    */
-  public static function componentDataDefinition() {
+  public static function getPropertyDefinition(): PropertyDefinition {
     // Create the presets definition for service tag type property.
     $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
     $service_types_data = $task_handler_report_services->listServiceTypeData();
@@ -79,12 +79,11 @@ class Service extends PHPClassFileWithInjection {
       return strnatcasecmp($a['label'], $b['label']);
     });
 
-    $data_definition = [
-      'service_tag_type' => [
-        'label' => 'Service type',
-        'description' => 'Tags this service for a particular purpose and implements the interface.',
-        'presets' => $presets,
-      ],
+    $properties = [
+      'service_tag_type' => PropertyDefinition::create('string')
+        ->setLabel('Service type')
+        ->setDescription('Tags this service for a particular purpose and implements the interface.')
+        ->setPresets($presets),
       'service_name' => PropertyDefinition::create('string')
         ->setLabel('Service name')
         ->setDescription("The name of the service, without the module name prefix.")
@@ -98,63 +97,52 @@ class Service extends PHPClassFileWithInjection {
             ->setExpression("parent.root_component_name.get() ~ '.' ~ parent.service_name.get()")
             ->setDependencies('..:root_component_name')
         ),
-      'injected_services' => [
-        'label' => 'Injected services',
-        'description' => "Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.",
-        'format' => 'array',
-        'options' => function (&$property_info) {
-          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-
-          $options = $mb_task_handler_report_services->listServiceNamesOptionsAll();
-
-          return $options;
-        },
-      ],
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services')
+        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
-      'tags' => [
-        'internal' => TRUE,
-        'format' => 'compound',
-        'properties' => [
-          'name' => [
-            'format' => 'string',
-            'required' => TRUE,
-          ],
+      'tags' => PropertyDefinition::create('complex')
+        ->setInternal(TRUE)
+        ->setMultiple(TRUE)
+        ->setProperties([
+          'name' => PropertyDefinition::create('string')
+            ->setRequired(TRUE),
           // TODO: rather than have to declare all of these, which is unscalable
           // as AFAIK tags can have any properties, this should be a new
           // associative array format type.
-          'priority' => [
-          ],
-          'applies_to' => [
-          ],
-          'tag' => [
-          ],
-          'call' => [
-          ],
-        ],
-      ],
+          'priority' => PropertyDefinition::create('string'),
+          'applies_to' => PropertyDefinition::create('string'),
+          'tag' => PropertyDefinition::create('string'),
+          'call' => PropertyDefinition::create('string'),
+        ]),
     ];
 
     // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
+    $definition = parent::getPropertyDefinition();
+    $parent_properties = $definition->getProperties();
+    $properties += $parent_properties;
+    $definition->setProperties($properties);
 
     // Use the plain class name as the exposed property.
     // TODO: allow a relative namespace to come from a setting, so that, for
     // example, all services can be put in the \Service namespace.
-    $data_definition['plain_class_name']
+    $definition->getProperty('plain_class_name')
       ->setInternal(TRUE)
       ->getDefault()
         ->setCallable([static::class, 'defaultPlainClassName'])
         ->setDependencies('..:service_name');
 
-    $data_definition['relative_class_name']
+    $definition->getProperty('relative_class_name')
       ->setInternal(TRUE);
 
-    $data_definition['relative_namespace']
+    $definition->getProperty('relative_namespace')
       ->setCallableDefault([static::class, 'defaultRelativeNamespace']);
 
-    return $data_definition;
+    return $definition;
   }
 
   public static function defaultPlainClassName($data_item) {
