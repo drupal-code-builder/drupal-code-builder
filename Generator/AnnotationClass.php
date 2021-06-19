@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for PHP class files that define a class annotation.
  */
@@ -10,13 +12,16 @@ class AnnotationClass extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
       // TODO: this is specific to plugins.
-      'plugin_relative_namespace' => [
-        'acquired' => TRUE,
-      ],
-    ];
+      'plugin_relative_namespace' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
+
+    return $definition;
   }
 
   /**
