@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Abstract Generator base class for files.
  */
@@ -10,14 +12,17 @@ class File extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperty(PropertyDefinition::create('string')
       // The name of the file, without the path.
-      'filename' => [
-        'internal' => TRUE,
-        'required' => TRUE,
-      ],
-    ];
+      ->setName('filename')
+      ->setInternal(TRUE)
+      ->setRequired(TRUE)
+    );
+
+    return $definition;
   }
 
   /**
