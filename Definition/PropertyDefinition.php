@@ -74,7 +74,9 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     $delta_definition = parent::getDeltaDefinition();
 
     // Remove presets.
-    $delta_definition->setPresets([]);
+    if ($delta_definition->getPresets()) {
+      $delta_definition->setPresets([]);
+    }
 
     return $delta_definition;
   }
@@ -197,6 +199,13 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
   }
 
   public function setPresets(array $presets) :self {
+    if ($this->getType() != 'string') {
+      throw new InvalidDefinitionException(sprintf(
+        "Property %s is not of type 'string' and so cannot have presets",
+        $this->name
+      ));
+    }
+
     $this->presets = $presets;
 
     if ($presets) {
