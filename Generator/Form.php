@@ -18,12 +18,12 @@ class Form extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $parent_data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $data_definition = [
+    $properties = [
       // Move the form class name property to the top, and override its default.
-      'plain_class_name' => $parent_data_definition['plain_class_name']
+      'plain_class_name' => $definition->getProperty('plain_class_name')
         ->setLabel("Form class name.")
         ->setDescription("The form class's plain class name, e.g. \"MyForm\"."),
       'form_id' => PropertyDefinition::create('string')
@@ -46,22 +46,22 @@ class Form extends PHPClassFileWithInjection {
     ];
 
     // Put the rest of the parent definitions after ours.
-    $data_definition += $parent_data_definition;
+    $definition->addProperties($properties);
 
     // Put the class in the 'Form' relative namespace.
-    $data_definition['relative_namespace']
+    $definition->getProperty('relative_namespace')
       ->setLiteralDefault('Form');
 
-    $data_definition['plain_class_name']
+    $definition->getProperty('plain_class_name')
       ->setLiteralDefault('MyForm');
 
-    $data_definition['relative_class_name']->setInternal(TRUE);
+      $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
     // Set the parent class.
-    $data_definition['parent_class_name']
+    $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\Form\FormBase');
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

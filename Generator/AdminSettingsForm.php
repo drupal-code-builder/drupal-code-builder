@@ -14,8 +14,8 @@ class AdminSettingsForm extends Form {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Because this component is declared in the Module root component, we
     // need defaults to work at the UI stage, including those that depend on
@@ -23,40 +23,45 @@ class AdminSettingsForm extends Form {
     // So instead use a default here.
     // TODO: expand this. Rethink acquisitions system? And technically, this
     // generator's definition should not know about the parent it's within
-    $data_definition['root_name'] = PropertyDefinition::create('string')
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('root_name')
       ->setInternal(TRUE)
-      ->setExpressionDefault("get('..:..:root_name')");
+      ->setExpressionDefault("get('..:..:root_name')")
+    );
 
-    $data_definition['parent_class_name']
+    $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\Form\ConfigFormBase');
 
     // Make one of the basic class name properties internal.
-    $data_definition['relative_class_name']->setInternal(TRUE);
+    $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
-    $parent_route_property['parent_route'] = [
-      'label' => 'Parent menu item',
-      'options' => 'ReportAdminRoutes:listAdminRoutesOptions',
-      'required' => TRUE,
-    ];
-    InsertArray::insertBefore($data_definition, 'injected_services', $parent_route_property);
+    $parent_route_property = PropertyDefinition::create('string')
+      ->setName('parent_route')
+      ->setLabel('Parent menu item')
+      ->setRequired(TRUE)
+      ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes'));
 
-    $data_definition['plain_class_name']
+    $definition->addPropertyAfter('injected_services', $parent_route_property);
+
+    $definition->getProperty('plain_class_name')
       ->setLiteralDefault('AdminSettingsForm');
 
-    $data_definition['form_id']->getDefault()
+    $definition->getProperty('form_id')->getDefault()
       ->setExpression("get('..:root_name') ~ '_settings_form'")
       ->setDependencies('..:root_name');
 
-    $data_definition['route_name'] = PropertyDefinition::create('string')
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('route_name')
       ->setLabel("The name of the route.")
       ->setRequired(TRUE)
       ->setDefault(
         DefaultDefinition::create()
           ->setExpression("get('..:root_name') ~ '.settings'")
           ->setDependencies('..:root_name')
-      );
+      )
+    );
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

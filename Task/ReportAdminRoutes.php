@@ -2,7 +2,9 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Task handler for reporting on admin routes.
@@ -11,7 +13,7 @@ use DrupalCodeBuilder\Task\Report\SectionReportInterface;
  *
  * @internal
  */
-class ReportAdminRoutes extends ReportHookDataFolder implements SectionReportInterface {
+class ReportAdminRoutes extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
   use SectionReportSimpleCountTrait;
 
   /**
@@ -45,6 +47,18 @@ class ReportAdminRoutes extends ReportHookDataFolder implements SectionReportInt
    */
   public function listAdminRoutes() {
     return $this->loadAdminRouteData();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    $options = [];
+    foreach ($this->listAdminRoutesOptions() as $id => $label) {
+      $options[$id] = OptionDefinition::create($id, $label);
+    }
+
+    return $options;
   }
 
   /**
