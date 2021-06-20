@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Definition;
 
+use DrupalCodeBuilder\Utility\InsertArray;
 use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Exception\InvalidDefinitionException;
@@ -27,7 +28,49 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
   protected $autoAcquired = FALSE;
 
-  public function getDeltaDefinition(): BasePropertyDefinition {
+  /**
+   * Adds a property after the named property.
+   *
+   * @param string $after
+   *   The name of the property to insert after.
+   * @param \MutableTypedData\Definition\DataDefinition $properties
+   *   The properties to insert after the specified property name, in the order
+   *   to insert them.
+   *
+   * @return \MutableTypedData\Definition\DataDefinition
+   *   Returns the same instance for chaining. (This is typed as the parent
+   *   class so it can be moved to MTD in future without causing incompatibility
+   *   issues.)
+   */
+  public function addPropertyAfter(string $after, BasePropertyDefinition ...$properties): BasePropertyDefinition {
+    // TODO! this won't catch child classes of SimpleData!!!
+    if ($this->type == 'string' || $this->type == 'boolean') {
+      // TODO: needs tests
+      throw new InvalidDefinitionException("Simple data can't have sub-properties.");
+    }
+
+    if ($this->type == 'mutable') {
+      throw new InvalidDefinitionException("Mutable data must have only the type property.");
+    }
+
+    // Reverse the array of properties, as we keep adding them after the $after
+    // property.
+    $properties = array_reverse($properties);
+
+    foreach ($properties as $property) {
+      if (empty($property->getName())) {
+        throw new InvalidDefinitionException("Properties added with addPropertyAfter() must have a machine name set.");
+      }
+
+      InsertArray::insertAfter($this->properties, $after, [
+        $property->getName() => $property,
+      ]);
+    }
+
+    return $this;
+  }
+
+  public function getDeltaDefinition(): self {
     $delta_definition = parent::getDeltaDefinition();
 
     // Remove presets.
