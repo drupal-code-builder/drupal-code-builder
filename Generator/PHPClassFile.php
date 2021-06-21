@@ -15,8 +15,10 @@ class PHPClassFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    return parent::componentDataDefinition() + [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
       // The class name properties all form an interdependent set.
       // Typically, UIs will allow users to specify either:
       //  - the plain class name, such as for entity classes or plugins, where
@@ -124,23 +126,19 @@ class PHPClassFile extends PHPFile {
             ->setDependencies('..:qualified_class_name_pieces')
         ),
       // Deprecated: use class_docblock_lines instead.
-      'docblock_first_line' => [
-        'format' => 'string',
-        'internal' => TRUE,
-        'default' => 'TODO: class docs.',
-      ],
+      'docblock_first_line' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('TODO: class docs.'),
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
       'class_docblock_lines' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
         // No default, as most generators don't use this yet.
-      'abstract' => [
-        'label' => 'Abstract',
-        'format' => 'boolean',
-        'internal' => TRUE,
-        'default' => FALSE,
-      ],
+      'abstract' => PropertyDefinition::create('boolean')
+        ->setLabel('Abstract')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
       // Inconsistent with other properties for this to be a string, but we tend
       // to have parents be a qualified class name.
       'parent_class_name' => PropertyDefinition::create('string')
@@ -152,14 +150,14 @@ class PHPClassFile extends PHPFile {
       // with initial '\'.
       'interfaces' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
-      'traits' => [
-        'label' => 'Traits',
-        'description' => 'List of traits this class uses, as fully-qualified names with initial \.',
-        'format' => 'array',
-        'internal' => TRUE,
-        'default' => [],
-      ],
-    ];
+      'traits' => PropertyDefinition::create('string')
+        ->setLabel('Traits')
+        ->setDescription('List of traits this class uses, as fully-qualified names with initial \.')
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE),
+    ]);
+
+    return $definition;
   }
 
   /**

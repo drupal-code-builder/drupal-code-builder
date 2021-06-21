@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Generator for PHP interface files.
  *
@@ -13,20 +15,21 @@ class PHPInterfaceFile extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Remove properties that are not relevant.
-    unset($definition['abstract']);
-    unset($definition['interfaces']);
-    unset($definition['parent_class_name']);
-    unset($definition['traits']);
+    $definition->removeProperty('abstract');
+    $definition->removeProperty('interfaces');
+    $definition->removeProperty('parent_class_name');
+    $definition->removeProperty('traits');
 
-    $definition['parent_interface_names'] = [
-      'label' => 'Parent interface names',
-      'format' => 'array',
-      'internal' => TRUE,
-    ];
+    $definition->addProperties([
+      'parent_interface_names' => PropertyDefinition::create('string')
+        ->setLabel('Parent interface names')
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE)
+    ]);
 
     return $definition;
   }

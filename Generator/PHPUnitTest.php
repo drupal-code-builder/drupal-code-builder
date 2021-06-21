@@ -14,7 +14,7 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
+  public static function getPropertyDefinition(): PropertyDefinition {
     // Presets for the different types of test.
     $test_type_presets = [
       'unit' => [
@@ -88,12 +88,11 @@ class PHPUnitTest extends PHPClassFile {
       ],
     ];
 
-    $data_definition = [
-      'test_type' => [
-        'label' => 'Test type',
-        'presets' => $test_type_presets,
-        'required' => TRUE,
-      ],
+    $properties = [
+      'test_type' => PropertyDefinition::create('string')
+        ->setLabel('Test type')
+        ->setPresets($test_type_presets)
+        ->setRequired(TRUE),
       'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('Test class name')
         ->setDescription("The short class name of the test.")
@@ -104,43 +103,28 @@ class PHPUnitTest extends PHPClassFile {
         //   return 'Invalid class name.';
         // }
         // TODO: must also end in 'Test'.
-      'container_services' => [
-        'label' => 'Services from the container',
-        'description' => "The services that this test class gets from the container, to use normally.",
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
-
-          return $options;
-        },
-      ],
-      'mocked_services' => [
-        'label' => 'Services to mock',
-        'description' => "The services that this test class creates mocks for.",
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          $mb_task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-
-          $options = $mb_task_handler_report_services->listServiceNamesOptions();
-
-          return $options;
-        },
-      ],
-      'module_dependencies' => [
-        'format' => 'array',
-        'acquired' => TRUE,
-      ],
-      'test_modules' => [
-        'label' => 'Test modules',
-        'format' => 'compound',
-        'component_type' => 'TestModule',
-      ],
+      'container_services' => PropertyDefinition::create('string')
+        ->setLabel('Services from the container')
+        ->setDescription("The services that this test class gets from the container, to use normally.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+      'mocked_services' => PropertyDefinition::create('string')
+        ->setLabel('Services to mock')
+        ->setDescription("The services that this test class creates mocks for.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+      'module_dependencies' => PropertyDefinition::create('string')
+        ->setMultiple(TRUE)
+        ->setAutoAcquiredFromRequester(),
+      'test_modules' => static::getPropertyDefinitionForGeneratorType('TestModule')
+        ->setLabel('Test modules')
+        ->setMultiple(TRUE),
     ];
 
     // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
+    $definition = parent::getPropertyDefinition();
+    $properties += $definition->getProperties();
+    $definition->setProperties($properties);
 
     // Override some parent definitions to provide computed defaults.
     // Qualified class names and paths work differently for test classes because
@@ -167,9 +151,9 @@ class PHPUnitTest extends PHPClassFile {
     //   }
     // };
 
-    $data_definition['relative_class_name']->setInternal(TRUE);
+    $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
-    $data_definition['qualified_class_name_pieces']->getDefault()
+    $definition->getProperty('qualified_class_name_pieces')->getDefault()
       ->setCallable(function (DataItem $component_data) {
         $class_name_pieces = array_merge(
           [
@@ -183,7 +167,7 @@ class PHPUnitTest extends PHPClassFile {
       return $class_name_pieces;
     });
 
-    $data_definition['path']->getDefault()
+    $definition->getProperty('path')->getDefault()
       ->setCallable(function (DataItem $component_data) {
         // Lop off the initial Drupal\Tests\module and the final class name to
         // build the path.
@@ -194,9 +178,9 @@ class PHPUnitTest extends PHPClassFile {
         return implode('/', $path_pieces);
       });
 
-    $data_definition['docblock_first_line']['default'] = "Test case class TODO.";
+    $definition->getProperty('docblock_first_line')->setLiteralDefault("Test case class TODO.");
 
-    return $data_definition;
+    return $definition;
   }
 
   /**
