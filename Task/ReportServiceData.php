@@ -9,18 +9,23 @@ namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
-use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Task handler for reporting on service data.
  */
 class ReportServiceData extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+  use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * The name of the method providing an array of options as $value => $label.
+   */
+  protected static $optionsMethod = 'listServiceNamesOptionsAll';
 
   /**
    * {@inheritdoc}
@@ -38,18 +43,6 @@ class ReportServiceData extends ReportHookDataFolder implements OptionsProviderI
    */
   public function getDataSummary(): array {
     return $this->listServiceNamesOptionsAll();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(): array {
-    $options = [];
-    foreach ($this->listServiceNamesOptionsAll() as $value => $label) {
-      $options[$value] = OptionDefinition::create($value, $label);
-    }
-
-    return $options;
   }
 
   /**

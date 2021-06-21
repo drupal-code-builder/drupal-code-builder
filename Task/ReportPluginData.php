@@ -10,7 +10,6 @@ namespace DrupalCodeBuilder\Task;
 use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
-use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Task handler for reporting on hook data.
@@ -20,12 +19,18 @@ use MutableTypedData\Definition\OptionDefinition;
  */
 class ReportPluginData extends ReportHookDataFolder
   implements OptionsProviderInterface, VariantMappingProviderInterface, SectionReportInterface {
+  use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * The name of the method providing an array of options as $value => $label.
+   */
+  protected static $optionsMethod = 'listPluginNamesOptions';
 
   /**
    * {@inheritdoc}
@@ -43,18 +48,6 @@ class ReportPluginData extends ReportHookDataFolder
    */
   public function getDataSummary(): array {
     return $this->listPluginNamesOptions();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(): array {
-    $options = [];
-    foreach ($this->listPluginNamesOptions() as $value => $label) {
-      $options[$value] = OptionDefinition::create($value, $label);
-    }
-
-    return $options;
   }
 
   /**
