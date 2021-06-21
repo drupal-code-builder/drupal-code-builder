@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Base generator entity types.
@@ -40,8 +41,8 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = [
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $properties = [
       'entity_type_id' => PropertyDefinition::create('string')
         ->setLabel('Entity type ID')
         ->setDescription("The identifier of the entity type.")
@@ -66,31 +67,27 @@ abstract class EntityTypeBase extends PHPClassFile {
             ->setExpression("machineToClass(get('..:entity_type_id'))")
             ->setDependencies('..:entity_type_id')
         ),
-      'functionality' => [
-        'label' => 'Entity functionality',
-        'description' => "Characteristics of the entity type that provide different kinds of functionality.",
-        'format' => 'array',
-        // 'process_default' => TRUE,
-        'presets' => [
-          // Provided by child classes.
-        ],
-      ],
+      'functionality' => PropertyDefinition::create('string')
+        // Presets provided by child classes.
+        ->setLabel('Entity functionality')
+        ->setDescription("Characteristics of the entity type that provide different kinds of functionality.")
+        ->setMultiple(TRUE),
       // UI property. This forces the route provider which in turn forces other
       // things, and also sets:
       // - the links annotation properties
       // - the menu links
       // - the menu actions
       // - the menu tasks
-      'entity_ui' => [
-        'label' => 'Provide UI',
-        'description' => "Whether this entity has a UI. If selected, this will override the route provider, default form, list builder, and admin permission options if they are left empty.",
-        'options' => [
+      'entity_ui' => PropertyDefinition::create('string')
+        ->setLabel('Provide UI')
+        ->setDescription("Whether this entity has a UI. If selected, this will override the route provider, default form, list builder, and admin permission options if they are left empty.")
+        ->setOptionsArray([
           // An empty value means processing won't be called.
           '' => 'No UI',
           'default' => 'Default UI',
           'admin' => 'Admin UI',
-        ],
-        'processing' => function(DataItem $component_data) {
+        ])
+        ->setProcessing(function(DataItem $component_data) {
           $entity_data = $component_data->getParent();
           if ($entity_data->handler_route_provider->isEmpty() ||
             $entity_data->handler_route_provider->value != $component_data->value) {
@@ -104,22 +101,16 @@ abstract class EntityTypeBase extends PHPClassFile {
           $entity_data->handler_form_delete = 'core';
 
           $entity_data->handler_list_builder = 'custom';
-        },
-      ],
-      'interface_parents' => [
-        'label' => 'Interface parents',
-        'description' => "The interfaces the entity interface inherits from.",
-        'format' => 'array',
-        'internal' => TRUE,
-      ],
-      'entity_keys' => [
-        'label' => 'Entity keys',
-        'format' => 'mapping',
-        'computed' => TRUE,
-        // TODO: check if this can be removed.
-        // 'process_empty' => TRUE,
+        }),
+      'interface_parents' => PropertyDefinition::create('string')
+        ->setLabel('Interface parents')
+        ->setDescription("The interfaces the entity interface inherits from.")
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE),
+      'entity_keys' => PropertyDefinition::create('mapping')
         // Child classes set the default value.
-      ],
+        ->setLabel('Entity keys')
+        ->setInternal(TRUE),
       'entity_interface_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(
@@ -137,41 +128,36 @@ abstract class EntityTypeBase extends PHPClassFile {
         case 'core_default':
           // Handler that core fills in if not specified, e.g. the access
           // handler.
-          $handler_property = [
-            'format' => 'boolean',
-            'label' => "Custom {$handler_type_info['label']} handler",
-          ];
+          $handler_property = PropertyDefinition::create('boolean')
+            ->setLabel("Custom {$handler_type_info['label']} handler");
           break;
 
         case 'core_none':
           // Handler that core leaves empty if not specified, e.g. the list
           // builder handler.
-          $handler_property = [
-            'format' => 'string',
-            'label' => ucfirst("{$handler_type_info['label']} handler"),
-            'options' => [
+          $handler_property = PropertyDefinition::create('string')
+            ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
+            ->setOptionsArray([
               'none' => 'Do not use a handler',
               'core' => 'Use the core handler class',
               'custom' => 'Provide a custom handler class',
-            ],
-          ];
+            ]);
           break;
 
         case 'custom_default':
           $default_handler_type = $handler_type_info['default_type'];
-          $handler_property = [
-            'label' => ucfirst("{$handler_type_info['label']} handler"),
-            'format' => 'string',
-            'options' => [
+          $handler_property = PropertyDefinition::create('string')
+            ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
+            ->setOptionsArray([
               'none' => 'Do not use a handler',
               'default' => "Use the '{$default_handler_type}' handler class (forces '{$default_handler_type}' to use the default if not set)",
               'custom' => "Provide a custom handler class (forces '{$default_handler_type}' to use the default if not set)",
-            ],
+            ])
             // Force the default type to at least be specified if it isn't
             // already.
             // TODO: this assumes the mode of the default handler type is
             // 'core_none'.
-            'processing' => function(DataItem $component_data) use ($default_handler_type) {
+            ->setProcessing(function(DataItem $component_data) use ($default_handler_type) {
               if ($component_data->isEmpty() || $component_data->value == 'none') {
                 // Nothing to do; this isn't set to use anything.
                 return;
@@ -182,29 +168,26 @@ abstract class EntityTypeBase extends PHPClassFile {
               if ($component_data->getParent()->{$default_handler_key}->isEmpty() || $component_data->getParent()->{$default_handler_key}->value == 'none') {
                 $component_data->getParent()->{$default_handler_key} = 'core';
               }
-            },
-          ];
-
+            });
           break;
       }
 
       // Allow the handler type to provide a UI description.
       if (isset($handler_type_info['description'])) {
-        $handler_property['description'] = $handler_type_info['description'];
+        $handler_property->setDescription($handler_type_info['description']);
       }
 
       // Add extra options specific to the handler type.
       if (isset($handler_type_info['options'])) {
-        $handler_property['format'] = 'string';
-
-        InsertArray::insertAfter($handler_property['options'], 'core', $handler_type_info['options']);
-        unset($handler_property['options']['core']);
+        foreach ($handler_type_info['options'] as $option_value => $option_label) {
+          $handler_property->addOption(new OptionDefinition($option_value, $option_label));
+        }
       }
 
-      $handler_property['handler_label'] = $handler_type_info['label'];
-      $handler_property['parent_class_name'] = $handler_type_info['base_class'];
+      // FUCK.
+      // $handler_property['parent_class_name'] = $handler_type_info['base_class'];
 
-      $data_definition[$handler_type_property_name] = $handler_property;
+      $properties[$handler_type_property_name] = $handler_property;
     }
 
     // If there is a route provider, force the following:
@@ -216,7 +199,7 @@ abstract class EntityTypeBase extends PHPClassFile {
     //   handlers exist and crash without one.
     // This can't be done in the processing callback for those properties, as
     // processing callback is not applied to an empty property.
-    $data_definition['handler_route_provider']['processing'] = function(DataItem $component_data) {
+    $properties['handler_route_provider']->setProcessing(function(DataItem $component_data) {
       $entity_data = $component_data->getParent();
       if (!$entity_data->handler_route_provider->isEmpty() && $entity_data->handler_route_provider->value != 'none') {
         $entity_data->admin_permission = TRUE;
@@ -229,15 +212,14 @@ abstract class EntityTypeBase extends PHPClassFile {
           $entity_data->handler_list_builder = 'core';
         }
       }
-    };
+    });
 
     // Admin permission.
-    $data_definition['admin_permission'] = [
-      'label' => 'Admin permission',
-      'description' => "Whether to provide an admin permission. (Always set if a route provider handler is used.)",
-      'format' => 'boolean',
-    ];
-    $data_definition['admin_permission_name'] = PropertyDefinition::create('string')
+    $properties['admin_permission'] = PropertyDefinition::create('boolean')
+      ->setLabel('Admin permission')
+      ->setDescription("Whether to provide an admin permission. (Always set if a route provider handler is used.)");
+
+    $properties['admin_permission_name'] = PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
@@ -245,32 +227,35 @@ abstract class EntityTypeBase extends PHPClassFile {
             ->setDependencies('..:entity_type_id')
         );
 
+    $definition = parent::getPropertyDefinition();
+
     // Put the parent definitions after ours.
-    $data_definition += parent::componentDataDefinition();
+    $properties += $definition->getProperties();
+    $definition->setProperties($properties);
 
     // Make one of the basic class name properties internal.
-    $data_definition['relative_class_name']->setInternal(TRUE);
+    $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
     // Override some defaults.
     // Put the class in the 'Entity' relative namespace.
-    $data_definition['relative_namespace']->getDefault()
+    $definition->getProperty('relative_namespace')->getDefault()
       ->setLiteral('Entity');
 
-    $data_definition['class_docblock_lines']
+    $definition->getProperty('class_docblock_lines')
       ->setDefault(
         DefaultDefinition::create()
           // Expression Language lets us define arrays, which is nice.
           ->setExpression("['Provides the ' ~ get('..:entity_type_label') ~ ' entity.']")
       );
 
-    $data_definition['interfaces']->setDefault(
+    $definition->getProperty('interfaces')->setDefault(
       DefaultDefinition::create()
         // Expression Language lets us define arrays, which is nice.
         // TODO: why do we have the separate entity_interface_name??
         ->setExpression("[get('..:entity_interface_name')]")
     );
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

@@ -39,11 +39,11 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Set up the entity type functionality preset options.
-    $data_definition['functionality']['presets'] = [
+    $definition->getProperty('functionality')->setPresets([
       'plugin_collection' => [
         'label' => "Plugin collection - entities use plugins; implements EntityWithPluginCollectionInterface",
         'data' => [
@@ -54,51 +54,50 @@ class ConfigEntityType extends EntityTypeBase {
           ],
         ],
       ],
-    ];
+    ]);
 
-    $config_schema_property = [
-      'entity_properties' => [
-        'label' => 'Entity properties',
-        'description' => "The config properties that are stored for each entity of this type. An ID and label property are provided automatically.",
-        'format' => 'compound',
-        'properties' => [
-          'name' => PropertyDefinition::create('string')
-            ->setLabel('Property name')
-            ->setRequired(TRUE)
-            ->setValidators('machine_name'),
-          'label' => PropertyDefinition::create('string')
-            ->setLabel('Property label')
-            ->setRequired(TRUE)
-            ->setDefault(
-              DefaultDefinition::create()
-                ->setExpression("machineToLabel(get('..:name'))")
-              ->setDependencies('..:name')
+    $config_schema_property = PropertyDefinition::create('complex')
+      ->setName('entity_properties')
+      ->setLabel('Entity properties')
+      ->setDescription("The config properties that are stored for each entity of this type. An ID and label property are provided automatically.")
+      ->setMultiple(TRUE)
+      ->setProperties([
+        'name' => PropertyDefinition::create('string')
+          ->setLabel('Property name')
+          ->setRequired(TRUE)
+          ->setValidators('machine_name'),
+        'label' => PropertyDefinition::create('string')
+          ->setLabel('Property label')
+          ->setRequired(TRUE)
+          ->setDefault(
+            DefaultDefinition::create()
+              ->setExpression("machineToLabel(get('..:name'))")
+            ->setDependencies('..:name')
           ),
-          'type' => [
-            'label' => 'Data type',
-            'required' => TRUE,
-            'options' => 'ReportDataTypes:listDataTypesOptions',
-          ],
-        ],
-      ],
-    ];
-    InsertArray::insertAfter($data_definition, 'interface_parents', $config_schema_property);
+        'type' => PropertyDefinition::create('string')
+          ->setLabel('Data type')
+          ->setRequired(TRUE)
+          ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportDataTypes')),
+      ]);
+    $definition->addPropertyAfter('interface_parents', $config_schema_property);
 
-    $data_definition['parent_class_name']
+    $definition->getProperty('parent_class_name')
       ->setDefault(
         DefaultDefinition::create()
           ->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBase')
       );
 
-    $data_definition['interface_parents']['default'] = ['\Drupal\Core\Config\Entity\ConfigEntityInterface'];
+    $definition->getProperty('interface_parents')
+      ->setLiteralDefault(['\Drupal\Core\Config\Entity\ConfigEntityInterface']);
 
     // Change the computed value for entity keys.
-    $data_definition['entity_keys']['default'] = [
+    $definition->getProperty('entity_keys')
+      ->setLiteralDefault([
       'id' => 'id',
       'label' => 'label',
-    ];
+    ]);
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

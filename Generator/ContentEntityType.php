@@ -48,11 +48,11 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Set up the entity type functionality preset options.
-    $data_definition['functionality']['presets'] = [
+    $definition->getProperty('functionality')->setPresets([
       'fieldable' => [
         'label' => 'Fieldable',
         'description' => "Allows the entity type to have fields.",
@@ -155,37 +155,42 @@ class ContentEntityType extends EntityTypeBase {
           ],
         ],
       ],
-    ];
-    $data_definition['functionality']['default'] = [
+    ]);
+
+    $definition->getProperty('functionality')->setLiteralDefault([
       'fieldable',
       'revisionable',
       'translatable',
-    ];
+    ]);
 
     $bundle_entity_properties = [
       // Single place to compute a bundle entity type ID. Here rather than in
       // the bundle generator, as this component needs it too.
       // TODO: REMOVE! we can reach into the child data!!
-      'bundle_entity_type_id' => PropertyDefinition::create('string')
+      PropertyDefinition::create('string')
+        ->setName('bundle_entity_type_id')
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
             ->setExpression("get('..:entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
-      'bundle_entity' => GeneratorDefinition::createFromGeneratorTypeWithConversion('ConfigBundleEntityType')
+      static::getPropertyDefinitionForGeneratorType('ConfigBundleEntityType')
+        ->setName('bundle_entity')
         ->setLabel('Bundle config entity type')
         ->setDescription("Creates a config entity type which provides the bundles for this entity type. "
           . "This is analogous to the Node Type entity type providing bundles for the Node entity type."),
-      'bundle_label' => PropertyDefinition::create('string')
+      PropertyDefinition::create('string')
+        ->setName('bundle_label')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setExpression("machineToLabel(get('..:bundle_entity_type_id'))")
           ->setDependencies('..:bundle_entity_type_id')
         ),
-      'field_ui_base_route' => PropertyDefinition::create('string')
+      PropertyDefinition::create('string')
         // TODO: expose to UI when we have dynamic defaults.
         // This will then be dependent on the 'fieldable' property.
+        ->setName('field_ui_base_route')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setCallable(function (DataItem $component_data) {
@@ -205,15 +210,16 @@ class ContentEntityType extends EntityTypeBase {
           ->setDependencies('..:functionality')
         ),
     ];
-    InsertArray::insertAfter($data_definition, 'entity_ui', $bundle_entity_properties);
+    $definition->addPropertyAfter('entity_ui', ...$bundle_entity_properties);
 
     $base_fields_properties = [
-      'base_fields' => [
-        'label' => 'Base fields',
-        'description' => "The base fields for this content entity.",
-        'format' => 'compound',
-        // TODO: default, populated by things such as interface choice!
-        'properties' => [
+      // TODO: default, populated by things such as interface choice!
+      PropertyDefinition::create('complex')
+        ->setMultiple(TRUE)
+        ->setName('base_fields')
+        ->setLabel('Base fields')
+        ->setDescription("The base fields for this content entity.")
+        ->setProperties([
           'name' => PropertyDefinition::create('string')
             ->setLabel('Field name')
             ->setRequired(TRUE)
@@ -227,36 +233,34 @@ class ContentEntityType extends EntityTypeBase {
                 ->setExpression("machineToLabel(get('..:name'))")
                 ->setDependencies('..:name')
             ),
-          'type' => [
-            'label' => 'Field type',
-            'required' => TRUE,
-            'options' => 'ReportFieldTypes:listFieldTypesOptions',
-          ],
+          'type' => PropertyDefinition::create('string')
+            ->setLabel('Field type')
+            ->setRequired(TRUE)
+            ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes')),
           // TODO: options for revisionable and translatable in 3.3.x once
           // we have conditional properties.
-        ],
-      ],
+        ]),
       // Helper methods from traits that baseFieldDefinitions() should call.
-      'base_fields_helper_methods' => [
-        'internal' => TRUE,
-        'format' => 'array',
-        // 'default' => [],
-      ],
+      PropertyDefinition::create('string')
+        ->setName('base_fields_helper_methods')
+        ->setInternal(TRUE)
+        ->setMultiple(TRUE),
     ];
-    InsertArray::insertAfter($data_definition, 'interface_parents', $base_fields_properties);
+    $definition->addPropertyAfter('interface_parents', ...$base_fields_properties);
 
-    $data_definition['parent_class_name']
+    $definition->getProperty('parent_class_name')
       ->setDefault(
         DefaultDefinition::create()
           ->setLiteral('\Drupal\Core\Entity\ContentEntityBase')
       );
 
-    $data_definition['interface_parents']['default'] = ['\Drupal\Core\Entity\ContentEntityInterface'];
+    $definition->getProperty('interface_parents')
+      ->setLiteralDefault(['\Drupal\Core\Entity\ContentEntityInterface']);
 
     // Set the computed value for entity keys. This is done in 'processing'
     // rather than 'default' so we can run after the preset values are applied
     // to add defaults and set the ordering.
-    $data_definition['entity_keys']['processing'] = function (DataItem $component_data) {
+    $definition->getProperty('entity_keys')->setProcessing(function (DataItem $component_data) {
       $entity_data = $component_data->getParent();
 
       $value = $component_data->value;
@@ -298,9 +302,9 @@ class ContentEntityType extends EntityTypeBase {
 
       // Replace the existing value.
       $component_data->set($ordered_value);
-    };
+    });
 
-    return $data_definition;
+    return $definition;
   }
 
   /**

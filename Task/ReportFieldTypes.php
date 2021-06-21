@@ -2,18 +2,25 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting on field type data.
  */
-class ReportFieldTypes extends ReportHookDataFolder implements SectionReportInterface {
+class ReportFieldTypes extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+  use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 
   /**
    * The sanity level this task requires to operate.
    */
   protected $sanity_level = 'component_data_processed';
+
+  /**
+   * The name of the method providing an array of options as $value => $label.
+   */
+  protected static $optionsMethod = 'listFieldTypesOptions';
 
   /**
    * {@inheritdoc}

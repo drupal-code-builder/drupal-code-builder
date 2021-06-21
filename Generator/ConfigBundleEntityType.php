@@ -34,24 +34,19 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    $bundle_entity_properties = [
-      // Just serves as a stepping-stone to allow this generator's
-      // entity_type_id to use it.
-      'bundle_entity_type_id' => [
-        'internal' => TRUE,
-        'acquired' => TRUE,
-      ],
-    ];
     // Add this right at the start, before the ID, so the ID default value
-    // can depend on it.
-    InsertArray::insertBefore($data_definition, 'entity_type_id', $bundle_entity_properties);
+    // can depend on it. TODO? order doesn't matter any more?
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('bundle_entity_type_id')
+      ->setAutoAcquiredFromRequester()
+    );
 
     // Allow the entity type ID to be derived from the entity it's a bundle
     // for a content entity type.
-    $data_definition['entity_type_id']->setDefault(
+    $definition->getProperty('entity_type_id')->setDefault(
       DefaultDefinition::create()
         // TODO: make this work in the form!
         ->setExpression("get('..:..:bundle_entity_type_id')")
@@ -59,11 +54,11 @@ class ConfigBundleEntityType extends ConfigEntityType {
 
     // Bundle entities need to use ConfigEntityBundleBase in order to clear
     // caches and synchronize display entities.
-    $data_definition['parent_class_name']->setDefault(
+    $definition->getProperty('parent_class_name')->setDefault(
       DefaultDefinition::create()->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBundleBase')
     );
 
-    return $data_definition;
+    return $definition;
   }
 
   /**
