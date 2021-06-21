@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -11,38 +12,30 @@ use MutableTypedData\Definition\DefaultDefinition;
 class EntityHandler extends PHPClassFile {
 
   /**
-   * Define the component data this component needs to function.
+   * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition() + [
-      'entity_type_id' => [
-        'internal' => TRUE,
-        // Means the ComponentCollector should copy in the property from the
-        // requesting component.
-        'acquired' => TRUE,
-      ],
-      'plain_class_name' => [
-        'internal' => TRUE,
-        'acquired' => TRUE,
-      ],
-      'entity_type_label' => [
-        'internal' => TRUE,
-        'acquired' => TRUE,
-      ],
-      'handler_type' => [
-        'internal' => TRUE,
-      ],
-      'handler_label' => [
-        'internal' => TRUE,
-      ],
-    ];
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'entity_type_id' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+      'plain_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'entity_type_label' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+      'handler_type' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'handler_label' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+    ]);
 
     // Note that relative_class_name is given by the entity type component.
 
-    $data_definition['class_docblock_lines']->setDefault(DefaultDefinition::create()
+    $definition->getProperty('class_docblock_lines')->setDefault(DefaultDefinition::create()
       ->setExpression("['Provides the ' ~ get('..:handler_label') ~ ' handler for the ' ~ get('..:entity_type_label') ~ ' entity.']"));
 
-    return $data_definition;
+    return $definition;
   }
 
 }

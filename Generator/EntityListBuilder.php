@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for entity list builder handler classes.
@@ -16,17 +17,18 @@ use CaseConverter\CaseString;
 class EntityListBuilder extends EntityHandler {
 
   /**
-   * Define the component data this component needs to function.
+   * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $data_definition = parent::componentDataDefinition() + [
-      // One of 'config' or 'content'.
-      'entity_type_group' => [
-        'internal' => TRUE,
-      ],
-    ];
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    return $data_definition;
+    $definition->addProperties([
+      // One of 'config' or 'content'.
+      'entity_type_group' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+    ]);
+
+    return $definition;
   }
 
   /**
