@@ -95,7 +95,8 @@ class ComponentClassHandler {
    *
    * @return
    *  A fully qualified class name for the type and, if it exists, version, e.g.
-   *  'DrupalCodeBuilder\Generator\Info6'.
+   *  'DrupalCodeBuilder\Generator\Info6'. Note that this class has not been
+   *  checked for existence.
    */
   public function getGeneratorClass($type) {
     $type = ucfirst($type);
