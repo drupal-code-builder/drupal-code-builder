@@ -27,6 +27,10 @@ class ComponentClassHandler {
     // DIRTY HACK.
     $machine_name = str_replace(':', '-', $machine_name);
 
+    if (!class_exists($class)) {
+      throw new \LogicException(sprintf("No class found for type %s", $component_type));
+    }
+
     return $class::getPropertyDefinition()->setName($machine_name);
   }
 
