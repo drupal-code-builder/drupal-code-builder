@@ -48,7 +48,7 @@ class GeneratorDefinition extends PropertyDefinition {
    *   TODO: remove this parameter. The generator class should be defining this,
    *   not the caller.
    *
-   * @return self
+   * @return static
    *   The new definition.
    */
   static public function createFromGeneratorType(string $generator_type, string $data_type = 'complex'): self {

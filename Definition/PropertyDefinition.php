@@ -130,7 +130,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
    *
    * Note there is no way to REMOVE acquired status, but this should be fine.
    *
-   * @return self
+   * @return static
    *   Returns the definition, for chaining.
    */
   public function setAutoAcquiredFromRequester(): self {
@@ -160,7 +160,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
    *   interpretation. Available variables:
    *    - requester: The requesting component.
    *
-   * @return self
+   * @return static
    *   Returns the definition, for chaining.
    */
   public function setAcquiringExpression(string $expression) :self {

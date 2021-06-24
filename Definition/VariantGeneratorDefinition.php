@@ -30,7 +30,7 @@ class VariantGeneratorDefinition extends VariantDefinition {
    * @param string $generator_type
    *   The generator type: the short class name of a Generator class.
    *
-   * @return self
+   * @return static
    */
   public function setGenerator(string $generator_type): self {
     $this->componentType = $generator_type;
