@@ -19,33 +19,32 @@ class Module7 extends Module {
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
-    unset($component_data_definition['plugins']);
-    unset($component_data_definition['plugin_types']);
-    unset($component_data_definition['services']);
-    unset($component_data_definition['phpunit_tests']);
-    unset($component_data_definition['tests']['description']);
-    unset($component_data_definition['config_entity_types']);
+    $definition->removeProperty('plugins');
+    $definition->removeProperty('plugin_types');
+    $definition->removeProperty('services');
+    $definition->removeProperty('phpunit_tests');
+    $definition->getProperty('tests')->setDescription('');
+    $definition->removeProperty('config_entity_types');
 
     // TODO: implement these for D7.
-    unset($component_data_definition['content_entity_types']);
-    unset($component_data_definition['theme_hooks']);
-    unset($component_data_definition['forms']);
+    $definition->removeProperty('content_entity_types');
+    $definition->removeProperty('theme_hooks');
+    $definition->removeProperty('forms');
 
-    $component_data_definition['router_items'] = [
-      'label' => "Menu paths",
-      'description' => "Paths for hook_menu(), eg 'path/foo'",
-      'required' => FALSE,
-      'format' => 'array',
-      'component_type' => 'RouterItem',
-    ];
+    $definition->addProperties([
+      'router_items' => static::getLazyDataDefinitionForGeneratorType('RouterItem', 'string')
+        ->setLabel("Menu paths")
+        ->setDescription("Paths for hook_menu(), eg 'path/foo'")
+        ->setMultiple(TRUE),
+      'settings_form' => static::getLazyDataDefinitionForGeneratorType('AdminSettingsForm', 'boolean')
+        ->setLabel("Admin settings form")
+        ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
+    ]);
 
-    $component_data_definition['settings_form']['format'] = 'boolean';
-    unset($component_data_definition['settings_form']['cardinality']);
-
-    return $component_data_definition;
+    return $definition;
   }
 
   /**

@@ -11,33 +11,31 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class TestModule extends Module {
 
-  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
-    // Do nothing.
-  }
-
   /**
-   * Define the component data this component needs to function.
+   * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Remove properties for components that test modules don't need.
     foreach ([
       'module_help_text',
       'api',
       'readme',
-      'phpunit_tests',
+      // 'phpunit_tests',
       'tests',
     ] as $property) {
-      unset($component_data_definition[$property]);
+      $definition->removeProperty($property);
     }
 
     // Acuisition hack to work in the UI stage.
-    $component_data_definition['test_class_name'] = PropertyDefinition::create('string')
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('test_class_name')
       ->setInternal(TRUE)
-      ->setExpressionDefault("get('..:..:..:plain_class_name')");
+      ->setExpressionDefault("get('..:..:..:plain_class_name')")
+    );
 
-    $component_data_definition['root_name']->setDefault(
+    $definition->getProperty('root_name')->setDefault(
       DefaultDefinition::create()
         ->setExpression("classToMachine(get('..:test_class_name'))")
         ->setDependencies('..:test_class_name')
@@ -45,16 +43,25 @@ class TestModule extends Module {
 
     // The package is always 'Testing' for test modules, so set this to
     // computed.
-    $component_data_definition['module_package']['default'] = 'Testing';
-    $component_data_definition['module_package']['computed'] = TRUE;
+    $definition->getProperty('module_package')
+      ->setLiteralDefault('Testing')
+      ->setInternal(TRUE);
 
     // Don't need this, but info file generators expect it.
-    $component_data_definition['module_dependencies']['internal'] = TRUE;
+    $definition->getProperty('module_dependencies')
+      ->setInternal(TRUE);
 
-    $component_data_definition['component_base_path']->getDefault()
-      ->setLiteral('tests/modules/%module');
+    $definition->getProperty('component_base_path')
+      ->setLiteralDefault('tests/modules/%module');
 
-    return $component_data_definition;
+    return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+    // Do nothing.
   }
 
 }

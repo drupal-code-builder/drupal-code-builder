@@ -67,32 +67,35 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
   /**
    * {@inheritdoc}
    */
-  public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition();
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
 
     // Define this here for completeness; child classes should specialize it.
-    $component_data_definition['root_name'] = PropertyDefinition::create('string')
+    $definition->addProperties([
+      'root_name' => PropertyDefinition::create('string')
       ->setLabel('Extension machine name')
-      ->setRequired(TRUE);
+      ->setRequired(TRUE),
+    ]);
 
     // Remove the root_component_name property that's come from the parent
     // class.
-    unset($component_data_definition['root_component_name']);
+    $definition->removeProperty('root_component_name');
 
     // Override the component_base_path property to be computed rather than
     // inherited.
-    $component_data_definition['component_base_path'] = PropertyDefinition::create('string')
-      ->setInternal(TRUE)
-      ->setDefault(
-        DefaultDefinition::create()
-          ->setLiteral('')
-      );
-
+    $definition->addProperties([
+      'component_base_path' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setLiteral('')
+        ),
       // Add the configuration data definition as internal.
-      $component_data_definition['configuration'] = static::configurationDefinition()
-        ->setInternal(TRUE);
+      'configuration' => static::configurationDefinition()
+        ->setInternal(TRUE),
+    ]);
 
-    return $component_data_definition;
+    return $definition;
   }
 
   public function isRootComponent(): bool {

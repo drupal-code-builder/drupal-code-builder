@@ -5,7 +5,6 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\VariantDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -118,40 +117,21 @@ class Module extends RootComponent {
       ]);
   }
 
-  public static function getPropertyDefinition() :PropertyDefinition {
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
-    static::baseComponentPropertyDefinitionAlter($definition);
-
     $definition->getProperty('root_name')
-      ->setLabel('Module machine name');
-
-    return $definition;
-  }
-
-  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
-    // This is just to allow easy skipping of this by TestModule.
-    $definition->setLabel('Module')
-      ->setName('module');
-  }
-
-  /**
-   * Define the component data this component needs to function.
-   */
-  public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition();
-
-    $component_data_definition['root_name']
       ->setLabel('Module machine name')
       ->setLiteralDefault('my_module');
 
-    $component_data_definition += [
-      'base' => [
-        'internal' => TRUE,
-        'default' => 'module',
-        'process_default' => TRUE,
-        'required' => TRUE,
-      ],
+    $definition->addProperties([
+      'base' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('module')
+        ->setRequired(TRUE),
       // TODO: move to RootComponent.
       'readable_name' => PropertyDefinition::create('string')
         ->setLabel('Module readable name')
@@ -161,122 +141,94 @@ class Module extends RootComponent {
             ->setExpression("machineToLabel(get('..:root_name'))")
             ->setDependencies('..:root_name')
         ),
-      'short_description' => [
-        'label' => 'Module .info file description',
-        'default' => 'TODO: Description of module',
-        'required' => TRUE,
-        'process_default' => TRUE,
-      ],
-      'module_package' => [
-        'label' => 'Module .info file package',
-        'default' => '',
-        'required' => FALSE,
-        'process_default' => TRUE,
-      ],
-      'module_dependencies' => [
-        'label' => 'Module dependencies',
-        'description' => 'The machine names of the modules this module should have as dependencies.',
-        'required' => FALSE,
+      'short_description' => PropertyDefinition::create('string')
+        ->setLabel('Module .info file description')
+        ->setLiteralDefault('TODO: Description of module')
+        ->setRequired(TRUE),
+      'module_package' => PropertyDefinition::create('string')
+        ->setLabel('Module .info file package')
+        ->setLiteralDefault(''),
+      'module_dependencies' => PropertyDefinition::create('string')
+        ->setLabel('Module dependencies')
+        ->setDescription('The machine names of the modules this module should have as dependencies.')
+        ->setMultiple(TRUE)
         // We need a value for this, as other generators acquire it.
-        'process_default' => TRUE,
-        'format' => 'array',
-      ],
+        ->setLiteralDefault([]),
       // If this is given, then hook_help() is automatically added to the list
       // of required hooks.
-      'module_help_text' => [
-        'label' => 'Module help text',
-        'description' => 'The text to show on the site help page. This automatically adds hook_help().',
-        'default' => NULL,
-        'required' => FALSE,
-      ],
-      'settings_form' => [
-        'label' => "Admin settings form",
-        'description' => "A form for setting the module's general settings. Also produces a permission and a router item.",
-        'required' => FALSE,
-        'format' => 'compound',
-        'cardinality' => 1,
-        'component_type' => 'AdminSettingsForm',
-      ],
-      'forms' => [
-        'label' => "Forms",
-        'description' => "The forms for this module to provide.",
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Form',
-      ],
-      'services' => [
-        'label' => "Services",
-        'description' => 'The services for this module to provide.',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Service',
-      ],
-      'service_provider' => [
-        'label' => "Service provider",
-        'description' => 'A service provider alters existing services or defines services dynamically.',
-        'required' => FALSE,
-        'default' => FALSE,
-        'format' => 'boolean',
-        'component_type' => 'ServiceProvider',
-      ],
-      'permissions' => [
-        'label' => "Permissions",
-        'description' => 'The permissions for this module to provide.',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'Permission',
-      ],
-      'module_hook_presets' => [
-        'label' => 'Hook preset groups',
-        'required' => FALSE,
-        'format' => 'array',
-        'options' => function(&$property_info) {
-          /// ARGH how to make format that is good for both UI and drush?
-          $mb_task_handler_report_presets = \DrupalCodeBuilder\Factory::getTask('ReportHookPresets');
-          $hook_presets = $mb_task_handler_report_presets->getHookPresets();
+      'module_help_text' => PropertyDefinition::create('string')
+        ->setLabel('Module help text')
+        ->setDescription('The text to show on the site help page. This automatically adds hook_help().'),
+      'settings_form' => static::getLazyDataDefinitionForGeneratorType('AdminSettingsForm')
+        ->setLabel("Admin settings form")
+        ->setDescription("A form for setting the module's general settings. Also produces a permission and a router item."),
+      'forms' => static::getLazyDataDefinitionForGeneratorType('Form')
+        ->setLabel("Forms")
+        ->setDescription("The forms for this module to provide.")
+        ->setMultiple(TRUE),
+      'services' => static::getLazyDataDefinitionForGeneratorType('Service')
+        ->setLabel("Services")
+        ->setDescription('The services for this module to provide.')
+        ->setMultiple(TRUE),
+      'service_provider' => static::getLazyDataDefinitionForGeneratorType('ServiceProvider', 'boolean')
+        ->setLabel("Service provider")
+        ->setDescription('A service provider alters existing services or defines services dynamically.'),
+      'permissions' => static::getLazyDataDefinitionForGeneratorType('Permission')
+        ->setLabel("Permissions")
+        ->setDescription('The permissions for this module to provide.')
+        ->setMultiple(TRUE),
+      // 'module_hook_presets' => PropertyDefinition::create('string')
+      //   ->setLabel( 'Hook preset groups')
+      //   ->setMultiple(TRUE)
+      //   'required' => FALSE,
+      //   'format' => 'array',
+      //   'options' => function(&$property_info) {
+      //     /// ARGH how to make format that is good for both UI and drush?
+      //     $mb_task_handler_report_presets = \DrupalCodeBuilder\Factory::getTask('ReportHookPresets');
+      //     $hook_presets = $mb_task_handler_report_presets->getHookPresets();
 
-          // Stash the hook presets in the property info so the processing
-          // callback doesn't have to repeat the work.
-          // TODO: this is not working! See the processing callback.
-          $property_info['_presets'] = $hook_presets;
+      //     // Stash the hook presets in the property info so the processing
+      //     // callback doesn't have to repeat the work.
+      //     // TODO: this is not working! See the processing callback.
+      //     $property_info['_presets'] = $hook_presets;
 
-          $options = [];
-          foreach ($hook_presets as $name => $info) {
-            $options[$name] = $info['label'];
-          }
-          return $options;
-        },
-        // The processing callback alters the component data in place, and may
-        // in fact alter another value.
-        // TODO: restore this as validation!
-        'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
-          // TODO: the options aren't there, as generateComponent() only gets
-          // given data, not the component info array. However, it's probably
-          // better to re-compute these lazily rather than do them all.
-          $mb_task_handler_report_presets = \DrupalCodeBuilder\Factory::getTask('ReportHookPresets');
-          $hook_presets = $mb_task_handler_report_presets->getHookPresets();
+      //     $options = [];
+      //     foreach ($hook_presets as $name => $info) {
+      //       $options[$name] = $info['label'];
+      //     }
+      //     return $options;
+      //   },
+      //   // The processing callback alters the component data in place, and may
+      //   // in fact alter another value.
+      //   // TODO: restore this as validation!
+      //   'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
+      //     // TODO: the options aren't there, as generateComponent() only gets
+      //     // given data, not the component info array. However, it's probably
+      //     // better to re-compute these lazily rather than do them all.
+      //     $mb_task_handler_report_presets = \DrupalCodeBuilder\Factory::getTask('ReportHookPresets');
+      //     $hook_presets = $mb_task_handler_report_presets->getHookPresets();
 
-          foreach ($value as $given_preset_name) {
-            if (!isset($hook_presets[$given_preset_name])) {
-              throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Undefined hook preset group !name", [
-                '!name' => htmlspecialchars($given_preset_name, ENT_QUOTES, 'UTF-8'),
-              ]));
-            }
-            // DX: check the preset is properly defined.
-            if (!is_array($hook_presets[$given_preset_name]['hooks'])) {
-              throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Incorrectly defined hook preset group !name", [
-                '!name' => htmlspecialchars($given_preset_name, ENT_QUOTES, 'UTF-8'),
-              ]));
-            }
+      //     foreach ($value as $given_preset_name) {
+      //       if (!isset($hook_presets[$given_preset_name])) {
+      //         throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Undefined hook preset group !name", [
+      //           '!name' => htmlspecialchars($given_preset_name, ENT_QUOTES, 'UTF-8'),
+      //         ]));
+      //       }
+      //       // DX: check the preset is properly defined.
+      //       if (!is_array($hook_presets[$given_preset_name]['hooks'])) {
+      //         throw new \DrupalCodeBuilder\Exception\InvalidInputException(strtr("Incorrectly defined hook preset group !name", [
+      //           '!name' => htmlspecialchars($given_preset_name, ENT_QUOTES, 'UTF-8'),
+      //         ]));
+      //       }
 
-            // Add the preset hooks list to the hooks array in the component
-            // data. The 'hooks' property processing will handle them.
-            $hooks = $hook_presets[$given_preset_name]['hooks'];
-            $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
-            //drush_print_r($component_data['hooks']);
-          }
-        },
-      ],
+      //       // Add the preset hooks list to the hooks array in the component
+      //       // data. The 'hooks' property processing will handle them.
+      //       $hooks = $hook_presets[$given_preset_name]['hooks'];
+      //       $component_data['hooks'] = array_merge($component_data['hooks'], $hooks);
+      //       //drush_print_r($component_data['hooks']);
+      //     }
+      //   },
+      // ],
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE)
@@ -323,75 +275,41 @@ class Module extends RootComponent {
       //     $component_data['hooks'] = $hooks;
       //   }
       // ),
-      'content_entity_types' => [
-        'label' => 'Content entity types',
-        'required' => FALSE,
-        'format' => 'compound',
-        // This tells the system that this is a request for generator
-        // components, and the input data should be placed in a nested array in
-        // the module data.
-        'component_type' => 'ContentEntityType',
-      ],
-      'config_entity_types' => [
-        'label' => 'Config entity types',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'ConfigEntityType',
-      ],
-      'plugins' => static::getPropertyDefinitionForGeneratorType('Plugin')
+      'content_entity_types' => static::getLazyDataDefinitionForGeneratorType('ContentEntityType')
+        ->setLabel('Content entity types')
+        ->setMultiple(TRUE),
+      'config_entity_types' => static::getLazyDataDefinitionForGeneratorType('ConfigEntityType')
+        ->setLabel('Config entity types')
+        ->setMultiple(TRUE),
+      'plugins' => static::getLazyDataDefinitionForGeneratorType('Plugin')
         ->setLabel('Plugins')
         ->setMultiple(TRUE),
-      'plugin_types' => [
-        'label' => 'Plugin types',
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'PluginType',
-      ],
-      'theme_hooks' => [
-        'label' => "Theme hooks",
-        'description' => "The name of theme hooks, without the leading 'theme_'.",
-        'format' => 'array',
-        'component_type' => 'ThemeHook',
-      ],
-      'router_items' => [
-        'label' => "Routes",
-        'required' => FALSE,
-        'format' => 'compound',
-        'component_type' => 'RouterItem',
-      ],
-      'library' => static::getPropertyDefinitionForGeneratorType('Library')
+      'plugin_types' => static::getLazyDataDefinitionForGeneratorType('PluginType')
+        ->setLabel('Plugin types')
+        ->setMultiple(TRUE),
+      'theme_hooks' => static::getLazyDataDefinitionForGeneratorType('ThemeHook', 'string')
+        ->setLabel("Theme hooks")
+        ->setDescription("The name of theme hooks, without the leading 'theme_'.")
+        ->setMultiple(TRUE),
+      'router_items' => static::getLazyDataDefinitionForGeneratorType('RouterItem')
+        ->setLabel("Routes")
+        ->setMultiple(TRUE),
+      'library' => static::getLazyDataDefinitionForGeneratorType('Library')
         ->setLabel('Libraries')
         ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
         ->setMultiple(TRUE),
-      'api' => [
-        'label' => "api.php file",
-        'description' => 'An api.php file documents hooks and callbacks that this module invents.',
-        'required' => FALSE,
-        'default' => FALSE,
-        'format' => 'boolean',
-        'component_type' => 'API',
-      ],
-      'readme' => [
-        'label' => "README file",
-        'required' => FALSE,
-        'default' => TRUE,
-        'format' => 'boolean',
-        'component_type' => 'Readme',
-      ],
-      'phpunit_tests' => [
-        'label' => "PHPUnit test case class",
-        'format' => 'compound',
-        'component_type' => 'PHPUnitTest',
-        'required' => FALSE,
-      ],
-      'tests' => [
-        'label' => "Simpletest test case class",
-        'description' => 'NOTICE: These are deprecated in Drupal 8.',
-        'required' => FALSE,
-        'default' => FALSE,
-        'format' => 'boolean',
-        'component_type' => 'Tests',
-      ],
+      'api' => static::getLazyDataDefinitionForGeneratorType('API', 'boolean')
+        ->setLabel("api.php file")
+        ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
+      'readme' => static::getLazyDataDefinitionForGeneratorType('Readme', 'boolean')
+        ->setLabel("README file")
+        ->setLiteralDefault(TRUE),
+      // 'phpunit_tests' go here, but can't be added at this point because it
+      // would cause circularity with TestModule.
+      // TODO: lazy load generator type property definitions?
+      'tests' => static::getLazyDataDefinitionForGeneratorType('Tests', 'boolean')
+        ->setLabel("Simpletest test case class")
+        ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.
@@ -407,9 +325,31 @@ class Module extends RootComponent {
             ->setExpression("machineToClass(get('..:root_name'))")
             ->setDependencies('..:root_name')
         ),
-    ];
+    ]);
 
-    return $component_data_definition;
+    static::baseComponentPropertyDefinitionAlter($definition);
+
+    return $definition;
+  }
+
+  /**
+   * Alter the definition.
+   *
+   * This is just to allow easy skipping of this by TestModule.
+   *
+   * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
+   *   The definition from this class.
+   */
+  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+    $definition
+      ->setLabel('Module')
+      ->setName('module');
+
+    $definition->addPropertyAfter('readme', static::getLazyDataDefinitionForGeneratorType('PHPUnitTest')
+      ->setName('phpunit_tests')
+      ->setLabel("PHPUnit test case class")
+      ->setMultiple(TRUE)
+    );
   }
 
   /**

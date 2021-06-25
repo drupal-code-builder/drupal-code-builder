@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use MutableTypedData\Definition\VariantDefinition;
@@ -16,9 +17,14 @@ class PluginType extends BaseGenerator {
 
   use NameFormattingTrait;
 
-  // ARGH common properties! -- root name!
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = GeneratorDefinition::createFromGeneratorType('PluginType', 'mutable')
+  /**
+   * {@inheritdoc}
+   */
+  protected static $dataType = 'mutable';
+
+  public static function setProperties(PropertyDefinition $definition): void {
+    // ARGH common properties! -- root name!
+    $definition
       ->setProperties([
         'discovery_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin discovery type')
@@ -195,8 +201,6 @@ class PluginType extends BaseGenerator {
     foreach ($definition->getVariants() as $variant) {
       $variant->addProperties($common_properties);
     }
-
-    return $definition;
   }
 
   /**
