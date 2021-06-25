@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Component generator: profile.
@@ -24,53 +25,39 @@ class Profile extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {
+  public static function setProperties(PropertyDefinition $definition): void {
+    parent::setProperties($definition);
+
     $definition
       ->setLabel('Profile')
       ->setName('profile');
-  }
 
-  /**
-   * This can't be a class property due to use of closures.
-   *
-   * @return
-   *  An array that defines the data this component needs to operate. This
-   *  includes:
-   *  - data that must be specified by the user
-   *  - data that may be specified by the user, but can be computed or take from
-   *    defaults
-   *  - data that should not be specified by the user, as it is computed from
-   *    other input.
-   */
-  public static function componentDataDefinition() {
-    $component_data_definition = parent::componentDataDefinition();
+    $definition->addProperties([
+      'base' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('profile'),
+      'readable_name' => PropertyDefinition::create('string')
+        ->setLabel('Profile readable name')
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(get('..:root_name'))")
+            ->setDependencies('..:root_name')
+        ),
+      'short_description' => PropertyDefinition::create('string')
+        ->setLabel('Profile .info file description')
+        ->setLiteralDefault('TODO: Description of profile'),
+    ]);
 
-    $component_data_definition['base'] = [
-      'internal' => TRUE,
-      'default' => 'profile',
-      'process_default' => TRUE,
-    ];
-
-    $component_data_definition['root_name']
+    $definition->getProperty('root_name')
       ->setLabel('Profile machine name')
       ->setLiteralDefault('my_profile');
-
-    $component_data_definition += [
-      'readable_name' => [
-        'label' => 'Profile readable name',
-        'default' => function($component_data) {
-          return ucfirst(str_replace('_', ' ', $component_data['root_name']));
-        },
-        'required' => FALSE,
-      ],
-      'short_description' => [
-        'label' => 'Profile .info file description',
-        'default' => 'TODO: Description of profile',
-        'required' => FALSE,
-      ],
-    ];
-    return $component_data_definition;
   }
+
+ /**
+  * {@inheritdoc}
+  */
+ public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {
+ }
 
   /**
    * Declares the subcomponents for this component.
