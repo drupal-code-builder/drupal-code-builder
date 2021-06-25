@@ -44,9 +44,6 @@ class Info extends File {
       );
     }
 
-    // This can't rely on the property definition created in
-    // addArrayPropertyInfoToDefinition() as it's multiple-valued and can't use
-    // the default acquiring expression.
     $definition->addProperty(PropertyDefinition::create('string')
       ->setName('module_dependencies')
       ->setMultiple(TRUE)
