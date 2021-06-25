@@ -224,12 +224,19 @@ abstract class BaseGenerator implements GeneratorInterface {
   public static function getPropertyDefinition() :PropertyDefinition {
     $type = static::deriveType(static::class);
 
-    // Get the array property info from the old definition method.
-    $array_property_info = static::componentDataDefinition();
-
     $definition = GeneratorDefinition::createFromGeneratorType($type, 'complex');
 
-    static::addArrayPropertyInfoToDefinition($definition, $array_property_info);
+    // Add the basic properties.
+    // TODO: put these in setProperties() instead, but can't yet, probably
+    // because of standalone data for requested components.
+    $definition->addProperties([
+      'root_component_name' => PropertyDefinition::create('string')
+        ->setAcquiringExpression("getRootComponentName(requester)"),
+      'containing_component' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      'component_base_path' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
 
     return $definition;
   }
@@ -238,7 +245,7 @@ abstract class BaseGenerator implements GeneratorInterface {
   // process the old array property info and add it to the property definition
   // for this generator.
   // TODO: move this elsewhere?
-  public static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
+  public static function REMOVEaddArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
     $generate_task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
 
     $converted_defs = [];
