@@ -234,6 +234,20 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return $this->processing;
   }
 
+  /**
+   * Load all the lazy properties.
+   *
+   * TODO: possibly rethink the lazy-loading thing? Can the problem it exists to
+   * solve be dealt with instead by changing all report tasks to lazy option
+   * providers and a bit of fancy footwork for the Module/TestModule
+   * circularity?
+   */
+  public function loadLazyProperties() {
+    foreach ($this->getProperties() as $property) {
+      $property->loadLazyProperties();
+    }
+  }
+
   public function offsetExists($offset) {
     dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetExists $offset.");

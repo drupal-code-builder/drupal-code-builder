@@ -61,7 +61,12 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
    * We need the base PropertyDefinition here for the interface compatibility.
    */
   public static function getDefinition(): BasePropertyDefinition {
-    return static::getPropertyDefinition();
+    $definition = static::getPropertyDefinition();
+
+    // Load all the lazy properties now we have the complete definition.
+    $definition->loadLazyProperties();
+
+    return $definition;
   }
 
   /**
