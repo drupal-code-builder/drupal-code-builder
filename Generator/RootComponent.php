@@ -51,7 +51,7 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
   public static function configurationDefinition(): PropertyDefinition {
     // Return an empty data definition by default.
     // NOTE: this can't have a root name set because it's also embedded into
-    // data by self::componentDataDefinition().
+    // data by self::getPropertyDefinition().
     return PropertyDefinition::create('complex');
   }
 
