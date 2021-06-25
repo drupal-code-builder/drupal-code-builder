@@ -783,42 +783,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     }
 
     return $differences_merged;
-
-
-    // Get the property info for just this component: we don't care about
-    // going into compound properties.
-    $component_property_info = static::componentDataDefinition();
-
-    // Only merge array properties.
-    foreach ($component_property_info as $property_name => $property_info) {
-      // Skip this property if there's nothing here.
-      if (!isset($this->component_data[$property_name]) && !isset($additional_component_data[$property_name])) {
-        continue;
-      }
-
-      // We're getting the component data direct, so it won't have default
-      // attributes filled in: 'format' might not be set.
-      if (!isset($property_info['format']) || $property_info['format'] != 'array') {
-        // Don't merge this property, but check that we're not throwing away
-        // data from the additional data.
-        assert($this->component_data[$property_name] == $additional_component_data[$property_name],
-          "Attempted to discard request for new component, but failed on property $property_name with existing data "
-           . print_r($this->component_data, TRUE)
-           . " and new data "
-           . print_r($additional_component_data, TRUE)
-         );
-
-        continue;
-      }
-
-      if ($this->component_data[$property_name] != $additional_component_data[$property_name]) {
-        $differences_merged = TRUE;
-
-        $this->component_data[$property_name] = array_merge_recursive($this->component_data[$property_name], $additional_component_data[$property_name]);
-      }
-    }
-
-    return $differences_merged;
   }
 
   /**
