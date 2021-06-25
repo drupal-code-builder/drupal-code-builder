@@ -51,7 +51,8 @@ class LazyGeneratorDefinition extends GeneratorDefinition {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }
 
-    if (empty($this->properties)) {
+    // Only lazy-load properties for a complex or mutable definition.
+    if (empty($this->properties) && in_array($this->type, ['complex', 'mutable'])) {
       $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
 
       // Pass this definition to the generator and let it add the properties.
