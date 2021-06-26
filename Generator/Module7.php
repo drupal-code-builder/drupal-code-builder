@@ -51,6 +51,13 @@ class Module7 extends Module {
   /**
    * {@inheritdoc}
    */
+  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+    // Do nothing.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents() {
     $components = parent::requiredComponents();
 
