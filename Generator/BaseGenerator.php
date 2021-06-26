@@ -487,7 +487,7 @@ abstract class BaseGenerator implements GeneratorInterface {
 
   // helper for requiredComponents()
   protected function getDataForGenerator(string $generator_type) {
-    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $definition = $class_handler->getComponentPropertyDefinition($generator_type);
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     return $data;
@@ -495,7 +495,7 @@ abstract class BaseGenerator implements GeneratorInterface {
 
   // TODO: remove this; replace with getLazyDataDefinitionForGeneratorType().
   protected static function getPropertyDefinitionForGeneratorType(string $component_type): PropertyDefinition {
-    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($component_type);
 
     return $generator_class::getPropertyDefinition();
@@ -504,7 +504,7 @@ abstract class BaseGenerator implements GeneratorInterface {
   // TODO: too many ways to do this -- clean up; standardize on this.
   // TODO: move this to a task handler?
   protected static function getLazyDataDefinitionForGeneratorType(string $component_type, string $data_type = NULL): PropertyDefinition {
-    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($component_type);
 
     return $generator_class::getGeneratorDataDefinition($component_type, $data_type);
