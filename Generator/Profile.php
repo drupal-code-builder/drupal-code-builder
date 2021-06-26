@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Component generator: profile.
  *
@@ -18,6 +20,15 @@ class Profile extends RootComponent {
    * The sanity level this generator requires to operate.
    */
   public static $sanity_level = 'none';
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {
+    $definition
+      ->setLabel('Profile')
+      ->setName('profile');
+  }
 
   /**
    * This can't be a class property due to use of closures.

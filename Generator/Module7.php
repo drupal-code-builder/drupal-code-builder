@@ -51,7 +51,7 @@ class Module7 extends Module {
   /**
    * {@inheritdoc}
    */
-  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+  public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {
     // Do nothing.
   }
 

@@ -327,8 +327,6 @@ class Module extends RootComponent {
         ),
     ]);
 
-    static::baseComponentPropertyDefinitionAlter($definition);
-
     return $definition;
   }
 
@@ -340,7 +338,7 @@ class Module extends RootComponent {
    * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
    *   The definition from this class.
    */
-  public static function baseComponentPropertyDefinitionAlter(PropertyDefinition $definition) {
+  public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {
     $definition
       ->setLabel('Module')
       ->setName('module');

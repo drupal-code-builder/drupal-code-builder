@@ -61,13 +61,34 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
    * We need the base PropertyDefinition here for the interface compatibility.
    */
   public static function getDefinition(): BasePropertyDefinition {
-    $definition = static::getPropertyDefinition();
+    $type = static::deriveType(static::class);
+
+    $definition = static::getGeneratorDataDefinition($type);
 
     // Load all the lazy properties now we have the complete definition.
     $definition->loadLazyProperties();
 
     return $definition;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function setProperties(PropertyDefinition $definition): void {
+    parent::setProperties($definition);
+
+    static::rootComponentPropertyDefinitionAlter($definition);
+  }
+
+  /**
+   * Alter the definition.
+   *
+   * This is mostly to allow easy skipping of this by TestModule.
+   *
+   * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
+   *   The definition from this class.
+   */
+  abstract public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void;
 
   /**
    * {@inheritdoc}
