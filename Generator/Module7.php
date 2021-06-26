@@ -25,6 +25,7 @@ class Module7 extends Module {
     $definition->removeProperty('plugins');
     $definition->removeProperty('plugin_types');
     $definition->removeProperty('services');
+    $definition->removeProperty('service_provider');
     $definition->removeProperty('phpunit_tests');
     $definition->getProperty('tests')->setDescription('');
     $definition->removeProperty('config_entity_types');
