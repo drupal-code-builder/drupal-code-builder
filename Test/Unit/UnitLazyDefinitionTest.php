@@ -21,6 +21,8 @@ class UnitLazyDefinitionTest extends TestCase {
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     \DrupalCodeBuilder\Factory::setEnvironment($environment->reveal());
 
+    $this->container = \DrupalCodeBuilder\Factory::getContainer();
+
     $this->setUpVarDumper();
   }
 
@@ -62,6 +64,54 @@ class UnitLazyDefinitionTest extends TestCase {
     $this->expectException(InvalidDefinitionException::class);
 
     $data->lazy_bad->set('crash');
+  }
+
+  /**
+   * Test a root component can unset properties from parent that do not apply.
+   *
+   * In particular, a root component's parent might set properties that need
+   * options that don't make sense in the child's context. E.g. Module8 has
+   * services and plugins, Module7 doesn't. If those properties' options get
+   * loaded, the report system will try to load analysis data files that don't
+   * exist.
+   */
+  public function testParentRootComponentPropertyRemoval() {
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $this->container->set('Generate\ComponentClassHandler', $class_handler);
+
+    $generator_class = $class_handler->getGeneratorClass('RootGeneratorChild');
+
+    /** @var \DrupalCodeBuilder\Definition\PropertyDefinition */
+    $definition = $generator_class::getDefinition();
+    $property_names = $definition->getPropertyNames();
+
+    $this->assertContains('common', $property_names);
+    $this->assertNotContains('only_base', $property_names);
+
+    $data = DrupalCodeBuilderDataItemFactory::createFromProvider(\DrupalCodeBuilder\Test\Fixtures\Generator\RootGeneratorChild::class);
+  }
+
+  /**
+   * Get a component collector with mocked dependencies.
+   *
+   * This uses the TestComponentClassHandler from fixtures, which in turns
+   * returns a \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator
+   * for components.
+   */
+  protected function getComponentCollector(): ComponentCollector {
+    // Set up the ComponentCollector's injected dependencies.
+    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
+
+    // Create the helper, with dependencies passed in.
+    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
+      $environment->reveal(),
+      $class_handler,
+      $data_info_gatherer->reveal()
+    );
+
+    return $component_collector;
   }
 
 }

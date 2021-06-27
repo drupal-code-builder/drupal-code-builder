@@ -19,9 +19,25 @@ class TestComponentClassHandler extends ComponentClassHandler {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getGeneratorClass($type) {
+    // Return generators in the fixtures namespace.
+    if (class_exists('\DrupalCodeBuilder\Test\Fixtures\Generator\\' . $type)) {
+      $class_name = '\DrupalCodeBuilder\Test\Fixtures\Generator\\' . $type;
+      return $class_name;
+    }
+
+    throw new \LogicException("No class found for '$type' in fixture namespace.");
+  }
+
+  /**
    * TODO
    */
   public function getGenerator($component_type, $component_data = NULL) {
+    // TODO: Special case, probably needs fixing, unifying with
+    // getGeneratorClass()/
+    // Return the SimpleGenerator.
     if (!isset($this->map[$component_type])) {
       $generator = new \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator();
       $generator->componentType = $component_type;
