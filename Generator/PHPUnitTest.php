@@ -116,7 +116,7 @@ class PHPUnitTest extends PHPClassFile {
       'module_dependencies' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setAutoAcquiredFromRequester(),
-      'test_modules' => static::getPropertyDefinitionForGeneratorType('TestModule')
+      'test_modules' => static::getLazyDataDefinitionForGeneratorType('TestModule')
         ->setLabel('Test modules')
         ->setMultiple(TRUE),
     ];

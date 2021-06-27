@@ -175,7 +175,7 @@ class ContentEntityType extends EntityTypeBase {
             ->setExpression("get('..:entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
-      static::getPropertyDefinitionForGeneratorType('ConfigBundleEntityType')
+      static::getLazyDataDefinitionForGeneratorType('ConfigBundleEntityType')
         ->setName('bundle_entity')
         ->setLabel('Bundle config entity type')
         ->setDescription("Creates a config entity type which provides the bundles for this entity type. "

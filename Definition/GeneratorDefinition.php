@@ -9,7 +9,7 @@ namespace DrupalCodeBuilder\Definition;
  * itself?? There are examples of both usages!! Plugin and PluginType use in the
  * generator itself; BaseGenerator in its conversion shim code is the parent
  * using it to define the child item. So far, the correct thing is to use
- * BaseGenerator::getPropertyDefinitionForGeneratorType() in the parent
+ * BaseGenerator::getLazyDataDefinitionForGeneratorType() in the parent
  * generator case.
  */
 class GeneratorDefinition extends PropertyDefinition {

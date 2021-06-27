@@ -207,7 +207,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * This shouldn't set things on its root data such as required, cardinality,
    * or label, as these may depend on where it's used.
    *
-   * Use static::getPropertyDefinitionForGeneratorType() to use the definition
+   * Use static::getLazyDataDefinitionForGeneratorType() to use the definition
    * from one generator inside another's.
    *
    * @param string $data_type
@@ -246,14 +246,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     $definition = $class_handler->getComponentPropertyDefinition($generator_type);
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     return $data;
-  }
-
-  // TODO: remove this; replace with getLazyDataDefinitionForGeneratorType().
-  protected static function getPropertyDefinitionForGeneratorType(string $component_type): PropertyDefinition {
-    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
-    $generator_class = $class_handler->getGeneratorClass($component_type);
-
-    return $generator_class::getPropertyDefinition();
   }
 
   // TODO: too many ways to do this -- clean up; standardize on this.
