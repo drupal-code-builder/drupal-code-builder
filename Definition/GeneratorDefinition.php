@@ -26,8 +26,6 @@ class GeneratorDefinition extends PropertyDefinition {
    *
    * @param string $data_type
    *   The data type.
-   *   TODO: remove this parameter. The generator class should be defining this,
-   *   not the caller.
    * @param string $generator_type
    *   The generator type.
    */
@@ -45,8 +43,6 @@ class GeneratorDefinition extends PropertyDefinition {
    *   number.
    * @param string $data_type
    *   (optional) The data type. Defaults to 'complex'.
-   *   TODO: remove this parameter. The generator class should be defining this,
-   *   not the caller.
    *
    * @return static
    *   The new definition.
