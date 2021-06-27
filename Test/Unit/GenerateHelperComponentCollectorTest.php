@@ -31,13 +31,11 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler,
-      $data_info_gatherer->reveal()
+      $class_handler
     );
 
     return $component_collector;
@@ -62,13 +60,11 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler,
-      $data_info_gatherer->reveal()
+      $class_handler
     );
 
     $collection = $component_collector->assembleComponentList($component_data);
@@ -205,13 +201,11 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Mock the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler,
-      $data_info_gatherer->reveal()
+      $class_handler
     );
 
     $collection = $component_collector->assembleComponentList($component_data);
@@ -349,7 +343,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Mock the ComponentCollector's injected dependencies.
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Mock the root component generator, and methods on the dependencies which
     // return things relating to it.
@@ -373,14 +366,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       })
     )->willReturn($root_component->reveal());
 
-    // The ComponentDataInfoGatherer mock returns the generator's info.
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
-
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
@@ -498,7 +487,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Mock the ComponentCollector's injected dependencies.
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Mock the root component generator, and methods on the dependencies which
     // return things relating to it.
@@ -522,14 +510,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       })
     )->willReturn($root_component->reveal());
 
-    // The ComponentDataInfoGatherer mock returns the generator's info.
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
-
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
@@ -564,7 +548,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The component collector's injected dependencies.
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // The root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
@@ -577,7 +560,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     ]);
     $root_component->getType()->willReturn('my_root');
 
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
@@ -593,7 +575,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $child_requirement_component_data_info = [];
 
-    $data_info_gatherer->getComponentDataInfo('child_requirement', TRUE)->willReturn($child_requirement_component_data_info);
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
@@ -608,8 +589,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
@@ -647,7 +627,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The component collector's injected dependencies.
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // The root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
@@ -660,7 +639,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     ]);
     $root_component->getType()->willReturn('my_root');
 
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
@@ -681,7 +659,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $child_requirement_component_data_info = [];
 
-    $data_info_gatherer->getComponentDataInfo('child_requirement', TRUE)->willReturn($child_requirement_component_data_info);
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
@@ -701,7 +678,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $grandchild_requirement_component_data_info = [];
 
-    $data_info_gatherer->getComponentDataInfo('grandchild_requirement', TRUE)->willReturn($grandchild_requirement_component_data_info);
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
@@ -716,8 +692,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
@@ -760,7 +735,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
@@ -787,9 +761,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     });
     $root_component->requiredComponents()->willReturn([]);
 
-
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
-
     // Simple child component.
     $simple_child_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
 
@@ -804,13 +775,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     )
     ->willReturn($simple_child_component->reveal());
 
-    $data_info_gatherer->getComponentDataInfo('simple', TRUE)->willReturn([]);
-
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
@@ -864,7 +832,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
@@ -890,8 +857,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       return $root_component->reveal();
     });
     $root_component->requiredComponents()->willReturn([]);
-
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
 
     // Alpha child component.
     $alpha_child_component = $this->prophesize(\DrupalCodeBuilder\Generator\BaseGenerator::class);
@@ -923,15 +888,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     )
     ->willReturn($beta_child_component->reveal());
 
-    // Components which are used for an 'array' format property need at least
-    // one property, set to primary.
-    $data_info_gatherer->getComponentDataInfo('component_array', TRUE)->willReturn($component_array_data_info);
-
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
@@ -1043,7 +1003,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
@@ -1060,14 +1019,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     });
     $root_component->requiredComponents()->willReturn([]);
 
-    // The ComponentDataInfoGatherer mock returns the generator's info.
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
-
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();
@@ -1119,7 +1074,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // The component collector's injected dependencies.
     $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
     $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-    $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // The root component.
     $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
@@ -1135,7 +1089,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $root_component->getComponentDataValue("acquired_aliased")->willReturn('acquired_aliased_value');
     $root_component->getComponentDataValue("acquired_from_source")->willReturn('acquired_from_source_value');
 
-    $data_info_gatherer->getComponentDataInfo('my_root', TRUE)->willReturn($root_data_info);
     $class_handler->getGenerator(
       'my_root',
       Argument::that(function ($arg) use ($root_data) {
@@ -1166,7 +1119,6 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     ];
     $this->componentDataInfoAddDefaults($child_requirement_component_data_info);
 
-    $data_info_gatherer->getComponentDataInfo('child_requirement', TRUE)->willReturn($child_requirement_component_data_info);
     // Wildcard the data parameter. We're not testing what components receive
     // for construction.
     $class_handler->getGenerator(
@@ -1190,8 +1142,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
       $environment->reveal(),
-      $class_handler->reveal(),
-      $data_info_gatherer->reveal()
+      $class_handler->reveal()
     );
 
     $component_paths = $component_collector->assembleComponentList($root_data)->getComponentRequestPaths();

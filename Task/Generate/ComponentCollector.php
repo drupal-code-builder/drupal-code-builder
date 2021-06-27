@@ -140,19 +140,13 @@ class ComponentCollector {
    *   The environment object.
    * @param ComponentClassHandler $class_handler
    *   The class handler helper.
-   * @param ComponentDataInfoGatherer $data_info_gatherer
-   *   The data info gatherer helper.
    */
   public function __construct(
     EnvironmentInterface $environment,
-    ComponentClassHandler $class_handler,
-    ComponentDataInfoGatherer $data_info_gatherer
+    ComponentClassHandler $class_handler
   ) {
     $this->environment = $environment;
     $this->classHandler = $class_handler;
-    // TODO: not used, but maybe restore this to handle assembling data
-    // definitions from generator classes?
-    $this->dataInfoGatherer = $data_info_gatherer;
   }
 
   /**
@@ -783,7 +777,6 @@ class ComponentCollector {
       $selected_preset_info = $presets[$preset_key];
 
       // Ensure these are both preset as at least empty arrays.
-      // TODO: handle filling this in in ComponentDataInfoGatherer?
       // TODO: testing should cover that it's ok to have these absent.
       $selected_preset_info['data'] += [
         'force' => [],

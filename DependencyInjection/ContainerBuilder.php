@@ -246,7 +246,6 @@ class ContainerBuilder {
       $environment,
       $root_component_type,
       $container->get('Generate\ComponentClassHandler'),
-      $container->get('Generate\ComponentDataInfoGatherer'),
       $container->get('Generate\ComponentCollector'),
       $container->get('Generate\FileAssembler'),
     );

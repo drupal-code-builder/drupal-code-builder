@@ -73,90 +73,85 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
   'Generate\\ComponentCollector' => 'get67',
   'subEntry45' => 'get68',
   'subEntry46' => 'get69',
-  'subEntry47' => 'get70',
-  'Generate\\ComponentDataInfoGatherer' => 'get71',
-  'subEntry48' => 'get72',
-  'Generate\\FileAssembler' => 'get73',
-  'ReportAdminRoutes' => 'get74',
-  'subEntry49' => 'get75',
-  'ReportDataTypes' => 'get76',
-  'subEntry50' => 'get77',
-  'ReportElementTypes' => 'get78',
-  'subEntry51' => 'get79',
-  'ReportEntityTypes' => 'get80',
-  'subEntry52' => 'get81',
-  'ReportFieldTypes' => 'get82',
-  'subEntry53' => 'get83',
-  'ReportHookData' => 'get84',
-  'subEntry54' => 'get85',
-  'ReportHookDataFolder' => 'get86',
-  'subEntry55' => 'get87',
-  'ReportHookPresets' => 'get88',
-  'subEntry56' => 'get89',
-  'ReportPluginData' => 'get90',
-  'subEntry57' => 'get91',
-  'ReportServiceData' => 'get92',
-  'subEntry58' => 'get93',
-  'ReportServiceTags' => 'get94',
+  'Generate\\FileAssembler' => 'get70',
+  'ReportAdminRoutes' => 'get71',
+  'subEntry47' => 'get72',
+  'ReportDataTypes' => 'get73',
+  'subEntry48' => 'get74',
+  'ReportElementTypes' => 'get75',
+  'subEntry49' => 'get76',
+  'ReportEntityTypes' => 'get77',
+  'subEntry50' => 'get78',
+  'ReportFieldTypes' => 'get79',
+  'subEntry51' => 'get80',
+  'ReportHookData' => 'get81',
+  'subEntry52' => 'get82',
+  'ReportHookDataFolder' => 'get83',
+  'subEntry53' => 'get84',
+  'ReportHookPresets' => 'get85',
+  'subEntry54' => 'get86',
+  'ReportPluginData' => 'get87',
+  'subEntry55' => 'get88',
+  'ReportServiceData' => 'get89',
+  'subEntry56' => 'get90',
+  'ReportServiceTags' => 'get91',
+  'subEntry57' => 'get92',
+  'ReportSummary' => 'get93',
+  'subEntry58' => 'get94',
   'subEntry59' => 'get95',
-  'ReportSummary' => 'get96',
-  'subEntry60' => 'get97',
+  'subEntry60' => 'get96',
+  'Testing\\CollectTesting7' => 'get97',
   'subEntry61' => 'get98',
   'subEntry62' => 'get99',
-  'Testing\\CollectTesting7' => 'get100',
+  'Testing\\CollectTesting8' => 'get100',
   'subEntry63' => 'get101',
   'subEntry64' => 'get102',
-  'Testing\\CollectTesting8' => 'get103',
-  'subEntry65' => 'get104',
-  'subEntry66' => 'get105',
-  'subEntry67' => 'get106',
-  'subEntry68' => 'get107',
-  'subEntry69' => 'get108',
-  'subEntry70' => 'get109',
-  'subEntry71' => 'get110',
-  'subEntry72' => 'get111',
-  'subEntry73' => 'get112',
-  'subEntry74' => 'get113',
-  'Generate|module' => 'get114',
-  'Generate|profile' => 'get115',
-  'Collect\\HooksCollector' => 'get116',
-  'Collect' => 'get117',
-  'Collect.unversioned' => 'get118',
-  'subEntry75' => 'get119',
-  'subEntry76' => 'get120',
-  'Testing\\CollectTesting' => 'get121',
-  'DrupalCodeBuilder\\Task\\Collect\\HooksCollector' => 'get122',
-  'environment' => 'get123',
-  'DrupalCodeBuilder\\Environment\\EnvironmentInterface' => 'get124',
-  'DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter' => 'get125',
-  'DrupalCodeBuilder\\Task\\Collect\\MethodCollector' => 'get126',
-  'DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser' => 'get127',
+  'subEntry65' => 'get103',
+  'subEntry66' => 'get104',
+  'subEntry67' => 'get105',
+  'subEntry68' => 'get106',
+  'subEntry69' => 'get107',
+  'subEntry70' => 'get108',
+  'subEntry71' => 'get109',
+  'subEntry72' => 'get110',
+  'Generate|module' => 'get111',
+  'Generate|profile' => 'get112',
+  'Collect\\HooksCollector' => 'get113',
+  'Collect' => 'get114',
+  'Collect.unversioned' => 'get115',
+  'subEntry73' => 'get116',
+  'subEntry74' => 'get117',
+  'Testing\\CollectTesting' => 'get118',
+  'DrupalCodeBuilder\\Task\\Collect\\HooksCollector' => 'get119',
+  'environment' => 'get120',
+  'DrupalCodeBuilder\\Environment\\EnvironmentInterface' => 'get121',
+  'DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter' => 'get122',
+  'DrupalCodeBuilder\\Task\\Collect\\MethodCollector' => 'get123',
+  'DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser' => 'get124',
+  'subEntry75' => 'get125',
+  'DrupalCodeBuilder\\Task\\Collect\\PluginTypesCollector' => 'get126',
+  'subEntry76' => 'get127',
   'subEntry77' => 'get128',
-  'DrupalCodeBuilder\\Task\\Collect\\PluginTypesCollector' => 'get129',
-  'subEntry78' => 'get130',
-  'subEntry79' => 'get131',
+  'subEntry78' => 'get129',
+  'subEntry79' => 'get130',
+  'DrupalCodeBuilder\\Task\\Collect\\ServicesCollector' => 'get131',
   'subEntry80' => 'get132',
   'subEntry81' => 'get133',
-  'DrupalCodeBuilder\\Task\\Collect\\ServicesCollector' => 'get134',
-  'subEntry82' => 'get135',
+  'subEntry82' => 'get134',
+  'DrupalCodeBuilder\\Task\\Collect\\ServiceTagTypesCollector' => 'get135',
   'subEntry83' => 'get136',
   'subEntry84' => 'get137',
-  'DrupalCodeBuilder\\Task\\Collect\\ServiceTagTypesCollector' => 'get138',
-  'subEntry85' => 'get139',
+  'subEntry85' => 'get138',
+  'DrupalCodeBuilder\\Task\\Collect\\FieldTypesCollector' => 'get139',
   'subEntry86' => 'get140',
-  'subEntry87' => 'get141',
-  'DrupalCodeBuilder\\Task\\Collect\\FieldTypesCollector' => 'get142',
-  'subEntry88' => 'get143',
-  'DrupalCodeBuilder\\Task\\Collect\\DataTypesCollector' => 'get144',
-  'subEntry89' => 'get145',
-  'DrupalCodeBuilder\\Task\\Collect\\EntityTypesCollector' => 'get146',
-  'subEntry90' => 'get147',
-  'DrupalCodeBuilder\\Task\\Collect\\ElementTypesCollector' => 'get148',
-  'subEntry91' => 'get149',
-  'DrupalCodeBuilder\\Task\\Collect\\AdminRoutesCollector' => 'get150',
-  'DrupalCodeBuilder\\Task\\Generate\\ComponentClassHandler' => 'get151',
-  'DrupalCodeBuilder\\Task\\Generate\\ComponentDataInfoGatherer' => 'get152',
-  'subEntry92' => 'get153',
+  'DrupalCodeBuilder\\Task\\Collect\\DataTypesCollector' => 'get141',
+  'subEntry87' => 'get142',
+  'DrupalCodeBuilder\\Task\\Collect\\EntityTypesCollector' => 'get143',
+  'subEntry88' => 'get144',
+  'DrupalCodeBuilder\\Task\\Collect\\ElementTypesCollector' => 'get145',
+  'subEntry89' => 'get146',
+  'DrupalCodeBuilder\\Task\\Collect\\AdminRoutesCollector' => 'get147',
+  'DrupalCodeBuilder\\Task\\Generate\\ComponentClassHandler' => 'get148',
 );
 
     protected function get2()
@@ -521,166 +516,150 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Generate\\ComponentClassHandler');
     }
 
-    protected function get70()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Generate\\ComponentDataInfoGatherer');
-    }
-
     protected function get67()
     {
-        $object = new \DrupalCodeBuilder\Task\Generate\ComponentCollector($this->get68(), $this->get69(), $this->get70());
+        $object = new \DrupalCodeBuilder\Task\Generate\ComponentCollector($this->get68(), $this->get69());
         return $object;
     }
 
-    protected function get72()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Generate\\ComponentClassHandler');
-    }
-
-    protected function get71()
-    {
-        $object = new \DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer($this->get72());
-        return $object;
-    }
-
-    protected function get73()
+    protected function get70()
     {
         $object = new \DrupalCodeBuilder\Task\Generate\FileAssembler();
         return $object;
     }
 
-    protected function get75()
+    protected function get72()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get71()
+    {
+        $object = new \DrupalCodeBuilder\Task\ReportAdminRoutes($this->get72());
+        return $object;
     }
 
     protected function get74()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportAdminRoutes($this->get75());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get77()
+    protected function get73()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportDataTypes($this->get74());
+        return $object;
     }
 
     protected function get76()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportDataTypes($this->get77());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get79()
+    protected function get75()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportElementTypes($this->get76());
+        return $object;
     }
 
     protected function get78()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportElementTypes($this->get79());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get81()
+    protected function get77()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportEntityTypes($this->get78());
+        return $object;
     }
 
     protected function get80()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportEntityTypes($this->get81());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get83()
+    protected function get79()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportFieldTypes($this->get80());
+        return $object;
     }
 
     protected function get82()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportFieldTypes($this->get83());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get85()
+    protected function get81()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportHookData($this->get82());
+        return $object;
     }
 
     protected function get84()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportHookData($this->get85());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get87()
+    protected function get83()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportHookDataFolder($this->get84());
+        return $object;
     }
 
     protected function get86()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportHookDataFolder($this->get87());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get89()
+    protected function get85()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportHookPresets($this->get86());
+        return $object;
     }
 
     protected function get88()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportHookPresets($this->get89());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get91()
+    protected function get87()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportPluginData($this->get88());
+        return $object;
     }
 
     protected function get90()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportPluginData($this->get91());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get93()
+    protected function get89()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportServiceData($this->get90());
+        return $object;
     }
 
     protected function get92()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportServiceData($this->get93());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get95()
+    protected function get91()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new \DrupalCodeBuilder\Task\ReportServiceTags($this->get92());
+        return $object;
     }
 
     protected function get94()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportServiceTags($this->get95());
-        return $object;
-    }
-
-    protected function get97()
-    {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get98()
+    protected function get95()
     {
         return $this->delegateContainer->get('Psr\\Container\\ContainerInterface');
     }
 
-    protected function get99()
+    protected function get96()
     {
         return [
             0 => 'ReportAdminRoutes',
@@ -695,10 +674,26 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         ];
     }
 
-    protected function get96()
+    protected function get93()
     {
-        $object = new \DrupalCodeBuilder\Task\ReportSummary($this->get97(), $this->get98());
-        $object->setReportHelpers($this->get99());
+        $object = new \DrupalCodeBuilder\Task\ReportSummary($this->get94(), $this->get95());
+        $object->setReportHelpers($this->get96());
+        return $object;
+    }
+
+    protected function get98()
+    {
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get99()
+    {
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\HooksCollector');
+    }
+
+    protected function get97()
+    {
+        $object = new \DrupalCodeBuilder\Task\Testing\CollectTesting7($this->get98(), $this->get99());
         return $object;
     }
 
@@ -712,69 +707,53 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\HooksCollector');
     }
 
-    protected function get100()
-    {
-        $object = new \DrupalCodeBuilder\Task\Testing\CollectTesting7($this->get101(), $this->get102());
-        return $object;
-    }
-
-    protected function get104()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
-    }
-
-    protected function get105()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\HooksCollector');
-    }
-
-    protected function get106()
+    protected function get103()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\PluginTypesCollector');
     }
 
-    protected function get107()
+    protected function get104()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ServicesCollector');
     }
 
-    protected function get108()
+    protected function get105()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ServiceTagTypesCollector');
     }
 
-    protected function get109()
+    protected function get106()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\FieldTypesCollector');
     }
 
-    protected function get110()
+    protected function get107()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\DataTypesCollector');
     }
 
-    protected function get111()
+    protected function get108()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\EntityTypesCollector');
     }
 
-    protected function get112()
+    protected function get109()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ElementTypesCollector');
     }
 
-    protected function get113()
+    protected function get110()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\AdminRoutesCollector');
     }
 
-    protected function get103()
+    protected function get100()
     {
-        $object = new \DrupalCodeBuilder\Task\Testing\CollectTesting8($this->get104(), $this->get105(), $this->get106(), $this->get107(), $this->get108(), $this->get109(), $this->get110(), $this->get111(), $this->get112(), $this->get113());
+        $object = new \DrupalCodeBuilder\Task\Testing\CollectTesting8($this->get101(), $this->get102(), $this->get103(), $this->get104(), $this->get105(), $this->get106(), $this->get107(), $this->get108(), $this->get109(), $this->get110());
         return $object;
     }
 
-    protected function get114()
+    protected function get111()
     {
         return $this->resolveFactory([
             0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
@@ -784,7 +763,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         ]);
     }
 
-    protected function get115()
+    protected function get112()
     {
         return $this->resolveFactory([
             0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
@@ -794,7 +773,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         ]);
     }
 
-    protected function get116()
+    protected function get113()
     {
         return $this->resolveFactory([
             0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
@@ -802,7 +781,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         ], 'Collect\\HooksCollector');
     }
 
-    protected function get117()
+    protected function get114()
     {
         return $this->resolveFactory([
             0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
@@ -810,23 +789,23 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         ], 'Collect');
     }
 
-    protected function get119()
+    protected function get116()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get120()
+    protected function get117()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\HooksCollector');
     }
 
-    protected function get118()
+    protected function get115()
     {
-        $object = new \DrupalCodeBuilder\Task\Collect($this->get119(), $this->get120());
+        $object = new \DrupalCodeBuilder\Task\Collect($this->get116(), $this->get117());
         return $object;
     }
 
-    protected function get121()
+    protected function get118()
     {
         return $this->resolveFactory([
             0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
@@ -834,177 +813,166 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         ], 'Testing\\CollectTesting');
     }
 
-    protected function get122()
+    protected function get119()
     {
         return $this->delegateContainer->get('Collect\\HooksCollector');
     }
 
-    protected function get123()
+    protected function get120()
     {
         $object = new DrupalCodeBuilder\Environment\DefaultEnvironment();
         return $object;
     }
 
-    protected function get124()
+    protected function get121()
     {
         return $this->delegateContainer->get('environment');
     }
 
-    protected function get125()
+    protected function get122()
     {
         $object = new DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter();
         return $object;
     }
 
-    protected function get126()
+    protected function get123()
     {
         $object = new DrupalCodeBuilder\Task\Collect\MethodCollector();
         return $object;
     }
 
-    protected function get128()
+    protected function get125()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get124()
+    {
+        $object = new DrupalCodeBuilder\Task\Collect\CodeAnalyser($this->get125());
+        return $object;
     }
 
     protected function get127()
     {
-        $object = new DrupalCodeBuilder\Task\Collect\CodeAnalyser($this->get128());
-        return $object;
-    }
-
-    protected function get130()
-    {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get131()
+    protected function get128()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter');
-    }
-
-    protected function get132()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\MethodCollector');
-    }
-
-    protected function get133()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser');
     }
 
     protected function get129()
     {
-        $object = new DrupalCodeBuilder\Task\Collect\PluginTypesCollector($this->get130(), $this->get131(), $this->get132(), $this->get133());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\MethodCollector');
     }
 
-    protected function get135()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
-    }
-
-    protected function get136()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter');
-    }
-
-    protected function get137()
+    protected function get130()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser');
     }
 
-    protected function get134()
+    protected function get126()
     {
-        $object = new DrupalCodeBuilder\Task\Collect\ServicesCollector($this->get135(), $this->get136(), $this->get137());
+        $object = new DrupalCodeBuilder\Task\Collect\PluginTypesCollector($this->get127(), $this->get128(), $this->get129(), $this->get130());
         return $object;
     }
 
-    protected function get139()
+    protected function get132()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get140()
+    protected function get133()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter');
     }
 
-    protected function get141()
+    protected function get134()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\MethodCollector');
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\CodeAnalyser');
+    }
+
+    protected function get131()
+    {
+        $object = new DrupalCodeBuilder\Task\Collect\ServicesCollector($this->get132(), $this->get133(), $this->get134());
+        return $object;
+    }
+
+    protected function get136()
+    {
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get137()
+    {
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\ContainerBuilderGetter');
     }
 
     protected function get138()
     {
-        $object = new DrupalCodeBuilder\Task\Collect\ServiceTagTypesCollector($this->get139(), $this->get140(), $this->get141());
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Collect\\MethodCollector');
+    }
+
+    protected function get135()
+    {
+        $object = new DrupalCodeBuilder\Task\Collect\ServiceTagTypesCollector($this->get136(), $this->get137(), $this->get138());
         return $object;
     }
 
-    protected function get143()
+    protected function get140()
     {
         return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get139()
+    {
+        $object = new DrupalCodeBuilder\Task\Collect\FieldTypesCollector($this->get140());
+        return $object;
     }
 
     protected function get142()
     {
-        $object = new DrupalCodeBuilder\Task\Collect\FieldTypesCollector($this->get143());
-        return $object;
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
     }
 
-    protected function get145()
+    protected function get141()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+        $object = new DrupalCodeBuilder\Task\Collect\DataTypesCollector($this->get142());
+        return $object;
     }
 
     protected function get144()
     {
-        $object = new DrupalCodeBuilder\Task\Collect\DataTypesCollector($this->get145());
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get143()
+    {
+        $object = new DrupalCodeBuilder\Task\Collect\EntityTypesCollector($this->get144());
+        return $object;
+    }
+
+    protected function get146()
+    {
+        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
+    }
+
+    protected function get145()
+    {
+        $object = new DrupalCodeBuilder\Task\Collect\ElementTypesCollector($this->get146());
         return $object;
     }
 
     protected function get147()
     {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
-    }
-
-    protected function get146()
-    {
-        $object = new DrupalCodeBuilder\Task\Collect\EntityTypesCollector($this->get147());
-        return $object;
-    }
-
-    protected function get149()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Environment\\EnvironmentInterface');
-    }
-
-    protected function get148()
-    {
-        $object = new DrupalCodeBuilder\Task\Collect\ElementTypesCollector($this->get149());
-        return $object;
-    }
-
-    protected function get150()
-    {
         $object = new DrupalCodeBuilder\Task\Collect\AdminRoutesCollector();
         return $object;
     }
 
-    protected function get151()
+    protected function get148()
     {
         $object = new DrupalCodeBuilder\Task\Generate\ComponentClassHandler();
-        return $object;
-    }
-
-    protected function get153()
-    {
-        return $this->delegateContainer->get('DrupalCodeBuilder\\Task\\Generate\\ComponentClassHandler');
-    }
-
-    protected function get152()
-    {
-        $object = new DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer($this->get153());
         return $object;
     }
 
