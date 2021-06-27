@@ -58,9 +58,9 @@ use DrupalCodeBuilder\Generator\GeneratorInterface;
  *  - 'processing' callbacks are called for each property TODO: not at the
  *    moment, possibly will be removed!
  *
- * Component data arrays have their structure defined by data property info
- * arrays, which each Generator class defines in its componentDataDefinition()
- * static method.
+ * Component data arrays have their structure defined by data property
+ * definitions which each Generator class defines in its
+ * getGeneratorDataDefinition() static method.
  *
  * The component data array for the root component, and any subsequent component
  * data arrays, can produce generators in three ways:
@@ -253,8 +253,6 @@ class ComponentCollector {
     if ($component_data->getVariants() && is_a($component_data->getVariantDefinition(), VariantGeneratorDefinition::class)) {
       $component_type = $component_data->getVariantDefinition()->getComponentType();
     }
-
-    // $component_data_info = $this->dataInfoGatherer->getComponentDataInfo($component_type, TRUE);
 
     // Acquire data from the requesting component. We call this even if there
     // isn't a requesting component, as in that case, an exception is thrown

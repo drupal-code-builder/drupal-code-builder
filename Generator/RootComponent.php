@@ -42,8 +42,8 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
    * their preferences in a persistent fashion.
    *
    * The properties here are merged into the main data by
-   * componentDataDefinition(), as child properties of a 'configuration' complex
-   * property.
+   * RootComponent::getPropertyDefinition(), as child properties of a
+   * 'configuration' complex property.
    *
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition
    *   The data definition.

@@ -106,15 +106,6 @@ class Generate extends Base {
   }
 
   /**
-   * @internal
-   *
-   * TODO: remove this!
-   */
-  public function getComponentDataInfo($component_type, $include_internal = FALSE) {
-    return $this->infoGatherer->getRootComponentDataInfo($component_type, $include_internal);
-  }
-
-  /**
    * Generate the files for a component.
    *
    * @param \MutableTypedData\Data\DataItem $component_data

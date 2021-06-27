@@ -35,22 +35,6 @@ class ComponentClassHandler {
   }
 
   /**
-   * Gets the data definition from a component.
-   *
-   * @param $component_type
-   *   The type of the component. This is use to build the class name: see
-   *   getGeneratorClass().
-   *
-   * @return
-   *   The component generator's raw data definition.
-   */
-  public function getComponentDataDefinition($component_type) {
-    $class = $this->getGeneratorClass($component_type);
-
-    return $class::componentDataDefinition();
-  }
-
-  /**
    * Generator factory.
    *
    * @param $component_type
