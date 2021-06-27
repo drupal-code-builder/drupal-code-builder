@@ -87,11 +87,6 @@ use MutableTypedData\Data\DataItem;
 abstract class BaseGenerator implements GeneratorInterface {
 
   /**
-   * Property attribute shorthand for acquired properties.
-   */
-  const PROPERTY_ACQUIRED = ['acquired' => TRUE];
-
-  /**
    * The data type for this generator's data definition.
    *
    * @var string
