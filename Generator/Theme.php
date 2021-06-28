@@ -37,7 +37,7 @@ class Theme extends BaseGenerator {
    *      themeables. This is a lookup array keyed by the component names of
    *      the themeables.
    */
-  public $component_data = [];
+  public $component_data;
 
   /**
    * Declares the subcomponents for this component.

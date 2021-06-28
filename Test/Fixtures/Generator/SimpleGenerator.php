@@ -16,7 +16,7 @@ class SimpleGenerator implements GeneratorInterface {
    */
   public $componentType;
 
-  public $component_data = [];
+  public $component_data;
 
   public function getMergeTag() {
     return NULL;

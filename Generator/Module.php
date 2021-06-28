@@ -47,7 +47,7 @@ class Module extends RootComponent {
    * This is initially the given data for generating the module, but other
    * generators may add data to it during the generating process.
    */
-  public $component_data = [];
+  public $component_data;
 
   /**
    * Constructor method; sets the component data.
