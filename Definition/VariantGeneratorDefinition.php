@@ -62,7 +62,7 @@ class VariantGeneratorDefinition extends VariantDefinition {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }
 
-    $class_handler = new \DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
+    $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
     $definition = $class_handler->getComponentPropertyDefinition($this->componentType);
 
     return $definition->getProperties();
