@@ -16,7 +16,22 @@ use MutableTypedData\Data\DataItem;
  *
  * (This named to distinguish it from the Base Task clas.)
  *
- * The generator process works over three phases:
+ * A generator represents a component of code to generate. This can be small,
+ * like a class method or a permission, or something that contains other
+ * components such as a whole module or a permissions YAML file. It can also
+ * be something that cuts across the physical files that will be written, such
+ * as an admin settings form, which will contain among other things a single
+ * permission.
+ *
+ * Generator classes do two things:
+ *
+ * - Define a data structure for that class. This is all done in static methods,
+ *   without instantiating the class. The Generate task access this definition
+ *   on a RootComponent class, and then a UI uses that definition to collect
+ *   the data from the user.
+ * - Generate the code from the user data.
+ *
+ * The generate process works over three phases:
  *  - a tree of generators is gathered
  *  - a list of file info is built up, with each generator allowed to contribute
  *  - the file info is processed and returned for the caller to output
