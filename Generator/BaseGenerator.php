@@ -255,14 +255,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     return FALSE;
   }
 
-  // helper for requiredComponents()
-  protected function getDataForGenerator(string $generator_type) {
-    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
-    $definition = $class_handler->getComponentPropertyDefinition($generator_type);
-    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-    return $data;
-  }
-
   // TODO: too many ways to do this -- clean up; standardize on this.
   // TODO: move this to a task handler?
   protected static function getLazyDataDefinitionForGeneratorType(string $component_type, string $data_type = NULL): PropertyDefinition {
