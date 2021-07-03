@@ -7,6 +7,7 @@ use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 
@@ -189,7 +190,9 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       $schema_id = $this->plugin_type_data['config_schema_prefix']
         . $this->component_data['prefixed_plugin_name'];
 
-      $data = $this->getDataForGenerator('ConfigSchema');
+      $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
+      $definition = $class_handler->getStandaloneComponentPropertyDefinition('ConfigSchema');
+      $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
       $data->yaml_data->set([
         $schema_id => [
           'type' => 'mapping',
