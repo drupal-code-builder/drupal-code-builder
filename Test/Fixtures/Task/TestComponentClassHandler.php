@@ -45,7 +45,7 @@ class TestComponentClassHandler extends ComponentClassHandler {
     return $generator;
   }
 
-  public function getComponentPropertyDefinition($component_type, $machine_name = NULL) {
+  public function getStandaloneComponentPropertyDefinition($component_type, $machine_name = NULL): PropertyDefinition {
     // ARGH too test-specific!
     return GeneratorDefinition::createFromGeneratorType($component_type, 'complex')
       ->setProperties([

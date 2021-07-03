@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  *  Task helper for working with generator classes and instantiating them.
  */
@@ -15,6 +17,45 @@ class ComponentClassHandler {
    * @var array
    */
   protected $classes = [];
+
+  /**
+   * Gets the data definition for a standalone component.
+   *
+   * This is for use by the requirement components process and variant
+   * generators.
+   *
+   * @param string $component_type
+   *   The component type.
+   * @param string $machine_name
+   *   (optional) The machine name for the root definition.
+   *
+   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
+   *   The definition.
+   *
+   * @throws \InvalidArgumentException
+   *   Throws an exception if there is no class found for the component type.
+   */
+  public function getStandaloneComponentPropertyDefinition(string $component_type, string $machine_name = NULL): PropertyDefinition {
+    $class = $this->getGeneratorClass($component_type);
+
+    // Quick hack. TODO: clean up.
+    $machine_name = $machine_name ?? strtolower($component_type);
+    // TODO: argh! some component types contain ':' characters!!
+    // DIRTY HACK.
+    $machine_name = str_replace(':', '-', $machine_name);
+
+    if (!class_exists($class)) {
+      throw new \InvalidArgumentException(sprintf("No class found for type %s", $component_type));
+    }
+
+    $definition = $class::getPropertyDefinition();
+
+    if (!$definition->getName()) {
+      $definition->setName($machine_name);
+    }
+
+    return $definition;
+  }
 
   // TODO: Possibly make $machine_name non-optional? who calls this?
   public function getComponentPropertyDefinition($component_type, $machine_name = NULL) {

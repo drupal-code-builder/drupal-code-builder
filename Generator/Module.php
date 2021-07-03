@@ -360,7 +360,7 @@ class Module extends RootComponent {
     // TODO: this was an experiment for how to do required components with
     // DataItems and it's not very nice DX. Figure out a better way.
     $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
-    $definition = $class_handler->getComponentPropertyDefinition('Info');
+    $definition = $class_handler->getStandaloneComponentPropertyDefinition('Info');
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $components['info'] = $data;

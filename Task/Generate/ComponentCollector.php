@@ -336,7 +336,7 @@ class ComponentCollector {
         // This is because on the one hand, a boolean property is just a boolean
         // because that's what the UI needs, but the component itself has
         // various properties that it expects to acquire.
-        $definition =  $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+        $definition =  $this->classHandler->getStandaloneComponentPropertyDefinition($item_component_type, $item_name);
         $data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
         // dump("switcheroo data item for boolean $item_name.");
@@ -357,7 +357,7 @@ class ComponentCollector {
           // so the generator can get acquired properties as well as the single
           // data from the UI.
           // TODO: make this sort of expansion internal to MTD?
-          $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+          $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($item_component_type, $item_name);
 
           // Get the public property from the definition. There must be only
           // one for this to make sense!
@@ -375,7 +375,7 @@ class ComponentCollector {
           $single_property_name = reset($component_property_names);
 
           foreach ($data_item as $delta => $simple_delta_item) {
-            $definition = $this->classHandler->getComponentPropertyDefinition($item_component_type, $item_name);
+            $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($item_component_type, $item_name);
 
             $new_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
             $new_data_item->setParent($data_item, $delta);
@@ -497,7 +497,7 @@ class ComponentCollector {
         }
         else {
           // Build a standalone data item from the array data.
-          $definition = $this->classHandler->getComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
+          $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
           // $definition->setName($required_item_name);
 
           unset($required_item_data['component_type']);

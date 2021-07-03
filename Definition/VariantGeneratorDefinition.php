@@ -63,7 +63,7 @@ class VariantGeneratorDefinition extends VariantDefinition {
     }
 
     $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
-    $definition = $class_handler->getComponentPropertyDefinition($this->componentType);
+    $definition = $class_handler->getStandaloneComponentPropertyDefinition($this->componentType);
 
     return $definition->getProperties();
   }
