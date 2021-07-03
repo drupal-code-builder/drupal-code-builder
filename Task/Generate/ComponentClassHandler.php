@@ -105,6 +105,7 @@ class ComponentClassHandler {
     $generator = new $class($component_data);
 
     // Quick hack for the benefit of the Hooks generator.
+    // TODO: inject this properly everywhere! Use inflection pattern?
     $generator->classHandlerHelper = $this;
 
     return $generator;
