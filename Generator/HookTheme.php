@@ -8,20 +8,6 @@ namespace DrupalCodeBuilder\Generator;
 class HookTheme extends HookImplementation {
 
   /**
-   * Constructor method; sets the component data.
-   */
-  function __construct($component_data) {
-    // WTF was this for???
-    // dump($component_data);
-    // // Set some default properties.
-    // $component_data += array(
-    //   'hook_name' => 'hook_theme',
-    // );
-
-    parent::__construct($component_data);
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
