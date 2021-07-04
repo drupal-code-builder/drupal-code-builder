@@ -173,6 +173,30 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   /**
+   * Gets the data definition for a given component type.
+   *
+   * This is for use within getPropertyDefinition() and related methods that
+   * build up the overall definition for a root component using different
+   * generator classes.
+   *
+   * For standalone data used in static::requiredComponents(), use
+   * ComponentClassHandler::getStandaloneComponentPropertyDefinition().
+   *
+   * TODO: move this to a task handler?
+   *
+   * @param string $component_type
+   * @param string $data_type
+   *
+   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
+   */
+  protected static function getLazyDataDefinitionForGeneratorType(string $component_type, string $data_type = NULL): PropertyDefinition {
+    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
+    $generator_class = $class_handler->getGeneratorClass($component_type);
+
+    return $generator_class::getGeneratorDataDefinition($component_type, $data_type);
+  }
+
+  /**
    * Gets the data definition for this generator without the properties.
    *
    * This must be called on the generator class itself. Use
@@ -253,15 +277,6 @@ abstract class BaseGenerator implements GeneratorInterface {
 
   public function isRootComponent(): bool {
     return FALSE;
-  }
-
-  // TODO: too many ways to do this -- clean up; standardize on this.
-  // TODO: move this to a task handler?
-  protected static function getLazyDataDefinitionForGeneratorType(string $component_type, string $data_type = NULL): PropertyDefinition {
-    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
-    $generator_class = $class_handler->getGeneratorClass($component_type);
-
-    return $generator_class::getGeneratorDataDefinition($component_type, $data_type);
   }
 
   /**
