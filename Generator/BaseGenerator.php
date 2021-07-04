@@ -18,18 +18,46 @@ use MutableTypedData\Data\DataItem;
  *
  * A generator represents a component of code to generate. This can be small,
  * like a class method or a permission, or something that contains other
- * components such as a whole module or a permissions YAML file. It can also
- * be something that cuts across the physical files that will be written, such
- * as an admin settings form, which will contain among other things a single
+ * components such as a whole module or a permissions YAML file. It can also be
+ * something that cuts across the physical files that will be written, such as
+ * an admin settings form, which will contain among other things a single
  * permission.
  *
  * Generator classes do two things:
  *
  * - Define a data structure for that class. This is all done in static methods,
- *   without instantiating the class. The Generate task access this definition
- *   on a RootComponent class, and then a UI uses that definition to collect
- *   the data from the user.
- * - Generate the code from the user data.
+ *   without instantiating the class. The Generate task accesses this definition
+ *   on a RootComponent class, and then a UI uses that definition to collect the
+ *   data from the user.
+ * - Generate the code from the user data. Each generator may return content and
+ *   also cause further generators to be instantiated as requirements. The
+ *   Generate task and its helpers assemble the content from the generators into
+ *   the contents of the files which are returned to the UI.
+ *
+ * @section data_definition Data definition
+ *
+ * RootComponent classes implement DefinitionProviderInterface to return their
+ * data definition. This hands over to getGeneratorDataDefinition(), which
+ * assembles the full definition for the root component.
+ *
+ * Some complex properties in the definition get their own properties from
+ * another generator: for example, the Module generator defines an admin
+ * settings form complex property, and the child properties for that are
+ * defined in the AdminSettingsForm generator. This is done with
+ * static::getLazyDataDefinitionForGeneratorType().
+ *
+ * All generator classes use class inheritance to build the definition: for
+ * example, this hiearchy reduces code repetition:
+ *  - BaseGenerator
+ *  - File
+ *  - PhpClassFile
+ *  - PhpClassFileWithInjection
+ *  - Form
+ *
+ * Property definitions are retrieved lazily for various reasons: see
+ * LazyGeneratorDefinition for details.
+ *
+ * @section Code generation
  *
  * The generate process works over three phases:
  *  - a tree of generators is gathered
