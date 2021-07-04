@@ -219,7 +219,7 @@ abstract class BaseGenerator implements GeneratorInterface {
   public static function getGeneratorDataDefinition(string $component_type, string $data_type = NULL): LazyGeneratorDefinition {
     $data_type = $data_type ?? static::$dataType;
 
-    $definition = LazyGeneratorDefinition::createFromGeneratorTypeWithSetProperties($component_type, $data_type);
+    $definition = LazyGeneratorDefinition::createFromGeneratorType($component_type, $data_type);
     return $definition;
   }
 

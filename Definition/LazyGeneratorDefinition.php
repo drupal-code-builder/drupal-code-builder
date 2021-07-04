@@ -23,27 +23,6 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 class LazyGeneratorDefinition extends GeneratorDefinition {
 
   /**
-   * Creates a new definition from a component type and data type.
-   *
-   * TODO: this should become the only way to get a definition from a generator.
-   * Rename after clean-up!
-   * See Plugin class for new plan!
-   *
-   * @param string $generator_type
-   *   The generator type; that is, the short class name without the version
-   *   number.
-   * @param string $data_type
-   *   The data type.
-   *
-   * @return static
-   */
-  public static function createFromGeneratorTypeWithSetProperties(string $generator_type, string $data_type): self {
-    $definition = new static($data_type, $generator_type);
-
-    return $definition;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getProperties() {
