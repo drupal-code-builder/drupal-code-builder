@@ -7,6 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Data\DataItem;
@@ -155,6 +156,13 @@ abstract class BaseGenerator implements GeneratorInterface {
   public $component_data;
 
   /**
+   * The class handler.
+   *
+   * @var \DrupalCodeBuilder\Task\Generate\ComponentClassHandler
+   */
+  protected $classHandlerHelper;
+
+  /**
    * Boolean to indicate whether this component already exists.
    *
    * @see detectExistence()
@@ -176,6 +184,16 @@ abstract class BaseGenerator implements GeneratorInterface {
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     $this->type = preg_replace('@\d+$@', '', $short_class);
+  }
+
+  /**
+   * Sets the class handler.
+   *
+   * @param \DrupalCodeBuilder\Task\Generate\ComponentClassHandler $class_handler
+   *   The class handler.
+   */
+  public function setClassHandler(ComponentClassHandler $class_handler) {
+    $this->classHandlerHelper = $class_handler;
   }
 
   /**
