@@ -57,24 +57,6 @@ class ComponentClassHandler {
     return $definition;
   }
 
-  // TODO: Possibly make $machine_name non-optional? who calls this?
-  public function getComponentPropertyDefinition($component_type, $machine_name = NULL) {
-    $class = $this->getGeneratorClass($component_type);
-
-    // Quick hack. TODO: clean up.
-    // TODO: don't always do this -- don't do this if there is one already!!!!!
-    $machine_name = $machine_name ?? strtolower($component_type);
-    // TODO: argh! some component types contain ':' characters!!
-    // DIRTY HACK.
-    $machine_name = str_replace(':', '-', $machine_name);
-
-    if (!class_exists($class)) {
-      throw new \LogicException(sprintf("No class found for type %s", $component_type));
-    }
-
-    return $class::getPropertyDefinition()->setName($machine_name);
-  }
-
   /**
    * Generator factory.
    *
