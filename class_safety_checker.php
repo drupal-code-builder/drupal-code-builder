@@ -28,7 +28,7 @@
  *    '\Drupal\mymodule\::/var/www/drupal/modules/contrib/mymodule/src'.
  * - 'CLASS': A fully-qualified PHP class name to check.
  *
- * For each command, the script will response on STDOUT with a line:
+ * For each command, the script will respond on STDOUT with a line:
  *   [COMMAND] OK
  *
  * In particular for the CLASS command, this indicates that the attempt to load
