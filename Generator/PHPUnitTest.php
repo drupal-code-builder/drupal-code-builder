@@ -288,7 +288,7 @@ class PHPUnitTest extends PHPClassFile {
       }
     }
 
-    $setup_lines = $this->buildMethodHeader('setUp', [], ['inheritdoc' => TRUE, 'prefixes' => ['protected']]);
+    $setup_lines = $this->buildMethodHeader('setUp', [], ['inheritdoc' => TRUE, 'prefixes' => ['protected']], 'void');
     // TODO: WTF should not need to manually indent!
     $setup_lines[] = '  parent::setUp();';
     $setup_lines[] = '';

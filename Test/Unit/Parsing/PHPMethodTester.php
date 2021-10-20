@@ -246,6 +246,22 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts the return type of the declaration.
+   *
+   * @param string $string
+   *   The expected return type.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertReturnType($type, $message = NULL) {
+    $message = $message ?? "The method {$this->methodName} declares the return type as {$type}.";
+
+    Assert::assertObjectHasAttribute('returnType', $this->methodNode);
+
+    Assert::assertEquals($type, $this->methodNode->returnType);
+  }
+
+  /**
    * Asserts the method returns the given string.
    *
    * This expects the final statement to be a return. Other return statements

@@ -110,6 +110,8 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Tests\UnitTestCase');
     $php_tester->assertClassHasNotProperty('modules');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+    $setup_method_tester = $php_tester->getMethodTester('setUp');
+    $setup_method_tester->assertReturnType('void');
   }
 
   /**
@@ -150,6 +152,8 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'test_module',
     ]);
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+    $setup_method_tester = $php_tester->getMethodTester('setUp');
+    $setup_method_tester->assertReturnType('void');
   }
 
   /**
