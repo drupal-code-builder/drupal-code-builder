@@ -38,12 +38,23 @@ class PHPTester {
   protected $ast;
 
   /**
+   * The path of this project's vendor directory.
+   *
+   * Static since this will never change during operation.
+   *
+   * @var string
+   */
+  protected static $composerVendorDir;
+
+  /**
    * Construct a new PHPTester.
    *
    * @param string $php_code
    *   The PHP code that should be tested.
    */
   public function __construct($drupal_major_version, $php_code) {
+    $this->findComposerVendorDir();
+
     $this->drupalMajorVersion = $drupal_major_version;
     $this->phpCode = $php_code;
 
@@ -52,6 +63,25 @@ class PHPTester {
     // Run the code through the parser once we know it's correct PHP, so the
     // parsed node tree is ready for any subsequent assertions.
     $this->parseCode();
+  }
+
+  /**
+   * Determines the vendor folder for the current project.
+   *
+   * This is required because some code testing tools we use expect to be run
+   * as command-line scripts and their code needs to be accessed directly.
+   *
+   * We can't simply go up directories from this file, as this would not all
+   * Drupal Code Builder to be aliased into a Composer project for development,
+   * since PHP's __DIR__ resolves symlinks.
+   */
+  protected function findComposerVendorDir() {
+    if (!isset(static::$composerVendorDir)) {
+      $reflection = new \ReflectionClass('\Composer\Autoload\ClassLoader');
+      $filename = $reflection->getFileName();
+
+      static::$composerVendorDir = dirname($filename, 2);
+    }
   }
 
   /**
@@ -170,7 +200,7 @@ class PHPTester {
     }
 
     // PHPCS has its own autoloader...
-    require __DIR__ . '/../../../vendor/squizlabs/php_codesniffer/autoload.php';
+    require static::$composerVendorDir . '/squizlabs/php_codesniffer/autoload.php';
 
     $runner = new Runner();
     // We need to pass in a non-empty array of fake command-line arguments to
@@ -179,7 +209,7 @@ class PHPTester {
     // finds PHPUnit's '--group' options, as it doesn't recognize it. The '--'
     // is treated as a null argument.
     $runner->config = new Config(['--']);
-    $runner->config->setConfigData('installed_paths', __DIR__ . '/../../../vendor/drupal/coder/coder_sniffer');
+    $runner->config->setConfigData('installed_paths', static::$composerVendorDir . '/drupal/coder/coder_sniffer');
     $runner->config->setConfigData('drupal_core_version', $this->drupalMajorVersion);
     $runner->config->standards = ['Drupal'];
     $runner->config->exclude = $excluded_sniffs;
