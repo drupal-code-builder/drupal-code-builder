@@ -582,11 +582,13 @@ class PHPClassFile extends PHPFile {
    *  - 'prefixes': (optional) An array of prefixes such as 'static', 'public'.
    *  - 'break_declaration': (optional) If TRUE, the declaration parameters
    *    are each on a single line.
+   * @param string $return_type
+   *  The return type.
    *
    * @return
    *  An array of code lines.
    */
-  protected function buildMethodHeader($name, $parameters = [], $options = []) {
+  protected function buildMethodHeader($name, $parameters = [], $options = [], string $return_type = NULL) {
     $options += [
       'inheritdoc' => FALSE,
       'prefixes' => [],
@@ -637,6 +639,13 @@ class PHPClassFile extends PHPFile {
 
     $code = array_merge($code, $this->docBlock($docblock_content_lines));
 
+    if ($return_type) {
+      $closing = "): $return_type {";
+    }
+    else {
+      $closing = ') {';
+    }
+
     $declaration_line = '';
     foreach ($options['prefixes'] as $prefix) {
       $declaration_line .= $prefix . ' ';
@@ -665,11 +674,11 @@ class PHPClassFile extends PHPFile {
         $code[] = '  ' . $param . ( $index == $last_index ? '' : ',' );
       }
 
-      $code[] = ') {';
+      $code[] = $closing;
     }
     else {
       $declaration_line .= implode(', ', $declaration_line_params);
-      $declaration_line .= ') {';
+      $declaration_line .= $closing;
 
       $code[] = $declaration_line;
     }
