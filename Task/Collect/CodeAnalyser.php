@@ -61,6 +61,9 @@ class CodeAnalyser {
    *   TRUE if the class may be used (but note this does not say whether it
    *   actually exists); FALSE if the class should not be used as attempting to
    *   will cause a PHP fatal error.
+   *
+   * @throws \Exception
+   *   Throws an exception if the class checker is not able to function.
    */
   public function classIsUsable($qualified_classname) {
     // Set up the script with its autoloader if not already done so. We keep the
