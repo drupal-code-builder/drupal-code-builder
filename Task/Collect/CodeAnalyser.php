@@ -93,6 +93,11 @@ class CodeAnalyser {
    * Starts a process running the class safety script.
    */
   protected function setupScript() {
+    $disabled_functions = ini_get('disable_functions');
+    if (strpos($disabled_functions,'proc_open') !== FALSE) {
+      throw new \Exception("The proc_open() function is disabled in php.ini. It must be enabled for the code analyser to work.");
+    }
+
     // The PHP that proc_open() will find may not be the same one as run by
     // the webserver, and indeed, on some systems may be an out-of-date version,
     // so detect the PHP that we're currently running and ensure we use that.
