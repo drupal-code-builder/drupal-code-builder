@@ -124,4 +124,63 @@ class UnitValidatorTest extends TestCase {
     $this->assertEquals(TRUE, $result);
   }
 
+  /**
+   * Data provider for testPluginNameValidator().
+   */
+  public function providerPluginNameValidator() {
+    return [
+      'one-part name' => [
+        'plugin',
+        TRUE,
+      ],
+      'two-part name' => [
+        'plugin_name',
+        TRUE,
+      ],
+      'three-part name' => [
+        'another_plugin_name',
+        TRUE,
+      ],
+      'title case' => [
+        'Title_case',
+        FALSE,
+      ],
+      'spaces' => [
+        'has spaces',
+        FALSE,
+      ],
+      'numbers' => [
+        'plugin_name_1',
+        TRUE,
+      ],
+      'initial number' => [
+        '1_plugin_name_1',
+        FALSE,
+      ],
+      'initial_colon' => [
+        ':plugin_name:suffix',
+        FALSE,
+      ],
+    ];
+  }
+
+  /**
+   * Tests the plugin name validator.
+   *
+   * @dataProvider providerPluginNameValidator
+   */
+  public function testPluginNameValidator($value, $expected_pass) {
+    $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\PluginName();
+
+    $data = \DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory::createFromDefinition(
+      DataDefinition::create('string')
+    );
+
+    $data->value = $value;
+
+    $result = $validator->validate($data);
+
+    $this->assertEquals($expected_pass, $result);
+  }
+
 }
