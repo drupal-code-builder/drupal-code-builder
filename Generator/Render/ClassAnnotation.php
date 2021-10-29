@@ -174,7 +174,7 @@ class ClassAnnotation {
         $declaration_line .= '{';
         $docblock_lines[] = $declaration_line;
 
-        $this->renderArray($docblock_lines, $value, $nesting + 1, $annotation_nesting + 1);
+        $this->renderArray($docblock_lines, $value ?? [], $nesting + 1, $annotation_nesting + 1);
 
         $docblock_lines[] = $indent . "},";
       }
