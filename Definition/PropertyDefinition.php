@@ -70,7 +70,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return $this;
   }
 
-  public function getDeltaDefinition(): self {
+  public function getDeltaDefinition(): BasePropertyDefinition {
     $delta_definition = parent::getDeltaDefinition();
 
     // Remove presets.
