@@ -307,9 +307,6 @@ class Module extends RootComponent {
       // 'phpunit_tests' go here, but can't be added at this point because it
       // would cause circularity with TestModule.
       // TODO: lazy load generator type property definitions?
-      'tests' => static::getLazyDataDefinitionForGeneratorType('Tests', 'boolean')
-        ->setLabel("Simpletest test case class")
-        ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
 
       // The following defaults are for ease of developing.
       // Uncomment them to reduce the amount of typing needed for testing.

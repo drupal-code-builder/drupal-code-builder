@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Drupal 7 version of component.
  */
-class Module7 extends Module {
+class Module7 extends Module8 {
 
   /**
    * {@inheritdoc}
