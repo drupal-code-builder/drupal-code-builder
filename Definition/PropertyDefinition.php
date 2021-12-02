@@ -9,9 +9,6 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 
 /**
  * Extends the basic property definition with DCB extras.
- *
- * TODO: replace return type with 'self' when PHP 7.4 is the minimum; it's
- * broken in PHP 7.3.
  */
 class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess {
 
@@ -42,7 +39,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
    *   class so it can be moved to MTD in future without causing incompatibility
    *   issues.)
    */
-  public function addPropertyAfter(string $after, BasePropertyDefinition ...$properties): BasePropertyDefinition {
+  public function addPropertyAfter(string $after, self ...$properties): self {
     // TODO! this won't catch child classes of SimpleData!!!
     if ($this->type == 'string' || $this->type == 'boolean') {
       // TODO: needs tests
@@ -82,13 +79,13 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
   }
 
   // TODO: move all options provider stuff upstream.
-  public function setOptionsProvider(OptionsProviderInterface $provider): BasePropertyDefinition {
+  public function setOptionsProvider(OptionsProviderInterface $provider): self {
     $this->optionsProvider = $provider;
 
     return $this;
   }
 
-  public function addOption(OptionDefinition $option): BasePropertyDefinition {
+  public function addOption(OptionDefinition $option): self {
     if ($this->optionsProvider) {
       throw new InvalidDefinitionException("Can't add options if using an options provider.");
     }
@@ -108,7 +105,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return parent::getOptions();
   }
 
-  public function setVariantMappingProvider(VariantMappingProviderInterface $provider): BasePropertyDefinition {
+  public function setVariantMappingProvider(VariantMappingProviderInterface $provider): self {
     $this->variantMappingProvider = $provider;
     return $this;
   }
@@ -224,7 +221,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     return $this->presets;
   }
 
-  public function setProcessing(callable $callback): BasePropertyDefinition {
+  public function setProcessing(callable $callback): self {
     $this->processing = $callback;
 
     return $this;
