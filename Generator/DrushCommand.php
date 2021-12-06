@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for a Drush 9 command.
@@ -12,9 +13,30 @@ class DrushCommand extends BaseGenerator {
   use NameFormattingTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->addProperties([
+      'command_name' => PropertyDefinition::create('string')
+        ->setLabel("The command name, either in the format 'group:command', or just 'command' to prepend the module name as the group.")
+        ->setRequired(TRUE),
+      'command_name_aliases' => PropertyDefinition::create('string')
+        ->setLabel("Command aliases")
+        ->setMultiple(TRUE),
+      'command_description' => PropertyDefinition::create('string')
+      ->setLabel("Command description."),
+    ]);
+
+    return $definition;
+  }
+
+
+  /**
    * Define the component data this component needs to function.
    */
-  public static function componentDataDefinition() {
+  public static function XXXcomponentDataDefinition() {
     $data_definition = parent::componentDataDefinition();
 
     $data_definition += [
