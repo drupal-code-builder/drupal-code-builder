@@ -301,6 +301,9 @@ class Module extends RootComponent {
       'api' => static::getLazyDataDefinitionForGeneratorType('API', 'boolean')
         ->setLabel("api.php file")
         ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
+      'drush_commands' => static::getLazyDataDefinitionForGeneratorType('DrushCommand')
+        ->setLabel("Drush commands")
+        ->setMultiple(TRUE),
       'readme' => static::getLazyDataDefinitionForGeneratorType('Readme', 'boolean')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
