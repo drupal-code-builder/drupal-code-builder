@@ -298,9 +298,6 @@ abstract class BaseGenerator implements GeneratorInterface {
    * Use static::getLazyDataDefinitionForGeneratorType() to use the definition
    * from one generator inside another's.
    *
-   * @param string $data_type
-   *   The data type. TODO: Obsolete.
-   *
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition
    *   The data definition.
    */
