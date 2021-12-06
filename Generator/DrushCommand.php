@@ -132,15 +132,12 @@ class DrushCommand extends BaseGenerator {
     $components = [];
 
     $components['command_file'] = [
-      'component_type' => 'DrushCommandFile',
-      'relative_class_name' => [
-        'Commands',
-        $this->component_data['command_short_class_name'],
-      ],
-      'parent_class_name' => '\Drush\Commands\DrushCommands',
-      'class_docblock_lines' => [
-        "Drush integration for the %Module module.",
-      ],
+      'component_type' => 'Service',
+      'prefixed_service_name' => $this->component_data->root_component_name->value . '.commands',
+      'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
+      'relative_namespace' => 'Commands',
+      'injected_services' => [],
+      'docblock_first_line' => "MODULE NAME Drush commands.",
     ];
 
     $docblock_lines = [
