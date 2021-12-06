@@ -154,51 +154,6 @@ class DrushCommand extends BaseGenerator {
       'body' => [],
     ];
 
-    // TODO: this won't work with multiple commands -- merge needs to be
-    // handled.
-    $yaml_data_arguments = [];
-    foreach ($this->component_data['injected_services'] as $service_id) {
-      $components['service_' . $service_id] = array(
-        'component_type' => 'InjectedService',
-        'containing_component' => '%requester',
-        'service_id' => $service_id,
-      );
-
-      // Add the service ID to the arguments in the YAML data.
-      $yaml_data_arguments[] = '@' . $service_id;
-    }
-
-    $yaml_service_definition = [
-      'class' => self::makeQualifiedClassName($this->component_data['qualified_class_name_pieces']),
-    ];
-    if ($yaml_data_arguments) {
-      $yaml_service_definition['arguments'] = $yaml_data_arguments;
-    }
-
-    // Service tags.
-    $yaml_service_definition['tags'][] = [
-      'name' => 'drush.command',
-    ];
-
-    $yaml_data = [];
-    $yaml_data['services'] = [
-      $this->component_data['drush_service_name'] => $yaml_service_definition,
-    ];
-
-    $components['drush.services.yml'] = [
-      'component_type' => 'YMLFile',
-      'filename' => 'drush.services.yml',
-      'yaml_data' => $yaml_data,
-      'yaml_inline_level' => 3,
-      // Expand the tags property further than the others.
-      'inline_levels_extra' => [
-        'tags' => [
-          'address' => ['services', '*', 'tags'],
-          'level' => 4,
-        ],
-      ],
-    ];
-
     return $components;
   }
 
