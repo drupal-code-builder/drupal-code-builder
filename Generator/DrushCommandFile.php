@@ -4,6 +4,8 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 
+// PROBABLY KILL
+
 /**
  * Generator for the class holding Drush command methods.
  */
