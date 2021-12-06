@@ -26,7 +26,14 @@ class DrushCommand extends BaseGenerator {
         ->setLabel("Command aliases")
         ->setMultiple(TRUE),
       'command_description' => PropertyDefinition::create('string')
-      ->setLabel("Command description."),
+       ->setLabel("Command description."),
+      'command_method_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          $command_name = preg_replace('@.+:@', '', $component_data->getParent()->command_name->value);
+
+          return CaseString::snake($command_name)->camel();
+        }),
     ]);
 
     return $definition;
