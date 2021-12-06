@@ -160,7 +160,7 @@ class FileAssembler {
       $filepath = strtr($filepath, $variables);
 
       // Verify that no two components are trying to generate the same file.
-      assert(!isset($return[$filepath]));
+      assert(!isset($return[$filepath]), "$filepath not already set in list of returned files");
 
       $return[$filepath] = $code;
     }
