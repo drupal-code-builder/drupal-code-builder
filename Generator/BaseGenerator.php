@@ -6,6 +6,7 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
+use DrupalCodeBuilder\Exception\MergeDataLossException;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -408,37 +409,18 @@ abstract class BaseGenerator implements GeneratorInterface {
    * @return bool
    *   Boolean indicating whether any data needed to be merged: TRUE if so,
    *   FALSE if nothing was merged because all values were the same.
+   *
+   * @throws \DrupalCodeBuilder\Exception\MergeDataLossException
+   *   Throws an exception if the merge would cause data from $other to be
+   *   discarded.
    */
   public function mergeComponentData(DataItem $additional_component_data) {
-    $differences_merged = FALSE;
-
-    $component_property_definition = static::getPropertyDefinition();
-
-    foreach ($component_property_definition->getProperties() as $property_name => $property_definition) {
-      // Only merge array properties.
-      // or WAIT is this only mapping properties???? or what?
-      if (!$property_definition->isMultiple() && $property_definition->getType() != 'mapping') {
-        // Don't merge this property, but check that we're not throwing away
-        // data from the additional data.
-        assert(
-          $this->component_data[$property_name] == $additional_component_data->{$property_name}->get(),
-          "Attempted to discard request for new component, but failed on property $property_name with existing data "
-            . print_r($this->component_data, TRUE)
-            . " and new data "
-            . print_r($additional_component_data->export(), TRUE)
-        );
-
-        continue;
-      }
-
-      if ($this->component_data[$property_name] != $additional_component_data->{$property_name}->get()) {
-        $differences_merged = TRUE;
-
-        $this->component_data->$property_name = array_merge_recursive(
-          $this->component_data[$property_name],
-          $additional_component_data->{$property_name}->export()
-        );
-      }
+    try {
+      $differences_merged = $this->component_data->merge($additional_component_data);
+    }
+    catch (MergeDataLossException $e) {
+      // TODO: add more detail here.
+      throw $e;
     }
 
     return $differences_merged;
