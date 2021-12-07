@@ -6,7 +6,7 @@ use DrupalCodeBuilder\Generator\RootComponent;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
- *  Dummy generator class for tests.
+ * Dummy generator class for tests.
  */
 class RootGeneratorBase extends RootComponent {
 

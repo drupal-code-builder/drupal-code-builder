@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use PHPUnit\Framework\Assert;
 
 /**
- *  Dummy generator class for tests.
+ * Dummy generator class for tests.
  */
 class UnrelatedVersionComponent extends BaseGenerator {
 

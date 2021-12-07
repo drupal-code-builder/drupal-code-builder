@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Fixtures\Generator;
 use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**
- *  Dummy generator class for tests.
+ * Dummy generator class for tests.
  */
 class SimpleGenerator implements GeneratorInterface {
 
