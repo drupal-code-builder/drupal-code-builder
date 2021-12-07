@@ -402,9 +402,8 @@ abstract class BaseGenerator implements GeneratorInterface {
   /**
    * Merge data from additional requests of a component.
    *
-   * @param array $additional_component_data
-   *   The array of new component data to merge in. This has the same format as
-   *   the parameter to __construct().
+   * @param \MutableTypedData\Data\DataItem $additional_component_data
+   *   The new component data to merge in.
    *
    * @return bool
    *   Boolean indicating whether any data needed to be merged: TRUE if so,
