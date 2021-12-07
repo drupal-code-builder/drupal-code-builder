@@ -67,7 +67,7 @@ class Form extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $form_name = $this->component_data['form_id'];
 
     $components = [

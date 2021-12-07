@@ -30,7 +30,7 @@ class AdminSettingsForm7 extends Form7 {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     // Change the body of the form builder.

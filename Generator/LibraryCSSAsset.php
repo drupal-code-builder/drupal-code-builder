@@ -40,7 +40,7 @@ class LibraryCSSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components['asset_file'] = [
       'component_type' => 'AssetFile',
       // TODO: do this in property processing!

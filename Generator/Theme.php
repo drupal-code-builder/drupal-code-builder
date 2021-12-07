@@ -47,7 +47,7 @@ class Theme extends BaseGenerator {
    * @return
    *  An array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $theme_data = $this->component_data;
     //drush_print_r($theme_data);
 

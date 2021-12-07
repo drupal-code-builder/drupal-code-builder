@@ -62,7 +62,7 @@ class Hooks extends BaseGenerator {
    * @return
    *  An array of subcomponent names and types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     // We add components of type HookImplementation: each of these is a single
     // function. From this point on, these subcomponents are the authority on
     // which hooks we generate. Each HookImplementation component will add the

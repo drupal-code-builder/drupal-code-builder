@@ -31,7 +31,7 @@ class EntityForm extends EntityHandler {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [
       // Request the form functions.
       // Note that for entity forms, buildForm() shouldn't be used, but form()

@@ -67,7 +67,7 @@ class Profile extends RootComponent {
    * @return
    *  An array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $root_name = $this->component_data['root_name'];
 
     $components = [

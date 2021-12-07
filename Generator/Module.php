@@ -350,7 +350,7 @@ class Module extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [];
 
     // Modules always have a .info file.

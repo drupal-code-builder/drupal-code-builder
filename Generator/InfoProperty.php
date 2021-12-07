@@ -32,7 +32,7 @@ class InfoProperty extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     // We don't need to request the .info file, as that's always required.
     return [];
   }

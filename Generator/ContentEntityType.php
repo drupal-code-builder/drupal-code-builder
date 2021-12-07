@@ -386,7 +386,7 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     $use_revisionable = in_array('revisionable', $this->component_data['functionality']);

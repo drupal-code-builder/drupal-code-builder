@@ -170,7 +170,7 @@ class Service extends PHPClassFileWithInjection {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [];
 
     $yaml_data_arguments = [];

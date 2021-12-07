@@ -30,7 +30,7 @@ class LibraryJSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components['asset_file'] = [
       'component_type' => 'JavaScriptFile',
       // TODO: do this in property processing!

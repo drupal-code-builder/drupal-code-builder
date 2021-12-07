@@ -382,7 +382,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * file. Hooks in turn require a varying number of files, determined by the
    * incoming module data.
    *
-   * @return
+   * @return array
    *  An array of subcomponents which the current generator requires.
    *  Each item's key is the local name for the component, which must be unique
    *  within both this array and the components that this component spawns from
@@ -395,7 +395,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * @see Generate::assembleComponentList()
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     return [];
   }
 

@@ -371,7 +371,7 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
