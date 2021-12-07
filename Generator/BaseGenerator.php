@@ -422,7 +422,7 @@ abstract class BaseGenerator implements GeneratorInterface {
         // Don't merge this property, but check that we're not throwing away
         // data from the additional data.
         assert(
-          $this->component_data[$property_name] == $additional_component_data->{$property_name}->get(),
+          $this->component_data->{$property_name}->get() == $additional_component_data->{$property_name}->get(),
           "Attempted to discard request for new component, but failed on property $property_name with existing data "
             . print_r($this->component_data, TRUE)
             . " and new data "
