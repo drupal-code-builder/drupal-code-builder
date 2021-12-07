@@ -110,6 +110,8 @@ class ComponentCollector {
 
   /**
    * The components collected by the process.
+   *
+   * @var \DrupalCodeBuilder\Generator\Collection\ComponentCollection
    */
   protected $component_collection;
 
@@ -118,6 +120,8 @@ class ComponentCollector {
    *
    * This allows us to prevent creation of duplicate generators which may be
    * requested by different things.
+   *
+   * @var array
    */
   protected $requested_data_record = [];
 
