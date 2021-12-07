@@ -186,7 +186,7 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [];
 
     foreach ($this->component_data['container_services'] as $service_id) {

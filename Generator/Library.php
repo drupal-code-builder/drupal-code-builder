@@ -59,7 +59,7 @@ class Library extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [
       "%module.libraries.yml" => [
         'component_type' => 'YMLFile',

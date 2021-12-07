@@ -174,7 +174,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     // TODO: really need a way to iterate over the scalar values!

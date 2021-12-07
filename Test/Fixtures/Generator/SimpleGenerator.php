@@ -22,7 +22,7 @@ class SimpleGenerator implements GeneratorInterface {
     return NULL;
   }
 
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     return [];
   }
 

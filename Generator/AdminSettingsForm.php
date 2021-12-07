@@ -67,7 +67,7 @@ class AdminSettingsForm extends Form {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     // Restore the call to the parent method.

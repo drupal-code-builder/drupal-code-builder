@@ -102,7 +102,7 @@ class PluginYamlDiscovery extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $yaml_file_suffix = $this->component_data['plugin_type_data']['yaml_file_suffix'];
 
     $components = [

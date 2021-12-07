@@ -320,7 +320,7 @@ class RouterItem extends BaseGenerator {
    * @return
    *  An array of subcomponent names and types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [];
 
     // Each RouterItem that gets added will cause a repeat request of these

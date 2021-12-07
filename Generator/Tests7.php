@@ -10,7 +10,7 @@ class Tests7 extends Tests {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [];
 
     // Declare the class file in the module's .info file.

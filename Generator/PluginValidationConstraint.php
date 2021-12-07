@@ -16,7 +16,7 @@ class PluginValidationConstraint extends PluginAnnotationDiscovery {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     $components['validator'] = [

@@ -52,7 +52,7 @@ class HookImplementation extends PHPFunction {
    * @return
    *  An array of subcomponent names and types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $code_file = $this->component_data['code_file'];
 
     return [

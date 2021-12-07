@@ -206,7 +206,7 @@ class PluginType extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     $plugin_type = $this->component_data['plugin_type'];

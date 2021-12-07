@@ -50,7 +50,7 @@ class Permission extends BaseGenerator {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [
       '%module.permissions.yml' => [
         'component_type' => 'YMLFile',

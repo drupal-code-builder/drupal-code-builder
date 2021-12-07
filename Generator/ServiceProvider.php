@@ -32,7 +32,7 @@ class ServiceProvider extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [
       'alter' => [
         'component_type' => 'PHPFunction',

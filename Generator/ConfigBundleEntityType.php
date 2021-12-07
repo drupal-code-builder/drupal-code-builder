@@ -78,7 +78,7 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     // For bundle entity types, the entity ID length is limited.

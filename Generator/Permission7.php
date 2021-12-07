@@ -10,7 +10,7 @@ class Permission7 extends Permission {
   /**
    * Return an array of subcomponent types.
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = [
       'hooks' => [
         'component_type' => 'Hooks',

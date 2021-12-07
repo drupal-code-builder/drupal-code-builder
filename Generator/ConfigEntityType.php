@@ -127,7 +127,7 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents() {
+  public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
     // Filthy hack.
