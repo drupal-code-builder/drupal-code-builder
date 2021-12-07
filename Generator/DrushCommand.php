@@ -34,6 +34,18 @@ class DrushCommand extends BaseGenerator {
 
           return CaseString::snake($command_name)->camel();
         }),
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services')
+        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+      // Experimental. Define the data here that will then be set by
+      // self::requiredComponents(). This is mostly needed so that the Service
+      // generator has access to the whole data, because it expects to be able
+      // to access module generator configuration options.
+      'commands_service' => static::getLazyDataDefinitionForGeneratorType('DrushCommandsService')
+        ->setInternal(TRUE),
+
     ]);
 
     return $definition;
@@ -131,8 +143,10 @@ class DrushCommand extends BaseGenerator {
   public function requiredComponents() {
     $components = [];
 
-    $components['command_file'] = [
-      'component_type' => 'Service',
+    $components['commands_service'] = [
+      'component_type' => 'DrushCommandsService',
+      // Makes this get matched up with the data definition.
+      'use_data_definition' => TRUE,
       'prefixed_service_name' => $this->component_data->root_component_name->value . '.commands',
       'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
       'relative_namespace' => 'Commands',
@@ -152,7 +166,7 @@ class DrushCommand extends BaseGenerator {
 
     $components['command_method'] = [
       'component_type' => 'PHPFunction',
-      'containing_component' => '%requester:command_file',
+      'containing_component' => '%requester:commands_service',
       'declaration' => "public function {$this->component_data['command_method_name']}()",
       'function_docblock_lines' => $docblock_lines,
       'body' => [],

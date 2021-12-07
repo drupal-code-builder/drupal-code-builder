@@ -48,13 +48,13 @@ class ComponentDrushCommand8Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'drush.services.yml',
+      'test_module.services.yml',
       'src/Commands/TestModuleCommands.php',
     ], $files);
 
-    $drush_services_file = $files["drush.services.yml"];
+    $services_file = $files["test_module.services.yml"];
 
-    $yaml_tester = new YamlTester($drush_services_file);
+    $yaml_tester = new YamlTester($services_file);
     $yaml_tester->assertHasProperty('services');
     $yaml_tester->assertHasProperty(['services', "$module_name.commands"]);
     $yaml_tester->assertPropertyHasValue(['services', "$module_name.commands", 'class'], "Drupal\\$module_name\\Commands\\TestModuleCommands");
