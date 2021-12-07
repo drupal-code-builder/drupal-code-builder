@@ -512,13 +512,13 @@ class ComponentCollection implements \IteratorAggregate {
    * @param $requesting_component
    *   The component that is requesting the component to match.
    *
-   * @return
+   * @return \DrupalCodeBuilder\Generator\GeneratorInterface|null
    *   Either a component that's in the collection and matches the given
    *   component, or NULL if nothing was found.
    */
-  public function getMatchingComponent($component, $requesting_component) {
+  public function getMatchingComponent(GeneratorInterface $component, ?GeneratorInterface $requesting_component): ?GeneratorInterface{
     if (is_null($requesting_component)) {
-      return;
+      return NULL;
     }
 
     if (!$component->getMergeTag()) {
@@ -542,6 +542,9 @@ class ComponentCollection implements \IteratorAggregate {
     if (isset($this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()])) {
       $matching_component_id = $this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()];
       return $this->components[$matching_component_id];
+    }
+    else {
+      return NULL;
     }
   }
 
