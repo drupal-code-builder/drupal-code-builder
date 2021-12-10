@@ -878,11 +878,18 @@ class PHPTester {
    * Assert the parsed class injects the given services.
    *
    * @param array $injected_services
-   *   Array of the injected services.
+   *   An array of data describing the expected injected services. This is a
+   *   numeric order, in the expected order, where each value is an array
+   *   with the following keys:
+   *    - 'typehint': The type of the service parameter.
+   *    - 'service_name': The name of the service.
+   *    - 'property_name': The name of the property for the service.
+   *    - 'parameter_name': The name of the parameter for the service.
+   *
    * @param string $message
    *   The assertion message.
    */
-  public function assertInjectedServices($injected_services, $message = NULL) {
+  public function assertInjectedServices(array $injected_services, $message = NULL) {
     $service_count = count($injected_services);
 
     // Assert the constructor method.
