@@ -298,6 +298,9 @@ class Module extends RootComponent {
         ->setLabel('Libraries')
         ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
         ->setMultiple(TRUE),
+      'drush_commands' => static::getLazyDataDefinitionForGeneratorType('DrushCommand')
+        ->setLabel("Drush commands")
+        ->setMultiple(TRUE),
       'api' => static::getLazyDataDefinitionForGeneratorType('API', 'boolean')
         ->setLabel("api.php file")
         ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),

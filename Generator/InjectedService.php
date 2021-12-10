@@ -84,6 +84,13 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
+  public function getMergeTag() {
+    return $this->component_data['containing_component'] . '-' . $this->component_data['service_id'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildComponentContents($children_contents) {
     $service_info = $this->component_data['service_info'];
 

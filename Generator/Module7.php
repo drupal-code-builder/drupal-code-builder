@@ -29,6 +29,7 @@ class Module7 extends Module8 {
     $definition->removeProperty('phpunit_tests');
     $definition->getProperty('tests')->setDescription('');
     $definition->removeProperty('config_entity_types');
+    $definition->removeProperty('drush_commands');
 
     // TODO: implement these for D7.
     $definition->removeProperty('content_entity_types');
