@@ -69,6 +69,14 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertClassDocBlockHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');
+
+    $alpha_method_tester = $php_tester->getMethodTester('alpha');
+    $alpha_method_tester->assertMethodHasDocblockLine('@command test_module:alpha');
+    $alpha_method_tester->assertMethodHasDocblockLine('@usage drush test_module:alpha');
+
+    $beta_method_tester = $php_tester->getMethodTester('beta');
+    $beta_method_tester->assertMethodHasDocblockLine('@command my_group:beta');
+    $beta_method_tester->assertMethodHasDocblockLine('@usage drush my_group:beta');
   }
 
   /**

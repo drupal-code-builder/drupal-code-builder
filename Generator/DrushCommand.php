@@ -71,6 +71,11 @@ class DrushCommand extends BaseGenerator {
       'docblock_first_line' => "%sentence Drush commands.",
     ];
 
+    // Prefix the module name as the command's group if no group set already.
+    if (strpos($this->component_data->command_name->value, ':') === FALSE) {
+      $this->component_data->command_name = $this->component_data->root_component_name->value . ':' . $this->component_data->command_name->value;
+    }
+
     $docblock_lines = [
       $this->component_data['command_description'],
       "@command {$this->component_data['command_name']}",
