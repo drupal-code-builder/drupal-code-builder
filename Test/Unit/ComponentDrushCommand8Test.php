@@ -35,6 +35,10 @@ class ComponentDrushCommand8Test extends TestBase {
         0 => [
           'command_name' => 'alpha',
           'command_description' => 'Do alpha.',
+          'command_parameters' => [
+            'one',
+            'two',
+          ],
         ],
         1 => [
           'command_name' => 'my_group:beta',
@@ -73,6 +77,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $alpha_method_tester = $php_tester->getMethodTester('alpha');
     $alpha_method_tester->assertMethodHasDocblockLine('@command test_module:alpha');
     $alpha_method_tester->assertMethodHasDocblockLine('@usage drush test_module:alpha');
+    $alpha_method_tester->assertHasParameters(['one' => 'string', 'two' => 'string']);
 
     $beta_method_tester = $php_tester->getMethodTester('beta');
     $beta_method_tester->assertMethodHasDocblockLine('@command my_group:beta');

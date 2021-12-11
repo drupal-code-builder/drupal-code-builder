@@ -52,8 +52,23 @@ class PHPFunction extends BaseGenerator {
         ->setDefault(DefaultDefinition::create()
           ->setCallable([static::class, 'defaultDocblockLines'])
       ),
+      'doxygen_tag_lines' => PropertyDefinition::create('string')
+        ->setLabel("Doxygen tags to go after the standard ones.")
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE),
       'declaration' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
+      'parameters' => PropertyDefinition::create('complex')
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE)
+        ->setProperties([
+          'name' => PropertyDefinition::create('string'),
+          'type' => PropertyDefinition::create('string')
+            // Need to give a type, otherwise PHPCS will complain in tests!
+            ->setLiteralDefault('string'),
+          'description' => PropertyDefinition::create('string')
+            ->setLiteralDefault('Parameter description.'),
+        ]),
       'body' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setInternal(TRUE),
@@ -104,6 +119,26 @@ class PHPFunction extends BaseGenerator {
       }
     }
 
+    if (!$this->component_data->parameters->isEmpty()) {
+      $lines[] = '';
+
+      foreach ($this->component_data->parameters as $parameter_data) {
+        $param_name_line = '@param ';
+        // ARGH TODO! Shouldn't this happen somewhere else???
+        $parameter_data->type->applyDefault();
+         if (!empty($parameter_data->type->value)) {
+          $param_name_line .= $parameter_data->type->value . ' ';
+        }
+        $param_name_line .= '$' . $parameter_data->name->value;
+        $lines[] = $param_name_line;
+        $lines[] = '  ' . $parameter_data->description->value;
+      }
+    }
+
+    if (!$this->component_data->doxygen_tag_lines->isEmpty()) {
+      $lines = array_merge($lines, [''], $this->component_data->doxygen_tag_lines->values());
+    }
+
     return $lines;
   }
 
@@ -115,6 +150,23 @@ class PHPFunction extends BaseGenerator {
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
     $declaration = str_replace('£', '$', $this->component_data['declaration']);
+
+    if (!$this->component_data->parameters->isEmpty()) {
+      // Remove the final closing ')'.
+      $declaration = rtrim($declaration, ')');
+
+      $parameters = [];
+      foreach ($this->component_data->parameters as $parameter_data) {
+        $parameter = '';
+        if (!$parameter_data->type->isEmpty()) {
+          $parameter .= $parameter_data->type->value . ' ';
+        }
+        $parameter .= '$' . $parameter_data->name->value;
+        $parameters[] = $parameter;
+      }
+
+      $declaration .= implode(', ', $parameters) . ')';
+    }
 
     $function_code[] = $declaration . ' {';
 

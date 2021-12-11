@@ -28,7 +28,10 @@ class DrushCommand extends BaseGenerator {
         ->setDescription("Short aliases for the command.")
         ->setMultiple(TRUE),
       'command_description' => PropertyDefinition::create('string')
-       ->setLabel("Command description."),
+        ->setLabel("Command description."),
+      'command_parameters' => PropertyDefinition::create('string')
+        ->setLabel("Command parameter names.")
+        ->setMultiple(TRUE),
       'command_method_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setCallableDefault(function ($component_data) {
@@ -78,12 +81,23 @@ class DrushCommand extends BaseGenerator {
 
     $docblock_lines = [
       $this->component_data['command_description'],
+    ];
+
+    $doxygen_tag_lines = [
       "@command {$this->component_data['command_name']}",
       "@usage drush {$this->component_data['command_name']}",
       "  {$this->component_data['command_description']}",
     ];
     if (!empty($this->component_data['command_name_aliases'])) {
-      $docblock_lines[] =  "@aliases " . implode(',', $this->component_data['command_name_aliases']);
+      $doxygen_tag_lines[] =  "@aliases " . implode(',', $this->component_data['command_name_aliases']);
+    }
+
+    $parameters_data = [];
+    foreach ($this->component_data->command_parameters as $parameter) {
+      $parameters_data[] = [
+        // TODO -- allow these to take the DataItems!?
+        'name' => $parameter->value,
+      ];
     }
 
     $components['command_method'] = [
@@ -91,6 +105,8 @@ class DrushCommand extends BaseGenerator {
       'containing_component' => '%requester:commands_service',
       'declaration' => "public function {$this->component_data['command_method_name']}()",
       'function_docblock_lines' => $docblock_lines,
+      'doxygen_tag_lines' => $doxygen_tag_lines,
+      'parameters' => $parameters_data,
       'body' => [],
     ];
 
