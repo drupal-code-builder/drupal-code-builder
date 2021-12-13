@@ -577,7 +577,7 @@ class PHPTester {
 
     $message = $message ?? "The file contains the interface {$interface_short_name}.";
 
-    // All the class files we generate contain only one class.
+    // All the interface files we generate contain only one interface.
     Assert::assertCount(1, $this->parser_nodes['interfaces']);
     Assert::assertArrayHasKey($interface_short_name, $this->parser_nodes['interfaces']);
 
