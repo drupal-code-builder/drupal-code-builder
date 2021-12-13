@@ -28,9 +28,13 @@ class DrushCommand extends BaseGenerator {
         ->setDescription("Short aliases for the command.")
         ->setMultiple(TRUE),
       'command_description' => PropertyDefinition::create('string')
-        ->setLabel("Command description."),
+        ->setLabel("Command description"),
       'command_parameters' => PropertyDefinition::create('string')
-        ->setLabel("Command parameter names.")
+        ->setLabel("Command parameter names")
+        ->setMultiple(TRUE),
+      'command_options' => PropertyDefinition::create('string')
+        ->setLabel("Command options")
+        ->setDescription("Enter each option as 'option_name: default', where for the default, a plain string will be quoted, a numeric is left as numeric, and string in ALL_CAPS are taken to be constants, including 'NULL', 'TRUE', 'FALSE'.")
         ->setMultiple(TRUE),
       'command_method_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
@@ -50,7 +54,6 @@ class DrushCommand extends BaseGenerator {
       // to access module generator configuration options.
       'commands_service' => static::getLazyDataDefinitionForGeneratorType('DrushCommandsService')
         ->setInternal(TRUE),
-
     ]);
 
     return $definition;
@@ -83,21 +86,66 @@ class DrushCommand extends BaseGenerator {
       $this->component_data['command_description'],
     ];
 
-    $doxygen_tag_lines = [
-      "@command {$this->component_data['command_name']}",
-      "@usage drush {$this->component_data['command_name']}",
-      "  {$this->component_data['command_description']}",
-    ];
-    if (!empty($this->component_data['command_name_aliases'])) {
-      $doxygen_tag_lines[] =  "@aliases " . implode(',', $this->component_data['command_name_aliases']);
-    }
+    $usage_line = "@usage drush {$this->component_data['command_name']}";
 
     $parameters_data = [];
     foreach ($this->component_data->command_parameters as $parameter) {
       $parameters_data[] = [
         // TODO -- allow these to take the DataItems!?
         'name' => $parameter->value,
+        // 'description' => "The {$parameter->value} parameter.",
       ];
+
+      // Add the parameters to the @usage tag.
+      $usage_line .= ' ' . $parameter->value;
+    }
+
+    $doxygen_tag_lines = [];
+
+    // Put the @option tags first in the tag lines, so they come after the
+    // @param lines that PHPFunction generator will put in.
+    foreach ($this->component_data->command_options as $option) {
+      list($option_name, $option_default) = explode(':', $option->value);
+      $option_name = trim($option_name);
+      $option_default = trim($option_default);
+      if (is_numeric($option_default)) {
+        $option_type = 'int';
+      }
+      elseif (in_array($option_default, ['TRUE', 'FALSE'])) {
+        $option_type = 'bool';
+      }
+      elseif (preg_match('@^[[:upper:]]+$@', $option_default)) {
+        // Assume that a default value that's in all CAPS and not a boolean is
+        // a constant, and assume that defined constants are usually ints.
+        $option_type = 'int';
+      }
+      else {
+        $option_type = 'string';
+
+        // Quote a string variable.
+        $option_default = "'" . $option_default . "'";
+      }
+
+      // Each option is documented as a @param, but also as an @option.
+      $parameters_data[] = [
+        'name' => $option_name,
+        'type' => $option_type,
+        'default_value' => $option_default,
+        'description' => "The {$option_name} option.",
+      ];
+
+      $doxygen_tag_lines[] = "@option {$option_name} Option description.";
+
+      // Add the options to the @usage tag.
+      $usage_line .= ' --' . $option_name;
+    }
+
+    $doxygen_tag_lines[] = "@command {$this->component_data['command_name']}";
+    $doxygen_tag_lines[] = $usage_line;
+    $doxygen_tag_lines[] = "  {$this->component_data['command_description']}";
+
+    if (!empty($this->component_data['command_name_aliases'])) {
+      $doxygen_tag_lines[] =  "@aliases " . implode(',', $this->component_data['command_name_aliases']);
     }
 
     $components['command_method'] = [

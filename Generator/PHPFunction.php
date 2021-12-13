@@ -68,6 +68,7 @@ class PHPFunction extends BaseGenerator {
             ->setLiteralDefault('string'),
           'description' => PropertyDefinition::create('string')
             ->setLiteralDefault('Parameter description.'),
+          'default_value' => PropertyDefinition::create('string'),
         ]),
       'body' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
@@ -162,6 +163,11 @@ class PHPFunction extends BaseGenerator {
           $parameter .= $parameter_data->type->value . ' ';
         }
         $parameter .= '$' . $parameter_data->name->value;
+
+        if (!$parameter_data->default_value->isEmpty()) {
+          $parameter .= ' = ' . $parameter_data->default_value->value;
+        }
+
         $parameters[] = $parameter;
       }
 
