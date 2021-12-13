@@ -239,4 +239,70 @@ class ComponentDrushCommand8Test extends TestBase {
     ]);
   }
 
+  /**
+   * Test a command with with inflection interfaces.
+   */
+  public function testCommandGenerationWithInflection() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = array(
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'drush_commands' => array(
+        0 => [
+          'command_name' => 'alpha',
+          'command_description' => 'Do alpha.',
+          'inflected_injection' => [
+            'autoloader',
+            'site_alias',
+          ],
+        ],
+        1 => [
+          'command_name' => 'my_group:beta',
+          'command_description' => 'Do beta.',
+          'inflected_injection' => [
+            'site_alias',
+          ],
+        ],
+      ),
+      'readme' => FALSE,
+    );
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'drush.services.yml',
+      'src/Commands/TestModuleCommands.php',
+    ], $files);
+
+    $drush_services_file = $files["drush.services.yml"];
+
+    $yaml_tester = new YamlTester($drush_services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "test_module.commands"]);
+    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'class'], "Drupal\\test_module\\Commands\\TestModuleCommands");
+    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'tags', 0, 'name'], 'drush.command');
+
+    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $command_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
+    $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
+    $php_tester->assertClassDocBlockHasLine('Test module Drush commands.');
+    $php_tester->assertHasMethod('alpha');
+    $php_tester->assertHasMethod('beta');
+    $php_tester->assertClassHasInterfaces([
+      "Drush\SiteAlias\SiteAliasManagerAwareInterface",
+      "Drush\Boot\AutoloaderAwareInterface",
+    ]);
+    $php_tester->assertClassHasTraits([
+      "Drush\Boot\AutoloaderAwareTrait",
+      "Consolidation\SiteAlias\SiteAliasManagerAwareTrait",
+    ]);
+  }
+
 }

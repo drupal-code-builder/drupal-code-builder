@@ -3,7 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Generator for a Drush 9 command.
@@ -43,6 +45,69 @@ class DrushCommand extends BaseGenerator {
 
           return CaseString::snake($command_name)->camel();
         }),
+      'inflected_injection' => PropertyDefinition::create('string')
+        ->setLabel("Inflection interfaces")
+        ->setMultiple(TRUE)
+        ->setPresets(
+          PresetDefinition::create(
+            'autoloader',
+            'AutoloaderAwareInterface',
+            "Provides access to the class loader."
+          )
+          ->setForceValues([
+            'service_interfaces' => [
+              'value' => '\Drush\Boot\AutoloaderAwareInterface',
+            ],
+            'service_traits' => [
+              'value' => '\Drush\Boot\AutoloaderAwareTrait',
+            ],
+          ]),
+          PresetDefinition::create(
+            'site_alias',
+            'SiteAliasManagerAwareInterface',
+            "The site alias manager allows alias records to be obtained."
+          )
+          ->setForceValues([
+            'service_interfaces' => [
+              'value' => '\Drush\SiteAlias\SiteAliasManagerAwareInterface',
+            ],
+            'service_traits' => [
+              'value' => '\Consolidation\SiteAlias\SiteAliasManagerAwareTrait',
+            ],
+          ]),
+          PresetDefinition::create(
+            'custom_event',
+            'CustomEventAwareInterface',
+            "Allows command files to define and fire custom events that other command files can hook."
+          )
+          ->setForceValues([
+            'service_interfaces' => [
+              'value' => '\Consolidation\AnnotatedCommand\Events\CustomEventAwareInterface',
+            ],
+            'service_traits' => [
+              'value' => '\Consolidation\AnnotatedCommand\Events\CustomEventAwareTrait',
+            ],
+          ]),
+          PresetDefinition::create(
+            'container',
+            'ContainerAwareInterface',
+            "Provides Drush's dependency injection container."
+          )
+          ->setForceValues([
+            'service_interfaces' => [
+              'value' => '\League\Container\ContainerAwareInterface',
+            ],
+            'service_traits' => [
+              'value' => '\League\Container\ContainerAwareTrait',
+            ],
+          ]),
+        ),
+      'service_interfaces' => PropertyDefinition::create('string')
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE),
+      'service_traits' => PropertyDefinition::create('string')
+        ->setMultiple(TRUE)
+        ->setInternal(TRUE),
       'injected_services' => PropertyDefinition::create('string')
         ->setLabel('Injected services')
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
@@ -75,6 +140,8 @@ class DrushCommand extends BaseGenerator {
       'parent_class_name' => '\Drush\Commands\DrushCommands',
       'injected_services' => $this->component_data['injected_services'],
       'docblock_first_line' => "%sentence Drush commands.",
+      'interfaces' => $this->component_data->service_interfaces->values(),
+      'traits' => $this->component_data->service_traits->values(),
     ];
 
     // Prefix the module name as the command's group if no group set already.
