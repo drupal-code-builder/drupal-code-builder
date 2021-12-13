@@ -277,6 +277,8 @@ class Service extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   protected function collectSectionBlocks() {
+    parent::collectSectionBlocks();
+
     $this->collectSectionBlocksForDependencyInjection();
 
     // Add methods from the tag type interface.
