@@ -195,7 +195,19 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     }
   }
 
-  public function setPresets(array $presets) :self {
+  /**
+   * Sets presets for this property.
+   *
+   * @param mixed ...$presets
+   *   Either:
+   *    - a variable number of \DrupalCodeBuilder\Definition\PresetDefinition
+   *      objects
+   *    - a single array of preset definition arrays.
+   *
+   * @return self
+   *   Returns $this for chaining.
+   */
+  public function setPresets(...$presets) :self {
     if ($this->getType() != 'string') {
       throw new InvalidDefinitionException(sprintf(
         "Property %s is not of type 'string' and so cannot have presets",
@@ -203,16 +215,44 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
       ));
     }
 
-    $this->presets = $presets;
-
     if ($presets) {
-      $options = [];
-      foreach ($presets as $key => $preset) {
-        $option = OptionDefinition::create($key, $preset['label'], $preset['description'] ?? NULL);
-        $options[] = $option;
+      // New object definition of presets.
+      if (is_object($presets[0])) {
+        $options = [];
+        /** @var \DrupalCodeBuilder\Definition\PresetDefinition $preset */
+        foreach ($presets as $preset) {
+          $options[] = $preset->getOption();
+        }
+
+        // Consumers of presets don't support PresetDefinitions yet, so convert
+        // here to array.
+        $preset_definitions = $presets;
+        $presets = [];
+        /** @var \DrupalCodeBuilder\Definition\PresetDefinition $preset */
+        foreach ($preset_definitions as $preset) {
+          // We only need to set the force data, as that's all preset
+          // consumers need.
+          $presets[$preset->getName()] = [
+            'data' => [
+              'force' => $preset->getForceValues(),
+            ],
+          ];
+        }
       }
+      else {
+        $presets = $presets[0];
+
+        $options = [];
+        foreach ($presets as $key => $preset) {
+          $option = OptionDefinition::create($key, $preset['label'], $preset['description'] ?? NULL);
+          $options[] = $option;
+        }
+      }
+
       $this->setOptions(...$options);
     }
+
+    $this->presets = $presets;
 
     return $this;
   }
