@@ -289,9 +289,9 @@ class PHPClassFile extends PHPFile {
       $line .= " extends {$this->component_data['parent_class_name']}";
     }
     if ($this->component_data['interfaces']) {
-      foreach ($this->component_data['interfaces'] as $interface) {
-        $line .= " implements $interface";
-      }
+      // Have to use export() instead of values() because of the hack with this
+      // being mapping data, not multi-valued string.
+      $line .= " implements " . implode(', ', $this->component_data->interfaces->export());
     }
     $line .= ' {';
 
