@@ -675,7 +675,7 @@ class PHPTester {
    * @param string[] $expected_interface_names
    *   An array of fully-qualified interface names, without the leading '\'.
    */
-  public function assertClassHasInterfaces($expected_interface_names) {
+  public function assertClassHasInterfaces(array $expected_interface_names) {
     // There will be only one class.
     $class_node = reset($this->parser_nodes['classes']);
 
@@ -707,7 +707,7 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertClassHasTraits($expected_trait_full_names, $message = NULL) {
+  public function assertClassHasTraits(array $expected_trait_full_names, $message = NULL) {
     if (empty($expected_trait_full_names)) {
       $message = $message ?? "The class does not use any traits.";
 
