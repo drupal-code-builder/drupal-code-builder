@@ -20,6 +20,7 @@ use MutableTypedData\Data\MutableData;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\DataItemFactory;
 use MutableTypedData\Definition\DataDefinition;
+use MutableTypedData\Exception\InvalidDefinitionException;
 use MutableTypedData\ExpressionLanguage\DataAddressLanguageProvider;
 
 /**
