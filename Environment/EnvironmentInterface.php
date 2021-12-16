@@ -209,7 +209,7 @@ interface EnvironmentInterface {
   public function getExtensionPath($type, $name);
 
   /**
-   * Gets the service container.
+   * Gets the Drupal service container.
    *
    * (Drupal 8 only!)
    */
