@@ -98,6 +98,12 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
             ->setCallable([static::class, 'processingPluginName'])
             ->setDependencies('..:plugin_name')
         ),
+      'plugin_label' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("machineToLabel(stripBefore(get('..:plugin_name'), ':'))")
+          ->setDependencies('..:plugin_name')
+        ),
       'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('Plugin class name')
         ->setRequired(TRUE)
@@ -303,6 +309,11 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         // CRASH
         // lazy defaults not working with array acess thought I'd fuckkign fixed it!
         $annotation_data['id'] = $this->component_data['prefixed_plugin_name'];
+        continue;
+      }
+
+      if (in_array($annotation_variable, ['label', 'admin_label'])) {
+        $annotation_data[$annotation_variable] = ClassAnnotation::Translation($this->component_data->plugin_label->value);
         continue;
       }
 

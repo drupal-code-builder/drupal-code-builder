@@ -65,7 +65,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    $annotation_tester->assertHasProperty('admin_label');
+    $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
     $annotation_tester->assertHasProperty('category');
 
     // Check the config yml file.
@@ -151,6 +151,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'system_menu_block:alpha', "The plugin ID has the derivative prefix but no module prefix.");
+    $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
   }
 
   /**
