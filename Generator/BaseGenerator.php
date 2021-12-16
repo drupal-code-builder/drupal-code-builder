@@ -161,7 +161,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * @var \DrupalCodeBuilder\Task\Generate\ComponentClassHandler
    */
-  protected $classHandlerHelper;
+  protected $classHandler;
 
   /**
    * Boolean to indicate whether this component already exists.
@@ -194,7 +194,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    *   The class handler.
    */
   public function setClassHandler(ComponentClassHandler $class_handler) {
-    $this->classHandlerHelper = $class_handler;
+    $this->classHandler = $class_handler;
   }
 
   /**
