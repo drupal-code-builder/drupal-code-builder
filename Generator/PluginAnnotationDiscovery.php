@@ -225,8 +225,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         $schema_id = $this->plugin_type_data['config_schema_prefix']
           . $this->component_data['prefixed_plugin_name'];
 
-        $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
-        $definition = $class_handler->getStandaloneComponentPropertyDefinition('ConfigSchema');
+        $definition = $this->classHandler->getStandaloneComponentPropertyDefinition('ConfigSchema');
         $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
         $data->yaml_data->set([
           $schema_id => [
