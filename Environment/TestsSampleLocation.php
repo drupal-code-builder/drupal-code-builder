@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Environment;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * Environment class for tests using prepared sample hook data.
  */
@@ -13,6 +15,13 @@ class TestsSampleLocation extends Tests {
   protected $storageType = 'TestExportInclude';
 
   /**
+   * The mocked Drupal service container.
+   *
+   * @var \Psr\Container\ContainerInterface
+   */
+  protected $container;
+
+  /**
    * Set the hooks directory.
    */
   function getHooksDirectorySetting() {
@@ -21,6 +30,22 @@ class TestsSampleLocation extends Tests {
     $directory = dirname(dirname(__FILE__)) . '/Test/sample_hook_definitions/' . $this->getCoreMajorVersion();
 
     $this->hooks_directory = $directory;
+  }
+
+  /**
+   * Sets the mocked Drupal service container.
+   *
+   * @param \Psr\Container\ContainerInterface $container
+   */
+  public function setContainer(ContainerInterface $container) {
+    $this->container = $container;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContainer() {
+    return $this->container;
   }
 
 }
