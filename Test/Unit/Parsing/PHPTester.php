@@ -548,6 +548,28 @@ class PHPTester {
   }
 
   /**
+   * Asserts that the class's docblock does not contain the given line.
+   *
+   * @param string $line
+   *   The line to search for, without the docblock formatting, i.e. without
+   *   the '*' or margin space. Indented lines will need to include their
+   *   indentation, however.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassDocBlockNotHasLine($line, $message = NULL) {
+    $message = $message ?? "The class docblock has the line '{$line}'";
+
+    // All the class files we generate contain only one class.
+    Assert::assertCount(1, $this->parser_nodes['classes']);
+    $class_node = reset($this->parser_nodes['classes']);
+
+    $docblock = $class_node->getAttribute('comments')[0];
+
+    $this->assertDocblockNotHasLine($line, $docblock, $message);
+  }
+
+  /**
    * Gets an annotation tester for the class annotation.
    *
    * @return \DrupalCodeBuilder\Test\Unit\Parsing\AnnotationTester
@@ -1338,7 +1360,41 @@ class PHPTester {
    *   (optional) The assertion message.
    */
   protected function assertDocblockHasLine($line, Doc $docblock, $message = NULL) {
-    $message = $message ?? "The docblock contains the line '{$line}'.";
+    $this->assertDocblockLineHelper($line, $docblock, TRUE, $message);
+  }
+
+  /**
+   * Assert the given docblock does not contain a line.
+   *
+   * @param string $line
+   *   The expected line.
+   * @param \PhpParser\Comment\Doc $docblock
+   *   The docblock parser node.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertDocblockNotHasLine($line, Doc $docblock, $message = NULL) {
+    $this->assertDocblockLineHelper($line, $docblock, FALSE, $message);
+  }
+
+  /**
+   * Helper for asserting a line in a docblock.
+   *
+   * @param string $line
+   *   The expected line.
+   * @param \PhpParser\Comment\Doc $docblock
+   *   The docblock parser node.
+   * @param bool $assert
+   *   Whether to assert the line is in the docblock, or assert it is not.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  protected function assertDocblockLineHelper($line, Doc $docblock, bool $assert, $message = NULL) {
+    $message = $message ?? (
+      $assert ?
+      "The docblock contains the line '{$line}'." :
+      "The docblock does not the line '{$line}'."
+    );
 
     $docblock_text = $docblock->getReformattedText();
     $docblock_lines = explode("\n", $docblock_text);
@@ -1355,7 +1411,12 @@ class PHPTester {
     // TODO: still needed with assertContains()?
     $message .= " Given docblock was: " . print_r($docblock_lines, TRUE);
 
-    Assert::assertContains($line, $docblock_lines, $message);
+    if ($assert) {
+      Assert::assertContains($line, $docblock_lines, $message);
+    }
+    else {
+      Assert::assertNotContains($line, $docblock_lines, $message);
+    }
   }
 
   /**
