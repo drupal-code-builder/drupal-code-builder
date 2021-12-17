@@ -13,6 +13,7 @@ use DrupalCodeBuilder\MutableTypedData\Data\MergeableStringData;
 use DrupalCodeBuilder\MutableTypedData\Validator\ClassName;
 use DrupalCodeBuilder\MutableTypedData\Validator\MachineName;
 use DrupalCodeBuilder\MutableTypedData\Validator\Path;
+use DrupalCodeBuilder\MutableTypedData\Validator\PluginExists;
 use DrupalCodeBuilder\MutableTypedData\Validator\PluginName;
 use DrupalCodeBuilder\MutableTypedData\Validator\ServiceName;
 use DrupalCodeBuilder\MutableTypedData\Validator\YamlPluginName;
@@ -65,6 +66,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     'class_name' => ClassName::class,
     'machine_name' => MachineName::class,
     'plugin_name' => PluginName::class,
+    'plugin_exists' => PluginExists::class,
     'yaml_plugin_name' => YamlPluginName::class,
     'service_name' => ServiceName::class,
     'path' => Path::class,

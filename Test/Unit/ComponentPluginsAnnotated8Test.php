@@ -5,6 +5,8 @@ namespace DrupalCodeBuilder\Test\Unit;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use MutableTypedData\Exception\InvalidInputException;
+use PHPUnit\Framework\Assert;
+use Psr\Container\ContainerInterface;
 
 /**
  * Tests the Plugins generator class.
@@ -152,6 +154,174 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'system_menu_block:alpha', "The plugin ID has the derivative prefix but no module prefix.");
     $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
+  }
+
+  /**
+   * Tests an existing plugin class as parent.
+   */
+  public function testPluginsGenerationParentPluginClass() {
+    // Mock the Drupal container and the block plugin manager. Use an anonymous
+    // class for the plugin manager as we don't have an interface for it within
+    // a test environment.
+    $drupal_container = $this->prophesize(ContainerInterface::class);
+    $drupal_container
+      ->get('plugin.manager.block')
+      ->willReturn(new class {
+        public function getDefinition($plugin_id) {
+          Assert::assertEquals('parent', $plugin_id);
+
+          return [
+            // The definition doesn't have the initial '\'.
+            'class' => 'Drupal\somemodule\Plugin\Block\ParentBlock',
+          ];
+        }
+      });
+    $this->container->get('environment')->setContainer($drupal_container->reveal());
+
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+          'parent_plugin_id' => 'parent',
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "config/schema/test_module.schema.yml",
+      "src/Plugin/Block/Alpha.php",
+    ], $files);
+
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertAnnotationClass('Block');
+    $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
+    $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
+
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertClassHasParent('Drupal\somemodule\Plugin\Block\ParentBlock');
+  }
+
+  /**
+   * Tests validation for existing plugin class as parent.
+   */
+  public function testPluginsGenerationBadParentPluginClass() {
+    // Mock the Drupal container and the block plugin manager. Use an anonymous
+    // class for the plugin manager as we don't have an interface for it within
+    // a test environment.
+    $drupal_container = $this->prophesize(ContainerInterface::class);
+    $drupal_container
+      ->get('plugin.manager.block')
+      ->willReturn(new class {
+        public function getDefinition($plugin_id) {
+          // throw new \Exception("$plugin_id not found.");
+          throw new \Drupal\Component\Plugin\Exception\PluginNotFoundException("$plugin_id not found.");
+        }
+      });
+    $this->container->get('environment')->setContainer($drupal_container->reveal());
+
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+          'parent_plugin_id' => 'parent',
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+
+    $this->expectException(\DrupalCodeBuilder\Test\Exception\ValidationException::class);
+    $this->expectExceptionMessage("module:plugins:0:parent_plugin_id: The 'parent' plugin does not exist.");
+    $this->generateModuleFiles($module_data);
+  }
+
+  /**
+   * Tests replacing a plugin.
+   */
+  public function testPluginsGenerationReplacePluginClass() {
+    // Mock the Drupal container and the block plugin manager. Use an anonymous
+    // class for the plugin manager as we don't have an interface for it within
+    // a test environment.
+    $drupal_container = $this->prophesize(ContainerInterface::class);
+    $drupal_container
+      ->get('plugin.manager.element_info')
+      ->willReturn(new class {
+        public function getDefinition($plugin_id) {
+          Assert::assertEquals('parent', $plugin_id);
+
+          return [
+            // The definition doesn't have the initial '\'.
+            'class' => 'Drupal\somemodule\Element\ParentElement',
+          ];
+        }
+      });
+    $this->container->get('environment')->setContainer($drupal_container->reveal());
+
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'element_info',
+          'plugin_name' => 'alpha',
+          'parent_plugin_id' => 'parent',
+          'replace_parent_plugin' => TRUE,
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "test_module.info.yml",
+      "test_module.module",
+      "src/Element/Alpha.php",
+    ], $files);
+
+    $plugin_file = $files["src/Element/Alpha.php"];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+
+    $php_tester->assertHasClass('Drupal\test_module\Element\Alpha');
+    $php_tester->assertClassHasParent('Drupal\somemodule\Element\ParentElement');
+    // There should be no annotation.
+    $php_tester->assertClassDocBlockNotHasLine('@Element(');
+
+    $module_file = $files['test_module.module'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester->assertIsProcedural();
+    $php_tester->assertHasHookImplementation('hook_element_plugin_alter', $module_name);
+
+    $function_tester = $php_tester->getFunctionTester('test_module_element_plugin_alter');
+    $function_tester->assertHasLine("\$info['parent']['class'] = Alpha::class;");
   }
 
   /**
@@ -591,4 +761,12 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $php_tester->assertHasMethod('validate');
   }
 
+}
+
+namespace Drupal\Component\Plugin\Exception;
+if (!class_exists(\Drupal\Component\Plugin\Exception\PluginNotFoundException::class)) {
+  /**
+   * Define the exception for testPluginsGenerationBadParentPluginClass().
+   */
+  class PluginNotFoundException extends \Exception {}
 }

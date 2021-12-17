@@ -123,6 +123,20 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionsProvider($services_data_task),
+      'parent_plugin_id' => PropertyDefinition::create('string')
+        ->setLabel('Parent class plugin ID')
+        ->setDescription("Use another plugin's class as the parent class for this plugin.")
+        ->setValidators('plugin_exists'),
+      'parent_plugin_class' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setCallable([static::class, 'defaultParentPluginClass'])
+            ->setDependencies('..:parent_plugin_id')
+        ),
+      'replace_parent_plugin' => PropertyDefinition::create('boolean')
+        ->setLabel('Replace parent plugin')
+        ->setDescription("Replace the parent plugin's class with the generated class, rather than define a new plugin."),
       'class_docblock_lines' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
         ->setDefault(
@@ -146,6 +160,20 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   public static function defaultRelativeNamespace($data_item) {
     $subdir = $data_item->getParent()->plugin_type_data->value['subdir'];
     return implode('\\', self::pathToNamespacePieces($subdir));
+  }
+
+  /**
+   * Default value callback.
+   */
+  public static function defaultParentPluginClass($data_item) {
+    $plugin_type_manager_service_id = $data_item->getParent()->plugin_type_data->value['service_id'];
+    $plugin_type_manager_service = \DrupalCodeBuilder\Factory::getEnvironment()->getContainer()->get($plugin_type_manager_service_id);
+
+    // Validation should already have checked this, no need to catch an
+    // exception.
+    $plugin_definition = $plugin_type_manager_service->getDefinition($data_item->getParent()->parent_plugin_id->value);
+
+    return $plugin_definition['class'];
   }
 
   /**
@@ -192,48 +220,49 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       ];
     }
 
-    if (!empty($this->plugin_type_data['config_schema_prefix'])) {
-      $schema_id = $this->plugin_type_data['config_schema_prefix']
-        . $this->component_data['prefixed_plugin_name'];
+    if (empty($this->component_data->replace_parent_plugin->value)) {
+      if (!empty($this->plugin_type_data['config_schema_prefix'])) {
+        $schema_id = $this->plugin_type_data['config_schema_prefix']
+          . $this->component_data['prefixed_plugin_name'];
 
-      $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
-      $definition = $class_handler->getStandaloneComponentPropertyDefinition('ConfigSchema');
-      $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-      $data->yaml_data->set([
-        $schema_id => [
-          'type' => 'mapping',
-          'label' => $this->component_data['prefixed_plugin_name'],
-          'mapping' => [],
-        ],
-      ]);
+        $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
+        $definition = $class_handler->getStandaloneComponentPropertyDefinition('ConfigSchema');
+        $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+        $data->yaml_data->set([
+          $schema_id => [
+            'type' => 'mapping',
+            'label' => $this->component_data['prefixed_plugin_name'],
+            'mapping' => [],
+          ],
+        ]);
 
-      $components["config/schema/%module.schema.yml"] = $data;
+        $components["config/schema/%module.schema.yml"] = $data;
 
-      // Old style:
-      // TODO: decide whether to convert to the above syntax.
-      // $components["config/schema/%module.schema.yml"] = [
-      //   'component_type' => 'ConfigSchema',
-      //   'yaml_data' => [
-      //      $schema_id => [
-      //       'type' => 'mapping',
-      //       'label' => $this->component_data['plugin_name'],
-      //       'mapping' => [
+        // Old style:
+        // TODO: decide whether to convert to the above syntax.
+        // $components["config/schema/%module.schema.yml"] = [
+        //   'component_type' => 'ConfigSchema',
+        //   'yaml_data' => [
+        //      $schema_id => [
+        //       'type' => 'mapping',
+        //       'label' => $this->component_data['plugin_name'],
+        //       'mapping' => [
 
-      //       ],
-      //     ],
-      //   ],
-      // ];
+        //       ],
+        //     ],
+        //   ],
+        // ];
+      }
     }
 
-    // WARNING!!! NO TEST COVERAGE OF THIS APPARENTLY??
-    if (!empty($this->component_data['replace_parent_plugin'])) {
+    if (!empty($this->component_data->replace_parent_plugin->value)) {
       if (!empty($this->plugin_type_data['alter_hook_name'])) {
         $alter_hook_name = 'hook_' . $this->plugin_type_data['alter_hook_name'];
 
         $components['hooks'] = [
           'component_type' => 'Hooks',
           'hooks' => [
-            $alter_hook_name => TRUE,
+            $alter_hook_name,
           ],
           'hook_bodies' => [
             $alter_hook_name => [
@@ -338,7 +367,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
    * Produces the class declaration.
    */
   function class_declaration() {
-    if (isset($this->component_data['parent_plugin_class'])) {
+    if ($this->component_data->parent_plugin_class->value) {
       $this->component_data->parent_class_name->value = '\\' . $this->component_data['parent_plugin_class'];
     }
     elseif (isset($this->plugin_type_data['base_class'])) {
@@ -436,7 +465,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   protected function getConstructParentInjectedServices() {
     $parameters = [];
 
-    if (isset($this->component_data['parent_plugin_class'])) {
+    if ($this->component_data->parent_plugin_class->value) {
       $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
     }
     elseif (isset($this->plugin_type_data['construction'])) {
