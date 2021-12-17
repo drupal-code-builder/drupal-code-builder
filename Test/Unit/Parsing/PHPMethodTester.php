@@ -3,17 +3,18 @@
 namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
 use PHPUnit\Framework\Assert;
-use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Expr\Variable;
 
 /**
- * Helper class for testing a PHP method.
+ * Helper class for testing a PHP method or function.
  *
- * Get this from the PHPTester with:
+ * Get this from the PHPTester with one of:
  * @code
  * $method_tester = $php_tester->getMethodTester($method_name);
+ * $function_tester = $php_tester->getFunctionTester($function_name);
  * @endcode
  *
  * TODO: move other method-related assertions from PHPTester to here.
@@ -23,7 +24,7 @@ class PHPMethodTester {
   /**
    * The method node.
    *
-   * @var \PhpParser\Node\Stmt\ClassMethod
+   * @var \PhpParser\Node\FunctionLike
    */
   protected $methodNode;
 
@@ -51,14 +52,14 @@ class PHPMethodTester {
   /**
    * Construct a new PHPMethodTester.
    *
-   * @param \PhpParser\Node\Stmt\ClassMethod $method_node
+   * @param \PhpParser\Node\FunctionLike $method_node
    *   The PhpParser method node.
    * @param \DrupalCodeBuilder\Test\Unit\Parsing\PHPTester file_tester
    *   The PHP tester for the file this method is in.
    * @param string $php_code
    *   The complete PHP code being tested.
    */
-  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $php_code) {
+  public function __construct(FunctionLike $method_node, PHPTester $file_tester, $php_code) {
     $this->methodNode = $method_node;
     $this->methodName = $method_node->name;
     $this->fileTester = $file_tester;
