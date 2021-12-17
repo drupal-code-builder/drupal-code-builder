@@ -80,7 +80,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   /**
    * Test plugin with specified class name.
    */
-  function testBasicPluginsGenerationClassName() {
+  function testPluginsGenerationClassName() {
     // Create a module.
     $module_name = 'test_module';
     $module_data = [
