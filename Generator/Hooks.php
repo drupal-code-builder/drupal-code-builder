@@ -35,10 +35,8 @@ class Hooks extends BaseGenerator {
       // The body code for any hook implementations. An array whose keys are
       // the full hook names, and whose values are the value to pass on to
       // that HookImplementation component.
-      'hook_bodies' => PropertyDefinition::create('string')
-        ->setLabel('Element type')
-        ->setInternal(TRUE)
-        ->setMultiple(TRUE),
+      'hook_bodies' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE),
     ]);
 
     return $definition;
