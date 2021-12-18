@@ -29,8 +29,4 @@ class RootGeneratorBase extends RootComponent {
     // Does nothing.
   }
 
-  public static function addArrayPropertyInfoToDefinition(PropertyDefinition $definition, $array_property_info) {
-    // Shut this shim up because it tries to get the Module generator!!
-  }
-
 }
