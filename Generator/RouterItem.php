@@ -59,6 +59,7 @@ class RouterItem extends BaseGenerator {
           'controller' => VariantDefinition::create()
             ->setLabel('Controller class')
             ->setProperties([
+              // TODO: remove this if possible?
               'controller_relative_class_name' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
                 ->setDefault(DefaultDefinition::create()
@@ -74,16 +75,8 @@ class RouterItem extends BaseGenerator {
                 ->setInternal(TRUE)
                 ->setDefault(DefaultDefinition::create()
                   ->setCallable(function (DataItem $component_data) {
-                    // AARGH HACK! Repeating the work the class component does!
-                    return
-                      '\Drupal\\'
-                      // Quick hack - need to ascend to a component that's
-                      // created from user-given data, as ComponentCollector
-                      // doesn't handle data acquisition properties on
-                      // components from requestedComponents().
-                      // TODO: fix!
-                      . $component_data->getParent()->getParent()->root_component_name->value . '\\'
-                      . $component_data->getParent()->controller_relative_class_name->value . '::content';
+                    $class = static::controllerClassFromRoutePath($component_data);
+                    return $class . '::content';
                   })
                 ),
             ]),
@@ -312,6 +305,17 @@ class RouterItem extends BaseGenerator {
     $module = $component_data['root_component_name'];
     $route_name = $module . '.' . str_replace('/', '.', $path);
     return $route_name;
+  }
+
+  /**
+   * Default callback for the controller class name.
+   */
+  public static function controllerClassFromRoutePath($data_item) {
+    // Create a controller name from the route path.
+    $path  = str_replace(['{', '}'], '', $data_item->getItem('..:..:path')->value);
+    $snake = str_replace(['/', '-'], '_', $path);
+    $controller_class_name = '\Drupal\%module\Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
+    return $controller_class_name;
   }
 
   /**
