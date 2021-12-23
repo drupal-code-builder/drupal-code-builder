@@ -191,6 +191,88 @@ class ComponentRouterItem8Test extends TestBase {
   }
 
   /**
+   * Tests the different access types.
+   *
+   * @dataProvider dataRouteAccessTypes
+   */
+  public function testRouteAccessTypes($access, $yaml_property, $yaml_value) {
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        0 => [
+          'path' => '/my/path/controller',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => $access,
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "test_module.info.yml",
+      "test_module.routing.yml",
+      "src/Controller/MyPathControllerController.php",
+    ], $files);
+
+    $routing_file = $files["test_module.routing.yml"];
+
+    $yaml_tester = new YamlTester($routing_file);
+
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyPathControllerController::content');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'requirements', $yaml_property], $yaml_value);
+  }
+
+  /**
+   * Data provider for testRouteAccessTypes().
+   */
+  public function dataRouteAccessTypes() {
+    return [
+      'none' => [
+        // The value for the 'access' property in the component data.
+        [
+          'access_type' => 'access',
+        ],
+        // The YAML key to test for.
+        '_access',
+        // The expect value for the YAML key.
+        'TRUE',
+      ],
+      'permission' => [
+        [
+          'access_type' => 'permission',
+          'routing_value' => 'my permission'
+        ],
+        '_permission',
+        'my permission',
+      ],
+      'role' => [
+        [
+          'access_type' => 'role',
+          'routing_value' => 'my role'
+        ],
+        '_role',
+        'my role',
+      ],
+      'entity_access' => [
+        [
+          'access_type' => 'entity_access',
+          'entity_type_id' => 'node',
+          'entity_access_operation' => 'view',
+        ],
+        '_entity_access',
+        'node.view',
+      ],
+    ];
+  }
+
+  /**
    * Test generating a route with a menu link.
    */
   public function testRouteGenerationWithMenuLink() {
