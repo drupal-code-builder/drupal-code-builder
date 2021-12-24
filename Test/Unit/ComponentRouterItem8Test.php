@@ -193,9 +193,28 @@ class ComponentRouterItem8Test extends TestBase {
   /**
    * Tests the different access types.
    *
+   * @param array $access
+   *   The array of values for the 'access' property in the module data.
+   * @param string $yaml_property
+   *   The name of the YAML property to expect in the routing file.
+   * @param string $yaml_value
+   *   The expected value of the $yaml_property.
+   * @param array $controller
+   *   (optional) An array of values for the 'controller' property in the
+   *   module data.
+   * @param array $class_names_and_methods
+   *   (optional) An array of data about expected classes and their methods.
+   *   Keys are the relative class names. Values are arrays of method names.
+   *
    * @dataProvider dataRouteAccessTypes
    */
-  public function testRouteAccessTypes($access, $yaml_property, $yaml_value) {
+  public function testRouteAccessTypes(
+    array $access,
+    string $yaml_property,
+    string $yaml_value,
+    array $controller = [],
+    array $class_names_and_methods = []
+  ) {
     $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
@@ -204,8 +223,11 @@ class ComponentRouterItem8Test extends TestBase {
       'router_items' => [
         0 => [
           'path' => '/my/path/controller',
-          'controller' => [
-            'controller_type' => 'controller',
+          // By default, don't request a controller.
+          'controller' => $controller ?: [
+            'controller_type' => 'entity_view',
+            'entity_type_id' => 'node',
+            'entity_view_mode' => 'default',
           ],
           'access' => $access,
         ],
@@ -215,18 +237,33 @@ class ComponentRouterItem8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertFiles([
+    $expected_files = [
       "test_module.info.yml",
       "test_module.routing.yml",
-      "src/Controller/MyPathControllerController.php",
-    ], $files);
+    ];
+    $expected_methods = [];
+
+    foreach ($class_names_and_methods as $relative_class_name => $class_methods) {
+      $filename = 'src/' . str_replace('\\', '/', $relative_class_name) . '.php';
+
+      $expected_files[] = $filename;
+      $expected_methods[$filename] = $class_methods;
+    }
+
+    $this->assertFiles($expected_files, $files);
 
     $routing_file = $files["test_module.routing.yml"];
 
     $yaml_tester = new YamlTester($routing_file);
 
-    $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'defaults', '_controller'], '\Drupal\test_module\Controller\MyPathControllerController::content');
     $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'requirements', $yaml_property], $yaml_value);
+
+    foreach ($expected_methods as $filename => $class_methods) {
+      $php_tester = new PHPTester($this->drupalMajorVersion, $files[$filename]);
+      foreach ($class_methods as $method_name) {
+        $php_tester->assertHasMethod($method_name);
+      }
+    }
   }
 
   /**
@@ -268,6 +305,72 @@ class ComponentRouterItem8Test extends TestBase {
         ],
         '_entity_access',
         'node.view',
+      ],
+      // Access in the controller, but without requesting a controller class.
+      // Weird case but can happen.
+      'custom_access-controller-without-content' => [
+        [
+          'access_type' => 'custom_access',
+          'custom_access_callback' => [
+            'callback_location' => 'controller',
+          ],
+        ],
+        '_custom_access',
+        '\Drupal\test_module\Controller\MyPathControllerController::access',
+        [
+          'controller_type' => 'controller',
+        ],
+        [
+          'Controller\MyPathControllerController' => [
+            'content',
+            'access',
+          ],
+        ],
+      ],
+      // Access in the controller, and also requesting a controller class.
+      'custom_access-controller-with-content' => [
+        [
+          'access_type' => 'custom_access',
+          'custom_access_callback' => [
+            'callback_location' => 'controller',
+          ],
+        ],
+        '_custom_access',
+        '\Drupal\test_module\Controller\MyPathControllerController::access',
+        [],
+        [
+          'Controller\MyPathControllerController' => [
+            'access',
+          ],
+        ],
+      ],
+      'custom_access-custom' => [
+        [
+          'access_type' => 'custom_access',
+          'custom_access_callback' => [
+            'callback_location' => 'custom',
+            'routing_value' => 'Access\RouteCustomAccess'
+          ],
+        ],
+        '_custom_access',
+        '\Drupal\test_module\Access\RouteCustomAccess::access',
+        [],
+        [
+          'Access\RouteCustomAccess' => [
+            'access',
+          ],
+        ],
+      ],
+      'custom_access-existing' => [
+        [
+          'access_type' => 'custom_access',
+          'custom_access_callback' => [
+            'callback_location' => 'existing',
+            'routing_value' => '\Drupal\other_module\Access\ExistingCustomAccess::access'
+          ],
+        ],
+        '_custom_access',
+        '\Drupal\other_module\Access\ExistingCustomAccess::access',
       ],
     ];
   }

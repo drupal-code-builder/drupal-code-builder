@@ -48,6 +48,19 @@ class RouterItem extends BaseGenerator {
             ->setLabel('The title for the menu link')
             ->setLiteralDefault('My Page')
         ]),
+      // TODO: remove this if possible? Probably need to allow PHPClassFile
+      // to take a full classname.
+      'controller_relative_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable(function (DataItem $component_data) {
+            // Create a controller name from the route path.
+            $path  = str_replace(['{', '}'], '', $component_data->getItem('..:path')->value);
+            $snake = str_replace(['/', '-'], '_', $path);
+            $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
+            return $controller_class_name;
+          })
+        ),
       'controller' => PropertyDefinition::create('mutable')
         ->setLabel('Controller type')
         ->setRequired(TRUE)
@@ -59,23 +72,12 @@ class RouterItem extends BaseGenerator {
           'controller' => VariantDefinition::create()
             ->setLabel('Controller class')
             ->setProperties([
-              // TODO: remove this if possible?
-              'controller_relative_class_name' => PropertyDefinition::create('string')
-                ->setInternal(TRUE)
-                ->setDefault(DefaultDefinition::create()
-                  ->setCallable(function (DataItem $component_data) {
-                    // Create a controller name from the route path.
-                    $path  = str_replace(['{', '}'], '', $component_data->getItem('..:..:path')->value);
-                    $snake = str_replace(['/', '-'], '_', $path);
-                    $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
-                    return $controller_class_name;
-                  })
-                ),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
                 ->setDefault(DefaultDefinition::create()
                   ->setCallable(function (DataItem $component_data) {
-                    $class = static::controllerClassFromRoutePath($component_data);
+                    $path = $component_data->getItem('..:..:path')->value;
+                    $class = static::controllerClassFromRoutePath($path);
                     return $class . '::content';
                   })
                 ),
@@ -159,6 +161,49 @@ class RouterItem extends BaseGenerator {
               'routing_value' => PropertyDefinition::create('string')
                 ->setLabel("User role machine name")
                 ->setLiteralDefault('authenticated')
+            ]),
+          'custom_access' => VariantDefinition::create()
+            ->setLabel('Custom access')
+            ->setProperties([
+              // Ugly hack: need to fetch the routing_value from the mutable
+              // data for custom_access_callback.
+              'routing_value' => PropertyDefinition::create('string')
+                ->setInternal(TRUE)
+                ->setExpressionDefault("get('..:custom_access_callback:routing_value')"),
+              'custom_access_callback' => PropertyDefinition::create('mutable')
+                ->setLabel('Custom access')
+                ->setRequired(TRUE)
+                ->setProperties([
+                  'callback_location' => PropertyDefinition::create('string')
+                    ->setLabel("Access callback")
+                ])
+                ->setVariants([
+                  'controller' => VariantDefinition::create()
+                    ->setLabel('Method in the route controller')
+                    ->setProperties([
+                      'routing_value' => PropertyDefinition::create('string')
+                        ->setInternal(TRUE)
+                        ->setDefault(DefaultDefinition::create()
+                          ->setCallable(function (DataItem $component_data) {
+                            $path = $component_data->getItem('..:..:..:path')->value;
+                            $class = static::controllerClassFromRoutePath($path);
+                            return $class . '::access';
+                          })
+                        )
+                    ]),
+                  'custom' => VariantDefinition::create()
+                    ->setLabel('Custom class')
+                    ->setProperties([
+                      'routing_value' => PropertyDefinition::create('string')
+                        ->setLabel("Class name, relative to this module's namespace"),
+                    ]),
+                  'existing' => VariantDefinition::create()
+                    ->setLabel('Existing class')
+                    ->setProperties([
+                      'routing_value' => PropertyDefinition::create('string')
+                        ->setLabel('Static method name, with fully-qualified class'),
+                    ]),
+                ]),
             ]),
           'entity_access' => VariantDefinition::create()
             ->setLabel('Entity access')
@@ -308,11 +353,11 @@ class RouterItem extends BaseGenerator {
   }
 
   /**
-   * Default callback for the controller class name.
+   * Helper for default callbacks for the controller class name.
    */
-  public static function controllerClassFromRoutePath($data_item) {
+  public static function controllerClassFromRoutePath(string $path) {
     // Create a controller name from the route path.
-    $path  = str_replace(['{', '}'], '', $data_item->getItem('..:..:path')->value);
+    $path  = str_replace(['{', '}'], '', $path);
     $snake = str_replace(['/', '-'], '_', $path);
     $controller_class_name = '\Drupal\%module\Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
     return $controller_class_name;
@@ -333,20 +378,58 @@ class RouterItem extends BaseGenerator {
       'component_type' => 'Routing',
     ];
 
-
-    // Add a controller class if needed.
+    // Controller class content callback.
     if ($this->component_data->controller->controller_type->value == 'controller') {
-      $controller_relative_class = $this->component_data->controller->controller_relative_class_name->value;
+      $controller_class_required = TRUE;
 
-      $components['controller'] = [
-        'component_type' => 'PHPClassFile',
-        'relative_class_name' => $controller_relative_class,
-      ];
       $components["controller-content"] = [
         'component_type' => 'PHPFunction',
         'containing_component' => "%requester:controller",
         'declaration' => 'public function content()',
         'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
+      ];
+    }
+
+    // Controller class access callback.
+    // Technically we allow this without a content callback, because validating
+    // that both are in sync would be very fiddly.
+    if ($this->component_data->access->access_type->value == 'custom_access') {
+      if ($this->component_data->access->custom_access_callback->callback_location->value == 'controller') {
+        $controller_class_required = TRUE;
+        $containing_component = '%requester:controller';
+      }
+
+      if ($this->component_data->access->custom_access_callback->callback_location->value == 'custom') {
+        $components['access'] = [
+          'component_type' => 'PHPClassFile',
+          'relative_class_name' => $this->component_data->access->custom_access_callback->routing_value->value,
+        ];
+
+        $containing_component = '%requester:access';
+
+        // Hack the routing value to be a complete class name and method name.
+        $this->component_data->access->custom_access_callback->routing_value->value =
+          '\Drupal\%module\\' .
+          $this->component_data->access->custom_access_callback->routing_value->value .
+          '::access';
+      }
+
+      if (in_array($this->component_data->access->custom_access_callback->callback_location->value, ['controller', 'custom'])) {
+        $components["access-method"] = [
+          'component_type' => 'PHPFunction',
+          'containing_component' => $containing_component,
+          'declaration' => 'public function access(\Drupal\Core\Session\AccountInterface $account)',
+          'doxygen_first' => "Checks access for the {$this->component_data->route_name->value} route.",
+        ];
+      }
+    }
+
+    if (!empty($controller_class_required)) {
+      $controller_relative_class = $this->component_data->controller_relative_class_name->value;
+
+      $components['controller'] = [
+        'component_type' => 'PHPClassFile',
+        'relative_class_name' => $controller_relative_class,
       ];
     }
 
