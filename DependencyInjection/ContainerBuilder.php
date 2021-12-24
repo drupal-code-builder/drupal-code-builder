@@ -56,6 +56,7 @@ class ContainerBuilder {
    */
   public static function buildContainer() {
     $builder = new \DI\ContainerBuilder();
+    $class_loader = require('vendor/autoload.php');
 
     $builder->addDefinitions([
       'environment' => \DI\create(\DrupalCodeBuilder\Environment\DefaultEnvironment::class),
@@ -66,8 +67,17 @@ class ContainerBuilder {
 
     $services = [];
     $versioned_services = [];
-    // Get files in the Task folder and its immediate subfolders.
+
+    // Change directory to DCB's root directory. In an environment where DCB is
+    // being developed with other packages (e.g. UIs that make use of it), it
+    // will not be at the root, but in Composer's vendor folder.
+    $previous_dir = getcwd();
+    $base_task_path = $class_loader->findFile(\DrupalCodeBuilder\Factory::class);
+    chdir(dirname($base_task_path));
     $task_files = glob('{Task,Task/*}/*.php', GLOB_BRACE);
+    chdir($previous_dir);
+
+    // Get files in the Task folder and its immediate subfolders.
     foreach ($task_files as $task_file) {
       $matches = [];
       preg_match('@Task/((?:\w+/)?\w+).php@', $task_file, $matches);
@@ -121,7 +131,6 @@ class ContainerBuilder {
     // Each of these needs to be its own service, as the Generate task gets
     // the root component as a construction parameter so different root
     // components need a different instance of the task.
-    $class_loader = require('vendor/autoload.php');
     // WARNING! This requires the Composer class loader to be up to date and
     // generated with `composer dump --optimise`.
     foreach ($class_loader->getClassMap() as $class_name => $class_filename) {
