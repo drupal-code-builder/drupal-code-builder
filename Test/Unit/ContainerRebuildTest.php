@@ -11,10 +11,21 @@ use PHPUnit\Framework\TestCase;
 class ContainerRebuildTest extends TestCase {
 
   /**
+   * The original location of the cached compiled container file.
+   *
+   * This is renamed by the test, and restored in tearDown().
+   *
+   * @var string
+   */
+  protected $cachedContainerFilename;
+
+  /**
    * Test rebuilding the cached container.
    */
   public function testRebuildContainer() {
     $cached_file = realpath(__DIR__ . '/../../DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
+    $this->cachedContainerFilename = $cached_file;
+
     $this->assertTrue(file_exists($cached_file));
 
     $original_cached_container_timestamp = filemtime($cached_file);
@@ -34,10 +45,15 @@ class ContainerRebuildTest extends TestCase {
     $new_cached_container_timestamp = filemtime($cached_file);
 
     $this->assertNotEquals($original_cached_container_timestamp, $new_cached_container_timestamp);
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown(): void {
     // Restore the cached container so the codebase is left in its original
     // state.
-    rename($cached_file . '-temp', $cached_file);
+    rename($this->cachedContainerFilename . '-temp', $this->cachedContainerFilename);
   }
 
 }
