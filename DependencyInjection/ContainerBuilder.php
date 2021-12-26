@@ -232,6 +232,10 @@ class ContainerBuilder {
     else {
       // Get the plain version of the requested service, as otherwise we'd just
       // be requesting the service that brought us here.
+      if (!$container->has($requested_name . '.unversioned')) {
+        throw new \LogicException("There is no service '$versioned_name' or its unversioned fallback '$requested_name'.");
+      }
+
       return $container->get($requested_name . '.unversioned');
     }
   }
