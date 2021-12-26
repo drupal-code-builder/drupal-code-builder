@@ -39,7 +39,7 @@ class CollectionTestBase extends KernelTestBase {
     // Create a module list service, using our subclass that lets us hack in
     // the discovery.
     $module_list = new TestModuleExtensionList(
-      $this->container->get('app.root'),
+      $this->container->getParameter('app.root'),
       'module',
       $this->container->get('cache.default'),
       $this->container->get('info_parser'),
