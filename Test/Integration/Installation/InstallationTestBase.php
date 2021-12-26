@@ -15,7 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class InstallationTestBase extends KernelTestBase {
 
-  public static $modules = [
+  protected static $modules = [
     'system',
   ];
 

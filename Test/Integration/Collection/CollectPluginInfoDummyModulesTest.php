@@ -14,7 +14,7 @@ class CollectPluginInfoDummyModulesTest extends CollectionTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     // Don't enable any modules, as we replace the module extension list during
     // the test and remove all modules except for our fixture module.
   ];

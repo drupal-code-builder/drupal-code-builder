@@ -32,7 +32,7 @@ class CollectPluginInfoTest extends CollectionTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     // Modules for the help section service.
     'help',
     'tour',
