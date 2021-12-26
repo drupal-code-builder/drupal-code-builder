@@ -132,7 +132,13 @@ class ContainerBuilder {
     // the root component as a construction parameter so different root
     // components need a different instance of the task.
     // WARNING! This requires the Composer class loader to be up to date and
-    // generated with `composer dump --optimise`.
+    // generated with `composer dump --optimise`. Complain if this seems to be
+    // the case.
+    $class_map = $class_loader->getClassMap();
+    if (!isset($class_map['DrupalCodeBuilder\Factory'])) {
+      throw new \LogicException("Composer class map does not contain \DrupalCodeBuilder\Factory class; it likely needs to be rebuild with 'composer dump -o'.");
+    }
+
     foreach ($class_loader->getClassMap() as $class_name => $class_filename) {
       if (strpos($class_name, 'DrupalCodeBuilder\Generator') !== 0) {
         continue;
