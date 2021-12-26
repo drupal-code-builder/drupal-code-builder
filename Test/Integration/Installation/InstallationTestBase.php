@@ -109,7 +109,7 @@ class InstallationTestBase extends KernelTestBase {
     // Write to the virtual file system that exists for the test site.
     // This also means we don't have to delete the code files in test tear-down
     // as this filesystem simply ceases to exist.
-    $test_site_path = \Drupal::service('site.path');
+    $test_site_path = $this->container->getParameter('site.path');
 
     // Uncomment when developing to see the written code.
     //$test_site_path = \Drupal::root();
@@ -137,7 +137,7 @@ class InstallationTestBase extends KernelTestBase {
    */
   protected function installModule($module_name) {
     // Force the extension system to re-scan for modules.
-    drupal_static_reset('system_rebuild_module_data');
+    \Drupal::service('extension.list.module')->reset();
     // ExtensionDiscovery keeps a cache of found files in a static property that
     // can only be cleared by hacking it with reflection.
     $reflection_property = new \ReflectionProperty(\Drupal\Core\Extension\ExtensionDiscovery::class, 'files');
