@@ -154,7 +154,8 @@ class InstallationTestBase extends KernelTestBase {
     $reflection_property->setAccessible(TRUE);
     $reflection_property->setValue(NULL, []);
 
-    $this->container->get('module_installer')->install([$module_name]);
+    $result = $this->container->get('module_installer')->install([$module_name]);
+    $this->assertTrue($result);
   }
 
   /**
