@@ -16,6 +16,9 @@ use MutableTypedData\Data\DataItem;
  */
 class InstallationTestBase extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
   ];
@@ -96,6 +99,20 @@ class InstallationTestBase extends KernelTestBase {
   }
 
   /**
+   * Gets the path of the folder to write modules to.
+   *
+   * This is a temporary folder which is deleted on teardown.
+   *
+   * @return string
+   *   The path to the folder, without a trailing slash.
+   */
+  protected function getModuleParentFolderPath(): string {
+    $app_root = $this->container->getParameter('app.root');
+    $modules_folder = $app_root . '/modules/tmp';
+    return $modules_folder;
+  }
+
+  /**
    * Write the module files to the site path.
    *
    * This uses the site path, which during tests is in a VFS.
@@ -106,15 +123,7 @@ class InstallationTestBase extends KernelTestBase {
    *   An array of code files, keyed by relative filepath.
    */
   protected function writeModuleFiles($module_name, $files) {
-    // Write to the virtual file system that exists for the test site.
-    // This also means we don't have to delete the code files in test tear-down
-    // as this filesystem simply ceases to exist.
-    $test_site_path = $this->container->getParameter('site.path');
-
-    // Uncomment when developing to see the written code.
-    //$test_site_path = \Drupal::root();
-
-    $module_folder = $test_site_path . '/modules/tmp/' . $module_name;
+    $module_folder = $this->getModuleParentFolderPath() . '/' . $module_name;
 
     mkdir($module_folder, 0777, TRUE);
 
@@ -125,7 +134,8 @@ class InstallationTestBase extends KernelTestBase {
         mkdir($absolute_file_dir, 0777, TRUE);
       }
 
-      file_put_contents($module_folder . '/' . $filepath, $code);
+      $result = file_put_contents($module_folder . '/' . $filepath, $code);
+      $this->assertNotEmpty($result);
     }
   }
 
@@ -135,7 +145,7 @@ class InstallationTestBase extends KernelTestBase {
    * @param string $module_name
    *   The module name.
    */
-  protected function installModule($module_name) {
+  protected function installModule(string $module_name) {
     // Force the extension system to re-scan for modules.
     \Drupal::service('extension.list.module')->reset();
     // ExtensionDiscovery keeps a cache of found files in a static property that
@@ -144,10 +154,14 @@ class InstallationTestBase extends KernelTestBase {
     $reflection_property->setAccessible(TRUE);
     $reflection_property->setValue(NULL, []);
 
-    $listing = new \Drupal\Core\Extension\ExtensionDiscovery(\Drupal::root());
-    $modules = $listing->scan('module');
-
     $this->container->get('module_installer')->install([$module_name]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    $this->container->get('file_system')->deleteRecursive($this->getModuleParentFolderPath());
   }
 
 }
