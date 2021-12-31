@@ -40,8 +40,8 @@ class ContentEntityTypeTest extends InstallationTestBase {
           // Use an ID string with an underscore to test class names and labels
           // correctly have it removed.
           'entity_type_id' => 'kitty_cat',
-          'interface_parents' => [
-            'EntityOwnerInterface',
+          'functionality' => [
+            'owner',
           ],
           'base_fields' => [
             0 => [
