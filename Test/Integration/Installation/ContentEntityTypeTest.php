@@ -15,6 +15,13 @@ use Drupal\KernelTests\KernelTestBase;
 class ContentEntityTypeTest extends InstallationTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'user',
+  ];
+
+  /**
    * Tests a content entity type without bundles.
    */
   public function testSimpleContentEntityType() {
