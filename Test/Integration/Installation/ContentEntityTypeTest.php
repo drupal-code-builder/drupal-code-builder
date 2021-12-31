@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Integration\Installation;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Tests a module that has a content entity type.
@@ -65,7 +66,12 @@ class ContentEntityTypeTest extends InstallationTestBase {
     // Get the entity type definition to check the entity class properly defines
     // it.
     \Drupal::service('entity_type.manager')->clearCachedDefinitions();
+
+    /** @var \Drupal\Core\Entity\EntityTypeInterface $definition */
     $definition = \Drupal::service('entity_type.manager')->getDefinition('kitty_cat');
+    $this->assertIsObject($definition);
+    $this->assertEquals('kitty_cat', $definition->id());
+    $this->assertEquals('Kitty Cat', $definition->getLabel());
   }
 
 }
