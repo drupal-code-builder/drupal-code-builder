@@ -50,6 +50,9 @@ class ComponentCssLibrary8Test extends TestBase {
             1 => [
               'filename' => 'js_two',
             ],
+            2 => [
+              'filename' => 'https://example.com/external.min.js',
+            ],
           ],
           'dependencies' => [
             'core/jquery',
@@ -85,6 +88,9 @@ class ComponentCssLibrary8Test extends TestBase {
     $yaml_tester->assertHasProperty(['test_module_library', 'css', 'theme', 'css/css_two.css'], "The libraries file declares the CSS file.");
     $yaml_tester->assertHasProperty(['test_module_library', 'js', 'js/js_one.js'], "The libraries file declares the JS file.");
     $yaml_tester->assertHasProperty(['test_module_library', 'js', 'js/js_two.js'], "The libraries file declares the JS file.");
+    $yaml_tester->assertHasProperty(['test_module_library', 'js', 'https://example.com/external.min.js'], "The libraries file declares the external JS URL.");
+    $yaml_tester->assertPropertyHasValue(['test_module_library', 'js', 'https://example.com/external.min.js', 'type'], 'external');
+    $yaml_tester->assertPropertyHasValue(['test_module_library', 'js', 'https://example.com/external.min.js', 'minified'], TRUE);
     $yaml_tester->assertPropertyHasValue(['test_module_library', 'dependencies', 0], 'core/jquery', "The libraries file declares the dependencies.");
     $yaml_tester->assertPropertyHasValue(['test_module_library', 'dependencies', 1], 'foo/bar', "The libraries file declares the dependencies.");
     $yaml_tester->assertHasNotProperty(['test_module_library', 'header'], 'The library does not specify the header property.');
