@@ -120,9 +120,13 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   }
 
   /**
-   * Tests special handling for a derivative plugin ID.
+   * Tests special cases where prefixing of the plugin name should be skipped.
+   *
+   * This also tests that derivative plugin IDs are handled correctly.
+   *
+   * @dataProvider providerPluginsGenerationNamePrefixing
    */
-  public function testPluginsGenerationDerivativeID() {
+  public function testPluginsGenerationNamePrefixing(string $plugin_id, string $filename) {
     // Create a module.
     $module_name = 'test_module';
     $module_data = [
@@ -135,8 +139,8 @@ class ComponentPluginsAnnotated8Test extends TestBase {
       'plugins' => [
         0 => [
           'plugin_type' => 'block',
-          'plugin_name' => 'system_menu_block:alpha',
-        ]
+          'plugin_name' => $plugin_id,
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -145,15 +149,34 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $this->assertFiles([
       "$module_name.info.yml",
       "config/schema/test_module.schema.yml",
-      "src/Plugin/Block/Alpha.php",
+      "src/Plugin/Block/$filename",
     ], $files);
 
-    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $plugin_file = $files["src/Plugin/Block/$filename"];
     $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Block');
-    $annotation_tester->assertPropertyHasValue('id', 'system_menu_block:alpha', "The plugin ID has the derivative prefix but no module prefix.");
-    $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
+    $annotation_tester->assertPropertyHasValue('id', $plugin_id, "The plugin ID has no module prefix.");
+  }
+
+  /**
+   * Data provder for testPluginsGenerationNamePrefixing().
+   */
+  public function providerPluginsGenerationNamePrefixing() {
+    return [
+      'derivative-plugin' => [
+        'system_menu_block:alpha',
+        'Alpha.php'
+      ],
+      'module-name-prefix' => [
+        'test_module_cake',
+        'TestModuleCake.php',
+      ],
+      'whole-module-name' => [
+        'test_module',
+        'TestModule.php',
+      ],
+    ];
   }
 
   /**
