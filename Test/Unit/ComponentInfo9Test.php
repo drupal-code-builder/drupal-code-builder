@@ -1,0 +1,92 @@
+<?php
+
+namespace DrupalCodeBuilder\Test\Unit;
+
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+
+/**
+ * Tests for Info component.
+ *
+ * @group yaml
+ */
+class ComponentInfo9Test extends TestBase {
+
+  /**
+   * The Drupal core major version to set up for this test.
+   *
+   * @var int
+   */
+  protected $drupalMajorVersion = 9;
+
+  /**
+   * Test generating a module info file.
+   */
+  public function testBasicInfoFile() {
+    $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
+    $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
+
+    // Test basic module info properties.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(1, $files, "One file is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .module file.");
+
+    $info_file = $files["$module_name.info.yml"];
+
+    $yaml_tester = new YamlTester($info_file);
+    $yaml_tester->assertPropertyHasValue('name', 'Test Module');
+    $yaml_tester->assertPropertyHasValue('type', 'module');
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9');
+    $yaml_tester->assertHasNotProperty('core');
+  }
+
+  /**
+   * Test optional info properties.
+   */
+  public function testInfoFileOptionalProperties() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'module_dependencies' => ['node', 'block'],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertCount(1, $files, "One file is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .module file.");
+
+    $info_file = $files["$module_name.info.yml"];
+
+    $yaml_tester = new YamlTester($info_file);
+    $yaml_tester->assertPropertyHasValue('name', 'Test Module');
+    $yaml_tester->assertPropertyHasValue('type', 'module');
+    $yaml_tester->assertPropertyHasValue('description', 'Test Module description');
+    $yaml_tester->assertPropertyHasValue('package', 'Test Package');
+    $yaml_tester->assertPropertyHasValue('dependencies', ['node', 'block']);
+
+    $yaml_tester->assertKeyOrder([], [
+      'name',
+      'type',
+      'description',
+      'package',
+      // We don't create the 'version' key.
+      // 'version',
+      'dependencies',
+      'core_version_requirement',
+    ]);
+  }
+
+}
