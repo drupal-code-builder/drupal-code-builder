@@ -26,5 +26,10 @@
   },
   "scripts": {
     "cr": "DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder::rebuildCachedContainer"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
