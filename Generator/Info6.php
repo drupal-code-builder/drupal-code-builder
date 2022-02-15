@@ -10,7 +10,7 @@ class Info6 extends InfoIni {
   /**
    * Create lines of file body for Drupal 6.
    */
-  function file_body() {
+  function infoData(): array {
     $lines = [];
     $lines['name'] =  $this->component_data['readable_name'];
     $lines['description'] =  $this->component_data['short_description'];
@@ -27,8 +27,7 @@ class Info6 extends InfoIni {
     }
     $lines['core'] = "6.x";
 
-    $info = $this->process_info_lines($lines);
-    return $info;
+    return $lines;
   }
 
 }

@@ -51,7 +51,7 @@ class Info9 extends Info {
   /**
    * Create lines of file body for Drupal 8.
    */
-  function file_body() {
+  function infoData(): array {
     $args = func_get_args();
     $files = array_shift($args);
 
@@ -82,10 +82,7 @@ class Info9 extends Info {
     }
     // dump($lines);
 
-    $lines = array_filter($lines);
-
-    $info = $this->process_info_lines($lines);
-    return $info;
+    return $lines;
   }
 
   /**

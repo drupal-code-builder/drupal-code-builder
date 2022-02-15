@@ -10,7 +10,7 @@ class Info7 extends InfoIni {
   /**
    * Create lines of file body for Drupal 7.
    */
-  function file_body() {
+  function infoData(): array {
     $lines = $this->getInfoFileEmptyLines();
     $lines['name'] =  $this->component_data['readable_name'];
     $lines['description'] =  $this->component_data['short_description'];
@@ -34,10 +34,7 @@ class Info7 extends InfoIni {
       $lines = array_merge($lines, $this->extraLines);
     }
 
-    $lines = array_filter($lines);
-
-    $info = $this->process_info_lines($lines);
-    return $info;
+    return $lines;
   }
 
 }

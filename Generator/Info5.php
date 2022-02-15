@@ -10,7 +10,7 @@ class Info5 extends InfoIni {
   /**
    * Create lines of file body for Drupal 5.
    */
-  function file_body() {
+  function infoData(): array {
     $lines = [];
     $lines['name'] =  $this->component_data['readable_name'];
     $lines['description'] =  $this->component_data['short_description'];
@@ -23,8 +23,7 @@ class Info5 extends InfoIni {
       $lines['package'] =  $this->component_data['module_package'];
     }
 
-    $info = $this->process_info_lines($lines);
-    return $info;
+    return $lines;
   }
 
 }

@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Generator base class for module info file.
  */
-class Info extends File {
+abstract class Info extends File {
 
   /**
    * The order of keys in the info file.
@@ -72,13 +72,29 @@ class Info extends File {
    * Build the code files.
    */
   public function getFileInfo() {
+    $data = $this->infoData();
+    $data = array_filter($data);
+    $body = $this->process_info_lines($data);
+
     return [
       'path' => '',
       'filename' => '%module.info',
-      'body' => $this->file_body(),
+      'body' => $body,
       'build_list_tags' => ['info'],
     ];
   }
+
+  /**
+   * Builds the array of data for the info file.
+   *
+   * @return array
+   *   An array of data whose keys and values correspond to info file
+   *   properties. This array may have empty lines, which are preserved in the
+   *   return value to allow subclasses to still have the order from
+   *   static::INFO_LINE_ORDER. Callers should run the return through
+   *   array_filter() to remove these.
+   */
+  abstract protected function infoData(): array;
 
   /**
    * Gets an array of info file lines in the correct order to be populated.

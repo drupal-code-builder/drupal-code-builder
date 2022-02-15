@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 /**
  * Abstract parent class for .ini syntax info files.
  */
-class InfoIni extends Info {
+abstract class InfoIni extends Info {
 
   /**
    * Process a structured array of info files lines to a flat array for merging.
