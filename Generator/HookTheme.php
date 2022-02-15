@@ -11,7 +11,7 @@ class HookTheme extends HookImplementation {
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
-    // If we have no children, i.e. no theme hook components, then hand over to
+    // If we have no children, i.e. no ThemeHook components, then hand over to
     // the parent, which will output the default hook code.
     if (empty($children_contents)) {
       return parent::buildComponentContents($children_contents);
