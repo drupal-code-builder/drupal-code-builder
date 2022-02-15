@@ -84,8 +84,8 @@ class ComponentInfo8Test extends TestBase {
       // We don't create the 'version' key.
       // 'version',
       'core',
-      'dependencies',
       'core_version_requirement',
+      'dependencies',
     ]);
   }
 

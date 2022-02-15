@@ -21,6 +21,7 @@ abstract class Info extends File {
     'package',
     'version',
     'core',
+    'core_version_requirement',
     'dependencies',
   ];
 
