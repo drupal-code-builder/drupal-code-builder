@@ -370,7 +370,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
-    $this->assertCount(2, $files, "Expected number of files is returned.");
+    $this->assertCount(4, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
     $this->assertArrayHasKey("src/Element/Alpha.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
 
@@ -782,6 +782,56 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\AlphaValidator');
     $php_tester->assertClassHasParent('Symfony\Component\Validator\ConstraintValidator');
     $php_tester->assertHasMethod('validate');
+  }
+
+  /**
+   * Test render element plugin generation.
+   */
+  function testRenderElement() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'element_info',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Element/Alpha.php",
+      "templates/alpha.html.twig",
+      "test_module.module",
+    ], $files);
+
+    $plugin = $files['src/Element/Alpha.php'];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Element\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Render\Element\RenderElement');
+    $php_tester->assertHasMethod('getInfo');
+
+    // Check the .module file.
+    $module_file = $files["$module_name.module"];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester->assertDrupalCodingStandards();
+
+    $php_tester->assertHasHookImplementation('hook_theme', $module_name);
+
+    // Check that the hook_theme() implementation has the generated code.
+    // This covers the specialized HookTheme hook generator class getting used.
+    $this->assertFunctionCode($module_file, "{$module_name}_theme", "'alpha' =>");
+    $this->assertFunctionCode($module_file, "{$module_name}_theme", "'render element' => 'elements',");
+
+    $template_file = $files['templates/alpha.html.twig'];
+    $this->assertStringContainsString("Default theme implementation to display a alpha.", $template_file);
   }
 
 }

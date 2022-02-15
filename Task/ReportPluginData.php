@@ -157,8 +157,9 @@ class ReportPluginData extends ReportHookDataFolder
       $mapping[$plugin_type_name] = $types[$plugin_type_info['discovery']] ?? 'yaml';
     }
 
-    // Special case for validation constraint plugins.
+    // Special cases for plugins which have their own generator.
     $mapping['validation.constraint'] = 'validation.constraint';
+    $mapping['element_info'] = 'element_info';
 
     return $mapping;
   }
