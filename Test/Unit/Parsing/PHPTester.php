@@ -209,7 +209,10 @@ class PHPTester {
     // finds PHPUnit's '--group' options, as it doesn't recognize it. The '--'
     // is treated as a null argument.
     $runner->config = new Config(['--']);
-    $runner->config->setConfigData('installed_paths', static::$composerVendorDir . '/drupal/coder/coder_sniffer');
+    $runner->config->setConfigData('installed_paths', implode(',', [
+      static::$composerVendorDir . '/drupal/coder/coder_sniffer',
+      static::$composerVendorDir . '/slevomat/coding-standard',
+    ]));
     $runner->config->setConfigData('drupal_core_version', $this->drupalMajorVersion);
     $runner->config->standards = ['Drupal'];
     $runner->config->exclude = $excluded_sniffs;
