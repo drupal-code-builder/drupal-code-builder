@@ -282,6 +282,8 @@ abstract class EntityTypeBase extends PHPClassFile {
    *      - 'custom_default': No handler is provided, but handler for another
    *        type can be used. The option is whether to use that, or create a
    *        custom handler. The 'default_type' property must also be given.
+   *   - 'options': An array of additional options for the handler property.
+   *     These are added to the options provided by the mode.
    *   - 'property_path': (optional) The path to set this into the annotation
    *      beneath the 'handlers' key. Only required if this is not simply the
    *      handler type key.
