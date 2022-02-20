@@ -308,7 +308,9 @@ abstract class EntityTypeBase extends PHPClassFile {
         'mode' => 'core_none',
         'base_class' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
         'options' => [
-          'default' => 'Default core route provider',
+          // Overwrite the label for the 'core' option which the mode provides.
+          // This is OK because addOption() replaces an existing option.
+          'core' => 'Default core route provider',
           'admin' => 'Admin route provider',
         ],
         'options_classes' => [

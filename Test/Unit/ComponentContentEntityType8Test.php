@@ -914,7 +914,7 @@ class ComponentContentEntityType8Test extends TestBase {
       ],
       'default core route provider' => [
         [
-          'handler_route_provider' => 'default',
+          'handler_route_provider' => 'core',
         ],
         [
           'route_provider' => [
@@ -966,7 +966,7 @@ class ComponentContentEntityType8Test extends TestBase {
         // Tests the the route handler forcing the form doesn't kick in when
         // the form is specified.
         [
-          'handler_route_provider' => 'default',
+          'handler_route_provider' => 'core',
           'handler_form_default' => 'custom',
         ],
         [
@@ -986,7 +986,7 @@ class ComponentContentEntityType8Test extends TestBase {
         // Tests the the route handler forcing the form doesn't kick in when
         // the list builder is specified.
         [
-          'handler_route_provider' => 'default',
+          'handler_route_provider' => 'core',
           'handler_list_builder' => 'custom',
         ],
         [
