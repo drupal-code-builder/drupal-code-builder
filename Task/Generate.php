@@ -39,13 +39,6 @@ class Generate extends Base {
   protected $component_list;
 
   /**
-   *  Helper objects.
-   *
-   * @var array
-   */
-  private $helpers = [];
-
-  /**
    * Override the base constructor.
    *
    * @param $environment
