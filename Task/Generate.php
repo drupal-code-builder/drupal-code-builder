@@ -26,7 +26,7 @@ class Generate extends Base {
   protected $sanity_level = NULL;
 
   /**
-   * Our base component type, i.e. either 'module' or 'theme'.
+   * The base component type being generated, i.e. either 'module' or 'theme'.
    */
   private $base;
 
