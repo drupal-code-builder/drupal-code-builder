@@ -51,7 +51,9 @@ class EntityForm extends EntityHandler {
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
-        'body' => '',
+        'body' => [
+          'parent::validateForm($form, $form_state);'
+        ],
       ],
       'submitForm' => [
         'component_type' => 'PHPFunction',
