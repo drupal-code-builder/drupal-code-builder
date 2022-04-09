@@ -28,6 +28,11 @@
   "scripts": {
     "cr": "DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder::rebuildCachedContainer"
   },
+  "extra": {
+    "branch-alias": {
+        "dev-sandbox-existing": "4.1.x-dev"
+    }
+  },
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
