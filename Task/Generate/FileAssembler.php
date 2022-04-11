@@ -86,6 +86,7 @@ class FileAssembler {
     // Components which provide a file should have registered themselves as
     // children of the root component.
     $file_components = $component_collection->getContainmentTreeChildren($component_collection->getRootComponent());
+    /** $var \DrupalCodeBuilder\Generator\File $child_component */
     foreach ($file_components as $id => $child_component) {
       // Don't get files for existing components.
       // TODO! This is quick and dirty! It's a lot more complicated than this,
