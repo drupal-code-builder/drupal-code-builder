@@ -484,6 +484,12 @@ class ComponentCollector {
     }
     */
 
+
+    // Determine existence.
+    if ($this->extension) {
+      $generator->detectExistence($this->extension);
+    }
+
     // Ask the generator for its required components.
     // TODO: lots to figure out here!
     $item_required_subcomponent_list = $generator->requiredComponents();
