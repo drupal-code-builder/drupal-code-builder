@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use Ckr\Util\ArrayMerger;
 
 /**
  * Generator base class for module info file.
@@ -74,7 +75,17 @@ abstract class Info extends File {
    */
   public function getFileInfo() {
     $data = $this->infoData();
+
+    // Filter before merging with existing, as if scalar properties have not
+    // been set, they will have the empty arrays from getInfoFileEmptyLines();
     $data = array_filter($data);
+
+    if ($this->exists) {
+      $merger = new ArrayMerger($this->existing, $data);
+      $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
+      $data = $merger->mergeData();
+    }
+
     $body = $this->process_info_lines($data);
 
     return [

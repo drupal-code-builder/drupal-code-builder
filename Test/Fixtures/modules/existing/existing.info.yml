@@ -1,0 +1,4 @@
+name: 'Existing'
+type: module
+description: 'Module for tests with an existing module.'
+core_version_requirement: '^8 || ^9'
