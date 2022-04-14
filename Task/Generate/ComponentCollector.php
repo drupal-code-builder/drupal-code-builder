@@ -6,6 +6,7 @@ use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
+use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Generator\RootComponent;
@@ -179,12 +180,14 @@ class ComponentCollector {
    * @return \DrupalCodeBuilder\Generator\Collection\ComponentCollection
    *  The collection of components.
    */
-  public function assembleComponentList(DataItem $component_data): ComponentCollection {
+  public function assembleComponentList(DataItem $component_data, DrupalExtension $extension = NULL): ComponentCollection {
     // Reset all class properties. We don't normally run this twice, but
     // probably needed for tests.
     $this->requested_data_record = [];
 
     $this->component_collection = new \DrupalCodeBuilder\Generator\Collection\ComponentCollection;
+
+    $this->extension = $extension;
 
     // Fiddly different handling for the type in the root component...
     // $component_type = $component_data->getName();

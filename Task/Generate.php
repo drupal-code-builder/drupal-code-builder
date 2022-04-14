@@ -12,6 +12,7 @@ use MutableTypedData\Data\DataItem;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use DrupalCodeBuilder\Task\Generate\FileAssembler;
+use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
  * Task handler for generating a component.
@@ -109,6 +110,9 @@ class Generate extends Base {
    *  data object as returned by
    *  \DrupalCodeBuilder\Task\Configuration::getConfigurationData(), with user
    *  values set on it.
+   * @param \DrupalCodeBuilder\File\DrupalExtension $existing_extension
+   *  An extension object for an existing extension, if applicable. This allows
+   *  generated code to be merged with existing file contents.
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -117,7 +121,7 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.
    */
-  public function generateComponent(DataItem $component_data, $existing_module_files = [], DataItem $configuration = NULL) {
+  public function generateComponent(DataItem $component_data, $existing_module_files = [], DataItem $configuration = NULL, DrupalExtension $existing_extension = NULL) {
     // Validate to ensure defaults are filled in.
     $component_data->validate();
 
@@ -133,7 +137,7 @@ class Generate extends Base {
     // return;
 
     // Assemble the component list from the request data.
-    $component_collection = $this->componentCollector->assembleComponentList($component_data);
+    $component_collection = $this->componentCollector->assembleComponentList($component_data, $existing_extension);
     // return;
 
     // Backward-compatiblity.
