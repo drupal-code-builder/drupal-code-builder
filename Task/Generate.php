@@ -147,11 +147,6 @@ class Generate extends Base {
 
     \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
 
-    // Let each component detect whether it already exists in the given module
-    // files.
-    // TODO: temp bypass!
-    // $this->detectExistence($this->component_list, $existing_module_files);
-
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
     // of parent => [children].
@@ -166,26 +161,6 @@ class Generate extends Base {
     );
 
     return $files_assembled;
-  }
-
-  /**
-   * Lets each component determine whether it is already in existing files.
-   *
-   * Existence is determined at the component level, rather than the file level,
-   * because one component may want to add to several files, and several
-   * components may want to add to the same file. For example, a service may
-   * exist, but other components might want to add services and therefore add
-   * code to the services.yml file.
-   *
-   * @param $component_list
-   *  The component list.
-   * @param $existing_module_files
-   *  The array of existing file names.
-   */
-  protected function detectExistence($component_list, $existing_module_files) {
-    foreach ($component_list as $name => $component) {
-      $component->detectExistence($existing_module_files);
-    }
   }
 
   /**
