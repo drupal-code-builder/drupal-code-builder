@@ -52,9 +52,6 @@ class Info9 extends Info {
    * Create lines of file body for Drupal 8.
    */
   function infoData(): array {
-    $args = func_get_args();
-    $files = array_shift($args);
-
     $module_data = $this->component_data;
     // dump("FILE BODY");
     // dump($module_data->export());
