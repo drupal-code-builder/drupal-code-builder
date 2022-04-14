@@ -168,7 +168,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * @see detectExistence()
    */
-  public $exists = FALSE;
+  protected $exists = FALSE;
 
   /**
    * Constructor method; sets the component data.
