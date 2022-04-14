@@ -15,8 +15,16 @@ class UnitCodeAnalyserTest extends TestCase {
    * Tests the CodeAnalyser task helper.
    */
   public function testCodeAnalyser() {
+    // Sanity check that we can run this test.
+    $cwd = getcwd();
+    if (!file_exists($cwd . '/vendor')) {
+      $this->markTestSkipped(
+        'This test must be run from the Composer project root.'
+      );
+    }
+
     $environment = $this->prophesize('DrupalCodeBuilder\Environment\EnvironmentInterface');
-    $environment->getRoot()->willReturn(__DIR__ . '/../../vendor');
+    $environment->getRoot()->willReturn($cwd . '/vendor');
 
     $container = $this->prophesize(DummyContainer::class);
 
@@ -27,9 +35,6 @@ class UnitCodeAnalyserTest extends TestCase {
     ]);
 
     $environment->getContainer()->willReturn($container->reveal());
-
-    // Sanity check that the code analyser will find the autoloader.
-    $this->assertTrue(file_exists($environment->reveal()->getRoot() . '/autoload.php'));
 
     $code_analyser = new \DrupalCodeBuilder\Task\Collect\CodeAnalyser($environment->reveal());
 
