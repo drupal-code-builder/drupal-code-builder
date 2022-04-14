@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
  * Generator class for module info file for Drupal 9.
@@ -26,15 +27,14 @@ class Info9 extends Info {
   /**
    * {@inheritdoc}
    */
-  public function detectExistence($existing_module_files) {
-    // Quick and dirty hack!
-    $root_component_name = $this->component_data['root_component_name'];
-    // Violates DRY as this is also in getFileInfo()!
-    $filename = "{$root_component_name}.info.yml";
+  public function detectExistence(DrupalExtension $extension) {
+    // Info files always exist if there is an extension.
+    $this->exists = TRUE;
 
-    if (isset($existing_module_files[$filename])) {
-      $this->exists = TRUE;
-    }
+    $yaml = $extension->getFileYaml('%module.info.yml');
+    // No idea of format here! Probably unique for each generator!
+    // For info files, the only thing which is mergeable
+    $this->existing = $yaml;
   }
 
   /**
