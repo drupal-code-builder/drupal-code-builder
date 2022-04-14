@@ -105,6 +105,7 @@ class Generate extends Base {
    * @param $existing_module_files
    *  (optional) An array of existing files for this module. Keys should be
    *  file paths relative to the module, values absolute paths.
+   *  @deprecated, use the $existing_extension parameter instead.
    * @param \MutableTypedData\Data\DataItem $configuration
    *  (optional) Configuration data for the component. This should be the same
    *  data object as returned by
