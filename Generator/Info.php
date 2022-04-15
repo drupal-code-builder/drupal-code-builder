@@ -80,20 +80,26 @@ abstract class Info extends File {
     // been set, they will have the empty arrays from getInfoFileEmptyLines();
     $data = array_filter($data);
 
+    $file_info = [];
+
     if ($this->exists) {
       $merger = new ArrayMerger($this->existing, $data);
       $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
       $data = $merger->mergeData();
+
+      $file_info['merged'] = TRUE;
     }
 
     $body = $this->process_info_lines($data);
 
-    return [
+    $file_info += [
       'path' => '',
       'filename' => '%module.info',
       'body' => $body,
       'build_list_tags' => ['info'],
     ];
+
+    return $file_info;
   }
 
   /**
