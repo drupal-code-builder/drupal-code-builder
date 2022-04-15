@@ -4,6 +4,8 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Utility\NestedArray;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
+use Ckr\Util\ArrayMerger;
 
 /**
  * Generator for general YML files.
@@ -61,6 +63,23 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
+  public function detectExistence(DrupalExtension $extension) {
+    $this->exists = $extension->hasFile($this->component_data['filename']);
+
+    if (!$this->exists) {
+      return;
+    }
+
+    $yaml = $extension->getFileYaml($this->component_data['filename']);
+
+    // No idea of format here! Probably unique for each generator!
+    // For info files, the only thing which is mergeable
+    $this->existing = $yaml;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildComponentContents($children_contents) {
     $yaml_data = [];
     foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {
@@ -81,10 +100,18 @@ class YMLFile extends File {
    * Build the code files.
    */
   public function getFileInfo() {
+    $yaml_data = $this->component_data['yaml_data'];
+
+    if ($this->exists) {
+      $merger = new ArrayMerger($this->existing, $yaml_data);
+      $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
+      $yaml_data = $merger->mergeData();
+    }
+
     return [
       'path' => '', // Means base folder.
       'filename' => $this->component_data['filename'],
-      'body' => $this->getYamlBody($this->component_data['yaml_data']),
+      'body' => $this->getYamlBody($yaml_data),
     ];
   }
 
