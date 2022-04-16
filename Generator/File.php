@@ -48,6 +48,8 @@ class File extends BaseGenerator {
    *
    * Subclasses should override this.
    *
+   * TODO: make this return CodeFile objects.
+   *
    * @return
    *  An array of file info, or NULL to provide no file. The file info array
    *  should have the following properties:
