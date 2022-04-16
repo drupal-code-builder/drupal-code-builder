@@ -86,7 +86,7 @@ class VariableStream {
         return [
             'dev'     => 0,
             'ino'     => 0,
-            'mode'    => 0100755,  // 0100000 + 0755 so that is_writable() yields true
+            'mode'    => 0100777,  // 0100000 + 0777 so that is_writable() yields true
             'nlink'   => 0,
             'uid'     => 0,
             'gid'     => 0,
