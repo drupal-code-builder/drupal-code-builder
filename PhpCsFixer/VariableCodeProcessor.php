@@ -16,7 +16,7 @@ class VariableCodeProcessor {
     /**
      * @param string|Config|null $config A path to configuration file or a config object
      */
-    public function __construct( string|Config $config=null) {
+    public function __construct($config=null) {
         $this->config = $config;
         $existed = in_array( $this->protocol, stream_get_wrappers() );
         if ( $existed ) {
