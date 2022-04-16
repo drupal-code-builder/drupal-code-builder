@@ -102,17 +102,23 @@ class YMLFile extends File {
   public function getFileInfo() {
     $yaml_data = $this->component_data['yaml_data'];
 
+    $file_info = [];
+
     if ($this->exists) {
       $merger = new ArrayMerger($this->existing, $yaml_data);
       $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
       $yaml_data = $merger->mergeData();
+
+      $file_info['merged'] = TRUE;
     }
 
-    return [
+    $file_info += [
       'path' => '', // Means base folder.
       'filename' => $this->component_data['filename'],
       'body' => $this->getYamlBody($yaml_data),
     ];
+
+    return $file_info;
   }
 
   /**
