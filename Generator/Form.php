@@ -74,6 +74,7 @@ class Form extends PHPClassFileWithInjection {
       // Request the form functions.
       'getFormId' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'getFormId',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function getFormId()',
@@ -108,6 +109,7 @@ class Form extends PHPClassFileWithInjection {
       ],
       'validateForm' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'validateForm',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
@@ -115,6 +117,7 @@ class Form extends PHPClassFileWithInjection {
       ],
       'submitForm' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'submitForm',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',

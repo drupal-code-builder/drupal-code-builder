@@ -472,6 +472,7 @@ class ContentEntityType extends EntityTypeBase {
 
     $components["baseFieldDefinitions"] = [
       'component_type' => 'PHPFunction',
+      'function_name' => 'baseFieldDefinitions',
       'containing_component' => '%requester',
       'declaration' => 'public static function baseFieldDefinitions(\Drupal\Core\Entity\EntityTypeInterface $entity_type)',
       'docblock_inherit' => TRUE,

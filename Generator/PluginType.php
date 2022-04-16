@@ -316,6 +316,7 @@ class PluginType extends BaseGenerator {
 
      $components['alter_hook'] = [
       'component_type' => 'PHPFunction',
+      'function_name' => "hook_{$this->component_data['info_alter_hook']}_alter",
       'containing_component' => '%requester:api',
       'declaration' => "function hook_{$this->component_data['info_alter_hook']}_alter(array &£info)",
       'function_docblock_lines' => [

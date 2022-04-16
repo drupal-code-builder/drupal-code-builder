@@ -48,6 +48,7 @@ class EntityForm extends EntityHandler {
       ],
       'validateForm' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'validateForm',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
@@ -57,6 +58,7 @@ class EntityForm extends EntityHandler {
       ],
       'submitForm' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'submitForm',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)',
@@ -66,6 +68,7 @@ class EntityForm extends EntityHandler {
       ],
       'save' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'save',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function save(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',

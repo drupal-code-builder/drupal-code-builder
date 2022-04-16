@@ -217,6 +217,7 @@ class DrushCommand extends BaseGenerator {
 
     $components['command_method'] = [
       'component_type' => 'PHPFunction',
+      'function_name' => $this->component_data['command_method_name'],
       'containing_component' => '%requester:commands_service',
       'declaration' => "public function {$this->component_data['command_method_name']}()",
       'function_docblock_lines' => $docblock_lines,
