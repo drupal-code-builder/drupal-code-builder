@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Generator\RootComponent;
 
@@ -24,7 +25,7 @@ class FileAssembler {
    *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
    *  values are strings of the contents for each file.
    */
-  public function generateFiles($component_data, ComponentCollection $component_collection) {
+  public function generateFiles($component_data, ComponentCollection $component_collection, DrupalExtension $existing_extension = NULL) {
     $component_list = $component_collection->getComponents();
 
     // Let each file component in the tree gather data from its own children.
@@ -43,7 +44,7 @@ class FileAssembler {
 
     // Then we assemble the files into a simple array of full filename and
     // contents.
-    $files_assembled = $this->assembleFiles($component_collection, $files);
+    $files_assembled = $this->assembleFiles($component_collection, $files, $existing_extension);
 
     return $files_assembled;
   }
@@ -78,7 +79,13 @@ class FileAssembler {
    *  The component list.
    *
    * @return
-   *  An array of file info, keyed by arbitrary file ID.
+   *  An array of file info, keyed by arbitrary file ID. Each array contains:
+   *    - filename
+   *    - path
+   *    - body
+   *    - source_component_id
+   *    - merged: TRUE if the file has been merged with an existing file. Unset
+   *      otherwise.
    */
   protected function collectFiles(ComponentCollection $component_collection) {
     $file_info = [];
@@ -126,7 +133,7 @@ class FileAssembler {
    *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
    *  values are strings of the contents for each file.
    */
-  protected function assembleFiles(ComponentCollection $component_collection, $files) {
+  protected function assembleFiles(ComponentCollection $component_collection, $files, DrupalExtension $existing_extension = NULL) {
     $return = [];
 
     foreach ($files as $file_id => $file_info) {

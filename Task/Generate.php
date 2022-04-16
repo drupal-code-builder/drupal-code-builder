@@ -157,7 +157,8 @@ class Generate extends Base {
 
     $files_assembled = $this->component_list = $this->fileAssembler->generateFiles(
       $component_data,
-      $component_collection
+      $component_collection,
+      $existing_extension
     );
 
     return $files_assembled;
