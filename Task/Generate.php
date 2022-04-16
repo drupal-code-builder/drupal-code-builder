@@ -12,6 +12,7 @@ use MutableTypedData\Data\DataItem;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use DrupalCodeBuilder\Task\Generate\FileAssembler;
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
@@ -115,9 +116,9 @@ class Generate extends Base {
    *  An extension object for an existing extension, if applicable. This allows
    *  generated code to be merged with existing file contents.
    *
-   * @return
-   *  A files array whose keys are filepaths (relative to the module folder) and
-   *  values are the code destined for each file.
+   * @return \DrupalCodeBuilder\File\CodeFileInterface[]
+   *  An array of \DrupalCodeBuilder\File\CodeFileInterface onjects, whose keys
+   *  are filepaths (relative to the module folder).
    *
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.

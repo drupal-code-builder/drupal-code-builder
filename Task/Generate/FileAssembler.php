@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Generator\RootComponent;
@@ -161,7 +162,10 @@ class FileAssembler {
       // Verify that no two components are trying to generate the same file.
       assert(!isset($return[$filepath]), "$filepath not already set in list of returned files");
 
-      $return[$filepath] = $code;
+      $exists = $existing_extension ? $existing_extension->hasFile($filepath) : FALSE;
+      $merged = $file_info['merged'] ?? FALSE;
+
+      $return[$filepath] = new CodeFile($filepath, $code, $exists, $merged);
     }
 
     return $return;
