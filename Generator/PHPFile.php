@@ -94,7 +94,7 @@ class PHPFile extends File {
    * Return the main body of the file code.
    *
    * @return
-   *  An array of code lines.
+   *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
   function code_body() {
     $code_body = [];
