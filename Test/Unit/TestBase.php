@@ -7,6 +7,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
@@ -92,7 +93,7 @@ abstract class TestBase extends TestCase {
    * @param
    *  An array of files.
    */
-  protected function generateComponentFilesFromData(DataItem $component_data) {
+  protected function generateComponentFilesFromData(DataItem $component_data, DrupalExtension $extension = NULL) {
     $violations = $component_data->validate();
 
     if ($violations) {
@@ -104,7 +105,7 @@ abstract class TestBase extends TestCase {
     }
 
     $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $component_data->base->value);
-    $files = $task_handler_generate->generateComponent($component_data);
+    $files = $task_handler_generate->generateComponent($component_data, NULL, NULL, $extension);
     return $files;
   }
 
@@ -117,12 +118,12 @@ abstract class TestBase extends TestCase {
    * @param
    *  An array of files.
    */
-  protected function generateModuleFiles($module_data) {
+  protected function generateModuleFiles($module_data, DrupalExtension $extension = NULL) {
     $component_data = $this->getRootComponentBlankData('module');
 
     $component_data->set($module_data);
 
-    $files = $this->generateComponentFilesFromData($component_data);
+    $files = $this->generateComponentFilesFromData($component_data, $extension);
 
     return $files;
   }

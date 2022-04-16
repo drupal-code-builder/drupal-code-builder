@@ -2,9 +2,11 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use MutableTypedData\Exception\InvalidInputException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests for Service component.
@@ -613,6 +615,140 @@ class ComponentService8Test extends TestBase {
     $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.beta", 'tags']);
     $yaml_tester->assertPropertyIsExpanded(['services', "$module_name.beta", 'tags', 0]);
     $yaml_tester->assertPropertyIsInlined(['services', "$module_name.beta", 'tags', 0, 'name']);
+  }
+
+  /**
+   * Data provider for testExistingServicesYamlFile().
+   */
+  public function dataExistingServicesYamlFile() {
+    return [
+      'only-existing' => [
+        <<<EOT
+          existing-service:
+            class: Drupal\my_module\Existing
+            arguments: ['@current_user', '@entity_type.manager']
+            tags:
+              - { name: normalizer, priority: 10 }
+        EOT,
+        [],
+        NULL,
+      ],
+      'only-generated' => [
+        NULL,
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+        <<<EOT
+          existing.alpha:
+            class: Drupal\existing\Alpha
+            arguments: ['@current_user']
+        EOT,
+      ],
+      'both-distinct' => [
+        <<<EOT
+          existing-service:
+            class: Drupal\my_module\Existing
+            arguments: ['@current_user', '@entity_type.manager']
+            tags:
+              - { name: normalizer, priority: 10 }
+        EOT,
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+        <<<EOT
+          existing.alpha:
+            class: Drupal\existing\Alpha
+            arguments: ['@current_user']
+        EOT,
+      ],
+      'both-merge' => [
+        <<<EOT
+          existing.alpha:
+            class: Drupal\my_module\Alpha
+            arguments: ['@current_user', '@entity_type.manager']
+        EOT,
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+            'module_handler',
+          ],
+        ],
+        <<<EOT
+          existing.alpha:
+            class: Drupal\existing\Alpha
+            arguments: ['@current_user', '@entity_type.manager', '@module_handler']
+        EOT,
+      ],
+    ];
+  }
+
+  /**
+   * Tests with an existing services file.
+   *
+   * @param string|null $existing
+   *   The YAML defining the list of existing services, without the initial
+   *   'services' key. NULL to have no existing services.yml file.
+   * @param array|null $generated
+   *   The array of data for a single service to generate. NULL to generate no
+   *   services.
+   * @param string|null $resulting
+   *   The expected YAML defining the list of existing services, without the
+   *   initial 'services' key. NULL if no file is expected to be generated.
+   *
+   * @group existing
+   *
+   * @dataProvider dataExistingServicesYamlFile
+   *
+   */
+  public function testExistingServicesYamlFile(?string $existing, ?array $generated, ?string $resulting) {
+    $module_name = 'existing';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+    ];
+    if ($generated) {
+      $module_data['services'] = [
+        0 => $generated,
+      ];
+    }
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+
+    if (!is_null($existing)) {
+      $services_file_yaml = <<<EOT
+        services:
+        $existing
+        EOT;
+
+      $extension->setFile('%module.services.yml', $services_file_yaml);
+    }
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+
+    // A NULL for the expected resulting file means we don't expect the file to
+    // be generated at all.
+    if (is_null($resulting)) {
+      $this->assertArrayNotHasKey("$module_name.services.yml", $files);
+      return;
+    }
+
+    $services_file = $files["$module_name.services.yml"];
+
+    // Don't use the YamlTester, we need to check the whole thing against the
+    // parameter.
+    $services_data = Yaml::parse($services_file);
+    $this->assertStringNotContainsString($resulting, $services_file);
   }
 
 }

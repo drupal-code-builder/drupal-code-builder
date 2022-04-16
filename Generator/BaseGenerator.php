@@ -7,6 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
+use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -168,7 +169,16 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * @see detectExistence()
    */
-  public $exists = FALSE;
+  protected $exists = FALSE;
+
+  /**
+   * Data about the existing component.
+   *
+   * Type varies for different generator classes.
+   *
+   * @var mixed
+   */
+  protected $existing = [];
 
   /**
    * Constructor method; sets the component data.
@@ -432,11 +442,10 @@ abstract class BaseGenerator implements GeneratorInterface {
    * Components should set $this->exists on themselves if they find they already
    * exist in the module.
    *
-   * @param $existing_module_files
-   *  An array of information about existing module files. Keys are filenames
-   *  relative to the module, values are absolute filenames.
+   * @param \DrupalCodeBuilder\File\DrupalExtension $extension
+   *  An extension object for the existing extension.
    */
-  public function detectExistence($existing_module_files) {
+  public function detectExistence(DrupalExtension $extension) {
     // Do nothing by default.
   }
 

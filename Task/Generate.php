@@ -12,6 +12,7 @@ use MutableTypedData\Data\DataItem;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use DrupalCodeBuilder\Task\Generate\FileAssembler;
+use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
  * Task handler for generating a component.
@@ -104,11 +105,15 @@ class Generate extends Base {
    * @param $existing_module_files
    *  (optional) An array of existing files for this module. Keys should be
    *  file paths relative to the module, values absolute paths.
+   *  @deprecated, use the $existing_extension parameter instead.
    * @param \MutableTypedData\Data\DataItem $configuration
    *  (optional) Configuration data for the component. This should be the same
    *  data object as returned by
    *  \DrupalCodeBuilder\Task\Configuration::getConfigurationData(), with user
    *  values set on it.
+   * @param \DrupalCodeBuilder\File\DrupalExtension $existing_extension
+   *  An extension object for an existing extension, if applicable. This allows
+   *  generated code to be merged with existing file contents.
    *
    * @return
    *  A files array whose keys are filepaths (relative to the module folder) and
@@ -117,7 +122,7 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.
    */
-  public function generateComponent(DataItem $component_data, $existing_module_files = [], DataItem $configuration = NULL) {
+  public function generateComponent(DataItem $component_data, $existing_module_files = [], DataItem $configuration = NULL, DrupalExtension $existing_extension = NULL) {
     // Validate to ensure defaults are filled in.
     $component_data->validate();
 
@@ -133,7 +138,7 @@ class Generate extends Base {
     // return;
 
     // Assemble the component list from the request data.
-    $component_collection = $this->componentCollector->assembleComponentList($component_data);
+    $component_collection = $this->componentCollector->assembleComponentList($component_data, $existing_extension);
     // return;
 
     // Backward-compatiblity.
@@ -141,11 +146,6 @@ class Generate extends Base {
     $this->component_list = $component_collection->getComponents();
 
     \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
-
-    // Let each component detect whether it already exists in the given module
-    // files.
-    // TODO: temp bypass!
-    // $this->detectExistence($this->component_list, $existing_module_files);
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
@@ -161,26 +161,6 @@ class Generate extends Base {
     );
 
     return $files_assembled;
-  }
-
-  /**
-   * Lets each component determine whether it is already in existing files.
-   *
-   * Existence is determined at the component level, rather than the file level,
-   * because one component may want to add to several files, and several
-   * components may want to add to the same file. For example, a service may
-   * exist, but other components might want to add services and therefore add
-   * code to the services.yml file.
-   *
-   * @param $component_list
-   *  The component list.
-   * @param $existing_module_files
-   *  The array of existing file names.
-   */
-  protected function detectExistence($component_list, $existing_module_files) {
-    foreach ($component_list as $name => $component) {
-      $component->detectExistence($existing_module_files);
-    }
   }
 
   /**

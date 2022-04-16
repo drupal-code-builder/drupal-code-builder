@@ -88,15 +88,6 @@ class FileAssembler {
     $file_components = $component_collection->getContainmentTreeChildren($component_collection->getRootComponent());
     /** $var \DrupalCodeBuilder\Generator\File $child_component */
     foreach ($file_components as $id => $child_component) {
-      // Don't get files for existing components.
-      // TODO! This is quick and dirty! It's a lot more complicated than this,
-      // for instance with components that affect other files.
-      // Currently the only component that will set this is Info, to make
-      // adding code to existing modules look like it works!
-      if ($child_component->exists) {
-        continue;
-      }
-
       $file_info_item = $child_component->getFileInfo();
       if (is_array($file_info_item)) {
         // Prepend the component_base_path to the path.
