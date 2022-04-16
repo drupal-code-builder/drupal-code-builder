@@ -22,7 +22,7 @@ class VariableCodeProcessor {
         if ( $existed ) {
             stream_wrapper_unregister( $this->protocol );
         }
-        stream_wrapper_register( $this->protocol, 'VariableStream' );
+        stream_wrapper_register( $this->protocol, VariableStream::class );
     }
 
     public function setConfig($config) {
