@@ -66,6 +66,26 @@ class DrupalExtension {
   }
 
   /**
+   * Gets a range of lines from a file.
+   *
+   * @param string $relative_file_path
+   *   The filepath relative to the extension folder. Use '%module' to represent
+   *   the extension's machine name in the filepath.
+   * @param int $start
+   *   The index of the start line, where 1 is the first line of the file.
+   * @param int $end
+   *   The index of the end line.
+   *
+   * @return array
+   */
+  public function getFileLines(string $relative_file_path, int $start, int $end): array {
+    $lines = explode("\n", $this->getFileContents($relative_file_path));
+
+    $slice = array_slice($lines, $start - 1, $end - $start + 1);
+    return $slice;
+  }
+
+  /**
    * Gets the YAML data from a file,
    *
    * @param string $relative_file_path
