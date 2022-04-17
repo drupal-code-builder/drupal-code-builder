@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\DrupalExtension;
+
 /**
  * Component generator: api.php file for documention hooks and callbacks.
  *
@@ -24,6 +26,36 @@ class API extends PHPFile {
   public function requiredComponents(): array {
     // We have no subcomponents.
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function detectExistence(DrupalExtension $extension) {
+    $this->exists = $extension->hasFile('%module.api.php');
+
+    if (!$this->exists) {
+      return;
+    }
+
+    $ast = $extension->getFileAST('%module.api.php');
+    $ast = $extension->getASTFunctions($ast);
+
+    // The first function in the AST will have additional comment blocks for the
+    // @file and the @addtogroup tags. Remove these, since we will generate
+    // them ourselves.
+    if (isset($ast[0])) {
+      $first_function = $ast[0];
+      $comments = $first_function->getAttribute('comments');
+      $docblock = end($comments);
+
+      $first_function->setAttribute('comments', [$docblock]);
+    }
+
+    // No idea of format here! Probably unique for each generator!
+    // For info files, the only thing which is mergeable
+    $this->existing = $ast;
+    $this->extension = $extension;
   }
 
   /**
@@ -68,8 +100,13 @@ class API extends PHPFile {
 
       EOT;
 
+    // Track the names of functions we generate.
+    $generated_function_names = [];
+
     foreach ($hooks as $hook_short_name => $parameters) {
-      $code_pieces[$hook_short_name] = $this->hook_code($hook_short_name, $parameters);
+      $code_pieces['hook_' . $hook_short_name] = $this->hook_code($hook_short_name, $parameters);
+
+      $generated_function_names['hook_' . $hook_short_name] = TRUE;
     }
 
     // Add lines from child function components.
@@ -78,7 +115,34 @@ class API extends PHPFile {
       // Blank line after the function.
       $function_lines[] = '';
 
-      $code_pieces[$component_name] = implode("\n", $function_lines);
+      $code_pieces[$function_name] = implode("\n", $function_lines);
+
+      $generated_function_names[$function_name] = TRUE;
+    }
+
+    // Merge any existing functions.
+    if ($this->exists) {
+      // Add functions from the existing file, unless we are generating them
+      // too, in which case we assume that our version is better.
+      foreach ($this->existing as $function_node) {
+        $existing_function_name = (string) $function_node->name;
+
+        // Skip if the function has already been generated.
+        if (isset($generated_function_names[$existing_function_name])) {
+          continue;
+        }
+
+        if ($comments = $function_node->getAttribute('comments')) {
+          $first_line = $comments[0]->getStartLine();
+        }
+        else {
+          $first_line = $function_node->getStartLine();
+        }
+
+        $end_line = $function_node->getEndLine() + 1;
+
+        $code_pieces[$existing_function_name] = implode("\n", $this->extension->getFileLines('%module.api.php', $first_line, $end_line));
+      }
     }
 
     // The docblock grouping.
