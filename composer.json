@@ -7,13 +7,13 @@
     "joachim-n/mutable-typed-data": "^1.1.4",
     "joachim-n/case-converter": "^1.0",
     "php-di/php-di": "^6.2",
-    "ckr/arraymerger": "^2.0"
+    "ckr/arraymerger": "^2.0",
+    "nikic/php-parser": "^4"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
     "drupal/coder": "^8.3",
     "squizlabs/php_codesniffer": "^3",
-    "nikic/php-parser": "^4",
     "symfony/yaml": "^3.2",
     "symfony/var-dumper": "^3.2",
     "morrislaptop/var-dumper-with-context": "^0.1.0",
