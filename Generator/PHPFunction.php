@@ -206,6 +206,7 @@ class PHPFunction extends BaseGenerator {
     return [
       'function' => [
         'role' => 'function',
+        'function_name' => $this->component_data['function_name'],
         'content' => $function_code,
       ],
     ];

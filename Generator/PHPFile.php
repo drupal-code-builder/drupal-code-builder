@@ -100,7 +100,7 @@ class PHPFile extends File {
     $code_body = [];
 
     // Function data has been set by buildComponentContents().
-    foreach ($this->functions as $component_name => $function_lines) {
+    foreach ($this->functions as $function_lines) {
       $code_body = array_merge($code_body, $function_lines);
       // Blank line after the function.
       $code_body[] = '';

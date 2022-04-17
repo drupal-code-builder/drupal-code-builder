@@ -548,13 +548,28 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * @return
    *  An array of the 'content' data of the given array items that matched the
-   *  role, keyed by the same key as the the given array item.
+   *  role. The array key is in MOST cases the same key as the the given array
+   *  item.
    */
   protected function filterComponentContentsForRole($contents, $role) {
     $return = [];
     foreach ($contents as $key => $item) {
+      $return_key = $key;
+
       if ($item['role'] == $role) {
-        $return[$key] = $item['content'];
+        // Special case: function contents need to know the function name
+        // for merging PHP files.
+        // We have to put this as the key, as there's no other way to include
+        // data other than the contents. Function names should be unique!
+        if ($role == 'function') {
+          assert(isset($item['function_name']));
+
+          $return_key = $item['function_name'];
+
+          assert(!isset($return[$return_key]));
+        }
+
+        $return[$return_key] = $item['content'];
       }
     }
     return $return;
