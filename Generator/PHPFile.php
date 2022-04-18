@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
  *
  * Code files for modules, theme, etc, should inherit from this.
  */
-class PHPFile extends File {
+abstract class PHPFile extends File {
 
   use PHPFormattingTrait;
   use NameFormattingTrait;
@@ -89,6 +89,14 @@ class PHPFile extends File {
     $code[] = '';
     return $code;
   }
+
+  /**
+   * Return the main body of the file code.
+   *
+   * @return
+   *  An array of code lines. Keys are immaterial but should avoid clashing.
+   */
+  abstract function code_body();
 
   /**
    * Remove fully-qualified classnames, extracting them to an array.

@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Generator\PHPFile;
+use DrupalCodeBuilder\Generator\PHPFile as RealPHPFile;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
@@ -207,6 +207,17 @@ class ComponentPHPFile8Test extends TestBase {
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
     $php_tester->assertImportsSorted();
+  }
+
+}
+
+/**
+ * Non-abstract version of PHPFile generator.
+ */
+class PHPFile extends RealPHPFile {
+
+  function code_body() {
+    return [];
   }
 
 }
