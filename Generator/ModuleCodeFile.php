@@ -71,6 +71,42 @@ class ModuleCodeFile extends PHPFile {
   }
 
   /**
+   * Return the main body of the file code.
+   *
+   * @return
+   *  An array of code lines. Keys are immaterial but should avoid clashing.
+   */
+  function code_body() {
+    $code_body = [];
+
+    // Function data has been set by buildComponentContents().
+    foreach ($this->functions as $function_lines) {
+      $code_body = array_merge($code_body, $function_lines);
+      // Blank line after the function.
+      $code_body[] = '';
+    }
+
+    // If there are no functions, then this is a .module file that's been
+    // requested so the module is correctly formed. It is customary to add a
+    // comment to the file for DX.
+    if (empty($code_body)) {
+      $code_body['empty'] = "// Drupal needs this blank file.";
+      $code_body[] = '';
+    }
+
+    // Replace any fully-qualified classes with short class names, and keep a
+    // list of the replacements to make import statements with.
+    $imported_classes = [];
+    $this->extractFullyQualifiedClasses($code_body, $imported_classes);
+
+    $return = array_merge(
+      $this->imports($imported_classes),
+      $code_body
+    );
+    return $return;
+  }
+
+  /**
    * {@inheritdoc}
    */
   function fileDocblockSummary() {
