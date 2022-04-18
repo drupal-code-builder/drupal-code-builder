@@ -6,6 +6,7 @@ use Symfony\Component\Yaml\Yaml;
 use PhpParser\ParserFactory;
 use PhpParser\Error;
 use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Use_;
 
 /**
  * Represents a Drupal extension's files in the codebase.
@@ -126,6 +127,23 @@ class DrupalExtension {
       // TODO: warn somehow?
       return NULL;
     }
+
+    return $ast;
+  }
+
+  /**
+   * Gets the import statements from an AST.
+   *
+   * @param array $ast
+   *   The AST as returned by getFileAST().
+   *
+   * @return array
+   *   An array of use nodes.
+   */
+  public function getASTImports(array $ast): array {
+    $ast = array_filter($ast, function($node) {
+      return $node instanceof Use_;
+    });
 
     return $ast;
   }
