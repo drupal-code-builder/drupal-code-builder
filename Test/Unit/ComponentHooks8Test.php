@@ -160,13 +160,17 @@ class ComponentHooks8Test extends TestBase {
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
       'hooks' => [
-        'hook_form_alter',
+        'hook_block_view_alter',
       ],
       'readme' => FALSE,
     ];
 
     $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
 
+    // This includes:
+    //  - an existing function
+    //  - an import which will not also be generated
+    //  - an import which will also be in the generated code
     $existing_module_file = <<<'EOPHP'
       <?php
 
@@ -175,12 +179,15 @@ class ComponentHooks8Test extends TestBase {
        * Contains hook implementations for the Test Module module.
        */
 
+      use Drupal\Core\Block\BlockPluginInterface;
+      use QualifiedNamespace\ShortClassName;
+
       /**
        * Does a thing.
        */
-      function some_function() {
+      function existing_function() {
         // Code does a thing.
-        $foo = 'foo';
+        $foo = new ShortClassName();
       }
 
       EOPHP;
@@ -190,7 +197,16 @@ class ComponentHooks8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data, $extension);
     $module_file = $files['test_module.module'];
     dump($module_file);
-  }
 
+    $module_file = $files["$module_name.module"];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertImportsClassLike(['Drupal\Core\Block\BlockPluginInterface']);
+    $php_tester->assertImportsClassLike(['QualifiedNamespace\ShortClassName']);
+    $php_tester->assertHasHookImplementation('hook_block_view_alter', $module_name);
+    $php_tester->assertHasFunction('existing_function');
+  }
 
 }
