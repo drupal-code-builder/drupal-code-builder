@@ -36,6 +36,7 @@ class ServiceProvider extends PHPClassFile {
     $components = [
       'alter' => [
         'component_type' => 'PHPFunction',
+        'function_name' => 'alter',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
         'declaration' => 'public function alter(\Drupal\Core\DependencyInjection\ContainerBuilder $container)',

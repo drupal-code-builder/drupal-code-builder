@@ -101,6 +101,7 @@ class AdminSettingsForm extends Form {
 
     $components['getEditableConfigNames'] = [
       'component_type' => 'PHPFunction',
+      'function_name' => 'getEditableConfigNames',
       'containing_component' => '%requester',
       'docblock_inherit' => TRUE,
       'declaration' => 'protected function getEditableConfigNames()',

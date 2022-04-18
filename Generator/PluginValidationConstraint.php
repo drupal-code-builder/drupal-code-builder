@@ -32,6 +32,7 @@ class PluginValidationConstraint extends PluginAnnotationDiscovery {
 
     $components['validator_validate'] = [
       'component_type' => 'PHPFunction',
+      'function_name' => 'validate',
       'containing_component' => '%requester:validator',
       'docblock_inherit' => TRUE,
       'function_name' => 'validate',

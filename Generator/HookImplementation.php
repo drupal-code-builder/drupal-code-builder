@@ -30,6 +30,9 @@ class HookImplementation extends PHPFunction {
       // Expression Language lets us define arrays, which is nice.
       ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
 
+    $definition->getProperty('function_name')
+      ->setExpressionDefault("'%module_' ~ get('..:hook_name')");
+
     return $definition;
   }
 

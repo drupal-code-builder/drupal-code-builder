@@ -55,6 +55,7 @@ class EntityListBuilder extends EntityHandler {
 
     $components['buildHeader'] = [
       'component_type' => 'PHPFunction',
+      'function_name' => 'buildHeader',
       'containing_component' => '%requester',
       'docblock_inherit' => TRUE,
       'function_name' => 'buildHeader',
@@ -81,6 +82,7 @@ class EntityListBuilder extends EntityHandler {
 
     $components['buildRow'] = [
       'component_type' => 'PHPFunction',
+      'function_name' => 'buildRow',
       'containing_component' => '%requester',
       'docblock_inherit' => TRUE,
       'function_name' => 'buildRow',

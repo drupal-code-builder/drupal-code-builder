@@ -36,6 +36,8 @@ class PHPFunction extends BaseGenerator {
     $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([
+      // TODO: make this required when https://github.com/joachim-n/mutable-typed-data/issues/7
+      // is fixed.
       'function_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
       'docblock_inherit' => PropertyDefinition::create('boolean')
@@ -197,9 +199,14 @@ class PHPFunction extends BaseGenerator {
 
     $function_code[] = "}";
 
+    // TODO: remove this when https://github.com/joachim-n/mutable-typed-data/issues/7
+    // is fixed.
+    assert(!empty($this->component_data['function_name']));
+
     return [
       'function' => [
         'role' => 'function',
+        'function_name' => $this->component_data['function_name'],
         'content' => $function_code,
       ],
     ];
