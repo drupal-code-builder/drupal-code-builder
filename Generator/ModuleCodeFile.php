@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\DrupalExtension;
+
 /**
  * Generator class for module code files.
  */
@@ -12,6 +14,14 @@ class ModuleCodeFile extends PHPFile {
    */
   public function getMergeTag() {
     return $this->component_data['filename'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function detectExistence(DrupalExtension $extension) {
+    $this->exists = $extension->hasFile($this->component_data['filename']);
+    $this->extension = $extension;
   }
 
   /**
@@ -55,6 +65,45 @@ class ModuleCodeFile extends PHPFile {
       $code_body[] = '';
     }
 
+    // Merge any existing functions.
+    if ($this->exists) {
+      $ast = $this->extension->getFileAST($this->component_data['filename']);
+
+      $existing_function_nodes = $this->extension->getASTFunctions($ast);
+
+      // The first function in the AST will have an additional comment block for
+      // the @file tag. Remove this, since we will generate it ourselves.
+      if (isset($ast[0])) {
+        $first_function = $ast[0];
+        $comments = $first_function->getAttribute('comments');
+        $docblock = end($comments);
+
+        $first_function->setAttribute('comments', [$docblock]);
+      }
+
+      // Add functions from the existing file, unless we are generating them
+      // too, in which case we assume that our version is better.
+      foreach ($existing_function_nodes as $function_node) {
+        $existing_function_name = (string) $function_node->name;
+
+        // Skip if the function has already been generated.
+        if (isset($this->functions[$existing_function_name])) {
+          continue;
+        }
+
+        if ($comments = $function_node->getAttribute('comments')) {
+          $first_line = $comments[0]->getStartLine();
+        }
+        else {
+          $first_line = $function_node->getStartLine();
+        }
+
+        $end_line = $function_node->getEndLine() + 1;
+
+        $code_body[$existing_function_name] = implode("\n", $this->extension->getFileLines($this->component_data['filename'], $first_line, $end_line));
+      }
+    }
+
     // If there are no functions, then this is a .module file that's been
     // requested so the module is correctly formed. It is customary to add a
     // comment to the file for DX.
@@ -67,6 +116,16 @@ class ModuleCodeFile extends PHPFile {
     // list of the replacements to make import statements with.
     $imported_classes = [];
     $this->extractFullyQualifiedClasses($code_body, $imported_classes);
+
+    // Merge any existing import statements.
+    if ($this->exists) {
+      $existing_import_nodes = $this->extension->getASTImports($ast);
+
+      foreach ($existing_import_nodes as $import_node) {
+        $existing_import = $import_node->uses[0]->name->toString();
+        $imported_classes[] = $existing_import;
+      }
+    }
 
     $return = array_merge(
       $this->imports($imported_classes),
