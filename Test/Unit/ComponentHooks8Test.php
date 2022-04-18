@@ -196,7 +196,6 @@ class ComponentHooks8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data, $extension);
     $module_file = $files['test_module.module'];
-    dump($module_file);
 
     $module_file = $files["$module_name.module"];
 
