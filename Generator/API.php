@@ -122,6 +122,7 @@ class API extends PHPFile {
 
     // Merge any existing functions.
     if ($this->exists) {
+      // TODO! doesn't handle imports at top of existing file!
       // Add functions from the existing file, unless we are generating them
       // too, in which case we assume that our version is better.
       foreach ($this->existing as $function_node) {
