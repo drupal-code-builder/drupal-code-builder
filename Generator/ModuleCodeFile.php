@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\DrupalExtension;
+
 /**
  * Generator class for module code files.
  */
@@ -12,6 +14,35 @@ class ModuleCodeFile extends PHPFile {
    */
   public function getMergeTag() {
     return $this->component_data['filename'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function detectExistence(DrupalExtension $extension) {
+    $this->exists = $extension->hasFile($this->component_data['filename']);
+
+    if (!$this->exists) {
+      return;
+    }
+
+    $ast = $extension->getFileAST($this->component_data['filename']);
+    $ast = $extension->getASTFunctions($ast);
+
+    // The first function in the AST will have an additional comment block for
+    // the @file tag. Remove this, since we will generate it ourselves.
+    if (isset($ast[0])) {
+      $first_function = $ast[0];
+      $comments = $first_function->getAttribute('comments');
+      $docblock = end($comments);
+
+      $first_function->setAttribute('comments', [$docblock]);
+    }
+
+    // No idea of format here! Probably unique for each generator!
+    // For info files, the only thing which is mergeable
+    $this->existing = $ast;
+    $this->extension = $extension;
   }
 
   /**

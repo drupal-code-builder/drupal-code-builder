@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
@@ -144,5 +145,52 @@ class ComponentHooks8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('description', $module_data['short_description']);
     $yaml_tester->assertPropertyHasValue('core', '8.x');
   }
+
+  /**
+   * Tests with an existing code file.
+   *
+   * @group existing
+   */
+  public function testHooksWithExitingFunctions() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+        'hook_form_alter',
+      ],
+      'readme' => FALSE,
+    ];
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+
+    $existing_module_file = <<<'EOPHP'
+      <?php
+
+      /**
+       * @file
+       * Contains hook implementations for the Test Module module.
+       */
+
+      /**
+       * Does a thing.
+       */
+      function some_function() {
+        // Code does a thing.
+        $foo = 'foo';
+      }
+
+      EOPHP;
+
+    $extension->setFile('%module.module', $existing_module_file);
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+    $module_file = $files['test_module.module'];
+    dump($module_file);
+  }
+
 
 }
