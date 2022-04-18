@@ -161,7 +161,8 @@ abstract class PHPFile extends File {
    * Produces the namespace import statements.
    *
    * @param $imported_classes
-   *  (optional) An array of fully-qualified class names.
+   *  (optional) An array of fully-qualified class names. The presence of the
+   *  leading slash is immaterial. Duplicates are removed.
    */
   function imports($imported_classes = []) {
     $imports = [];
@@ -174,6 +175,9 @@ abstract class PHPFile extends File {
 
       // Sort the imported classes.
       sort($imports);
+
+      // Remove duplicates.
+      $imports = array_unique($imports);
 
       $imports[] = '';
     }
