@@ -641,7 +641,7 @@ class ComponentService8Test extends TestBase {
             'current_user',
           ],
         ],
-        <<<EOT
+        <<<'EOT'
           existing.alpha:
             class: Drupal\existing\Alpha
             arguments: ['@current_user']
@@ -661,7 +661,7 @@ class ComponentService8Test extends TestBase {
             'current_user',
           ],
         ],
-        <<<EOT
+        <<<'EOT'
           existing.alpha:
             class: Drupal\existing\Alpha
             arguments: ['@current_user']
@@ -680,7 +680,7 @@ class ComponentService8Test extends TestBase {
             'module_handler',
           ],
         ],
-        <<<EOT
+        <<<'EOT'
           existing.alpha:
             class: Drupal\existing\Alpha
             arguments: ['@current_user', '@entity_type.manager', '@module_handler']
@@ -747,8 +747,7 @@ class ComponentService8Test extends TestBase {
 
     // Don't use the YamlTester, we need to check the whole thing against the
     // parameter.
-    $services_data = Yaml::parse($services_file);
-    $this->assertStringNotContainsString($resulting, $services_file);
+    $this->assertStringContainsString($resulting, $services_file);
   }
 
 }
