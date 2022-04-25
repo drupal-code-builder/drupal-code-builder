@@ -23,6 +23,7 @@ class HookImplementation extends PHPFunction {
       'code_file' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setLiteralDefault('%module.module'),
+      // The long hook name.
       'hook_name' => PropertyDefinition::create('string'),
     ]);
 
@@ -31,7 +32,12 @@ class HookImplementation extends PHPFunction {
       ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
 
     $definition->getProperty('function_name')
-      ->setExpressionDefault("'%module_' ~ get('..:hook_name')");
+      ->setCallableDefault(function ($component_data) {
+        $long_hook_name = $component_data->getParent()->hook_name->value;
+        $short_hook_name = preg_replace('@^hook_@', '', $long_hook_name);
+        $function_name = '%module_' . $short_hook_name;
+        return $function_name;
+      });
 
     return $definition;
   }
