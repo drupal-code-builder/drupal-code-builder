@@ -81,13 +81,21 @@ class ModuleCodeFile extends PHPFile {
         $first_function->setAttribute('comments', [$docblock]);
       }
 
+      // Get the names of generated functions.
+      $generated_function_names = [];
+      foreach (array_keys($this->functions) as $name) {
+        $name = str_replace('%module', $this->component_data['root_component_name'], $name);
+        $generated_function_names[$name] = TRUE;
+      }
+
       // Add functions from the existing file, unless we are generating them
       // too, in which case we assume that our version is better.
       foreach ($existing_function_nodes as $function_node) {
         $existing_function_name = (string) $function_node->name;
 
-        // Skip if the function has already been generated.
-        if (isset($this->functions[$existing_function_name])) {
+        // Skip if the function has already been generated: a generated function
+        // overwrites an existing one.
+        if (isset($generated_function_names[$existing_function_name])) {
           continue;
         }
 

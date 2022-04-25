@@ -161,6 +161,7 @@ class ComponentHooks8Test extends TestBase {
       'short_description' => 'Test Module description',
       'hooks' => [
         'hook_block_view_alter',
+        'hook_element_info_alter',
       ],
       'readme' => FALSE,
     ];
@@ -190,6 +191,14 @@ class ComponentHooks8Test extends TestBase {
         $foo = new ShortClassName();
       }
 
+      /**
+       * Implements hook_element_info_alter().
+       */
+      function test_module_element_info_alter(array &$info) {
+        // Existing hook implementation code.
+        $info = [];
+      }
+
       EOPHP;
 
     $extension->setFile('%module.module', $existing_module_file);
@@ -197,15 +206,17 @@ class ComponentHooks8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data, $extension);
     $module_file = $files['test_module.module'];
 
-    $module_file = $files["$module_name.module"];
-
     $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
 
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertImportsClassLike(['Drupal\Core\Block\BlockPluginInterface']);
     $php_tester->assertImportsClassLike(['QualifiedNamespace\ShortClassName']);
     $php_tester->assertHasHookImplementation('hook_block_view_alter', $module_name);
+    $php_tester->assertHasHookImplementation('hook_element_info_alter', $module_name);
     $php_tester->assertHasFunction('existing_function');
+
+    // The existing hook implementation is overwritten.
+    $this->assertStringNotContainsString('Existing hook implementation code', $module_file);
   }
 
 }
