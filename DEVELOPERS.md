@@ -23,34 +23,68 @@ For example:
 
 The code generation system is made up of a set of Generator classes, and is
 operated from the \DrupalCodeBuilder\Task\Generate class. To build code, you
-need to specify: - the root generator to use, such as 'module', 'theme',
-'profile'. This is the name of a subclass of
-DrupalCodeBuilder\Generator\RootComponent. - an array of component data. The
-options for this depend on the component. A specification for these is obtained
-by calling getRootComponentDataInfo().
+need to specify:
+- the root generator to use, such as 'module', 'theme', 'profile'. This is the
+  name of a subclass of DrupalCodeBuilder\Generator\RootComponent.
+- the component data. This is a \MutableTypedData\Data\DataItem object, which
+  can be obtained by calling getRootComponentData().
 
 This is done as follows:
 
 ```
   // Get the generator task.
   $task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
-  // Get the info about the component data. This is an array keyed by property
-  // name, with the definition of each property.
-  $component_data_info = $task->getRootComponentDataInfo();
-  foreach ($component_data_info as $property_name => &$property_info) {
-    // Prepare each property. This sets up the default value and the options.
-    // This is to allow each property to use the data entered so far. For
-    // example, if the user enters 'foo_bar' for the module machine name, the
-    // proposed default for the module readable name will be 'Foo Bar'.
-    $task->prepareComponentDataProperty($property_name, $property_info, $component_data);
+  // Get the initial component data object.
+  $component_data = $task->getRootComponentData();
+  // Iterate over the component data to present options to the user.
+  foreach ($component_data as $property_name => $child_data) {
+    // Get label and description.
+    $child_data->getLabel();
+    $child_data->getDescription();
+    // Get type.
+    $child_data->getType();
+    // Etc.
+    // Set value.
+    $child_data->value = 'foo_bar';
   }
-  // Set your values.
-  $component_data['root_name'] = 'foo_bar';
   // Get the files of generated code.
-  // This is an array keyed by filename, where each value is the text of the
-  // file.
+  // This is an array of objects implementing
+  // \DrupalCodeBuilder\File\CodeFileInterface.
   $files = $task->generateComponent($component_data);
 ```
 
-The $files array contains code for the component files, keyed by the filenames.
-This can then be output as desired.
+The $files array contains \DrupalCodeBuilder\File\CodeFileInterface objects for
+the component files, keyed by the filenames. This can then be output as desired.
+
+## Merging with existing code
+
+If the module to be generated already exists on disk, some of the existing code
+files can be merged with the generated code (depending on the type of file; this
+is not yet supported for all files.)
+
+To do this, get a DrupalExtension object for the existing module, and pass it to
+the Generate task:
+
+```
+$analyse_extension_task = \DrupalCodeBuilder\Factory::getTask('AnalyseExtension');
+$existing_extension = $analyse_extension_task->createExtension('module', $existing_module_path);
+
+$files = $task->generateComponent($component_data, [], NULL, $existing_extension);
+```
+
+## Configuration
+
+Different components can have configuration for how the code is generated. This
+is held in a \MutableTypedData\Data\DataItem object, obtained like this:
+
+```
+$configuration_task = \DrupalCodeBuilder\Factory::getTask('Configuration');
+$config_data = $configuration_task->getConfigurationData('module');
+```
+
+The config object can be used in the same way as the component data. To use
+the config, pass it in when generating the code:
+
+```
+$files = $task->generateComponent($component_data, [], $config_data);
+```
