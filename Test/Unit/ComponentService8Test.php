@@ -750,4 +750,82 @@ class ComponentService8Test extends TestBase {
     $this->assertStringContainsString($resulting, $services_file);
   }
 
+  /**
+   * Test merging of injected services in an existing service.
+   */
+  public function testExistingServiceMerge() {
+    $module_name = 'existing';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'services' => [
+        0 => [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+            'module_handler',
+          ],
+        ],
+      ],
+    ];
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+    $services_file_yaml = <<<EOT
+      services:
+        existing.alpha:
+          class: Drupal\my_module\Alpha
+          arguments: ['@current_user', '@entity_type.manager']
+      EOT;
+
+    $extension->setFile('%module.services.yml', $services_file_yaml);
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+
+    $services_file = $files["$module_name.services.yml"];
+    $yaml_tester = new YamlTester($services_file);
+
+    // We expect the order to be existing services first, in their original
+    // order, and then new ones from the generate request.
+    $yaml_arguments = [
+      '@current_user',
+      '@entity_type.manager',
+      '@module_handler',
+    ];
+    foreach ($yaml_arguments as $index => $argument) {
+      $yaml_tester->assertPropertyHasValue(['services', "$module_name.alpha", 'arguments', $index], $argument);
+    }
+
+    $service_class_file = $files['src/Alpha.php'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\existing\Alpha');
+
+    $assert_injected_services = [
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+        'service_name' => 'module_handler',
+        'property_name' => 'moduleHandler',
+        'parameter_name' => 'module_handler',
+      ],
+    ];
+    $php_tester->assertInjectedServices($assert_injected_services);
+  }
+
 }

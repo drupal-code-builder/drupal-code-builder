@@ -5,6 +5,8 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\StringAssembler;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
+use Ckr\Util\ArrayMerger;
 
 /**
  * Generator for a service.
@@ -168,13 +170,52 @@ class Service extends PHPClassFileWithInjection {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function detectExistence(DrupalExtension $extension) {
+    if (!$extension->hasFile('%module.services.yml')) {
+      $this->exists = FALSE;
+      return;
+    }
+
+    $services_yaml = $extension->getFileYaml('%module.services.yml');
+
+    if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']])) {
+      $this->exists = TRUE;
+      $this->extension = $extension;
+    }
+  }
+
+  /**
    * Return an array of subcomponent types.
    */
   public function requiredComponents(): array {
     $components = [];
 
     $yaml_data_arguments = [];
+
+    $requested_services = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
+      $requested_services[] = $service_id;
+    }
+    $existing_services = [];
+    if ($this->exists) {
+      $services_yaml = $this->extension->getFileYaml('%module.services.yml');
+
+      foreach ($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'] as $argument) {
+        $service_id = ltrim($argument, '@');
+        $existing_services[] = $service_id;
+      }
+    }
+
+    // Use the ArrayMerger even though these are flat arrays, so we get the same
+    // behaviour as the YAML data will in the YMLFile generator.
+    // Put the existing services first.
+    $merger = new ArrayMerger($existing_services, $requested_services);
+    $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
+    $service_ids = $merger->mergeData();
+
+    foreach ($service_ids as $service_id) {
       $components['service_' . $service_id] = [
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
