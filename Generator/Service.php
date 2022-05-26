@@ -202,9 +202,11 @@ class Service extends PHPClassFileWithInjection {
     if ($this->exists) {
       $services_yaml = $this->extension->getFileYaml('%module.services.yml');
 
-      foreach ($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'] as $argument) {
-        $service_id = ltrim($argument, '@');
-        $existing_services[] = $service_id;
+      if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'])) {
+        foreach ($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'] as $argument) {
+          $service_id = ltrim($argument, '@');
+          $existing_services[] = $service_id;
+        }
       }
     }
 
