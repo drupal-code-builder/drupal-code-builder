@@ -103,7 +103,8 @@ class DrupalExtension {
 
     $value = Yaml::parse($yml);
 
-    return $value;
+    // Cast to array in case the .yml file is empty.
+    return (array) $value;
   }
 
   /**
