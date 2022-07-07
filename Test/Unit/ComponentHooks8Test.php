@@ -279,9 +279,12 @@ class ComponentHooks8Test extends TestBase {
       // The code sample for hook_update_N() has an empty line after a comment.
       'Drupal.Commenting.InlineComment.InvalidEndChar',
     ]);
-    $php_tester->assertHasHookImplementation('hook_update_N', $module_name);
     $php_tester->assertHasFunction('test_module_update_8001');
     $php_tester->assertHasFunction('test_module_update_8002');
+    // We can't use assertHasHookImplementation() as the N is replaced with the
+    // next schema number.
+    $php_tester->assertHasFunction('test_module_update_8003');
+    $php_tester->assertHasNotHookImplementation('hook_update_N', $module_name);
   }
 
 }
