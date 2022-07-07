@@ -219,4 +219,69 @@ class ComponentHooks8Test extends TestBase {
     $this->assertStringNotContainsString('Existing hook implementation code', $module_file);
   }
 
+  /**
+   * Tests hook_update_N() existing implementations.
+   *
+   * @group existing
+   */
+  public function testHooksWithExitingHookInstall() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+        'hook_update_N',
+      ],
+      'readme' => FALSE,
+    ];
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+
+    $existing_install_file = <<<'EOPHP'
+      <?php
+
+      /**
+       * @file
+       * Contains install and update hooks for the Test Module module.
+       */
+
+      /**
+       * Update 8001.
+       */
+      function test_module_update_8001() {
+        // Code does a thing.
+        $foo = 42;
+      }
+
+      /**
+       * Update 8002.
+       */
+      function test_module_update_8002() {
+        // Code does a thing.
+        $foo = 42;
+      }
+
+      EOPHP;
+
+    $extension->setFile('%module.install', $existing_install_file);
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+    $install_file = $files['test_module.install'];
+
+    $php_tester = new PHPTester($this->drupalMajorVersion, $install_file);
+
+    $php_tester->assertDrupalCodingStandards([
+      // 'hook_update_N' is not a valid function name.
+      'Drupal.NamingConventions.ValidFunctionName.InvalidName',
+      // The code sample for hook_update_N() has an empty line after a comment.
+      'Drupal.Commenting.InlineComment.InvalidEndChar',
+    ]);
+    $php_tester->assertHasHookImplementation('hook_update_N', $module_name);
+    $php_tester->assertHasFunction('test_module_update_8001');
+    $php_tester->assertHasFunction('test_module_update_8002');
+  }
+
 }
