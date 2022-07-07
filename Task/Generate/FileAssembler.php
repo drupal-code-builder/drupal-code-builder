@@ -145,6 +145,12 @@ class FileAssembler {
         $filepath = $file_info['filename'];
       }
 
+      // Set the flags relating to existing files on the file info.
+      // This must be done before tokens are replaced, as tests use the filename
+      // with the token.
+      $exists = $existing_extension ? $existing_extension->hasFile($filepath) : FALSE;
+      $merged = $file_info['merged'] ?? FALSE;
+
       $code = implode("\n", $file_info['body']);
 
       // Replace tokens in file contents and file path.
@@ -161,9 +167,6 @@ class FileAssembler {
 
       // Verify that no two components are trying to generate the same file.
       assert(!isset($return[$filepath]), "$filepath not already set in list of returned files");
-
-      $exists = $existing_extension ? $existing_extension->hasFile($filepath) : FALSE;
-      $merged = $file_info['merged'] ?? FALSE;
 
       $return[$filepath] = new CodeFile($filepath, $code, $exists, $merged);
     }
