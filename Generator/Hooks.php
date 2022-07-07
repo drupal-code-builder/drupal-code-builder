@@ -87,8 +87,6 @@ class Hooks extends BaseGenerator {
       // Add a HookImplementation component for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
         // Figure out if there is a dedicated generator class for this hook.
-        // TODO: is it really worth this faff? How many will we have, apart from
-        // hook_menu? Is coding this a) slow and b) YAGNI?
         $hook_name_pieces = explode('_', strtolower($hook['name']));
         $hook_name_pieces = array_map(function($word) { return ucwords($word); }, $hook_name_pieces);
         // Make the class name, eg HookMenu.
