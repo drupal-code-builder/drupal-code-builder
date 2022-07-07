@@ -194,7 +194,12 @@ class Hooks extends BaseGenerator {
     // We don't care for this order!
     $hook_function_declarations = $mb_task_handler_report->getHookDeclarations();
 
-    //drush_print_r($hook_function_declarations);
+    // Normalise requested hooks to lowercase, to match the declarations. Not
+    // sure why getHookDeclarations() does this. This is only necessary to
+    // prevent headdesking when writing tests, as input from users is normalised
+    // somewhere as well.
+    $requested_hook_list = array_change_key_case($requested_hook_list);
+
     // TODO: this should contain the name of the api.php file that provided it!
 
     // Add hook dependencies.
