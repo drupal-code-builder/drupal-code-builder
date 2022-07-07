@@ -8,6 +8,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
@@ -82,6 +83,23 @@ abstract class TestBase extends TestCase {
     $task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', $type);
     $component_data = $task_handler_generate->getRootComponentData();
     return $component_data;
+  }
+
+  /**
+   * Gets a mocked Extension object for use to mock existing files.
+   *
+   * The mocked extension will include the .info.yml file at
+   * Test/Fixtures/modules/existing, which exists to avoid the need to mock it
+   * in every test using this.
+   *
+   * @param string $type
+   *   The extension type, e.g. 'module'.
+   *
+   * @return \DrupalCodeBuilder\Test\Fixtures\File\MockableExtension
+   *   The mocked extension.
+   */
+  protected function getMockedExtenstion(string $type) {
+    return new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing');
   }
 
   /**
