@@ -14,6 +14,16 @@ use DrupalCodeBuilder\File\DrupalExtension;
 class API extends PHPFile {
 
   /**
+   * Whether this file is merged with existing code.
+   *
+   * @todo Move this up the class hierarchy to PHPFIle when it's used there and
+   * in all child classes.
+   *
+   * @var bool
+   */
+  protected $merged = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function getMergeTag() {
@@ -69,6 +79,7 @@ class API extends PHPFile {
       'filename' => "$module_root_name.api.php",
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', 'api'],
+      'merged' => $this->merged,
     ];
   }
 
@@ -126,6 +137,8 @@ class API extends PHPFile {
       // Add functions from the existing file, unless we are generating them
       // too, in which case we assume that our version is better.
       foreach ($this->existing as $function_node) {
+        $this->merged = TRUE;
+
         $existing_function_name = (string) $function_node->name;
 
         // Skip if the function has already been generated.

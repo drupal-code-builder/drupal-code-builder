@@ -10,6 +10,16 @@ use DrupalCodeBuilder\File\DrupalExtension;
 class ModuleCodeFile extends PHPFile {
 
   /**
+   * Whether this file is merged with existing code.
+   *
+   * @todo Move this up the class hierarchy to PHPFIle when it's used there and
+   * in all child classes.
+   *
+   * @var bool
+   */
+  protected $merged = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function getMergeTag() {
@@ -46,6 +56,7 @@ class ModuleCodeFile extends PHPFile {
       'filename' => $this->component_data['filename'],
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', $file_key_tag],
+      'merged' => $this->merged,
     ];
   }
 
@@ -70,6 +81,10 @@ class ModuleCodeFile extends PHPFile {
       $ast = $this->extension->getFileAST($this->component_data['filename']);
 
       $existing_function_nodes = $this->extension->getASTFunctions($ast);
+
+      if ($existing_function_nodes) {
+        $this->merged = TRUE;
+      }
 
       // The first function in the AST will have an additional comment block for
       // the @file tag. Remove this, since we will generate it ourselves.
