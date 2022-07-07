@@ -274,8 +274,6 @@ class ComponentHooks8Test extends TestBase {
     $php_tester = new PHPTester($this->drupalMajorVersion, $install_file);
 
     $php_tester->assertDrupalCodingStandards([
-      // 'hook_update_N' is not a valid function name.
-      'Drupal.NamingConventions.ValidFunctionName.InvalidName',
       // The code sample for hook_update_N() has an empty line after a comment.
       'Drupal.Commenting.InlineComment.InvalidEndChar',
     ]);
