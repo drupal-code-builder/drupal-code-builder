@@ -40,7 +40,7 @@ class DrupalExtension {
    * @param string $extension_type
    *   The type.
    * @param string $extension_path
-   *   The path.
+   *   The path to the extension, without a trailing slash.
    */
   public function __construct(string $extension_type, string $extension_path) {
     if (!file_exists($extension_path)) {
