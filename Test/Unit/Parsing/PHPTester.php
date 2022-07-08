@@ -1156,6 +1156,20 @@ class PHPTester {
   }
 
   /**
+   * Assert the parsed code does not contain the given method.
+   *
+   * @param string $method_name
+   *   The method name to check for.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasNotMethod($method_name, $message = NULL) {
+    $message = $message ?? "The file does not contain the method {$method_name}.";
+
+    Assert::assertArrayNotHasKey($method_name, $this->parser_nodes['methods'], $message);
+  }
+
+  /**
    * Asserts a subset of the parameters of a method of the parsed class.
    *
    * Helper for other assertions.
