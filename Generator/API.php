@@ -76,7 +76,7 @@ class API extends PHPFile {
 
     return [
       'path' => '', // Means base folder.
-      'filename' => "$module_root_name.api.php",
+      'filename' => '%module.api.php',
       'body' => $this->fileContents(),
       'build_list_tags' => ['code', 'api'],
       'merged' => $this->merged,
