@@ -752,6 +752,8 @@ class ComponentService8Test extends TestBase {
 
   /**
    * Test merging of injected services in an existing service.
+   *
+   * @group existing
    */
   public function testExistingServiceMerge() {
     $module_name = 'existing';
