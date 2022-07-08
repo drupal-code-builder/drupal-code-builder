@@ -56,7 +56,9 @@ class File extends BaseGenerator {
    *  - path: The path to the file, relative to the future component folder,
    *    without the trailing slash. An empty string means the base folder of the
    *    component.
-   *  - filename: The file name. This may contain tokens, to be replaced using
+   *  - filename: The file name. This MUST use the '%module' token for the root
+   *    component name, so that FileAssembler correctly detects existing files.
+   *    Other tokens may also be used and will be replaced using
    *    the root component class's getReplacements().
    *  - body: An array of pieces to assemble in order to form the body of the
    *    file. These can be single lines, or larger chunks: they will be joined
