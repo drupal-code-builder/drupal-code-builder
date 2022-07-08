@@ -154,6 +154,10 @@ class ComponentInfo9Test extends TestBase {
     $files = $this->generateModuleFiles($module_data, $extension);
 
     $info_file = $files["$module_name.info.yml"];
+
+    $this->assertTrue($info_file->fileExists());
+    $this->assertTrue($info_file->fileIsMerged());
+
     $yaml_tester = new YamlTester($info_file);
     $yaml_tester->assertPropertyHasValue('dependencies', $resulting_dependencies);
   }

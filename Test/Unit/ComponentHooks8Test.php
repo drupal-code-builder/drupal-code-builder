@@ -162,6 +162,7 @@ class ComponentHooks8Test extends TestBase {
       'hooks' => [
         'hook_block_view_alter',
         'hook_element_info_alter',
+        'hook_install',
       ],
       'readme' => FALSE,
     ];
@@ -205,6 +206,14 @@ class ComponentHooks8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data, $extension);
     $module_file = $files['test_module.module'];
+    $install_file = $files['test_module.install'];
+
+    // Test the code file status flags.
+    $this->assertTrue($module_file->fileExists());
+    $this->assertTrue($module_file->fileIsMerged());
+
+    $this->assertFalse($install_file->fileExists());
+    $this->assertFalse($install_file->fileIsMerged());
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
 
@@ -270,6 +279,9 @@ class ComponentHooks8Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data, $extension);
     $install_file = $files['test_module.install'];
+
+    $this->assertTrue($install_file->fileExists());
+    $this->assertTrue($install_file->fileIsMerged());
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $install_file);
 

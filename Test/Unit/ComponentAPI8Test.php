@@ -128,6 +128,10 @@ class ComponentAPI8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data, $extension);
     $api_file = $files['test_module.api.php'];
 
+    // Test the code file status flags.
+    $this->assertTrue($api_file->fileExists());
+    $this->assertTrue($api_file->fileIsMerged());
+
     $php_tester = new PHPTester($this->drupalMajorVersion, $api_file);
     // Skip the return type sniff, as the generated hook function won't have
     // a return type.

@@ -745,6 +745,14 @@ class ComponentService8Test extends TestBase {
 
     $services_file = $files["$module_name.services.yml"];
 
+    if (is_null($existing)) {
+      $this->assertFalse($services_file->fileExists());
+    }
+    else {
+      $this->assertTrue($services_file->fileExists());
+      $this->assertTrue($services_file->fileIsMerged());
+    }
+
     // Don't use the YamlTester, we need to check the whole thing against the
     // parameter.
     $this->assertStringContainsString($resulting, $services_file);
@@ -822,6 +830,10 @@ class ComponentService8Test extends TestBase {
     $files = $this->generateModuleFiles($module_data, $extension);
 
     $services_file = $files["$module_name.services.yml"];
+
+    $this->assertTrue($services_file->fileExists());
+    $this->assertTrue($services_file->fileIsMerged());
+
     $yaml_tester = new YamlTester($services_file);
 
     // We expect the order to be existing services first, in their original
@@ -836,6 +848,9 @@ class ComponentService8Test extends TestBase {
     }
 
     $service_class_file = $files['src/Alpha.php'];
+
+    $this->assertTrue($service_class_file->fileExists());
+    $this->assertFalse($service_class_file->fileIsMerged());
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
