@@ -756,6 +756,50 @@ class ComponentService8Test extends TestBase {
    * @group existing
    */
   public function testExistingServiceMerge() {
+    // First pass: generate the files we'll mock as existing.
+    $module_name = 'existing';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'services' => [
+        0 => [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+        ],
+      ],
+    ];
+
+    $existing_files = $this->generateModuleFiles($module_data);
+    // Add an existing class method.
+    $class_file = $existing_files['src/Alpha.php'];
+    $method = <<<'EOT'
+
+      /**
+       * Method.
+       */
+      public function existingMethod() {
+        $foo = 'bar';
+      }
+
+    EOT;
+    $class_file = substr_replace($class_file, $method, -3, 0);
+
+    // Sanity check the spliced file.
+    $php_tester = new PHPTester($this->drupalMajorVersion, $class_file);
+    $php_tester->assertDrupalCodingStandards();
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+    $extension->setFile('%module.services.yml', $existing_files['existing.services.yml']);
+    $extension->setFile('src/Alpha.php', $existing_files['src/Alpha.php']);
+
+    // Now generate the module again, passing in the mocked existing code.
     $module_name = 'existing';
     $module_data = [
       'base' => 'module',
@@ -774,16 +818,6 @@ class ComponentService8Test extends TestBase {
         ],
       ],
     ];
-
-    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
-    $services_file_yaml = <<<EOT
-      services:
-        existing.alpha:
-          class: Drupal\my_module\Alpha
-          arguments: ['@current_user', '@entity_type.manager']
-      EOT;
-
-    $extension->setFile('%module.services.yml', $services_file_yaml);
 
     $files = $this->generateModuleFiles($module_data, $extension);
 
@@ -806,6 +840,10 @@ class ComponentService8Test extends TestBase {
     $php_tester = new PHPTester($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\existing\Alpha');
+
+    // The existing method is overwritten, until merging of PHP classes is
+    // implemented.
+    $php_tester->assertHasNotMethod('existingMethod', 'The existing method is overwritten.');
 
     $assert_injected_services = [
       [
