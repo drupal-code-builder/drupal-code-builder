@@ -14,7 +14,7 @@ For example:
   include_once('Factory.php');
   // Tell DCB which environment it's being used in and the Drupal core version.
   \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('Drush')
-    ->setCoreVersionNumber(8);
+    ->setCoreVersionNumber(9);
   // Get the Task handler.
   $dcb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
   // Call a method in the Task handler to perform the operation.
@@ -34,7 +34,7 @@ This is done as follows:
 ```
   // Tell DCB which environment it's being used in and the Drupal core version.
   \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('Drush')
-    ->setCoreVersionNumber(8);
+    ->setCoreVersionNumber(9);
   // Get the generator task.
   $task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
   // Get the initial component data object.
