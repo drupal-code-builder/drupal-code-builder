@@ -32,6 +32,9 @@ need to specify:
 This is done as follows:
 
 ```
+  // Tell DCB which environment it's being used in and the Drupal core version.
+  \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('Drush')
+    ->setCoreVersionNumber(8);
   // Get the generator task.
   $task = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
   // Get the initial component data object.
