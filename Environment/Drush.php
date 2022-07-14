@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Environment;
 
+use Drush\Drush as StaticDrush;
+
 /**
  * Environment class for use as a Drush plugin.
  */
@@ -35,8 +37,8 @@ class Drush extends BaseEnvironment {
   private function getHooksDirectorySettingHelper() {
     // Set the module folder based on variable.
     // First try the drush 'data' option.
-    if (drush_get_option('data')) {
-      $directory = drush_get_option('data');
+    if (StaticDrush::input()->hasOption('data')) {
+      $directory = StaticDrush::input()->getOption('data');
       if ($directory) {
         // In pure Drush, the hooks folder contains subfolder for hooks for
         // each major version of Drupal.
