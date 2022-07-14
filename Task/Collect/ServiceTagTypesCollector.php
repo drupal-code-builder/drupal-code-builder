@@ -72,6 +72,9 @@ class ServiceTagTypesCollector extends CollectorBase  {
    * @return
    *  An array whose keys are service tags, and whose values arrays containing:
    *    - 'label': A label for the tag.
+   *    - 'collector_type': One of:
+   *      - 'service_collector': The collector has instantiated services.
+   *      - 'service_id_collector: The collector has service IDs.
    *    - 'interface': The fully-qualified name (without leading slash) of the
    *      interface that each tagged service must implement.
    *    - 'methods': An array of the methods of this interface, in the same
