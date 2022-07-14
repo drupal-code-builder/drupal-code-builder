@@ -109,6 +109,12 @@ class ServiceTagTypesCollector extends CollectorBase  {
       foreach ($tag_infos as $tag_info) {
         $tag = $tag_info['tag'];
 
+        // Filter out tags slated for deprecation.
+        // See https://www.drupal.org/project/drupal/issues/2915772.
+        if (in_array($tag, ['non_lazy_route_enhancer', 'non_lazy_route_filter'])) {
+          continue;
+        }
+
         // Make a label from the service tag.
         // This is generally more descriptive than the interface short name
         // (e.g. 'FilterInterface'), but sometimes has inverted syntax.
