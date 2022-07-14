@@ -35,7 +35,7 @@ class CollectServiceTagsTest extends CollectionTestBase {
 
     $this->assertArrayHasKey('route_enhancer', $tag_data);
     $route_enhancer_data = $tag_data['route_enhancer'];
-    $this->assertEquals('Enhancer', $route_enhancer_data['label']);
+    $this->assertEquals('Route enhancer', $route_enhancer_data['label']);
     $this->assertEquals('service_collector', $route_enhancer_data['collector_type']);
     $this->assertEquals('Drupal\Core\Routing\EnhancerInterface', $route_enhancer_data['interface']);
 

@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use CaseConverter\CaseString;
+use CaseConverter\StringAssembler;
 
 /**
  *  Task helper for collecting data on tagged services.
@@ -108,6 +109,14 @@ class ServiceTagTypesCollector extends CollectorBase  {
       foreach ($tag_infos as $tag_info) {
         $tag = $tag_info['tag'];
 
+        // Make a label from the service tag.
+        // This is generally more descriptive than the interface short name
+        // (e.g. 'FilterInterface'), but sometimes has inverted syntax.
+        // We can't use CaseString because the tag contains both _ and .
+        // characters.
+        $tag_pieces = preg_split('@[_.]@', $tag);
+        $label = (new StringAssembler($tag_pieces))->sentence();
+
         if ($collector_type == 'service_id_collector') {
           // Service ID collectors don't give us anything but the service ID,
           // so nothing can be detected about the interface collected services
@@ -117,8 +126,6 @@ class ServiceTagTypesCollector extends CollectorBase  {
           // its tagged services to implement its own interface. So all we can
           // do is assume other implementations will do the same.
           $service_class_reflection = new \ReflectionClass($service_class);
-
-          $label = CaseString::pascal($service_class_reflection->getShortName())->title();
 
           // Hope there's only one interface...
           $service_interfaces = $service_class_reflection->getInterfaceNames();
@@ -151,13 +158,6 @@ class ServiceTagTypesCollector extends CollectorBase  {
             // collected services must implement.
             continue;
           }
-
-          // Make a label from the interface name: take the short interface name,
-          // and remove an 'Interface' suffix, convert to title case.
-          $interface_pieces = explode('\\', $collected_services_interface);
-          $label = array_pop($interface_pieces);
-          $label = preg_replace('@Interface$@', '', $label);
-          $label = CaseString::pascal($label)->title();
 
           $interface_methods = $this->methodCollector->collectMethods($collected_services_interface);
         }
