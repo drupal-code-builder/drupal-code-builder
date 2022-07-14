@@ -118,6 +118,10 @@ class DrupalExtension {
    *   The AST array.
    */
   public function getFileAST(string $relative_file_path): array {
+    if (!$this->hasFile($relative_file_path)) {
+      throw new \LogicException("File $relative_file_path does not exist.");
+    }
+
     $php = $this->getFileContents($relative_file_path);
 
     $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
