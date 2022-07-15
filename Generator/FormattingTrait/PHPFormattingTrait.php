@@ -48,7 +48,7 @@ trait PHPFormattingTrait {
    * @return
    *   The array of code lines with the indentation applied.
    */
-  function indentCodeLines($lines, $indent = 1) {
+  function indentCodeLines(array $lines, int $indent = 1) {
     $indent = str_repeat('  ', $indent);
 
     $indented_lines = array_map(function ($line) use ($indent) {
