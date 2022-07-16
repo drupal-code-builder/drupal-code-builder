@@ -18,35 +18,6 @@ class AnalyzeModule extends Base {
   protected $sanity_level = 'component_data_processed';
 
   /**
-   * Helper function to get all the code files for a given module
-   *
-   * TODO: does drush have this?
-   *
-   * @param $module_root_name
-   *  The root name of a module, eg 'node', 'taxonomy'.
-   *
-   * @return
-   *  A flat array of filenames.
-   */
-  public function getFiles($module_root_name) {
-    $filepath = $this->environment->getExtensionPath('module', $module_root_name);
-
-    //$old_dir = getcwd();
-    //chdir($filepath);
-    $files = scandir($filepath);
-
-    $module_files = [];
-    foreach ($files as $filename) {
-      $ext = substr(strrchr($filename, '.'), 1);
-      if (in_array($ext, ['module', 'install', 'inc'])) {
-        $module_files[] = $filepath . '/' . $filename;
-      }
-    }
-
-    return $module_files;
-  }
-
-  /**
    * Helper function to get all function names from a file.
    *
    * @param $file

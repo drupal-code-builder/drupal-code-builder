@@ -27,11 +27,6 @@ class UnitAnalyzeModuleTest extends TestCase {
 
     $analyze_task = new \DrupalCodeBuilder\Task\AnalyzeModule($environment->reveal());
 
-    $files = $analyze_task->getFiles('test_analyze');
-
-    // We get absolute paths back; too faffy to check them in a portable way.
-    $this->assertCount(4, $files);
-
     $hooks = $analyze_task->getInventedHooks('test_analyze');
 
     $this->assertEqualsCanonicalizing([
