@@ -211,6 +211,9 @@ class ComponentFolderRecursiveFilterIterator extends \RecursiveFilterIterator {
 
     // List of file extensions we should skip.
     $unwanted_extensions = [
+      'yml',
+      'txt',
+      'md',
       // Module folders (well mine at least) frequently contain patch files and
       // other associated cruft which we want to skip.
       'patch',
