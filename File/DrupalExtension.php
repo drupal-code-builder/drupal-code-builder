@@ -2,11 +2,13 @@
 
 namespace DrupalCodeBuilder\File;
 
+use DrupalCodeBuilder\PhpParser\GroupingNodeVisitor;
 use Symfony\Component\Yaml\Yaml;
-use PhpParser\ParserFactory;
 use PhpParser\Error;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Use_;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
 
 /**
  * Represents a Drupal extension's files in the codebase.
@@ -160,7 +162,7 @@ class DrupalExtension {
    *   The AST as returned by getFileAST().
    *
    * @return array
-   *   An array of function nodes.
+   *   An array of function nodes, numerically indexed, yes, WTF.
    */
   public function getASTFunctions(array $ast): array {
     $ast = array_filter($ast, function($node) {
@@ -168,6 +170,26 @@ class DrupalExtension {
     });
 
     return $ast;
+  }
+
+  /**
+   * Gets the methods from an AST.
+   *
+   * @param array $ast
+   *   The AST as returned by getFileAST().
+   *
+   * @return array
+   *   An array of method nodes keyed by the method name.
+   */
+  public function getASTMethods(array $ast): array {
+    // TODO: throw exception if not a class.
+    $recursive_visitor = new GroupingNodeVisitor();
+    $traverser = new NodeTraverser();
+    $traverser->addVisitor($recursive_visitor);
+
+    $traverser->traverse($ast);
+
+    return $recursive_visitor->getNodes()['methods'];
   }
 
   /**
