@@ -72,13 +72,60 @@ class AnalyzeModule extends Base {
       $contents = file_get_contents("$filename");
 
       // List of patterns to match on.
+      // The array keys are arbitrary.
       // They should all have capturing groups for:
       //  - 1. hook name
       //  - 2. optional parameters
       $hook_invocation_patterns = [
-        // module_invoke_all() calls (the key here is arbitrary).
-        'module_invoke_all' => [
+        'invokeAll' => [
           // The pattern for this item.
+          'pattern' => "/
+            invokeAll \(
+              ' ( $hook_prefix \w+ ) ' # Hook name, with the hook prefix.
+              (?:
+                , \s*
+                (
+                  [^)]* # Capture further parameters: anything up to the closing ')'.
+                )
+              )? # The further parameters are optional.
+          /x",
+        ],
+        'invoke' => [
+          'pattern' =>
+            "/
+            invoke \(
+              [^,]+ # The \$module parameter.
+              , \s*
+              ' ( $hook_prefix \w+ ) ' # Hook name, with the hook prefix.
+              (?:
+                , \s*
+                (
+                  [^)]* # Capture further parameters: anything up to the closing ')'.
+                )
+              )? # The further parameters are optional.
+            /x",
+        ],
+        'alter_single' => [
+          'pattern' =>
+            "/
+            alter \(
+              ' ( $hook_prefix \w+ ) ' # Hook name, with the hook prefix.
+              (?:
+                , \s*
+                (
+                  [^)]* # Capture further parameters: anything up to the closing ')'.
+                )
+              )? # The further parameters are optional.
+            /x",
+          // A process callback to apply to each hook name the pattern finds.
+          // This is because the hook name in drupal_alter() needs a suffix to
+          // be added to it.
+          'process callback' => function ($hook_name) {
+            return $hook_name . '_alter';
+          },
+        ],
+        // module_invoke_all() calls.
+        'module_invoke_all' => [
           'pattern' =>
             "/
             module_invoke_all \(
