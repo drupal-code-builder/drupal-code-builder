@@ -43,6 +43,13 @@ class UnitAnalyzeModuleTest9 extends TestCase {
       'test_analyze_9_method_change_cat_alter' => '$purr, $miaow',
       'test_analyze_9_service_change_cat_alter' => '$purr, $miaow',
       'test_analyze_9_di_change_cat_alter' => '$purr, $miaow',
+      // alter() with an array of hooks.
+      'test_analyze_9_di_change_cat_1_alter' => '$purr, $miaow',
+      'test_analyze_9_di_change_cat_2_alter' => '$purr, $miaow',
+      'test_analyze_9_method_change_cat_1_alter' => '$purr, $miaow',
+      'test_analyze_9_method_change_cat_2_alter' => '$purr, $miaow',
+      'test_analyze_9_service_change_cat_1_alter' => '$purr, $miaow',
+      'test_analyze_9_service_change_cat_2_alter' => '$purr, $miaow',
     ];
     // WTF: assertEqualsCanonicalizing() doesn't work with associative arrays.
     // Have to sort these ourselves.

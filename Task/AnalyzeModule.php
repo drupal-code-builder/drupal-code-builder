@@ -121,7 +121,41 @@ class AnalyzeModule extends Base {
           // This is because the hook name in drupal_alter() needs a suffix to
           // be added to it.
           'process callback' => function ($hook_name) {
-            return $hook_name . '_alter';
+            return [$hook_name . '_alter'];
+          },
+        ],
+        'alter_multiple' => [
+          'pattern' =>
+            "/
+            alter \(
+              # Array of hook names.
+              \[
+                (
+                  # Hook names, with the hook prefix.
+                  # Capture as the whole thing, split in the process callback.
+                  (?: ' $hook_prefix \w+ ' ,? \ ? ) *
+                )
+              \]
+              (?:
+                , \s*
+                (
+                  [^)]* # Capture further parameters: anything up to the closing ')'.
+                )
+              )? # The further parameters are optional.
+            /x",
+          // A process callback to apply to each hook name the pattern finds.
+          'process callback' => function ($hook_array_string) {
+            // Split the code string that's an array of hook names.
+            $matches = [];
+            preg_match_all('@\w+@', $hook_array_string, $matches);
+
+            // Add the '_alter' suffix to all hook namaes,
+            $hook_names = [];
+            foreach ($matches[0] as $hook_name) {
+              $hook_names[] = $hook_name . '_alter';
+            }
+
+            return $hook_names;
           },
         ],
         // module_invoke_all() calls.
@@ -171,7 +205,7 @@ class AnalyzeModule extends Base {
           // This is because the hook name in drupal_alter() needs a suffix to
           // be added to it.
           'process callback' => function ($hook_name) {
-            return $hook_name . '_alter';
+            return [$hook_name . '_alter'];
           },
         ],
       ];
@@ -196,21 +230,27 @@ class AnalyzeModule extends Base {
 
           foreach ($file_hooks as $hook_short_name => $parameters) {
             // Perform additional processing on the hook short name, if needed.
+            // This can return more than one hook.
             if (isset($pattern_info['process callback'])) {
-              $hook_short_name = $pattern_info['process callback']($hook_short_name);
-            }
-
-            // If this hook is already in our list, we take the longest parameters
-            // string, on the assumption that this may be more complete if some
-            // parameters are options.
-            if (isset($hooks[$hook_short_name])) {
-              // Replace the existing hook if the new parameters are longer.
-              if (strlen($parameters) > strlen($hooks[$hook_short_name])) {
-                $hooks[$hook_short_name] = $parameters;
-              }
+              $hook_short_names = $pattern_info['process callback']($hook_short_name);
             }
             else {
-              $hooks[$hook_short_name] = $parameters;
+              $hook_short_names = [$hook_short_name];
+            }
+
+            foreach ($hook_short_names as $hook_short_name_inner) {
+              // If this hook is already in our list, we take the longest parameters
+              // string, on the assumption that this may be more complete if some
+              // parameters are options.
+              if (isset($hooks[$hook_short_name_inner])) {
+                // Replace the existing hook if the new parameters are longer.
+                if (strlen($parameters) > strlen($hooks[$hook_short_name_inner])) {
+                  $hooks[$hook_short_name_inner] = $parameters;
+                }
+              }
+              else {
+                $hooks[$hook_short_name_inner] = $parameters;
+              }
             }
           }
         }
