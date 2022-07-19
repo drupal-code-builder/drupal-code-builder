@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the Test module module.
+ */
+
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function test_analyze_9_entity_bundle_info() {
+  \Drupal::moduleHandler()->invokeAll('test_analyze_9_method_all_cats', $purr, $miaow);
+  \Drupal::moduleHandler()->invoke('kitty_module', 'test_analyze_9_method_one_cat', $purr, $miaow);
+  \Drupal::moduleHandler()->alter('test_analyze_9_method_change_cat', $purr, $miaow);
+  \Drupal::moduleHandler()->alter(['test_analyze_9_method_change_cat_1', 'test_analyze_9_method_change_cat_2'], $purr, $miaow);
+  \Drupal::service('module_handler')->invokeAll('test_analyze_9_service_all_cats', $purr, $miaow);
+  \Drupal::service('module_handler')->invoke('kitty_module', 'test_analyze_9_service_one_cat', $purr, $miaow);
+  \Drupal::service('module_handler')->alter('test_analyze_9_service_change_cat', $purr, $miaow);
+  \Drupal::service('module_handler')->alter(['test_analyze_9_service_change_cat_1', 'test_analyze_9_service_change_cat_2'], $purr, $miaow);
+  $bundles['user']['user']['label'] = t('User');
+  return $bundles;
+}

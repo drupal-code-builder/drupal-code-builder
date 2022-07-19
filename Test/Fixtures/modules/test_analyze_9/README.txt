@@ -1,0 +1,1 @@
+This module was generated automatically by the 'dcb:fixtures' command.
