@@ -84,4 +84,18 @@ class CodeFile implements \Stringable, CodeFileInterface {
     return $this->merged;
   }
 
+  /**
+   * Gets the relative filepath.
+   *
+   * @internal
+   *
+   * @todo Make this part of the API in 4.3.0.
+   *
+   * @return string
+   *   The filepath.
+   */
+  public function getFilePath(): string {
+    return $this->filepath;
+  }
+
 }

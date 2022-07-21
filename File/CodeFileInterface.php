@@ -19,6 +19,14 @@ interface CodeFileInterface {
   public function getCode(): string;
 
   /**
+   * Gets the relative filepath for the file.
+   *
+   * @return string
+   *   The filepath, relative to the extension root.
+   */
+  public function getFilePath(): string;
+
+  /**
    * Determines whether the file this code is for already exists.
    *
    * @return bool
