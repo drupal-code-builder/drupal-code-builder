@@ -41,7 +41,7 @@ class ComponentModule7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $php_tester->assertDrupalCodingStandards();
   }
 
@@ -72,7 +72,7 @@ class ComponentModule7Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
 
     $php_tester->assertDrupalCodingStandards();
 

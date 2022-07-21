@@ -134,27 +134,26 @@ class PHPTester {
    *   (optional) An array of names of PHPCS sniffs to exclude from testing.
    */
   public function assertDrupalCodingStandards(array $excluded_sniffs = []) {
-    // Exclude this sniff, as we don't have access to the class name.
-    // TODO: restore this as part of #170.
-    $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
-
     // Exclude TODO standards, as we use 'TODO' and not '@todo' and we want that
     // to stand out.
     $excluded_sniffs[] = 'Drupal.Commenting.TodoComment.TodoFormat';
+
+    if (empty($this->phpCodeFilePath)) {
+      // Exclude this sniff if we don't have access to the file name.
+      $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
+    }
 
     $phpcs_runner = $this->setUpPHPCS($excluded_sniffs);
 
     // Process the file with PHPCS.
 
-    // We need to pass in a value for the filename, even though the file does
-    // not exist.
-    // TODO: #170 pass the real filename, as at least one sniff makes use of
-    // it.
-
     // Create and process a single file, faking the path so the report looks nice.
     // $fileContent = "<?php\necho 'hi';";
     $file = new DummyFile($this->phpCode, $phpcs_runner->ruleset, $phpcs_runner->config);
-    $file->path = '/path/to/my/file.php';
+    // We need to pass in a value for the filename, even though the file does
+    // not exist. Use a dummy if the PHPTester was constructed without a
+    // filepath.
+    $file->path = $this->phpCodeFilePath ?? '/path/to/my/file.php';
     // Process the file.
     $phpcs_runner->processFile($file);
     // Print out the reports.

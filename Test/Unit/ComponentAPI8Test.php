@@ -50,7 +50,7 @@ class ComponentAPI8Test extends TestBase {
 
     $api_file = $files["$module_name.api.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $api_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $api_file);
     $php_tester->assertDrupalCodingStandards();
 
     // TODO: expand the docblock assertion for these.
@@ -132,7 +132,7 @@ class ComponentAPI8Test extends TestBase {
     $this->assertTrue($api_file->fileExists());
     $this->assertTrue($api_file->fileIsMerged());
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $api_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $api_file);
     // Skip the return type sniff, as the generated hook function won't have
     // a return type.
     $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.FunctionComment.MissingReturnType']);

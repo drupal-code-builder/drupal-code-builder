@@ -66,14 +66,14 @@ class ComponentContentEntityType8Test extends TestBase {
     ], $files);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_interface_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
     $php_tester->assertInterfaceHasParents(['Drupal\Core\Entity\ContentEntityInterface']);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityBase');
@@ -145,7 +145,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_interface_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
     $php_tester->assertInterfaceHasParents(['Drupal\Core\Entity\ContentEntityInterface']);
@@ -193,14 +193,14 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_interface_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_interface_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasInterface('Drupal\test_module\Entity\KittyCatInterface');
     $php_tester->assertInterfaceHasParents($expected_parent_interfaces);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     // TODO: remove this coding standards exception when the comment for core
     // issue https://www.drupal.org/project/drupal/issues/2949964 is removed
     // from content entity type generation. See
@@ -396,7 +396,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
 
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
@@ -514,7 +514,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
 
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCat');
@@ -646,7 +646,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     // TODO: remove this coding standards exception when the comment for core
     // issue https://www.drupal.org/project/drupal/issues/2949964 is removed
     // from content entity type generation. See
@@ -703,7 +703,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $bundle_entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $bundle_entity_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\KittyCatType');
     $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBundleBase');
@@ -777,14 +777,14 @@ class ComponentContentEntityType8Test extends TestBase {
 
     // Test the entity annotation.
     $entity_class_file = $files['src/Entity/KittyCat.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertPropertyHasValue(['handlers'], $expected_handlers_annotation);
 
     // Test the base classes.
     foreach ($expected_files_base_classes as $filename => $base_class) {
       $handler_class_file = $files[$filename];
-      $php_tester = new PHPTester($this->drupalMajorVersion, $handler_class_file);
+      $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $handler_class_file);
       $php_tester->assertClassHasParent($base_class);
     }
   }
@@ -1205,7 +1205,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $storage_class_file = $files['src/Entity/Handler/KittyCatStorage.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $storage_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $storage_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorage');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\Sql\SqlContentEntityStorage');
@@ -1213,7 +1213,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $storage_schema_class_file = $files['src/Entity/Handler/KittyCatStorageSchema.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $storage_schema_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $storage_schema_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorageSchema');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema');
@@ -1221,7 +1221,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $access_class_file = $files['src/Entity/Handler/KittyCatAccess.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $access_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $access_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatAccess');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityAccessControlHandler');
@@ -1229,7 +1229,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $view_builder_class_file = $files['src/Entity/Handler/KittyCatViewBuilder.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $view_builder_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $view_builder_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatViewBuilder');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityViewBuilder');
@@ -1237,7 +1237,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $list_builder_class_file = $files['src/Entity/Handler/KittyCatListBuilder.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $list_builder_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $list_builder_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatListBuilder');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityListBuilder');
@@ -1255,7 +1255,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $views_data_class_file = $files['src/Entity/Handler/KittyCatViewsData.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $views_data_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $views_data_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatViewsData');
     $php_tester->assertClassHasParent('Drupal\views\EntityViewsData');
@@ -1263,7 +1263,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $translation_class_file = $files['src/Entity/Handler/KittyCatTranslation.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $translation_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $translation_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatTranslation');
     $php_tester->assertClassHasParent('Drupal\content_translation\ContentTranslationHandler');
@@ -1271,7 +1271,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $router_provider_class_file = $files['src/Entity/Handler/KittyCatRouteProvider.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $router_provider_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $router_provider_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatRouteProvider');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider');
@@ -1279,7 +1279,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $form_class_file = $files["src/Form/KittyCatForm.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $form_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $form_class_file);
     // The form class has overridden methods that only call the parent for
     // developers to start working with, so ignore the sniff for this.
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
@@ -1319,12 +1319,12 @@ class ComponentContentEntityType8Test extends TestBase {
     $this->assertArrayHasKey('src/Cake/KittyCatAccess.php', $files);
     $this->assertArrayHasKey('src/Form/KittyCatForm.php', $files, 'The form handler is not affected.');
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $files['src/Cake/KittyCatAccess.php']);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $files['src/Cake/KittyCatAccess.php']);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Cake\KittyCatAccess');
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Cake\KittyCatAccess');
 
@@ -1353,12 +1353,12 @@ class ComponentContentEntityType8Test extends TestBase {
     $this->assertArrayHasKey('src/KittyCatAccess.php', $files);
     $this->assertArrayHasKey('src/Form/KittyCatForm.php', $files, 'The form handler is not affected.');
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $files['src/KittyCatAccess.php']);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $files['src/KittyCatAccess.php']);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\KittyCatAccess');
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\KittyCatAccess');
   }
@@ -1395,7 +1395,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     // Check the links are declared.
     $entity_class_file = $files['src/Entity/KittyCat.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertHasRootProperties([
       'id',
@@ -1452,7 +1452,7 @@ class ComponentContentEntityType8Test extends TestBase {
     // Check the content entity form file.
     $entity_form_file = $files['src/Form/KittyCatForm.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_form_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_form_file);
     // We override formSubmit() empty so it's there for the developer to add to,
     // so disable the sniff for empty overrides.
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
@@ -1531,7 +1531,7 @@ class ComponentContentEntityType8Test extends TestBase {
     // Check the bundle entity form file.
     $entity_type_form_file = $files['src/Form/KittyCatTypeForm.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_type_form_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_type_form_file);
     $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
     $form_builder_tester->assertElementCount(4);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
@@ -1606,7 +1606,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
 
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
@@ -1631,7 +1631,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $bundle_entity_class_file = $files['src/Entity/KittyCatType.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $bundle_entity_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $bundle_entity_class_file);
     $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityBundleBase');
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
@@ -1685,7 +1685,7 @@ class ComponentContentEntityType8Test extends TestBase {
     // Check the content entity form file.
     $entity_form_file = $files['src/Form/KittyCatForm.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_form_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_form_file);
     // We override formSubmit() empty so it's there for the developer to add to,
     // so disable the sniff for empty overrides.
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);
@@ -1702,7 +1702,7 @@ class ComponentContentEntityType8Test extends TestBase {
     // Check the bundle entity form file.
     $entity_type_form_file = $files['src/Form/KittyCatTypeForm.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $entity_type_form_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_type_form_file);
     // We override formSubmit() empty so it's there for the developer to add to,
     // so disable the sniff for empty overrides.
     $php_tester->assertDrupalCodingStandards(['Generic.CodeAnalysis.UselessOverridingMethod.Found']);

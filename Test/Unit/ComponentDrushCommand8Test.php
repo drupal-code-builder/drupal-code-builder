@@ -62,7 +62,7 @@ class ComponentDrushCommand8Test extends TestBase {
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $command_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
@@ -132,7 +132,7 @@ class ComponentDrushCommand8Test extends TestBase {
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $command_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
@@ -216,7 +216,7 @@ class ComponentDrushCommand8Test extends TestBase {
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $command_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
@@ -288,7 +288,7 @@ class ComponentDrushCommand8Test extends TestBase {
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $command_class_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');

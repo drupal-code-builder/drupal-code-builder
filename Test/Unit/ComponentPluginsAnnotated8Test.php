@@ -55,7 +55,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
@@ -113,7 +113,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/OtherClassName.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\OtherClassName');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
@@ -153,7 +153,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     ], $files);
 
     $plugin_file = $files["src/Plugin/Block/$filename"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', $plugin_id, "The plugin ID has no module prefix.");
@@ -228,7 +228,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     ], $files);
 
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
@@ -330,7 +330,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     ], $files);
 
     $plugin_file = $files["src/Element/Alpha.php"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
 
     $php_tester->assertHasClass('Drupal\test_module\Element\Alpha');
     $php_tester->assertClassHasParent('Drupal\somemodule\Element\ParentElement');
@@ -339,7 +339,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
     $module_file = $files['test_module.module'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $php_tester->assertIsProcedural();
     $php_tester->assertHasHookImplementation('hook_element_plugin_alter', $module_name);
 
@@ -375,7 +375,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $this->assertArrayHasKey("src/Element/Alpha.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
 
     $plugin_file = $files["src/Element/Alpha.php"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('RenderElement');
     $annotation_tester->assertAnnotationTextContent('test_module_alpha');
@@ -484,7 +484,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
@@ -561,7 +561,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/ImageEffect/Alpha.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\ImageEffect\Alpha');
     $php_tester->assertClassHasParent('Drupal\image\ImageEffectBase');
@@ -642,7 +642,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     // Check the plugin file.
     $plugin_file = $files["src/Plugin/Field/FieldFormatter/Alpha.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Field\FieldFormatter\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Field\FormatterBase');
@@ -770,14 +770,14 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     ], $files);
 
     $plugin = $files['src/Plugin/Validation/Constraint/Alpha.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\Alpha');
     $php_tester->assertClassHasParent('Symfony\Component\Validator\Constraint');
 
     $validator = $files["src/Plugin/Validation/Constraint/AlphaValidator.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $validator);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $validator);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\AlphaValidator');
     $php_tester->assertClassHasParent('Symfony\Component\Validator\ConstraintValidator');
@@ -812,7 +812,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     ], $files);
 
     $plugin = $files['src/Element/Alpha.php'];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $plugin);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Element\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Render\Element\RenderElement');
@@ -820,7 +820,7 @@ class ComponentPluginsAnnotated8Test extends TestBase {
 
     // Check the .module file.
     $module_file = $files["$module_name.module"];
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $php_tester->assertDrupalCodingStandards();
 
     $php_tester->assertHasHookImplementation('hook_theme', $module_name);

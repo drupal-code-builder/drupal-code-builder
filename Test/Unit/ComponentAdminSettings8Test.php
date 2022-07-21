@@ -50,7 +50,7 @@ class ComponentAdminSettings8Test extends TestBase {
     // Check the form class code.
     $form_file = $files['src/Form/AdminSettingsForm.php'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $form_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $form_file);
     $php_tester->assertDrupalCodingStandards([
       // Excluded because of the buildForm() commented-out code.
       'Drupal.Commenting.InlineComment.SpacingAfter',

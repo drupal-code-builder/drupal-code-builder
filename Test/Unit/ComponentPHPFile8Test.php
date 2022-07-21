@@ -205,7 +205,7 @@ class ComponentPHPFile8Test extends TestBase {
 
     $module_file = $files['test_module.module'];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $php_tester->assertImportsSorted();
   }
 

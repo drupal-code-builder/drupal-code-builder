@@ -101,7 +101,7 @@ class ComponentRouterItem8Test extends TestBase {
 
     $controller_file = $files["src/Controller/MyPathController.php"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $controller_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
     $php_tester->assertHasMethod('content');
@@ -259,7 +259,7 @@ class ComponentRouterItem8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['test_module.my.path.controller', 'requirements', $yaml_property], $yaml_value);
 
     foreach ($expected_methods as $filename => $class_methods) {
-      $php_tester = new PHPTester($this->drupalMajorVersion, $files[$filename]);
+      $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $files[$filename]);
       foreach ($class_methods as $method_name) {
         $php_tester->assertHasMethod($method_name);
       }

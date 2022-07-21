@@ -55,7 +55,7 @@ class ComponentHooks8Test extends TestBase {
 
     $module_file = $files["$module_name.module"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_help', $module_name);
@@ -103,7 +103,7 @@ class ComponentHooks8Test extends TestBase {
     // Check the .module file.
     $module_file = $files["$module_name.module"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $phpcs_excluded_sniffs = [
       // Temporarily exclude the sniff for comment lines being too long, as a
       // comment in hook_form_alter() violates this.
@@ -120,7 +120,7 @@ class ComponentHooks8Test extends TestBase {
     // Check the .install file.
     $install_file = $files["$module_name.install"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $install_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $install_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
     $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
@@ -130,7 +130,7 @@ class ComponentHooks8Test extends TestBase {
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $tokens_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $tokens_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasHookImplementation('hook_tokens', $module_name);
     $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
@@ -215,7 +215,7 @@ class ComponentHooks8Test extends TestBase {
     $this->assertFalse($install_file->fileExists());
     $this->assertFalse($install_file->fileIsMerged());
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
 
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertImportsClassLike(['Drupal\Core\Block\BlockPluginInterface']);
@@ -283,7 +283,7 @@ class ComponentHooks8Test extends TestBase {
     $this->assertTrue($install_file->fileExists());
     $this->assertTrue($install_file->fileIsMerged());
 
-    $php_tester = new PHPTester($this->drupalMajorVersion, $install_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $install_file);
 
     $php_tester->assertDrupalCodingStandards([
       // The code sample for hook_update_N() has an empty line after a comment.
