@@ -58,11 +58,11 @@ class ComponentTests8Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'src/Tests/TestModuleTest.php',
+      'src/Tests/TestModuleTestCase.php',
     ], $files);
 
     // Check the .test file.
-    $tests_file = $files['src/Tests/TestModuleTest.php'];
+    $tests_file = $files['src/Tests/TestModuleTestCase.php'];
 
     $php_tester = new PHPTester($this->drupalMajorVersion, $tests_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);

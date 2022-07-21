@@ -38,7 +38,7 @@ class Tests extends PHPFile {
    */
   public function getFileInfo() {
     $module_root_name = $this->component_data['camel_case_name'];
-    $test_file_name = $module_root_name . "Test.php";
+    $test_file_name = $module_root_name . "TestCase.php";
 
     return [
       'path' => 'src/Tests',
