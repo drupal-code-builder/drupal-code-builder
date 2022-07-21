@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
+use DrupalCodeBuilder\File\CodeFileInterface;
 use PHPUnit\Framework\Assert;
 use PHP_CodeSniffer;
 use PhpParser\Comment\Doc;
@@ -52,10 +53,11 @@ class PHPTester {
    * @param string $php_code
    *   The PHP code that should be tested.
    */
-  public function __construct($drupal_major_version, $php_code) {
+  public function __construct($drupal_major_version, string $php_code, string $file_path = '') {
     $this->findComposerVendorDir();
 
     $this->drupalMajorVersion = $drupal_major_version;
+    $this->phpCodeFilePath = $file_path;
     $this->phpCode = $php_code;
 
     $this->assertWellFormedPHP();
@@ -63,6 +65,18 @@ class PHPTester {
     // Run the code through the parser once we know it's correct PHP, so the
     // parsed node tree is ready for any subsequent assertions.
     $this->parseCode();
+  }
+
+  /**
+   * Creates a PHPTester from a CodeFile object.
+   *
+   * @param int $drupal_major_version
+   *   The Drupal major version of the code.
+   * @param \DrupalCodeBuilder\File\CodeFileInterface $php_code
+   *   The PHP code that should be tested.
+   */
+  public static function fromCodeFile(int $drupal_major_version, CodeFileInterface $code_file) {
+    return new static($drupal_major_version, $code_file->getCode(), $code_file->getFilePath());
   }
 
   /**
