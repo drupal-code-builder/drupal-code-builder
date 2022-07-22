@@ -90,10 +90,19 @@ class MethodCollector {
     $search = [];
     $replace = [];
     foreach ($parameters as $parameter) {
-      $parameter_hinted_class = $parameter->getClass();
+      $parameter_type = $parameter->getType();
 
-      // Skip a parameter that doesn't have a class hint.
-      if (is_null($parameter_hinted_class)) {
+      // Skip a parameter that doesn't have a type.
+      if (is_null($parameter_type)) {
+        continue;
+      }
+      // Skip a parameter that isn't a single type (such as intersection or
+      // union types. TODO: handle these!)
+      if (get_class($parameter_type) != \ReflectionNamedType::class) {
+        continue;
+      }
+      // Skip a parameter type that isn't a class.
+      if ($parameter_type->isBuiltin()) {
         continue;
       }
 
@@ -102,11 +111,12 @@ class MethodCollector {
       // fully-qualified root-namespace typehint (such as \Iterator).
       // Add the space between the typehint and the parameter to help guard
       // against false replacements.
-      $parameter_hinted_class_short_name = $parameter_hinted_class->getShortName();
+      $parameter_hinted_class_pieces = explode('\\', $parameter_type->getName());
+      $parameter_hinted_class_short_name = end($parameter_hinted_class_pieces);
       $search[] = "@(?<!\\\\){$parameter_hinted_class_short_name}(?= )@";
 
       // Prepend the initial '\'.
-      $replace[] = '\\' . $parameter_hinted_class->getName();
+      $replace[] = '\\' . $parameter_type->getName();
     }
 
     $interface_method_data['declaration'] = preg_replace(
