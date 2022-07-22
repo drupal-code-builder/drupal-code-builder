@@ -122,6 +122,7 @@ class ComponentHooks8Test extends TestBase {
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $install_file);
     $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertFileDocblockHasLine("Contains install and update hooks for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
     $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
     $php_tester->assertHasNotHookImplementation('hook_form_alter', $module_name);

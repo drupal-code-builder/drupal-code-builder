@@ -162,13 +162,12 @@ class ModuleCodeFile extends PHPFile {
    */
   function fileDocblockSummary() {
     $filename_pieces = explode('.', $this->component_data['filename']);
-    if (end($filename_pieces) == 'module') {
-      return "Contains hook implementations for the %readable module.";
-    }
-    else {
-      // TODO: handle other .inc files that contain hooks?
-      return parent::fileDocblockSummary();
-    }
+
+    return match (end($filename_pieces)) {
+      'module' => 'Contains hook implementations for the %readable module.',
+      'install' => 'Contains install and update hooks for the %readable module.',
+      default => parent::fileDocblockSummary(),
+    };
   }
 
   /**
