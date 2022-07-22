@@ -7,7 +7,7 @@
     "joachim-n/mutable-typed-data": "^1.1.4",
     "joachim-n/case-converter": "^1.0",
     "php-di/php-di": "^6.2",
-    "ckr/arraymerger": "^2.0",
+    "ckr/arraymerger": "^3.0",
     "nikic/php-parser": "^4"
   },
   "require-dev": {
