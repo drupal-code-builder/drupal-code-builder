@@ -97,9 +97,14 @@ class DrupalExtension {
    *
    * @return array
    *   The YAML data.
+   *
+   * @throws \InvalidArgumentException
+   *   Throws an exception if the given filepath does not have a .yml extension.
    */
   public function getFileYaml(string $relative_file_path): array {
-    // TODO: throw if not a .yml file.
+    if (pathinfo($relative_file_path, PATHINFO_EXTENSION) != 'yml') {
+      throw new \InvalidArgumentException(sprintf('%s is not a YAML file', $relative_file_path));
+    }
 
     $yml = $this->getFileContents($relative_file_path);
 
