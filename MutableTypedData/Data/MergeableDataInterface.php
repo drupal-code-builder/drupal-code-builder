@@ -18,8 +18,7 @@ interface MergeableDataInterface {
    * data is appended.
    *
    * @param \DrupalCodeBuilder\MutableTypedData\Data\MergeableDataInterface $other
-   *   The data item to merge. TODO: change this type to static when PHP 8 is
-   *   the minimum.
+   *   The data item to merge.
    *
    * @return bool
    *   - FALSE if no additional data was added to the called data item.
@@ -28,6 +27,6 @@ interface MergeableDataInterface {
    * @throws \DrupalCodeBuilder\Exception\MergeDataLossException
    *   Throws an exception if the merge would cause data from $other to be discarded.
    */
-  public function merge(MergeableDataInterface $other): bool;
+  public function merge(self $other): bool;
 
 }
