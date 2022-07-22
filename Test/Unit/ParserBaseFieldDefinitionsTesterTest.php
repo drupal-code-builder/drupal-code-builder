@@ -14,7 +14,7 @@ class ParserBaseFieldDefinitionsTesterTest extends TestCase {
     $code = <<<'EOT'
       <?php
 
-      class MyEntityClass {
+      class MyEntityClass extends \Drupal\Core\Entity\ContentEntityBase {
 
         /**
          * {@inheritdoc}
