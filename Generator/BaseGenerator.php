@@ -558,6 +558,31 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   /**
+   * Gets the type of the content.
+   *
+   * This is used by the containing component to determine how to use the
+   * content.
+   *
+   * @return string
+   *   A string identifying the content type.
+   */
+  public function getContentType(): string {
+    return 'element';
+  }
+
+  /**
+   * Gets the contents of the component.
+   *
+   * @return array
+   *   An array of content. The format of this depends on the value of
+   *   self::getContentType(). Typically this will be code lines, or a keyed
+   *   array for YAML data.
+   */
+  public function getContents(): array {
+    return [];
+  }
+
+  /**
    * Filters an array of child contents by role.
    *
    * Helper for buildComponentContents().
