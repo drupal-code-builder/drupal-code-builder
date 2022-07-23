@@ -363,29 +363,6 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected function collectSectionBlocks() {
-    parent::collectSectionBlocks();
-
-    // TODO: remove this when Drupal core 8.6.x is no longer supported.
-    // See https://www.drupal.org/project/drupal/issues/2949964
-    if (in_array('owner', $this->component_data['functionality'])) {
-      $this->functions = array_merge(['core-2949964-comment' => [
-        // No idea why the first line gets an extra indent; removing it here to
-        // compensate. Not worth fixing properly as this will get removed in
-        // the near future.
-        <<<EOT
-        // TODO: If using Drupal core prior to 8.6.x, methods from interface
-          // \Drupal\user\EntityOwnerInterface must be implemented, the owner base field
-          // defined, and EntityOwnerTrait and the call to ownerBaseFieldDefinitions()
-          // removed. See https://www.drupal.org/project/drupal/issues/2949964.
-        EOT,
-      ]], $this->functions);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
