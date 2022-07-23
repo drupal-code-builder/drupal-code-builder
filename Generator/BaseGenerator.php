@@ -158,6 +158,13 @@ abstract class BaseGenerator implements GeneratorInterface {
   public $component_data;
 
   /**
+   * Collection of contained components.
+   *
+   * @var \DrupalCodeBuilder\Generator\Collection\ContainedComponentCollection
+   */
+  protected $containedComponents = [];
+
+  /**
    * The class handler.
    *
    * @var \DrupalCodeBuilder\Task\Generate\ComponentClassHandler
@@ -508,6 +515,11 @@ abstract class BaseGenerator implements GeneratorInterface {
    */
   function buildComponentContentsIterative(ComponentCollection $component_collection) {
     $children_contents = [];
+
+    // New system, experimental.
+    // TODO: sort by type here using getContentType(), or leave that to
+    // specific classes? Many don't need to care about type.
+    $this->containedComponents = $component_collection->getContainedComponentCollection($this);
 
     // Allow each of our children to do the same as this to collect its own
     // children.

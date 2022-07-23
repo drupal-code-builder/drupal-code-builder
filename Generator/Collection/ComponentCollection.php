@@ -488,6 +488,35 @@ class ComponentCollection implements \IteratorAggregate {
   }
 
   /**
+   * Gets a component's collection of contained components in the tree.
+   *
+   * @param GeneratorInterface $component
+   *   The component to get children for.
+   *
+   * @return \DrupalCodeBuilder\Generator\Collection\ContainedComponentCollection
+   *   The collection object holding the child components.
+   */
+  public function getContainedComponentCollection(GeneratorInterface $component): ContainedComponentCollection {
+    $children = $this->getContainmentTreeChildren($component);
+
+    $contained_components = [];
+    foreach ($children as $id => $child) {
+      $content_type = $child->getContentType();
+      $request_path = $this->requestPaths[$id];
+
+      assert(!empty($content_type), sprintf('Contained child %s at %s must have a non-empty content type.',
+        $child->getType(),
+        $request_path
+      ));
+
+     $contained_components[$content_type][$request_path] = $child;
+    }
+
+    $component_request_path = $this->requestPaths[$this->getComponentKey($component)];
+    return new ContainedComponentCollection($contained_components, $component_request_path);
+  }
+
+  /**
    * Gets the containment tree.
    *
    * This checks that the tree has been assembled already.
