@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
 use DrupalCodeBuilder\File\CodeFileInterface;
+use DrupalCodeBuilder\PhpParser\GroupingNodeVisitor;
 use PHPUnit\Framework\Assert;
 use PHP_CodeSniffer;
 use PhpParser\Comment\Doc;
@@ -330,71 +331,13 @@ class PHPTester {
 
     //dump($this->ast);
 
-    // Reset our array of parser nodes.
-    // This then passed into the anonymous visitor class, and populated with the
-    // nodes we are interested in for subsequent assertions.
-    $this->parser_nodes = array_fill_keys([
-      'namespace',
-      'imports',
-      'classes',
-      'interfaces',
-      'properties',
-      'traits',
-      'functions',
-      'methods',
-    ], []);
-
-    // A recursive visitor that groups the parser nodes by type, so subsequent
-    // assertions can easily find them.
-    $recursive_visitor = new class($this->parser_nodes) extends NodeVisitorAbstract {
-
-      /**
-       * Constructor for the visitor.
-       *
-       * Receives the array of parser nodes from the outer PHPTester object by
-       * reference, so we can get data out of the visitor object.
-       *
-       * @param array $nodes
-       *   The PHPTester's array of parser nodes.
-       */
-      public function __construct(&$nodes) {
-        $this->nodes = &$nodes;
-      }
-
-      public function enterNode(Node $node) {
-        switch (get_class($node)) {
-          case \PhpParser\Node\Stmt\Namespace_::class:
-            $this->nodes['namespace'][] = $node;
-            break;
-          case \PhpParser\Node\Stmt\Use_::class:
-            $this->nodes['imports'][] = $node;
-            break;
-          case \PhpParser\Node\Stmt\Class_::class:
-            $this->nodes['classes'][$node->name->toString()] = $node;
-            break;
-          case \PhpParser\Node\Stmt\Interface_::class:
-            $this->nodes['interfaces'][$node->name->toString()] = $node;
-            break;
-          case \PhpParser\Node\Stmt\Property::class:
-            $this->nodes['properties'][$node->props[0]->name->toString()] = $node;
-            break;
-          case \PhpParser\Node\Stmt\TraitUse::class:
-            $this->nodes['traits'][$node->traits[0]->parts[0]] = $node;
-            break;
-          case \PhpParser\Node\Stmt\Function_::class:
-            $this->nodes['functions'][$node->name->toString()] = $node;
-            break;
-          case \PhpParser\Node\Stmt\ClassMethod::class:
-            $this->nodes['methods'][$node->name->toString()] = $node;
-            break;
-        }
-      }
-    };
-
+    $recursive_visitor = new GroupingNodeVisitor();
     $traverser = new NodeTraverser();
     $traverser->addVisitor($recursive_visitor);
 
     $this->ast = $traverser->traverse($this->ast);
+
+    $this->parser_nodes = $recursive_visitor->getNodes();
   }
 
   /**
