@@ -13,6 +13,22 @@ use PhpParser\Node;
 class GroupingNodeVisitor extends NodeVisitorAbstract {
 
   /**
+   * Array of extracted nodes, grouped by type.
+   *
+   * @var array
+   */
+  protected $nodes = [
+    'namespace'=> [],
+    'imports'=> [],
+    'classes'=> [],
+    'interfaces'=> [],
+    'properties'=> [],
+    'traits'=> [],
+    'functions'=> [],
+    'methods'=> [],
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function enterNode(Node $node) {
