@@ -52,7 +52,14 @@ class FormElement extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContentType(): string {
+    return 'element';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContents(): array {
     $form_api_array = [
       '#type' => $this->component_data['element_type'],
     ];
@@ -68,15 +75,7 @@ class FormElement extends BaseGenerator {
       $form_api_array['#' . $attribute] = $value;
     }
 
-    return [
-      'element' => [
-        'role' => 'element',
-        'content' => [
-          'key' => $this->component_data['form_key'],
-          'array' => $form_api_array,
-        ],
-      ],
-    ];
+    return $form_api_array;
   }
 
 }
