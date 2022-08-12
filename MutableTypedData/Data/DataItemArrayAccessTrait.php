@@ -10,11 +10,17 @@ namespace DrupalCodeBuilder\MutableTypedData\Data;
  */
 trait DataItemArrayAccessTrait {
 
-  public function offsetExists($offset) {
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetExists(mixed $offset): bool {
     return isset($this->value[$offset]);
   }
 
-  public function offsetGet($offset) {
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetGet(mixed $offset): mixed {
     if (!isset($this->properties[$offset])) {
       throw new \Exception(sprintf("No property %s at address %s. Valid properties are: %s.",
         $offset,
@@ -44,7 +50,10 @@ trait DataItemArrayAccessTrait {
     }
   }
 
-  public function offsetSet($offset, $value) {
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetSet(mixed $offset, mixed $value): void {
     throw new \Exception(sprintf(
       "Attempt to set array key %s at %s.",
       $offset,
@@ -52,7 +61,10 @@ trait DataItemArrayAccessTrait {
     ));
   }
 
-  public function offsetUnset($offset) {
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetUnset(mixed $offset): void {
     throw new \Exception(sprintf(
       "Attempt to unset array key %s at %s.",
       $offset,
