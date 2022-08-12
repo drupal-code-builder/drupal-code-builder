@@ -311,7 +311,8 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
 
   /**
    * {@inheritdoc}
-   */  public function offsetUnset(mixed $offset): void{
+   */
+  public function offsetUnset(mixed $offset): void {
     dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetUnset $offset.");
   }
