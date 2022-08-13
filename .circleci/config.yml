@@ -46,5 +46,15 @@ jobs:
           paths:
             - ./vendor
 
-      # run tests with phpunit or codecept
+      # Run unit tests.
       - run: ./vendor/bin/phpunit Test/Unit
+
+      # Run integration tests.
+      - run: mkdir drupal
+      - run: cp ../travis/travis.composer.json drupal/composer.json
+      - run: cp ../travis/travis.phpunit.xml drupal/phpunit.xml
+      - run: cd drupal
+      - run: composer install
+      - run: mysql -e 'create database dcb'
+
+      - run: ./vendor/bin/phpunit  ./vendor/drupal-code-builder/drupal-code-builder/Test/Integration/Collection
