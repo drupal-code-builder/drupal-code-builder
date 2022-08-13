@@ -11,6 +11,9 @@ jobs:
     docker:
       # Specify the version you desire here
       - image: cimg/php:8.0.8
+      - image: circleci/mysql:5.8-ram
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -27,7 +30,7 @@ jobs:
       - checkout
 
       - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
-      # - run: sudo docker-php-ext-install zip
+      - run: sudo apt-get install mysql-client
 
       # Download and cache dependencies
       - restore_cache:
@@ -55,6 +58,6 @@ jobs:
       - run: cp ./travis/travis.phpunit.xml drupal/phpunit.xml
       - run: cd drupal
       - run: composer install
-      - run: mysql -e 'create database dcb'
+      - run: mysqladmin create dcb --host="127.0.0.1" --user="root" --password="root"
 
       - run: ./vendor/bin/phpunit  ./vendor/drupal-code-builder/drupal-code-builder/Test/Integration/Collection
