@@ -5,7 +5,7 @@
   "repositories": [
       {
         "type": "path",
-        "url": "/home/travis/build/drupal-code-builder/drupal-code-builder"
+        "url": ".."
       }
   ],
   "require": {
