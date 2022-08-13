@@ -57,7 +57,9 @@ jobs:
       - run: cp ./travis/travis.composer.json drupal/composer.json
       - run: cp ./travis/travis.phpunit.xml drupal/phpunit.xml
       - run: cd drupal
+      - run: pwd
       - run: composer install
+      - run: ls -l
       - run: mysqladmin create dcb --host="127.0.0.1" --user="root" --password="root"
 
       - run: ./vendor/bin/phpunit  ./vendor/drupal-code-builder/drupal-code-builder/Test/Integration/Collection
