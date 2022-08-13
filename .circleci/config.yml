@@ -52,6 +52,7 @@ jobs:
       # Run integration tests.
       - run: mkdir drupal
       - run: pwd
+      - run: ls
       - run: ls ../travis
       - run: cp ../travis/travis.composer.json drupal/composer.json
       - run: cp ../travis/travis.phpunit.xml drupal/phpunit.xml
