@@ -33,7 +33,7 @@ class ComponentRouterItem8Test extends TestBase {
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
       'router_items' => [
-        0 => [
+        [
           'path' => '/my/path',
           'controller' => [
             'controller_type' => 'controller',
@@ -42,7 +42,7 @@ class ComponentRouterItem8Test extends TestBase {
             'access_type' => 'permission',
           ],
         ],
-        1 => [
+        [
           'path' => '/my/other-path',
           'title' => 'My Other Page',
           'controller' => [
@@ -52,7 +52,7 @@ class ComponentRouterItem8Test extends TestBase {
             'access_type' => 'role',
           ],
         ],
-        2 => [
+        [
           'path' => '/my/{parameter}/path',
           'title' => 'My Parameter Page',
           'controller' => [
