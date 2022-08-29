@@ -407,6 +407,17 @@ class ComponentRouterItem8Test extends TestBase {
             'access_type' => 'access',
           ],
         ],
+        [
+          'path' => '/my/path/string-translation',
+          'title' => 'My Controller Base Page',
+          'controller' => [
+            'controller_type' => 'controller',
+            'import_stringtranslation' => TRUE,
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -418,6 +429,7 @@ class ComponentRouterItem8Test extends TestBase {
       "$module_name.routing.yml",
       "src/Controller/MyPathNoBaseController.php",
       "src/Controller/MyPathControllerBaseController.php",
+      "src/Controller/MyPathStringTranslationController.php",
     ], $files);
 
     $controller_file = $files["src/Controller/MyPathNoBaseController.php"];
@@ -427,6 +439,7 @@ class ComponentRouterItem8Test extends TestBase {
     $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathNoBaseController");
     $php_tester->assertClassHasNoParent();
     $php_tester->assertHasMethod('content');
+    $php_tester->assertClassHasTraits([]);
 
     $controller_file = $files["src/Controller/MyPathControllerBaseController.php"];
 
@@ -435,6 +448,18 @@ class ComponentRouterItem8Test extends TestBase {
     $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathControllerBaseController");
     $php_tester->assertClassHasParent('Drupal\Core\Controller\ControllerBase');
     $php_tester->assertHasMethod('content');
+    $php_tester->assertClassHasTraits([]);
+
+    $controller_file = $files["src/Controller/MyPathStringTranslationController.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathStringTranslationController");
+    $php_tester->assertClassHasNoParent();
+    $php_tester->assertHasMethod('content');
+    $php_tester->assertClassHasTraits([
+      'Drupal\Core\StringTranslation\StringTranslationTrait',
+    ]);
   }
 
   /**

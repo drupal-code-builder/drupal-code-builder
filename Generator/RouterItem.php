@@ -83,6 +83,8 @@ class RouterItem extends BaseGenerator {
                 ),
               'use_base' => PropertyDefinition::create('boolean')
                 ->setLabel('Use ControllerBase as the parent class'),
+              'import_stringtranslation' => PropertyDefinition::create('boolean')
+                ->setLabel('Use StringTranslationTrait'),
             ]),
           'form' => VariantDefinition::create()
             ->setLabel('Form')
@@ -436,8 +438,14 @@ class RouterItem extends BaseGenerator {
         'relative_class_name' => $controller_relative_class,
       ];
 
-      if ($this->component_data->controller->controller_type->value == 'controller' && $this->component_data->controller->use_base->value) {
-        $components['controller']['parent_class_name'] = '\Drupal\Core\Controller\ControllerBase';
+      if ($this->component_data->controller->controller_type->value == 'controller') {
+        if ($this->component_data->controller->use_base->value) {
+          $components['controller']['parent_class_name'] = '\Drupal\Core\Controller\ControllerBase';
+        }
+
+        if ($this->component_data->controller->import_stringtranslation->value) {
+          $components['controller']['traits'][] = '\Drupal\Core\StringTranslation\StringTranslationTrait';
+        }
       }
     }
 
