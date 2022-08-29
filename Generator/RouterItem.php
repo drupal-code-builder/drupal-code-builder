@@ -81,6 +81,8 @@ class RouterItem extends BaseGenerator {
                     return $class . '::content';
                   })
                 ),
+              'use_base' => PropertyDefinition::create('boolean')
+                ->setLabel('Use ControllerBase as the parent class'),
             ]),
           'form' => VariantDefinition::create()
             ->setLabel('Form')
@@ -433,6 +435,10 @@ class RouterItem extends BaseGenerator {
         'component_type' => 'PHPClassFile',
         'relative_class_name' => $controller_relative_class,
       ];
+
+      if ($this->component_data->controller->controller_type->value == 'controller' && $this->component_data->controller->use_base->value) {
+        $components['controller']['parent_class_name'] = '\Drupal\Core\Controller\ControllerBase';
+      }
     }
 
     if (!$this->component_data->menu_link->isEmpty()) {

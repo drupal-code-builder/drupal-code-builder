@@ -376,6 +376,68 @@ class ComponentRouterItem8Test extends TestBase {
   }
 
   /**
+   * Test options for the controller class
+   */
+  public function testRouteControllerClass() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        [
+          'path' => '/my/path/no-base',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        [
+          'path' => '/my/path/controller-base',
+          'title' => 'My Controller Base Page',
+          'controller' => [
+            'controller_type' => 'controller',
+            'use_base' => TRUE,
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/MyPathNoBaseController.php",
+      "src/Controller/MyPathControllerBaseController.php",
+    ], $files);
+
+    $controller_file = $files["src/Controller/MyPathNoBaseController.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathNoBaseController");
+    $php_tester->assertClassHasNoParent();
+    $php_tester->assertHasMethod('content');
+
+    $controller_file = $files["src/Controller/MyPathControllerBaseController.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathControllerBaseController");
+    $php_tester->assertClassHasParent('Drupal\Core\Controller\ControllerBase');
+    $php_tester->assertHasMethod('content');
+  }
+
+  /**
    * Test generating a route with a menu link.
    */
   public function testRouteGenerationWithMenuLink() {

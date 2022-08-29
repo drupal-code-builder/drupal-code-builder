@@ -651,6 +651,21 @@ class PHPTester {
   }
 
   /**
+   * Asserts the parsed code's class has no parent class.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassHasNoParent($message = NULL) {
+    $class_node = reset($this->parser_nodes['classes']);
+    $class_name = $class_node->name;
+
+    $message = $message ?? "The class {$class_name} has no parent class.";
+
+    Assert::assertEmpty($class_node->extends);
+  }
+
+  /**
    * Asserts that the parsed class implements the given interfaces.
    *
    * @param string[] $expected_interface_names
