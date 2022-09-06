@@ -86,14 +86,21 @@ class ModuleCodeFile extends PHPFile {
         $this->merged = TRUE;
       }
 
-      // The first function in the AST will have an additional comment block for
+      // The first function in the AST might have an additional comment block for
       // the @file tag. Remove this, since we will generate it ourselves.
-      if (isset($ast[0])) {
-        $first_function = $ast[0];
+      foreach ($ast as $ast_node) {
+        if ($ast_node->getType() != 'Stmt_Function') {
+          continue;
+        }
+
+        $first_function = $ast_node;
         $comments = $first_function->getAttribute('comments');
         $docblock = end($comments);
 
         $first_function->setAttribute('comments', [$docblock]);
+
+        // Only act on the first function.
+        break;
       }
 
       // Get the names of generated functions.
