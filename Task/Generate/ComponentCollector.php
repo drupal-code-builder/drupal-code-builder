@@ -174,8 +174,10 @@ class ComponentCollector {
    * Obviously, it's important that eventually this process terminate with
    * generators that return an empty array for requiredComponents().
    *
-   * @param $component_data
+   * @param \MutableTypedData\Data\DataItem $component_data
    *  The requested component data.
+   * @param \DrupalCodeBuilder\File\DrupalExtension $existing_extension
+   *  An extension object for an existing extension, if applicable.
    *
    * @return \DrupalCodeBuilder\Generator\Collection\ComponentCollection
    *  The collection of components.
@@ -213,15 +215,12 @@ class ComponentCollector {
    * - Components which the component itself requests in its
    *   requiredComponents() method.
    *
-   * @param $name
-   *   The name of the component in a containing array.
-   * @param $component_data
-   *   The data array. This must contain at least a 'component_type' property
-   *   the gives the type of the component.
-   * @param $requesting_component
-   *   The generator that is in scope when the components are requested, or
-   *   NULL if this is the first iteration and we are building the root
-   *   component.
+   * @param \MutableTypedData\Data\DataItem $component_data
+   *   The component data array.
+   * @param \DrupalCodeBuilder\Generator\GeneratorInterface|null $requesting_component
+   *   (optiona) The generator that is in scope when the components are
+   *   requested, or NULL if this is the first iteration and we are building the
+   *   root component.
    *
    * @return
    *   The new generator that the top level of the data array is requesting, or
