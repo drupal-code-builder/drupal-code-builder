@@ -900,6 +900,7 @@ class PHPTester {
     //    indicated in the details with the 'extracted_from_other_service'
     //    attribute.
     $expected_injected_services_constructor_params = array_filter($injected_services, function ($item) {
+      assert(is_array($item));
       return empty($item['extracted_from_other_service']);
     });
 
