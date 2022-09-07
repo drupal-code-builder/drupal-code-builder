@@ -282,7 +282,11 @@ class ComponentCollector {
     // recurse, as all subsequent generators need it.
     $generator = $this->classHandler->getGenerator($component_type, $component_data);
 
-    $this->debug($chain, "instantiated name $name; type: $component_type; ID");
+    $this->debug($chain, sprintf("instantiated name %s; type: %s; ID, requester %s",
+      $name,
+      $component_type,
+      $requesting_component ? $requesting_component->getAddress() : '-none-'
+    ));
 
     $existing_matching_component = $this->component_collection->getMatchingComponent($generator, $requesting_component);
     if ($existing_matching_component) {
