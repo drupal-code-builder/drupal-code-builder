@@ -873,6 +873,11 @@ class PHPTester {
   /**
    * Assert the parsed class injects the given services.
    *
+   * This ignores a discrepancy between the number of expected services and the
+   * number of parameters to the __construct() method, to allow for plugin
+   * classes which have other parameters first. To verify the count of
+   * constructor parameters, use self::assertOnlyInjectedServices().
+   *
    * @param array $injected_services
    *   An array of data describing the expected injected services. This is a
    *   numeric order, in the expected order, where each value is an array
@@ -937,6 +942,19 @@ class PHPTester {
     foreach ($injected_services as $injected_service_details) {
       $this->assertClassHasProtectedProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
     }
+  }
+
+  /**
+   * Same as assertInjectedServices() but expects only service parameters.
+   */
+  public function assertOnlyInjectedServices(array $injected_services, $message = NULL) {
+    // Assert the constructor method.
+    $this->assertHasMethod('__construct');
+    $construct_node = $this->parser_nodes['methods']['__construct'];
+
+    Assert::assertEquals(count($injected_services), count($construct_node->params), "The constructor method has same number of parameters as injected services.");
+
+    $this->assertInjectedServices($injected_services, $message);
   }
 
   /**
