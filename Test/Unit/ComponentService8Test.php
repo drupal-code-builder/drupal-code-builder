@@ -462,10 +462,6 @@ class ComponentService8Test extends TestBase {
       "src/MyService.php",
     ], $files);
 
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
-    $this->assertArrayHasKey("$module_name.services.yml", $files, "The files list has a services yml file.");
-    $this->assertArrayHasKey("src/MyService.php", $files, "The files list has a service class file.");
-
     $services_file = $files["$module_name.services.yml"];
 
     $yaml_tester = new YamlTester($services_file);
