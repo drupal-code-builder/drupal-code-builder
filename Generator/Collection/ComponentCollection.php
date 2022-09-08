@@ -221,10 +221,10 @@ class ComponentCollection implements \IteratorAggregate {
     }
 
     // Add to the merge tags list.
-    if ($merge_tag = $component->getMergeTag()) {
+    if ($merge_tag = $this->getComponentMergeTag($component, $requesting_component)) {
       // $closest_requesting_root will be set because the root component has
       // no merge tag.
-      $this->mergeTags[$closest_requesting_root][$component->getType()][$component->getMergeTag()] = $key;
+      $this->mergeTags[$closest_requesting_root][$component->getType()][$merge_tag] = $key;
     }
 
     $this->components[$key] = $component;
@@ -521,7 +521,9 @@ class ComponentCollection implements \IteratorAggregate {
       return NULL;
     }
 
-    if (!$component->getMergeTag()) {
+    $component_merge_tag = $this->getComponentMergeTag($component, $requesting_component);
+
+    if (empty($component_merge_tag)) {
       return NULL;
     }
 
@@ -539,8 +541,8 @@ class ComponentCollection implements \IteratorAggregate {
       $closest_requesting_root_id = $this->getComponentKey($this->getClosestRequestingRootComponent($requesting_component));
     }
 
-    if (isset($this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()])) {
-      $matching_component_id = $this->mergeTags[$closest_requesting_root_id][$component->getType()][$component->getMergeTag()];
+    if (isset($this->mergeTags[$closest_requesting_root_id][$component->getType()][$component_merge_tag])) {
+      $matching_component_id = $this->mergeTags[$closest_requesting_root_id][$component->getType()][$component_merge_tag];
       return $this->components[$matching_component_id];
     }
     else {
@@ -572,6 +574,40 @@ class ComponentCollection implements \IteratorAggregate {
 
     $closest_requesting_root_id = $this->requestRoots[$component_id];
     return $this->components[$closest_requesting_root_id];
+  }
+
+  /**
+   * Gets the merge tag for a component, handling token replacement.
+   *
+   * A component's merge tag MUST be obtained via this method.
+   *
+   * @param \DrupalCodeBuilder\Generator\GeneratorInterface $component
+   *   The component.
+   * @param \DrupalCodeBuilder\Generator\GeneratorInterface|null $requesting_component
+   *   (optional) The requester of the component.
+   *
+   * @return string
+   *   The merge tag, with the '%requester' token replaced with the data address
+   *   of the requester.
+   */
+  protected function getComponentMergeTag(GeneratorInterface $component, ?GeneratorInterface $requesting_component): string {
+    $component_merge_tag = $component->getMergeTag();
+
+    if (empty($component_merge_tag)) {
+      return '';
+    }
+
+    if (str_contains($component_merge_tag, '%requester')) {
+      if (!$requesting_component) {
+        throw new \LogicException("Merge tag {$component_merge_tag} contains token but there is nothing to replace it.");
+      }
+
+      // The merge tag can contain the '%requester' token which needs to be
+      // replaced.
+      $component_merge_tag = str_replace('%requester', $requesting_component->component_data->getAddress(), $component_merge_tag);
+    }
+
+    return $component_merge_tag;
   }
 
   /**

@@ -356,11 +356,15 @@ abstract class BaseGenerator implements GeneratorInterface {
    * and the same merge tag as an existing component, it is merged in rather
    * added.
    *
+   * To indicate a component is unique within its requester, use the
+   * '%requester' token within the tag.
+   *
    * @see ComponentCollector::getComponentsFromData()
    * @see ComponentCollection::getMatchingComponent()
    *
    * @return string
-   *   The merge tag.
+   *   The merge tag. This may contain the '%requester' token. It is the
+   *   caller's responsibility to replace this.
    */
   public function getMergeTag() {
     return NULL;

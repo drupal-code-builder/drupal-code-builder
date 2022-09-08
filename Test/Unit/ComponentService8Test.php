@@ -482,6 +482,91 @@ class ComponentService8Test extends TestBase {
     $php_tester->assertInjectedServices($assert_injected_services);
   }
 
+ /**
+   * Test several services injecting the same services.
+   *
+   * @group di
+   */
+  function testServiceGenerationRepeatedInjectedServies() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => [
+        [
+          'service_name' => 'my_service',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+        ],
+        [
+          'service_name' => 'other_service',
+          'injected_services' => [
+            'entity_type.manager',
+            'module_handler',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyService.php",
+      "src/OtherService.php",
+    ], $files);
+
+    $service_class_file = $files['src/MyService.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\MyService');
+
+    // Check service injection.
+    $php_tester->assertOnlyInjectedServices([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
+
+    $service_class_file = $files['src/OtherService.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\OtherService');
+
+    // Check service injection.
+    $php_tester->assertOnlyInjectedServices([
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+        'service_name' => 'module_handler',
+        'property_name' => 'moduleHandler',
+        'parameter_name' => 'module_handler',
+      ],
+    ]);
+  }
+
   /**
    * Test a service with with a non-existent injected service.
    */

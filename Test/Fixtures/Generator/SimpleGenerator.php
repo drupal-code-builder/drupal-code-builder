@@ -22,6 +22,10 @@ class SimpleGenerator implements GeneratorInterface {
     return NULL;
   }
 
+  public function getAddress() {
+    return '';
+  }
+
   public function requiredComponents(): array {
     return [];
   }

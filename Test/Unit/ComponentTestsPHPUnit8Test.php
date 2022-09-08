@@ -273,6 +273,14 @@ class ComponentTestsPHPUnit8Test extends TestBase {
                   'plugin_name' => 'alpha',
                 ],
               ],
+              'services' => [
+                [
+                  'service_name' => 'test_service',
+                  'injected_services' => [
+                    'entity_type.manager',
+                  ],
+                ],
+              ],
             ],
           ],
         ],
@@ -284,6 +292,14 @@ class ComponentTestsPHPUnit8Test extends TestBase {
           'plugin_name' => 'alpha',
         ],
       ],
+      'services' => [
+        [
+          'service_name' => 'my_service',
+          'injected_services' => [
+            'entity_type.manager',
+          ],
+        ],
+      ],
       'readme' => FALSE,
     ];
 
@@ -291,10 +307,14 @@ class ComponentTestsPHPUnit8Test extends TestBase {
 
     $this->assertFiles([
       'generated_module.info.yml',
+      'generated_module.services.yml',
+      'src/MyService.php',
       'src/Plugin/Block/Alpha.php',
       'config/schema/generated_module.schema.yml',
       'tests/src/Kernel/MyTest.php',
       'tests/modules/my_test/my_test.info.yml',
+      'tests/modules/my_test/my_test.services.yml',
+      'tests/modules/my_test/src/TestService.php',
       'tests/modules/my_test/src/Plugin/Block/Alpha.php',
       'tests/modules/my_test/config/schema/my_test.schema.yml',
     ], $files);
@@ -331,6 +351,36 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\my_test\Plugin\Block\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
+
+    // Check the main module service.
+    $service_class_file = $files["src/MyService.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\generated_module\MyService');
+    $php_tester->assertOnlyInjectedServices([
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
+
+    // Check the test module service.
+    $service_class_file = $files["tests/modules/my_test/src/TestService.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\my_test\TestService');
+    $php_tester->assertOnlyInjectedServices([
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
 
