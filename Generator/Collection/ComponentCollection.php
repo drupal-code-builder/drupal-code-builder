@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator\Collection;
 
 use DrupalCodeBuilder\Generator\GeneratorInterface;
+use DrupalCodeBuilder\Generator\RootComponent;
 
 /**
  * The collection of components for a generate execution.
@@ -565,7 +566,7 @@ class ComponentCollection implements \IteratorAggregate {
    *   Throws an exception if called with the root component, as in that case
    *   the answer does not make sense.
    */
-  public function getClosestRequestingRootComponent(GeneratorInterface $component) {
+  public function getClosestRequestingRootComponent(GeneratorInterface $component): RootComponent {
     if ($this->getComponentKey($component) === $this->rootGeneratorId) {
       throw new \LogicException("ComponentCollection::getClosestRequestingRootComponent() may not be called with the root component.");
     }
