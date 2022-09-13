@@ -386,7 +386,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         // implements it.
         $use_di_interface = FALSE;
       }
-      elseif (!empty($this->component_data['parent_plugin_class'])) {
+      elseif ($this->component_data->parent_plugin_class->value) {
         // TODO: violates DRY; we call this twice.
         $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
         if (!empty($parent_construction_parameters)) {
