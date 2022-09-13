@@ -99,6 +99,7 @@ class FileAssembler {
       $file_info_item = $child_component->getFileInfo();
       if (is_array($file_info_item)) {
         // Prepend the component_base_path to the path.
+        // @todo Make use of File::getFilename().
         $component_base_path = $child_component->component_data->component_base_path->value;
         if (!empty($component_base_path)) {
           if (empty($file_info_item['path'])) {

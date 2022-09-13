@@ -10,6 +10,28 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 class File extends BaseGenerator {
 
   /**
+   * Gets the filename, relative to the main root component.
+   *
+   * This should be used instead of accessing the filename property directly, as
+   * it replaces the '%module' token. This is particularly important as the
+   * replacement value depends on the component's closest root.
+   *
+   * @return string
+   *   The relative filename, with the '%module' token replaced.
+   */
+  public function getFilename(): string {
+    $filename = $this->component_data->filename->value;
+    $filename = str_replace('%module', $this->component_data->root_component_name->value, $filename);
+
+    $component_base_path = $this->component_data->component_base_path->value;
+    if (!empty($component_base_path)) {
+      $filename = $component_base_path . '/' . $filename;
+    }
+
+    return $filename;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getPropertyDefinition(): PropertyDefinition {
