@@ -812,7 +812,7 @@ class ComponentService8Test extends TestBase {
         $existing
         EOT;
 
-      $extension->setFile('%module.services.yml', $services_file_yaml);
+      $extension->setFile('existing.services.yml', $services_file_yaml);
     }
 
     $files = $this->generateModuleFiles($module_data, $extension);
@@ -885,7 +885,7 @@ class ComponentService8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
 
     $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
-    $extension->setFile('%module.services.yml', $existing_files['existing.services.yml']);
+    $extension->setFile('existing.services.yml', $existing_files['existing.services.yml']);
     $extension->setFile('src/Alpha.php', $existing_files['src/Alpha.php']);
 
     // Now generate the module again, passing in the mocked existing code.

@@ -173,12 +173,22 @@ class Service extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   public function detectExistence(DrupalExtension $extension) {
-    if (!$extension->hasFile('%module.services.yml')) {
+    // We detect existence by looking in the services.yml file.
+    $services_yml_filename = str_replace('%module', $this->component_data->root_component_name->value, '%module.services.yml');
+
+    $service_file_path = (
+      $this->component_data->component_base_path->value ?
+      $this->component_data->component_base_path->value . '/' :
+      ''
+      )
+      . $services_yml_filename;
+
+    if (!$extension->hasFile($service_file_path)) {
       $this->exists = FALSE;
       return;
     }
 
-    $services_yaml = $extension->getFileYaml('%module.services.yml');
+    $services_yaml = $extension->getFileYaml($service_file_path);
 
     if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']])) {
       $this->exists = TRUE;
@@ -200,7 +210,16 @@ class Service extends PHPClassFileWithInjection {
     }
     $existing_services = [];
     if ($this->exists) {
-      $services_yaml = $this->extension->getFileYaml('%module.services.yml');
+      $services_yml_filename = str_replace('%module', $this->component_data->root_component_name->value, '%module.services.yml');
+
+      $service_file_path = (
+        $this->component_data->component_base_path->value ?
+        $this->component_data->component_base_path->value . '/' :
+        ''
+        )
+        . $services_yml_filename;
+
+      $services_yaml = $this->extension->getFileYaml($services_yml_filename);
 
       if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'])) {
         foreach ($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'] as $argument) {

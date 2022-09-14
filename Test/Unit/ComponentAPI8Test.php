@@ -123,7 +123,7 @@ class ComponentAPI8Test extends TestBase {
 
       EOPHP;
 
-    $extension->setFile('%module.api.php', $api_file);
+    $extension->setFile('test_module.api.php', $api_file);
 
     $files = $this->generateModuleFiles($module_data, $extension);
     $api_file = $files['test_module.api.php'];

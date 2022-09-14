@@ -2,10 +2,24 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Abstract parent class for .ini syntax info files.
  */
 abstract class InfoIni extends Info {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->getProperty('filename')
+      ->setLiteralDefault('%module.info');
+
+    return $definition;
+  }
 
   /**
    * Process a structured array of info files lines to a flat array for merging.

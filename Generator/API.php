@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
@@ -26,6 +27,19 @@ class API extends PHPFile {
   /**
    * {@inheritdoc}
    */
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->getProperty('filename')
+      ->setLiteralDefault('%module.api.php');
+
+    return $definition;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
   public function getMergeTag() {
     return $this->component_data['root_component_name'] . '.api.php';
   }
@@ -42,13 +56,13 @@ class API extends PHPFile {
    * {@inheritdoc}
    */
   public function detectExistence(DrupalExtension $extension) {
-    $this->exists = $extension->hasFile('%module.api.php');
+    $this->exists = $extension->hasFile($this->getFilename());
 
     if (!$this->exists) {
       return;
     }
 
-    $ast = $extension->getFileAST('%module.api.php');
+    $ast = $extension->getFileAST($this->getFilename());
     $ast = $extension->getASTFunctions($ast);
 
     // The first function in the AST will have additional comment blocks for the
@@ -155,7 +169,7 @@ class API extends PHPFile {
 
         $end_line = $function_node->getEndLine() + 1;
 
-        $code_pieces[$existing_function_name] = implode("\n", $this->extension->getFileLines('%module.api.php', $first_line, $end_line));
+        $code_pieces[$existing_function_name] = implode("\n", $this->extension->getFileLines($this->getFilename(), $first_line, $end_line));
       }
     }
 

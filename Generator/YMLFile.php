@@ -64,13 +64,14 @@ class YMLFile extends File {
    * {@inheritdoc}
    */
   public function detectExistence(DrupalExtension $extension) {
-    $this->exists = $extension->hasFile($this->component_data['filename']);
+    $filename = $this->getFilename();
+    $this->exists = $extension->hasFile($filename);
 
     if (!$this->exists) {
       return;
     }
 
-    $yaml = $extension->getFileYaml($this->component_data['filename']);
+    $yaml = $extension->getFileYaml($filename);
 
     // No idea of format here! Probably unique for each generator!
     // For info files, the only thing which is mergeable

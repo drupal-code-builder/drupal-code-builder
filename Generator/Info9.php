@@ -21,6 +21,9 @@ class Info9 extends Info {
       ->setAutoAcquiredFromRequester()
     );
 
+    $definition->getProperty('filename')
+      ->setLiteralDefault('%module.info.yml');
+
     return $definition;
   }
 
@@ -28,13 +31,17 @@ class Info9 extends Info {
    * {@inheritdoc}
    */
   public function detectExistence(DrupalExtension $extension) {
-    // Info files always exist if there is an extension.
-    $this->exists = TRUE;
+    $info_filename = $this->getFilename();
 
-    $yaml = $extension->getFileYaml('%module.info.yml');
-    // No idea of format here! Probably unique for each generator!
-    // For info files, the only thing which is mergeable
-    $this->existing = $yaml;
+    // Info files don't necessarily exist in the case of test modules.
+    $this->exists = $extension->hasFile($info_filename);
+
+    if ($this->exists) {
+      $yaml = $extension->getFileYaml($info_filename);
+      // No idea of format here! Probably unique for each generator!
+      // For info files, the only thing which is mergeable
+      $this->existing = $yaml;
+    }
   }
 
   /**

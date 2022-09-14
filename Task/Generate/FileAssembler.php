@@ -139,11 +139,19 @@ class FileAssembler {
     $return = [];
 
     foreach ($files as $file_id => $file_info) {
-      if (!empty($file_info['path'])) {
-        $filepath = $file_info['path'] . '/' . $file_info['filename'];
-      }
-      else {
-        $filepath = $file_info['filename'];
+      $file_component = $component_collection->getComponent($file_info['source_component_id']);
+
+      // Try the filepath from the component first, but in some cases this is
+      // only hardcoded in the file info and not defined in the property
+      // system, WTF!
+      $filepath = $file_component->getFilename();
+      if (!empty($file_info['use_file_info_filename']) || empty($filepath)) {
+        if (!empty($file_info['path'])) {
+          $filepath = $file_info['path'] . '/' . $file_info['filename'];
+        }
+        else {
+          $filepath = $file_info['filename'];
+        }
       }
 
       // Set the flags relating to existing files on the file info.
@@ -160,7 +168,6 @@ class FileAssembler {
       // TODO: consider changing this to be nearest root component; though
       // would require a change to File::containingComponent() among other
       // things.
-      $file_component = $component_collection->getComponent($file_info['source_component_id']);
       $closest_requesting_root = $component_collection->getClosestRequestingRootComponent($file_component);
       $variables = $closest_requesting_root->getReplacements();
       $code = strtr($code, $variables);

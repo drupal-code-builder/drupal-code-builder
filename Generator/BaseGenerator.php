@@ -325,6 +325,7 @@ abstract class BaseGenerator implements GeneratorInterface {
         ->setAcquiringExpression("getRootComponentName(requester)"),
       'containing_component' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
+      // The path of the nearest root component.
       'component_base_path' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
@@ -445,6 +446,11 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * Components should set $this->exists on themselves if they find they already
    * exist in the module.
+   *
+   * Implementations of this method should use self::getFilename() to get the
+   * component's filename rather than the data property, as that takes into
+   * account components being inside a child root component such as a test
+   * module.
    *
    * @param \DrupalCodeBuilder\File\DrupalExtension $extension
    *  An extension object for the existing extension.

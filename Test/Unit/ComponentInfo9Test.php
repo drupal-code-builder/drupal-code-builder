@@ -149,7 +149,7 @@ class ComponentInfo9Test extends TestBase {
       $info_file_yaml .= "\n" . $dependencies_yaml;
     }
 
-    $extension->setFile('%module.info.yml', $info_file_yaml);
+    $extension->setFile('test_module.info.yml', $info_file_yaml);
 
     $files = $this->generateModuleFiles($module_data, $extension);
 

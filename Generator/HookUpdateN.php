@@ -23,11 +23,19 @@ class HookUpdateN extends HookImplementation {
     // This does not strictly speaking detect existence, but detects existing
     // implementations of this hook, so that our new implementation gets the
     // correct number.
-    if (!$extension->hasFile('%module.install')) {
+    $install_filename = (
+      $this->component_data->component_base_path->value ?
+      $this->component_data->component_base_path->value . '/' :
+      ''
+      )
+      . '%module.install';
+    $install_filename = str_replace('%module', $this->component_data->root_component_name->value, $install_filename);
+
+    if (!$extension->hasFile($install_filename)) {
       return;
     }
 
-    $ast = $extension->getFileAST('%module.install');
+    $ast = $extension->getFileAST($install_filename);
     $install_function_nodes = $extension->getASTFunctions($ast);
 
     // Detect any existing implementations.

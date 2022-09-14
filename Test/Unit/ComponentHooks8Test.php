@@ -203,7 +203,7 @@ class ComponentHooks8Test extends TestBase {
 
       EOPHP;
 
-    $extension->setFile('%module.module', $existing_module_file);
+    $extension->setFile('test_module.module', $existing_module_file);
 
     $files = $this->generateModuleFiles($module_data, $extension);
     $module_file = $files['test_module.module'];
@@ -276,7 +276,7 @@ class ComponentHooks8Test extends TestBase {
 
       EOPHP;
 
-    $extension->setFile('%module.install', $existing_install_file);
+    $extension->setFile('test_module.install', $existing_install_file);
 
     $files = $this->generateModuleFiles($module_data, $extension);
     $install_file = $files['test_module.install'];

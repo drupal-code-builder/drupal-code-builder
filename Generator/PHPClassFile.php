@@ -125,6 +125,9 @@ class PHPClassFile extends PHPFile {
             ->setExpression("pathFromQualifiedClassNamePieces(parent.qualified_class_name_pieces.get())")
             ->setDependencies('..:qualified_class_name_pieces')
         ),
+      'filename' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setExpressionDefault("get('..:path') ~ '/' ~ get('..:plain_class_name') ~ '.php'"),
       // Deprecated: use class_docblock_lines instead.
       'docblock_first_line' => PropertyDefinition::create('string')
         ->setInternal(TRUE)

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
@@ -395,4 +396,262 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertClassHasProtectedProperty('modules', 'array', $expected_modules_property_value);
   }
 
+  /**
+   * Data provider.
+   *
+   * Test data for:
+   *  - testTestModuleWithExistingFunctions()
+   *  - testTestModuleWithExistingServices()
+   */
+  public function dataTestModuleWithExistingFunctions() {
+    $data = [];
+
+    $options = [
+      'main',
+      'test',
+    ];
+
+    foreach ($options as $option) {
+      foreach ($options as $option_inner) {
+         $data["$option-$option_inner"] = [
+            'generated' => $option,
+            'existing_code' => $option_inner
+         ];
+      }
+    }
+
+    return $data;
+  }
+
+  /**
+   * Tests existing functions in the module files.
+   *
+   * This generates a hook in either the main or the test module, with an
+   * existing function is either the main or test module file.
+   *
+   * @group existing
+   * @group test
+   *
+   * @dataProvider dataTestModuleWithExistingFunctions
+   *
+   * @param string $generated_hook
+   *   Where the generated hook goes. One of:
+   *    - 'main': The main generated module.
+   *    - 'test': The test module.
+   * @param string $existing_code
+   *   Where the existing code goes. One of:
+   *    - 'main': The main generated module.
+   *    - 'test': The test module.
+   */
+  public function testTestModuleWithExistingFunctions(string $generated_hook, string $existing_code) {
+    // Create a module.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'generated_module',
+      'readable_name' => 'Generated module',
+      'hooks' => match ($generated_hook) {
+        'main' => ['hook_form_alter'],
+        'test' => [],
+      },
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'kernel',
+          'plain_class_name' => 'MyTest',
+          'test_modules' => [
+            0 => [
+              // Don't specify root_name so the default is applied.
+              'hooks' => match ($generated_hook) {
+                'main' => [],
+                'test' => ['hook_form_alter'],
+              },
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+    $extension->mockInfoFile('generated_module');
+
+    $existing_module_file = <<<'EOPHP'
+      <?php
+
+      /**
+       * @file
+       * Contains hooks for the Generated Module module.
+       */
+
+      /**
+       * Some function.
+       */
+      function some_my_function() {
+        // Code does a thing.
+        $foo = 42;
+      }
+
+      EOPHP;
+
+    $extension->setFile(match ($existing_code) {
+      'main' => 'generated_module.module',
+      'test' => 'tests/modules/my_test/my_test.module',
+    }, $existing_module_file);
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+
+    if ($generated_hook == 'main') {
+      $this->assertArrayHasKey('generated_module.module', $files);
+    }
+    else {
+      $this->assertArrayNotHasKey('generated_module.module', $files);
+    }
+
+    if ($generated_hook == 'test') {
+      $this->assertArrayHasKey('tests/modules/my_test/my_test.module', $files);
+    }
+    else {
+      $this->assertArrayNotHasKey('tests/modules/my_test/my_test.module', $files);
+    }
+
+    // In all cases, only one module file is generated.
+    $module_file = match ($generated_hook) {
+      'main' => $files['generated_module.module'],
+      'test' => $files['tests/modules/my_test/my_test.module'],
+    };
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
+    $phpcs_excluded_sniffs = [
+      // Temporarily exclude the sniff for comment lines being too long, as a
+      // comment in hook_form_alter() violates this. TODO: remove this when
+      // https://www.drupal.org/project/drupal/issues/2924184 is fixed.
+      'Drupal.Files.LineLength.TooLong',
+    ];
+    $php_tester->assertDrupalCodingStandards($phpcs_excluded_sniffs);
+    $php_tester->assertHasHookImplementation('hook_form_alter', match ($generated_hook) {
+      'main' => 'generated_module',
+      'test' => 'my_test',
+    });
+
+    // If the existing function was in the same module as where we're generating
+    // a hook, the function should have been merged.
+    if ($generated_hook == $existing_code) {
+      $php_tester->assertHasFunction('some_my_function');
+    }
+    else {
+      $php_tester->assertHasNotFunction('some_my_function');
+    }
+  }
+
+  /**
+   * Tests existing services with test module.
+   *
+   * This generates a service in either the main or the test module, with an
+   * existing service is either the main or test module.
+   *
+   * @group existing
+   * @group test
+   *
+   * @dataProvider dataTestModuleWithExistingFunctions
+   *
+   * @param string $generated_service
+   *   Where the generated service goes. One of:
+   *    - 'main': The main generated module.
+   *    - 'test': The test module.
+   * @param string $existing_code
+   *   Where the existing code goes. One of:
+   *    - 'main': The main generated module.
+   *    - 'test': The test module.
+   */
+  public function testTestModuleWithExistingServices(string $generated_service, string $existing_code) {
+    $services_value = [
+      [
+        'service_name' => 'test_service',
+        'injected_services' => [
+          'current_user',
+          'entity_type.manager',
+        ],
+      ]
+    ];
+
+    // Create a module.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'generated_module',
+      'readable_name' => 'Main module',
+      'services' => match ($generated_service) {
+        'main' => $services_value,
+        'test' => [],
+      },
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'kernel',
+          'plain_class_name' => 'MyTest',
+          'test_modules' => [
+            0 => [
+              // Don't specify root_name so the default is applied.
+              'services' => match ($generated_service) {
+                'main' => [],
+                'test' => $services_value,
+              },
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+    $services_file_yaml = <<<EOT
+      services:
+        existing.alpha:
+          class: Drupal\my_module\Alpha
+          arguments: ['@current_user', '@entity_type.manager']
+      EOT;
+
+    $extension->mockInfoFile('generated_module');
+    $extension->mockInfoFile('test_modules', [], 'tests/modules/my_test/');
+    $extension->setFile(match ($existing_code) {
+      'main' => 'generated_module.services.yml',
+      'test' => 'tests/modules/my_test/my_test.services.yml',
+    }, $services_file_yaml);
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+
+    if ($generated_service == 'main') {
+      $this->assertArrayHasKey('generated_module.services.yml', $files);
+    }
+    else {
+      $this->assertArrayNotHasKey('generated_module.services.yml', $files);
+    }
+
+    if ($generated_service == 'test') {
+      $this->assertArrayHasKey('tests/modules/my_test/my_test.services.yml', $files);
+    }
+    else {
+      $this->assertArrayNotHasKey('tests/modules/my_test/my_test.services.yml', $files);
+    }
+
+    // In all cases, only one services file is generated.
+    $services_file = match ($generated_service) {
+      'main' => $files['generated_module.services.yml'],
+      'test' => $files['tests/modules/my_test/my_test.services.yml'],
+    };
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+
+    $yaml_tester->assertHasProperty(['services', match ($generated_service) {
+      'main' => 'generated_module.test_service',
+      'test' => 'my_test.test_service',
+    }]);
+
+    // If the existing function was in the same module as where we're generating
+    // a hook, the function should have been merged.
+    if ($generated_service == $existing_code) {
+      $yaml_tester->assertHasProperty(['services', 'existing.alpha']);
+    }
+    else {
+      $yaml_tester->assertHasNotProperty(['services', "existing.alpha"]);
+    }
+  }
 }

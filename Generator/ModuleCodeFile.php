@@ -30,7 +30,7 @@ class ModuleCodeFile extends PHPFile {
    * {@inheritdoc}
    */
   public function detectExistence(DrupalExtension $extension) {
-    $this->exists = $extension->hasFile($this->component_data['filename']);
+    $this->exists = $extension->hasFile($this->getFilename());
     $this->extension = $extension;
   }
 
@@ -78,7 +78,7 @@ class ModuleCodeFile extends PHPFile {
 
     // Merge any existing functions.
     if ($this->exists) {
-      $ast = $this->extension->getFileAST($this->component_data['filename']);
+      $ast = $this->extension->getFileAST($this->getFilename());
 
       $existing_function_nodes = $this->extension->getASTFunctions($ast);
 
@@ -130,7 +130,7 @@ class ModuleCodeFile extends PHPFile {
 
         $end_line = $function_node->getEndLine() + 1;
 
-        $code_body[$existing_function_name] = implode("\n", $this->extension->getFileLines($this->component_data['filename'], $first_line, $end_line));
+        $code_body[$existing_function_name] = implode("\n", $this->extension->getFileLines($this->getFilename(), $first_line, $end_line));
       }
     }
 
