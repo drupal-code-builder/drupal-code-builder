@@ -52,7 +52,7 @@ class TestModule extends Module {
       ->setInternal(TRUE);
 
     $definition->getProperty('component_base_path')
-      ->setLiteralDefault('tests/modules/%module');
+      ->setExpressionDefault('"tests/modules/" ~get("..:root_name")');
 
     return $definition;
   }
