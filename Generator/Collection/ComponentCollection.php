@@ -136,7 +136,7 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Returns the iterator for this object.
    */
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     return new \ArrayIterator($this->components);
   }
 

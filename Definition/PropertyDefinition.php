@@ -285,22 +285,22 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     }
   }
 
-  public function offsetExists($offset) {
+  public function offsetExists(mixed $offset): bool {
     dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetExists $offset.");
   }
 
-  public function offsetGet($offset) {
+  public function offsetGet(mixed $offset): mixed {
     dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetGet $offset.");
   }
 
-  public function offsetSet($offset, $value) {
+  public function offsetSet(mixed $offset, mixed $value): void {
     dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetSet $offset.");
   }
 
-  public function offsetUnset($offset){
+  public function offsetUnset(mixed $offset): void {
     dump($this);
     throw new \Exception("Accessing definition $this->name as array with offsetUnset $offset.");
   }
