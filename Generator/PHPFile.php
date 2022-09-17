@@ -135,9 +135,9 @@ abstract class PHPFile extends File {
       $matches = [];
       // Do not match after a ' or ", as then the class name is a quoted string
       // and should be left alone.
-      // Do not match after a letter, as then that's also part of the namespace
-      // and we shouldn't be matching only the tail end.
-      if (preg_match_all('@(?<![\'"[:alpha:]])(?:\\\\(\w+)){2,}@', $line, $matches, PREG_SET_ORDER)) {
+      // Do not match after a letter or number, as then that's also part of the
+      // namespace and we shouldn't be matching only the tail end.
+      if (preg_match_all('@(?<![\'"[:alnum:]])(?:\\\\(\w+)){2,}@', $line, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];

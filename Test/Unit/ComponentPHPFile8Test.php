@@ -144,6 +144,23 @@ class ComponentPHPFile8Test extends TestBase {
         NULL,
         NULL,
       ],
+      'namespace-numeric-suffix' => [
+        "\Drupal\module_2976861\Entity\Test2976861Type::class",
+        "Test2976861Type::class",
+        'Drupal\module_2976861\Entity\Test2976861Type',
+      ],
+      // This checks that the 1 at the end of a namespace component isn't
+      // treated as a boundary for a FQCN.
+      'namespace-numeric-suffix-quoted' => [
+        "'\Drupal\module_2976861\Entity\Test2976861Type', 'load'",
+        NULL,
+        NULL,
+      ],
+      'class-name-numeric-suffix' => [
+        "'\Drupal\module_2976861\Entity\Test2976861', 'load'",
+        NULL,
+        NULL,
+      ],
     ];
   }
 
