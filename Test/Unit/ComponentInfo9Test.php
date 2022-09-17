@@ -47,7 +47,7 @@ class ComponentInfo9Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('name', 'Test Module');
     $yaml_tester->assertPropertyHasValue('type', 'module');
     $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9');
-    $yaml_tester->assertHasNotProperty('core');
+    $yaml_tester->assertNotHasProperty('core');
   }
 
   /**

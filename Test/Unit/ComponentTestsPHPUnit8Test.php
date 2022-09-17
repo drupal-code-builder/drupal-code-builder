@@ -109,7 +109,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Unit\MyTest');
     $php_tester->assertClassHasParent('Drupal\Tests\UnitTestCase');
-    $php_tester->assertClassHasNotProperty('modules');
+    $php_tester->assertNotClassHasProperty('modules');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
     $setup_method_tester = $php_tester->getMethodTester('setUp');
     $setup_method_tester->assertReturnType('void');
@@ -538,7 +538,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       $php_tester->assertHasFunction('some_my_function');
     }
     else {
-      $php_tester->assertHasNotFunction('some_my_function');
+      $php_tester->assertNotHasFunction('some_my_function');
     }
   }
 
@@ -651,7 +651,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       $yaml_tester->assertHasProperty(['services', 'existing.alpha']);
     }
     else {
-      $yaml_tester->assertHasNotProperty(['services', "existing.alpha"]);
+      $yaml_tester->assertNotHasProperty(['services', "existing.alpha"]);
     }
   }
 }

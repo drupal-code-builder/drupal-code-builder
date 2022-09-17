@@ -65,8 +65,8 @@ class ComponentHooks7Test extends TestBase {
     $php_tester->assertHasHookImplementation('hook_menu', $module_name);
     $php_tester->assertHasHookImplementation('hook_block_info', $module_name);
 
-    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_install', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];
@@ -75,9 +75,9 @@ class ComponentHooks7Test extends TestBase {
 
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
 
-    $php_tester->assertHasNotHookImplementation('hook_menu', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_block_info', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_menu', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_block_info', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
 
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
@@ -87,9 +87,9 @@ class ComponentHooks7Test extends TestBase {
 
     $php_tester->assertHasHookImplementation('hook_tokens', $module_name);
 
-    $php_tester->assertHasNotHookImplementation('hook_menu', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_block_info', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_menu', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_block_info', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_install', $module_name);
 
     // Check the .info file.
     $info_file = $files["$module_name.info"];

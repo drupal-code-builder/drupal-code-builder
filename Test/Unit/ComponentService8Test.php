@@ -939,7 +939,7 @@ class ComponentService8Test extends TestBase {
 
     // The existing method is overwritten, until merging of PHP classes is
     // implemented.
-    $php_tester->assertHasNotMethod('existingMethod', 'The existing method is overwritten.');
+    $php_tester->assertNotHasMethod('existingMethod', 'The existing method is overwritten.');
 
     $assert_injected_services = [
       [

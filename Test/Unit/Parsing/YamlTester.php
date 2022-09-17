@@ -111,7 +111,7 @@ class YamlTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertHasNotProperty($property_address, $message = NULL) {
+  public function assertNotHasProperty($property_address, $message = NULL) {
     if (!is_array($property_address)) {
       $property_address = [$property_address];
     }

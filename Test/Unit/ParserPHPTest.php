@@ -151,7 +151,7 @@ class ParserPHPTest extends TestCase {
     $expected_interfaces_string = implode(', ', $expected_interfaces);
 
     $this->assertAssertion($pass_has, $php_tester, 'assertClassHasInterfaces', $expected_interfaces);
-    $this->assertAssertion($pass_has_not, $php_tester, 'assertClassHasNotInterfaces', $expected_interfaces);
+    $this->assertAssertion($pass_has_not, $php_tester, 'assertNotClassHasInterfaces', $expected_interfaces);
   }
 
   /**
@@ -179,7 +179,7 @@ class ParserPHPTest extends TestCase {
         FALSE,
         TRUE,
       ],
-      // This and a further case commented out, as assertClassHasNotInterfaces()
+      // This and a further case commented out, as assertNotClassHasInterfaces()
       // is not yet subtle enough to pick up on only the namespace being wrong
       // when the class matches.
       /*

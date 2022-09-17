@@ -738,7 +738,7 @@ class PHPTester {
    * @param string[] $not_expected_interface_names
    *   An array of fully-qualified interface names, without the leading '\'.
    */
-  public function assertClassHasNotInterfaces($not_expected_interface_names) {
+  public function assertNotClassHasInterfaces($not_expected_interface_names) {
     // There will be only one class.
     $class_node = reset($this->parser_nodes['classes']);
 
@@ -864,7 +864,7 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertClassHasNotProperty($property_name, $message = NULL) {
+  public function assertNotClassHasProperty($property_name, $message = NULL) {
     $message = $message ?? "The class does not define the property \${$property_name}";
 
     Assert::assertArrayNotHasKey($property_name, $this->parser_nodes['properties'], $message);
@@ -1153,7 +1153,7 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertHasNotMethod($method_name, $message = NULL) {
+  public function assertNotHasMethod($method_name, $message = NULL) {
     $message = $message ?? "The file does not contain the method {$method_name}.";
 
     Assert::assertArrayNotHasKey($method_name, $this->parser_nodes['methods'], $message);
@@ -1281,7 +1281,7 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertHasNotFunction($function_name, $message = NULL) {
+  public function assertNotHasFunction($function_name, $message = NULL) {
     $message = $message ?? "The file does not contain the function {$function_name}.";
 
     Assert::assertArrayNotHasKey($function_name, $this->parser_nodes['functions'], $message);
@@ -1347,13 +1347,13 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertHasNotHookImplementation($hook_name, $module_name, $message = NULL) {
+  public function assertNotHasHookImplementation($hook_name, $module_name, $message = NULL) {
     $message = $message ?? "The code does not have a function that implements the hook $hook_name for module $module_name.";
 
     $hook_short_name = substr($hook_name, 5);
     $function_name = $module_name . '_' . $hook_short_name;
 
-    $this->assertHasNotFunction($function_name, $message);
+    $this->assertNotHasFunction($function_name, $message);
   }
 
   /**

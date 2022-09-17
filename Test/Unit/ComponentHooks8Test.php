@@ -114,8 +114,8 @@ class ComponentHooks8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards($phpcs_excluded_sniffs);
     $php_tester->assertHasHookImplementation('hook_help', $module_name);
     $php_tester->assertHasHookImplementation('hook_form_alter', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_install', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
 
     // Check the .install file.
     $install_file = $files["$module_name.install"];
@@ -124,9 +124,9 @@ class ComponentHooks8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertFileDocblockHasLine("Contains install and update hooks for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_form_alter', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_tokens', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_help', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_form_alter', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
 
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
@@ -134,9 +134,9 @@ class ComponentHooks8Test extends TestBase {
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $tokens_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasHookImplementation('hook_tokens', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_help', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_form_alter', $module_name);
-    $php_tester->assertHasNotHookImplementation('hook_install', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_help', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_form_alter', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_install', $module_name);
 
     // Check the .info file.
     $info_file = $files["$module_name.info.yml"];
@@ -295,7 +295,7 @@ class ComponentHooks8Test extends TestBase {
     // We can't use assertHasHookImplementation() as the N is replaced with the
     // next schema number.
     $php_tester->assertHasFunction('test_module_update_8003');
-    $php_tester->assertHasNotHookImplementation('hook_update_N', $module_name);
+    $php_tester->assertNotHasHookImplementation('hook_update_N', $module_name);
   }
 
 }

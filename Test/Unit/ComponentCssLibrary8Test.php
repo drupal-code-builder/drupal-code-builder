@@ -93,7 +93,7 @@ class ComponentCssLibrary8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['test_module_library', 'js', 'https://example.com/external.min.js', 'minified'], TRUE);
     $yaml_tester->assertPropertyHasValue(['test_module_library', 'dependencies', 0], 'core/jquery', "The libraries file declares the dependencies.");
     $yaml_tester->assertPropertyHasValue(['test_module_library', 'dependencies', 1], 'foo/bar', "The libraries file declares the dependencies.");
-    $yaml_tester->assertHasNotProperty(['test_module_library', 'header'], 'The library does not specify the header property.');
+    $yaml_tester->assertNotHasProperty(['test_module_library', 'header'], 'The library does not specify the header property.');
 
     $yaml_tester->assertHasProperty('second_library');
     $yaml_tester->assertPropertyHasValue(['second_library', 'version'], '1.x', "The libraries file declares the library version.");
