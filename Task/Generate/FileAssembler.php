@@ -157,6 +157,8 @@ class FileAssembler {
       // Set the flags relating to existing files on the file info.
       // This must be done before tokens are replaced, as tests use the filename
       // with the token.
+      // @todo: Use valuue from component once all File generator classes
+      // check for existence.
       $exists = $existing_extension ? $existing_extension->hasFile($filepath) : FALSE;
       $merged = $file_info['merged'] ?? FALSE;
 
