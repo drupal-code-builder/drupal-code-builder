@@ -15,8 +15,8 @@ class ContainerBuilderGetter {
   /**
    * Gets the ContainerBuilder by hacking the Drupal kernel.
    *
-   * @return
-   *   The container builder.
+   * @return \Drupal\Core\DependencyInjection\ContainerBuilder
+   *   The compiled service container
    */
   public function getContainerBuilder() {
     if (!isset($this->containerBuilder)) {

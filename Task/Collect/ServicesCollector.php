@@ -34,6 +34,8 @@ class ServicesCollector extends CollectorBase  {
 
   /**
    * The container builder helper.
+   *
+   * @var \DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter
    */
   protected $containerBuilderGetter;
 
@@ -42,7 +44,7 @@ class ServicesCollector extends CollectorBase  {
    *
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
    *   The environment object.
-   * @param ContainerBuilderGetter $method_collector
+   * @param \DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter $method_collector
    *   The container builder helper.
    * @param \DrupalCodeBuilder\Task\Collect\CodeAnalyser $code_analyser
    *   The code analyser helper.
@@ -343,13 +345,17 @@ class ServicesCollector extends CollectorBase  {
    * This examines the \Drupal static helper using reflection, and extracts
    * data from the helper methods that return services.
    *
+   * This provides more information about these particular services, such as
+   * their description in the methods' docblock.
+   *
    * @return array
    *   An array of service data.
    */
   protected function getStaticContainerServices(): array {
     $container_builder = $this->containerBuilderGetter->getContainerBuilder();
 
-    // We can get service IDs from the container,
+    // Get the reflections for the methods on the \Drupal class, and deduce
+    // which ones return services from the container.
     $static_container_reflection = new \ReflectionClass('\Drupal');
     $filename = $static_container_reflection->getFileName();
     $source = file($filename);
