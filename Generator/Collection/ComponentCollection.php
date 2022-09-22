@@ -201,6 +201,9 @@ class ComponentCollection implements \IteratorAggregate {
     if ($requesting_component) {
       $request_path = $this->requestPaths[$this->getComponentKey($requesting_component)] . '/' . $local_name;
 
+      // Request paths should be unique.
+      assert(!isset($this->requestPaths[$key]));
+
       // Add to the array of request paths.
       $this->requestPaths[$key] = $request_path;
 
