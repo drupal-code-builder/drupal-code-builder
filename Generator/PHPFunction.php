@@ -99,53 +99,6 @@ class PHPFunction extends BaseGenerator {
   }
 
   /**
-   * Gets the bare lines to format as the docblock.
-   *
-   * @return string[]
-   *   An array of lines.
-   */
-  protected function getFunctionDocBlockLines() {
-    $lines = [];
-
-    // Check the deprecated 'doxygen_first' property first, as code that doesn't
-    // use this will have it empty.
-    if (!$this->component_data->doxygen_first->isEmpty()) {
-      $lines[] = $this->component_data->doxygen_first->value;
-    }
-    else {
-      $lines = $this->component_data->function_docblock_lines->value;
-
-      if (count($lines) > 1) {
-        // If there is more than one line, splice in a blank line after the
-        // first one.
-        array_splice($lines, 1, 0, '');
-      }
-    }
-
-    if (!$this->component_data->parameters->isEmpty()) {
-      $lines[] = '';
-
-      foreach ($this->component_data->parameters as $parameter_data) {
-        $param_name_line = '@param ';
-        // ARGH TODO! Shouldn't this happen somewhere else???
-        $parameter_data->type->applyDefault();
-         if (!empty($parameter_data->type->value)) {
-          $param_name_line .= $parameter_data->type->value . ' ';
-        }
-        $param_name_line .= '$' . $parameter_data->name->value;
-        $lines[] = $param_name_line;
-        $lines[] = '  ' . $parameter_data->description->value;
-      }
-    }
-
-    if (!$this->component_data->doxygen_tag_lines->isEmpty()) {
-      $lines = array_merge($lines, [''], $this->component_data->doxygen_tag_lines->values());
-    }
-
-    return $lines;
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function buildComponentContents($children_contents) {
@@ -210,6 +163,53 @@ class PHPFunction extends BaseGenerator {
         'content' => $function_code,
       ],
     ];
+  }
+
+  /**
+   * Gets the bare lines to format as the docblock.
+   *
+   * @return string[]
+   *   An array of lines.
+   */
+  protected function getFunctionDocBlockLines() {
+    $lines = [];
+
+    // Check the deprecated 'doxygen_first' property first, as code that doesn't
+    // use this will have it empty.
+    if (!$this->component_data->doxygen_first->isEmpty()) {
+      $lines[] = $this->component_data->doxygen_first->value;
+    }
+    else {
+      $lines = $this->component_data->function_docblock_lines->value;
+
+      if (count($lines) > 1) {
+        // If there is more than one line, splice in a blank line after the
+        // first one.
+        array_splice($lines, 1, 0, '');
+      }
+    }
+
+    if (!$this->component_data->parameters->isEmpty()) {
+      $lines[] = '';
+
+      foreach ($this->component_data->parameters as $parameter_data) {
+        $param_name_line = '@param ';
+        // ARGH TODO! Shouldn't this happen somewhere else???
+        $parameter_data->type->applyDefault();
+         if (!empty($parameter_data->type->value)) {
+          $param_name_line .= $parameter_data->type->value . ' ';
+        }
+        $param_name_line .= '$' . $parameter_data->name->value;
+        $lines[] = $param_name_line;
+        $lines[] = '  ' . $parameter_data->description->value;
+      }
+    }
+
+    if (!$this->component_data->doxygen_tag_lines->isEmpty()) {
+      $lines = array_merge($lines, [''], $this->component_data->doxygen_tag_lines->values());
+    }
+
+    return $lines;
   }
 
 }
