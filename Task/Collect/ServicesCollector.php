@@ -391,6 +391,12 @@ class ServicesCollector extends CollectorBase  {
       }
       $service_id = $matches[1];
 
+      // It's possible for services that the \Drupal class provides to not
+      // exist, if a custom compiler pass removes them.
+      if (!$container_builder->has($service_id)) {
+        continue;
+      }
+
       $docblock = $method->getDocComment();
 
       // Extract the interface for the service from the docblock @return.
