@@ -196,7 +196,9 @@ abstract class PHPFile extends File {
   }
 
   /**
-   * Return a file footer.
+   * Returns a file footer.
+   *
+   * This is only used if non-empty.
    */
   function code_footer() {}
 

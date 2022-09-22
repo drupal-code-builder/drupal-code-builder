@@ -178,28 +178,6 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Return the contents of the file.
-   *
-   * Helper for subclasses. Serves to concatenate standard pieces of the file.
-   *
-   * @return
-   *  An array of text strings, in the correct order for concatenation.
-   */
-  protected function fileContents() {
-    // File contents are built up.
-    $file_contents = array_merge(
-      $this->file_header(),
-      $this->code_header(),
-      $this->code_body(),
-      [
-        $this->code_footer(),
-      ]
-    );
-
-    return $file_contents;
-  }
-
-  /**
    * Returns file header code.
    */
   function code_header() {
@@ -233,6 +211,7 @@ class PHPClassFile extends PHPFile {
       $class_code,
       [
         '}',
+        '',
       ]);
     return $return;
   }

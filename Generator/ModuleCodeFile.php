@@ -178,10 +178,10 @@ class ModuleCodeFile extends PHPFile {
   }
 
   /**
-   * Return a file footer.
+   * {@inheritdoc}
    */
   function code_footer() {
-    $footer = \DrupalCodeBuilder\Factory::getEnvironment()->getSetting('footer', '');
+    $footer = \DrupalCodeBuilder\Factory::getEnvironment()->getSetting('footer', NULL);
     return $footer;
   }
 
