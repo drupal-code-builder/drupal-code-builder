@@ -74,9 +74,9 @@ class RouterItem7 extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     // Return code for a single menu item. Our parent in the component tree,
-    // HookMenu, will merge it in its own buildComponentContents().
+    // HookMenu, will merge it in.
     $code = [];
     $code[] = "£items['{$this->component_data['path']}'] = array(";
     $code[] = "  'title' => '{$this->component_data['title']}',";
@@ -97,12 +97,7 @@ class RouterItem7 extends BaseGenerator {
     }
     $code[] = ");";
 
-    return [
-      'route' => [
-        'role' => 'item',
-        'content' => $code,
-      ],
-    ];
+    return $code;
   }
 
 }
