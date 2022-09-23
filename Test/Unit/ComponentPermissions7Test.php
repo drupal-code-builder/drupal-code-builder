@@ -6,6 +6,8 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the Permissions generator class.
+ *
+ * @group hooks
  */
 class ComponentPermissions7Test extends TestBase {
 
