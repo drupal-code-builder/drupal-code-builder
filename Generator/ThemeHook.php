@@ -60,7 +60,14 @@ class ThemeHook extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContentType(): string {
+    return 'element';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContents(): array {
     // Return code for a single hook_theme() item.
     $theme_hook_name = $this->component_data['theme_hook_name'];
 
@@ -70,13 +77,7 @@ class ThemeHook extends BaseGenerator {
     $code[] = "    'render element' => 'elements',";
     $code[] = "  ],";
 
-    return [
-      'item' => [
-        'role' => 'item',
-        'content' => $code,
-      ],
-    ];
-
+    return $code;
   }
 
 }
