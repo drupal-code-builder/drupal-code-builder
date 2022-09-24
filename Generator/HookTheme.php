@@ -10,11 +10,11 @@ class HookTheme extends HookImplementation {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  protected function getFunctionBody(): array {
     // If we have no children, i.e. no ThemeHook components, then hand over to
     // the parent, which will output the default hook code.
     if ($this->containedComponents->isEmpty()) {
-      return parent::buildComponentContents($children_contents);
+      return parent::getFunctionBody();
     }
 
     $code = [];
@@ -24,10 +24,9 @@ class HookTheme extends HookImplementation {
     }
     $code[] = '];';
 
-    $this->component_data->body = $code;
     $this->component_data->body_indented = FALSE;
 
-    return parent::buildComponentContents($children_contents);
+    return $code;
   }
 
 }

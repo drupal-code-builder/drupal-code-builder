@@ -131,24 +131,28 @@ class PHPFunction extends BaseGenerator {
 
     $function_code[] = $declaration . ' {';
 
-    if (isset($this->component_data['body'])) {
+    $body = [];
+    if ($body = $this->getFunctionBody()) {
+      // Do nothing; assignment suffices.
+    }
+    elseif (isset($this->component_data['body'])) {
       $body = is_array($this->component_data['body'])
         ? $this->component_data['body']
         : [$this->component_data['body']];
-
-      // Little bit of sugar: to save endless escaping of $ in front of
-      // variables in code body, you can use £.
-      $body = array_map(function($line) {
-          return str_replace('£', '$', $line);
-        }, $body);
-
-      // Add indent.
-      if (empty($this->component_data['body_indented'])) {
-        $body = $this->indentCodeLines($body);
-      }
-
-      $function_code = array_merge($function_code, $body);
     }
+
+    // Little bit of sugar: to save endless escaping of $ in front of
+    // variables in code body, you can use £.
+    $body = array_map(function($line) {
+        return str_replace('£', '$', $line);
+      }, $body);
+
+    // Add indent.
+    if (empty($this->component_data->body_indented->value)) {
+      $body = $this->indentCodeLines($body);
+    }
+
+    $function_code = array_merge($function_code, $body);
 
     $function_code[] = "}";
 
@@ -210,6 +214,19 @@ class PHPFunction extends BaseGenerator {
     }
 
     return $lines;
+  }
+
+  /**
+   * Gets body lines of the function.
+   *
+   * Helper to allow classes to override the code lines from the property
+   * value.
+   *
+   * @return string[]
+   *   An array of lines.
+   */
+  protected function getFunctionBody(): array {
+    return [];
   }
 
 }
