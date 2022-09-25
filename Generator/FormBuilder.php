@@ -33,14 +33,27 @@ class FormBuilder extends PHPFunction {
 
   }
 
+  // TEMPORARY: This exists for containing components which still expect to get
+  // contained components using $children_contents and
+  // filterComponentContentsForRole. Piggy-back on getContents().
+  protected function buildComponentContents($children_contents) {
+    return [
+      'function' => [
+        'role' => 'function',
+        'function_name' => $this->component_data['function_name'],
+        'content' => $this->getContents(),
+      ],
+    ];
+  }
+
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     // If there are no form elements, fall back to normal function generator
     // handling, which takes the body specified in the properties.
     if ($this->containedComponents->isEmpty()) {
-      return parent::buildComponentContents($children_contents);
+      return parent::getContents();
     }
 
     $function_code = [];
@@ -86,13 +99,7 @@ class FormBuilder extends PHPFunction {
         return str_replace('£', '$', $line);
       }, $function_code);
 
-    return [
-      'function' => [
-        'role' => 'function',
-        'function_name' => $this->component_data['function_name'],
-        'content' => $function_code,
-      ],
-    ];
+    return $function_code;
   }
 
 }

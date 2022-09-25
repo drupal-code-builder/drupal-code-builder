@@ -98,10 +98,30 @@ class PHPFunction extends BaseGenerator {
     }
   }
 
+  // TEMPORARY: This exists for containing components which still expect to get
+  // contained components using $children_contents and
+  // filterComponentContentsForRole. Piggy-back on getContents().
+  protected function buildComponentContents($children_contents) {
+    return [
+      'function' => [
+        'role' => 'function',
+        'function_name' => $this->component_data['function_name'],
+        'content' => $this->getContents(),
+      ],
+    ];
+  }
+
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContentType(): string {
+    return 'function';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContents(): array {
     $function_code = [];
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
@@ -160,13 +180,7 @@ class PHPFunction extends BaseGenerator {
     // is fixed.
     assert(!empty($this->component_data['function_name']));
 
-    return [
-      'function' => [
-        'role' => 'function',
-        'function_name' => $this->component_data['function_name'],
-        'content' => $function_code,
-      ],
-    ];
+    return $function_code;
   }
 
   /**

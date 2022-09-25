@@ -69,8 +69,15 @@ class ModuleCodeFile extends PHPFile {
   function code_body() {
     $code_body = [];
 
-    // Function data has been set by buildComponentContents().
-    foreach ($this->functions as $function_lines) {
+    // Array of the names of generated functions.
+    $generated_function_names = [];
+
+    foreach ($this->containedComponents['function'] as $key => $child_item) {
+      $function_name = $child_item->component_data->function_name->value;
+      $function_name = str_replace('%module', $this->component_data['root_component_name'], $function_name);
+      $generated_function_names[$function_name] = TRUE;
+
+      $function_lines = $child_item->getContents();
       $code_body = array_merge($code_body, $function_lines);
       // Blank line after the function.
       $code_body[] = '';
@@ -101,13 +108,6 @@ class ModuleCodeFile extends PHPFile {
 
         // Only act on the first function.
         break;
-      }
-
-      // Get the names of generated functions.
-      $generated_function_names = [];
-      foreach (array_keys($this->functions) as $name) {
-        $name = str_replace('%module', $this->component_data['root_component_name'], $name);
-        $generated_function_names[$name] = TRUE;
       }
 
       // Add functions from the existing file, unless we are generating them

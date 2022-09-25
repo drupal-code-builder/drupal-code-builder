@@ -55,13 +55,11 @@ class HookUpdateN extends HookImplementation {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
-    // TODO: This has to remain as buildComponentContents until PHPFunction is
-    // changed over.
+  public function getContents(): array {
     // Replace the '_N' part of the function declaration.
     $this->component_data->declaration->value = preg_replace('/(?<=hook_update_)N/', $this->nextSchemaNumber, $this->component_data->declaration->value);
 
-    return parent::buildComponentContents($children_contents);
+    return parent::getContents();
   }
 
 }
