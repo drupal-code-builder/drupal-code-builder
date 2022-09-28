@@ -75,6 +75,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'dependency_two',
       'test_module',
     ]);
+    $php_tester->assertStatementIsParentCall('setUp', 0);
   }
 
   /**
@@ -111,6 +112,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Tests\UnitTestCase');
     $php_tester->assertNotClassHasProperty('modules');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+    $php_tester->assertStatementIsParentCall('setUp', 0);
     $setup_method_tester = $php_tester->getMethodTester('setUp');
     $setup_method_tester->assertReturnType('void');
   }
@@ -153,6 +155,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'test_module',
     ]);
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+    $php_tester->assertStatementIsParentCall('setUp', 0);
     $setup_method_tester = $php_tester->getMethodTester('setUp');
     $setup_method_tester->assertReturnType('void');
   }
@@ -199,6 +202,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
+    $php_tester->assertStatementIsParentCall('setUp', 0);
 
     // Container services.
     $php_tester->assertClassHasProtectedProperty('currentUser', 'Drupal\Core\Session\AccountProxyInterface');
