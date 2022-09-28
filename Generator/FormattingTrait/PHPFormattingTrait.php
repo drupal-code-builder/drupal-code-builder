@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator\FormattingTrait;
 
+use CaseConverter\CaseString;
+
 /**
  * Trait for PHP formatting.
  */
