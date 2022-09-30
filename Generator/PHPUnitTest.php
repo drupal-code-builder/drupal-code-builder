@@ -189,6 +189,29 @@ class PHPUnitTest extends PHPClassFile {
   public function requiredComponents(): array {
     $components = [];
 
+    $components['method_setup'] = [
+      'component_type' => 'PHPFunction',
+      'containing_component' => '%requester',
+      'function_name' => 'setUp',
+      'docblock_inherit' => TRUE,
+      'prefixes' => ['protected'],
+      'return_type' => 'void',
+      // 'body' is set later, in classCodeBody().
+    ];
+
+    $components['method_test'] = [
+      'component_type' => 'PHPFunction',
+      'containing_component' => '%requester',
+      'function_name' => 'testMyTest',
+      'function_docblock_lines' => [
+        'Tests the TODO.',
+      ],
+      'prefixes' => ['public'],
+      'body' => [
+        '// TODO: test code here.',
+      ],
+    ];
+
     foreach ($this->component_data['container_services'] as $service_id) {
       $components['service_' . $service_id] = [
         'component_type' => 'InjectedService',
@@ -228,6 +251,29 @@ class PHPUnitTest extends PHPClassFile {
     $docblock_lines[] = '@group %module';
 
     return $docblock_lines;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function classCodeBody() {
+    // Quick temporary hack to set the method lines for working with services
+    // into the setUp() method.
+    // TODO: change the services to be components that are contained in the
+    // method_setup function component.
+    foreach ($this->containedComponents['function'] as $key => $child_item) {
+      $parts = explode('/', $key);
+      $local_name = end($parts);
+
+      if ($local_name == 'method_setup') {
+        $setup_method_component = $child_item;
+        break;
+      }
+    }
+
+    $setup_method_component->component_data->body = $this->getSetupMethodLines();
+
+    return parent::classCodeBody();
   }
 
   /**
@@ -287,10 +333,18 @@ class PHPUnitTest extends PHPClassFile {
         $this->properties[] = $property_code;
       }
     }
+  }
 
-    $setup_lines = $this->buildMethodHeader('setUp', [], ['inheritdoc' => TRUE, 'prefixes' => ['protected']], 'void');
-    // TODO: WTF should not need to manually indent!
-    $setup_lines[] = '  parent::setUp();';
+  /**
+   * Gets the code lines for the setUp() method.
+   *
+   * @return array
+   *   Array of code lines.
+   */
+  protected function getSetupMethodLines(): array {
+    $setup_lines = [];
+
+    $setup_lines[] = 'parent::setUp();';
     $setup_lines[] = '';
 
     // Container services setup.
@@ -299,7 +353,7 @@ class PHPUnitTest extends PHPClassFile {
       // that is intended for use in an array and so has a terminal comma.
       // TODO: remove the terminal comma so we can use it here!
       foreach ($this->childContentsGrouped['service_container'] as $service_info) {
-        $setup_lines[] = "  £this->{$service_info['property_name']} = £this->container->get('{$service_info['id']}');";
+        $setup_lines[] = "£this->{$service_info['property_name']} = £this->container->get('{$service_info['id']}');";
       }
 
       $setup_lines[] = '';
@@ -308,29 +362,13 @@ class PHPUnitTest extends PHPClassFile {
     // Mocked services.
     if (!empty($this->childContentsGrouped['service_mocked'])) {
       foreach ($this->childContentsGrouped['service_mocked'] as $service_info) {
-        $setup_lines[] = "  // Mock the {$service_info['label']} service.";
-        $setup_lines[] = "  £{$service_info['variable_name']} = £this->prophesize({$service_info['typehint']}::class);";
-        $setup_lines[] = "  £this->container->set('{$service_info['id']}', £{$service_info['variable_name']}->reveal());";
+        $setup_lines[] = "// Mock the {$service_info['label']} service.";
+        $setup_lines[] = "£{$service_info['variable_name']} = £this->prophesize({$service_info['typehint']}::class);";
+        $setup_lines[] = "£this->container->set('{$service_info['id']}', £{$service_info['variable_name']}->reveal());";
       }
-
-      $setup_lines[] = '';
     }
 
-    $setup_lines[] = '  // TODO: setup tasks here.';
-    $setup_lines[] = '}';
-
-    // TOFO: WTF this should be central!!!
-    $setup_lines = array_map(function($line) {
-      return str_replace('£', '$', $line);
-    }, $setup_lines);
-
-    $this->functions[] = $setup_lines;
-
-    $test_method_lines = $this->buildMethodHeader('testMyTest', [], ['docblock_first_line' => 'Tests the TODO.', 'prefixes' => ['public']]);
-    $test_method_lines[] = '  // TODO: test code here.';
-    $test_method_lines[] = '}';
-
-    $this->functions[] = $test_method_lines;
+    return $setup_lines ;
   }
 
 }

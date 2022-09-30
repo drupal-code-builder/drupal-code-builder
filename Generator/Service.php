@@ -318,6 +318,19 @@ class Service extends PHPClassFileWithInjection {
       'line_break_between_blocks_level' => $line_break_between_blocks_level,
     ];
 
+    // Add methods from the tag type interface.
+    if (!empty($this->component_data->service_tag_type->value)) {
+      $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+      $service_types_data = $task_handler_report_services->listServiceTypeData();
+
+      if (!empty($service_types_data[$this->component_data->service_tag_type->value]['methods'])) {
+        $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
+        foreach ($service_type_interface_data as $method_name => $method_data) {
+          $components['function-' . $method_name] = $this->createFunctionComponentFromMethodData($method_data);
+        }
+      }
+    }
+
     return $components;
   }
 
@@ -342,17 +355,6 @@ class Service extends PHPClassFileWithInjection {
     parent::collectSectionBlocks();
 
     $this->collectSectionBlocksForDependencyInjection();
-
-    // Add methods from the tag type interface.
-    if (!empty($this->component_data['service_tag_type'])) {
-      $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-      $service_types_data = $task_handler_report_services->listServiceTypeData();
-
-      if (!empty($service_types_data[$this->component_data['service_tag_type']]['methods'])) {
-        $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
-        $this->createBlocksFromMethodData($service_type_interface_data);
-      }
-    }
   }
 
 }

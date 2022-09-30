@@ -276,6 +276,10 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       }
     }
 
+    foreach ($this->plugin_type_data['plugin_interface_methods'] as $method_name => $method_data) {
+      $components['function-' . $method_name] = $this->createFunctionComponentFromMethodData($method_data);
+    }
+
     return $components;
   }
 
@@ -412,9 +416,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
    */
   protected function collectSectionBlocks() {
     $this->collectSectionBlocksForDependencyInjection();
-
-    // TODO: move this to a component.
-    $this->createBlocksFromMethodData($this->plugin_type_data['plugin_interface_methods']);
   }
 
   /**

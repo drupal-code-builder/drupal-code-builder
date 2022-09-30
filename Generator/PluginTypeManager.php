@@ -43,6 +43,32 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    if ($this->component_data['discovery_type'] == 'yaml') {
+      $components['method-get-discovery'] = [
+        'component_type' => 'PHPFunction',
+        'function_name' => 'getDiscovery',
+        'containing_component' => '%requester',
+        'docblock_inherit' => TRUE,
+        'prefixes' => ['protected'],
+        'body' => [
+          'if (!$this->discovery) {',
+          "  \$discovery = new \Drupal\Core\Plugin\Discovery\YamlDiscovery('{$this->component_data['plugin_type']}', \$this->moduleHandler->getModuleDirectories());",
+          '  $this->discovery = new \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator($discovery);',
+          '}',
+          'return $this->discovery;',
+          ],
+      ];
+    }
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildComponentContents($children_contents) {
     parent::buildComponentContents($children_contents);
 
@@ -80,8 +106,6 @@ class PluginTypeManager extends Service {
     $this->constructor = $this->codeBodyClassMethodConstruct();
 
     if ($this->component_data['discovery_type'] == 'yaml') {
-      $this->functions[] = $this->codeBodyGetDiscovery();
-
       $this->properties[] = $this->createPropertyBlock(
         'defaults',
         'array',
@@ -187,37 +211,6 @@ class PluginTypeManager extends Service {
     $code = $this->indentCodeLines($code);
 
     $code = array_merge($constructor_code, $code);
-
-    $code[] = '}';
-
-    return $code;
-  }
-
-  /**
-   * Generates the code for the getDiscovery() method for YAML plugins.
-   */
-  protected function codeBodyGetDiscovery() {
-    $header_code = $this->buildMethodHeader(
-      'getDiscovery',
-      [],
-      [
-        'inheritdoc' => TRUE,
-        'prefixes' => ['protected'],
-      ]
-    );
-
-    $code = [];
-
-    $code[] = 'if (!$this->discovery) {';
-    $code[] = "  \$discovery = new \Drupal\Core\Plugin\Discovery\YamlDiscovery('{$this->component_data['plugin_type']}', \$this->moduleHandler->getModuleDirectories());";
-    $code[] = '  $this->discovery = new \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator($discovery);';
-    $code[] = '}';
-    $code[] = 'return $this->discovery;';
-
-    // Indent the body.
-    $code = $this->indentCodeLines($code);
-
-    $code = array_merge($header_code, $code);
 
     $code[] = '}';
 

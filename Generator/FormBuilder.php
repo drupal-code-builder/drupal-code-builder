@@ -33,19 +33,6 @@ class FormBuilder extends PHPFunction {
 
   }
 
-  // TEMPORARY: This exists for containing components which still expect to get
-  // contained components using $children_contents and
-  // filterComponentContentsForRole. Piggy-back on getContents().
-  protected function buildComponentContents($children_contents) {
-    return [
-      'function' => [
-        'role' => 'function',
-        'function_name' => $this->component_data['function_name'],
-        'content' => $this->getContents(),
-      ],
-    ];
-  }
-
   /**
    * {@inheritdoc}
    */
