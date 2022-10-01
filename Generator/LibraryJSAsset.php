@@ -61,7 +61,7 @@ class LibraryJSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     if (filter_var($this->component_data['filename'], FILTER_VALIDATE_URL)) {
       $value = [
         'type' => 'external',
@@ -76,11 +76,6 @@ class LibraryJSAsset extends BaseGenerator {
       $this->component_data['filename'] => $value,
     ];
 
-    return [
-      'asset' => [
-        'role' => 'asset',
-        'content' => $yaml_data,
-      ],
-    ];
+    return $yaml_data;
   }
 }

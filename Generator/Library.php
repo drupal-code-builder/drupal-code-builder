@@ -83,8 +83,8 @@ class Library extends BaseGenerator {
    */
   protected function buildComponentContents($children_contents) {
     $assets_yaml_data = [];
-    foreach ($this->filterComponentContentsForRole($children_contents, 'asset') as $component_name => $component_yaml_data) {
-      $assets_yaml_data = array_merge_recursive($assets_yaml_data, $component_yaml_data);
+    foreach ($this->containedComponents['element'] as $child_item) {
+      $assets_yaml_data = array_merge_recursive($assets_yaml_data, $child_item->getContents());
     }
 
     $library_data = [

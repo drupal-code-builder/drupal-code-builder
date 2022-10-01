@@ -60,19 +60,14 @@ class LibraryCSSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     $style_type = $this->component_data['style_type'];
 
     $yaml_data['css'][$style_type] = [
       'css/' . $this->component_data['filename'] . '.css' => [],
     ];
 
-    return [
-      'asset' => [
-        'role' => 'asset',
-        'content' => $yaml_data,
-      ],
-    ];
+    return $yaml_data;
   }
 
 }
