@@ -60,10 +60,12 @@ abstract class Info extends File {
    */
   protected function buildComponentContents($children_contents) {
     $lines = [];
-    foreach ($this->filterComponentContentsForRole($children_contents, 'infoline') as $component_name => $component_lines) {
+    foreach ($this->containedComponents['element'] as $key => $child_item) {
+      $contents = $child_item->getContents();
+
       // Assume that children components don't tread on each others' toes and
       // provide the same property names.
-      $lines += $component_lines;
+      $lines[array_key_first($contents)] = reset($contents);
     }
 
     // Temporary, until Generate handles the return from this.
