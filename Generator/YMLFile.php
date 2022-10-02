@@ -83,8 +83,8 @@ class YMLFile extends File {
    */
   protected function buildComponentContents($children_contents) {
     $yaml_data = [];
-    foreach ($this->filterComponentContentsForRole($children_contents, 'yaml') as $component_name => $component_yaml_data) {
-      $yaml_data += $component_yaml_data;
+    foreach ($this->containedComponents['element'] as $key => $child_item) {
+      $yaml_data += $child_item->getContents();
     }
 
     // TEMPORARY, until Generate task handles returned contents.

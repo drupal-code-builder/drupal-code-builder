@@ -127,7 +127,7 @@ class PluginYamlDiscovery extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     if ($this->component_data->prefix_name->value) {
       $plugin_name = $this->component_data->prefixed_plugin_name->value;
     }
@@ -137,12 +137,7 @@ class PluginYamlDiscovery extends BaseGenerator {
 
     $yaml_data[$plugin_name] = $this->component_data['plugin_properties'];
 
-    return [
-      'plugin' => [
-        'role' => 'yaml',
-        'content' => $yaml_data,
-      ],
-    ];
+    return $yaml_data;
   }
 
 }

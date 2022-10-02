@@ -479,7 +479,7 @@ class RouterItem extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     $path = $this->component_data['path'];
 
     $route_yaml = [];
@@ -502,12 +502,7 @@ class RouterItem extends BaseGenerator {
     $route_name = $this->component_data['route_name'];
     $routing_data[$route_name] = $route_yaml;
 
-    return [
-      'route' => [
-        'role' => 'yaml',
-        'content' => $routing_data,
-      ],
-    ];
+    return $routing_data;
   }
 
 }

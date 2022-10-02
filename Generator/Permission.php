@@ -71,7 +71,7 @@ class Permission extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     $permission_name = $this->component_data['permission'];
 
     $permission_info = [
@@ -84,12 +84,7 @@ class Permission extends BaseGenerator {
 
     $yaml_data[$permission_name] = $permission_info;
 
-    return [
-      'permission' => [
-        'role' => 'yaml',
-        'content' => $yaml_data,
-      ],
-    ];
+    return $yaml_data;
   }
 
 }
