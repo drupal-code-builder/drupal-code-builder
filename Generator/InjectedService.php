@@ -91,7 +91,17 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContentType(): string {
+    return 'injected_service';
+  }
+
+  /**
+   * Gets the contents of the component.
+   *
+   * @return array
+   *   An array of different elements, keyed by role.
+   */
+  public function getContents(): array {
     $service_info = $this->component_data['service_info'];
 
     $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
@@ -118,25 +128,15 @@ class InjectedService extends BaseGenerator {
     }
 
     $contents = [
-      'service' => [
-        'role' => 'service',
-        'content' => $service_info,
-      ],
+      'service' => $service_info,
       'service_property' => [
-        'role' => 'service_property',
-        'content' => [
-          'id'            => $service_info['id'],
-          'property_name' => $service_info['property_name'],
-          'typehint'      => $service_info['typehint'],
-          'description'   => $service_info['description'],
-        ],
+        'id'            => $service_info['id'],
+        'property_name' => $service_info['property_name'],
+        'typehint'      => $service_info['typehint'],
+        'description'   => $service_info['description'],
       ],
-      'container_extraction' => [
-        'role' => 'container_extraction',
-        'content' => $container_extraction,
-      ],
+      'container_extraction' => $container_extraction,
       'constructor_param' => [
-        'role' => 'constructor_param',
         // At this point, we can't know whether the service is being injected
         // into a class that has a static factory or not, so we don't know if
         // the constructor param is:
@@ -144,27 +144,26 @@ class InjectedService extends BaseGenerator {
         //  the extraction)
         // b. the real service variable name (because the constructor then does
         //  the extraction)
-        'content' => [
-          'id'          => $service_info['id'],
-          'name'        => $service_info['variable_name'],
-          'typehint'    => $service_info['typehint'],
-          'description' => $service_info['description'] . '.',
-          'type'        => $service_type,
-          'real_name'   => $service_info['real_service_variable_name'] ?? '',
-          'real_typehint'    => $service_info['real_service_typehint'] ?? '',
-          'real_description' => ($service_info['real_service_description'] ?? '') . '.',
-          // 'container_extraction' => $container_extraction,
-        ],
+        'id'          => $service_info['id'],
+        'name'        => $service_info['variable_name'],
+        'typehint'    => $service_info['typehint'],
+        'description' => $service_info['description'] . '.',
+        'type'        => $service_type,
+        'real_name'   => $service_info['real_service_variable_name'] ?? '',
+        'real_typehint'    => $service_info['real_service_typehint'] ?? '',
+        'real_description' => ($service_info['real_service_description'] ?? '') . '.',
+        // 'container_extraction' => $container_extraction,
       ],
-      'property_assignment' => [
-        'role' => 'property_assignment',
-        'content' => $property_assignment,
-      ],
+      'property_assignment' => $property_assignment,
     ];
 
-    if (!empty($this->component_data['role_suffix'])) {
-      foreach ($contents as &$data) {
-        $data['role'] .= $this->component_data['role_suffix'];
+    // Special handling for unit tests.
+    // TODO: clean up!
+    if (!empty($this->component_data->role_suffix->value)) {
+      foreach (['service', 'service_property'] as $existing_key) {
+        $new_key = $existing_key . $this->component_data['role_suffix'];
+
+        $contents[$new_key] = $contents[$existing_key];
       }
     }
 

@@ -276,19 +276,11 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       }
     }
 
+    foreach ($this->plugin_type_data['plugin_interface_methods'] as $method_name => $method_data) {
+      $components['function-' . $method_name] = $this->createFunctionComponentFromMethodData($method_data);
+    }
+
     return $components;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function buildComponentContents($children_contents) {
-    // TEMPORARY, until Generate task handles returned contents.
-    $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
-
-    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
-
-    return [];
   }
 
   /**
@@ -378,7 +370,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     $use_di_interface = FALSE;
     // We need the DI interface if this class injects services, unless a parent
     // class also does so.
-    if (!empty($this->injectedServices)) {
+    if (isset($this->containedComponents['injected_service'])) {
       $use_di_interface = TRUE;
 
       if (!empty($this->plugin_type_data['base_class_has_di'])) {
@@ -412,9 +404,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
    */
   protected function collectSectionBlocks() {
     $this->collectSectionBlocksForDependencyInjection();
-
-    // TODO: move this to a component.
-    $this->createBlocksFromMethodData($this->plugin_type_data['plugin_interface_methods']);
   }
 
   /**

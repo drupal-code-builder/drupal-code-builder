@@ -43,34 +43,68 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
-    parent::buildComponentContents($children_contents);
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    if ($this->component_data['discovery_type'] == 'yaml') {
+      $components['method-get-discovery'] = [
+        'component_type' => 'PHPFunction',
+        'function_name' => 'getDiscovery',
+        'containing_component' => '%requester',
+        'docblock_inherit' => TRUE,
+        'prefixes' => ['protected'],
+        'body' => [
+          'if (!$this->discovery) {',
+          "  \$discovery = new \Drupal\Core\Plugin\Discovery\YamlDiscovery('{$this->component_data['plugin_type']}', \$this->moduleHandler->getModuleDirectories());",
+          '  $this->discovery = new \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator($discovery);',
+          '}',
+          'return $this->discovery;',
+          ],
+      ];
+    }
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getContentsElement(string $type): array {
+    $subcontents = parent::getContentsElement($type);
 
     // For YAML plugin type, we need to hack out various bits of injection,
     // which is a PITA.
     if ($this->component_data['discovery_type'] == 'yaml') {
       // The cache.discover service is injected, but not set to a property.
-      foreach ($this->childContentsGrouped['service_property'] as $key => $content) {
-        if ($content['id'] == 'cache.discovery') {
-          unset($this->childContentsGrouped['service_property'][$key]);
+      if ($type == 'service_property') {
+        foreach ($subcontents as $key => $content) {
+          if ($content['id'] == 'cache.discovery') {
+            unset($subcontents[$key]);
+          }
         }
       }
 
       // The cache.discovery param name needs to be tweaked.
       // TODO: fix this hack, do it somewhere like code analysis?
-      foreach ($this->childContentsGrouped['constructor_param'] as $key => $content) {
-        if ($content['id'] == 'cache.discovery') {
-          $this->childContentsGrouped['constructor_param'][$key]['name'] = 'cache_backend';
+      if ($type == 'constructor_param') {
+        foreach ($subcontents as $key => $content) {
+          if ($content['id'] == 'cache.discovery') {
+            $subcontents[$key]['name'] = 'cache_backend';
+          }
         }
       }
 
       // The cache.discovery param doesn't get assigned.
-      foreach ($this->childContentsGrouped['property_assignment'] as $key => $content) {
-        if ($content['id'] == 'cache.discovery') {
-          unset($this->childContentsGrouped['property_assignment'][$key]);
+      if ($type == 'property_assignment') {
+        foreach ($subcontents as $key => $content) {
+          if ($content['id'] == 'cache.discovery') {
+            unset($subcontents[$key]);
+          }
         }
       }
     }
+
+    return $subcontents;
   }
 
   /**
@@ -80,8 +114,6 @@ class PluginTypeManager extends Service {
     $this->constructor = $this->codeBodyClassMethodConstruct();
 
     if ($this->component_data['discovery_type'] == 'yaml') {
-      $this->functions[] = $this->codeBodyGetDiscovery();
-
       $this->properties[] = $this->createPropertyBlock(
         'defaults',
         'array',
@@ -129,7 +161,7 @@ class PluginTypeManager extends Service {
       ];
     }
     else {
-      foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+    foreach ($this->getContentsElement('constructor_param') as $service_parameter) {
         $parameters[] = $service_parameter;
       }
     }
@@ -173,8 +205,8 @@ class PluginTypeManager extends Service {
       $code[] = '// discovery.';
     }
 
-    if (isset($this->childContentsGrouped['property_assignment'])) {
-      foreach ($this->childContentsGrouped['property_assignment'] as $content) {
+    if (!empty($this->getContentsElement('property_assignment'))) {
+      foreach ($this->getContentsElement('property_assignment') as $content) {
         $code[] = "\$this->{$content['property_name']} = \${$content['variable_name']};";
       }
       $code[] = '';
@@ -187,37 +219,6 @@ class PluginTypeManager extends Service {
     $code = $this->indentCodeLines($code);
 
     $code = array_merge($constructor_code, $code);
-
-    $code[] = '}';
-
-    return $code;
-  }
-
-  /**
-   * Generates the code for the getDiscovery() method for YAML plugins.
-   */
-  protected function codeBodyGetDiscovery() {
-    $header_code = $this->buildMethodHeader(
-      'getDiscovery',
-      [],
-      [
-        'inheritdoc' => TRUE,
-        'prefixes' => ['protected'],
-      ]
-    );
-
-    $code = [];
-
-    $code[] = 'if (!$this->discovery) {';
-    $code[] = "  \$discovery = new \Drupal\Core\Plugin\Discovery\YamlDiscovery('{$this->component_data['plugin_type']}', \$this->moduleHandler->getModuleDirectories());";
-    $code[] = '  $this->discovery = new \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator($discovery);';
-    $code[] = '}';
-    $code[] = 'return $this->discovery;';
-
-    // Indent the body.
-    $code = $this->indentCodeLines($code);
-
-    $code = array_merge($header_code, $code);
 
     $code[] = '}';
 

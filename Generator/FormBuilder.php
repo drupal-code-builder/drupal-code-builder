@@ -36,11 +36,11 @@ class FormBuilder extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     // If there are no form elements, fall back to normal function generator
     // handling, which takes the body specified in the properties.
-    if (empty($children_contents)) {
-      return parent::buildComponentContents($children_contents);
+    if ($this->containedComponents->isEmpty()) {
+      return parent::getContents();
     }
 
     $function_code = [];
@@ -54,13 +54,18 @@ class FormBuilder extends PHPFunction {
     $body_code[] = "£{$this->component_data['function_name']} = parent::form(£form, £form_state);";
     $body_code[] = '';
 
-    foreach ($children_contents as $child_item) {
-      $content = $child_item['content'];
+    // Don't need to filter by type; all our child items are form elements.
+    foreach ($this->containedComponents['element'] as $key => $child_item) {
+      $content = $child_item->getContents();
 
-      $body_code[] = "£form['{$content['key']}'] = [";
+      $form_element_key = $child_item->component_data->form_key->value;
+
+      // TODO: move this line and the closing bracket into
+      // FormElement::getContents()?
+      $body_code[] = "£form['{$form_element_key}'] = [";
 
       // Render the FormAPI element recursively.
-      $form_renderer = new \DrupalCodeBuilder\Generator\Render\FormAPIArrayRenderer($content['array']);
+      $form_renderer = new \DrupalCodeBuilder\Generator\Render\FormAPIArrayRenderer($content);
       $element_lines = $form_renderer->render();
       $element_lines = $this->indentCodeLines($element_lines);
       $body_code = array_merge($body_code, $element_lines);
@@ -81,13 +86,7 @@ class FormBuilder extends PHPFunction {
         return str_replace('£', '$', $line);
       }, $function_code);
 
-    return [
-      'function' => [
-        'role' => 'function',
-        'function_name' => $this->component_data['function_name'],
-        'content' => $function_code,
-      ],
-    ];
+    return $function_code;
   }
 
 }

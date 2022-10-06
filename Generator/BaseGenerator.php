@@ -158,6 +158,13 @@ abstract class BaseGenerator implements GeneratorInterface {
   public $component_data;
 
   /**
+   * Collection of contained components.
+   *
+   * @var \DrupalCodeBuilder\Generator\Collection\ContainedComponentCollection
+   */
+  protected $containedComponents = [];
+
+  /**
    * The class handler.
    *
    * @var \DrupalCodeBuilder\Task\Generate\ComponentClassHandler
@@ -496,118 +503,47 @@ abstract class BaseGenerator implements GeneratorInterface {
    * This allows, for example, a module code file component to collect the
    * functions it contains.
    *
-   * Components wishing to participate in this should override
-   * buildComponentContents().
-   *
    * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
    *   The component collection.
-   *
-   * @return
-   *  An array of data for this component's content, in the same form as the
-   *  return of buildComponentContents().
    */
   function buildComponentContentsIterative(ComponentCollection $component_collection) {
     $children_contents = [];
 
+    // New system, experimental.
+    // TODO: sort by type here using getContentType(), or leave that to
+    // specific classes? Many don't need to care about type.
+    $this->containedComponents = $component_collection->getContainedComponentCollection($this);
+
     // Allow each of our children to do the same as this to collect its own
     // children.
     foreach ($component_collection->getContainmentTreeChildren($this) as $id => $child_component) {
-      $child_contents = $child_component->buildComponentContentsIterative($component_collection);
-      foreach ($child_contents as $key => $contents) {
-        $children_contents[$id . ':' . $key] = $contents;
-      }
+      $child_component->buildComponentContentsIterative($component_collection);
     }
-
-    // Produce output for the current component, using data collected from the
-    // children. E.g. a PHP file concatenates and wraps the output of its child
-    // function components.
-    return $this->buildComponentContents($children_contents);
   }
 
   /**
-   * Collects contents for this component.
+   * Gets the type of the content.
    *
-   * @param $children_contents
-   *  An array of the content that the child components returned.
+   * This is used by the containing component to determine how to use the
+   * content.
    *
-   * @return
-   *  The content for this component, destined for the containing component to
-   *  make use of. This is an array with the following keys:
-   *  - 'role': A string indicating to the containing component how to use this
-   *    content.
-   *  - 'content': The content itself. The nature of this depends on the
-   *    intended parent and the role: for example PHPFile 'function' role
-   *    expects an array of code lines whereas YMLFile expects an array of data
-   *    to be rendered into Yaml.
+   * @return string
+   *   A string identifying the content type.
    */
-  protected function buildComponentContents($children_contents) {
-    // Base does nothing.
+  public function getContentType(): string {
+    return 'element';
+  }
+
+  /**
+   * Gets the contents of the component.
+   *
+   * @return array
+   *   An array of content. The format of this depends on the value of
+   *   self::getContentType(). Typically this will be code lines, or a keyed
+   *   array for YAML data.
+   */
+  public function getContents(): array {
     return [];
-  }
-
-  /**
-   * Filters an array of child contents by role.
-   *
-   * Helper for buildComponentContents().
-   *
-   * @param $contents
-   *  The array of contents as returned by an implementation of
-   *  buildComponentContents().
-   * @param $role
-   *  A role name, as used in the 'role' property of the $contents array.
-   *
-   * @return
-   *  An array of the 'content' data of the given array items that matched the
-   *  role. The array key is in MOST cases the same key as the the given array
-   *  item.
-   */
-  protected function filterComponentContentsForRole($contents, $role) {
-    $return = [];
-    foreach ($contents as $key => $item) {
-      $return_key = $key;
-
-      if ($item['role'] == $role) {
-        // Special case: function contents need to know the function name
-        // for merging PHP files.
-        // We have to put this as the key, as there's no other way to include
-        // data other than the contents. Function names should be unique!
-        if ($role == 'function') {
-          assert(isset($item['function_name']));
-
-          $return_key = $item['function_name'];
-
-          assert(!isset($return[$return_key]));
-        }
-
-        $return[$return_key] = $item['content'];
-      }
-    }
-    return $return;
-  }
-
-  /**
-   * Groups the array of component contents by their role.
-   *
-   * @param $contents
-   *  The array of contents as returned by an implementation of
-   *  buildComponentContents().
-   *
-   * @return
-   *  An array of the grouped items. The keys are all the values of the 'role'
-   *  item in the contents array. The values are arrays keyed by the keys of the
-   *  contents array, whose values are the content items. For example:
-   *    - role1 =>
-   *      - itemkeyA => item content
-   *      - itemkeyB => item content
-   *    - role2 =>
-   *      - itemkeyC => item content
-   */
-  protected function groupComponentContentsByRole($contents) {
-    $return = [];
-    foreach ($contents as $key => $item) {
-      $return[$item['role']][$key] = $item['content'];
-    }
-    return $return;
   }
 
 }

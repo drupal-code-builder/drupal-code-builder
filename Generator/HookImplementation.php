@@ -82,18 +82,18 @@ class HookImplementation extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     // Replace the 'hook_' part of the function declaration.
     $this->component_data->declaration->value = preg_replace('/(?<=function )hook/', '%module', $this->component_data->declaration->value);
 
     // Allow for subclasses that provide their own body code, which is not
     // indented.
     // TODO: clean this up!
-    if (!empty($children_contents)) {
+    if (!$this->containedComponents->isEmpty()) {
       $this->component_data->body_indented = FALSE;
     }
 
-    return parent::buildComponentContents($children_contents);
+    return parent::getContents();
   }
 
 }

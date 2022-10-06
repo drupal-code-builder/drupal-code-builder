@@ -301,11 +301,22 @@ class PHPClassFile extends PHPFile {
       'constants',
       'properties',
       'constructor',
+      // Most functions are made with contained components, but some remain
+      // created with section blocks, in particular, those for dependency
+      // injection.
       'functions',
     ];
     foreach ($section_types as $section_type) {
       $section_blocks = $this->getSectionBlocks($section_type);
       $code_body = array_merge($code_body, $this->mergeSectionCode($section_blocks));
+    }
+
+    foreach ($this->containedComponents['function'] as $key => $child_item) {
+      $content = $child_item->getContents();
+      $code_body = array_merge($code_body, $content);
+
+      // Blank line after each function.
+      $code_body[] = '';
     }
 
     // Indent all the class code.
@@ -503,40 +514,47 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Create blocks in the 'function' section from data describing methods.
+   * Creates a function component from analysis data for class methods.
+   *
+   * Helper for requiredComponents().
    *
    * @param $methods_data
    *   An array of method data as returned by reporting.
+   *
+   * @return array
+   *   An array for a PHPFunction component for requiredComponents().
    */
-  protected function createBlocksFromMethodData($methods_data) {
-    foreach ($methods_data as $interface_method_name => $interface_method_data) {
-      $function_code = [];
-      $function_doc = $this->docBlock('{@inheritdoc}');
-      $function_code = array_merge($function_code, $function_doc);
+  protected function createFunctionComponentFromMethodData($method_data): array {
+    // Trim the semicolon from the end of the interface method.
+    $method_declaration = substr($method_data['declaration'], 0, -1);
 
-      // Trim the semicolon from the end of the interface method.
-      $method_declaration = substr($interface_method_data['declaration'], 0, -1);
+    // Add a comment with the method's first line of docblock, so the user
+    // has something more informative than '{@inheritdoc}' to go on!
+    $comment = $method_data['description'];
 
-      $function_code[] = "$method_declaration {";
-      // Add a comment with the method's first line of docblock, so the user
-      // has something more informative than '{@inheritdoc}' to go on!
-
-      // Babysit documentation that is missing a final full stop, so PHP
-      // Codesniffer doesn't complain in our own tests, and we output correctly
-      // formatted code ourselves.
-      // (This can happen either if the full stop is missing, or if the first
-      // line overruns to two, in which case our analysis will have truncated
-      // the sentence.)
-      if (substr($interface_method_data['description'], -1) != '.') {
-        $interface_method_data['description'] .= '.';
-      }
-
-      $function_code[] = '  // ' . $interface_method_data['description'];
-      $function_code[] = '}';
-
-      // Add to the functions section array for the parent to merge.
-      $this->functions[] = $function_code;
+    // Babysit documentation that is missing a final full stop, so PHP
+    // Codesniffer doesn't complain in our own tests, and we output correctly
+    // formatted code ourselves.
+    // (This can happen either if the full stop is missing, or if the first
+    // line overruns to two, in which case our analysis will have truncated
+    // the sentence.)
+    if (substr($comment, -1) != '.') {
+      $comment .= '.';
     }
+
+    $component = [
+      'component_type' => 'PHPFunction',
+      'containing_component' => '%requester',
+      'function_name' => $method_data['name'],
+      'declaration' => $method_declaration,
+      'docblock_inherit' => TRUE,
+      'body' => [
+        '// ' . $comment,
+      ],
+
+    ];
+
+    return $component;
   }
 
   /**
@@ -666,6 +684,32 @@ class PHPClassFile extends PHPFile {
     }
 
     return $code;
+  }
+
+  /**
+   * Helper to extract parts of contents.
+   *
+   * This is needed because InjectedService returns a nested array of different
+   * items rather than a single array of items.
+   *
+   * TODO: Rethink this; it was a quick hack in the conversion from doing this
+   * in the now removed buildComponentContents().
+   *
+   * @param string $type
+   *
+   * @return array
+   */
+  protected function getContentsElement(string $type): array {
+    $subcontents = [];
+    foreach ($this->containedComponents['injected_service'] as $key => $child_item) {
+      $child_contents = $child_item->getContents();
+
+      if (isset($child_contents[$type])) {
+        $subcontents[$key] = $child_contents[$type];
+      }
+    }
+
+    return $subcontents;
   }
 
 }

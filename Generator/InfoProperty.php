@@ -47,16 +47,10 @@ class InfoProperty extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
-    $data = [
-      'property' => [
-        'role' => 'infoline',
-        'content' => [
-          $this->component_data['property_name'] => $this->component_data['property_value']
-        ],
-      ]
+  public function getContents(): array {
+    return [
+      $this->component_data['property_name'] => $this->component_data['property_value'],
     ];
-    return $data;
   }
 
 }

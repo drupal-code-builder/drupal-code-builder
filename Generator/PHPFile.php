@@ -17,20 +17,11 @@ abstract class PHPFile extends File {
   /**
    * An array of functions for this file.
    *
-   * @see buildComponentContents()
+   * TODO: Remove this.
+   *
    * @see code_body()
    */
   protected $functions = [];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function buildComponentContents($children_contents) {
-    // TEMPORARY, until Generate task handles returned contents.
-    $this->functions = $this->filterComponentContentsForRole($children_contents, 'function');
-
-    return [];
-  }
 
   /**
    * Return the contents of the file.

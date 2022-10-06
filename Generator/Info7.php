@@ -28,10 +28,10 @@ class Info7 extends InfoIni {
 
     $lines['core'] = "7.x";
 
-    if (!empty($this->extraLines)) {
+    if (!empty($extra_lines = $this->getContainedComponentInfoLines())) {
       // Add a blank line before the extra lines.
       $lines[] = '';
-      $lines = array_merge($lines, $this->extraLines);
+      $lines = array_merge($lines, $extra_lines);
     }
 
     return $lines;

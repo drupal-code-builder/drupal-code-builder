@@ -135,8 +135,10 @@ class API extends PHPFile {
     }
 
     // Add lines from child function components.
-    // Function data has been set by buildComponentContents().
-    foreach ($this->functions as $function_name => $function_lines) {
+    foreach ($this->containedComponents['function'] as $key => $child_item) {
+      $function_lines = $child_item->getContents();
+      $function_name = $child_item->component_data->function_name->value;
+
       // Blank line after the function.
       $function_lines[] = '';
 

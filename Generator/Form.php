@@ -139,18 +139,6 @@ class Form extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
-    // TEMPORARY, until Generate task handles returned contents.
-    $this->functions = $this->filterComponentContentsForRole($children_contents, 'function');
-    $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
-    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
-
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function collectSectionBlocks() {
     $this->collectSectionBlocksForDependencyInjection();
   }

@@ -33,7 +33,7 @@ class Permission7 extends Permission {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
+  public function getContents(): array {
     // Return code for a single permission item for the hook.
     $code = [];
 
@@ -44,12 +44,7 @@ class Permission7 extends Permission {
     $code[] = "  'description' => t('TODO: enter permission description'),";
     $code[] = ");";
 
-    return [
-      'permission' => [
-        'role' => 'item',
-        'content' => $code,
-      ],
-    ];
+    return $code;
   }
 
 }
