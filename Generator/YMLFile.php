@@ -79,29 +79,18 @@ class YMLFile extends File {
   }
 
   /**
-   * {@inheritdoc}
+   * Build the code files.
    */
-  protected function buildComponentContents($children_contents) {
+  public function getFileInfo() {
     $yaml_data = [];
     foreach ($this->containedComponents['element'] as $key => $child_item) {
       $yaml_data += $child_item->getContents();
     }
-
-    // TEMPORARY, until Generate task handles returned contents.
-    if (!empty($yaml_data)) {
-      // Only zap this if children provide something, as other components still
-      // set this property by request.
-      $this->component_data->yaml_data->set($yaml_data);
+    if (empty($yaml_data)) {
+      // If children don't provide anything, use the property, as that may have
+      // been set by a requesting component.
+      $yaml_data = $this->component_data->yaml_data->value;
     }
-
-    return [];
-  }
-
-  /**
-   * Build the code files.
-   */
-  public function getFileInfo() {
-    $yaml_data = $this->component_data['yaml_data'];
 
     $file_info = [];
 
