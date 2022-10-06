@@ -320,9 +320,9 @@ class PHPUnitTest extends PHPClassFile {
     }
 
     // Add properties for services obtained from the container.
-    if (!empty($this->childContentsGrouped['service_property_container'])) {
+    if (!empty($this->getContentsElement('service_property_container'))) {
       // Service class property.
-      foreach ($this->childContentsGrouped['service_property_container'] as $service_property) {
+      foreach ($this->getContentsElement('service_property_container') as $service_property) {
         $property_code = $this->docBlock([
           $service_property['description'] . '.',
           '',
@@ -347,12 +347,14 @@ class PHPUnitTest extends PHPClassFile {
     $setup_lines[] = 'parent::setUp();';
     $setup_lines[] = '';
 
+    // $this->containedComponents->dump();
+
     // Container services setup.
-    if (!empty($this->childContentsGrouped['service_container'])) {
+    if (!empty($this->getContentsElement('service_container'))) {
       // Use the main service infor rather than 'container_extraction', as
       // that is intended for use in an array and so has a terminal comma.
       // TODO: remove the terminal comma so we can use it here!
-      foreach ($this->childContentsGrouped['service_container'] as $service_info) {
+      foreach ($this->getContentsElement('service_container') as $service_info) {
         $setup_lines[] = "£this->{$service_info['property_name']} = £this->container->get('{$service_info['id']}');";
       }
 
@@ -360,8 +362,8 @@ class PHPUnitTest extends PHPClassFile {
     }
 
     // Mocked services.
-    if (!empty($this->childContentsGrouped['service_mocked'])) {
-      foreach ($this->childContentsGrouped['service_mocked'] as $service_info) {
+    if (!empty($this->getContentsElement('service_mocked'))) {
+      foreach ($this->getContentsElement('service_mocked') as $service_info) {
         $setup_lines[] = "// Mock the {$service_info['label']} service.";
         $setup_lines[] = "£{$service_info['variable_name']} = £this->prophesize({$service_info['typehint']}::class);";
         $setup_lines[] = "£this->container->set('{$service_info['id']}', £{$service_info['variable_name']}->reveal());";

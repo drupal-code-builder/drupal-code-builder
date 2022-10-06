@@ -71,19 +71,17 @@ class PHPClassFileWithInjection extends PHPClassFile {
    */
   protected function collectSectionBlocksForDependencyInjection() {
     // Injected services.
-    if (!empty($this->injectedServices)) {
+    if (isset($this->containedComponents['injected_service'])) {
       // Service class property.
-      if (isset($this->childContentsGrouped['service_property'])) {
-        foreach ($this->childContentsGrouped['service_property'] as $service_property) {
-          $property_code = $this->docBlock([
-            $service_property['description'] . '.',
-            '',
-            '@var ' . $service_property['typehint']
-          ]);
-          $property_code[] = 'protected $' . $service_property['property_name'] . ';';
+      foreach ($this->getContentsElement('service_property') as $service_property) {
+        $property_code = $this->docBlock([
+          $service_property['description'] . '.',
+          '',
+          '@var ' . $service_property['typehint']
+        ]);
+        $property_code[] = 'protected $' . $service_property['property_name'] . ';';
 
-          $this->properties[] = $property_code;
-        }
+        $this->properties[] = $property_code;
       }
 
       // __construct() method
@@ -151,7 +149,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $static_call_lines[] = '    ' . $parent_container_extraction['extraction'] . ',';
     }
 
-    foreach ($this->childContentsGrouped['container_extraction'] as $container_extraction) {
+    foreach ($this->getContentsElement('container_extraction') as $container_extraction) {
       $static_call_lines[] = '    ' . $container_extraction;
     }
 
@@ -181,7 +179,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
     $parameters = array_merge($parameters, $base_parameters);
     $parameters = array_merge($parameters, $parent_injected_services);
 
-    foreach ($this->childContentsGrouped['constructor_param'] as $service_parameter) {
+    foreach ($this->getContentsElement('constructor_param') as $service_parameter) {
       // Don't repeat parameters. This can be possible with pseudoservices.
       if (in_array($service_parameter, $parameters)) {
         continue;
@@ -231,7 +229,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $code[] = '  ' . 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
     }
 
-    foreach ($this->childContentsGrouped['property_assignment'] as $content) {
+    foreach ($this->getContentsElement('property_assignment') as $content) {
       if (!$this->hasStaticFactoryMethod && isset($content['parameter_extraction'])) {
         // There is no static factory, so the constructor receives the real
         // service. We have to extract it here.

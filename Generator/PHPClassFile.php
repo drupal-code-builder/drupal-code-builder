@@ -686,4 +686,30 @@ class PHPClassFile extends PHPFile {
     return $code;
   }
 
+  /**
+   * Helper to extract parts of contents.
+   *
+   * This is needed because InjectedService returns a nested array of different
+   * items rather than a single array of items.
+   *
+   * TODO: Rethink this; it was a quick hack in the conversion from doing this
+   * in buildComponentContents().
+   *
+   * @param string $type
+   *
+   * @return array
+   */
+  protected function getContentsElement(string $type): array {
+    $subcontents = [];
+    foreach ($this->containedComponents['injected_service'] as $key => $child_item) {
+      $child_contents = $child_item->getContents();
+
+      if (isset($child_contents[$type])) {
+        $subcontents[$key] = $child_contents[$type];
+      }
+    }
+
+    return $subcontents;
+  }
+
 }

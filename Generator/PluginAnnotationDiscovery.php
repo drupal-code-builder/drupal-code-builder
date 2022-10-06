@@ -382,7 +382,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     $use_di_interface = FALSE;
     // We need the DI interface if this class injects services, unless a parent
     // class also does so.
-    if (!empty($this->injectedServices)) {
+    if (isset($this->containedComponents['injected_service'])) {
       $use_di_interface = TRUE;
 
       if (!empty($this->plugin_type_data['base_class_has_di'])) {
