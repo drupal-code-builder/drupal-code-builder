@@ -56,23 +56,6 @@ abstract class Info extends File {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function buildComponentContents($children_contents) {
-    $lines = [];
-    foreach ($this->containedComponents['element'] as $key => $child_item) {
-      $contents = $child_item->getContents();
-
-      // Assume that children components don't tread on each others' toes and
-      // provide the same property names.
-      $lines[array_key_first($contents)] = reset($contents);
-    }
-
-    // Temporary, until Generate handles the return from this.
-    $this->extraLines = $lines;
-  }
-
-  /**
    * Build the code files.
    */
   public function getFileInfo() {
@@ -115,6 +98,24 @@ abstract class Info extends File {
    *   array_filter() to remove these.
    */
   abstract protected function infoData(): array;
+
+  /**
+   * Gets additional info lines from contained components.
+   *
+   * @return array
+   */
+  protected function getContainedComponentInfoLines(): array {
+    $lines = [];
+    foreach ($this->containedComponents['element'] as $key => $child_item) {
+      $contents = $child_item->getContents();
+
+      // Assume that children components don't tread on each others' toes and
+      // provide the same property names.
+      $lines[array_key_first($contents)] = reset($contents);
+    }
+
+    return $lines;
+  }
 
   /**
    * Gets an array of info file lines in the correct order to be populated.

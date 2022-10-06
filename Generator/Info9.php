@@ -79,8 +79,8 @@ class Info9 extends Info {
 
     $lines['core_version_requirement'] = '^8 || ^9';
 
-    if (!empty($this->extraLines)) {
-      $lines = array_merge($lines, $this->extraLines);
+    if (!empty($extra_lines = $this->getContainedComponentInfoLines())) {
+      $lines = array_merge($lines, $extra_lines);
     }
     // dump($lines);
 
