@@ -152,7 +152,7 @@ class ComponentHooks8Test extends TestBase {
    *
    * @group existing
    */
-  public function testHooksWithExitingFunctions() {
+  public function testHooksWithExistingFunctions() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = [
@@ -234,7 +234,7 @@ class ComponentHooks8Test extends TestBase {
    *
    * @group existing
    */
-  public function testHooksWithExitingHookInstall() {
+  public function testHooksWithExistingHookInstall() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = [
