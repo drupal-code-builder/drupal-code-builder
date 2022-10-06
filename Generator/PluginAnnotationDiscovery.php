@@ -290,8 +290,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     // TEMPORARY, until Generate task handles returned contents.
     $this->injectedServices = $this->filterComponentContentsForRole($children_contents, 'service');
 
-    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
-
     return [];
   }
 

@@ -235,16 +235,6 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function buildComponentContents($children_contents) {
-    // TEMPORARY, until Generate task handles returned contents.
-    $this->childContentsGrouped = $this->groupComponentContentsByRole($children_contents);
-
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getClassDocBlockLines() {
     $docblock_lines = parent::getClassDocBlockLines();
     $docblock_lines[] = '';
