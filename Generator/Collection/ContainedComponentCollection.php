@@ -76,4 +76,17 @@ class ContainedComponentCollection implements \ArrayAccess {
     throw new \Exception("Items cannot be removed from ContainedComponentCollection after creation.");
   }
 
+  /**
+   * Dump the data of the collection's components.
+   */
+  public function dump() {
+    $dump = [];
+    foreach ($this->containedComponents as $type => $components) {
+      foreach ($components as $request_path => $component) {
+        $dump[$type][$request_path] = $component->component_data->export();
+      }
+    }
+    dump($dump);
+  }
+
 }
