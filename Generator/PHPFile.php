@@ -23,16 +23,6 @@ abstract class PHPFile extends File {
   protected $functions = [];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function buildComponentContents($children_contents) {
-    // TEMPORARY, until Generate task handles returned contents.
-    $this->functions = $this->filterComponentContentsForRole($children_contents, 'function');
-
-    return [];
-  }
-
-  /**
    * Return the contents of the file.
    *
    * Helper for subclasses. Serves to concatenate standard pieces of the file.
