@@ -693,7 +693,7 @@ class PHPClassFile extends PHPFile {
    * items rather than a single array of items.
    *
    * TODO: Rethink this; it was a quick hack in the conversion from doing this
-   * in buildComponentContents().
+   * in the now removed buildComponentContents().
    *
    * @param string $type
    *

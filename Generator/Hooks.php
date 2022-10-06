@@ -134,8 +134,8 @@ class Hooks extends BaseGenerator {
           // Set it as the method body.
           $components[$hook['name']]['body'] = $hook['template'];
 
-          // The code is a single string, already indented. Tell
-          // buildComponentContents() not to indent it again.
+          // The code is a single string, already indented. Ensure we don't
+          // indent it again.
           $components[$hook['name']]['body_indented'] = TRUE;
         }
       }

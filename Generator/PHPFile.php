@@ -17,7 +17,8 @@ abstract class PHPFile extends File {
   /**
    * An array of functions for this file.
    *
-   * @see buildComponentContents()
+   * TODO: Remove this.
+   *
    * @see code_body()
    */
   protected $functions = [];

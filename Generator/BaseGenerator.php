@@ -503,15 +503,8 @@ abstract class BaseGenerator implements GeneratorInterface {
    * This allows, for example, a module code file component to collect the
    * functions it contains.
    *
-   * Components wishing to participate in this should override
-   * buildComponentContents().
-   *
    * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
    *   The component collection.
-   *
-   * @return
-   *  An array of data for this component's content, in the same form as the
-   *  return of buildComponentContents().
    */
   function buildComponentContentsIterative(ComponentCollection $component_collection) {
     $children_contents = [];
@@ -524,37 +517,8 @@ abstract class BaseGenerator implements GeneratorInterface {
     // Allow each of our children to do the same as this to collect its own
     // children.
     foreach ($component_collection->getContainmentTreeChildren($this) as $id => $child_component) {
-      $child_contents = $child_component->buildComponentContentsIterative($component_collection);
-      foreach ($child_contents as $key => $contents) {
-        $children_contents[$id . ':' . $key] = $contents;
-      }
+      $child_component->buildComponentContentsIterative($component_collection);
     }
-
-    // Produce output for the current component, using data collected from the
-    // children. E.g. a PHP file concatenates and wraps the output of its child
-    // function components.
-    return $this->buildComponentContents($children_contents);
-  }
-
-  /**
-   * Collects contents for this component.
-   *
-   * @param $children_contents
-   *  An array of the content that the child components returned.
-   *
-   * @return
-   *  The content for this component, destined for the containing component to
-   *  make use of. This is an array with the following keys:
-   *  - 'role': A string indicating to the containing component how to use this
-   *    content.
-   *  - 'content': The content itself. The nature of this depends on the
-   *    intended parent and the role: for example PHPFile 'function' role
-   *    expects an array of code lines whereas YMLFile expects an array of data
-   *    to be rendered into Yaml.
-   */
-  protected function buildComponentContents($children_contents) {
-    // Base does nothing.
-    return [];
   }
 
   /**
