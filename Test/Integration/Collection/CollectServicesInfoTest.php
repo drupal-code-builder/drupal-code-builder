@@ -55,8 +55,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertEquals('\Drupal\Core\Entity\EntityTypeBundleInfo', $entity_type_bundle_info['class']);
     $this->assertEquals('\Drupal\Core\Entity\EntityTypeBundleInfoInterface', $entity_type_bundle_info['interface']);
     $this->assertEquals('Entity type bundle info', $entity_type_bundle_info['label']);
-    // TODO: why does this get uppercase 'Entity'??
-    $this->assertEquals('The Entity type bundle info service', $entity_type_bundle_info['description']);
+    $this->assertEquals('The entity type bundle info service', $entity_type_bundle_info['description']);
     $this->assertEquals('entity_type_bundle_info', $entity_type_bundle_info['variable_name']);
 
     // A 'manager' doesn't get called 'service'.
@@ -65,7 +64,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertEquals('\Drupal\Core\Config\ConfigManager', $config_manager_info['class']);
     $this->assertEquals('\Drupal\Core\Config\ConfigManagerInterface', $config_manager_info['interface']);
     $this->assertEquals('Config manager', $config_manager_info['label']);
-    $this->assertEquals('The Config manager', $config_manager_info['description']);
+    $this->assertEquals('The config manager', $config_manager_info['description']);
     $this->assertEquals('config_manager', $config_manager_info['variable_name']);
 
     // Proxy services get the original class.
@@ -74,7 +73,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertEquals('\Drupal\Core\Lock\PersistentDatabaseLockBackend', $service_info['class']);
     $this->assertEquals('', $service_info['interface']);
     $this->assertEquals('Persistent database lock backend', $service_info['label']);
-    $this->assertEquals('The Persistent database lock backend service', $service_info['description']);
+    $this->assertEquals('The persistent database lock backend service', $service_info['description']);
     // A service ID with a '.' in it has the variable name derived from the
     // class name instead of the service ID.
     $this->assertEquals('persistent_database_lock_backend', $service_info['variable_name']);
@@ -119,13 +118,13 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $test_service_info = $complete_service_info['all']['test_services.combobulating_service'];
     $this->assertEquals('\Drupal\test_services\CombobulatingService', $test_service_info['class']);
     $this->assertEquals('Combobulating service', $test_service_info['label']);
-    $this->assertEquals('The Combobulating service', $test_service_info['description']);
+    $this->assertEquals('The combobulating service', $test_service_info['description']);
 
     $this->assertNotEmpty($complete_service_info['all']['test_services.slash_prefix']);
     $test_service_info = $complete_service_info['all']['test_services.slash_prefix'];
     $this->assertEquals('\Drupal\test_services\SlashPrefix', $test_service_info['class']);
     $this->assertEquals('Slash prefix', $test_service_info['label']);
-    $this->assertEquals('The Slash prefix service', $test_service_info['description']);
+    $this->assertEquals('The slash prefix service', $test_service_info['description']);
 
     $this->assertNotEmpty($complete_service_info['all']['test_services.fq_interface']);
     $test_service_info = $complete_service_info['all']['test_services.fq_interface'];
@@ -133,7 +132,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertEquals('\Drupal\test_services\ServiceInterface\FullyQualifedInterface', $test_service_info['interface']);
     // TODO: bug? Should not trim 'interface'?
     $this->assertEquals('Uses fully qualifed', $test_service_info['label']);
-    $this->assertEquals('The Uses fully qualifed service', $test_service_info['description']);
+    $this->assertEquals('The uses fully qualifed service', $test_service_info['description']);
   }
 
 }

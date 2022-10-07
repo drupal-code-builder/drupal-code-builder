@@ -228,15 +228,16 @@ class ServicesCollector extends CollectorBase  {
       $service_short_class = preg_replace('/Interface$/', '', $service_short_class);
 
       $label = CaseString::pascal($service_short_class)->sentence();
+      $lowercase_label = strtolower($label);
 
       // Append 'service' to the description, unless:
       //  - the label already contains 'service'
       //  - the label calls the service a 'manager'
-      if (preg_match('@(service|manager)$@', $label)) {
-        $description = "The {$label}";
+      if (preg_match('@(service|manager)$@', $lowercase_label)) {
+        $description = "The {$lowercase_label}";
       }
       else {
-        $description = "The {$label} service";
+        $description = "The {$lowercase_label} service";
       }
 
       // Prefix the class with a backslash if it doesn't already have it.
