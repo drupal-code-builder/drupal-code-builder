@@ -1118,6 +1118,22 @@ class PHPTester {
   }
 
   /**
+   * Asserts the order of functions.
+   *
+   * @param array $function_names
+   *   An array of function names.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasFunctionOrder($function_names, $message = NULL) {
+    $message = $message ?? "The functions are in the expected order.";
+
+    $actual_function_order = array_keys($this->parser_nodes['functions']);
+
+    Assert::assertEquals($function_names, $actual_function_order, $message);
+  }
+
+  /**
    * Assert the parsed code contains the given function.
    *
    * @param string $function_name

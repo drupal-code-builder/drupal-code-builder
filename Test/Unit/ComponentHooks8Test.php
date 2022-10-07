@@ -259,6 +259,12 @@ class ComponentHooks8Test extends TestBase {
        */
 
       /**
+       * Other function.
+       */
+      function first() {
+      }
+
+      /**
        * Update 8001.
        */
       function test_module_update_8001() {
@@ -272,6 +278,12 @@ class ComponentHooks8Test extends TestBase {
       function test_module_update_8002() {
         // Code does a thing.
         $foo = 42;
+      }
+
+      /**
+       * Other function.
+       */
+      function last() {
       }
 
       EOPHP;
@@ -296,6 +308,14 @@ class ComponentHooks8Test extends TestBase {
     // next schema number.
     $php_tester->assertHasFunction('test_module_update_8003');
     $php_tester->assertNotHasHookImplementation('hook_update_N', $module_name);
+
+    $php_tester->assertHasFunctionOrder([
+      'first',
+      'test_module_update_8001',
+      'test_module_update_8002',
+      'test_module_update_8003',
+      'last',
+    ]);
   }
 
 }

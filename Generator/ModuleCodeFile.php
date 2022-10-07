@@ -67,23 +67,34 @@ class ModuleCodeFile extends PHPFile {
    *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
   function code_body() {
-    $code_body = [];
+    // Keep each function separate for now, so they can be ordered.
+    $function_code = [];
 
     // Array of the names of generated functions.
     $generated_function_names = [];
+    $generated_function_names_without_suffixes = [];
 
     foreach ($this->containedComponents['function'] as $key => $child_item) {
+      // Subtle (and brittle) point: call getContents first so that any value
+      // replacement can take place. E.g. HookUpdateN setting the schema number.
+      $function_lines = $child_item->getContents();
+
       $function_name = $child_item->component_data->function_name->value;
       $function_name = str_replace('%module', $this->component_data['root_component_name'], $function_name);
       $generated_function_names[$function_name] = TRUE;
+      if (preg_match('@\d+$@', $function_name)) {
+        $generated_function_names_without_suffixes[$function_name] = preg_replace('@\d+$@', '', $function_name);
+      }
 
-      $function_lines = $child_item->getContents();
-      $code_body = array_merge($code_body, $function_lines);
       // Blank line after the function.
-      $code_body[] = '';
+      $function_lines[] = '';
+
+      $function_code[$function_name] = $function_lines;
     }
 
     // Merge any existing functions.
+    $existing_function_order = [];
+    $existing_function_names_without_suffixes = [];
     if ($this->exists) {
       $ast = $this->extension->getFileAST($this->getFilename());
 
@@ -112,8 +123,17 @@ class ModuleCodeFile extends PHPFile {
 
       // Add functions from the existing file, unless we are generating them
       // too, in which case we assume that our version is better.
+      // Keep track of their order.
+      $index = 0;
       foreach ($existing_function_nodes as $function_node) {
         $existing_function_name = (string) $function_node->name;
+
+        $existing_function_order[$existing_function_name] = $index;
+        $index++;
+
+        if (preg_match('@\d+$@', $existing_function_name)) {
+          $existing_function_names_without_suffixes[$existing_function_name] = preg_replace('@\d+$@', '', $existing_function_name);
+        }
 
         // Skip if the function has already been generated: a generated function
         // overwrites an existing one.
@@ -130,16 +150,55 @@ class ModuleCodeFile extends PHPFile {
 
         $end_line = $function_node->getEndLine() + 1;
 
-        $code_body[$existing_function_name] = implode("\n", $this->extension->getFileLines($this->getFilename(), $first_line, $end_line));
+        $function_code[$existing_function_name] = $this->extension->getFileLines($this->getFilename(), $first_line, $end_line);
       }
     }
 
-    // If there are no functions, then this is a .module file that's been
-    // requested so the module is correctly formed. It is customary to add a
-    // comment to the file for DX.
+    // Assemble the code.
+    $code_body = [];
+    // Generated functions go first, unless they match existing functions to
+    // within a numeric suffix.
+    foreach (array_keys($generated_function_names) as $function_name) {
+      // This matches an existing function to within a suffix: leave it for now
+      // because we insert it among existing functions.
+      if (
+        isset($generated_function_names_without_suffixes[$function_name]) &&
+        in_array($generated_function_names_without_suffixes[$function_name], $existing_function_names_without_suffixes)
+      ) {
+        continue;
+      }
+
+      $code_body[$function_name] = $function_code[$function_name];
+    }
+
+    foreach (array_keys($existing_function_order) as $function_name) {
+      // Add the function.
+      $code_body[$function_name] = $function_code[$function_name];
+
+      // Now see if a generated function that we held over needs to go next.
+      if (isset($existing_function_names_without_suffixes[$function_name])) {
+        // Make a function name with the suffix incremented by 1 and see if it
+        // exists in the generated functions.
+        $numeric_suffix = substr($function_name, strlen($existing_function_names_without_suffixes[$function_name]));
+
+        $potential_generated_function_name = $existing_function_names_without_suffixes[$function_name] . ($numeric_suffix + 1);
+
+        if (isset($generated_function_names[$potential_generated_function_name])) {
+          $code_body[$potential_generated_function_name] = $function_code[$potential_generated_function_name];
+        }
+      }
+    }
+
     if (empty($code_body)) {
+      // If there are no functions, then this is a .module file that's been
+      // requested so the module is correctly formed. It is customary to add a
+      // comment to the file for DX.
       $code_body['empty'] = "// Drupal needs this blank file.";
       $code_body[] = '';
+    }
+    else {
+      // Merge the arrays of code lines for each function.
+      $code_body = array_merge(...array_values($code_body));
     }
 
     // Replace any fully-qualified classes with short class names, and keep a

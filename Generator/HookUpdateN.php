@@ -58,6 +58,8 @@ class HookUpdateN extends HookImplementation {
   public function getContents(): array {
     // Replace the '_N' part of the function declaration.
     $this->component_data->declaration->value = preg_replace('/(?<=hook_update_)N/', $this->nextSchemaNumber, $this->component_data->declaration->value);
+    // Also do the function name.
+    $this->component_data->function_name->value = preg_replace('/(?<=update_)N/', $this->nextSchemaNumber, $this->component_data->function_name->value);
 
     return parent::getContents();
   }
