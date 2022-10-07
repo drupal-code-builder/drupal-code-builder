@@ -18,7 +18,7 @@ class Tests extends PHPFile {
     $definition->addProperties([
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
-      'camel_case_name' => PropertyDefinition::create('string')
+      'pascal_case_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
 
@@ -37,7 +37,7 @@ class Tests extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $module_root_name = $this->component_data['camel_case_name'];
+    $module_root_name = $this->component_data['pascal_case_name'];
     $test_file_name = $module_root_name . "TestCase.php";
 
     return [
@@ -61,7 +61,7 @@ class Tests extends PHPFile {
    */
   function code_body() {
     $module_root_name = $this->component_data['root_component_name'];
-    $module_camel_case = $this->component_data['camel_case_name'];
+    $module_camel_case = $this->component_data['pascal_case_name'];
     $module_readable_name = $this->component_data['readable_name'];
 
     $code = <<<EOT

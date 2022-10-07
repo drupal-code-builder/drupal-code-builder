@@ -316,7 +316,7 @@ class Module extends RootComponent {
       //'hooks' => 'init',
       //'router_items' => 'path/foo path/bar',
       // The following properties shouldn't be offered as UI options.
-      'camel_case_name' => PropertyDefinition::create('string')
+      'pascal_case_name' => PropertyDefinition::create('string')
         ->setLabel('Module human-readable name')
         ->setInternal(TRUE)
         ->setRequired(TRUE)
