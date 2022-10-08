@@ -188,7 +188,7 @@ class ComponentHooks8Test extends TestBase {
       /**
        * Does a thing.
        */
-      function existing_function() {
+      function test_module_existing_function() {
         // Code does a thing.
         $foo = new ShortClassName();
       }
@@ -223,7 +223,7 @@ class ComponentHooks8Test extends TestBase {
     $php_tester->assertImportsClassLike(['QualifiedNamespace\ShortClassName']);
     $php_tester->assertHasHookImplementation('hook_block_view_alter', $module_name);
     $php_tester->assertHasHookImplementation('hook_element_info_alter', $module_name);
-    $php_tester->assertHasFunction('existing_function');
+    $php_tester->assertHasFunction('test_module_existing_function');
 
     // The existing hook implementation is overwritten.
     $this->assertStringNotContainsString('Existing hook implementation code', $module_file);

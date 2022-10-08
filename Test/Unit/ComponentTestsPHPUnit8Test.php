@@ -478,7 +478,12 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
     $extension->mockInfoFile('generated_module');
 
-    $existing_module_file = <<<'EOPHP'
+    $existing_function_name = match ($existing_code) {
+      'main' => 'generated_module_my_function',
+      'test' => 'my_test_my_function',
+    };
+
+    $existing_module_file = <<<EOPHP
       <?php
 
       /**
@@ -489,9 +494,9 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       /**
        * Some function.
        */
-      function some_my_function() {
+      function $existing_function_name() {
         // Code does a thing.
-        $foo = 42;
+        return 42;
       }
 
       EOPHP;
@@ -539,10 +544,10 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     // If the existing function was in the same module as where we're generating
     // a hook, the function should have been merged.
     if ($generated_hook == $existing_code) {
-      $php_tester->assertHasFunction('some_my_function');
+      $php_tester->assertHasFunction($existing_function_name);
     }
     else {
-      $php_tester->assertNotHasFunction('some_my_function');
+      $php_tester->assertNotHasFunction($existing_function_name);
     }
   }
 
