@@ -311,10 +311,6 @@ class Module extends RootComponent {
       // would cause circularity with TestModule.
       // TODO: lazy load generator type property definitions?
 
-      // The following defaults are for ease of developing.
-      // Uncomment them to reduce the amount of typing needed for testing.
-      //'hooks' => 'init',
-      //'router_items' => 'path/foo path/bar',
       // The following properties shouldn't be offered as UI options.
       'pascal_case_name' => PropertyDefinition::create('string')
         ->setLabel('Module human-readable name')
