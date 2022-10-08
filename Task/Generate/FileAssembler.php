@@ -63,7 +63,7 @@ class FileAssembler {
     foreach ($file_components as $file_component) {
       // Let the file component run over its children iteratively.
       // (Not literally ;)
-      $file_component->buildComponentContentsIterative($component_collection);
+      $file_component->collectComponentContents($component_collection);
     }
   }
 

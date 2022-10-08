@@ -99,7 +99,7 @@ use MutableTypedData\Data\DataItem;
  * that are contained by their parents. For example, the module code file
  * contains functions and hook implementations.
  *
- * This tree is iterated over again in buildComponentContentsIterative() to allow
+ * This tree is iterated over again in collectComponentContents() to allow
  * file components in the tree to gather data from their child components.
  *
  * @section sec_assemble_file_info Collect file info
@@ -506,7 +506,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
    *   The component collection.
    */
-  function buildComponentContentsIterative(ComponentCollection $component_collection) {
+  function collectComponentContents(ComponentCollection $component_collection) {
     $children_contents = [];
 
     // New system, experimental.
@@ -517,7 +517,7 @@ abstract class BaseGenerator implements GeneratorInterface {
     // Allow each of our children to do the same as this to collect its own
     // children.
     foreach ($component_collection->getContainmentTreeChildren($this) as $id => $child_component) {
-      $child_component->buildComponentContentsIterative($component_collection);
+      $child_component->collectComponentContents($component_collection);
     }
   }
 
