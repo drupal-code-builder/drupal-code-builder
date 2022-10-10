@@ -51,7 +51,7 @@ class Form7 extends BaseGenerator {
         'component_type' => 'PHPFunction',
         'function_name' => $form_builder,
         'containing_component' => '%module.module',
-        'doxygen_first' => 'Form builder.',
+        'function_docblock_lines' => ['Form builder.'],
         'declaration' => "function $form_builder(£form, &£form_state)",
         'body' => [
           "£form['element'] = array(",
@@ -67,7 +67,7 @@ class Form7 extends BaseGenerator {
         'component_type' => 'PHPFunction',
         'function_name' => $form_validate,
         'containing_component' => '%module.module',
-        'doxygen_first' => 'Form validate handler.',
+        'function_docblock_lines' => ['Form validate handler.'],
         'declaration' => "function $form_validate(£form, &£form_state)",
         'body' => [
           "if (£form_state['values']['element'] != 'hello') {",
@@ -79,7 +79,7 @@ class Form7 extends BaseGenerator {
         'component_type' => 'PHPFunction',
         'function_name' => $form_submit,
         'containing_component' => '%module.module',
-        'doxygen_first' => 'Form submit handler.',
+        'function_docblock_lines' => ['Form submit handler.'],
         'declaration' => "function $form_submit(£form, &£form_state)",
         'body' => '',
       ],

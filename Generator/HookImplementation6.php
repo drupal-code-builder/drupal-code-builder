@@ -15,7 +15,7 @@ class HookImplementation6 extends HookImplementation {
   public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
-    $definition->getProperty('doxygen_first')->getDefault()
+    $definition->getProperty('function_docblock_lines')->getDefault()
       ->setExpression("['Implementation of ' ~ get('..:hook_name') ~ '().']");
 
     return $definition;

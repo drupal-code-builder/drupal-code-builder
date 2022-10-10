@@ -49,9 +49,6 @@ class PHPFunction extends BaseGenerator {
       'docblock_inherit' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
         ->setLiteralDefault(FALSE),
-      // Deprecated: use function_docblock_lines instead.
-      'doxygen_first' => PropertyDefinition::create('string')
-        ->setInternal(TRUE),
       // Lines for the class docblock.
       // If there is more than one line, a blank link is inserted automatically
       // after the first one.
@@ -206,21 +203,12 @@ class PHPFunction extends BaseGenerator {
    *   An array of lines.
    */
   protected function getFunctionDocBlockLines() {
-    $lines = [];
+    $lines = $this->component_data->function_docblock_lines->value;
 
-    // Check the deprecated 'doxygen_first' property first, as code that doesn't
-    // use this will have it empty.
-    if (!$this->component_data->doxygen_first->isEmpty()) {
-      $lines[] = $this->component_data->doxygen_first->value;
-    }
-    else {
-      $lines = $this->component_data->function_docblock_lines->value;
-
-      if (count($lines) > 1) {
-        // If there is more than one line, splice in a blank line after the
-        // first one.
-        array_splice($lines, 1, 0, '');
-      }
+    if (count($lines) > 1) {
+      // If there is more than one line, splice in a blank line after the
+      // first one.
+      array_splice($lines, 1, 0, '');
     }
 
     if (!$this->component_data->parameters->isEmpty()) {

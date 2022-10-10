@@ -391,7 +391,7 @@ class RouterItem extends BaseGenerator {
         'function_name' => 'validate',
         'containing_component' => "%requester:controller",
         'declaration' => 'public function content()',
-        'doxygen_first' => "Callback for the {$this->component_data['route_name']} route.",
+        'function_docblock_lines' => ["Callback for the {$this->component_data['route_name']} route."],
       ];
     }
 
@@ -425,7 +425,7 @@ class RouterItem extends BaseGenerator {
           'function_name' => 'access',
           'containing_component' => $containing_component,
           'declaration' => 'public function access(\Drupal\Core\Session\AccountInterface $account)',
-          'doxygen_first' => "Checks access for the {$this->component_data->route_name->value} route.",
+          'function_docblock_lines' => ["Checks access for the {$this->component_data->route_name->value} route."],
         ];
       }
     }
