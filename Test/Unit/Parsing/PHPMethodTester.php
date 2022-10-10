@@ -111,8 +111,6 @@ class PHPMethodTester {
    *   (optional) The assertion message.
    */
   public function assertMethodHasDocblockLine($line, $message = NULL) {
-    $message = $message ?? "The method {$this->methodName} has the docblock line {$line}.";
-
     $comments = $this->methodNode->getAttribute('comments');
     $docblock = $comments[0]->getReformattedText();
     $docblock_lines = explode("\n", $docblock);
@@ -123,7 +121,14 @@ class PHPMethodTester {
       return preg_replace('/^ \* /', '', $line);
     }, $docblock_lines);
 
-    Assert::assertContains($line, $docblock_lines);
+    $message = $message ?? sprintf(
+      "The method %s has the docblock line '%s' within docblock '%s'.",
+      $this->methodName,
+      $line,
+      implode('¶', $docblock_lines)
+    );
+
+    Assert::assertContains($line, $docblock_lines, $message);
   }
 
   /**
