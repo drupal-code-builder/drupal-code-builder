@@ -30,11 +30,6 @@ class InjectedService extends BaseGenerator {
           ->setCallable([static::class, 'defaultServiceInfo'])
           ->setDependencies('..:service_id')
       ),
-      // Bit of a hack for PHPUnitTest generator's sake. Lets the requesting
-      // generator tack a suffix onto the roles we give to component contents.
-      // PHPUnitTest needs this as it has two kinds of service.
-      'role_suffix' => PropertyDefinition::create('string')
-        ->setInternal(TRUE),
     ]);
 
     return $definition;
@@ -156,16 +151,6 @@ class InjectedService extends BaseGenerator {
       ],
       'property_assignment' => $property_assignment,
     ];
-
-    // Special handling for unit tests.
-    // TODO: clean up!
-    if (!empty($this->component_data->role_suffix->value)) {
-      foreach (['service', 'service_property'] as $existing_key) {
-        $new_key = $existing_key . $this->component_data['role_suffix'];
-
-        $contents[$new_key] = $contents[$existing_key];
-      }
-    }
 
     return $contents;
   }

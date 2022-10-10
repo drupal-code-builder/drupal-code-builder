@@ -214,18 +214,16 @@ class PHPUnitTest extends PHPClassFile {
 
     foreach ($this->component_data['container_services'] as $service_id) {
       $components['service_' . $service_id] = [
-        'component_type' => 'InjectedService',
+        'component_type' => 'TestContainerService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
-        'role_suffix' => '_container',
       ];
     }
     foreach ($this->component_data['mocked_services'] as $service_id) {
       $components['service_' . $service_id] = [
-        'component_type' => 'InjectedService',
+        'component_type' => 'TestMockedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
-        'role_suffix' => '_mocked',
       ];
     }
 
