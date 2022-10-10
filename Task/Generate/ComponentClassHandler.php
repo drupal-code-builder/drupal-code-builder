@@ -45,7 +45,7 @@ class ComponentClassHandler {
     $machine_name = str_replace(':', '-', $machine_name);
 
     if (!class_exists($class)) {
-      throw new \InvalidArgumentException(sprintf("No class found for type %s", $component_type));
+      throw new \InvalidArgumentException(sprintf("No class found for type '%s'", $component_type));
     }
 
     $definition = $class::getPropertyDefinition();
