@@ -67,6 +67,7 @@ class PHPFunction extends BaseGenerator {
       'prefixes' => PropertyDefinition::create('string')
         ->setMultiple(TRUE),
       // Not yet compatible with 'declaration' property.
+      // Has no effect if 'parameters' is empty.
       'break_declaration' => PropertyDefinition::create('boolean')
         ->setDescription('If TRUE, the declaration parameters are each on a single line.'),
       'parameters' => PropertyDefinition::create('complex')
@@ -260,6 +261,11 @@ class PHPFunction extends BaseGenerator {
       'prefixes' => [],
       'break_declaration' => FALSE,
     ];
+
+    // Override break_declaration if there are no parameters.
+    if (empty($parameters)) {
+      $options['break_declaration'] = FALSE;
+    }
 
     $code = [];
 
