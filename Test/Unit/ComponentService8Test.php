@@ -346,6 +346,23 @@ class ComponentService8Test extends TestBase {
    */
   public function providerServiceGenerationWithServices() {
     return [
+      // Basic service.
+      'basic' => [
+        '$injected_services' => [
+          'entity_type.manager',
+        ],
+        '$yaml_arguments' => [
+          '@entity_type.manager',
+        ],
+        '$assert_injected_services' => [
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'entityTypeManager',
+            'parameter_name' => 'entity_type_manager',
+          ],
+        ],
+      ],
       // Pseudoservice with the real service also present as a parameter.
       'pseudo-with-real' => [
         '$injected_services' => [
