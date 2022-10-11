@@ -245,7 +245,10 @@ class PHPFunction extends BaseGenerator {
    *    - 'name'
    *    - 'typehint'
    * @param array $options
-   *   An array of options.
+   *   An array of options:
+   *    - 'prefixes': An array of the function's prefixes.
+   *    - 'break_declaration': Boolean to set whether to put each parameter on
+   *      its own line.
    * @param string $return_type
    *   The return type.
    *
