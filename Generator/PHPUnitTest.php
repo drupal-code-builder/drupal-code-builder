@@ -187,7 +187,7 @@ class PHPUnitTest extends PHPClassFile {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $components = [];
+    $components = parent::requiredComponents();
 
     $components['method_setup'] = [
       'component_type' => 'PHPFunction',

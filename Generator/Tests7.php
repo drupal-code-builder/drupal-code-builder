@@ -11,7 +11,7 @@ class Tests7 extends Tests {
    * Return an array of subcomponent types.
    */
   public function requiredComponents(): array {
-    $components = [];
+    $components = parent::requiredComponents();
 
     // Declare the class file in the module's .info file.
     $components['info_class'] = [

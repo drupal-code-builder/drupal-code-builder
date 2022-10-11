@@ -39,7 +39,7 @@ class LibraryJSAsset extends BaseGenerator {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $components = [];
+    $components = parent::requiredComponents();
 
     if (!filter_var($this->component_data['filename'], FILTER_VALIDATE_URL)) {
       $components['asset_file'] = [

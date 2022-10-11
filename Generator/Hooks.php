@@ -65,7 +65,7 @@ class Hooks extends BaseGenerator {
     // function. From this point on, these subcomponents are the authority on
     // which hooks we generate. Each HookImplementation component will add the
     // file it requires to the component list.
-    $components = [];
+    $components = parent::requiredComponents();
 
     // Convert the input data to the right format.
     // TODO: clean this up -- it used to be handled in property processing.

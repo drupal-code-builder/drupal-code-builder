@@ -54,7 +54,7 @@ class Theme extends BaseGenerator {
     drupal_theme_initialize();
     $theme_registry = theme_get_registry();
 
-    $components = [];
+    $components = parent::requiredComponents();
     foreach ($this->component_data['themeables'] as $theme_hook_name) {
       $hook = $theme_hook_name;
       // Iteratively strip everything after the last '--' delimiter, until an

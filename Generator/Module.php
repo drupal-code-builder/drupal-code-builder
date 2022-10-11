@@ -350,7 +350,7 @@ class Module extends RootComponent {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $components = [];
+    $components = parent::requiredComponents();
 
     // Modules always have a .info file.
     // TODO: this was an experiment for how to do required components with

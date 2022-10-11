@@ -128,7 +128,7 @@ class DrushCommand extends BaseGenerator {
    * Return an array of subcomponent types.
    */
   public function requiredComponents(): array {
-    $components = [];
+    $components = parent::requiredComponents();
 
     $components['commands_service'] = [
       'component_type' => 'DrushCommandsService',
