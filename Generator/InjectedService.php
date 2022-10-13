@@ -86,6 +86,37 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    $components['constructor_param'] = [
+      'component_type' => 'PHPFunctionParameter',
+      'containing_component' => '%requester:%requester:construct',
+      // ↓ WHY DON'T WE KNOW??
+      // At this point, we can't know whether the service is being injected
+      // into a class that has a static factory or not, so we don't know if
+      // the constructor param is:
+      // a. the pseudoservice variable name (because the factory method did
+      //  the extraction)
+      // b. the real service variable name (because the constructor then does
+      //  the extraction)
+      // 'id'          => $service_info['id'],
+      // 'name'        => $service_info['variable_name'],
+      // 'typehint'    => $service_info['typehint'],
+      // 'description' => $service_info['description'] . '.',
+      // 'type'        => $service_type,
+      // 'real_name'   => $service_info['real_service_variable_name'] ?? '',
+      // 'real_typehint'    => $service_info['real_service_typehint'] ?? '',
+      // 'real_description' => ($service_info['real_service_description'] ?? '') . '.',
+      // 'container_extraction' => $container_extraction,
+    ];
+
+    return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getContentType(): string {
     return 'injected_service';
   }
