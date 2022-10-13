@@ -35,6 +35,8 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * These are iterated over by this class.
    *
+   * Keys are the ID given by self::getComponentKey().
+   *
    * @var \DrupalCodeBuilder\Generator\GeneratorInterface[]
    */
   private $components = [];
