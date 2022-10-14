@@ -32,7 +32,7 @@ class UnitComponentCollectionTest extends TestCase {
     $collection->addComponent('requested', $root_requested->reveal(), $root_component->reveal());
 
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessageRegExp('@Unique ID .+ already in use, by component with request path .+.@');
+    $this->expectExceptionMessageMatches('@Unique ID .+ already in use, by component with request path .+.@');
 
     $collection->addComponent('requested', $root_requested->reveal(), $root_component->reveal());
   }
