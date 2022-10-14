@@ -15,10 +15,6 @@ class UnitComponentCollectionTest extends TestCase {
 
   use ProphecyTrait;
 
-  protected function setUp(): void {
-    $this->markTestSkipped();
-  }
-
   /**
    * Tests adding the same component twice.
    */
@@ -27,6 +23,12 @@ class UnitComponentCollectionTest extends TestCase {
 
     $root_component = $this->prophesize(RootComponent::class);
     $root_requested = $this->prophesize(BaseGenerator::class);
+
+    $root_component->isRootComponent()->willReturn(TRUE);
+    $root_requested->isRootComponent()->willReturn(FALSE);
+
+    $root_component->getMergeTag()->willReturn();
+    $root_requested->getMergeTag()->willReturn();
 
     $collection->addComponent('root', $root_component->reveal(), NULL);
     $collection->addComponent('requested', $root_requested->reveal(), $root_component->reveal());
@@ -46,6 +48,12 @@ class UnitComponentCollectionTest extends TestCase {
     $root_component = $this->prophesize(RootComponent::class);
     $root_requested = $this->prophesize(BaseGenerator::class);
 
+    $root_component->isRootComponent()->willReturn(TRUE);
+    $root_requested->isRootComponent()->willReturn(FALSE);
+
+    $root_component->getMergeTag()->willReturn();
+    $root_requested->getMergeTag()->willReturn();
+
     $collection->addComponent('root', $root_component->reveal(), NULL);
     $collection->addComponent('requested', $root_requested->reveal(), $root_component->reveal());
 
@@ -62,6 +70,7 @@ class UnitComponentCollectionTest extends TestCase {
 
     $root_component = $this->prophesize(RootComponent::class);
     $root_component->getMergeTag()->willReturn(NULL);
+    $root_component->isRootComponent()->willReturn(TRUE);
     $root_component->containingComponent()->willReturn(NULL);
 
     $collection->addComponent('root', $root_component->reveal(), NULL);
@@ -83,10 +92,25 @@ class UnitComponentCollectionTest extends TestCase {
 
     // Create a request chain:
     // root -> requested -> inner_root -> inner_requested
-    $root_component = $this->prophesize(RootComponent::class)->reveal();
-    $root_requested = $this->prophesize(BaseGenerator::class)->reveal();
-    $inner_root = $this->prophesize(RootComponent::class)->reveal();
-    $inner_requested = $this->prophesize(BaseGenerator::class)->reveal();
+    $root_component_prophecy = $this->prophesize(RootComponent::class);
+    $root_component_prophecy->isRootComponent()->willReturn(TRUE);
+    $root_component_prophecy->getMergeTag()->willReturn();
+    $root_component = $root_component_prophecy->reveal();
+
+    $root_requested_prophecy = $this->prophesize(BaseGenerator::class);
+    $root_requested_prophecy->isRootComponent()->willReturn(FALSE);
+    $root_requested_prophecy->getMergeTag()->willReturn();
+    $root_requested = $root_requested_prophecy->reveal();
+
+    $inner_root_prophecy = $this->prophesize(RootComponent::class);
+    $inner_root_prophecy->isRootComponent()->willReturn(TRUE);
+    $inner_root_prophecy->getMergeTag()->willReturn();
+    $inner_root = $inner_root_prophecy->reveal();
+
+    $inner_requested_prophecy = $this->prophesize(BaseGenerator::class);
+    $inner_requested_prophecy->isRootComponent()->willReturn(FALSE);
+    $inner_requested_prophecy->getMergeTag()->willReturn();
+    $inner_requested = $inner_requested_prophecy->reveal();
 
     $collection->addComponent('root', $root_component, NULL);
     $collection->addComponent('requested', $root_requested, $root_component);
@@ -137,6 +161,15 @@ class UnitComponentCollectionTest extends TestCase {
     $requested_b_1_prophecy->getMergeTag()->willReturn();
     $requested_b_2_prophecy->getMergeTag()->willReturn();
     $requested_c_prophecy->getMergeTag()->willReturn();
+
+    // We have an absolute root and a secondary root.
+    $root_prophecy->isRootComponent()->willReturn(TRUE);
+    $requested_a_prophecy->isRootComponent()->willReturn(FALSE);
+    $requested_a_1_prophecy->isRootComponent()->willReturn(FALSE);
+    $requested_b_prophecy->isRootComponent()->willReturn(TRUE);
+    $requested_b_1_prophecy->isRootComponent()->willReturn(FALSE);
+    $requested_b_2_prophecy->isRootComponent()->willReturn(FALSE);
+    $requested_c_prophecy->isRootComponent()->willReturn(FALSE);
 
     $root = $root_prophecy->reveal();
     $requested_a = $requested_a_prophecy->reveal();
