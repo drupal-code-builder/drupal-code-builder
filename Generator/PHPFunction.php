@@ -125,9 +125,14 @@ class PHPFunction extends BaseGenerator {
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
     if (empty($this->component_data->declaration->value)) {
+      $parameters = [];
+      foreach ($this->containedComponents['parameter'] as $parameter_component) {
+        $parameters[] = $parameter_component->getContents();
+      }
+
       $declaration_lines = $this->buildMethodDeclaration(
         $this->component_data->function_name->value,
-        [], // TODO params!
+        $parameters,
         [
           'prefixes' => $this->component_data->prefixes->values(),
           'break_declaration' => $this->component_data->break_declaration->value,
@@ -212,8 +217,16 @@ class PHPFunction extends BaseGenerator {
       array_splice($lines, 1, 0, '');
     }
 
-    if (!$this->component_data->parameters->isEmpty()) {
+    if (!$this->component_data->parameters->isEmpty() || !$this->containedComponents->isEmpty()) {
       $lines[] = '';
+
+      // Handle contained component parameters first.?? TODO? correct?
+      foreach ($this->containedComponents['parameter'] as $parameter_component) {
+        $parameter_data = $parameter_component->getContents();
+
+        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['name']}";
+        $lines[] = '  ' . $parameter_data['description'];
+      }
 
       foreach ($this->component_data->parameters as $parameter_data) {
         $param_name_line = '@param ';
