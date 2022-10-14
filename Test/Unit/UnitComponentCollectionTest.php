@@ -153,6 +153,7 @@ class UnitComponentCollectionTest extends TestCase {
     $requested_b_1_prophecy = $this->prophesize(BaseGenerator::class);
     $requested_b_2_prophecy = $this->prophesize(BaseGenerator::class);
     $requested_c_prophecy = $this->prophesize(BaseGenerator::class);
+    $requested_c_1_prophecy = $this->prophesize(BaseGenerator::class);
 
     $root_prophecy->getMergeTag()->willReturn();
     $requested_a_prophecy->getMergeTag()->willReturn();
@@ -161,6 +162,7 @@ class UnitComponentCollectionTest extends TestCase {
     $requested_b_1_prophecy->getMergeTag()->willReturn();
     $requested_b_2_prophecy->getMergeTag()->willReturn();
     $requested_c_prophecy->getMergeTag()->willReturn();
+    $requested_c_1_prophecy->getMergeTag()->willReturn();
 
     // We have an absolute root and a secondary root.
     $root_prophecy->isRootComponent()->willReturn(TRUE);
@@ -170,6 +172,7 @@ class UnitComponentCollectionTest extends TestCase {
     $requested_b_1_prophecy->isRootComponent()->willReturn(FALSE);
     $requested_b_2_prophecy->isRootComponent()->willReturn(FALSE);
     $requested_c_prophecy->isRootComponent()->willReturn(FALSE);
+    $requested_c_1_prophecy->isRootComponent()->willReturn(FALSE);
 
     $root = $root_prophecy->reveal();
     $requested_a = $requested_a_prophecy->reveal();
@@ -178,12 +181,13 @@ class UnitComponentCollectionTest extends TestCase {
     $requested_b_1 = $requested_b_1_prophecy->reveal();
     $requested_b_2 = $requested_b_2_prophecy->reveal();
     $requested_c = $requested_c_prophecy->reveal();
+    $requested_c_1 = $requested_c_1_prophecy->reveal();
 
     // Create a request chain:
     // root -> requested_a -> requested_a_1
     //      -> requested_b [root] -> requested_b_1
     //                            -> requested_b_2
-    //      -> requested_c
+    //      -> requested_c -> requested_c_1
     $collection->addComponent('root', $root, NULL);
     $collection->addComponent('a', $requested_a, $root);
     $collection->addComponent('a_1', $requested_a_1, $requested_a);
@@ -191,11 +195,14 @@ class UnitComponentCollectionTest extends TestCase {
     $collection->addComponent('b_1', $requested_b_1, $requested_b);
     $collection->addComponent('b_2', $requested_b_2, $requested_b);
     $collection->addComponent('c', $requested_c, $root);
+    $collection->addComponent('c_1', $requested_c_1, $requested_c);
 
     // Create a containment hierarchy that's completely different:
     // root [
     //   requested_a_1 [
-    //     requested_a
+    //     requested_a [
+    //       requested_c_1
+    //     ]
     //     requested_b [
     //       requested_b_1 [
     //         requested_b_2
@@ -211,6 +218,7 @@ class UnitComponentCollectionTest extends TestCase {
     $requested_b_1_prophecy->containingComponent()->willReturn('%requester');
     $requested_b_2_prophecy->containingComponent()->willReturn('%nearest_root:b_1');
     $requested_c_prophecy->containingComponent()->willReturn('%requester:a:a_1');
+    $requested_c_1_prophecy->containingComponent()->willReturn('%requester:%requester:a');
 
     $collection->assembleContainmentTree();
 
@@ -220,6 +228,9 @@ class UnitComponentCollectionTest extends TestCase {
     $this->assertEquals([
       "root" => [
         "root/a/a_1",
+      ],
+      "root/a" => [
+        "root/c/c_1",
       ],
       "root/a/a_1" => [
         "root/a",

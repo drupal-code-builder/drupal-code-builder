@@ -473,9 +473,9 @@ abstract class BaseGenerator implements GeneratorInterface {
    * components by containment.
    *
    * @return string|NULL
-   *  A string that defines another component, using either a token, or a token
-   *  and a chain of local names from the component that the token represents.
-   *  The following patterns are allowed:
+   *  A string that defines another component as a chain of local names from a
+   *  component. Tokens define the starting point. The following patterns are
+   *  allowed:
    *   - '%root': Represents the root component.
    *   - '%requester': Represents the component that requested this component
    *      either via properties or requiredComponents().
@@ -485,6 +485,8 @@ abstract class BaseGenerator implements GeneratorInterface {
    *     For example, '%requester:foo' gets the component 'foo' that was also
    *     spawned by this component's spawner. '%requester:foo:bar' gets the
    *     component spawned by the 'foo' component.
+   *   - '%requester:(%requester)+:PATH': Ascends the request tree multiple
+   *     steps.
    *   - '%self:PATH': Represents a path of local names from this component.
    *   - '%nearest_root:PATH': Represents a path of local names from the
    *     component's nearest requesting root.

@@ -369,79 +369,94 @@ class ComponentCollection implements \IteratorAggregate {
 
     $this->tree = [];
     foreach ($this->components as $id => $component) {
-      $containing_component_token = $component->containingComponent();
+      $containing_component_name = $this->getContainingComponentName($component);
 
-      if (empty($containing_component_token)) {
+      // An empty containing component means the component does not participate
+      // in the containment tree.
+      if (empty($containing_component_name)) {
         continue;
       }
 
-      // Handle tokens.
-      if ($containing_component_token == '%root') {
-        $parent_name = $this->rootGeneratorId;
-      }
-      elseif ($containing_component_token == '%requester') {
-        // TODO: consider whether this might go wrong when a component is
-        // requested multiple times. Unlikely, as it tends to be containers
-        // that are re-requested.
-        $parent_name = $this->requesters[$id];
-      }
-      elseif (substr($containing_component_token, 0, strlen('%requester:')) == '%requester:') {
-        $requester_id = $this->requesters[$id];
+      assert(isset($this->components[$containing_component_name]), "Containing component '$containing_component_name' given by '$id' is not a component ID.");
 
-        $path_string = substr($containing_component_token, strlen('%requester:'));
-        $path_pieces = explode(':', $path_string);
-
-        $component_id = $requester_id;
-        foreach ($path_pieces as $path_piece) {
-          $local_name = $path_piece;
-
-          assert(isset($this->localNames[$component_id][$local_name]), "Failed to get containing component for $id, local name $local_name not found for ID $component_id.");
-
-          $component_id = $this->localNames[$component_id][$local_name];
-        }
-
-        $parent_name = $component_id;
-      }
-      elseif (substr($containing_component_token, 0, strlen('%self:')) == '%self:') {
-        $path_string = substr($containing_component_token, strlen('%self:'));
-        $path_pieces = explode(':', $path_string);
-
-        $component_id = $id;
-        foreach ($path_pieces as $path_piece) {
-          $local_name = $path_piece;
-
-          assert(isset($this->localNames[$component_id][$local_name]), "Failed to get containing component for $id, local name $local_name not found for ID $component_id.");
-
-          $component_id = $this->localNames[$component_id][$local_name];
-        }
-
-        $parent_name = $component_id;
-      }
-      elseif (substr($containing_component_token, 0, strlen('%nearest_root:')) == '%nearest_root:') {
-        $path_string = substr($containing_component_token, strlen('%nearest_root:'));
-        $path_pieces = explode(':', $path_string);
-
-        $component_id = $this->requestRoots[$id];
-        foreach ($path_pieces as $path_piece) {
-          $local_name = $path_piece;
-
-          assert(isset($this->localNames[$component_id][$local_name]), "Failed to get containing component for $id, local name $local_name not found for ID $component_id.");
-
-          $component_id = $this->localNames[$component_id][$local_name];
-        }
-
-        $parent_name = $component_id;
-      }
-      else {
-        throw new \Exception("Unrecognized containing component token string '$containing_component_token' for component $id.");
-      }
-
-      assert(isset($this->components[$parent_name]), "Containing component '$parent_name' given by '$id' is not a component ID.");
-
-      $this->tree[$parent_name][] = $id;
+      $this->tree[$containing_component_name][] = $id;
     }
 
     return $this->tree;
+  }
+
+  /**
+   * Gets the containing component ID for the given component.
+   *
+   * @param \DrupalCodeBuilder\Generator\GeneratorInterface $component
+   *   The component to get the containing component for.
+   *
+   * @return string|null
+   *   The component ID as given by self::getComponentKey(), or NULL if there
+   *   is no containing component.
+   *
+   * @see \DrupalCodeBuilder\Generator\BaseGenerator::containingComponent()
+   */
+  protected function getContainingComponentName(GeneratorInterface $component): ?string {
+    $id = $this->getComponentKey($component);
+    $containing_component_token = $component->containingComponent();
+
+    // Nothing to do if the token is empty.
+    if (empty($containing_component_token)) {
+      return NULL;
+    }
+
+    // Handle the root special case.
+    if ($containing_component_token == '%root') {
+      return $this->rootGeneratorId;
+    }
+
+    // Handle the plain requester as a special case rather than in the loop for
+    // easier debugging.
+    if ($containing_component_token == '%requester') {
+      // TODO: consider whether this might go wrong when a component is
+      // requested multiple times. Unlikely, as it tends to be containers
+      // that are re-requested.
+      return $this->requesters[$id];
+    }
+
+    // Handle a compound token.
+    $token_pieces = explode(':', $containing_component_token);
+    $current_id = $id;
+    foreach ($token_pieces as $index => $token_piece) {
+      if ($token_piece == '%requester') {
+        // if requester, get requester of CURRENT ID.
+        $current_id = $this->requesters[$current_id];
+        continue;
+      }
+
+      if ($token_piece == '%self') {
+        assert(($index == 0), 'Token %self may only be used in first path piece.');
+
+        // Do nothing: $current_id already set before the loop.
+        continue;
+      }
+
+      if ($token_piece == '%nearest_root') {
+        assert(($index == 0), 'Token %nearest_root may only be used in first path piece.');
+
+        $current_id = $this->requestRoots[$current_id];
+        continue;
+      }
+
+      // Default case: token piece is a local name.
+      assert(isset($this->localNames[$current_id][$token_piece]), sprintf(
+        "Failed to get containing component for %s, local name '%s' not found for ID %s. Valid local names are: %s",
+        $this->requestPaths[$id],
+        $token_piece,
+        $this->requestPaths[$current_id],
+        implode(', ', array_keys($this->localNames[$current_id]))
+      ));
+
+      $current_id = $this->localNames[$current_id][$token_piece];
+    }
+
+    return $current_id;
   }
 
   /**
