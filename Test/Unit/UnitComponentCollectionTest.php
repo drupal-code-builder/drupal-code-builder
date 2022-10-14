@@ -6,11 +6,14 @@ use PHPUnit\Framework\TestCase;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Generator\BaseGenerator;
 use DrupalCodeBuilder\Generator\RootComponent;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Unit tests for the ComponentCollection class.
  */
 class UnitComponentCollectionTest extends TestCase {
+
+  use ProphecyTrait;
 
   protected function setUp(): void {
     $this->markTestSkipped();
