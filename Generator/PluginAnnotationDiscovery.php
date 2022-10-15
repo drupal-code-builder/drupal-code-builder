@@ -218,6 +218,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
+        'class_has_static_factory' => $this->hasStaticFactoryMethod,
       ];
     }
 

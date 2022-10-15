@@ -174,6 +174,12 @@ class PHPFunction extends BaseGenerator {
     if ($body = $this->getFunctionBody()) {
       // Do nothing; assignment suffices.
     }
+    elseif (isset($this->containedComponents['line'])) {
+      foreach ($this->containedComponents['line'] as $parameter_component) {
+        $code_lines = $parameter_component->getContents();
+        $body = array_merge($body, $code_lines);
+      }
+    }
     elseif (isset($this->component_data['body'])) {
       $body = is_array($this->component_data['body'])
         ? $this->component_data['body']
@@ -217,7 +223,7 @@ class PHPFunction extends BaseGenerator {
       array_splice($lines, 1, 0, '');
     }
 
-    if (!$this->component_data->parameters->isEmpty() || !$this->containedComponents->isEmpty()) {
+    if (!$this->component_data->parameters->isEmpty() || isset($this->containedComponents['parameter'])) {
       $lines[] = '';
 
       // Handle contained component parameters first.?? TODO? correct?

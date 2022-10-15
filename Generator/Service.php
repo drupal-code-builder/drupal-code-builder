@@ -241,6 +241,7 @@ class Service extends PHPClassFileWithInjection {
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
+        'class_has_static_factory' => $this->hasStaticFactoryMethod,
       ];
 
       // Add the service ID to the arguments in the YAML data.

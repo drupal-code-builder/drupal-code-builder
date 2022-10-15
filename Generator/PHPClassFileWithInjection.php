@@ -36,29 +36,8 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $parameters = array_merge($parameters, $base_parameters);
       $parameters = array_merge($parameters, $parent_injected_services);
 
-      // // ARGH not ready yet!
-      // foreach ($this->getContentsElement('constructor_param') as $service_parameter) {
-      //   // Don't repeat parameters. This can be possible with pseudoservices.
-      //   if (in_array($service_parameter, $parameters)) {
-      //     continue;
-      //   }
-
-      //   // If this class needs to perform pseudoservice extraction in the
-      //   // constructor (because it has no static create() method), then switch in
-      //   // the real service's info, because the constructor parameter needs to be
-      //   // the real service.
-      //   if (!$this->hasStaticFactoryMethod && !empty($service_parameter['real_name'])) {
-      //     $service_parameter['name'] = $service_parameter['real_name'];
-      //     $service_parameter['description'] = $service_parameter['real_description'];
-      //     $service_parameter['typehint'] = $service_parameter['real_typehint'];
-      //   }
-
-      //   // Key by the parameter name to prevent duplicates of a parameter that
-      //   // is for pseudoservices and the real service.
-      //   $parameters[$service_parameter['name']] = $service_parameter;
-      // }
-      // dump($parameters);
-
+      // Parameters and body are supplied by components requested by
+      // the InjectedService component.
       $components['construct'] = [
         'component_type' => 'PHPFunction',
         'function_name' => '__construct',
@@ -70,92 +49,11 @@ class PHPClassFileWithInjection extends PHPClassFile {
         // This is a Drupal coding standard still under discussion: see
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
-        'parameters' => [],
-        'body' => [
-          "return '';",
-        ],
       ];
     }
 
     return $components;
   }
-
-  /*
-      // Assemble the parameters to the __construct() method.
-    // These are the base parameter + the parent injected services + our
-    // injected services.
-    $base_parameters = $this->getConstructBaseParameters();
-    $parent_injected_services = $this->getConstructParentInjectedServices();
-
-    $parameters = [];
-    $parameters = array_merge($parameters, $base_parameters);
-    $parameters = array_merge($parameters, $parent_injected_services);
-
-    foreach ($this->getContentsElement('constructor_param') as $service_parameter) {
-      // Don't repeat parameters. This can be possible with pseudoservices.
-      if (in_array($service_parameter, $parameters)) {
-        continue;
-      }
-
-      // If this class needs to perform pseudoservice extraction in the
-      // constructor (because it has no static create() method), then switch in
-      // the real service's info, because the constructor parameter needs to be
-      // the real service.
-      if (!$this->hasStaticFactoryMethod && !empty($service_parameter['real_name'])) {
-        $service_parameter['name'] = $service_parameter['real_name'];
-        $service_parameter['description'] = $service_parameter['real_description'];
-        $service_parameter['typehint'] = $service_parameter['real_typehint'];
-      }
-
-      // Key by the parameter name to prevent duplicates of a parameter that
-      // is for pseudoservices and the real service.
-      $parameters[$service_parameter['name']] = $service_parameter;
-    }
-
-    // Build the docblock and declaration for the method.
-    $code = $this->buildMethodHeader(
-      '__construct',
-      $parameters,
-      [
-        'docblock_first_line' => "Creates a {$this->component_data['plain_class_name']} instance.",
-        'prefixes' => ['public'],
-        // We want the __construct() method declaration's parameter to be
-        // broken over multiple lines for legibility.
-        // This is a Drupal coding standard still under discussion: see
-        // https://www.drupal.org/node/1539712.
-        'break_declaration' => TRUE,
-      ]
-    );
-
-    if ($base_parameters || $parent_injected_services) {
-      $parent_call_args = [];
-
-      foreach ($base_parameters as $parameter) {
-        $parent_call_args[] = '$' . $parameter['name'];
-      }
-
-      foreach ($parent_injected_services as $parameter) {
-        $parent_call_args[] = '$' . $parameter['name'];
-      }
-
-      $code[] = '  ' . 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
-    }
-
-    foreach ($this->getContentsElement('property_assignment') as $content) {
-      if (!$this->hasStaticFactoryMethod && isset($content['parameter_extraction'])) {
-        // There is no static factory, so the constructor receives the real
-        // service. We have to extract it here.
-        $code[] = "  \$this->{$content['property_name']} = \${$content['parameter_extraction']};";
-      }
-      else {
-        // The static factory method has got the pseudoservice object from the
-        // real service, and passes it to the constructor.
-        $code[] = "  \$this->{$content['property_name']} = \${$content['variable_name']};";
-      }
-
-    }
-    $code[] = '}';
-    */
 
   /**
    * The parameters for the base class.
@@ -223,7 +121,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
       }
 
       // __construct() method
-      $this->constructor = $this->codeBodyClassMethodConstruct();
+      // $this->constructor = $this->codeBodyClassMethodConstruct();
 
       if ($this->hasStaticFactoryMethod) {
         // create() method.
@@ -306,7 +204,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
   /**
    * Creates the code lines for the __construct() method with DI.
    */
-  protected function codeBodyClassMethodConstruct() {
+  protected function XXcodeBodyClassMethodConstruct() {
     // Assemble the parameters to the __construct() method.
     // These are the base parameter + the parent injected services + our
     // injected services.

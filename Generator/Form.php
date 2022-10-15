@@ -68,9 +68,11 @@ class Form extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
     $form_name = $this->component_data['form_id'];
 
-    $components = [
+    $components += [
       // Request the form functions.
       'getFormId' => [
         'component_type' => 'PHPFunction',
@@ -130,6 +132,7 @@ class Form extends PHPClassFileWithInjection {
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
+        'class_has_static_factory' => $this->hasStaticFactoryMethod,
       ];
     }
 
