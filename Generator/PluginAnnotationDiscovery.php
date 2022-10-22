@@ -345,6 +345,13 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         continue;
       }
 
+      // It's an array. We don't know what the contents might be, but we can
+      // provide a blank array as a template.
+      if (isset($annotation_variable_info['type']) && $annotation_variable_info['type'] == 'array') {
+        $annotation_data[$annotation_variable] = ['TODO' => 'array values'];
+        continue;
+      }
+
       // It's a plain string.
       $annotation_data[$annotation_variable] = "TODO: replace this with a value";
     }

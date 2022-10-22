@@ -647,6 +647,11 @@ class ComponentPluginsAnnotated8Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Field\FieldFormatter\Alpha');
     $php_tester->assertClassHasParent('Drupal\Core\Field\FormatterBase');
 
+    // Test an array annotation property.
+    // TODO: move this to a more logical test.
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertHasProperty(['field_types', 'TODO']);
+
     // Check service injection.
     $php_tester->assertNotClassHasInterfaces([
       'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
