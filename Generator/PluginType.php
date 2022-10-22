@@ -278,7 +278,12 @@ class PluginType extends BaseGenerator {
       'plain_class_name' => $this->component_data->plugin_plain_class_name->value . 'Interface',
       'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'docblock_first_line' => "Interface for {$this->component_data['plugin_label']} plugins.",
-      // TODO: parent interfaces.
+      'parent_interface_names' => [
+        // The interfaces that PluginBase implements, since we use that as the
+        // parent of the generated plugin base class.
+        '\Drupal\Component\Plugin\PluginInspectionInterface',
+        '\Drupal\Component\Plugin\DerivativeInspectionInterface',
+      ]
     ];
 
     $components['base_class'] = [
