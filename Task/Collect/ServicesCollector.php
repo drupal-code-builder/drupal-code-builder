@@ -323,6 +323,11 @@ class ServicesCollector extends CollectorBase  {
       return '';
     }
 
+    // Skip an interface which is just for DI.
+    if ($matches[1] == 'ContainerAwareInterface') {
+      return '';
+    }
+
     // If the interface wasn't imported, but is fully-qualified, we're done.
     // WARNING: this doesn't handle a class that has part of its namespace
     // imported!

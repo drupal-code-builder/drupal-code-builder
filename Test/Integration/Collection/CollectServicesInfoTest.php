@@ -71,9 +71,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertNotEmpty($complete_service_info['all']['queue']);
     $queue_factory = $complete_service_info['all']['queue'];
     $this->assertEquals('\Drupal\Core\Queue\QueueFactory', $queue_factory['class']);
-    // TODO: check interface when
-    // https://github.com/drupal-code-builder/drupal-code-builder/issues/268 is
-    // fixed.
+    $this->assertEquals('', $queue_factory['interface']);
     $this->assertEquals('Queue factory', $queue_factory['label']);
     $this->assertEquals('The queue factory', $queue_factory['description']);
     $this->assertEquals('queue_factory', $queue_factory['variable_name']);
