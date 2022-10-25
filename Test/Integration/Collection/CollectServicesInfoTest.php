@@ -76,6 +76,16 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertEquals('The queue factory', $queue_factory['description']);
     $this->assertEquals('queue_factory', $queue_factory['variable_name']);
 
+    // A service with a name without dots gets that used for variables, and an
+    // 'Aware' prefix doesn't get used in the a label.
+    $this->assertNotEmpty($complete_service_info['all']['event_dispatcher']);
+    $event_dispatcher = $complete_service_info['all']['event_dispatcher'];
+    $this->assertEquals('\Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher', $event_dispatcher['class']);
+    $this->assertEquals('\Symfony\Component\EventDispatcher\EventDispatcherInterface', $event_dispatcher['interface']);
+    $this->assertEquals('Event dispatcher', $event_dispatcher['label']);
+    $this->assertEquals('The event dispatcher service', $event_dispatcher['description']);
+    $this->assertEquals('event_dispatcher', $event_dispatcher['variable_name']);
+
     // Proxy services get the original class.
     $this->assertNotEmpty($complete_service_info['all']['lock.persistent']);
     $service_info = $complete_service_info['all']['lock.persistent'];

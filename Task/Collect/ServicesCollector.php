@@ -27,6 +27,7 @@ class ServicesCollector extends CollectorBase  {
   protected $testingServiceNames = [
     'current_user' => TRUE,
     'entity_type.manager' => TRUE,
+    'event_dispatcher' => TRUE,
     'module_handler' => TRUE,
     'cache.discovery' => TRUE,
     'storage:node' => TRUE,
@@ -221,13 +222,18 @@ class ServicesCollector extends CollectorBase  {
 
       // Get the short class name to use as a label.
       $service_class_pieces = explode('\\', $service_class);
-      $service_short_class = array_pop($service_class_pieces);
+      $class_name_extract_for_label = array_pop($service_class_pieces);
 
       // If the class is in fact secretly an interface (this is the case for
       // cache services!) then remove the 'Interface' suffix.
-      $service_short_class = preg_replace('/Interface$/', '', $service_short_class);
+      $class_name_extract_for_label = preg_replace('/Interface$/', '', $class_name_extract_for_label);
 
-      $label = CaseString::pascal($service_short_class)->sentence();
+      // If the class is 'aware' of something as a prefix, e.g.
+      // 'CakeAwareWibbler', then skip that prefix for the label. Ensure
+      // something is left after the 'Aware' part.
+      $class_name_extract_for_label = preg_replace('@.+Aware(?=.+)@', '', $class_name_extract_for_label);
+
+      $label = CaseString::pascal($class_name_extract_for_label)->sentence();
       $lowercase_label = strtolower($label);
 
       // Append 'service' to the description, unless:
