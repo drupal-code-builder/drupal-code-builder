@@ -252,6 +252,12 @@ class ServicesCollector extends CollectorBase  {
         // class name.
         $service_id_pieces = preg_split('@[_.]@', $service_id);
         $variable_name = (new StringAssembler($service_id_pieces))->snake();
+
+        // If the service class ends in 'factory' but the name doesn't, append
+        // that, which appears to be the convention in core.
+        if (str_ends_with($lowercase_label, 'factory') && !str_ends_with($variable_name, 'factory')) {
+          $variable_name .= '_factory';
+        }
       }
       else {
         // Otherwise, use the service class name.

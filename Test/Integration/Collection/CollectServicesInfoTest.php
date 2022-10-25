@@ -76,7 +76,7 @@ class CollectServicesInfoTest extends CollectionTestBase {
     // fixed.
     $this->assertEquals('Queue factory', $queue_factory['label']);
     $this->assertEquals('The queue factory', $queue_factory['description']);
-    $this->assertEquals('queue', $queue_factory['variable_name']);
+    $this->assertEquals('queue_factory', $queue_factory['variable_name']);
 
     // Proxy services get the original class.
     $this->assertNotEmpty($complete_service_info['all']['lock.persistent']);
