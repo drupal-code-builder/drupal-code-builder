@@ -67,6 +67,17 @@ class CollectServicesInfoTest extends CollectionTestBase {
     $this->assertEquals('The config manager', $config_manager_info['description']);
     $this->assertEquals('config_manager', $config_manager_info['variable_name']);
 
+    // A 'factory' doesn't get called 'service'.
+    $this->assertNotEmpty($complete_service_info['all']['queue']);
+    $queue_factory = $complete_service_info['all']['queue'];
+    $this->assertEquals('\Drupal\Core\Queue\QueueFactory', $queue_factory['class']);
+    // TODO: check interface when
+    // https://github.com/drupal-code-builder/drupal-code-builder/issues/268 is
+    // fixed.
+    $this->assertEquals('Queue factory', $queue_factory['label']);
+    $this->assertEquals('The queue factory', $queue_factory['description']);
+    $this->assertEquals('queue', $queue_factory['variable_name']);
+
     // Proxy services get the original class.
     $this->assertNotEmpty($complete_service_info['all']['lock.persistent']);
     $service_info = $complete_service_info['all']['lock.persistent'];

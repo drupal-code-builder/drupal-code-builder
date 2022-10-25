@@ -233,7 +233,8 @@ class ServicesCollector extends CollectorBase  {
       // Append 'service' to the description, unless:
       //  - the label already contains 'service'
       //  - the label calls the service a 'manager'
-      if (preg_match('@(service|manager)$@', $lowercase_label)) {
+      //  - the label calls the service a 'factory'
+      if (preg_match('@(service|manager|factory)$@', $lowercase_label)) {
         $description = "The {$lowercase_label}";
       }
       else {
