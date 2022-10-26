@@ -38,10 +38,10 @@ class PHPClassFileWithInjection extends PHPClassFile {
 
       // ARGH! inconsistent use of type/typehint!!!
       // TODO: fix this!
-      array_walk($parameters, function(&$parameter) {
-        $parameter['type'] = $parameter['typehint'];
-        unset($parameter['typehint']);
-      });
+      // array_walk($parameters, function(&$parameter) {
+      //   $parameter['type'] = $parameter['typehint'];
+      //   unset($parameter['typehint']);
+      // });
 
       // Parameters and body are supplied by components requested by
       // the InjectedService component.

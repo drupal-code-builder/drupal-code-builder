@@ -75,7 +75,7 @@ class PHPFunction extends BaseGenerator {
         ->setInternal(TRUE)
         ->setProperties([
           'name' => PropertyDefinition::create('string'),
-          'type' => PropertyDefinition::create('string')
+          'typehint' => PropertyDefinition::create('string')
             // Need to give a type, otherwise PHPCS will complain in tests!
             ->setLiteralDefault('string'),
           'description' => PropertyDefinition::create('string')
@@ -238,9 +238,9 @@ class PHPFunction extends BaseGenerator {
       foreach ($this->component_data->parameters as $parameter_data) {
         $param_name_line = '@param ';
         // ARGH TODO! Shouldn't this happen somewhere else???
-        $parameter_data->type->applyDefault();
-         if (!empty($parameter_data->type->value)) {
-          $param_name_line .= $parameter_data->type->value . ' ';
+        $parameter_data->typehint->applyDefault();
+         if (!empty($parameter_data->typehint->value)) {
+          $param_name_line .= $parameter_data->typehint->value . ' ';
         }
         $param_name_line .= '$' . $parameter_data->name->value;
         $lines[] = $param_name_line;
