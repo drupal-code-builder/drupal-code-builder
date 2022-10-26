@@ -36,6 +36,13 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $parameters = array_merge($parameters, $base_parameters);
       $parameters = array_merge($parameters, $parent_injected_services);
 
+      // ARGH! inconsistent use of type/typehint!!!
+      // TODO: fix this!
+      array_walk($parameters, function(&$parameter) {
+        $parameter['type'] = $parameter['typehint'];
+        unset($parameter['typehint']);
+      });
+
       // Parameters and body are supplied by components requested by
       // the InjectedService component.
       $components['construct'] = [
@@ -49,6 +56,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
         // This is a Drupal coding standard still under discussion: see
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
+        'parameters' => $parameters,
       ];
     }
 
