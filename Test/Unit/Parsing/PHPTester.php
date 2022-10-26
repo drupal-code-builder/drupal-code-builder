@@ -1027,23 +1027,23 @@ class PHPTester {
   /**
    * Asserts that the class construction has the given base parameters.
    *
-   * @param $parameters
+   * @param $expected_parameters
    *   An array of parameters, in the same format as for
    *   assertMethodHasParameters().
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertConstructorBaseParameters($parameters, $message = NULL) {
+  public function assertConstructorBaseParameters($expected_parameters, $message = NULL) {
     $message = $message ?? "The constructor method has the expected base parameters.";
 
-    $expected_parameter_names = array_keys($parameters);
+    $expected_parameter_names = array_keys($expected_parameters);
 
     $this->assertHasMethod('__construct');
     $this->assertHasMethod('create');
 
     // Check that the __construct() method has the base parameters before the
     // services.
-    $this->assertHelperMethodHasParametersSlice($parameters, '__construct', $message, 0, count($parameters));
+    $this->assertHelperMethodHasParametersSlice($expected_parameters, '__construct', $message, 0, count($expected_parameters));
 
     // The first statement in the __construct() should be parent call, with
     // the base parameters.
@@ -1055,14 +1055,14 @@ class PHPTester {
     foreach ($parent_call_node->args as $arg) {
       $call_arg_names[] = $arg->value->name;
     }
-    Assert::assertEquals(array_keys($parameters), $call_arg_names, "The call to the parent constructor has the base parameters.");
+    Assert::assertEquals(array_keys($expected_parameters), $call_arg_names, "The call to the parent constructor has the base parameters.");
 
     // The only statement in the create() method should return the new object.
     $create_node = $this->parser_nodes['methods']['create'];
 
     $object_create_node = $this->parser_nodes['methods']['create']->stmts[0];
     // Slice the construct call arguments to the given parameters.
-    $construct_base_args = array_slice($create_node->stmts[0]->expr->args, 0, count($parameters));
+    $construct_base_args = array_slice($create_node->stmts[0]->expr->args, 0, count($expected_parameters));
     $create_arg_names = [];
 
     foreach ($construct_base_args as $index => $arg) {
@@ -1187,7 +1187,7 @@ class PHPTester {
    *
    * TODO: Move assertions that use this to PHPMethodTester and remove this.
    *
-   * @param $parameters
+   * @param $expected_parameters
    *   An array of parameters: keys are the parameter names, values are the
    *   typehint, with NULL for no typehint.
    * @param string $method_name
@@ -1203,9 +1203,9 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  private function assertHelperMethodHasParametersSlice($parameters, $method_name, $message = NULL, $offset = 0, $length = NULL) {
-    $expected_parameter_names = array_keys($parameters);
-    $expected_parameter_typehints = array_values($parameters);
+  private function assertHelperMethodHasParametersSlice($expected_parameters, $method_name, $message = NULL, $offset = 0, $length = NULL) {
+    $expected_parameter_names = array_keys($expected_parameters);
+    $expected_parameter_typehints = array_values($expected_parameters);
 
     $parameter_names_string = implode(", ", $expected_parameter_names);
     $message = $message ?? "The method {$method_name} has the parameters {$parameter_names_string} in positions ... TODO.";
@@ -1222,7 +1222,7 @@ class PHPTester {
     }
 
     // Sanity check.
-    Assert::assertEquals(count($parameters), count($param_nodes_slice), "The length of the expected parameters list for {$method_name} matches the found ones.");
+    Assert::assertEquals(count($expected_parameters), count($param_nodes_slice), "The length of the expected parameters list for {$method_name} matches the found ones.");
 
     $actual_parameter_names_slice = [];
     $actual_parameter_types_slice = [];
