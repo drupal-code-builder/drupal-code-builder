@@ -124,8 +124,16 @@ class PHPFunction extends BaseGenerator {
     $function_code = [];
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
+    // If the declaration isn't set, built it from property values and contained
+    // parameter components.
     if (empty($this->component_data->declaration->value)) {
       $parameters = [];
+
+      // Handle parameters set as a property first, then contained components.
+      foreach ($this->component_data->parameters as $parameter_data) {
+        $parameters[] = $parameter_data->export();
+      }
+
       foreach ($this->containedComponents['parameter'] as $parameter_component) {
         $parameters[] = $parameter_component->getContents();
       }
@@ -226,14 +234,7 @@ class PHPFunction extends BaseGenerator {
     if (!$this->component_data->parameters->isEmpty() || isset($this->containedComponents['parameter'])) {
       $lines[] = '';
 
-      // Handle contained component parameters first.?? TODO? correct?
-      foreach ($this->containedComponents['parameter'] as $parameter_component) {
-        $parameter_data = $parameter_component->getContents();
-
-        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['name']}";
-        $lines[] = '  ' . $parameter_data['description'];
-      }
-
+      // Handle parameters set as a property first, then contained components.
       foreach ($this->component_data->parameters as $parameter_data) {
         $param_name_line = '@param ';
         // ARGH TODO! Shouldn't this happen somewhere else???
@@ -244,6 +245,13 @@ class PHPFunction extends BaseGenerator {
         $param_name_line .= '$' . $parameter_data->name->value;
         $lines[] = $param_name_line;
         $lines[] = '  ' . $parameter_data->description->value;
+      }
+
+      foreach ($this->containedComponents['parameter'] as $parameter_component) {
+        $parameter_data = $parameter_component->getContents();
+
+        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['name']}";
+        $lines[] = '  ' . $parameter_data['description'];
       }
     }
 
