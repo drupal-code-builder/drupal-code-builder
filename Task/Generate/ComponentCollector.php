@@ -532,6 +532,13 @@ class ComponentCollector {
           try {
             $required_item_data_item->set($required_item_data);
           }
+          catch (\MutableTypedData\Exception\InvalidAccessException $e) {
+            throw new \Exception(sprintf("Invalid access when trying to set data on required item '%s' for generator at '%s', with message '%s'.",
+              $required_item_data_item->getAddress(),
+              $generator->component_data->getAddress(),
+              $e->getMessage()
+            ));
+          }
           catch (\MutableTypedData\Exception\InvalidInputException $e) {
             throw new \Exception(sprintf("Invalid input when trying to set data on required item '%s' for generator at '%s', with message '%s'.",
               $required_item_data_item->getAddress(),
