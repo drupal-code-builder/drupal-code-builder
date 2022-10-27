@@ -36,6 +36,22 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $parameters = array_merge($parameters, $base_parameters);
       $parameters = array_merge($parameters, $parent_injected_services);
 
+      $body = [];
+      // Parent call line.
+      if ($base_parameters || $parent_injected_services) {
+        $parent_call_args = [];
+
+        foreach ($base_parameters as $parameter) {
+          $parent_call_args[] = '$' . $parameter['name'];
+        }
+
+        foreach ($parent_injected_services as $parameter) {
+          $parent_call_args[] = '$' . $parameter['name'];
+        }
+
+        $body[] = 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
+      }
+
       // Parameters and body are supplied by components requested by
       // the InjectedService component.
       $components['construct'] = [
@@ -50,6 +66,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
         'parameters' => $parameters,
+        'body' => $body,
       ];
     }
 

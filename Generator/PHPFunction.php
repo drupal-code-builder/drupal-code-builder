@@ -17,6 +17,8 @@ use MutableTypedData\Definition\DefaultDefinition;
  * functions completely assembled in code it's easier to define each element
  * of the declaration.
  *
+ * TODO document combining of property value + contained components for parameters and body!
+ *
  * Properties include:
  *    - 'declaration': The function declaration, including the function name
  *      and parameters, up to the closing parenthesis. Should not however
@@ -182,16 +184,20 @@ class PHPFunction extends BaseGenerator {
     if ($body = $this->getFunctionBody()) {
       // Do nothing; assignment suffices.
     }
-    elseif (isset($this->containedComponents['line'])) {
-      foreach ($this->containedComponents['line'] as $parameter_component) {
-        $code_lines = $parameter_component->getContents();
-        $body = array_merge($body, $code_lines);
+    else {
+      // Use both property data and contained components.
+      if (isset($this->component_data['body'])) {
+        $body = is_array($this->component_data['body'])
+          ? $this->component_data['body']
+          : [$this->component_data['body']];
       }
-    }
-    elseif (isset($this->component_data['body'])) {
-      $body = is_array($this->component_data['body'])
-        ? $this->component_data['body']
-        : [$this->component_data['body']];
+
+      if (isset($this->containedComponents['line'])) {
+        foreach ($this->containedComponents['line'] as $parameter_component) {
+          $code_lines = $parameter_component->getContents();
+          $body = array_merge($body, $code_lines);
+        }
+      }
     }
 
     // Little bit of sugar: to save endless escaping of $ in front of
@@ -347,7 +353,7 @@ class PHPFunction extends BaseGenerator {
    * Gets body lines of the function.
    *
    * Helper to allow classes to override the code lines from the property
-   * value.
+   * value and contents.
    *
    * @return string[]
    *   An array of lines.
