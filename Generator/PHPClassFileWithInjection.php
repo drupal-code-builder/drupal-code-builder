@@ -52,7 +52,10 @@ class PHPClassFileWithInjection extends PHPClassFile {
         $body[] = 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
       }
 
-      // Handle service extraction.
+      // Handle service extraction. If the DI parameter needs to be obtained
+      // from the container with a complex expression and the class doesn't use
+      // a create() method, then that expression needs to be used in in the
+      // constructor.
       foreach ($parameters as $parameter) {
         if (isset($parameter['extraction'])) {
           if (!$this->hasStaticFactoryMethod) {
