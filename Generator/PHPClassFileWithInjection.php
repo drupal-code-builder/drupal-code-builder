@@ -52,6 +52,24 @@ class PHPClassFileWithInjection extends PHPClassFile {
         $body[] = 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
       }
 
+      // Handle service extraction.
+      foreach ($parameters as $parameter) {
+        if (isset($parameter['extraction'])) {
+          if (!$this->hasStaticFactoryMethod) {
+            // There is no static factory, so the constructor receives the real
+            // service. We have to extract it here.
+            $body[] = "\$this->{$content['property_name']} = \${$parameter['extraction']};";
+          }
+          else {
+            // The static factory method has got the pseudoservice object from the
+            // real service, and passes it to the constructor.
+            $body[] = "\$this->{$content['property_name']} = \${$parameter['name']};";
+          }
+
+          unset($parameter['extraction']);
+        }
+      }
+
       // Parameters and body are supplied by components requested by
       // the InjectedService component.
       $components['construct'] = [
