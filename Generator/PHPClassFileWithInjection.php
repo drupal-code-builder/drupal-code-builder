@@ -36,6 +36,11 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $parameters = array_merge($parameters, $base_parameters);
       $parameters = array_merge($parameters, $parent_injected_services);
 
+      // current problem! some of $parameters have 'extraction' property!
+      // InjectedService knows it!
+      // ARGH need to go
+      // InjectedService -> Extraction ??? contained by DIConstruct ???? AAARGH
+
       $body = [];
       // Parent call line.
       if ($base_parameters || $parent_injected_services) {
@@ -56,18 +61,20 @@ class PHPClassFileWithInjection extends PHPClassFile {
       // from the container with a complex expression and the class doesn't use
       // a create() method, then that expression needs to be used in in the
       // constructor.
-      foreach ($parameters as $parameter) {
+      foreach ($parameters as &$parameter) {
         if (isset($parameter['extraction'])) {
-          if (!$this->hasStaticFactoryMethod) {
-            // There is no static factory, so the constructor receives the real
-            // service. We have to extract it here.
-            $body[] = "\$this->{$content['property_name']} = \${$parameter['extraction']};";
-          }
-          else {
-            // The static factory method has got the pseudoservice object from the
-            // real service, and passes it to the constructor.
-            $body[] = "\$this->{$content['property_name']} = \${$parameter['name']};";
-          }
+        //   if (!$this->hasStaticFactoryMethod) {
+        //     // There is no static factory, so the constructor receives the real
+        //     // service. We have to extract it here.
+        //     //
+        //     // WE DON"T KNOW THIS HERE --
+        //     $body[] = "\$this->{$content['property_name']} = \${$parameter['extraction']};";
+        //   }
+        //   else {
+        //     // The static factory method has got the pseudoservice object from the
+        //     // real service, and passes it to the constructor.
+        //     $body[] = "\$this->{$content['property_name']} = \${$parameter['name']};";
+        //   }
 
           unset($parameter['extraction']);
         }

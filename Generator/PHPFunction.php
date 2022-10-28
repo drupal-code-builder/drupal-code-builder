@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -250,6 +251,14 @@ class PHPFunction extends BaseGenerator {
         }
         $param_name_line .= '$' . $parameter_data->name->value;
         $lines[] = $param_name_line;
+
+        // TODO: why default not applied?
+        // Generate a parameter description from the name if none was given.
+        if (empty($parameter_data->description->value)) {
+          // TODO: add a 'lower' case to case converter.
+          $parameter_data->description = CaseString::snake('The_' . $parameter_data->name->value)->sentence() . '.';
+        }
+
         $lines[] = '  ' . $parameter_data->description->value;
       }
 
