@@ -13,6 +13,13 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 class PluginTypeManager extends Service {
 
   /**
+   * Plugin managers always have a constructor.
+   *
+   * @var bool
+   */
+  protected $forceConstructComponent = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   public static function getPropertyDefinition(): PropertyDefinition {

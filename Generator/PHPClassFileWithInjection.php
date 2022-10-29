@@ -20,12 +20,21 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected $injectedServices = [];
 
   /**
+   * Forces the requesting of a constructor method component.
+   *
+   * If FALSE, a constructor is only requested if there are injected services.
+   *
+   * @var bool
+   */
+  protected $forceConstructComponent = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    if (!$this->component_data->injected_services->isEmpty()) {
+    if (!$this->component_data->injected_services->isEmpty() || $this->forceConstructComponent) {
       // Assemble the parameters to the __construct() method.
       // These are the base parameter + the parent injected services + our
       // injected services.
