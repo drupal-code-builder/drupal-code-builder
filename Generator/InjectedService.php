@@ -113,15 +113,21 @@ class InjectedService extends BaseGenerator {
       }
       else {
         // Pseudoservice: needs to be extracted from a real service.
-        if (!$this->component_data->class_has_static_factory->value) {
-          // There is no static factory, so the constructor receives the real
-          // service. We have to extract it here.
-          $code_line = "\$this->{$service_info['property_name']} = {$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}');";
-        }
-        else {
+        if ($this->component_data->class_has_static_factory->value) {
           // The static factory method has got the pseudoservice object from the
           // real service, and passes it to the constructor.
           $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+        }
+        else {
+          // There is no static factory, so the constructor receives the real
+          // service. We have to extract it here.
+          $code_line = "\$this->{$service_info['property_name']} = \${$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}');";
+
+          // Also, the constructor parameter is the real service, not the
+          // pseudoservice.
+          $components['constructor_param']['name'] = $service_info['real_service_variable_name'];
+          $components['constructor_param']['typehint'] = $service_info['real_service_typehint'];
+          $components['constructor_param']['description'] = $service_info['real_service_description'] . '.';
         }
       }
     }
