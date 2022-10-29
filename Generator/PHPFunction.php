@@ -269,7 +269,17 @@ class PHPFunction extends BaseGenerator {
           $parameter_data->description = CaseString::snake('The_' . $parameter_data->name->value)->sentence() . '.';
         }
 
-        $lines[] = '  ' . $parameter_data->description->value;
+        // Wrap the description to 80 characters minus the indentation.
+        $indent_count =
+          2 // Class code indent.
+          + 2 // Space and the doc comment asterisk.
+          + 3; // Indentation for the parameter description.
+        $wrapped_description = wordwrap($parameter_data->description->value, 80 - $indent_count);
+        $wrapped_description_lines = explode("\n", $wrapped_description);
+
+        foreach ($wrapped_description_lines as $line) {
+          $lines[] = '  ' . $line;
+        }
       }
 
       foreach ($this->containedComponents['parameter'] as $parameter_component) {
