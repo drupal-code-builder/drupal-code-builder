@@ -65,6 +65,77 @@ class PluginTypeManager extends Service {
 
     $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data['plain_class_name']}Manager NEW!!."];
 
+    if ($this->component_data->discovery_type->value == 'annotation') {
+      $components['construct']['parameters'] = [
+        [
+          'name' => 'namespaces',
+          'typehint' => '\Traversable',
+          'description' => "An object that implements \Traversable which contains the root paths keyed by the corresponding namespace to look for plugin implementations.",
+        ],
+        [
+          'name' => 'cache_backend',
+          'typehint' => '\Drupal\Core\Cache\CacheBackendInterface',
+          'description' => 'The cache backend.',
+        ],
+        [
+          'name' => 'module_handler',
+          'typehint' => '\Drupal\Core\Extension\ModuleHandlerInterface',
+          'description' => 'The module handler.',
+        ],
+      ];
+    }
+
+    if ($this->component_data->discovery_type->value == 'yaml') {
+      // The cache doesn't get assigned normally but in a custom code line
+      // set further down.
+      $components['service_cache.discovery']['assignment'] = 'NONE';
+    }
+
+    // Only annotation type plugins call the parent constructor.
+    $code = [];
+    if ($this->component_data->discovery_type->value == 'annotation') {
+      $code[] = 'parent::__construct(';
+      $code[] = '  ' . "'Plugin/{$this->component_data['plugin_subdirectory']}',";
+      $code[] = '  $namespaces,';
+      $code[] = '  $module_handler,';
+      $code[] = "  " . $this->component_data['interface'] . '::class' . ",";
+      $code[] = "  " . '\\' . $this->makeQualifiedClassName([
+        'Drupal',
+        $this->component_data['root_component_name'],
+        'Annotation',
+        // We can't acquire the annotation class name, as it's a mutable
+        // property and so not always present. Use this instead.
+        $this->component_data['plugin_plain_class_name'],
+      ]) . '::class';
+      $code[] = ');';
+      $code[] = '';
+    }
+    else {
+      $code[] = '// Skip calling the parent constructor, since that assumes annotation-based';
+      $code[] = '// discovery.';
+    }
+
+    // TODO!? will happen in PHPFunction but order other way round!
+    // if (!empty($this->getContentsElement('property_assignment'))) {
+    //   foreach ($this->getContentsElement('property_assignment') as $content) {
+    //     $code[] = "\$this->{$content['property_name']} = \${$content['variable_name']};";
+    //   }
+    //   $code[] = '';
+    // }
+
+    $code[] = "\$this->alterInfo('{$this->component_data['info_alter_hook']}');";
+    $code[] = "\$this->setCacheBackend(\$cache_backend, '{$this->component_data['plugin_type']}_plugins');";
+
+    // YAML managers have more code to from InjectedService components, so add
+    // a blank line.
+    if ($this->component_data->discovery_type->value == 'yaml') {
+      $code[] = '';
+    }
+
+    $components['construct']['body'] = $code;
+
+    dump($components);
+
     return $components;
   }
 
