@@ -195,8 +195,18 @@ class PHPFunction extends BaseGenerator {
 
       if (isset($this->containedComponents['line'])) {
         foreach ($this->containedComponents['line'] as $parameter_component) {
-          $code_lines = $parameter_component->getContents();
-          $body = array_merge($body, $code_lines);
+          $contained_component_code_lines = $parameter_component->getContents();
+        }
+
+        // Contained component content lines are either added at the end, or
+        // to replace the magic 'CONTAINED_COMPONENTS' lines.
+        if (in_array('CONTAINED_COMPONENTS', $body)) {
+          $index = array_search('CONTAINED_COMPONENTS', $body);
+
+          array_splice($body, $index, 1, $contained_component_code_lines);
+        }
+        else {
+          $body = array_merge($body, $contained_component_code_lines);
         }
       }
     }

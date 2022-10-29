@@ -113,6 +113,9 @@ class PluginTypeManager extends Service {
     else {
       $code[] = '// Skip calling the parent constructor, since that assumes annotation-based';
       $code[] = '// discovery.';
+      // YAML managers have more code to from InjectedService components.
+      $code[] = 'CONTAINED_COMPONENTS';
+      $code[] = '';
     }
 
     // TODO!? will happen in PHPFunction but order other way round!
@@ -125,12 +128,6 @@ class PluginTypeManager extends Service {
 
     $code[] = "\$this->alterInfo('{$this->component_data['info_alter_hook']}');";
     $code[] = "\$this->setCacheBackend(\$cache_backend, '{$this->component_data['plugin_type']}_plugins');";
-
-    // YAML managers have more code to from InjectedService components, so add
-    // a blank line.
-    if ($this->component_data->discovery_type->value == 'yaml') {
-      $code[] = '';
-    }
 
     $components['construct']['body'] = $code;
 
