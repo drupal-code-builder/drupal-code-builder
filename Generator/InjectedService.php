@@ -33,6 +33,9 @@ class InjectedService extends BaseGenerator {
       'class_has_static_factory' => PropertyDefinition::create('boolean')
         ->setLabel('Whether the class injecting this uses a static create() method.')
         ->setRequired(TRUE),
+      // Allows special cases for assignment in the construct method.
+      // So far only skips assignment if set to anything! TODO!!
+      'assignment' => PropertyDefinition::create('string'),
     ]);
 
     return $definition;
@@ -104,28 +107,32 @@ class InjectedService extends BaseGenerator {
 
     $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
 
-    if ($service_info['type'] == 'service') {
-      $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
-    }
-    else {
-      // Pseudoservice: needs to be extracted from a real service.
-      if (!$this->component_data->class_has_static_factory->value) {
-        // There is no static factory, so the constructor receives the real
-        // service. We have to extract it here.
-        $code_line = "\$this->{$service_info['property_name']} = {$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}');";
+    if ($this->component_data->assignment->isEmpty()) {
+      if ($service_info['type'] == 'service') {
+        $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
       }
       else {
-        // The static factory method has got the pseudoservice object from the
-        // real service, and passes it to the constructor.
-        $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+        // Pseudoservice: needs to be extracted from a real service.
+        if (!$this->component_data->class_has_static_factory->value) {
+          // There is no static factory, so the constructor receives the real
+          // service. We have to extract it here.
+          $code_line = "\$this->{$service_info['property_name']} = {$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}');";
+        }
+        else {
+          // The static factory method has got the pseudoservice object from the
+          // real service, and passes it to the constructor.
+          $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+        }
       }
     }
 
-    $components['constructor_line'] = [
-      'component_type' => 'PHPFunctionLine',
-      'containing_component' => '%requester:%requester:construct',
-      'code' => $code_line,
-    ];
+    if (isset($code_line)) {
+      $components['constructor_line'] = [
+        'component_type' => 'PHPFunctionLine',
+        'containing_component' => '%requester:%requester:construct',
+        'code' => $code_line,
+      ];
+    }
 
     return $components;
   }
