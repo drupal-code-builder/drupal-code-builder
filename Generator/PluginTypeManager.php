@@ -63,6 +63,8 @@ class PluginTypeManager extends Service {
       ];
     }
 
+    $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data['plain_class_name']}Manager NEW!!."];
+
     return $components;
   }
 
