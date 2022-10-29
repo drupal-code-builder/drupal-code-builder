@@ -519,6 +519,8 @@ class ComponentCollector {
           $required_item_data = $component_data->{$required_item_name};
         }
         else {
+          assert(isset($required_item_data['component_type']), sprintf("Missing component_type key in requested components for %s at array key %s.", $item_name, $required_item_name));
+
           // Build a standalone data item from the array data.
           $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($required_item_data['component_type'], $required_item_name);
           // $definition->setName($required_item_name);
