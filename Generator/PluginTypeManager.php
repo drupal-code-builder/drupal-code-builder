@@ -181,8 +181,6 @@ class PluginTypeManager extends Service {
    * {@inheritdoc}
    */
   protected function collectSectionBlocks() {
-    $this->constructor = $this->codeBodyClassMethodConstruct();
-
     if ($this->component_data['discovery_type'] == 'yaml') {
       $this->properties[] = $this->createPropertyBlock(
         'defaults',
@@ -206,7 +204,7 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
-  protected function codeBodyClassMethodConstruct() {
+  protected function XXXcodeBodyClassMethodConstruct() {
     $parameters = [];
 
     // Annotation plugins have injection parameters that don't come from the
