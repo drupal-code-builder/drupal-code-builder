@@ -133,9 +133,7 @@ class InjectedService extends BaseGenerator {
           $components['constructor_param']['description'] = $service_info['real_service_description'] . '.';
         }
       }
-    }
 
-    if (isset($code_line)) {
       $components['constructor_line'] = [
         'component_type' => 'PHPFunctionLine',
         'containing_component' => '%requester:%requester:construct',
