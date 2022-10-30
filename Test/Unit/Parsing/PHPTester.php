@@ -923,15 +923,16 @@ class PHPTester {
     // Check the class property assignments in the constructor.
     $assign_index = 0;
     foreach ($construct_node->stmts as $stmt_node) {
-      if (get_class($stmt_node) == \PhpParser\Node\Expr\Assign::class) {
-        Assert::assertEquals($injected_services[$assign_index]['property_name'], $stmt_node->var->name);
+      if (get_class($stmt_node->expr) == \PhpParser\Node\Expr\Assign::class) {
+        $assign_node = $stmt_node->expr;
+        Assert::assertEquals($injected_services[$assign_index]['property_name'], $assign_node->var->name);
         if (isset($injected_services[$assign_index]['extraction_method'])) {
-          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $stmt_node->expr->var->name);
-          Assert::assertEquals($injected_services[$assign_index]['extraction_method'], $stmt_node->expr->name);
-          Assert::assertEquals($injected_services[$assign_index]['extraction_method_param'], $stmt_node->expr->args[0]->value->value);
+          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $assign_node->expr->var->name);
+          Assert::assertEquals($injected_services[$assign_index]['extraction_method'], $assign_node->expr->name);
+          Assert::assertEquals($injected_services[$assign_index]['extraction_method_param'], $assign_node->expr->args[0]->value->value);
         }
         else {
-          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $stmt_node->expr->name);
+          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $assign_node->expr->name);
         }
 
         $assign_index++;
