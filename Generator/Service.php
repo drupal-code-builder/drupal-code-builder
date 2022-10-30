@@ -242,6 +242,7 @@ class Service extends PHPClassFileWithInjection {
         'containing_component' => '%requester',
         'service_id' => $service_id,
         'class_has_static_factory' => $this->hasStaticFactoryMethod,
+        'class_has_constructor' => TRUE,
         'class_name' => $this->component_data->qualified_class_name->value,
       ];
 
