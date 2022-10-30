@@ -346,15 +346,21 @@ class PHPFunction extends BaseGenerator {
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
     foreach ($parameters as $parameter_info) {
+      // Allow for parameter info from both code analysis and from a
+      // PHPFunctionParameter component, which don't use the same key (because
+      // using 'name' as a data property name causes issues as it's also a class
+      // property name on the DataItem class.
+      $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
+
       if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
         // Don't type hint scalar types.
-        $declaration_line_params[] = '$' . $parameter_info['parameter_name'];
+        $declaration_line_params[] = '$' . $parameter_name;
       }
       elseif (!empty($parameter_info['typehint'])) {
-        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['parameter_name'];
+        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_name;
       }
       else {
-        $declaration_line_params[] = '$' . $parameter_info['parameter_name'];
+        $declaration_line_params[] = '$' . $parameter_name;
       }
     }
 
