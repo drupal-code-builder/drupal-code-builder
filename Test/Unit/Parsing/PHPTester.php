@@ -938,6 +938,10 @@ class PHPTester {
       }
     }
 
+    // Rough attempt at checking we don't have any assignments missing.
+    // TODO: this doesn't tell us which ones!
+    Assert::assertEquals($service_count, $assign_index, 'Number of assignment statements does not match number of services.');
+
     // For each service, assert the property.
     foreach ($injected_services as $injected_service_details) {
       $this->assertClassHasProtectedProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
