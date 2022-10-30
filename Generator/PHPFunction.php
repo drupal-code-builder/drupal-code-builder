@@ -285,7 +285,7 @@ class PHPFunction extends BaseGenerator {
       foreach ($this->containedComponents['parameter'] as $parameter_component) {
         $parameter_data = $parameter_component->getContents();
 
-        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['name']}";
+        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['parameter_name']}";
         $lines[] = '  ' . $parameter_data['description'];
       }
     }
@@ -347,13 +347,13 @@ class PHPFunction extends BaseGenerator {
     foreach ($parameters as $parameter_info) {
       if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
         // Don't type hint scalar types.
-        $declaration_line_params[] = '$' . $parameter_info['name'];
+        $declaration_line_params[] = '$' . $parameter_info['parameter_name'];
       }
       elseif (!empty($parameter_info['typehint'])) {
-        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['name'];
+        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['parameter_name'];
       }
       else {
-        $declaration_line_params[] = '$' . $parameter_info['name'];
+        $declaration_line_params[] = '$' . $parameter_info['parameter_name'];
       }
     }
 

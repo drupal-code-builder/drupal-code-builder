@@ -16,15 +16,24 @@ class PHPFunctionParameter extends BaseGenerator {
     $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([
-      'name' => PropertyDefinition::create('string')
+      'parameter_name' => PropertyDefinition::create('string')
         ->setRequired(TRUE),
       'typehint' => PropertyDefinition::create('string'),
       'description' => PropertyDefinition::create('string')
         ->setRequired(TRUE),
+      'class_name' => PropertyDefinition::create('string'),
+      'method_name' => PropertyDefinition::create('string'),
     ]);
 
     return $definition;
   }
+
+  public function getMergeTag() {
+    // ARGH TODO also function name!
+    return $this->component_data->class_name->value . '-' . $this->component_data->parameter_name->value;
+  }
+
+  // merge tag: unique to class + function + name.
 
   /**
    * {@inheritdoc}
@@ -39,7 +48,7 @@ class PHPFunctionParameter extends BaseGenerator {
   public function getContents(): array {
     $contents = [];
 
-    foreach (['name', 'typehint', 'description'] as $property) {
+    foreach (['parameter_name', 'typehint', 'description'] as $property) {
       $contents[$property] = $this->component_data->{$property}->value;
     }
 

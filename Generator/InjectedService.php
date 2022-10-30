@@ -36,6 +36,7 @@ class InjectedService extends BaseGenerator {
       // Allows special cases for assignment in the construct method.
       // So far only skips assignment if set to anything! TODO!!
       'assignment' => PropertyDefinition::create('string'),
+      'class_name' => PropertyDefinition::create('string'),
     ]);
 
     return $definition;
@@ -100,9 +101,11 @@ class InjectedService extends BaseGenerator {
     $components['constructor_param'] = [
       'component_type' => 'PHPFunctionParameter',
       'containing_component' => '%requester:%requester:construct',
-      'name'        => $service_info['variable_name'],
-      'typehint'    => $service_info['typehint'],
+      'parameter_name' => $service_info['variable_name'],
+      'typehint' => $service_info['typehint'],
       'description' => $service_info['description'] . '.',
+      'class_name' => $this->component_data->class_name->value,
+      'method_name' => '__construct',
     ];
 
     $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
@@ -125,7 +128,7 @@ class InjectedService extends BaseGenerator {
 
           // Also, the constructor parameter is the real service, not the
           // pseudoservice.
-          $components['constructor_param']['name'] = $service_info['real_service_variable_name'];
+          $components['constructor_param']['parameter_name'] = $service_info['real_service_variable_name'];
           $components['constructor_param']['typehint'] = $service_info['real_service_typehint'];
           $components['constructor_param']['description'] = $service_info['real_service_description'] . '.';
         }
