@@ -163,8 +163,8 @@ class PHPFunction extends BaseGenerator {
         $parameters = [];
         foreach ($this->component_data->parameters as $parameter_data) {
           $parameter = '';
-          if (!$parameter_data->type->isEmpty()) {
-            $parameter .= $parameter_data->type->value . ' ';
+          if (!$parameter_data->typehint->isEmpty()) {
+            $parameter .= $parameter_data->typehint->value . ' ';
           }
           $parameter .= '$' . $parameter_data->name->value;
 
