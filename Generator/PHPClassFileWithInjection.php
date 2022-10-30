@@ -154,9 +154,6 @@ class PHPClassFileWithInjection extends PHPClassFile {
         $this->properties[] = $property_code;
       }
 
-      // __construct() method
-      // $this->constructor = $this->codeBodyClassMethodConstruct();
-
       if ($this->hasStaticFactoryMethod) {
         // create() method.
         // Function data has been set by buildComponentContents(). WHAT DO I MEAN? TODO?
