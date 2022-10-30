@@ -138,8 +138,6 @@ class PluginTypeManager extends Service {
 
     $components['construct']['body'] = $code;
 
-    dump($components);
-
     return $components;
   }
 
