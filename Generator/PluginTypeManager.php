@@ -95,7 +95,7 @@ class PluginTypeManager extends Service {
     if ($this->component_data->discovery_type->value == 'yaml') {
       // The cache doesn't get assigned normally but in a custom code line
       // set further down.
-      $components['service_cache.discovery']['assignment'] = 'NONE';
+      $components['service_cache.discovery']['omit_assignment'] = TRUE;
     }
 
     // Only annotation type plugins call the parent constructor.

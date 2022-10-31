@@ -37,8 +37,7 @@ class InjectedService extends BaseGenerator {
         ->setLabel('Whether the class injecting this uses a static create() method.')
         ->setRequired(TRUE),
       // Allows special cases for assignment in the construct method.
-      // So far only skips assignment if set to anything! TODO!!
-      'assignment' => PropertyDefinition::create('string'),
+      'omit_assignment' => PropertyDefinition::create('boolean'),
       'class_name' => PropertyDefinition::create('string'),
     ]);
 
@@ -114,7 +113,7 @@ class InjectedService extends BaseGenerator {
 
       $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
 
-      if ($this->component_data->assignment->isEmpty()) {
+      if ($this->component_data->omit_assignment->isEmpty()) {
         if ($service_info['type'] == 'service') {
           $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
         }
