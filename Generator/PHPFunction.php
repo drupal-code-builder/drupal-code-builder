@@ -12,13 +12,23 @@ use MutableTypedData\Definition\DefaultDefinition;
  *
  * (We can't call this 'Function', as that's a reserved word.)
  *
- * This has two broad modes of operation: either a complete declaration string,
- * or the separate name, prefixes, parameters, and return type. The reason for
- * this is that analysis data will have the declaration string, but for
- * functions completely assembled in code it's easier to define each element
- * of the declaration.
+ * This generator has properties that can be used in several different
+ * combinations:
  *
- * TODO document combining of property value + contained components for parameters and body!
+ * - For the declaration, either set complete declaration string, or the
+ *   separate name, prefixes, parameters, and return type. The reason for this
+ *   is that analysis data will have the declaration string, but for functions
+ *   completely assembled in code it's easier to define each element of the
+ *   declaration.
+ * - For the parameters, both the property value and contained
+ *   PHPFunctionParameter components are combined in that order.
+ * - The code of the function can either come from:
+ *    - The getFunctionBody() method if a subclass overrides it.
+ *    - The property value.
+ *    - Contained PHPFunctionLine components.
+ *    - Both the property value and contained PHPFunctionLine components, in
+ *      which case contained component lines either go last, or are inserted to
+ *      replace a token: see self::getContents().
  *
  * Properties include:
  *    - 'declaration': The function declaration, including the function name
