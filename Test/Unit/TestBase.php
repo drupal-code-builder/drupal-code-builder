@@ -42,6 +42,9 @@ abstract class TestBase extends TestCase {
    * This expects the class property $drupalMajorVersion to be defined.
    */
   protected function setUp(): void {
+    // TODO - only include this if run manually and not by CI?
+    include_once(__DIR__ . '/../debug.php');
+
     $this->setUpVarDumper();
 
     if (empty($this->drupalMajorVersion)) {
