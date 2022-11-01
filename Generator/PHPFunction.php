@@ -55,6 +55,7 @@ class PHPFunction extends BaseGenerator {
     $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([
+      // The method name (without the ()).
       // TODO: make this required when https://github.com/joachim-n/mutable-typed-data/issues/7
       // is fixed.
       'function_name' => PropertyDefinition::create('string')
@@ -76,6 +77,7 @@ class PHPFunction extends BaseGenerator {
         ->setInternal(TRUE),
       'declaration' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
+      // An array of prefixes such as 'static', 'public'.
       // Not yet compatible with 'declaration' property.
       'prefixes' => PropertyDefinition::create('string')
         ->setMultiple(TRUE),
@@ -87,10 +89,16 @@ class PHPFunction extends BaseGenerator {
         ->setMultiple(TRUE)
         ->setInternal(TRUE)
         ->setProperties([
+          // The name of the parameter, without the initial $.
           'name' => PropertyDefinition::create('string'),
+          // The typehint of the parameter. If this is a class or interface, use
+          // the fully-qualified form: this will produce import statements for
+          // the file automatically.
           'typehint' => PropertyDefinition::create('string')
             // Need to give a type, otherwise PHPCS will complain in tests!
             ->setLiteralDefault('string'),
+          // The description of the parameter. This may be omitted if
+          // 'docblock_inherit' is TRUE.
           'description' => PropertyDefinition::create('string')
             ->setLiteralDefault('Parameter description.'),
           'default_value' => PropertyDefinition::create('string'),

@@ -435,7 +435,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
         $parameters[$i] = [
           'name' => $param['name'],
-          // buildMethodHeader() will fill in a description.
+          // The PHPFunction component will fill in a description.
           // TODO: get this from the docblock in analysis.
           'description' => '',
           'typehint' => $typehint,
