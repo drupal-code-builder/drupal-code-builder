@@ -130,8 +130,6 @@ class Service extends PHPClassFileWithInjection {
     $definition->setProperties($properties);
 
     // Use the plain class name as the exposed property.
-    // TODO: allow a relative namespace to come from a setting, so that, for
-    // example, all services can be put in the \Service namespace.
     $definition->getProperty('plain_class_name')
       ->setInternal(TRUE)
       ->getDefault()
