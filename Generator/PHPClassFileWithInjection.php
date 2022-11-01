@@ -15,11 +15,6 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected $hasStaticFactoryMethod = FALSE;
 
   /**
-   * An array of data about injected services.
-   */
-  protected $injectedServices = [];
-
-  /**
    * Forces the requesting of a constructor method component.
    *
    * If FALSE, a constructor is only requested if there are injected services.
