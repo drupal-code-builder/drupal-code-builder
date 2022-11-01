@@ -234,6 +234,8 @@ class PluginType extends BaseGenerator {
     }
     else {
       // YAML plugin managers need some services injecting.
+      // TODO: move this to the manager?? But then we lose the handling in
+      // the Service class.
       $components['manager']['injected_services'] = [
         'cache.discovery',
         'module_handler',

@@ -30,6 +30,15 @@ class InjectedService extends BaseGenerator {
           ->setCallable([static::class, 'defaultServiceInfo'])
           ->setDependencies('..:service_id')
       ),
+      'class_has_constructor' => PropertyDefinition::create('boolean')
+        ->setLabel('Whether the class injecting this uses a constructor method.')
+        ->setRequired(TRUE),
+      'class_has_static_factory' => PropertyDefinition::create('boolean')
+        ->setLabel('Whether the class injecting this uses a static create() method.')
+        ->setRequired(TRUE),
+      // Allows special cases for assignment in the construct method.
+      'omit_assignment' => PropertyDefinition::create('boolean'),
+      'class_name' => PropertyDefinition::create('string'),
     ]);
 
     return $definition;
@@ -81,6 +90,62 @@ class InjectedService extends BaseGenerator {
    */
   public function getMergeTag() {
     return $this->component_data['containing_component'] . '-' . $this->component_data['service_id'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    if ($this->component_data->class_has_constructor->value) {
+      $service_info = $this->component_data->service_info->value;
+
+      $components['constructor_param'] = [
+        'component_type' => 'PHPFunctionParameter',
+        'containing_component' => '%requester:%requester:construct',
+        'parameter_name' => $service_info['variable_name'],
+        'typehint' => $service_info['typehint'],
+        'description' => $service_info['description'] . '.',
+        'class_name' => $this->component_data->class_name->value,
+        'method_name' => '__construct',
+      ];
+
+      $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
+
+      if ($this->component_data->omit_assignment->isEmpty()) {
+        if ($service_info['type'] == 'service') {
+          $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+        }
+        else {
+          // Pseudoservice: needs to be extracted from a real service.
+          if ($this->component_data->class_has_static_factory->value) {
+            // The static factory method has got the pseudoservice object from the
+            // real service, and passes it to the constructor.
+            $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
+          }
+          else {
+            // There is no static factory, so the constructor receives the real
+            // service. We have to extract it here.
+            $code_line = "\$this->{$service_info['property_name']} = \${$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}');";
+
+            // Also, the constructor parameter is the real service, not the
+            // pseudoservice.
+            $components['constructor_param']['parameter_name'] = $service_info['real_service_variable_name'];
+            $components['constructor_param']['typehint'] = $service_info['real_service_typehint'];
+            $components['constructor_param']['description'] = $service_info['real_service_description'] . '.';
+          }
+        }
+
+        $components['constructor_line'] = [
+          'component_type' => 'PHPFunctionLine',
+          'containing_component' => '%requester:%requester:construct',
+          'code' => $code_line,
+        ];
+      }
+    }
+
+    return $components;
   }
 
   /**

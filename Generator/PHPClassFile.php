@@ -300,7 +300,6 @@ class PHPClassFile extends PHPFile {
       'traits',
       'constants',
       'properties',
-      'constructor',
       // Most functions are made with contained components, but some remain
       // created with section blocks, in particular, those for dependency
       // injection.
@@ -363,11 +362,6 @@ class PHPClassFile extends PHPFile {
    *   An array of blocks
    */
   protected function getSectionBlocks($section_type) {
-    if ($section_type == 'constructor' && isset($this->constructor)) {
-      // TODO: remove this special casing.
-      $this->constructor = [$this->constructor];
-    }
-
     $code_blocks = [];
     if (!empty($this->{$section_type})) {
       foreach ($this->{$section_type} as $component_name => $lines) {

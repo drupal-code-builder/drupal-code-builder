@@ -217,6 +217,8 @@ class PHPUnitTest extends PHPClassFile {
         'component_type' => 'TestContainerService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
+        'class_has_constructor' => FALSE,
+        'class_has_static_factory' => FALSE,
       ];
     }
     foreach ($this->component_data['mocked_services'] as $service_id) {
@@ -224,6 +226,8 @@ class PHPUnitTest extends PHPClassFile {
         'component_type' => 'TestMockedService',
         'containing_component' => '%requester',
         'service_id' => $service_id,
+        'class_has_constructor' => FALSE,
+        'class_has_static_factory' => FALSE,
       ];
     }
 

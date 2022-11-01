@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -11,11 +12,23 @@ use MutableTypedData\Definition\DefaultDefinition;
  *
  * (We can't call this 'Function', as that's a reserved word.)
  *
- * This has two broad modes of operation: either a complete declaration string,
- * or the separate name, prefixes, parameters, and return type. The reason for
- * this is that analysis data will have the declaration string, but for
- * functions completely assembled in code it's easier to define each element
- * of the declaration.
+ * This generator has properties that can be used in several different
+ * combinations:
+ *
+ * - For the declaration, either set complete declaration string, or the
+ *   separate name, prefixes, parameters, and return type. The reason for this
+ *   is that analysis data will have the declaration string, but for functions
+ *   completely assembled in code it's easier to define each element of the
+ *   declaration.
+ * - For the parameters, both the property value and contained
+ *   PHPFunctionParameter components are combined in that order.
+ * - The code of the function can either come from:
+ *    - The getFunctionBody() method if a subclass overrides it.
+ *    - The property value.
+ *    - Contained PHPFunctionLine components.
+ *    - Both the property value and contained PHPFunctionLine components, in
+ *      which case contained component lines either go last, or are inserted to
+ *      replace a token: see self::getContents().
  *
  * Properties include:
  *    - 'declaration': The function declaration, including the function name
@@ -75,7 +88,7 @@ class PHPFunction extends BaseGenerator {
         ->setInternal(TRUE)
         ->setProperties([
           'name' => PropertyDefinition::create('string'),
-          'type' => PropertyDefinition::create('string')
+          'typehint' => PropertyDefinition::create('string')
             // Need to give a type, otherwise PHPCS will complain in tests!
             ->setLiteralDefault('string'),
           'description' => PropertyDefinition::create('string')
@@ -124,10 +137,23 @@ class PHPFunction extends BaseGenerator {
     $function_code = [];
     $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
 
+    // If the declaration isn't set, built it from property values and contained
+    // parameter components.
     if (empty($this->component_data->declaration->value)) {
+      $parameters = [];
+
+      // Handle parameters set as a property first, then contained components.
+      foreach ($this->component_data->parameters as $parameter_data) {
+        $parameters[] = $parameter_data->export();
+      }
+
+      foreach ($this->containedComponents['parameter'] as $parameter_component) {
+        $parameters[] = $parameter_component->getContents();
+      }
+
       $declaration_lines = $this->buildMethodDeclaration(
         $this->component_data->function_name->value,
-        [], // TODO params!
+        $parameters,
         [
           'prefixes' => $this->component_data->prefixes->values(),
           'break_declaration' => $this->component_data->break_declaration->value,
@@ -147,8 +173,8 @@ class PHPFunction extends BaseGenerator {
         $parameters = [];
         foreach ($this->component_data->parameters as $parameter_data) {
           $parameter = '';
-          if (!$parameter_data->type->isEmpty()) {
-            $parameter .= $parameter_data->type->value . ' ';
+          if (!$parameter_data->typehint->isEmpty()) {
+            $parameter .= $parameter_data->typehint->value . ' ';
           }
           $parameter .= '$' . $parameter_data->name->value;
 
@@ -169,10 +195,31 @@ class PHPFunction extends BaseGenerator {
     if ($body = $this->getFunctionBody()) {
       // Do nothing; assignment suffices.
     }
-    elseif (isset($this->component_data['body'])) {
-      $body = is_array($this->component_data['body'])
-        ? $this->component_data['body']
-        : [$this->component_data['body']];
+    else {
+      // Use both property data and contained components.
+      if (isset($this->component_data['body'])) {
+        $body = is_array($this->component_data['body'])
+          ? $this->component_data['body']
+          : [$this->component_data['body']];
+      }
+
+      if (isset($this->containedComponents['line'])) {
+        $contained_component_code_lines = [];
+        foreach ($this->containedComponents['line'] as $parameter_component) {
+          $contained_component_code_lines = array_merge($contained_component_code_lines, $parameter_component->getContents());
+        }
+
+        // Contained component content lines are either added at the end, or
+        // to replace the magic 'CONTAINED_COMPONENTS' lines.
+        if (in_array('CONTAINED_COMPONENTS', $body)) {
+          $index = array_search('CONTAINED_COMPONENTS', $body);
+
+          array_splice($body, $index, 1, $contained_component_code_lines);
+        }
+        else {
+          $body = array_merge($body, $contained_component_code_lines);
+        }
+      }
     }
 
     // Little bit of sugar: to save endless escaping of $ in front of
@@ -212,19 +259,45 @@ class PHPFunction extends BaseGenerator {
       array_splice($lines, 1, 0, '');
     }
 
-    if (!$this->component_data->parameters->isEmpty()) {
+    if (!$this->component_data->parameters->isEmpty() || isset($this->containedComponents['parameter'])) {
       $lines[] = '';
 
+      // Handle parameters set as a property first, then contained components.
       foreach ($this->component_data->parameters as $parameter_data) {
         $param_name_line = '@param ';
         // ARGH TODO! Shouldn't this happen somewhere else???
-        $parameter_data->type->applyDefault();
-         if (!empty($parameter_data->type->value)) {
-          $param_name_line .= $parameter_data->type->value . ' ';
+        $parameter_data->typehint->applyDefault();
+         if (!empty($parameter_data->typehint->value)) {
+          $param_name_line .= $parameter_data->typehint->value . ' ';
         }
         $param_name_line .= '$' . $parameter_data->name->value;
         $lines[] = $param_name_line;
-        $lines[] = '  ' . $parameter_data->description->value;
+
+        // TODO: why default not applied?
+        // Generate a parameter description from the name if none was given.
+        if (empty($parameter_data->description->value)) {
+          // TODO: add a 'lower' case to case converter.
+          $parameter_data->description = CaseString::snake('The_' . $parameter_data->name->value)->sentence() . '.';
+        }
+
+        // Wrap the description to 80 characters minus the indentation.
+        $indent_count =
+          2 // Class code indent.
+          + 2 // Space and the doc comment asterisk.
+          + 3; // Indentation for the parameter description.
+        $wrapped_description = wordwrap($parameter_data->description->value, 80 - $indent_count);
+        $wrapped_description_lines = explode("\n", $wrapped_description);
+
+        foreach ($wrapped_description_lines as $line) {
+          $lines[] = '  ' . $line;
+        }
+      }
+
+      foreach ($this->containedComponents['parameter'] as $parameter_component) {
+        $parameter_data = $parameter_component->getContents();
+
+        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['parameter_name']}";
+        $lines[] = '  ' . $parameter_data['description'];
       }
     }
 
@@ -283,15 +356,21 @@ class PHPFunction extends BaseGenerator {
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
     foreach ($parameters as $parameter_info) {
+      // Allow for parameter info from both code analysis and from a
+      // PHPFunctionParameter component, which don't use the same key (because
+      // using 'name' as a data property name causes issues as it's also a class
+      // property name on the DataItem class.
+      $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
+
       if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
         // Don't type hint scalar types.
-        $declaration_line_params[] = '$' . $parameter_info['name'];
+        $declaration_line_params[] = '$' . $parameter_name;
       }
       elseif (!empty($parameter_info['typehint'])) {
-        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_info['name'];
+        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_name;
       }
       else {
-        $declaration_line_params[] = '$' . $parameter_info['name'];
+        $declaration_line_params[] = '$' . $parameter_name;
       }
     }
 
@@ -320,7 +399,7 @@ class PHPFunction extends BaseGenerator {
    * Gets body lines of the function.
    *
    * Helper to allow classes to override the code lines from the property
-   * value.
+   * value and contents.
    *
    * @return string[]
    *   An array of lines.

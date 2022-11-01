@@ -196,7 +196,7 @@ class DrushCommand extends BaseGenerator {
       // Each option is documented as a @param, but also as an @option.
       $parameters_data[] = [
         'name' => $option_name,
-        'type' => $option_type,
+        'typehint' => $option_type,
         'default_value' => $option_default,
         'description' => "The {$option_name} option.",
       ];
