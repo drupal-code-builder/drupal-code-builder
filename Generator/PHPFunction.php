@@ -253,6 +253,11 @@ class PHPFunction extends BaseGenerator {
   protected function getFunctionDocBlockLines() {
     $lines = $this->component_data->function_docblock_lines->value;
 
+    // An inherit docblock is handled as a default value. Nothing else to do.
+    if ($this->component_data->docblock_inherit->value) {
+      return $lines;
+    }
+
     if (count($lines) > 1) {
       // If there is more than one line, splice in a blank line after the
       // first one.
