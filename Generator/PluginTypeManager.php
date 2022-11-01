@@ -6,9 +6,6 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for a plugin type manager service.
- *
- * @todo: Consider removing this class once Service generator uses child
- * components for its methods.
  */
 class PluginTypeManager extends Service {
 
