@@ -98,8 +98,9 @@ class InjectedService extends BaseGenerator {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
+    $service_info = $this->component_data->service_info->value;
+
     if ($this->component_data->class_has_constructor->value) {
-      $service_info = $this->component_data->service_info->value;
 
       $components['constructor_param'] = [
         'component_type' => 'PHPFunctionParameter',
@@ -143,6 +144,35 @@ class InjectedService extends BaseGenerator {
           'code' => $code_line,
         ];
       }
+    }
+
+    if ($this->component_data->class_has_static_factory->value) {
+      if ($service_info['type'] == 'service') {
+        $container_extraction = "\$container->get('{$service_info['id']}'),";
+
+        $property_assignment = [
+          'id'            => $service_info['id'],
+          'property_name' => $service_info['property_name'],
+          'variable_name' => $service_info['variable_name'],
+        ];
+      }
+      else {
+        // Pseudoservice: needs to be extracted from a real service.
+        $container_extraction = "\$container->get('{$service_info['real_service']}')->{$service_info['service_method']}('{$service_info['variant']}'),";
+
+        $property_assignment = [
+          'id'            => $service_info['id'],
+          'property_name' => $service_info['property_name'],
+          'variable_name' => $service_info['variable_name'],
+          'parameter_extraction' => "{$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}')",
+        ];
+      }
+
+      $components['create_line'] = [
+        'component_type' => 'PHPFunctionLine',
+        'containing_component' => '%requester:%requester:create',
+        'code' => '  ' . $container_extraction,
+      ];
     }
 
     return $components;

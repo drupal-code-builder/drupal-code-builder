@@ -35,9 +35,73 @@ class PHPClassFileWithInjection extends PHPClassFile {
     $components = parent::requiredComponents();
 
     if (!$this->component_data->injected_services->isEmpty() || $this->forceConstructComponent) {
-      // Assemble the parameters to the __construct() method.
-      // These are the base parameter + the parent injected services + our
-      // injected services.
+      // The static factory create() method.
+      if ($this->hasStaticFactoryMethod) {
+        $create_parameters = [
+          [
+            'name' => 'container',
+            'typehint' => '\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
+          ],
+        ];
+
+        $base_create_parameters = $this->getCreateParameters();
+        $create_parameters = array_merge($create_parameters, $base_create_parameters);
+
+
+        // The create() factory method's code consists of a single statement,
+        // the return of the object created with 'new static()'. The arguments
+        // of this call are in three groups:
+        // - the parameters which the base class expects for its constructor,
+        //   e.g. PluginBase.
+        // - services extracted from the container for parent classes, e.g. the
+        //   plugin type base class.
+        // - services requested by the component data for this class.
+        $static_call_lines = [];
+
+        $construct_base_arguments = $this->getConstructBaseParameters();
+        foreach ($construct_base_arguments as $parameter) {
+          if (isset($parameter['extraction'])) {
+            // Some fixed parameters have an extraction of sorts, as they are values
+            // from the plugin $configuration array, therefore an expression is
+            // passed to the call rather than a variable.
+            $static_call_lines[] = $parameter['extraction'] . ',';
+          }
+          else {
+            $static_call_lines[] = '$' . $parameter['name'] . ',';
+          }
+        }
+
+        $parent_injected_services = $this->getConstructParentInjectedServices();
+        foreach ($parent_injected_services as $parent_container_extraction) {
+          $static_call_lines[] = $parent_container_extraction['extraction'] . ',';
+        }
+
+        $create_body = [];
+        $create_body[] = 'return new static(';
+        foreach ($static_call_lines as $line) {
+          $create_body[] = '  ' . $line;
+        }
+        // Parameters from requested services will go here. Each one gets a
+        // terminal comma, but a trailing comma in a function call is fine since
+        // PHP 7.3 and will likely be adopted as a Drupal coding standard (see
+        // https://www.drupal.org/project/coding_standards/issues/2707507) and
+        // so dealing with removing it dynamically is not worth the faff.
+        $create_body[] = 'CONTAINED_COMPONENTS';
+        $create_body[] = ');';
+
+        $components['create'] = [
+          'component_type' => 'PHPFunction',
+          'function_name' => 'create',
+          'containing_component' => '%requester',
+          'docblock_inherit' => TRUE,
+          'prefixes' => ['public', 'static'],
+          'parameters' => $create_parameters,
+          'body' => $create_body,
+        ];
+      }
+
+      // The __construct() method. The parameters to this are the base parameter
+      // + the parent injected services + our injected services.
       $base_parameters = $this->getConstructBaseParameters();
       $parent_injected_services = $this->getConstructParentInjectedServices();
 
@@ -153,83 +217,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
 
         $this->properties[] = $property_code;
       }
-
-      if ($this->hasStaticFactoryMethod) {
-        // create() method.
-        // Function data has been set by buildComponentContents(). WHAT DO I MEAN? TODO?
-        // Goes first in the functions.
-        $this->functions = array_merge([$this->codeBodyClassMethodCreate()], $this->functions);
-      }
     }
-  }
-
-  /**
-   * Creates the code lines for the create() method.
-   */
-  protected function codeBodyClassMethodCreate() {
-    $parameters = [
-      [
-        'name' => 'container',
-        'typehint' => '\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
-      ],
-    ];
-
-    $base_create_parameters = $this->getCreateParameters();
-    $parameters = array_merge($parameters, $base_create_parameters);
-
-    $code = $this->buildMethodHeader(
-      'create',
-      $parameters,
-      [
-        'inheritdoc' => TRUE,
-        'prefixes' => ['public', 'static'],
-      ]
-    );
-
-    $code[] = '  return new static(';
-
-    // The create() factory method's code consists of a single statement, the
-    // return of the object created with 'new static()'.
-    // The arguments of this call are in three groups:
-    // - the parameters which the base class expects for its constructor, e.g.
-    //   PluginBase.
-    // - services extracted from the container for parent classes, e.g. the
-    //   plugin type base class.
-    // - services requested by the component data for this class.
-    $static_call_lines = [];
-
-    $construct_base_arguments = $this->getConstructBaseParameters();
-    foreach ($construct_base_arguments as $parameter) {
-      if (isset($parameter['extraction'])) {
-        // Some fixed parameters have an extraction of sorts, as they are values
-        // from the plugin $configuration array, therefore an expression is
-        // passed to the call rather than a variable.
-        $static_call_lines[] = '    ' . $parameter['extraction'] . ',';
-      }
-      else {
-        $static_call_lines[] = '    ' . '$' . $parameter['name'] . ',';
-      }
-    }
-
-    $parent_injected_services = $this->getConstructParentInjectedServices();
-    foreach ($parent_injected_services as $parent_container_extraction) {
-      $static_call_lines[] = '    ' . $parent_container_extraction['extraction'] . ',';
-    }
-
-    foreach ($this->getContentsElement('container_extraction') as $container_extraction) {
-      $static_call_lines[] = '    ' . $container_extraction;
-    }
-
-    // Remove the last comma.
-    end($static_call_lines);
-    $last_line_key = key($static_call_lines);
-    $static_call_lines[$last_line_key] = rtrim($static_call_lines[$last_line_key], ',');
-    $code = array_merge($code, $static_call_lines);
-
-    $code[] = '  );';
-    $code[] = '}';
-
-    return $code;
   }
 
 }
