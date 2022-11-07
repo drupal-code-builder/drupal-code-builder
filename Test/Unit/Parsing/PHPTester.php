@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
 use DrupalCodeBuilder\File\CodeFileInterface;
 use DrupalCodeBuilder\PhpParser\GroupingNodeVisitor;
+use DrupalCodeBuilder\Test\Constraint\CodeIsValidPhp;
 use PHPUnit\Framework\Assert;
 use PHP_CodeSniffer;
 use PhpParser\Comment\Doc;
@@ -103,27 +104,9 @@ class PHPTester {
    * Assert the code is correctly-formed PHP.
    */
   protected function assertWellFormedPHP() {
-    // Escape all the backslashes. This is to prevent any escaped character
-    // sequences from being formed by namespaces and long classes, e.g.
-    // 'namespace Foo\testmodule;' will treat the '\t' as a tab character.
-    // TODO: find a better way to do this that doesn't involve changing the
-    // code.
-    $escaped_code = str_replace('\\', '\\\\', $this->phpCode);
+    $constraint = new CodeIsValidPhp();
 
-    // Pass the code to PHP for linting.
-    $output = NULL;
-    $exit = NULL;
-    $result = exec(sprintf('echo %s | php -l', escapeshellarg($escaped_code)), $output, $exit);
-
-    if (!empty($exit)) {
-      // Dump the code lines as an array so we get the line numbers.
-      $code_lines = explode("\n", $this->phpCode);
-      // Re-key it so the line numbers start at 1.
-      $code_lines = array_combine(range(1, count($code_lines)), $code_lines);
-      dump($code_lines);
-
-      Assert::fail("Error parsing the code resulted in: \n" . implode("\n", $output));
-    }
+    Assert::assertThat($this->phpCode, $constraint, "The code file {$this->phpCodeFilePath} is valid PHP.");
   }
 
   /**
