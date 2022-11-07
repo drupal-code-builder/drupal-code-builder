@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
 use DrupalCodeBuilder\File\CodeFileInterface;
 use DrupalCodeBuilder\PhpParser\GroupingNodeVisitor;
+use DrupalCodeBuilder\Test\Constraint\CodeAdheresToCodingStandards;
 use DrupalCodeBuilder\Test\Constraint\CodeIsValidPhp;
 use PHPUnit\Framework\Assert;
 use PHP_CodeSniffer;
@@ -127,62 +128,9 @@ class PHPTester {
       $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
     }
 
-    $phpcs_runner = $this->setUpPHPCS($excluded_sniffs);
+    $constraint = new CodeAdheresToCodingStandards($this->drupalMajorVersion, $excluded_sniffs, $this->phpCodeFilePath);
 
-    // Process the file with PHPCS.
-
-    // Create and process a single file, faking the path so the report looks nice.
-    // $fileContent = "<?php\necho 'hi';";
-    $file = new DummyFile($this->phpCode, $phpcs_runner->ruleset, $phpcs_runner->config);
-    // We need to pass in a value for the filename, even though the file does
-    // not exist. Use a dummy if the PHPTester was constructed without a
-    // filepath.
-    $file->path = $this->phpCodeFilePath ?? '/path/to/my/file.php';
-    // Process the file.
-    $phpcs_runner->processFile($file);
-    // Print out the reports.
-    // $phpcs_runner->reporter->printReports();
-
-    // $phpcsFile = $phpcs_runner->processFile('fictious file name', $this->phpCode);
-
-    $error_count   = $file->getErrorCount();
-    $warning_count = $file->getWarningCount();
-
-    $total_error_count = $error_count + $warning_count;
-
-    if (empty($total_error_count)) {
-      // No pass method :(
-      //$this->pass("PHPCS passed.");
-      return;
-    }
-
-    // Get the reporting to process the errors.
-    $this->reporting = new \PHP_CodeSniffer\Reporter($this->PHPCodeSnifferConfig);
-    // $reportClass = $this->reporting->factory('full');
-    // Prepare the report, but don't call generateFileReport() as that echo()s
-    // it!
-    $reportData  = $this->reporting->prepareFileReport($file);
-    //$reportClass->generateFileReport($reportData, $phpcsFile);
-
-    // Dump the code lines as an array so we get the line numbers.
-    $code_lines = explode("\n", $this->phpCode);
-    // Re-key it so the line numbers start at 1.
-    $code_lines = array_combine(range(1, count($code_lines)), $code_lines);
-    dump($code_lines);
-
-    foreach ($reportData['messages'] as $line_number => $columns) {
-      foreach ($columns as $column_number => $messages) {
-        $code_line = $code_lines[$line_number];
-        $before = substr($code_line, 0, $column_number - 1);
-        $after = substr($code_line, $column_number - 1);
-        dump($before . '^' . $after);
-        foreach ($messages as $message_info) {
-          dump("{$message_info['type']}: line $line_number, column $column_number: {$message_info['message']} - {$message_info['source']}");
-        }
-      }
-    }
-
-    Assert::fail("PHPCS failed with $error_count errors and $warning_count warnings.");
+    Assert::assertThat($this->phpCode, $constraint, "The code file {$this->phpCodeFilePath} adheres to Drupal coding standards.");
   }
 
   /**
