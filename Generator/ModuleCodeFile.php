@@ -113,9 +113,13 @@ class ModuleCodeFile extends PHPFile {
 
         $first_function = $ast_node;
         $comments = $first_function->getAttribute('comments');
-        $docblock = end($comments);
 
-        $first_function->setAttribute('comments', [$docblock]);
+        // Allow for crappy code with missing docblock.
+        if ($comments) {
+          $docblock = end($comments);
+
+          $first_function->setAttribute('comments', [$docblock]);
+        }
 
         // Only act on the first function.
         break;
