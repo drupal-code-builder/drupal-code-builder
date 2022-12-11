@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -71,9 +72,8 @@ class PHPFunction extends BaseGenerator {
         ->setDefault(DefaultDefinition::create()
           ->setCallable([static::class, 'defaultDocblockLines'])
       ),
-      'doxygen_tag_lines' => PropertyDefinition::create('string')
+      'doxygen_tag_lines' => PropertyDefinition::create('mapping')
         ->setLabel("Doxygen tags to go after the standard ones.")
-        ->setMultiple(TRUE)
         ->setInternal(TRUE),
       'declaration' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
@@ -113,6 +113,12 @@ class PHPFunction extends BaseGenerator {
       'body_indented' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
         ->setLiteralDefault(FALSE),
+      // Whether this is a procedural function or a class method. Fiddly but
+      // less so than making a subclass just for this, probably. Defaults to
+      // TRUE as most things are methods.
+      'method' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(TRUE),
     ]);
 
     return $definition;
@@ -143,7 +149,7 @@ class PHPFunction extends BaseGenerator {
    */
   public function getContents(): array {
     $function_code = [];
-    $function_code = array_merge($function_code, $this->docBlock($this->getFunctionDocBlockLines()));
+    $function_code = array_merge($function_code, $this->getFunctionDocBlockLines());
 
     // If the declaration isn't set, built it from property values and contained
     // parameter components.
@@ -253,72 +259,55 @@ class PHPFunction extends BaseGenerator {
   }
 
   /**
-   * Gets the bare lines to format as the docblock.
+   * Gets the docblock lines, with docblock formatting.
    *
    * @return string[]
    *   An array of lines.
    */
   protected function getFunctionDocBlockLines() {
-    $lines = $this->component_data->function_docblock_lines->value;
-
+    // TODO: no need for default value in properties
     // An inherit docblock is handled as a default value. Nothing else to do.
     if ($this->component_data->docblock_inherit->value) {
-      return $lines;
+      return DocBlock::inheritdoc()->render();
     }
 
-    if (count($lines) > 1) {
-      // If there is more than one line, splice in a blank line after the
-      // first one.
-      array_splice($lines, 1, 0, '');
+    if ($this->component_data->method->value) {
+      $docblock = DocBlock::method();
+    }
+    else {
+      $docblock = DocBlock::function();
+    }
+
+    $lines = $this->component_data->function_docblock_lines->value;
+
+    foreach ($lines as $line) {
+      $docblock[] = $line;
     }
 
     if (!$this->component_data->parameters->isEmpty() || isset($this->containedComponents['parameter'])) {
-      $lines[] = '';
-
       // Handle parameters set as a property first, then contained components.
       foreach ($this->component_data->parameters as $parameter_data) {
-        $param_name_line = '@param ';
         // ARGH TODO! Shouldn't this happen somewhere else???
         $parameter_data->typehint->applyDefault();
-         if (!empty($parameter_data->typehint->value)) {
-          $param_name_line .= $parameter_data->typehint->value . ' ';
-        }
-        $param_name_line .= '$' . $parameter_data->name->value;
-        $lines[] = $param_name_line;
 
-        // TODO: why default not applied?
-        // Generate a parameter description from the name if none was given.
-        if (empty($parameter_data->description->value)) {
-          // TODO: add a 'lower' case to case converter.
-          $parameter_data->description = CaseString::snake('The_' . $parameter_data->name->value)->sentence() . '.';
-        }
-
-        // Wrap the description to 80 characters minus the indentation.
-        $indent_count =
-          2 // Class code indent.
-          + 2 // Space and the doc comment asterisk.
-          + 3; // Indentation for the parameter description.
-        $wrapped_description = wordwrap($parameter_data->description->value, 80 - $indent_count);
-        $wrapped_description_lines = explode("\n", $wrapped_description);
-
-        foreach ($wrapped_description_lines as $line) {
-          $lines[] = '  ' . $line;
-        }
+        $docblock->param($parameter_data->typehint->value, $parameter_data->name->value, $parameter_data->description->value);
       }
 
       foreach ($this->containedComponents['parameter'] as $parameter_component) {
         $parameter_data = $parameter_component->getContents();
 
-        $lines[] = "@param {$parameter_data['typehint']} \${$parameter_data['parameter_name']}";
-        $lines[] = '  ' . $parameter_data['description'];
+        $docblock->param($parameter_data['typehint'], $parameter_data['parameter_name'], $parameter_data['description']);
       }
     }
 
     if (!$this->component_data->doxygen_tag_lines->isEmpty()) {
-      $lines = array_merge($lines, [''], $this->component_data->doxygen_tag_lines->values());
+      foreach ($this->component_data->doxygen_tag_lines->value as $tag_data) {
+        $tag = array_shift($tag_data);
+        $docblock->$tag(...$tag_data);
+      }
     }
 
-    return $lines;
+    return $docblock->render();
   }
 
   /**

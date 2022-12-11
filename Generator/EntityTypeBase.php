@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
@@ -480,10 +481,9 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function getClassDocBlockLines() {
+  protected function getClassDocBlock(): DocBlock {
     //dump($this->component_data);
-    $docblock_lines = parent::getClassDocBlockLines();
-    $docblock_lines[] = '';
+    $docblock = parent::getClassDocBlock();
 
     $annotation_data = $this->getAnnotationData();
 
@@ -500,9 +500,9 @@ abstract class EntityTypeBase extends PHPClassFile {
 
     $annotation = ClassAnnotation::{$this->annotationClassName}($annotation_data_ordered);
 
-    $docblock_lines = array_merge($docblock_lines, $annotation->render());
+    $docblock->addAnnotation($annotation);
 
-    return $docblock_lines;
+    return $docblock;
   }
 
   /**

@@ -10,35 +10,6 @@ use CaseConverter\CaseString;
 trait PHPFormattingTrait {
 
   /**
-   * Helper to format text as docblock.
-   *
-   * @param @lines
-   *  An array of lines, or a single line of text. Lines to be normally indented
-   *  should have no leading whitespace.
-   *
-   * @return
-   *  An array of lines for the docblock with start and end PHP comment markers.
-   */
-  function docBlock($lines) {
-    if (!is_array($lines)) {
-      $lines = [$lines];
-    }
-
-    $lines = array_merge(
-      ["/**"],
-      array_map(function ($line) {
-        if (empty($line)) {
-          return ' *';
-        }
-        return " * $line";
-      }, $lines),
-      [" */"]
-    );
-
-    return $lines;
-  }
-
-  /**
    * Indent all the non-empty lines in a block of code.
    *
    * @param array $lines

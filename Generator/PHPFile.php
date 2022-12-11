@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 
 /**
  * Generator for general PHP code files.
@@ -71,11 +72,11 @@ abstract class PHPFile extends File {
    * Return the file doxygen header and any custom header code.
    */
   function code_header() {
-    $lines = [
-      "@file",
-      $this->fileDocblockSummary(),
-    ];
-    $code = $this->docBlock($lines);
+    $docblock = DocBlock::file();
+
+    $docblock[] = $this->fileDocblockSummary();
+
+    $code = $docblock->render();
     // Blank line after the file docblock.
     $code[] = '';
     return $code;

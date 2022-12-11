@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\Docblock;
 use MutableTypedData\Data\DataItem;
 
 /**
@@ -237,12 +238,12 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function getClassDocBlockLines() {
-    $docblock_lines = parent::getClassDocBlockLines();
-    $docblock_lines[] = '';
-    $docblock_lines[] = '@group %module';
+  protected function getClassDocBlock(): DocBlock {
+    $docblock = parent::getClassDocBlock();
 
-    return $docblock_lines;
+    $docblock->group('%module');
+
+    return $docblock;
   }
 
   /**
@@ -315,11 +316,11 @@ class PHPUnitTest extends PHPClassFile {
     if (!empty($this->getContentsElement('service_property_container'))) {
       // Service class property.
       foreach ($this->getContentsElement('service_property_container') as $service_property) {
-        $property_code = $this->docBlock([
-          $service_property['description'] . '.',
-          '',
-          '@var ' . $service_property['typehint']
-        ]);
+        $docblock = DocBlock::property();
+        $docblock[] = $service_property['description'] . '.';
+        $docblock->var($service_property['typehint']);
+        $property_code = $docblock->render();
+
         $property_code[] = 'protected $' . $service_property['property_name'] . ';';
 
         $this->properties[] = $property_code;

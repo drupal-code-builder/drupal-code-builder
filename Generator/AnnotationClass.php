@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 
 /**
  * Generator for PHP class files that define a class annotation.
@@ -27,13 +28,12 @@ class AnnotationClass extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function getClassDocBlockLines() {
-    $lines = parent::getClassDocBlockLines();
+  protected function getClassDocBlock(): DocBlock {
+    $docblock = parent::getClassDocBlock();
 
-    $lines[] = "";
-    $lines[] = "@Annotation";
+    $docblock->Annotation();
 
-    return $lines;
+    return $docblock;
   }
 
   /**

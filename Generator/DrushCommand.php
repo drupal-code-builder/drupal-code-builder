@@ -153,7 +153,7 @@ class DrushCommand extends BaseGenerator {
       $this->component_data['command_description'],
     ];
 
-    $usage_line = "@usage drush {$this->component_data['command_name']}";
+    $usage_line = "drush {$this->component_data['command_name']}";
 
     $parameters_data = [];
     foreach ($this->component_data->command_parameters as $parameter) {
@@ -201,18 +201,17 @@ class DrushCommand extends BaseGenerator {
         'description' => "The {$option_name} option.",
       ];
 
-      $doxygen_tag_lines[] = "@option {$option_name} Option description.";
+      $doxygen_tag_lines[] = ['option', $option_name . ' Option description.', ''];
 
       // Add the options to the @usage tag.
       $usage_line .= ' --' . $option_name;
     }
 
-    $doxygen_tag_lines[] = "@command {$this->component_data['command_name']}";
-    $doxygen_tag_lines[] = $usage_line;
-    $doxygen_tag_lines[] = "  {$this->component_data['command_description']}";
+    $doxygen_tag_lines[] = ['command', $this->component_data['command_name']];
+    $doxygen_tag_lines[] = ['usage', $usage_line, $this->component_data['command_description']];
 
     if (!empty($this->component_data['command_name_aliases'])) {
-      $doxygen_tag_lines[] =  "@aliases " . implode(',', $this->component_data['command_name_aliases']);
+      $doxygen_tag_lines[] = ['aliases', implode(',', $this->component_data['command_name_aliases']), ''];
     }
 
     $components['command_method'] = [

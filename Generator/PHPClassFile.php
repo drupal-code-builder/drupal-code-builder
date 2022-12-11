@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Data\DataItem;
 
@@ -191,11 +192,10 @@ class PHPClassFile extends PHPFile {
   function code_body() {
     // Get the class code from the class docblock onwards first, so it can be
     // then processed for qualified class names.
-    $class_doc_block = $this->getClassDocBlockLines();
-    $class_doc_block = $this->docBlock($class_doc_block);
+    $class_doc_block = $this->getClassDocBlock();
 
     $class_code = array_merge(
-      $class_doc_block,
+      $class_doc_block->render(),
       $this->class_declaration(),
       $this->classCodeBody()
     );
@@ -229,25 +229,22 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Gets the bare lines to format as the docblock.
+   * Gets the !!! lines to format as the docblock.
    *
-   * @return string[]
+   * @return string[] !!
    *   An array of lines.
    */
-  protected function getClassDocBlockLines() {
-    $lines = [];
+  protected function getClassDocBlock(): DocBlock {
+    $docblock = DocBlock::class();
 
     if ($this->component_data->class_docblock_lines->value) {
-      $lines = $this->component_data['class_docblock_lines'];
-
-      if (count($lines) > 1) {
-        // If there is more than one line, splice in a blank line after the
-        // first one.
-        array_splice($lines, 1, 0, '');
+      // This is a mapping not a multiple string for FKW reasons.
+      foreach ($this->component_data->class_docblock_lines->value as $line) {
+        $docblock[] = $line;
       }
     }
     elseif ($this->component_data->docblock_first_line->value) {
-      $lines[] = $this->component_data['docblock_first_line'];
+      $docblock[] = $this->component_data['docblock_first_line'];
     }
     else {
       // Complain here, as every class should have something for its first
@@ -255,7 +252,7 @@ class PHPClassFile extends PHPFile {
       assert(FALSE, "Missing first docblock line.");
     }
 
-    return $lines;
+    return $docblock;
   }
 
   /**
@@ -423,17 +420,14 @@ class PHPClassFile extends PHPFile {
       'break_array_value' => FALSE,
     ];
 
-    $docblock_lines = [];
+    $docblock = Docblock::property();
 
-    $docblock_lines[] = $options['docblock_first_line'];
-
-    if (!empty($options['docblock_lines'])) {
-      $docblock_lines[] = '';
-      $docblock_lines = array_merge($docblock_lines, $options['docblock_lines']);
+    $docblock[] = $options['docblock_first_line'];
+    foreach ($options['docblock_lines'] ?? [] as $docblock_line) {
+      $docblock[] = $docblock_line;
     }
 
-    $docblock_lines[] = '';
-    $docblock_lines[] = '@var ' . $type;
+    $docblock->var($type);
 
     $declaration_lines = [];
     $declaration_first_line = '';
@@ -500,7 +494,7 @@ class PHPClassFile extends PHPFile {
 
 
     $property_code = array_merge(
-      $this->docBlock($docblock_lines),
+      $docblock->render(),
       $declaration_lines
     );
 

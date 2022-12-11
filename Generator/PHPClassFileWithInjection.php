@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Generator\Render\Docblock;
+
 /**
  * Generator for PHP class files that have services injected.
  */
@@ -203,11 +205,11 @@ class PHPClassFileWithInjection extends PHPClassFile {
     if (isset($this->containedComponents['injected_service'])) {
       // Service class property.
       foreach ($this->getContentsElement('service_property') as $service_property) {
-        $property_code = $this->docBlock([
-          $service_property['description'] . '.',
-          '',
-          '@var ' . $service_property['typehint']
-        ]);
+        $docblock = DocBlock::property();
+        $docblock[] = $service_property['description'] . '.';
+        $docblock->var($service_property['typehint']);
+
+        $property_code = $docblock->render();
         $property_code[] = 'protected $' . $service_property['property_name'] . ';';
 
         $this->properties[] = $property_code;

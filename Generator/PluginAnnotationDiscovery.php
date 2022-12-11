@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
+use DrupalCodeBuilder\Generator\Render\Docblock;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
@@ -289,28 +290,26 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   /**
    * Procudes the docblock for the class.
    */
-  protected function getClassDocBlockLines() {
-    $docblock_lines = parent::getClassDocBlockLines();
+  protected function getClassDocBlock(): DocBlock {
+    $docblock = parent::getClassDocBlock();
 
     // Do not include the annotation if this plugin is a class override.
     if (!empty($this->component_data['replace_parent_plugin'])) {
-      return $docblock_lines;
+      return $docblock;
     }
 
-    $docblock_lines[] = '';
+    $docblock->addAnnotation($this->classAnnotation());
 
-    $docblock_lines = array_merge($docblock_lines, $this->classAnnotation());
-
-    return $docblock_lines;
+    return $docblock;
   }
 
   /**
-   * Produces the plugin class annotation lines.
+   * Produces the plugin class annotation.
    *
-   * @return
-   *   An array of lines suitable for docBlock().
+   * @return \DrupalCodeBuilder\Generator\Render\ClassAnnotation
+   *   A class annotation object.
    */
-  function classAnnotation() {
+  function classAnnotation(): ClassAnnotation {
     $annotation_class_path = explode('\\', $this->plugin_type_data['plugin_definition_annotation_name']);
     $annotation_class = array_pop($annotation_class_path);
 
@@ -318,9 +317,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     if (!empty($this->plugin_type_data['annotation_id_only'])) {
       $annotation = ClassAnnotation::{$annotation_class}($this->component_data['prefixed_plugin_name']);
 
-      $annotation_lines = $annotation->render();
-
-      return $annotation_lines;
+      return $annotation;
     }
 
     $annotation_variables = $this->plugin_type_data['plugin_properties'];
@@ -360,9 +357,8 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
     }
 
     $annotation = ClassAnnotation::{$annotation_class}($annotation_data);
-    $annotation_lines = $annotation->render();
 
-    return $annotation_lines;
+    return $annotation;
   }
 
   /**
