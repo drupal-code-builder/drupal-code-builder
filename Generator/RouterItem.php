@@ -382,7 +382,7 @@ class RouterItem extends BaseGenerator {
    */
   public static function controllerRelativeClassFromRoutePath(string $path) {
     $path  = str_replace(['{', '}'], '', $path);
-    $snake = str_replace(['/', '-'], '_', $path);
+    $snake = str_replace(['/', '-', '.'], '_', $path);
     $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
 
     return $controller_class_name;

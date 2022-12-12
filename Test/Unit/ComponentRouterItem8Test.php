@@ -64,6 +64,18 @@ class ComponentRouterItem8Test extends TestBase {
             'entity_access_operation' => 'update',
           ],
         ],
+        [
+          'path' => '/my/path.with.dots-and-dashes_and_underscores',
+          'title' => 'My Parameter Page',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'entity_access',
+            'entity_type_id' => 'node',
+            'entity_access_operation' => 'update',
+          ],
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -76,6 +88,7 @@ class ComponentRouterItem8Test extends TestBase {
       "src/Controller/MyPathController.php",
       "src/Controller/MyOtherPathController.php",
       "src/Controller/MyParameterPathController.php",
+      'src/Controller/MyPathWithDotsAndDashesAndUnderscoresController.php',
     ], $files);
 
     $routing_file = $files["$module_name.routing.yml"];
@@ -107,6 +120,13 @@ class ComponentRouterItem8Test extends TestBase {
 
     $method_tester = $php_tester->getMethodTester('content');
     $method_tester->assertMethodHasDocblockLine('Callback for the test_module.my.path route.');
+
+    $controller_file = $files['src/Controller/MyPathWithDotsAndDashesAndUnderscoresController.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    // The first line of the callback's docblock will be too long because of the
+    // long route name.
+    $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.DocComment.ShortSingleLine']);
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathWithDotsAndDashesAndUnderscoresController");
   }
 
   /**
