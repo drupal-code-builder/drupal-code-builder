@@ -388,9 +388,9 @@ class RouterItem extends BaseGenerator {
 
       $components["controller-content"] = [
         'component_type' => 'PHPFunction',
-        'function_name' => 'validate',
+        'function_name' => 'content',
         'containing_component' => "%requester:controller",
-        'declaration' => 'public function content()',
+        'prefixes' => ['public'],
         'function_docblock_lines' => ["Callback for the {$this->component_data['route_name']} route."],
       ];
     }
