@@ -42,7 +42,7 @@ class Drush extends BaseEnvironment {
       if ($directory) {
         // In pure Drush, the hooks folder contains subfolder for hooks for
         // each major version of Drupal.
-        if (substr($directory, -1, 1) != '/') {
+        if (!str_ends_with($directory, '/')) {
           $directory .= '/';
         }
         $directory .= $this->getCoreMajorVersion();

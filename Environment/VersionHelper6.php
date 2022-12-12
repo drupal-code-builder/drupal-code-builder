@@ -18,7 +18,7 @@ class VersionHelper6 extends VersionHelper7 {
    * Absolute paths are unchanged.
    */
   function directoryPath(&$directory) {
-    if (substr($directory, 0, 1) != '/') {
+    if (!str_starts_with($directory, '/')) {
       // Relative, and so assumed to be in Drupal's files folder: prepend this to
       // the given directory.
       // sanity check. need to verify /files exists before we do anything. see http://drupal.org/node/367138

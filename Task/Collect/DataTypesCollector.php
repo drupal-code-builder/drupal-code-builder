@@ -84,13 +84,13 @@ class DataTypesCollector extends CollectorBase {
       }
 
       // Skip types that are to do with fields.
-      if (substr($type, 0, strlen('field.')) == 'field.') {
+      if (str_starts_with($type, 'field.')) {
         continue;
       }
 
       // Skip types that don't seem like they should be used for config
       // entities (??).
-      if (substr($type, - strlen('settings')) == 'settings') {
+      if (str_ends_with($type, 'settings')) {
         continue;
       }
       if (strpos($type, 'date_format') !== FALSE) {

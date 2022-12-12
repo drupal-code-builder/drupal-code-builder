@@ -23,7 +23,7 @@ class LibraryJSAsset extends BaseGenerator {
         ->setProcessing(function ($data) {
           if (!filter_var($data->value, FILTER_VALIDATE_URL)) {
             // DIRTY HACK! processing gets repeated ARGH. TODO ARRRRRGH.
-            if (substr($data->value, 0, 3) != 'js/') {
+            if (!str_starts_with($data->value, 'js/')) {
               $data->value = 'js/' . $data->value . '.js';
             }
           }

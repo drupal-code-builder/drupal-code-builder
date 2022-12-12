@@ -553,7 +553,7 @@ class PHPClassFile extends PHPFile {
     // (This can happen either if the full stop is missing, or if the first
     // line overruns to two, in which case our analysis will have truncated
     // the sentence.)
-    if (substr($comment, -1) != '.') {
+    if (!str_ends_with($comment, '.')) {
       $comment .= '.';
     }
 

@@ -131,7 +131,7 @@ class HooksCollector8 extends HooksCollector {
       //dsm($matches, $module);
 
       // Mark core files.
-      $core = (substr($file['uri'], 0, 4) == 'core');
+      $core = str_starts_with($file['uri'], 'core');
 
       $hook_files[$filename] = [
         'original' => $drupal_root . '/' . $file['uri'], // no idea if useful

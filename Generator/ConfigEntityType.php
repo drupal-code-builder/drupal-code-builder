@@ -285,7 +285,7 @@ class ConfigEntityType extends EntityTypeBase {
       // Just take the label as the description.
       // TODO: add a description property?
       $description = $schema_item['label'];
-      if (substr($description, 0, 1) != '.') {
+      if (!str_ends_with($description, '.')) {
         $description .= '.';
       }
 

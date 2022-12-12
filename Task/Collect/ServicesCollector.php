@@ -163,10 +163,10 @@ class ServicesCollector extends CollectorBase  {
 
     foreach ($definitions as $service_id => $definition) {
       // Skip services from Drush.
-      if (substr($service_id, 0, strlen('drush.')) == 'drush.') {
+      if (str_starts_with($service_id, 'drush.')) {
         continue;
       }
-      if (substr($service_id, - strlen('.commands')) == '.commands') {
+      if (str_ends_with($service_id, '.commands')) {
         continue;
       }
 
@@ -200,7 +200,7 @@ class ServicesCollector extends CollectorBase  {
       }
 
       // Unproxy an original service that's been proxied.
-      if (substr($service_id, 0, strlen('drupal.proxy_original_service.')) == 'drupal.proxy_original_service.') {
+      if (str_starts_with($service_id, 'drupal.proxy_original_service.')) {
         $service_id = substr($service_id, strlen('drupal.proxy_original_service.'));
       }
 
@@ -248,7 +248,7 @@ class ServicesCollector extends CollectorBase  {
       }
 
       // Prefix the class with a backslash if it doesn't already have it.
-      if (substr($service_class, 0, 1) != '\\') {
+      if (!str_starts_with($service_class, '\\')) {
         $service_class = '\\' . $service_class;
       }
 
@@ -347,7 +347,7 @@ class ServicesCollector extends CollectorBase  {
     // obtained from the reflection.
     $interfaces = $reflection->getInterfaces();
     foreach (array_keys($interfaces) as $interface) {
-      if (substr($interface, -(strlen($interface_short_name) + 1)) == '\\' . $interface_short_name) {
+      if (str_ends_with($interface, '\\' . $interface_short_name)) {
         // The reflection doesn't give the initial '\'.
         $full_interface_name = '\\' . $interface;
 

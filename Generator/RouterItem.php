@@ -508,8 +508,8 @@ class RouterItem extends BaseGenerator {
     $route_yaml = [];
 
     // Prepend a slash to the path for D8 if one not given.
-    if (substr($path, 0, 1) != '/') {
-      $path = '/' . $path;
+    if (!str_starts_with($path, '/')) {
+      $path  = '/' . $path;
     }
     $route_yaml['path'] = $path;
     $route_yaml['defaults']['_title'] = $this->component_data['title'];

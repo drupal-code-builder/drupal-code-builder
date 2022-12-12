@@ -553,17 +553,17 @@ class PluginTypesCollector extends CollectorBase  {
       $property_docblock = $property_reflection->getDocComment();
       $property_docblock_lines = explode("\n", $property_docblock);
       foreach ($property_docblock_lines as $line) {
-        if (substr($line, 0, 3) == '/**') {
+        if (str_starts_with($line, '/**')) {
           continue;
         }
 
         // Take the first actual docblock line to be the description.
-        if (!isset($annotation_property_data['description']) && substr($line, 0, 5) == '   * ') {
+        if (!isset($annotation_property_data['description']) && str_starts_with($line, '   * ')) {
           $annotation_property_data['description'] = substr($line, 5);
         }
 
         // Look for a @var token, to tell us the type of the property.
-        if (substr($line, 0, 10) == '   * @var ') {
+        if (str_starts_with($line, '   * @var ')) {
           $annotation_property_data['type'] = substr($line, 10);
         }
       }
@@ -734,7 +734,7 @@ class PluginTypesCollector extends CollectorBase  {
           break;
         }
 
-        if (substr($ancestor_class, - strlen('Base')) == 'Base') {
+        if (str_ends_with($ancestor_class, 'Base')) {
           $potential_base_classes[] = $ancestor_class;
 
           // Done with this plugin.

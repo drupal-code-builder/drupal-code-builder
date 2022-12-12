@@ -74,10 +74,10 @@ class FluentMethodCall {
         $fluent_call_line = ']';
       }
       // £ is unicode apparently.
-      elseif (mb_substr($parameter, 0, 1) == '£') {
+      elseif (str_starts_with($parameter, '£')) {
         $fluent_call_line .= $parameter;
       }
-      elseif (substr($parameter, 0, 2) == 't(') {
+      elseif (str_starts_with($parameter, 't(')) {
         $fluent_call_line .= $parameter;
       }
       elseif (is_string($parameter)) {
