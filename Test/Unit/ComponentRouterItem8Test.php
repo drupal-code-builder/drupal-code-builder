@@ -471,6 +471,72 @@ class ComponentRouterItem8Test extends TestBase {
   }
 
   /**
+   * Test options for the controller class
+   *
+   * @group di
+   */
+  public function testRouteControllerClassWithDI() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        [
+          'path' => '/my/path/injection',
+          'title' => 'My Controller Base Page',
+          'controller' => [
+            'controller_type' => 'controller',
+            'injected_services' => [
+              'current_user',
+              'entity_type.manager',
+            ],
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/MyPathInjectionController.php",
+    ], $files);
+
+    $controller_file = $files["src/Controller/MyPathInjectionController.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathInjectionController");
+    $php_tester->assertClassHasNoParent();
+    $php_tester->assertClassHasInterfaces(['Drupal\Core\DependencyInjection\ContainerInjectionInterface']);
+    $php_tester->assertHasMethodOrder(['create', '__construct', 'content']);
+
+    // Check service injection.
+    $php_tester->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
+  }
+
+  /**
    * Test generating a route with a menu link.
    */
   public function testRouteGenerationWithMenuLink() {

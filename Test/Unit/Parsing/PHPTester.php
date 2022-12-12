@@ -1084,6 +1084,22 @@ class PHPTester {
   }
 
   /**
+   * Asserts the order of methods.
+   *
+   * @param array $method_names
+   *   An array of method names.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasMethodOrder($function_names, $message = NULL) {
+    $message = $message ?? "The methods are in the expected order.";
+
+    $actual_function_order = array_keys($this->parser_nodes['methods']);
+
+    Assert::assertEquals($function_names, $actual_function_order, $message);
+  }
+
+  /**
    * Assert the parsed code contains the given method.
    *
    * @param string $method_name

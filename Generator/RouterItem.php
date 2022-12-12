@@ -85,6 +85,11 @@ class RouterItem extends BaseGenerator {
                 ->setLabel('Use ControllerBase as the parent class'),
               'import_stringtranslation' => PropertyDefinition::create('boolean')
                 ->setLabel('Use StringTranslationTrait'),
+              'injected_services' => PropertyDefinition::create('string')
+                ->setLabel('Injected services')
+                ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+                ->setMultiple(TRUE)
+                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
             ]),
           'form' => VariantDefinition::create()
             ->setLabel('Form')
@@ -434,7 +439,7 @@ class RouterItem extends BaseGenerator {
       $controller_relative_class = $this->component_data->controller_relative_class_name->value;
 
       $components['controller'] = [
-        'component_type' => 'PHPClassFile',
+        'component_type' => 'Controller',
         'relative_class_name' => $controller_relative_class,
       ];
 
@@ -446,6 +451,8 @@ class RouterItem extends BaseGenerator {
         if ($this->component_data->controller->import_stringtranslation->value) {
           $components['controller']['traits'][] = '\Drupal\Core\StringTranslation\StringTranslationTrait';
         }
+
+        $components['controller']['injected_services'] = $this->component_data->controller->injected_services->export();
       }
     }
 
