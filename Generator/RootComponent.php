@@ -97,8 +97,9 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
     // Define this here for completeness; child classes should specialize it.
     $definition->addProperties([
       'root_name' => PropertyDefinition::create('string')
-      ->setLabel('Extension machine name')
-      ->setRequired(TRUE),
+        ->setLabel('Extension machine name')
+        ->setValidators('machine_name')
+        ->setRequired(TRUE),
     ]);
 
     // Remove the root_component_name property that's come from the parent

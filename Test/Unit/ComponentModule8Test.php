@@ -168,4 +168,21 @@ class ComponentModule8Test extends TestBase {
     $this->assertFunctionCode($module_file, $module_name . '_help', $help_text, "The hook_help() implementation contains the requested help text.");
   }
 
+  /**
+   * Test validation of the module name.
+   */
+  function testModuleNameValidation() {
+    $module_name = '9_number_first_bad';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'readme' => FALSE,
+    ];
+
+    $this->expectException(\DrupalCodeBuilder\Test\Exception\ValidationException::class);
+    $this->generateModuleFiles($module_data);
+  }
+
 }
