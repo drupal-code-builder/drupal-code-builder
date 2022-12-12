@@ -307,12 +307,39 @@ class PHPClassFile extends PHPFile {
       $code_body = array_merge($code_body, $this->mergeSectionCode($section_blocks));
     }
 
+    // Order functions by static, constructor, public, others.
+    // This is done here rather than with a sort callback implemented in the
+    // component class as it's the PHP class which has an opinion on how the
+    // methods should be arranged.
+    $grouped_function_components = array_fill_keys(['static', '__construct', 'public', 'OTHER'], []);
     foreach ($this->containedComponents['function'] as $key => $child_item) {
-      $content = $child_item->getContents();
-      $code_body = array_merge($code_body, $content);
+      $prefixes = $child_item->component_data->prefixes->export();
+      if (in_array('static', $prefixes)) {
+        $grouped_function_components['static'][$key] = $child_item;
+        continue;
+      }
 
-      // Blank line after each function.
-      $code_body[] = '';
+      if ($child_item->component_data->function_name->value == '__construct') {
+        $grouped_function_components['__construct'][$key] = $child_item;
+        continue;
+      }
+
+      if (in_array('public', $prefixes)) {
+        $grouped_function_components['public'][$key] = $child_item;
+        continue;
+      }
+
+      $grouped_function_components['OTHER'][$key] = $child_item;
+    }
+
+    foreach ($grouped_function_components as $group_functions) {
+      foreach ($group_functions as $key => $child_item) {
+        $content = $child_item->getContents();
+        $code_body = array_merge($code_body, $content);
+
+        // Blank line after each function.
+        $code_body[] = '';
+      }
     }
 
     // Indent all the class code.
