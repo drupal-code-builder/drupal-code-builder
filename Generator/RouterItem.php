@@ -55,10 +55,7 @@ class RouterItem extends BaseGenerator {
         ->setDefault(DefaultDefinition::create()
           ->setCallable(function (DataItem $component_data) {
             // Create a controller name from the route path.
-            $path  = str_replace(['{', '}'], '', $component_data->getItem('..:path')->value);
-            $snake = str_replace(['/', '-'], '_', $path);
-            $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
-            return $controller_class_name;
+            return static::controllerRelativeClassFromRoutePath($component_data->getItem('..:path')->value);
           })
         ),
       'controller' => PropertyDefinition::create('mutable')
@@ -363,12 +360,31 @@ class RouterItem extends BaseGenerator {
 
   /**
    * Helper for default callbacks for the controller class name.
+   *
+   * Creates the full controller name from the route path, for use in
+   * routing.yml files.
+   *
+   * @return string
+   *   The fully-qualified controller class with the initial '\'.
    */
   public static function controllerClassFromRoutePath(string $path) {
-    // Create a controller name from the route path.
+    $controller_class_name = '\Drupal\%module\\' . static::controllerRelativeClassFromRoutePath($path);
+    return $controller_class_name;
+  }
+
+  /**
+   * Helper for default callbacks for the controller class name.
+   *
+   * Creates the relative controller name from the route path.
+   *
+   * @return string
+   *   The relative controller class without the initial '\'.
+   */
+  public static function controllerRelativeClassFromRoutePath(string $path) {
     $path  = str_replace(['{', '}'], '', $path);
     $snake = str_replace(['/', '-'], '_', $path);
-    $controller_class_name = '\Drupal\%module\Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
+    $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
+
     return $controller_class_name;
   }
 
