@@ -276,6 +276,15 @@ class PHPUnitTest extends PHPClassFile {
     // Set up properties and methods.
 
     if ($this->component_data['test_type'] != 'unit') {
+      // Get the dependencies of the generated module. These need to be cleaned
+      // up to remove any 'project:' prefixes.
+      $module_dependencies = $this->component_data->module_dependencies->values();
+      array_walk($module_dependencies, function(&$dependency) {
+        if ($position = strpos($dependency, ':')) {
+          $dependency = substr($dependency, $position + 1);
+        }
+      });
+
       // Create the array of modules to install in the test.
       $test_install_modules = array_merge(
         // Some general defaults.
@@ -283,8 +292,7 @@ class PHPUnitTest extends PHPClassFile {
           'system',
           'user',
         ],
-        // The generated module's dependencies.
-        $this->component_data['module_dependencies'],
+        $module_dependencies,
         // The generated module itself.
         [
           '%module',

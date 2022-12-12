@@ -42,7 +42,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
       'readable_name' => 'Test module',
       'module_dependencies' => [
         'dependency_one',
-        'dependency_two',
+        'project:dependency_two',
       ],
       'phpunit_tests' => [
         0 => [
