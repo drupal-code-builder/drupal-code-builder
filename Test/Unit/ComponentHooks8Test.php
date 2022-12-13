@@ -250,6 +250,34 @@ class ComponentHooks8Test extends TestBase {
 
     $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
 
+    // An .install file with no update hooks.
+    $existing_install_file = <<<'EOPHP'
+      <?php
+
+      /**
+       * @file
+       * Contains install and update hooks for the Test Module module.
+       */
+
+      /**
+       * Other function.
+       */
+      function first() {
+      }
+
+      EOPHP;
+
+    $extension->setFile('test_module.install', $existing_install_file);
+
+    $files = $this->generateModuleFiles($module_data, $extension);
+    $install_file = $files['test_module.install'];
+
+    $this->assertTrue($install_file->fileExists());
+    $this->assertTrue($install_file->fileIsMerged());
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $install_file);
+    $php_tester->assertHasFunction("test_module_update_{$this->drupalMajorVersion}001");
+
     $existing_install_file = <<<'EOPHP'
       <?php
 

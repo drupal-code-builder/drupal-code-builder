@@ -51,7 +51,6 @@ class HookUpdateN extends HookImplementation {
 
     $this->nextSchemaNumber = $hook_update_schema_numbers
       ? max($hook_update_schema_numbers) + 1
-      // TODO: add test coverage for this case.
       : (\DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion() * 1000) + 1;
   }
 
