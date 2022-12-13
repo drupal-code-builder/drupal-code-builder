@@ -11,6 +11,7 @@ use DrupalCodeBuilder\MutableTypedData\Data\MergeableArrayData;
 use DrupalCodeBuilder\MutableTypedData\Data\MergeableBooleanData;
 use DrupalCodeBuilder\MutableTypedData\Data\MergeableStringData;
 use DrupalCodeBuilder\MutableTypedData\Validator\ClassName;
+use DrupalCodeBuilder\MutableTypedData\Validator\FormReference;
 use DrupalCodeBuilder\MutableTypedData\Validator\MachineName;
 use DrupalCodeBuilder\MutableTypedData\Validator\Path;
 use DrupalCodeBuilder\MutableTypedData\Validator\PluginExists;
@@ -67,6 +68,7 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     'machine_name' => MachineName::class,
     'plugin_name' => PluginName::class,
     'plugin_exists' => PluginExists::class,
+    'form_ref' => FormReference::class,
     'yaml_plugin_name' => YamlPluginName::class,
     'service_name' => ServiceName::class,
     'path' => Path::class,

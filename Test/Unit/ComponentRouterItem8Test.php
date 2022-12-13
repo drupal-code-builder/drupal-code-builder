@@ -557,6 +557,60 @@ class ComponentRouterItem8Test extends TestBase {
   }
 
   /**
+   * Tests specifying the form class.
+   */
+  public function testRouteForm() {
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        0 => [
+          'path' => '/my/path/existing-form',
+          'controller' => [
+            'controller_type' => 'form',
+            'form_class' => '\Drupal\other_module\Form\ExistingForm',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        1 => [
+          'path' => '/my/path/generated-form',
+          'controller' => [
+            'controller_type' => 'form',
+            'form_class' => '!1',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+      ],
+      'forms' => [
+        0 => [
+          'plain_class_name' => 'GeneratedForm',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.routing.yml',
+      'src/Form/GeneratedForm.php',
+    ], $files);
+
+    $routing_file = $files['test_module.routing.yml'];
+    $yaml_tester = new YamlTester($routing_file);
+
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.existing_form', 'defaults', '_form'], '\Drupal\other_module\Form\ExistingForm');
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path.generated_form', 'defaults', '_form'], '\Drupal\test_module\Form\GeneratedForm');
+  }
+
+  /**
    * Test generating a route with a menu link.
    */
   public function testRouteGenerationWithMenuLink() {

@@ -91,9 +91,15 @@ class RouterItem extends BaseGenerator {
           'form' => VariantDefinition::create()
             ->setLabel('Form')
             ->setProperties([
+              // TODO: add validation.
+              'form_class' => PropertyDefinition::create('string')
+                ->setLabel('Form class')
+                ->setDescription("A fully-qualified class name. Additionally, use '!N' to use the Nth generated form from this module.")
+                ->setValidators('form_ref')
+                ->setLiteralDefault('\Drupal\module\Form\FormClassName'),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
-                ->setLiteralDefault('\Drupal\module\Form\FormClassName')
+                ->setExpressionDefault("get('..:form_class')"),
             ]),
           'entity_view' => VariantDefinition::create()
             ->setLabel('Entity view display')
@@ -469,6 +475,16 @@ class RouterItem extends BaseGenerator {
         }
 
         $components['controller']['injected_services'] = $this->component_data->controller->injected_services->export();
+      }
+    }
+
+    // Form.
+    if ($this->component_data->controller->controller_type->value == 'form') {
+      if (str_starts_with($this->component_data->controller->form_class->value, '!')) {
+        $form_index = substr($this->component_data->controller->form_class->value, 1) - 1;
+        $form_class_name = $this->component_data->getItem('..:..:forms')[$form_index]->qualified_class_name->value;
+
+        $this->component_data->controller->routing_value->value = '\\' . $form_class_name;
       }
     }
 
