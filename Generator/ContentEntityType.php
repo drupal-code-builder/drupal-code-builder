@@ -408,6 +408,20 @@ class ContentEntityType extends EntityTypeBase {
     $method_body = array_merge($method_body, $call_lines);
     $method_body[] = '';
 
+    // Add a 'created' field.
+    $method_body[] = "£fields['created'] = \Drupal\Core\Field\BaseFieldDefinition::create('created')";
+    $created_field_calls = new FluentMethodCall;
+    $created_field_calls->setLabel(FluentMethodCall::t('Created'))
+      ->setDescription(FluentMethodCall::t('The time that the entity was created.'));
+    if ($use_revisionable) {
+      $created_field_calls->setRevisionable(TRUE);
+    }
+    if ($use_translatable) {
+      $created_field_calls->setTranslatable(TRUE);
+    }
+    $method_body = array_merge($method_body, $created_field_calls->getCodeLines());
+    $method_body[] = '';
+
     // Add a 'changed' field if entities use the changed interface.
     if (in_array('changed', $this->component_data['functionality'])) {
       $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";

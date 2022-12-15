@@ -85,6 +85,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $base_fields_definitions_tester->assertFieldNames([
       'title',
+      'created',
       'breed',
       'colour',
     ]);
@@ -223,7 +224,8 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $expected_fields = array_merge(
       [
-        'title'
+        'title',
+        'created',
       ],
       array_keys($expected_extra_base_fields)
     );
@@ -408,6 +410,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $base_fields_definitions_tester->assertFieldNames([
       'title',
+      'created',
       'breed',
       'colour',
     ]);
@@ -526,6 +529,7 @@ class ComponentContentEntityType8Test extends TestBase {
 
     $base_fields_definitions_tester->assertFieldNames([
       'title',
+      'created',
       'breed',
       'colour',
     ]);
