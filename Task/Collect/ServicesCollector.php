@@ -304,6 +304,13 @@ class ServicesCollector extends CollectorBase  {
    *   empty string if no interface was found.
    */
   protected function getServiceInterface($service_class) {
+    // Special cases.
+    // Logger channels should implement the PSR interface, not Drupal's. See
+    // \Drupal\Core\Logger\LoggerChannel.
+    if ($service_class == '\Drupal\Core\Logger\LoggerChannel') {
+      return '\Psr\Log\LoggerInterface';
+    }
+
     $reflection = new \ReflectionClass($service_class);
     // This can get us more than one interface, if the declared interface has
     // parents. We only want one, so we need to go hacking in the code itself.
