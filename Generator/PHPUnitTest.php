@@ -375,7 +375,7 @@ class PHPUnitTest extends PHPClassFile {
     // Mocked services.
     if (!empty($this->getContentsElement('service_mocked'))) {
       foreach ($this->getContentsElement('service_mocked') as $service_info) {
-        $setup_lines[] = "// Mock the {$service_info['label']} service.";
+        $setup_lines[] = "// Mock the {$service_info['label']}.";
         $setup_lines[] = "£{$service_info['variable_name']} = £this->prophesize({$service_info['typehint']}::class);";
         $setup_lines[] = "£this->container->set('{$service_info['id']}', £{$service_info['variable_name']}->reveal());";
       }
