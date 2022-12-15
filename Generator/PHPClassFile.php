@@ -14,6 +14,21 @@ use MutableTypedData\Data\DataItem;
 class PHPClassFile extends PHPFile {
 
   /**
+   * Ordering of generated class methods.
+   *
+   * This allows easy overriding by child classes.
+   *
+   * @var array
+   */
+  protected $functionOrdering = [
+    'static',
+    '__construct',
+    'public',
+    'protected',
+    'OTHER',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public static function getPropertyDefinition(): PropertyDefinition {
@@ -311,7 +326,7 @@ class PHPClassFile extends PHPFile {
     // This is done here rather than with a sort callback implemented in the
     // component class as it's the PHP class which has an opinion on how the
     // methods should be arranged.
-    $grouped_function_components = array_fill_keys(['static', '__construct', 'public', 'OTHER'], []);
+    $grouped_function_components = array_fill_keys($this->functionOrdering, []);
     foreach ($this->containedComponents['function'] as $key => $child_item) {
       $prefixes = $child_item->component_data->prefixes->export();
       if (in_array('static', $prefixes)) {
@@ -326,6 +341,11 @@ class PHPClassFile extends PHPFile {
 
       if (in_array('public', $prefixes)) {
         $grouped_function_components['public'][$key] = $child_item;
+        continue;
+      }
+
+      if (in_array('protected', $prefixes)) {
+        $grouped_function_components['protected'][$key] = $child_item;
         continue;
       }
 

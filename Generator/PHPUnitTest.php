@@ -15,6 +15,16 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
+  protected $functionOrdering = [
+    // We only generate protected and public methods. The protected setUp()
+    // should go before the public test method.
+    'protected',
+    'public',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getPropertyDefinition(): PropertyDefinition {
     // Presets for the different types of test.
     $test_type_presets = [
