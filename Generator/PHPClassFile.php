@@ -565,7 +565,7 @@ class PHPClassFile extends PHPFile {
 
     // Add a comment with the method's first line of docblock, so the user
     // has something more informative than '{@inheritdoc}' to go on!
-    $comment = $method_data['description'];
+    $comment = $method_data['description'] ?? 'Method has no documentation!';
 
     // Babysit documentation that is missing a final full stop, so PHP
     // Codesniffer doesn't complain in our own tests, and we output correctly
