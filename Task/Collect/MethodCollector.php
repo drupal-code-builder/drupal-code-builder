@@ -81,17 +81,18 @@ class MethodCollector {
       }
     }
 
-    // Replace class typehints on method parameters with their full namespaced
-    // versions, as typically these will be short class names. The PHPFile
-    // generator will then take care of extracting namespaces and creating
-    // import statements.
+    // Replace class and interface types on the method parameters and return
+    // with their full namespaced versions, as typically these will be short
+    // class names. The PHPFile generator will then take care of extracting
+    // namespaces and creating import statements.
     // Get the typehint classes on parameters.
-    $parameters = $method->getParameters();
+    $types = array_map(function (\ReflectionParameter $parameter) {
+      return $parameter->getType();
+    }, $method->getParameters());
     $search = [];
     $replace = [];
-    foreach ($parameters as $parameter) {
-      $parameter_type = $parameter->getType();
-
+    /** @var \ReflectionType $parameter_type */
+    foreach ($types as $parameter_type) {
       // Skip a parameter that doesn't have a type.
       if (is_null($parameter_type)) {
         continue;
