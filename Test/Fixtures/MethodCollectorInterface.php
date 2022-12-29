@@ -22,4 +22,12 @@ interface MethodCollectorInterface {
 
   public function namespaceParams(Alpha $one, Beta $two);
 
+  public function scalarReturn($one): int;
+
+  public function qualifiedRootNamespaceReturn($one): \DateTime;
+
+  public function importedRootNamespaceReturn($one): Iterator;
+
+  public function namespaceReturn(Alpha $one): Beta;
+
 }

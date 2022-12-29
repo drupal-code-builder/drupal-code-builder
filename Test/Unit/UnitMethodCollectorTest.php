@@ -54,6 +54,22 @@ class UnitMethodCollectorTest extends TestCase {
         'namespaceParams',
         'public function namespaceParams(\DrupalCodeBuilder\Test\Fixtures\Typehint\Alpha $one, \DrupalCodeBuilder\Test\Fixtures\Typehint\Beta $two);',
       ],
+      'scalarReturn' => [
+        'scalarReturn',
+        'public function scalarReturn($one): int;'
+      ],
+      'qualifiedRootNamespaceReturn' => [
+        'qualifiedRootNamespaceReturn',
+        'public function qualifiedRootNamespaceReturn($one): \DateTime;'
+      ],
+      'importedRootNamespaceReturn' => [
+        'importedRootNamespaceReturn',
+        'public function importedRootNamespaceReturn($one): \Iterator;'
+      ],
+      'namespaceReturn' => [
+        'namespaceReturn',
+        'public function namespaceReturn(\DrupalCodeBuilder\Test\Fixtures\Typehint\Alpha $one): \DrupalCodeBuilder\Test\Fixtures\Typehint\Beta;'
+      ],
     ];
   }
 
