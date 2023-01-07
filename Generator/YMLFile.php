@@ -84,8 +84,13 @@ class YMLFile extends File {
   public function getFileInfo() {
     $yaml_data = [];
     foreach ($this->containedComponents['element'] as $key => $child_item) {
-      $yaml_data += $child_item->getContents();
+      $child_item_yaml_data = $child_item->getContents();
+
+      // Use array merge as child items may provide numerically-keyed lists,
+      // which should not clobber each other.
+      $yaml_data = ArrayMerger::doMerge($yaml_data, $child_item_yaml_data);
     }
+
     if (empty($yaml_data)) {
       // If children don't provide anything, use the property, as that may have
       // been set by a requesting component.
