@@ -294,6 +294,9 @@ class Module extends RootComponent {
       'router_items' => static::getLazyDataDefinitionForGeneratorType('RouterItem')
         ->setLabel("Routes")
         ->setMultiple(TRUE),
+      'dynamic_routes' =>  static::getLazyDataDefinitionForGeneratorType('RouteCallback')
+        ->setLabel('Dynamic route providers')
+        ->setMultiple(TRUE),
       'library' => static::getLazyDataDefinitionForGeneratorType('Library')
         ->setLabel('Libraries')
         ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
