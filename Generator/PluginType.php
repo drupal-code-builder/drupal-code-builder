@@ -325,11 +325,16 @@ class PluginType extends BaseGenerator {
       'component_type' => 'PHPFunction',
       'function_name' => "hook_{$this->component_data['info_alter_hook']}_alter",
       'containing_component' => '%requester:api',
-      'declaration' => "function hook_{$this->component_data['info_alter_hook']}_alter(array &£info)",
       'function_docblock_lines' => [
         "Perform alterations on {$this->component_data['plugin_label']} definitions.",
-        '@param array $info',
-        "  Array of information on {$this->component_data['plugin_label']} plugins.",
+      ],
+      'parameters' => [
+        [
+          'name' => 'info',
+          'by_reference' => TRUE,
+          'typehint' => 'array',
+          'description' => "Array of information on {$this->component_data['plugin_label']} plugins.",
+        ],
       ],
       'body' => [
         "// Change the class of the 'foo' plugin.",

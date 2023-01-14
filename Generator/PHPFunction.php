@@ -91,6 +91,7 @@ class PHPFunction extends BaseGenerator {
         ->setProperties([
           // The name of the parameter, without the initial $.
           'name' => PropertyDefinition::create('string'),
+          'by_reference' => PropertyDefinition::create('boolean'),
           // The typehint of the parameter. If this is a class or interface, use
           // the fully-qualified form: this will produce import statements for
           // the file automatically.
@@ -290,13 +291,13 @@ class PHPFunction extends BaseGenerator {
         // ARGH TODO! Shouldn't this happen somewhere else???
         $parameter_data->typehint->applyDefault();
 
-        $docblock->param($parameter_data->typehint->value, $parameter_data->name->value, $parameter_data->description->value);
+        $docblock->param($parameter_data->typehint->value, $parameter_data->name->value, $parameter_data->description->value, $parameter_data->by_reference->value);
       }
 
       foreach ($this->containedComponents['parameter'] as $parameter_component) {
         $parameter_data = $parameter_component->getContents();
 
-        $docblock->param($parameter_data['typehint'], $parameter_data['parameter_name'], $parameter_data['description']);
+        $docblock->param($parameter_data['typehint'], $parameter_data['parameter_name'], $parameter_data['description'], $parameter_data['by_reference'] ?? FALSE);
       }
     }
 
@@ -320,6 +321,7 @@ class PHPFunction extends BaseGenerator {
    *   keys:
    *    - 'name'
    *    - 'typehint'
+   *    - 'by_reference'
    * @param array $options
    *   An array of options:
    *    - 'prefixes': An array of the function's prefixes.
@@ -364,15 +366,20 @@ class PHPFunction extends BaseGenerator {
       // property name on the DataItem class.
       $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
 
+      $parameter_symbol =
+        (!empty($parameter_info['by_reference']) ? '&' : '')
+        . '$'
+        . $parameter_name;
+
       if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
         // Don't type hint scalar types.
-        $declaration_line_params[] = '$' . $parameter_name;
+        $declaration_line_params[] = $parameter_symbol;
       }
       elseif (!empty($parameter_info['typehint'])) {
-        $declaration_line_params[] = $parameter_info['typehint'] . ' $' . $parameter_name;
+        $declaration_line_params[] = $parameter_info['typehint'] . ' ' . $parameter_symbol;
       }
       else {
-        $declaration_line_params[] = '$' . $parameter_name;
+        $declaration_line_params[] = $parameter_symbol;
       }
     }
 

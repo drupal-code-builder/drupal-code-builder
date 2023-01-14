@@ -128,6 +128,7 @@ class DocBlock implements \ArrayAccess {
    *    - parameter type (pass NULL if there is no type)
    *    - description (an empty value will get a default based on the parameter
    *      name)
+   *    - by_reference (an empty value means FALSE)
    *  - return
    *    - return type (optional)
    *    - description
@@ -184,12 +185,18 @@ class DocBlock implements \ArrayAccess {
 
         foreach ($tags['param'] as $arguments) {
           list ($typehint, $param_name, $description) = $arguments;
+          $by_reference = $arguments[3] ?? FALSE;
+
+          $parameter_symbol =
+            ($by_reference ? '&' : '')
+            . '$'
+            . $param_name;
 
           if (empty($typehint)) {
-            $lines[] = '@param $' . $param_name;
+            $lines[] = '@param ' . $parameter_symbol;
           }
           else {
-            $lines[] = '@param ' . $typehint . ' $' . $param_name;
+            $lines[] = '@param ' . $typehint . ' ' . $parameter_symbol;
           }
 
           if (empty($description)) {

@@ -162,6 +162,9 @@ class ComponentPluginType8Test extends TestBase {
     $this->assertStringContainsString('@} End of "addtogroup hooks".', $api_file, 'The API file contains the closing addtogroup docblock tag.');
 
     $php_tester->assertHasFunction('hook_cat_feeder_info_alter');
+    // Check the $info is by reference.
+    $this->assertStringContainsString('@param array &$info', $api_file);
+    $this->assertStringContainsString('function hook_cat_feeder_info_alter(array &$info)', $api_file);
 
     // Check the plugin type file.
     $plugin_type_file = $files['test_module.plugin_type.yml'];

@@ -18,6 +18,7 @@ class PHPFunctionParameter extends BaseGenerator {
     $definition->addProperties([
       'parameter_name' => PropertyDefinition::create('string')
         ->setRequired(TRUE),
+      'by_reference' => PropertyDefinition::create('boolean'),
       'typehint' => PropertyDefinition::create('string'),
       'description' => PropertyDefinition::create('string')
         ->setRequired(TRUE),
@@ -52,7 +53,7 @@ class PHPFunctionParameter extends BaseGenerator {
   public function getContents(): array {
     $contents = [];
 
-    foreach (['parameter_name', 'typehint', 'description'] as $property) {
+    foreach (['parameter_name', 'typehint', 'description', 'by_reference'] as $property) {
       $contents[$property] = $this->component_data->{$property}->value;
     }
 
