@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Abstract parent class for .ini syntax info files.
  */
-abstract class InfoIni extends Info {
+abstract class InfoIni extends InfoBase {
 
   /**
    * {@inheritdoc}

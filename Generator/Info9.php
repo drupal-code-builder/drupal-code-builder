@@ -8,7 +8,7 @@ use DrupalCodeBuilder\File\DrupalExtension;
 /**
  * Generator class for module info file for Drupal 9.
  */
-class Info9 extends Info {
+class Info9 extends InfoBase {
 
   /**
    * {@inheritdoc}

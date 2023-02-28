@@ -8,7 +8,7 @@ use Ckr\Util\ArrayMerger;
 /**
  * Generator base class for module info file.
  */
-abstract class Info extends File {
+abstract class InfoBase extends File {
 
   /**
    * The order of keys in the info file.
