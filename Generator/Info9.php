@@ -77,7 +77,8 @@ class Info9 extends Info {
       $lines['package'] = $module_data->module_package->value;
     }
 
-    $lines['core_version_requirement'] = '^8 || ^9';
+    // TODO: Move this to a helper method.
+    $lines['core_version_requirement'] = '^8 || ^9 || ^10';
 
     if (!empty($extra_lines = $this->getContainedComponentInfoLines())) {
       $lines = array_merge($lines, $extra_lines);
