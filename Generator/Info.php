@@ -6,9 +6,9 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
- * Generator class for module info file for Drupal 9.
+ * Generator class for module info file for Drupal 9 and higher.
  */
-class Info9 extends InfoBase {
+class Info extends InfoBase {
 
   /**
    * {@inheritdoc}
