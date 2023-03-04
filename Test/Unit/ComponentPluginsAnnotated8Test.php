@@ -180,6 +180,46 @@ class ComponentPluginsAnnotated8Test extends TestBase {
   }
 
   /**
+   * Tests plugin derivers.
+   */
+  function testPluginsGenerationDeriver() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'block',
+          'plugin_name' => 'alpha',
+          'deriver' => TRUE,
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey('src/Plugin/Derivative/AlphaBlockDeriver.php', $files);
+
+    $deriver = $files['src/Plugin/Derivative/AlphaBlockDeriver.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
+    $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
+    $php_tester->assertHasMethod('getDerivativeDefinitions');
+
+    // Check the plugin file declares the deriver.
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+    $annotation_tester->assertHasProperty('deriver');
+    $annotation_tester->assertPropertyHasValue('deriver', '\Drupal\test_module\Plugin\Derivative\AlphaBlockDeriver');
+  }
+
+  /**
    * Tests an existing plugin class as parent.
    */
   public function testPluginsGenerationParentPluginClass() {

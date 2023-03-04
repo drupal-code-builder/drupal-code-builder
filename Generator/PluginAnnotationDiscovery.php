@@ -10,6 +10,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use CaseConverter\CaseString;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -124,6 +125,21 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionsProvider($services_data_task),
+      'deriver' => PropertyDefinition::create('boolean')
+        ->setLabel('Use deriver')
+        ->setDescription("Adds a deriver class to dynamically derive plugins from a template."),
+      'deriver_plain_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable(function (DataItem $component_data) {
+            $plugin_data = $component_data->getParent();
+
+            return
+              $plugin_data->plain_class_name->value .
+              CaseString::snake($plugin_data->plugin_type_data->value['type_id'])->pascal() .
+              'Deriver';
+          })
+        ),
       'parent_plugin_id' => PropertyDefinition::create('string')
         ->setLabel('Parent class plugin ID')
         ->setDescription("Use another plugin's class as the parent class for this plugin.")
@@ -259,6 +275,34 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
       }
     }
 
+
+    if (!empty($this->component_data->deriver->value)) {
+      $components['deriver'] = [
+        'component_type' => 'PHPClassFile',
+        'class_docblock_lines' => [
+          'Plugin deriver for ' . $this->component_data->plugin_name->value . '.',
+        ],
+        'plain_class_name' => $this->component_data->deriver_plain_class_name->value,
+        'relative_namespace' => 'Plugin\Derivative',
+        'parent_class_name' => '\Drupal\Component\Plugin\Derivative\DeriverBase',
+        'interfaces' => [
+          '\Drupal\Core\Plugin\Discovery\ContainerDeriverInterface',
+        ],
+      ];
+
+      $components['getDerivativeDefinitions'] = [
+        'component_type' => 'PHPFunction',
+        'function_name' => 'getDerivativeDefinitions',
+        'containing_component' => '%requester:deriver',
+        'docblock_inherit' => TRUE,
+        'parameters' => [
+          0 => [
+            'name' => 'base_plugin_definition',
+          ],
+        ],
+      ];
+    }
+
     if (!empty($this->component_data->replace_parent_plugin->value)) {
       if (!empty($this->plugin_type_data['alter_hook_name'])) {
         $alter_hook_name = 'hook_' . $this->plugin_type_data['alter_hook_name'];
@@ -354,6 +398,10 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
 
       // It's a plain string.
       $annotation_data[$annotation_variable] = "TODO: replace this with a value";
+    }
+
+    if (!empty($this->component_data->deriver->value)) {
+      $annotation_data['deriver'] = '\Drupal\%module\Plugin\Derivative\\' . $this->component_data->deriver_plain_class_name->value;
     }
 
     $annotation = ClassAnnotation::{$annotation_class}($annotation_data);
