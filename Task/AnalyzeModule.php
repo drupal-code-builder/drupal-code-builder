@@ -282,6 +282,7 @@ class ComponentFolderRecursiveFilterIterator extends \RecursiveFilterIterator {
         );
     }
 
+  #[\ReturnTypeWillChange]
   public function accept() {
     $current_filename = $this->current()->getFilename();
 
