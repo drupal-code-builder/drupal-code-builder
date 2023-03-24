@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests for Info component.
  *
  * @group yaml
+ * @group info
  */
 class ComponentInfo8Test extends TestBase {
 

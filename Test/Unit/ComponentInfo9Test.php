@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
  * Tests for Info component.
  *
  * @group yaml
+ * @group info
  */
 class ComponentInfo9Test extends TestBase {
 
