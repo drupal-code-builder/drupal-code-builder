@@ -12,19 +12,20 @@ use Symfony\Component\Yaml\Yaml;
  * @group yaml
  * @group info
  */
-class ComponentInfo9Test extends TestBase {
+class ComponentInfo10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 9;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test generating a module info file.
    */
   public function testBasicInfoFile() {
+
     $mb_task_handler_generate = \DrupalCodeBuilder\Factory::getTask('Generate', 'module');
     $this->assertTrue(is_object($mb_task_handler_generate), "A task handler object was returned.");
 
@@ -79,7 +80,7 @@ class ComponentInfo9Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('type', 'module');
     $yaml_tester->assertPropertyHasValue('description', 'Test Module description');
     $yaml_tester->assertPropertyHasValue('package', 'Test Package');
-    $yaml_tester->assertPropertyHasValue('experimental', 'true');
+    $yaml_tester->assertPropertyHasValue('lifecycle', 'experimental');
     $yaml_tester->assertPropertyHasValue('dependencies', ['node', 'block']);
 
     $yaml_tester->assertKeyOrder([], [
@@ -89,7 +90,7 @@ class ComponentInfo9Test extends TestBase {
       'package',
       // We don't create the 'version' key.
       // 'version',
-      'experimental',
+      'lifecycle',
       'core_version_requirement',
       'dependencies',
     ]);
@@ -126,6 +127,8 @@ class ComponentInfo9Test extends TestBase {
    * @dataProvider dataExistingInfoFile
    */
   public function testExistingInfoFile($existing_dependencies, $generated_dependencies, $resulting_dependencies) {
+    $this->markTestSkipped('Needs sample data for Drupal 10 to run.');
+
     $module_name = 'test_module';
     $module_data = [
       'base' => 'module',

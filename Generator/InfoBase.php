@@ -21,9 +21,24 @@ abstract class InfoBase extends File {
     'description',
     'package',
     'version',
+    'lifecycle',
+    'experimental',
     'core',
     'core_version_requirement',
     'dependencies',
+  ];
+
+  /**
+   * Properties that should be automatically defined and acquired from the root.
+   *
+   * @var array
+   */
+  protected static $propertiesAcquiredFromRoot = [
+    'readable_name',
+    'short_description',
+    'module_dependencies',
+    'module_package',
+    'lifecycle',
   ];
 
   /**
@@ -33,13 +48,7 @@ abstract class InfoBase extends File {
     $definition = parent::getPropertyDefinition();
 
     // Properties acquired from the requesting root component.
-    $plugin_type_properties = [
-      'readable_name',
-      'short_description',
-      'module_dependencies',
-      'module_package',
-    ];
-    foreach ($plugin_type_properties as $property_name) {
+    foreach (static::$propertiesAcquiredFromRoot as $property_name) {
       $definition->addProperty(PropertyDefinition::create('string')
         ->setName($property_name)
         ->setAutoAcquiredFromRequester()

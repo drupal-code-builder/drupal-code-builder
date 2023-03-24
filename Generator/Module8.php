@@ -21,6 +21,8 @@ class Module8 extends Module {
         ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
     ]);
 
+    $definition->removeProperty('lifecycle');
+
     return $definition;
   }
 

@@ -10,6 +10,16 @@ class Info8 extends Info {
   /**
    * {@inheritdoc}
    */
+  protected static $propertiesAcquiredFromRoot = [
+    'readable_name',
+    'short_description',
+    'module_dependencies',
+    'module_package',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   function infoData(): array {
     $lines = parent::infoData();
 

@@ -12,6 +12,16 @@ abstract class InfoIni extends InfoBase {
   /**
    * {@inheritdoc}
    */
+  protected static $propertiesAcquiredFromRoot = [
+    'readable_name',
+    'short_description',
+    'module_dependencies',
+    'module_package',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 

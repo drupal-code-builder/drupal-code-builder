@@ -6,7 +6,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
- * Generator class for module info file for Drupal 9 and higher.
+ * Generator class for module info file for Drupal 10 and higher.
  */
 class Info extends InfoBase {
 
@@ -56,7 +56,7 @@ class Info extends InfoBase {
   }
 
   /**
-   * Create lines of file body for Drupal 8.
+   * Create lines of file body for Drupal 8 and higher.
    */
   function infoData(): array {
     $module_data = $this->component_data;
@@ -71,6 +71,10 @@ class Info extends InfoBase {
     // simply make an array.
     foreach ($module_data->module_dependencies as $dependency) {
       $lines['dependencies'][] = $dependency->value;
+    }
+
+    if ($module_data->hasProperty('lifecycle') && $module_data->lifecycle->value) {
+      $lines['lifecycle'] = $module_data->lifecycle->value;
     }
 
     if (!$module_data->module_package->isEmpty()) {

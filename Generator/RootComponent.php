@@ -118,6 +118,13 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
       // Add the configuration data definition as internal.
       'configuration' => static::configurationDefinition()
         ->setInternal(TRUE),
+      'lifecycle' => PropertyDefinition::create('string')
+        ->setLabel('Lifecycle')
+        ->setOptionsArray([
+          'experimental' => 'Experimental',
+          'deprecated' => 'Deprecated',
+          'obsolete' => 'Obsolete',
+        ]),
     ]);
 
     return $definition;
