@@ -42,6 +42,9 @@ class PHPUnitTest extends PHPClassFile {
             'parent_class_name' => [
               'value' => '\Drupal\Tests\UnitTestCase',
             ],
+            'use_module_dependencies' => [
+              'value' => FALSE,
+            ],
           ],
         ],
       ],
@@ -54,6 +57,9 @@ class PHPUnitTest extends PHPClassFile {
             ],
             'parent_class_name' => [
               'value' => '\Drupal\KernelTests\KernelTestBase',
+            ],
+            'use_module_dependencies' => [
+              'value' => TRUE,
             ],
           ],
         ],
@@ -68,6 +74,9 @@ class PHPUnitTest extends PHPClassFile {
             'parent_class_name' => [
               'value' => '\Drupal\KernelTests\Core\Entity\EntityKernelTestBase',
             ],
+            'use_module_dependencies' => [
+              'value' => TRUE,
+            ],
           ],
         ],
       ],
@@ -80,6 +89,9 @@ class PHPUnitTest extends PHPClassFile {
             ],
             'parent_class_name' => [
               'value' => '\Drupal\Tests\BrowserTestBase',
+            ],
+            'use_module_dependencies' => [
+              'value' => TRUE,
             ],
           ],
         ],
@@ -94,9 +106,30 @@ class PHPUnitTest extends PHPClassFile {
             'parent_class_name' => [
               'value' => '\Drupal\FunctionalJavascriptTests\WebDriverTestBase',
             ],
+            'use_module_dependencies' => [
+              'value' => TRUE,
+            ],
           ],
         ],
       ],
+      'existing_site' => [
+        'label' => 'Existing site test',
+        'description' => 'Requires the weitzman/drupal-test-traits package.',
+        'data' => [
+          'force' => [
+            'relative_namespace' => [
+              'value' => 'ExistingSite',
+            ],
+            'parent_class_name' => [
+              'value' => '\weitzman\DrupalTestTraits\ExistingSiteBase',
+            ],
+            'use_module_dependencies' => [
+              'value' => FALSE,
+            ],
+          ],
+        ],
+      ],
+
     ];
 
     $properties = [
@@ -127,6 +160,8 @@ class PHPUnitTest extends PHPClassFile {
       'module_dependencies' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setAutoAcquiredFromRequester(),
+      'use_module_dependencies' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE),
       'test_modules' => static::getLazyDataDefinitionForGeneratorType('TestModule')
         ->setLabel('Test modules')
         ->setMultiple(TRUE),
@@ -285,7 +320,7 @@ class PHPUnitTest extends PHPClassFile {
   protected function collectSectionBlocks() {
     // Set up properties and methods.
 
-    if ($this->component_data['test_type'] != 'unit') {
+    if ($this->component_data->use_module_dependencies->value) {
       // Get the dependencies of the generated module. These need to be cleaned
       // up to remove any 'project:' prefixes.
       $module_dependencies = $this->component_data->module_dependencies->values();
