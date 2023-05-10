@@ -59,6 +59,9 @@ class ContainerBuilder {
     $class_loader = require('vendor/autoload.php');
 
     $builder->addDefinitions([
+      // This is set to a dummy generic class because the container builder
+      // needs one. This class is replaced when DCB is initialised by
+      // \DrupalCodeBuilder\Factory::setEnvironment().
       'environment' => \DI\create(\DrupalCodeBuilder\Environment\DefaultEnvironment::class),
       // Alias the environment to the interface, so autowiring picks up the
       // environment parameter type.
