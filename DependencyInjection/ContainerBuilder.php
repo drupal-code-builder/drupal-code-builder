@@ -126,7 +126,7 @@ class ContainerBuilder {
       }
 
       $services[$service_name] = $class_name;
-    }
+    } // foreach $task_files
 
     $definitions = [];
 
@@ -173,7 +173,7 @@ class ContainerBuilder {
 
       $definitions[$service_name] = \DI\factory([static::class, 'createGenerator'])
         ->parameter('root_component_type', $root_component_type);
-    }
+    } // foreach class map
 
     // Define the versioned services. This needs a separate loop because some
     // of these classe are abstract, and so not in $services.
