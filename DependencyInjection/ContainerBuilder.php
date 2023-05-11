@@ -195,7 +195,7 @@ class ContainerBuilder {
 
     // Second pass to collect SectionReportInterface tasks, to pass the names as
     // parameters to the ReportSummary.
-    $report_helper_service_ids = [];
+    $report_helper_services = [];
     foreach ($definitions as $service_name => $service_definition) {
       // Use string matching first to narrow down to Report tasks.
       if (preg_match('/^Report\w+/', $service_name)) {
@@ -203,12 +203,14 @@ class ContainerBuilder {
 
         $reflection_class = new \ReflectionClass($class_name);
         if ($reflection_class->implementsInterface(\DrupalCodeBuilder\Task\Report\SectionReportInterface::class)) {
-          $report_helper_service_ids[] = $service_name;
+          $report_helper_services[] = \DI\get($service_name);
         }
       }
     }
 
-    $definitions['ReportSummary']->method('setReportHelpers', $report_helper_service_ids);
+    // Have to pass in the services as an array, as method() only works with a
+    // single parameter!!
+    $definitions['ReportSummary']->method('setReportHelpers', $report_helper_services);
 
     $builder->addDefinitions($definitions);
 

@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting a summary of all stored analysis data.
@@ -22,37 +23,26 @@ class ReportSummary extends ReportHookDataFolder {
   protected $sanity_level = 'component_data_processed';
 
   /**
-   * Array of service names for report helpers.
+   * Array of report helper services
    *
    * @var array
    */
-  protected $helperServiceNames = [];
+  protected $helperServices = [];
 
   /**
-   * Constructor.
-   *
-   * @param $environment
-   *  The current environment handler.
-   */
-  function __construct(EnvironmentInterface $environment, \Psr\Container\ContainerInterface $container) {
-    $this->environment = $environment;
-    $this->container = $container;
-  }
-
-  /**
-   * Sets the report helper service names.
+   * Sets the report helper services.
    *
    * Called by the container on instantiation.
    *
-   * @param array $helper_service_names
-   *  An array of service names for the section reports. These are all the
+   * @param array $helper_services
+   *  An array of section report tasks. These are all the
    *  services which implement
    *  \DrupalCodeBuilder\Task\Report\SectionReportInterface.
    *
    * @see \DrupalCodeBuilder\DependencyInjection\ContainerBuilder
    */
-  public function setReportHelpers(array $helper_service_names) {
-    $this->helperServiceNames = $helper_service_names;
+  public function setReportHelpers(array $helper_services) {
+    $this->helperServices = $helper_services;
   }
 
   /**
@@ -73,9 +63,7 @@ class ReportSummary extends ReportHookDataFolder {
     $return = [];
 
     // Get data from each report section helper.
-    foreach ($this->helperServiceNames as $service_name) {
-      $section_report = $this->container->get($service_name);
-
+    foreach ($this->helperServices as $section_report) {
       $section_info = $section_report->getInfo();
 
       $return[$section_info['key']] = [
