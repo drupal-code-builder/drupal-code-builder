@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\DependencyInjection;
 
+use Composer\Script\Event;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -39,9 +40,10 @@ class ContainerBuilder {
   /**
    * Composer script callback to rebuild the cached container.
    */
-  public static function rebuildCachedContainer() {
+  public static function rebuildCachedContainer(Event $event) {
     $cached_file = realpath(__DIR__ . '/cache/DrupalCodeBuilderCompiledContainer.php');
     if (file_exists($cached_file)) {
+      $event->getIO()->write("Deleting cached container file.");
       unlink($cached_file);
     }
 
@@ -49,6 +51,8 @@ class ContainerBuilder {
     require_once("vendor/php-di/php-di/src/functions.php");
 
     static::buildContainer();
+
+    $event->getIO()->write("Written new cached container file.");
   }
 
   /**
