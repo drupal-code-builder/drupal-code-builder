@@ -50,6 +50,10 @@ class ContainerBuilder {
     // Include PHP-DI's functions, as Composer scripts don't autoload these.
     require_once("vendor/php-di/php-di/src/functions.php");
 
+    // Include symfony var-dumper for development. This code is only ever run
+    // during DCB development, so no need to comment it out.
+    require_once('vendor/symfony/var-dumper/Resources/functions/dump.php');
+
     static::buildContainer();
 
     $event->getIO()->write("Written new cached container file.");
