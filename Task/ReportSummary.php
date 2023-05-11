@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Attribute\InjectImplementations;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
@@ -41,6 +42,7 @@ class ReportSummary extends ReportHookDataFolder {
    *
    * @see \DrupalCodeBuilder\DependencyInjection\ContainerBuilder
    */
+  #[InjectImplementations(\DrupalCodeBuilder\Task\Report\SectionReportInterface::class)]
   public function setReportHelpers(array $helper_services) {
     $this->helperServices = $helper_services;
   }

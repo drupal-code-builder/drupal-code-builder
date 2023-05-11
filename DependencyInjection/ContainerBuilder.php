@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\DependencyInjection;
 
 use Composer\Script\Event;
+use DrupalCodeBuilder\Attribute\InjectImplementations;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -87,6 +88,12 @@ class ContainerBuilder {
     chdir(dirname($base_task_path));
     $task_files = glob('{Task,Task/*}/*.php', GLOB_BRACE);
     chdir($previous_dir);
+
+    // Assembling the services for the container is done over multiple passes.
+    // It would be nice if each of these could be its own class, as in Drupal
+    // core. However, the ContainerBuilder doesn't allow retrieving services
+    // and I don't know whether we can make changes to the Container before
+    // building it.
 
     // Get files in the Task folder and its immediate subfolders.
     foreach ($task_files as $task_file) {
@@ -197,24 +204,87 @@ class ContainerBuilder {
     // register them as an alias for the short name.
     $definitions['DrupalCodeBuilder\Task\Collect\HooksCollector'] = \DI\get('Collect\HooksCollector');
 
-    // Second pass to collect SectionReportInterface tasks, to pass the names as
-    // parameters to the ReportSummary.
-    $report_helper_services = [];
+    // Attribute-based method pass. Services may add an attribute
+    // \DrupalCodeBuilder\Attribute\InjectImplementations to collector method,
+    // specifying in the attribute an interface. All services which implement
+    // this interface will be passed to that method by the container.
+    $collection_interfaces = [];
+    $collector_service_methods = [];
     foreach ($definitions as $service_name => $service_definition) {
-      // Use string matching first to narrow down to Report tasks.
-      if (preg_match('/^Report\w+/', $service_name)) {
-        $class_name = $services[$service_name];
+      if (!isset($services[$service_name])) {
+        continue;
+      }
 
-        $reflection_class = new \ReflectionClass($class_name);
-        if ($reflection_class->implementsInterface(\DrupalCodeBuilder\Task\Report\SectionReportInterface::class)) {
-          $report_helper_services[] = \DI\get($service_name);
+      $class_name = $services[$service_name];
+      $class = new \ReflectionClass($class_name);
+
+      foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        if ($method->isStatic()) {
+          continue;
         }
+
+        $attribute = $method->getAttributes(InjectImplementations::class)[0] ?? NULL;
+
+        if (!$attribute) {
+          continue;
+        }
+
+        $inject = $attribute->newInstance();
+        $interface = $inject->getInterface();
+
+        // Assemble a list of collector services, so we only need to go once
+        // through all services to look for interface implementors.
+        $collection_interfaces[$service_name] = $interface;
+        $collector_service_methods[$service_name] = $method->getName();
       }
     }
+    // Now get all services that implement the collectable interfaces!
+    $collections = [];
+    foreach ($definitions as $service_name => $service_definition) {
+      if (!isset($services[$service_name])) {
+        continue;
+      }
 
-    // Have to pass in the services as an array, as method() only works with a
-    // single parameter!!
-    $definitions['ReportSummary']->method('setReportHelpers', $report_helper_services);
+      $class_name = $services[$service_name];
+      $class = new \ReflectionClass($class_name);
+      // If the service implements any collection interfaces, add it to the
+      // array of collections for that interface.
+      foreach (array_intersect($class->getInterfaceNames(), $collection_interfaces) as $interface) {
+        // Don't add versioned services: we only want the plain one to be used;
+        // when it is obtained from the container, the self::createVersioned()
+        // factory will take care of providing the right version.
+        if (is_numeric(substr($service_name, -1))) {
+          continue;
+        }
+
+        $collections[$interface][] = \DI\get($service_name);
+      }
+    }
+    // Finally, define the method to call on the collector service definition.
+    foreach ($collection_interfaces as $service_name => $interface) {
+      if (empty($collections[$interface])) {
+        continue;
+      }
+
+      // If the definition is a factory, then we actually want the unversioned
+      // alias.
+      // TODO: Why can't we use the __toString() method on the definitions to
+      // check for this in a more API-ish way? API to get definition objects
+      // from helper objects is really weird.
+      if ($definitions[$service_name] instanceof \DI\Definition\Helper\FactoryDefinitionHelper) {
+        $definition = $definitions[$service_name . '.unversioned'];
+      }
+      else {
+        $definition = $definitions[$service_name];
+      }
+
+      // Have to pass in the services as an array, as method() only works with a
+      // single parameter!!
+      $definition->method(
+        $collector_service_methods[$service_name],
+        $collections[$interface]
+      );
+    }
 
     $builder->addDefinitions($definitions);
 
