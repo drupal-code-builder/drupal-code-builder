@@ -40,7 +40,7 @@ class ContainerBuilder {
    * Composer script callback to rebuild the cached container.
    */
   public static function rebuildCachedContainer() {
-    $cached_file = realpath('DependencyInjection/cache/DrupalCodeBuilderCompiledContainer.php');
+    $cached_file = realpath(__DIR__ . '/cache/DrupalCodeBuilderCompiledContainer.php');
     if (file_exists($cached_file)) {
       unlink($cached_file);
     }
