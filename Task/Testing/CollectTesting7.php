@@ -7,7 +7,7 @@
 
 namespace DrupalCodeBuilder\Task\Testing;
 
-use DrupalCodeBuilder\Task\Collect;
+use DrupalCodeBuilder\Task\Collect7;
 use DrupalCodeBuilder\Factory;
 
 /**
@@ -16,7 +16,7 @@ use DrupalCodeBuilder\Factory;
  * This task is meant for internal use only, to keep the testing hook
  * definitions up to date.
  */
-class CollectTesting7 extends Collect {
+class CollectTesting7 extends Collect7 {
 
   /**
    * {@inheritdoc}

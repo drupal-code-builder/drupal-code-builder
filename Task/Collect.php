@@ -8,16 +8,28 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Task\Collect\ElementTypesCollector;
+use DrupalCodeBuilder\Task\Collect\EntityTypesCollector;
 use DrupalCodeBuilder\Task\Collect\HooksCollector;
+use DrupalCodeBuilder\Task\Collect\PluginTypesCollector;
+use DrupalCodeBuilder\Task\Collect\ServicesCollector;
+use DrupalCodeBuilder\Task\Collect\ServiceTagTypesCollector;
+use DrupalCodeBuilder\Task\Collect\FieldTypesCollector;
+use DrupalCodeBuilder\Task\Collect\DataTypesCollector;
+use DrupalCodeBuilder\Task\Collect\AdminRoutesCollector;
 
 /**
  * Task handler for collecting and processing definitions for Drupal components.
  *
- * This will do different things depending on the core Drupal version:
+ * This class is for the highest supported version of Drupal, and any lower
+ * versions which do not have a dedicated class.
+ *
+ * The collection process will do different things depending on the core Drupal
+ * version:
  *  - on D5/6, this downloads documentation files from drupal.org containing
  *    definitions of hooks.
  *  - on D7, this collects hook documentation files from the current site.
- *  - on D8, this collects data about plugins as well as hooks.
+ *  - on D8 and higher, this collects data about plugins as well as hooks.
  */
 class Collect extends Base {
 
@@ -38,12 +50,28 @@ class Collect extends Base {
    */
   function __construct(
     EnvironmentInterface $environment,
-    HooksCollector $hooks_collector
+    HooksCollector $hooks_collector,
+    PluginTypesCollector $plugin_types_collector,
+    ServicesCollector $services_collector,
+    ServiceTagTypesCollector $service_tag_type_collector,
+    FieldTypesCollector $field_types_collector,
+    DataTypesCollector $data_types_collector,
+    EntityTypesCollector $entity_types_collector,
+    ElementTypesCollector $element_types_collector,
+    AdminRoutesCollector $admin_routes_collector
   ) {
     $this->environment = $environment;
 
     $this->collectors = [
       'Collect\HooksCollector' => $hooks_collector,
+      'Collect\PluginTypesCollector' => $plugin_types_collector,
+      'Collect\ServicesCollector' => $services_collector,
+      'Collect\ServiceTagTypesCollector' => $service_tag_type_collector,
+      'Collect\FieldTypesCollector' => $field_types_collector,
+      'Collect\DataTypesCollector' => $data_types_collector,
+      'Collect\EntityTypesCollector' => $entity_types_collector,
+      'Collect\ElementTypesCollector' => $element_types_collector,
+      'Collect\AdminRoutesCollector' => $admin_routes_collector,
     ];
   }
 

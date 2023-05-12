@@ -69,7 +69,7 @@ class ReportPluginData extends ReportHookDataFolder
    * @return
    *  The processed plugin data.
    *
-   * @see \DrupalCodeBuilder\Task\Collect8::gatherPluginTypeInfo()
+   * @see \DrupalCodeBuilder\Task\Collect::gatherPluginTypeInfo()
    */
   function listPluginData($discovery_type = NULL) {
     // We may come here several times, so cache this.

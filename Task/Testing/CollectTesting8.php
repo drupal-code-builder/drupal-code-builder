@@ -7,7 +7,7 @@
 
 namespace DrupalCodeBuilder\Task\Testing;
 
-use DrupalCodeBuilder\Task\Collect8;
+use DrupalCodeBuilder\Task\Collect;
 use DrupalCodeBuilder\Factory;
 
 /**
@@ -26,6 +26,6 @@ use DrupalCodeBuilder\Factory;
  * all the jobs we run for sample data collection here rather than the faffy
  * filtering in each collector helper.
  */
-class CollectTesting8 extends Collect8 {
+class CollectTesting8 extends Collect {
 
 }

@@ -27,8 +27,7 @@ class ContainerTest extends TestCase {
 
     $this->assertEquals(7, $container->get('environment')->getCoreMajorVersion());
     $this->assertEquals(\DrupalCodeBuilder\Task\ReportPluginData::class, get_class($container->get('ReportPluginData')));
-    // There is no Collect7 class, so we expect the plain class here.
-    $this->assertEquals(\DrupalCodeBuilder\Task\Collect::class, get_class($container->get('Collect')));
+    $this->assertEquals(\DrupalCodeBuilder\Task\Collect7::class, get_class($container->get('Collect')));
     $this->assertEquals(\DrupalCodeBuilder\Task\Collect\HooksCollector7::class, get_class($container->get('Collect\HooksCollector')));
   }
 
@@ -45,7 +44,8 @@ class ContainerTest extends TestCase {
 
     $this->assertEquals(8, $container->get('environment')->getCoreMajorVersion());
     $this->assertEquals(\DrupalCodeBuilder\Task\ReportPluginData::class, get_class($container->get('ReportPluginData')));
-    $this->assertEquals(\DrupalCodeBuilder\Task\Collect8::class, get_class($container->get('Collect')));
+    // There is no Collect8 class, so we expect the plain class here.
+    $this->assertEquals(\DrupalCodeBuilder\Task\Collect::class, get_class($container->get('Collect')));
     $this->assertEquals(\DrupalCodeBuilder\Task\Collect\HooksCollector8::class, get_class($container->get('Collect\HooksCollector')));
 
     $generate_module = $container->get('Generate|module');

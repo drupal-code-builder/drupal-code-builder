@@ -7,7 +7,7 @@
 
 namespace DrupalCodeBuilder\Task\Testing;
 
-use DrupalCodeBuilder\Task\Collect9;
+use DrupalCodeBuilder\Task\Collect;
 
 /**
  * Collect hook definitions to be stored as a file in our tests folder.
@@ -22,6 +22,6 @@ use DrupalCodeBuilder\Task\Collect9;
  * all the jobs we run for sample data collection here rather than the faffy
  * filtering in each collector helper.
  */
-class CollectTesting9 extends Collect9 {
+class CollectTesting9 extends Collect {
 
 }
