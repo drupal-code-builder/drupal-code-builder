@@ -27,6 +27,13 @@ class Collect extends Base {
   protected $sanity_level = 'data_directory_exists';
 
   /**
+   * The collector services.
+   *
+   * @var array
+   */
+  protected $collectors = [];
+
+  /**
    * Constructor.
    */
   function __construct(
