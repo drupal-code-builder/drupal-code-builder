@@ -33,6 +33,13 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 class Base {
 
   /**
+   * The environment.
+   *
+   * @var \DrupalCodeBuilder\Environment\EnvironmentInterface
+   */
+  protected $environment;
+
+  /**
    * Constructor.
    *
    * @param $environment
