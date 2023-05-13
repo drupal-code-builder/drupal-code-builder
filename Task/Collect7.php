@@ -24,4 +24,12 @@ class Collect7 extends Collect {
     ];
   }
 
+  /**
+   * Override the parent method to not have the injection attribute.
+   *
+   * This class uses constructor injection as it only uses one collector.
+   */
+  public function setCollectors(array $collectors) {
+  }
+
 }

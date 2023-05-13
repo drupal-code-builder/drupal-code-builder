@@ -27,8 +27,17 @@ class ContainerTest extends TestCase {
 
     $this->assertEquals(7, $container->get('environment')->getCoreMajorVersion());
     $this->assertEquals(\DrupalCodeBuilder\Task\ReportPluginData::class, get_class($container->get('ReportPluginData')));
-    $this->assertEquals(\DrupalCodeBuilder\Task\Collect7::class, get_class($container->get('Collect')));
     $this->assertEquals(\DrupalCodeBuilder\Task\Collect\HooksCollector7::class, get_class($container->get('Collect\HooksCollector')));
+
+    // Check the Collect task gets the right collectors injected.
+    $this->assertEquals(\DrupalCodeBuilder\Task\Collect7::class, get_class($container->get('Collect')));
+    $collect_task = $container->get('Collect');
+    $collect_reflection = new \ReflectionObject($collect_task);
+    $p = $collect_reflection->getProperty('collectors');
+    $p->setAccessible(TRUE);
+    $collectors = $p->getValue($collect_task);
+    $this->assertCount(1, $collectors);
+    $this->assertArrayHasKey('Collect\HooksCollector', $p->getValue($collect_task));
   }
 
   /**
@@ -44,9 +53,17 @@ class ContainerTest extends TestCase {
 
     $this->assertEquals(8, $container->get('environment')->getCoreMajorVersion());
     $this->assertEquals(\DrupalCodeBuilder\Task\ReportPluginData::class, get_class($container->get('ReportPluginData')));
+    $this->assertEquals(\DrupalCodeBuilder\Task\Collect\HooksCollector8::class, get_class($container->get('Collect\HooksCollector')));
+
     // There is no Collect8 class, so we expect the plain class here.
     $this->assertEquals(\DrupalCodeBuilder\Task\Collect::class, get_class($container->get('Collect')));
-    $this->assertEquals(\DrupalCodeBuilder\Task\Collect\HooksCollector8::class, get_class($container->get('Collect\HooksCollector')));
+    // Check the Collect task gets all the collectors injected.
+    $collect_task = $container->get('Collect');
+    $collect_reflection = new \ReflectionObject($collect_task);
+    $p = $collect_reflection->getProperty('collectors');
+    $p->setAccessible(TRUE);
+    $collectors = $p->getValue($collect_task);
+    $this->assertNotCount(1, $collectors);
 
     $generate_module = $container->get('Generate|module');
     $this->assertEquals(\DrupalCodeBuilder\Task\Generate::class, get_class($generate_module));

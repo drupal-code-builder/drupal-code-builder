@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Task\Collect;
 /**
  * Base class for analysis collector classes.
  */
-abstract class CollectorBase {
+abstract class CollectorBase implements CollectorInterface {
 
   /**
    * The key in the filename for the processed data.
