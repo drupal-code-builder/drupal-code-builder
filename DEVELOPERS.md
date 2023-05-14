@@ -8,7 +8,7 @@ Using DCB can be summarized as follows:
 
 For example:
 
-```
+```php
   // Load the file for the factory class.
   // (Not necessary if using DCB via Composer.)
   include_once('Factory.php');
@@ -31,7 +31,7 @@ need to specify:
 
 This is done as follows:
 
-```
+```php
   // Tell DCB which environment it's being used in and the Drupal core version.
   \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('Drush')
     ->setCoreVersionNumber(9);
@@ -68,7 +68,7 @@ is not yet supported for all files.)
 To do this, get a DrupalExtension object for the existing module, and pass it to
 the Generate task:
 
-```
+```php
 $analyse_extension_task = \DrupalCodeBuilder\Factory::getTask('AnalyseExtension');
 $existing_extension = $analyse_extension_task->createExtension('module', $existing_module_path);
 
@@ -80,7 +80,7 @@ $files = $task->generateComponent($component_data, [], NULL, $existing_extension
 Different components can have configuration for how the code is generated. This
 is held in a \MutableTypedData\Data\DataItem object, obtained like this:
 
-```
+```php
 $configuration_task = \DrupalCodeBuilder\Factory::getTask('Configuration');
 $config_data = $configuration_task->getConfigurationData('module');
 ```
@@ -88,6 +88,6 @@ $config_data = $configuration_task->getConfigurationData('module');
 The config object can be used in the same way as the component data. To use
 the config, pass it in when generating the code:
 
-```
+```php
 $files = $task->generateComponent($component_data, [], $config_data);
 ```
