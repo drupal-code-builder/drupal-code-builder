@@ -39,7 +39,7 @@ array (
       'static_method' => '',
       'class' => '\\Drupal\\Core\\Cache\\CacheBackendInterface',
       'interface' => '',
-      'description' => 'The Cache backend service',
+      'description' => 'The cache backend service',
       'variable_name' => 'cache_backend',
     ),
     'current_user' => 
@@ -61,6 +61,16 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
       'variable_name' => 'entity_type_manager',
+    ),
+    'event_dispatcher' => 
+    array (
+      'id' => 'event_dispatcher',
+      'label' => 'Event dispatcher',
+      'static_method' => '',
+      'class' => '\\Drupal\\Component\\EventDispatcher\\ContainerAwareEventDispatcher',
+      'interface' => '\\Symfony\\Component\\EventDispatcher\\EventDispatcherInterface',
+      'description' => 'The event dispatcher service',
+      'variable_name' => 'event_dispatcher',
     ),
     'module_handler' => 
     array (

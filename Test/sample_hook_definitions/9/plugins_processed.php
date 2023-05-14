@@ -278,7 +278,7 @@ array (
       'weight' => 
       array (
         'name' => 'weight',
-        'description' => 'An integer to determine the weight of this formatter relative to other',
+        'description' => 'An integer to determine the weight of this formatter.',
         'type' => 'int',
       ),
     ),
@@ -623,7 +623,7 @@ array (
       'type' => 
       array (
         'name' => 'type',
-        'description' => 'An array of DataType plugin IDs for which this constraint applies. Valid',
+        'description' => 'DataType plugin IDs for which this constraint applies.',
         'type' => 'string|string[]|false',
       ),
     ),
