@@ -36,6 +36,9 @@ interface SectionReportInterface {
   /**
    * Gets the count of values for this section.
    *
+   * Use \DrupalCodeBuilder\Task\SectionReportSimpleCountTrait for simple
+   * implementations of this.
+   *
    * @return int
    *   The number of values.
    */
