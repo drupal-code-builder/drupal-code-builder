@@ -71,6 +71,7 @@ class Collect extends Base {
     foreach ($this->collectors as $collector_service_name => $collector_helper) {
       // Get the list of jobs from each collector.
       $collector_job_list = $collector_helper->getJobList();
+      assert(!empty($collector_helper->getReportingKey()));
 
       if (is_null($collector_job_list)) {
         // Collector doesn't support jobs: create just a single job for it.
@@ -204,7 +205,9 @@ class Collect extends Base {
       $collector_data = $collector_helper->collect($job_list);
 
       // Save the data.
-      $this->environment->getStorage()->store($collector_helper->getSaveDataKey(), $collector_data);
+      $data_key = $collector_helper->getSaveDataKey();
+      assert(!empty($data_key));
+      $this->environment->getStorage()->store($data_key, $collector_data);
 
       // Add the count to the results.
       $count = $collector_helper->getDataCount($collector_data);
