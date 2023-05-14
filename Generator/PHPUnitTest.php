@@ -157,6 +157,11 @@ class PHPUnitTest extends PHPClassFile {
         ->setDescription("The services that this test class creates mocks for.")
         ->setMultiple(TRUE)
         ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+      'creation_traits' => PropertyDefinition::create('string')
+        ->setLabel('Creation traits')
+        ->setDescription("Traits which provide useful methods for creating various kinds of test data.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('Analyse\TestTraits')),
       'module_dependencies' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setAutoAcquiredFromRequester(),
@@ -379,6 +384,14 @@ class PHPUnitTest extends PHPClassFile {
         $this->properties[] = $property_code;
       }
     }
+
+    foreach ($this->component_data['creation_traits'] as $data) {
+      $this->traits[] = [
+        "use {$data};",
+      ];
+    }
+
+    parent::collectSectionBlocks();
   }
 
   /**
