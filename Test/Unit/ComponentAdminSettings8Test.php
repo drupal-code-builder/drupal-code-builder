@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * Tests the AdminSettingsForm generator class.
  *
  * @group form
+ * @group yaml
  */
 class ComponentAdminSettings8Test extends TestBase {
 
