@@ -79,7 +79,7 @@ class DataTypesCollector extends CollectorBase {
       }
 
       // Skip types with a wildcard in the name.
-      if (strpos($type, '*') !== FALSE) {
+      if (str_contains($type, '*')) {
         continue;
       }
 
@@ -93,7 +93,7 @@ class DataTypesCollector extends CollectorBase {
       if (str_ends_with($type, 'settings')) {
         continue;
       }
-      if (strpos($type, 'date_format') !== FALSE) {
+      if (str_contains($type, 'date_format')) {
         continue;
       }
 

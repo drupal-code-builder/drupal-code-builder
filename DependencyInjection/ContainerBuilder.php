@@ -158,7 +158,7 @@ class ContainerBuilder {
     }
 
     foreach ($class_loader->getClassMap() as $class_name => $class_filename) {
-      if (strpos($class_name, 'DrupalCodeBuilder\Generator') !== 0) {
+      if (!str_starts_with($class_name, 'DrupalCodeBuilder\Generator')) {
         continue;
       }
 

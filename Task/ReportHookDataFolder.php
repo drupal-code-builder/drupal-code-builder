@@ -59,7 +59,7 @@ class ReportHookDataFolder extends Base {
         continue;
       }
       // Our own processed files.
-      if (strpos($file, '_processed.php')) {
+      if (str_ends_with($file, '_processed.php')) {
         continue;
       }
 

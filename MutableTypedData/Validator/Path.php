@@ -14,7 +14,7 @@ class Path implements ValidatorInterface {
    * {@inheritdoc}
    */
   public function validate(DataItem $data): bool {
-    return (strpos($data->value, '/') === 0);
+    return str_starts_with($data->value, '/');
   }
 
   /**

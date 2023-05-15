@@ -89,7 +89,7 @@ class PluginTypesCollector extends CollectorBase  {
     $job_list = [];
     foreach ($plugin_manager_service_ids as $plugin_manager_service_id) {
       // Derive a plugin type ID.
-      if (strpos($plugin_manager_service_id, 'plugin.manager.') === 0) {
+      if (str_starts_with($plugin_manager_service_id, 'plugin.manager.')) {
         // We identify plugin types where the service name follows the standard
         // pattern by the part of the plugin manager service name that comes
         // after 'plugin.manager.'.
@@ -152,7 +152,7 @@ class PluginTypesCollector extends CollectorBase  {
 
       // Assume that any service whose name is of the form plugin.manager.FOO
       // is a plugin type manager.
-      if (strpos($service_id, 'plugin.manager.') === 0) {
+      if (str_starts_with($service_id, 'plugin.manager.')) {
         $plugin_manager_service_ids[] = $service_id;
 
         continue;
@@ -1124,7 +1124,7 @@ class PluginTypesCollector extends CollectorBase  {
     // the syntax tree.
     $body = $method_ref->getBody();
 
-    if (strpos($body, 'return new') === FALSE) {
+    if (!str_contains($body, 'return new')) {
       // The method doesn't construct an object: therefore the paramters for
       // the plugin constructor are the standard ones.
       return;

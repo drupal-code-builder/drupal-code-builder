@@ -206,14 +206,14 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   public static function processingPluginName($data_item) {
     $plugin_name = $data_item->getParent()->plugin_name->value;
 
-    if (strpos($plugin_name, ':') !== FALSE) {
+    if (str_contains($plugin_name, ':')) {
       // Don't if the plugin ID is a derivative.
       return $plugin_name;
     }
 
     $module_name = $data_item->getParent()->root_component_name->value;
 
-    if (strpos($plugin_name, $module_name) === 0) {
+    if (str_starts_with($plugin_name, $module_name)) {
       // Don't if the plugin ID already has the module name as a prefix, or
       // is entirely the module name.
       return $plugin_name;

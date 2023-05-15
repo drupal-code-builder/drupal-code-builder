@@ -293,7 +293,7 @@ class ComponentFolderRecursiveFilterIterator extends \RecursiveFilterIterator {
     $current_filename_extension = pathinfo($current_filename, PATHINFO_EXTENSION);
 
     // Filter out hidden files: don't want to be scanning .git folders!
-    if (strpos($current_filename, '.') === (int) 0) {
+    if (str_starts_with($current_filename, '.')) {
       return FALSE;
     }
 
