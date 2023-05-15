@@ -52,7 +52,7 @@ class ComponentPermissions8Test extends TestBase {
 
     $yaml_tester = new YamlTester($permissions_file);
     $yaml_tester->assertPropertyHasValue([$permission_name, 'title'], 'My permission name', "The permissions file declares the permission name.");
-    $yaml_tester->assertPropertyHasValue([$permission_name, 'description'], 'My permission name', "The permissions file declares the permission description.");
+    $yaml_tester->assertPropertyHasValue([$permission_name, 'description'], 'Description for My permission name.', "The permissions file declares the permission description.");
   }
 
 }

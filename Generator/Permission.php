@@ -34,7 +34,7 @@ class Permission extends BaseGenerator {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("get('..:title')")
+            ->setExpression("'Description for ' ~ get('..:title') ~ '.'")
             ->setDependencies('..:title')
         ),
       'restrict_access' => PropertyDefinition::create('boolean')

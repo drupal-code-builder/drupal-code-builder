@@ -423,7 +423,7 @@ class ComponentConfigEntityType8Test extends TestBase {
 
     $yaml_tester->assertHasProperty('administer kitty_cat entities', "The permissions file declares the entity admin permission.");
     $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'title'], 'Administer Kitty cat entities', "The permission has the expected title.");
-    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'description'], 'Administer Kitty cat entities', "The permission has the expected description.");
+    $yaml_tester->assertPropertyHasValue(['administer kitty_cat entities', 'description'], 'Description for Administer Kitty cat entities.', "The permission has the expected description.");
 
     // Check the menu links file.
     $menu_links_file = $files["test_module.links.menu.yml"];
