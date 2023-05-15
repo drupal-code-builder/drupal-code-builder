@@ -14,7 +14,6 @@ class Path implements ValidatorInterface {
    * {@inheritdoc}
    */
   public function validate(DataItem $data): bool {
-    // No spaces allowed.
     return (strpos($data->value, '/') === 0);
   }
 
