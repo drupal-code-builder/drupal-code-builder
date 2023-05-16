@@ -7,8 +7,8 @@ use DrupalCodeBuilder\Exception\StorageException;
 /**
  * Provides a storage handler that writes PHP declarations of data in files.
  *
- * Slightly better than DumpEval, as the resulting files get syntax highlighting
- * in text editors.
+ * Slightly better than ExportEval, as the resulting files get syntax
+ * highlighting in text editors.
  */
 class ExportInclude extends StorageBase {
 
