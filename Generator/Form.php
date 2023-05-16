@@ -6,7 +6,7 @@ use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
- * Generator class for forms on Drupal 8.
+ * Generator class for forms on Drupal 8 and higher.
  *
  * Note that entity forms use the EntityForm generator which does *not*
  * inherit from this class!

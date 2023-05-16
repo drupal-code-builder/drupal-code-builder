@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Generator for the routing.yml file.
  *
- * Note this only is requested for Drupal 8.
+ * Note this only note requested for Drupal 7 and older.
  *
  * @see RouterItem
  */

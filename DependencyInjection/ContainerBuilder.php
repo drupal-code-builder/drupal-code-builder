@@ -23,9 +23,9 @@ use Psr\Container\ContainerInterface;
  * class 'Foo7' exists, then requesting 'Foo' while running on Drupal 7 will
  * return a 'Foo7' object.
  *
- * This uses php-di/php-di rather than symfony/dependency_injection, because
- * we need the DCB package to run on both Drupal 8 and 9, and those use
- * different versions of Symfony. The DI component is sufficiently different
+ * This uses php-di/php-di rather than symfony/dependency_injection, because we
+ * need the DCB package to run on different major versions of Drupal which will
+ * use different versions of Symfony. The DI component is sufficiently different
  * in versions 3 and 4 of Symfony to make this impossible. Therefore the
  * simplest solution is to use a completely different DI package.
  *

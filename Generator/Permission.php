@@ -6,7 +6,7 @@ use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
- * Generator for module permissions on Drupal 8.
+ * Generator for module permissions on Drupal 8 and higher.
  */
 class Permission extends BaseGenerator {
 

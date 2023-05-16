@@ -11,7 +11,7 @@ use MutableTypedData\Definition\VariantDefinition;
 use MutableTypedData\Data\DataItem;
 
 /**
- * Generator for router item on Drupal 8.
+ * Generator for router item on Drupal 8 and higher.
  *
  * This adds a routing item to the routing component.
  */
