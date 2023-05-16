@@ -61,7 +61,7 @@ abstract class StorageBase {
    *   The indentifier for the data, e.g. 'hooks'.
    */
   public function delete($key) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $data_file = "$directory/{$key}_processed.php";
 
     if (file_exists($data_file)) {

@@ -29,7 +29,7 @@ class ReportHookDataFolder extends Base {
    *  A unix timestamp, or NULL if the hooks have never been collected.
    */
   public function lastUpdatedDate() {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $hooks_file = "$directory/hooks_processed.php";
     if (file_exists($hooks_file)) {
       $timestamp = filemtime($hooks_file);
@@ -45,7 +45,7 @@ class ReportHookDataFolder extends Base {
    *  are present, an empty array is returned.
    */
   public function listHookFiles() {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
 
     $files = [];
 

@@ -16,7 +16,7 @@ class ExportInclude extends StorageBase {
    * {@inheritdoc}
    */
   public function store($key, $data) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $export = '<?php $data =' . "\n" . var_export($data, TRUE) . ';';
     file_put_contents("{$directory}/{$key}_processed.php", $export);
   }
@@ -25,7 +25,7 @@ class ExportInclude extends StorageBase {
    * {@inheritdoc}
    */
   public function retrieve($key) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
 
     // Convert the public:// scheme to an absolute path, as using include on
     // a stream on PHP ^7.4 causes it to call streamWrapper::stream_set_option()

@@ -15,7 +15,7 @@ class TestExportInclude extends ExportInclude {
    * {@inheritdoc}
    */
   public function retrieve($key) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
 
     $data_file = "$directory/{$key}_processed.php";
 

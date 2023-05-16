@@ -13,7 +13,7 @@ class Serialized extends StorageBase {
    * {@inheritdoc}
    */
   public function store($key, $data) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $serialized = serialize($data);
     file_put_contents("{$directory}/{$key}_processed.php", $serialized);
   }
@@ -22,7 +22,7 @@ class Serialized extends StorageBase {
    * {@inheritdoc}
    */
   public function retrieve($key) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $data_file = "$directory/{$key}_processed.php";
     if (file_exists($data_file)) {
       $data = unserialize(file_get_contents($data_file));

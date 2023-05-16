@@ -40,7 +40,7 @@ class HooksCollector7 extends HooksCollector {
    */
   protected function gatherHookDocumentationFiles($system_listing) {
     // Get the hooks directory.
-    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
+    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getDataDirectory();
 
     // Get Drupal root folder as a file path.
     // DRUPAL_ROOT is defined both by Drupal and Drush.

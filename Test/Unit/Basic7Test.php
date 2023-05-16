@@ -26,7 +26,7 @@ class Basic7Test extends TestBase {
    * Test the hook data is reported correctly.
    */
   public function testReportHookData() {
-    $hooks_directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
+    $hooks_directory = \DrupalCodeBuilder\Factory::getEnvironment()->getDataDirectory();
 
     $mb_task_handler_report = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
     $this->assertTrue(is_object($mb_task_handler_report), "A task handler object was returned.");

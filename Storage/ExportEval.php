@@ -14,7 +14,7 @@ class ExportEval extends StorageBase {
    * {@inheritdoc}
    */
   public function store($key, $data) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $export = var_export($data, TRUE);
     file_put_contents("{$directory}/{$key}_processed.php", $export);
   }
@@ -23,7 +23,7 @@ class ExportEval extends StorageBase {
    * {@inheritdoc}
    */
   public function retrieve($key) {
-    $directory = $this->environment->getHooksDirectory();
+    $directory = $this->environment->getDataDirectory();
     $data_file = "$directory/{$key}_processed.php";
     if (file_exists($data_file)) {
       eval('$data = ' . file_get_contents($data_file) . ';');

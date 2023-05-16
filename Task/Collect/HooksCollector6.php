@@ -27,7 +27,7 @@ class HooksCollector6 extends HooksCollector {
    * Because getJobList() returns NULL, $job_list is NULL and is ignored.
    */
   protected function gatherHookDocumentationFiles($job_list) {
-    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getHooksDirectory();
+    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getDataDirectory();
 
     // Fetch data about the files we need to download.
     $hook_files = $this->getHookFileUrls($directory);
