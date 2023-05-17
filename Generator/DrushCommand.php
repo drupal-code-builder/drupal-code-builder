@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 
 /**
@@ -30,7 +31,12 @@ class DrushCommand extends BaseGenerator {
         ->setDescription("Short aliases for the command.")
         ->setMultiple(TRUE),
       'command_description' => PropertyDefinition::create('string')
-        ->setLabel("Command description"),
+        ->setLabel("Command description")
+        ->setRequired(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setExpression("'The ' ~ get('..:command_name') ~ ' command.'")
+          ->setDependencies('..:command_name')
+        ),
       'command_parameters' => PropertyDefinition::create('string')
         ->setLabel("Command parameter names")
         ->setMultiple(TRUE),
