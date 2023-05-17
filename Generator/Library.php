@@ -34,7 +34,7 @@ class Library extends BaseGenerator {
         ->setMultiple(TRUE),
       'dependencies' => PropertyDefinition::create('string')
         ->setLabel("Library dependencies")
-        ->setDescription("The sample code in JavaScriptFile requires core/jquery and core/drupal.")
+        ->setDescription("The sample code in the generated JS file requires core/jquery and core/drupal.")
         ->setMultiple(TRUE)
         ->setLiteralDefault([
           // The sample code in JavaScriptFile assumes these dependencies.
