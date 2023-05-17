@@ -43,6 +43,7 @@ class UnitCodeAnalyserTest extends TestCase {
     $this->assertTrue($code_analyser->classIsUsable(__CLASS__), "The current class is safe.");
     $this->assertTrue($code_analyser->classIsUsable('MadeUpClass'), "A non-existent class is safe.");
     $this->assertTrue($code_analyser->classIsUsable('DrupalCodeBuilder\Test\Fixtures\Php7Class'), "A class with PHP7 syntax is safe.");
+    $this->assertTrue($code_analyser->classIsUsable('DrupalCodeBuilder\Test\Fixtures\Php8Class'), "A class with PHP8 syntax is safe.");
 
     // For development: use this line to verify that BadClass indeed crashes
     // PHP!
