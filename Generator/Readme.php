@@ -22,6 +22,11 @@ class Readme extends File {
         ->setAutoAcquiredFromRequester(),
     ]);
 
+    $definition->getProperty('filename')
+      // The extension is in lowercase for good reasons which I don't remember
+      // right now, but probably to do with Windows being rubbish.
+      ->setLiteralDefault('README.txt');
+
     return $definition;
   }
 
