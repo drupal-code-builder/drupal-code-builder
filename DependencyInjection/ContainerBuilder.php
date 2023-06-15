@@ -300,6 +300,15 @@ class ContainerBuilder {
   /**
    * Factory for versioned services which have no construction parameters.
    *
+   * This is registered as the factory for the service name without a version
+   * suffix, for example, 'Foo'. Instead of 'Foo', it will return:
+   *  1. The service with the version suffix for the current major version, for
+   *     example 'Foo10', if it exists.
+   *  2. The service formed by adding the '.unversioned' suffix otherwise. This
+   *     is an alias for the 'Foo' class, which is needed because trying to get
+   *     'Foo' from the container will bring us right back to this factory
+   *     method.
+   *
    * @param \Psr\Container\ContainerInterface $container
    *   The container.
    * @param \DI\Factory\RequestedEntry $entry
