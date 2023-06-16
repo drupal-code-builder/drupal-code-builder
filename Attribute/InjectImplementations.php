@@ -21,6 +21,8 @@ use Attribute;
  *   interface.
  * - Define one or more services that implement the interface passed to the
  *   attribute.
+ *
+ * Services are injected as an array, keyed by the service name.
  */
 #[Attribute(Attribute::TARGET_METHOD)]
 final class InjectImplementations {

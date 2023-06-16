@@ -681,16 +681,16 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get88()
     {
         return [
-            0 => $this->get89(),
-            1 => $this->get90(),
-            2 => $this->get91(),
-            3 => $this->get92(),
-            4 => $this->get93(),
-            5 => $this->get94(),
-            6 => $this->get95(),
-            7 => $this->get96(),
-            8 => $this->get97(),
-            9 => $this->get98(),
+            'Analyse\\TestTraits' => $this->get89(),
+            'ReportAdminRoutes' => $this->get90(),
+            'ReportDataTypes' => $this->get91(),
+            'ReportElementTypes' => $this->get92(),
+            'ReportEntityTypes' => $this->get93(),
+            'ReportFieldTypes' => $this->get94(),
+            'ReportHookData' => $this->get95(),
+            'ReportPluginData' => $this->get96(),
+            'ReportServiceData' => $this->get97(),
+            'ReportServiceTags' => $this->get98(),
         ];
     }
 
@@ -775,16 +775,16 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get104()
     {
         return [
-            0 => $this->get105(),
-            1 => $this->get106(),
-            2 => $this->get107(),
-            3 => $this->get108(),
-            4 => $this->get109(),
-            5 => $this->get110(),
-            6 => $this->get111(),
-            7 => $this->get112(),
-            8 => $this->get113(),
-            9 => $this->get114(),
+            'Analyse\\TestTraits' => $this->get105(),
+            'Collect\\AdminRoutesCollector' => $this->get106(),
+            'Collect\\DataTypesCollector' => $this->get107(),
+            'Collect\\ElementTypesCollector' => $this->get108(),
+            'Collect\\EntityTypesCollector' => $this->get109(),
+            'Collect\\FieldTypesCollector' => $this->get110(),
+            'Collect\\PluginTypesCollector' => $this->get111(),
+            'Collect\\ServiceTagTypesCollector' => $this->get112(),
+            'Collect\\ServicesCollector' => $this->get113(),
+            'Collect\\HooksCollector' => $this->get114(),
         ];
     }
 
@@ -853,16 +853,16 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get117()
     {
         return [
-            0 => $this->get118(),
-            1 => $this->get119(),
-            2 => $this->get120(),
-            3 => $this->get121(),
-            4 => $this->get122(),
-            5 => $this->get123(),
-            6 => $this->get124(),
-            7 => $this->get125(),
-            8 => $this->get126(),
-            9 => $this->get127(),
+            'Analyse\\TestTraits' => $this->get118(),
+            'Collect\\AdminRoutesCollector' => $this->get119(),
+            'Collect\\DataTypesCollector' => $this->get120(),
+            'Collect\\ElementTypesCollector' => $this->get121(),
+            'Collect\\EntityTypesCollector' => $this->get122(),
+            'Collect\\FieldTypesCollector' => $this->get123(),
+            'Collect\\PluginTypesCollector' => $this->get124(),
+            'Collect\\ServiceTagTypesCollector' => $this->get125(),
+            'Collect\\ServicesCollector' => $this->get126(),
+            'Collect\\HooksCollector' => $this->get127(),
         ];
     }
 
@@ -967,16 +967,16 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get134()
     {
         return [
-            0 => $this->get135(),
-            1 => $this->get136(),
-            2 => $this->get137(),
-            3 => $this->get138(),
-            4 => $this->get139(),
-            5 => $this->get140(),
-            6 => $this->get141(),
-            7 => $this->get142(),
-            8 => $this->get143(),
-            9 => $this->get144(),
+            'Analyse\\TestTraits' => $this->get135(),
+            'Collect\\AdminRoutesCollector' => $this->get136(),
+            'Collect\\DataTypesCollector' => $this->get137(),
+            'Collect\\ElementTypesCollector' => $this->get138(),
+            'Collect\\EntityTypesCollector' => $this->get139(),
+            'Collect\\FieldTypesCollector' => $this->get140(),
+            'Collect\\PluginTypesCollector' => $this->get141(),
+            'Collect\\ServiceTagTypesCollector' => $this->get142(),
+            'Collect\\ServicesCollector' => $this->get143(),
+            'Collect\\HooksCollector' => $this->get144(),
         ];
     }
 

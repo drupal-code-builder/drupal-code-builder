@@ -272,7 +272,7 @@ class ContainerBuilder {
           continue;
         }
 
-        $collections[$interface][] = \DI\get($service_name);
+        $collections[$interface][$service_name] = \DI\get($service_name);
       }
     }
     // Finally, define the method to call on the collector service definition.
