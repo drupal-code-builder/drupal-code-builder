@@ -193,8 +193,8 @@ class ContainerBuilder {
         ->parameter('root_component_type', $root_component_type);
     } // foreach class map
 
-    // Define the versioned services. This needs a separate loop because some
-    // of these classe are abstract, and so not in $services.
+    // Define the unversioned services. This needs a separate loop because some
+    // of these classes are abstract, and so not in $services.
     foreach (array_keys($versioned_services) as $service_name) {
       // These can all use the same factory because the versioned class is also
       // a service, that gets autowired and the factory doesn't need to worry
