@@ -77,7 +77,12 @@ class ContainerBuilder {
       \DrupalCodeBuilder\Environment\EnvironmentInterface::class => \DI\get('environment'),
     ]);
 
+    // An array of service name => full class name.
     $services = [];
+
+    // The service names of services that have versioned versions. For example,
+    // would contain Foo if there is a Foo8.
+    // TODO: Rename!
     $versioned_services = [];
 
     // Change directory to DCB's root directory. In an environment where DCB is
