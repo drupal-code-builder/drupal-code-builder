@@ -80,6 +80,10 @@ class ContainerBuilder {
     // An array of service name => full class name.
     $services = [];
 
+    // An array of potential service name => full class name, with all classes:
+    // contains classes that are filtered out and not defined as services.
+    $all_classes = [];
+
     // The service names of services that have versioned versions. For example,
     // would contain Foo if there is a Foo8.
     // TODO: Rename!
@@ -112,6 +116,8 @@ class ContainerBuilder {
       $service_name = str_replace('/', '\\', $trimmed_file_name);
 
       $class_name = '\DrupalCodeBuilder\Task\\' . $service_name;
+
+      $all_classes[$service_name] = $class_name;
 
       // With versioned classes, keep track of the base unversioned name, as
       // these should not be registered in the bulk list.
@@ -246,11 +252,15 @@ class ContainerBuilder {
     // Now get all services that implement the collectable interfaces!
     $collections = [];
     foreach ($definitions as $service_name => $service_definition) {
-      if (!isset($services[$service_name])) {
+      // Skip anything that isn't a class, such as the flavours of Generate.
+      if (!isset($all_classes[$service_name])) {
         continue;
       }
 
-      $class_name = $services[$service_name];
+      // We check all classes, not just services, as if the unversioned service
+      // is an abstract class (because versions exist for all core versions),
+      // it won't be a service.
+      $class_name = $all_classes[$service_name];
       $class = new \ReflectionClass($class_name);
       // If the service implements any collection interfaces, add it to the
       // array of collections for that interface.
