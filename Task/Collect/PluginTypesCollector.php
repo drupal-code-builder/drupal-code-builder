@@ -164,9 +164,15 @@ class PluginTypesCollector extends CollectorBase  {
         continue;
       }
 
+
+      // Skip if the class isn't loadable by PHP without causing a fatal.
+      $service_class = $definition->getClass();
+      if (!$this->codeAnalyser->classIsUsable($service_class)) {
+        continue;
+      }
+
       // Find any plugin managers which don't conform to the pattern for the
       // service name, but do inherit from the DefaultPluginManager class.
-      $service_class = $definition->getClass();
       if (is_subclass_of($service_class, \Drupal\Core\Plugin\DefaultPluginManager::class)) {
         $plugin_manager_service_ids[] = $service_id;
       }
