@@ -423,6 +423,16 @@ class ServicesCollector extends CollectorBase  {
         continue;
       }
 
+      // Apparently checking with has() isn't sufficient and it's still possible
+      // for a service to not exist at this point. E.g. this is happening with
+      // 'token' for FKW reasons.
+      try {
+        $definition = $container_builder->getDefinition($service_id);
+      }
+      catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException $e) {
+        continue;
+      }
+
       $docblock = $method->getDocComment();
 
       // Extract the interface for the service from the docblock @return.
@@ -438,8 +448,6 @@ class ServicesCollector extends CollectorBase  {
       preg_match("@(the (.*))\.@", $doc_first_line, $matches);
       $description = ucfirst($matches[1]);
       $label = ucfirst($matches[2]);
-
-      $definition = $container_builder->getDefinition($service_id);
 
       $service_definition = [
         'id' => $service_id,
