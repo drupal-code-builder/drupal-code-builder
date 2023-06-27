@@ -344,6 +344,13 @@ abstract class HooksCollector extends CollectorBase {
     foreach ($data['bodies'] as &$hook_body) {
       $hook_body = preg_replace(array_keys($import_replacements), array_values($import_replacements), $hook_body);
     }
+    // Replace all the short class names in definitions with fully-qualified
+    // ones. Some api.php files use fully-qualified classes in the function
+    // declarations, and some rely on import statements, and there is no
+    // documentation standard for it :(
+    foreach ($data['definitions'] as &$hook_definition) {
+      $hook_definition = preg_replace(array_keys($import_replacements), array_values($import_replacements), $hook_definition);
+    }
 
     return $data;
   }

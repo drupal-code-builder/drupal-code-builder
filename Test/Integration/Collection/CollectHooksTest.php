@@ -57,6 +57,31 @@ class CollectHooksTest extends CollectionTestBase {
       $body,
       'The short class name in hook body code is replaced with the fully-qualified version.'
     );
+
+    $test_hook_jobs = [
+      [
+        'uri' => 'core/modules/views/views.api.php',
+        'filename' => 'views.api.php',
+        'name' => 'views.api',
+        'group' => 'views',
+        'module' => 'views',
+        'process_label' => 'hooks',
+        'item_label' => 'views.api.php',
+        'collector' => 'HooksCollector',
+      ],
+    ];
+
+    $data = $hooks_collector->collect($test_hook_jobs);
+
+    // Only test specific hooks; don't assert a count
+    $hook_views_post_render_data = $data['views']['hook_views_post_render'];
+
+    // Test the short class names in the function declaration are replaced.
+    // This is kind of babysitting, as most api.php files use fully-qualified
+    // class names in the declarations, but there's no documentation standard
+    // for it.
+    $this->assertStringContainsString('\Drupal\views\ViewExecutable $view', $hook_views_post_render_data['definition']);
+    $this->assertStringContainsString('\Drupal\views\Plugin\views\cache\CachePluginBase $cache', $hook_views_post_render_data['definition']);
   }
 
 }
