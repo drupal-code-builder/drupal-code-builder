@@ -65,7 +65,11 @@ class ContainerBuilder {
    */
   public static function buildContainer() {
     $builder = new \DI\ContainerBuilder();
-    $class_loader = require('vendor/autoload.php');
+
+    // Get the path to this package so we can look for files in it. This also
+    // works if this package is the root.
+    $drupal_code_builder_path = \Composer\InstalledVersions::getInstallPath('drupal-code-builder/drupal-code-builder');
+    $drupal_code_builder_path = realpath($drupal_code_builder_path);
 
     $builder->addDefinitions([
       // This is set to a dummy generic class because the container builder
@@ -93,8 +97,7 @@ class ContainerBuilder {
     // being developed with other packages (e.g. UIs that make use of it), it
     // will not be at the root, but in Composer's vendor folder.
     $previous_dir = getcwd();
-    $base_task_path = $class_loader->findFile(\DrupalCodeBuilder\Factory::class);
-    chdir(dirname($base_task_path));
+    chdir($drupal_code_builder_path);
     $task_files = glob('{Task,Task/*}/*.php', GLOB_BRACE);
     chdir($previous_dir);
 
@@ -160,20 +163,21 @@ class ContainerBuilder {
     // Each of these needs to be its own service, as the Generate task gets
     // the root component as a construction parameter so different root
     // components need a different instance of the task.
-    // WARNING! This requires the Composer class loader to be up to date and
-    // generated with `composer dump --optimise`. Complain if this seems to be
-    // the case.
-    $class_map = $class_loader->getClassMap();
-    if (!isset($class_map['DrupalCodeBuilder\Factory'])) {
-      throw new \LogicException("Composer class map does not contain \DrupalCodeBuilder\Factory class; it likely needs to be rebuild with 'composer dump -o'.");
-    }
+    chdir($drupal_code_builder_path);
+    $generator_files = glob('Generator/*.php', GLOB_BRACE);
+    chdir($previous_dir);
 
-    foreach ($class_loader->getClassMap() as $class_name => $class_filename) {
-      if (!str_starts_with($class_name, 'DrupalCodeBuilder\Generator')) {
+    foreach ($generator_files as $generator_file) {
+      $matches = [];
+      preg_match('@Generator/(\w+).php@', $generator_file, $matches);
+      $trimmed_file_name = $matches[1];
+      $class_name = '\DrupalCodeBuilder\Generator\\' . $trimmed_file_name;
+
+      // Allow for junk files left during development...
+      if (!class_exists($class_name)) {
         continue;
       }
 
-      require_once $class_filename;
       $reflection_class = new \ReflectionClass($class_name);
 
       if (!$reflection_class->getParentClass()) {
