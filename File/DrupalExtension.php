@@ -137,7 +137,7 @@ class DrupalExtension {
     }
     catch (Error $error) {
       // TODO: warn somehow?
-      return NULL;
+      return [];
     }
 
     return $ast;
