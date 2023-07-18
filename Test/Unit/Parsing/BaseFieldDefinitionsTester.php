@@ -93,7 +93,7 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
           $method_calls = [];
           $method_call = $expression->expr;
           while (isset($method_call->var)) {
-            $method_calls[] = $method_call->name;
+            $method_calls[] = $method_call->name->name;
 
             $method_call = $method_call->var;
           }
