@@ -613,6 +613,10 @@ class PluginTypesCollector extends CollectorBase  {
    *   this cannot be determined.
    */
   protected function analysePluginTypeBaseClassFromDefiningModule($data) {
+    if (empty($data['plugin_interface'])) {
+      return;
+    }
+
     // Bail if the interface doesn't have an 'Interface' suffix.
     if (!preg_match('@Interface$@', $data['plugin_interface'])) {
       return;
