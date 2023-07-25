@@ -614,7 +614,7 @@ class PluginTypesCollector extends CollectorBase  {
    */
   protected function analysePluginTypeBaseClassFromDefiningModule($data) {
     // Bail if the interface doesn't have an 'Interface' suffix.
-    if (!preg_match('@Interface$@', $data['plugin_interface'])) {
+      if (!$data['plugin_interface'] || !preg_match('@Interface$@', $data['plugin_interface'])) {
       return;
     }
 
