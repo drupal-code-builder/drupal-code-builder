@@ -472,6 +472,9 @@ class PluginTypesCollector extends CollectorBase  {
       $property->setAccessible(TRUE);
       $data[$data_key] = $property->getValue($service);
     }
+
+    // Babysit code that puts an initial backslash on the interface.
+    $data['plugin_interface'] = ltrim($data['plugin_interface'], '\\');
   }
 
   /**
