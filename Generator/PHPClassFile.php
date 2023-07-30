@@ -204,7 +204,7 @@ class PHPClassFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  function code_body() {
+  function phpCodeBody() {
     // Get the class code from the class docblock onwards first, so it can be
     // then processed for qualified class names.
     $class_doc_block = $this->getClassDocBlock();

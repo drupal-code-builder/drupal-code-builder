@@ -66,7 +66,7 @@ class ModuleCodeFile extends PHPFile {
    * @return
    *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
-  function code_body() {
+  function phpCodeBody() {
     // Keep each function separate for now, so they can be ordered.
     $function_code = [];
 

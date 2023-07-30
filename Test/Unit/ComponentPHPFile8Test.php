@@ -233,7 +233,7 @@ class ComponentPHPFile8Test extends TestBase {
  */
 class PHPFile extends RealPHPFile {
 
-  function code_body() {
+  function phpCodeBody() {
     return [];
   }
 

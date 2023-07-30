@@ -39,7 +39,7 @@ abstract class PHPFile extends File {
     // TODO: Decide whether to restore this or remove it.
     $module_data = $this->root_component->component_data;
     if (!empty($module_data['bare_code'])) {
-      return $this->code_body();
+      return $this->phpCodeBody();
     }
     */
 
@@ -48,7 +48,7 @@ abstract class PHPFile extends File {
       $this->file_header(),
       // The code header and body are themselves arrays.
       $this->code_header(),
-      $this->code_body()
+      $this->phpCodeBody()
     );
 
     if (!empty($this->code_footer())) {
@@ -90,7 +90,7 @@ abstract class PHPFile extends File {
    * @return
    *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
-  abstract function code_body();
+  abstract function phpCodeBody();
 
   /**
    * Remove fully-qualified classnames, extracting them to an array.

@@ -107,7 +107,7 @@ class API extends PHPFile {
   /**
    * Return the main body of the file code.
    */
-  function code_body() {
+  function phpCodeBody() {
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_analyze = \DrupalCodeBuilder\Factory::getTask('AnalyzeModule');
 

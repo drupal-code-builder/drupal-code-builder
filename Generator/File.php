@@ -99,7 +99,7 @@ class File extends BaseGenerator {
     return array(
       'path' => '', // Means base folder.
       'filename' => '%module.info',
-      'body' => $this->code_body(),
+      'body' => $this->phpCodeBody(),
     );
     */
 

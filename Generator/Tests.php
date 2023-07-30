@@ -59,7 +59,7 @@ class Tests extends PHPFile {
   /**
    * Return the main body of the file code.
    */
-  function code_body() {
+  function phpCodeBody() {
     $module_root_name = $this->component_data['root_component_name'];
     $module_camel_case = $this->component_data['pascal_case_name'];
     $module_readable_name = $this->component_data['readable_name'];
