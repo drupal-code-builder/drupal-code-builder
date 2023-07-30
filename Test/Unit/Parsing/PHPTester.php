@@ -50,6 +50,9 @@ class PHPTester {
    */
   protected static $composerVendorDir;
 
+
+  protected int $expectedClassCount = 1;
+
   /**
    * Construct a new PHPTester.
    *
@@ -363,6 +366,10 @@ class PHPTester {
     Assert::assertEquals($sorted, $seen, $message);
   }
 
+  public function expectClassCount(int $count) {
+    $this->expectedClassCount = $count;
+  }
+
   /**
    * Asserts the parsed code contains the class name.
    *
@@ -379,7 +386,7 @@ class PHPTester {
     $message = $message ?? "The file contains the class {$full_class_name}.";
 
     // All the class files we generate contain only one class.
-    Assert::assertCount(1, $this->parser_nodes['classes']);
+    Assert::assertCount($this->expectedClassCount, $this->parser_nodes['classes']);
     Assert::assertArrayHasKey($class_short_name, $this->parser_nodes['classes'], $message);
 
     // Check the namespace of the class.

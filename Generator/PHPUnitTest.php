@@ -282,7 +282,32 @@ class PHPUnitTest extends PHPClassFile {
       ];
     }
 
+    // TMP!
+    $components['fixture_class' . 'foo'] = [
+      'component_type' => 'PHPClassEmbedded',
+      'containing_component' => '%requester',
+      'plain_class_name' => 'CakeFixture',
+    ];
+
     return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function fileContents() {
+    $file_contents = parent::fileContents();
+
+    // Test fixture classes.
+    foreach ($this->containedComponents['fixture_class'] as $key => $child_item) {
+      $file_contents = array_merge(
+        $file_contents,
+        $child_item->getContents(),
+      );
+      $file_contents[] = '';
+    }
+
+    return $file_contents;
   }
 
   /**

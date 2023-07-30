@@ -144,9 +144,11 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     ], $files);
 
     $test_file = $files["tests/src/Kernel/MyTest.php"];
+    dump($test_file);
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+    $php_tester->expectClassCount(2);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
     $php_tester->assertClassHasProtectedProperty('modules', 'array', [
