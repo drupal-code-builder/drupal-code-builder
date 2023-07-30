@@ -202,7 +202,7 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Return the main body of the file code.
+   * {@inheritdoc}
    */
   function code_body() {
     // Get the class code from the class docblock onwards first, so it can be

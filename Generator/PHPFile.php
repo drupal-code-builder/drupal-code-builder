@@ -85,6 +85,8 @@ abstract class PHPFile extends File {
   /**
    * Return the main body of the file code.
    *
+   * This is everything after the opening '<php' tag.
+   *
    * @return
    *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
