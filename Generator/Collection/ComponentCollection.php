@@ -335,8 +335,8 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Assemble a tree of components, grouped by what they contain.
    *
-   * For example, a code file contains its functions; a form component
-   * contains the handler functions.
+   * For example, a code file contains its functions; a class file contains
+   * methods, a Drupal 7 form component contains the handler functions.
    *
    * This iterates over the flat list of components assembled by
    * ComponentCollector, and re-assembles it as a tree.
