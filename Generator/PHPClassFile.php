@@ -207,13 +207,7 @@ class PHPClassFile extends PHPFile {
   function phpCodeBody() {
     // Get the class code from the class docblock onwards first, so it can be
     // then processed for qualified class names.
-    $class_doc_block = $this->getClassDocBlock();
-
-    $class_code = array_merge(
-      $class_doc_block->render(),
-      $this->class_declaration(),
-      $this->classCodeBody()
-    );
+    $class_code = $this->phpClassCode();
 
     // Replace any fully-qualified classes with short class names, and keep a
     // list of the replacements to make import statements with.
@@ -225,7 +219,6 @@ class PHPClassFile extends PHPFile {
       $this->imports($imported_classes),
       $class_code,
       [
-        '}',
         '',
       ]);
     return $return;
@@ -241,6 +234,27 @@ class PHPClassFile extends PHPFile {
     $code[] = '';
 
     return $code;
+  }
+
+  /**
+   * Gets the complete class code, from docblock to closing brace.
+   *
+   * @return array
+   *   An array of code pieces.
+   */
+  protected function phpClassCode(): array {
+    $class_doc_block = $this->getClassDocBlock();
+
+    $class_code = array_merge(
+      $class_doc_block->render(),
+      $this->class_declaration(),
+      $this->classCodeBody(),
+      [
+        '}',
+      ],
+    );
+
+    return $class_code;
   }
 
   /**
