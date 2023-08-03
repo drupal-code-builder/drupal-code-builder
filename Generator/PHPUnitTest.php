@@ -157,6 +157,11 @@ class PHPUnitTest extends PHPClassFile {
         ->setDescription("The services that this test class creates mocks for.")
         ->setMultiple(TRUE)
         ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+      'overridden_services' => PropertyDefinition::create('string')
+        ->setLabel('Services to override')
+        ->setDescription("The services that are replaced with a custom subclass, appended to the test class's code file.")
+        ->setMultiple(TRUE)
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'creation_traits' => PropertyDefinition::create('string')
         ->setLabel('Creation traits')
         ->setDescription("Traits which provide useful methods for creating various kinds of test data.")
@@ -281,6 +286,19 @@ class PHPUnitTest extends PHPClassFile {
         'class_has_static_factory' => FALSE,
       ];
     }
+
+    foreach ($this->component_data['overridden_services'] as $service_id) {
+      $components['service_' . $service_id] = [
+        'component_type' => 'TestMockedService',
+        'containing_component' => '%requester',
+        'service_id' => $service_id,
+        'class_has_constructor' => FALSE,
+        'class_has_static_factory' => FALSE,
+      ];
+    }
+
+
+
 
     // TMP!
     $components['fixture_class' . 'foo'] = [
