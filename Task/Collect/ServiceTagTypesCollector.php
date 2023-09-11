@@ -137,7 +137,9 @@ class ServiceTagTypesCollector extends CollectorBase  {
           $service_interfaces = $service_class_reflection->getInterfaceNames();
           $collected_services_interface = array_shift($service_interfaces);
 
-          $interface_methods = $this->methodCollector->collectMethods($collected_services_interface);
+          if ($collected_services_interface) {
+            $interface_methods = $this->methodCollector->collectMethods($collected_services_interface);
+          }
         }
         else {
           // Service collectors tell us what the container should call on the
@@ -172,7 +174,7 @@ class ServiceTagTypesCollector extends CollectorBase  {
           'label' => $label,
           'collector_type' => $collector_type,
           'interface' => $collected_services_interface,
-          'methods' => $interface_methods,
+          'methods' => $interface_methods ?? [],
         ];
       }
     }
