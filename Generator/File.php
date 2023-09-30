@@ -62,6 +62,8 @@ class File extends BaseGenerator {
    * Files are usually contained by the root component.
    */
   function containingComponent() {
+    // Ensure we're not overriding the containing_component property.
+    assert($this->component_data->containing_component->value == NULL, 'Overriding containing_component value');
     return '%root';
   }
 
