@@ -176,7 +176,7 @@ class FileAssembler {
       $filepath = strtr($filepath, $variables);
 
       // Verify that no two components are trying to generate the same file.
-      assert(!isset($return[$filepath]), "$filepath not already set in list of returned files");
+      assert(!isset($return[$filepath]), "$filepath already set in list of returned files");
 
       $return[$filepath] = new CodeFile($filepath, $code, $exists, $merged);
     }
