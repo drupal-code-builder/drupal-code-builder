@@ -101,7 +101,7 @@ abstract class TestBase extends TestCase {
    * @return \DrupalCodeBuilder\Test\Fixtures\File\MockableExtension
    *   The mocked extension.
    */
-  protected function getMockedExtenstion(string $type) {
+  protected function getMockedExtension(string $type) {
     return new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing');
   }
 
