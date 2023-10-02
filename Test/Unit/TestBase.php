@@ -139,7 +139,7 @@ abstract class TestBase extends TestCase {
    * @param
    *  An array of files.
    */
-  protected function generateModuleFiles($module_data, DrupalExtension $extension = NULL) {
+  protected function generateModuleFiles(array $module_data, DrupalExtension $extension = NULL) {
     $component_data = $this->getRootComponentBlankData('module');
 
     $component_data->set($module_data);
