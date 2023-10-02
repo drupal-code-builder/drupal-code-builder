@@ -9,6 +9,7 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Represents a Drupal extension's files in the codebase.
@@ -68,6 +69,18 @@ class DrupalExtension {
    */
   public function hasFile(string $relative_file_path): bool {
     return file_exists($this->getRealPath($relative_file_path));
+  }
+
+  /**
+   * Gets a Finder for this extension.
+   *
+   * @return \Symfony\Component\Finder\Finder
+   *   A finder object, set to search in this extension.
+   */
+  public function getFinder(): Finder {
+    $finder = new Finder();
+    $finder->in($this->path);
+    return $finder;
   }
 
   /**
