@@ -277,9 +277,6 @@ class ComponentCollector {
     $this->processComponentData($component_data);
 
     // Instantiate the generator in question.
-    // We always pass in the root component.
-    // We need to ensure that we create the root generator first, before we
-    // recurse, as all subsequent generators need it.
     $generator = $this->classHandler->getGenerator($component_type, $component_data);
 
     $this->debug($chain, sprintf("instantiated name %s; type: %s; ID, requester %s",
