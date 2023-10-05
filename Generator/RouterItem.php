@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Utility\NestedArray;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\VariantDefinition;
@@ -15,7 +16,7 @@ use MutableTypedData\Data\DataItem;
  *
  * This adds a routing item to the routing component.
  */
-class RouterItem extends BaseGenerator {
+class RouterItem extends BaseGenerator implements AdoptableInterface {
 
   use NameFormattingTrait;
 
@@ -392,6 +393,78 @@ class RouterItem extends BaseGenerator {
     $controller_class_name = 'Controller\\' . CaseString::snake($snake)->pascal() . 'Controller';
 
     return $controller_class_name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    $routing_filename = $extension->name . '.routing.yml';
+    if (!$extension->hasFile($routing_filename)) {
+      return [];
+    }
+
+    $adoptable_items = [];
+
+    $yaml = $extension->getFileYaml($routing_filename);
+    foreach ($yaml as $name => $route) {
+      // Only do routes with controllers for now.
+      if (isset($route['defaults']['_controller'])) {
+        $adoptable_items[$name] = $name . ' - ' . $route['defaults']['_controller'];
+      }
+    }
+
+    return $adoptable_items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function adoptComponent(DataItem $component_data, DrupalExtension $extension, string $property_name, string $name): void {
+    $routing_filename = $extension->name . '.routing.yml';
+    $yaml = $extension->getFileYaml($routing_filename);
+    $route_definition = $yaml[$name];
+
+    $value = [
+      'route_name' => preg_replace("@^{$extension->name}\.@", '', $name),
+      'path' => $route_definition['path'],
+    ];
+
+    if (isset($route_definition['defaults']['_controller'])) {
+      $value['controller'] = [
+        'controller_type' => 'controller',
+        'routing_value' => $route_definition['defaults']['_controller'],
+        // TODO: further options.
+      ];
+
+      if (str_contains('Drupal\\' . $extension->name, $route_definition['defaults']['_controller'])) {
+        // services
+      }
+
+      foreach (['permission', 'entity_access', 'role', 'access'] as $requirement_type) {
+        if (isset($route_definition['requirements']["_{$requirement_type}"])) {
+          $value['access'] = [
+            'access_type' => $requirement_type,
+            'routing_value' => $route_definition['requirements']["_{$requirement_type}"],
+          ];
+        }
+        continue;
+      }
+      if (isset($route_definition['requirements']['_custom_access'])) {
+        $value['access'] = [
+          'access_type' => 'custom_access',
+          // TODO.
+          'custom_access_callback' => $route_definition['requirements']['_custom_access'],
+        ];
+      }
+
+      // TODO: Merge with existing.
+
+      // Bit of a WTF: this requires this class to know it's being used as a
+      // multi-valued item in the Module generator.
+      $item_data = $component_data->getItem($property_name)->createItem();
+      $item_data->set($value);
+    }
   }
 
   /**

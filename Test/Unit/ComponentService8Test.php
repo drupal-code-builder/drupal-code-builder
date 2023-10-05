@@ -981,4 +981,112 @@ class ComponentService8Test extends TestBase {
     $php_tester->assertInjectedServices($assert_injected_services);
   }
 
+  /**
+   * Data provider for testExistingServicesAdoption().
+   */
+  public function dataExistingServicesAdoption() {
+    return [
+      'top_level' => [
+        'data_services' => [],
+        'adopted_relative_class' => 'Alpha',
+      ],
+      'subfolder' => [
+        'data_services' => [],
+        'adopted_relative_class' => 'Services\Alpha',
+      ],
+      'no_merge' => [
+        'data_services' => [],
+        'adopted_relative_class' => 'Alpha',
+      ],
+      'merge_service_name' => [
+        'data_services' => [
+          [
+            'service_name' => 'alpha',
+          ],
+        ],
+        'adopted_relative_class' => 'Alpha',
+      ],
+      'merge_di' => [
+        'data_services' => [
+          [
+            'service_name' => 'alpha',
+            'injected_services' => [
+              'current_user',
+            ],
+          ],
+        ],
+        'adopted_relative_class' => 'Alpha',
+      ],
+      'other_service' => [
+        'data_services' => [
+          [
+            'service_name' => 'beta_in_data',
+          ],
+        ],
+        'adopted_relative_class' => 'Alpha',
+      ],
+    ];
+  }
+
+  /**
+   * Tests adoption of existing services.
+   *
+   * @param array $data_services
+   *   The services data to set in the component data. This allows testing of
+   *   various scenarios for merging the adopted component with a component
+   *   already in the component data.
+   * @param string $adopted_relative_class
+   *   The relative class name of the adopted service.
+   *
+   * @group adopt
+   *
+   * @dataProvider dataExistingServicesAdoption
+   */
+  public function testExistingServicesAdoption(array $data_services, string $adopted_relative_class) {
+    // Mock an existing module.
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');
+
+    // We only need to mock the services.yml file, not the actual class, as
+    // the adoption analysis only looks at that.
+    $services_file_yaml = <<<EOT
+    services:
+      existing.alpha:
+        class: Drupal\\existing\\$adopted_relative_class
+        arguments: ['@current_user', '@entity_type.manager', '@module_handler']
+    EOT;
+    $extension->setFile('existing.services.yml', $services_file_yaml);
+
+    $module_name = 'existing';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'services' => $data_services,
+    ];
+
+    $component_data = $this->getRootComponentBlankData('module');
+    $component_data->set($module_data);
+
+    $task_handler_adopt = \DrupalCodeBuilder\Factory::getTask('Adopt');
+    $items = $task_handler_adopt->listAdoptableComponents($component_data, $extension);
+    $this->assertArrayHasKey('module:services', $items);
+    $this->assertArrayHasKey('existing.alpha', $items['module:services']);
+
+    $task_handler_adopt->adoptComponent($component_data, $extension, 'module:services', 'existing.alpha');
+
+    // Don't pass in the existing extension, to check the adopted service is
+    // getting generated from scratch.
+    $files = $this->generateComponentFilesFromData($component_data);
+
+    $services_file = $files["$module_name.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "$module_name.alpha"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.alpha", 'class'], "Drupal\\$module_name\\$adopted_relative_class");
+  }
+
 }

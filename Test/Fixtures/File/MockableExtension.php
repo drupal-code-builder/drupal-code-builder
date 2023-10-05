@@ -3,7 +3,10 @@
 namespace DrupalCodeBuilder\Test\Fixtures\File;
 
 use DrupalCodeBuilder\File\DrupalExtension;
+use org\bovigo\vfs\vfsStream;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 /**
  * Mock for an existing Drupal extension in tests.
@@ -11,6 +14,16 @@ use Symfony\Component\Yaml\Yaml;
 class MockableExtension extends DrupalExtension {
 
   protected $mockedFiles = [];
+
+  public function getFinder(): Finder {
+    vfsStream::setup($this->name);
+    vfsStream::copyFromFileSystem($this->path);
+    vfsStream::create($this->mockedFiles);
+
+    $finder = new Finder();
+    $finder->in(vfsStream::url($this->name));
+    return $finder;
+  }
 
   /**
    * Set mocked code.

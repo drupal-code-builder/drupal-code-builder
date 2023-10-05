@@ -139,4 +139,103 @@ class ComponentForm8Test extends TestBase {
     ]);
   }
 
+  /**
+   * Data provider for testExistingFormAdoption().
+   */
+  public function dataAdoptionMerge() {
+    return [
+      'no-merge' => [FALSE],
+      'merge' => [TRUE],
+    ];
+  }
+
+  /**
+   * Tests adoption of existing form.
+   *
+   * @param bool $merge
+   *   Whether a generated component exists to have the adopted component merged
+   *   with.
+   *
+   * @group adopt
+   *
+   * @dataProvider dataAdoptionMerge
+   */
+  public function testExistingFormAdoption(bool $merge) {
+    // First pass: generate the files we'll mock as existing.
+    $module_name = 'existing';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'forms' => [
+        0 => [
+          'plain_class_name' => 'AlphaForm',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+        ],
+      ],
+    ];
+
+    $existing_files = $this->generateModuleFiles($module_data);
+    $extension = $this->getMockedExtension('module');
+    $extension->setFile('src/Form/AlphaForm.php', $existing_files['src/Form/AlphaForm.php']);
+
+    // Now generate the module again, passing in the mocked existing code.
+    if ($merge) {
+      unset($module_data['forms'][0]['injected_services']);
+    }
+    else {
+      // If we're not testing merging, remove the form entirely.
+      unset($module_data['forms']);
+    }
+
+    $component_data = $this->getRootComponentBlankData('module');
+    $component_data->set($module_data);
+
+    $task_handler_adopt = \DrupalCodeBuilder\Factory::getTask('Adopt');
+    $items = $task_handler_adopt->listAdoptableComponents($component_data, $extension);
+    $this->assertArrayHasKey('module:forms', $items);
+    $this->assertArrayHasKey('src/Form/AlphaForm.php', $items['module:forms']);
+
+    $task_handler_adopt->adoptComponent($component_data, $extension, 'module:forms', 'src/Form/AlphaForm.php');
+
+    // Don't pass in the existing extension, to check the adopted form is
+    // getting generated from scratch.
+    $files = $this->generateComponentFilesFromData($component_data);
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Form/AlphaForm.php",
+    ], $files);
+
+    $form_file = $files["src/Form/AlphaForm.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $form_file);
+    $php_tester->assertDrupalCodingStandards([
+      // Excluded because of the buildForm() commented-out code.
+      'Drupal.Commenting.InlineComment.SpacingAfter',
+      'Drupal.Commenting.InlineComment.InvalidEndChar',
+    ]);
+    $php_tester->assertHasClass('Drupal\existing\Form\AlphaForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
+    $php_tester->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
+  }
+
 }

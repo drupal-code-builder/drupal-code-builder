@@ -4,6 +4,10 @@ namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\Utility\NestedArray;
+use MutableTypedData\Data\DataItem;
+use PhpParser\NodeFinder;
 
 /**
  * Generator class for forms on Drupal 8 and higher.
@@ -11,7 +15,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  * Note that entity forms use the EntityForm generator which does *not*
  * inherit from this class!
  */
-class Form extends PHPClassFileWithInjection {
+class Form extends PHPClassFileWithInjection implements AdoptableInterface {
 
   protected $hasStaticFactoryMethod = TRUE;
 
@@ -62,6 +66,87 @@ class Form extends PHPClassFileWithInjection {
       ->setLiteralDefault('\Drupal\Core\Form\FormBase');
 
     return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    $finder = $extension->getFinder();
+    $finder
+      // Some module stupidly put forms at the top level.
+      ->path(['src', 'src/Form'])
+      ->name('*Form.php')
+      ->ignoreUnreadableDirs();
+
+    $adoptable_items = [];
+    foreach ($finder as $file) {
+      $relative_pathname = $file->getRelativePathname();
+      // TODO: Check class with reflection for interface/base class? Or too
+      // fiddly?
+
+      $adoptable_items[$relative_pathname] = $relative_pathname;
+    }
+
+    return $adoptable_items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function adoptComponent(DataItem $component_data, DrupalExtension $extension, string $property_name, string $name): void {
+    $form_ast = $extension->getFileAST($name);
+
+    $nodeFinder = new NodeFinder;
+    $namespace = $nodeFinder->findInstanceOf($form_ast, \PhpParser\Node\Stmt\Namespace_::class);
+    $classes = $nodeFinder->findInstanceOf($form_ast, \PhpParser\Node\Stmt\Class_::class);
+
+    $methods = $extension->getASTMethods($form_ast);
+    $injected_services = [];
+    if (isset($methods['create'])) {
+      foreach ($methods['create']->stmts[0]->expr->args as $creation_arg) {
+        $injected_services[] = $creation_arg->value->args[0]->value->value;
+      }
+    }
+
+    // Not all forms implement getFormId(): entity forms, for example.
+    if (isset($methods['getFormId'])) {
+      $form_id = $methods['getFormId']->stmts[0]->expr->value;
+    }
+
+    $relative_namespace_pieces = array_slice($namespace[0]->name->parts, 2);
+    $relative_namespace = implode('\\', $relative_namespace_pieces);
+    $relative_class_name = $relative_namespace . '\\' . $classes[0]->name->name;
+
+    $value = [
+      // Have to set this as well as the relative class name.
+      'plain_class_name' => $classes[0]->name->name,
+      // Have to set this in case the form class file is in a stupid place.
+      'relative_namespace' => $relative_namespace,
+      'relative_class_name' => $relative_class_name,
+      'injected_services' => $injected_services,
+      'form_id' => $form_id ?? NULL,
+    ];
+
+    foreach ($component_data->getItem($property_name) as $delta => $delta_item) {
+      if ($delta_item->relative_class_name->value == $value['relative_class_name']) {
+        $merge_delta = $delta;
+        break;
+      }
+    }
+
+    if (isset($merge_delta)) {
+      $existing_value = $component_data->getItem($property_name)[$merge_delta]->export();
+      $merged_value = NestedArray::mergeDeep($existing_value, $value);
+
+      $component_data->getItem($property_name)[$merge_delta]->set($merged_value);
+    }
+    else {
+      // Bit of a WTF: this requires this class to know it's being used as a
+      // multi-valued item in the Module generator.
+      $item_data = $component_data->getItem($property_name)->createItem();
+      $item_data->set($value);
+    }
   }
 
   /**

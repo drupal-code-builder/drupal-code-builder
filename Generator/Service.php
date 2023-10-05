@@ -6,12 +6,14 @@ use CaseConverter\StringAssembler;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\Utility\NestedArray;
 use Ckr\Util\ArrayMerger;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Generator for a service.
  */
-class Service extends PHPClassFileWithInjection {
+class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
   use NameFormattingTrait;
 
@@ -164,6 +166,61 @@ class Service extends PHPClassFileWithInjection {
     }
     else {
       return $data_item->getItem('module:configuration:service_namespace')->value;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    $services_filename = $extension->name . '.services.yml';
+    if (!$extension->hasFile($services_filename)) {
+      return [];
+    }
+
+    $yaml = $extension->getFileYaml($services_filename);
+    $service_names = array_keys($yaml['services']);
+    return array_combine($service_names, $service_names);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function adoptComponent(DataItem $component_data, DrupalExtension $extension, string $property_name, string $name): void {
+    $services_filename = $extension->name . '.services.yml';
+    $yaml = $extension->getFileYaml($services_filename);
+    $service_yaml = $yaml['services'][$name];
+
+    // An adopted service migt not be in the standard namespace, so we need to
+    // detect and specify that.
+    $class_name_pieces = explode('\\', $service_yaml['class']);
+
+    $value = [
+      'service_name' => preg_replace("@^{$extension->name}\.@", '', $name),
+      'injected_services' => array_map(fn ($service_name) => ltrim($service_name, '@'), $service_yaml['arguments']),
+      // These properties are hidden in the UI but will be stored anyway.
+      'plain_class_name' => end($class_name_pieces),
+      'relative_namespace' => implode('\\', array_slice($class_name_pieces, 2, -1)),
+    ];
+
+    foreach ($component_data->getItem($property_name) as $delta => $delta_item) {
+      if ($delta_item->service_name->value == $value['service_name']) {
+        $merge_delta = $delta;
+        break;
+      }
+    }
+
+    if (isset($merge_delta)) {
+      $existing_value = $component_data->getItem($property_name)[$merge_delta]->export();
+      $merged_value = NestedArray::mergeDeep($existing_value, $value);
+
+      $component_data->getItem($property_name)[$merge_delta]->set($merged_value);
+    }
+    else {
+      // Bit of a WTF: this requires the Service class to know it's being used
+      // as a multi-valued item in the Module generator.
+      $item_data = $component_data->getItem($property_name)->createItem();
+      $item_data->set($value);
     }
   }
 

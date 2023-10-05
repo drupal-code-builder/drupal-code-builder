@@ -674,4 +674,75 @@ class ComponentRouterItem8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'route_name'], 'test_module.my.path', "The menu links file declares the link route.");
   }
 
+  /**
+   * Tests adoption of existing form.
+   *
+   * @group adopt
+   */
+  public function testExistingRouterItemAdoption() {
+    // First pass: generate the files we'll mock as existing.
+    $module_name = 'existing';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'router_items' => [
+        [
+          'path' => '/path/existing',
+          'title' => 'Existing Base Page',
+          'controller' => [
+            'controller_type' => 'controller',
+            'injected_services' => [
+              'current_user',
+              'entity_type.manager',
+            ],
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+      ],
+    ];
+
+    $existing_files = $this->generateModuleFiles($module_data);
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/PathExistingController.php",
+    ], $existing_files);
+
+    $extension = $this->getMockedExtension('module', $existing_files);
+
+    // Now create the component data, and adopt the router item.
+    unset($module_data['router_items']);
+    $component_data = $this->getRootComponentBlankData('module');
+    $component_data->set($module_data);
+
+    $task_handler_adopt = \DrupalCodeBuilder\Factory::getTask('Adopt');
+    $adoptable_items = $task_handler_adopt->listAdoptableComponents($component_data, $extension);
+
+    $this->assertArrayHasKey('module:router_items', $adoptable_items);
+    $this->assertArrayHasKey('existing.path.existing', $adoptable_items['module:router_items']);
+
+    $task_handler_adopt->adoptComponent($component_data, $extension, 'module:router_items', 'existing.path.existing');
+
+    // Don't pass in the existing extension, to check the adopted form is
+    // getting generated from scratch.
+    $files = $this->generateComponentFilesFromData($component_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/PathExistingController.php",
+    ], $files);
+
+    $routing_file = $files["$module_name.routing.yml"];
+    $yaml_tester = new YamlTester($routing_file);
+
+    $yaml_tester->assertPropertyHasValue(['path.existing', 'defaults', '_controller'], '\Drupal\\existing\Controller\PathExistingController::content');
+  }
+
 }

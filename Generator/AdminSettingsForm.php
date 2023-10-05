@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Utility\InsertArray;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
  * Component generator: admin form for modules.
@@ -62,6 +63,13 @@ class AdminSettingsForm extends Form {
     );
 
     return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    return [];
   }
 
   /**
