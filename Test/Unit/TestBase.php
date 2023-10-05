@@ -97,12 +97,21 @@ abstract class TestBase extends TestCase {
    *
    * @param string $type
    *   The extension type, e.g. 'module'.
+   * @param array $files
+   *   An array of files to set in the mocked extension. Keys are filenames,
+   *   values are file contents.
    *
    * @return \DrupalCodeBuilder\Test\Fixtures\File\MockableExtension
    *   The mocked extension.
    */
-  protected function getMockedExtension(string $type) {
-    return new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing');
+  protected function getMockedExtension(string $type, array $files = []) {
+    $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing');
+
+    foreach ($files as $filename => $contents) {
+      $extension->setFile($filename, $contents);
+    }
+
+    return $extension;
   }
 
   /**
