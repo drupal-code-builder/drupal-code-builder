@@ -185,4 +185,16 @@ class ComponentModule8Test extends TestBase {
     $this->generateModuleFiles($module_data);
   }
 
+  /**
+   * Tests adoption of an existing module.
+   */
+  public function testExistingModuleAdoption() {
+    $extension = $this->getMockedExtension('module');
+
+    $task_handler_adopt = \DrupalCodeBuilder\Factory::getTask('Adopt');
+    $data = $task_handler_adopt->adoptExtension($extension);
+
+    $this->assertEquals('existing', $data->root_name->value);
+  }
+
 }

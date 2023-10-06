@@ -3,10 +3,12 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -347,6 +349,29 @@ class Module extends RootComponent {
       ->setLabel("PHPUnit test case class")
       ->setMultiple(TRUE)
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function adoptRootComponent(DrupalExtension $existing_extension): DataItem {
+    $info_file_data = $existing_extension->getFileYaml($existing_extension->name . '.info.yml');
+
+    $value = [
+      'base' => $existing_extension->type,
+      'root_name' => $existing_extension->name,
+      'readable_name' => $info_file_data['name'],
+      'short_description' => $info_file_data['description'] ?? '',
+      'module_package' => $info_file_data['package'] ?? '',
+      'module_dependencies' => $info_file_data['dependencies'] ?? [],
+      'lifecycle' => $info_file_data['lifecycle'] ?? '',
+    ];
+
+    $data = DrupalCodeBuilderDataItemFactory::createFromProvider(static::class);
+
+    $data->import($value);
+
+    return $data;
   }
 
   /**

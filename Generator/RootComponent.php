@@ -4,6 +4,9 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 use MutableTypedData\Definition\DefinitionProviderInterface;
@@ -128,6 +131,31 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
     ]);
 
     return $definition;
+  }
+
+  /**
+   * Gets root component data for an existing Drupal extension.
+   *
+   * @param \DrupalCodeBuilder\File\DrupalExtension $existing_extension
+   *   The existing extension.
+   *
+   * @return \MutableTypedData\Data\DataItem
+   *   The component data for the new root component.
+   */
+  public static function adoptRootComponent(DrupalExtension $existing_extension): DataItem {
+    $info_file_data = $existing_extension->getFileYaml($existing_extension->name . '.info.yml');
+
+    $value = [
+      'base' => $existing_extension->type,
+      'root_name' => $existing_extension->name,
+      'readable_name' => $info_file_data['name'],
+      'short_description' => $info_file_data['description'] ?? '',
+    ];
+
+    $data = DrupalCodeBuilderDataItemFactory::createFromProvider(static::class);
+    $data->import($value);
+
+    return $data;
   }
 
   public function isRootComponent(): bool {

@@ -53,6 +53,23 @@ class Adopt extends Base {
   protected $sanity_level = 'component_data_processed';
 
   /**
+   * Gets the component data for an existing Drupal extension.
+   *
+   * @param \DrupalCodeBuilder\File\DrupalExtension $existing_extension
+   *   The existing extension.
+   *
+   * @return \MutableTypedData\Data\DataItem
+   *   The root component data based on the extension. As DCB doesn't store
+   *   user data, it is up to the calling UI to store this.
+   */
+  public function adoptExtension(DrupalExtension $existing_extension): DataItem {
+    $generator_class = $this->classHandler->getGeneratorClass($existing_extension->type);
+    $data = $generator_class::adoptRootComponent($existing_extension);
+
+    return $data;
+  }
+
+  /**
    * Analyses an existing extension for items which can be adopted.
    *
    * @param \MutableTypedData\Data\DataItem $component_data
