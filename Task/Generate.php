@@ -33,14 +33,6 @@ class Generate extends Base {
   private $base;
 
   /**
-   * The list of components.
-   *
-   * This is keyed by the unique ID of the component. Values are the
-   * instantiated component generators.
-   */
-  protected $component_list;
-
-  /**
    * Override the base constructor.
    *
    * @param $environment
@@ -140,13 +132,9 @@ class Generate extends Base {
 
     // Assemble the component list from the request data.
     $component_collection = $this->componentCollector->assembleComponentList($component_data, $existing_extension);
-    // return;
+    $component_list = $component_collection->getComponents();
 
-    // Backward-compatiblity.
-    // TODO: replace this.
-    $this->component_list = $component_collection->getComponents();
-
-    \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($this->component_list), "Complete component list names");
+    \DrupalCodeBuilder\Factory::getEnvironment()->log(array_keys($component_list), "Complete component list names");
 
     // Now assemble them into a tree.
     // Calls containingComponent() on everything and puts it into a 2-D array
@@ -156,7 +144,7 @@ class Generate extends Base {
 
     \DrupalCodeBuilder\Factory::getEnvironment()->log($tree, "Component tree");
 
-    $files_assembled = $this->component_list = $this->fileAssembler->generateFiles(
+    $files_assembled = $this->fileAssembler->generateFiles(
       $component_data,
       $component_collection,
       $existing_extension

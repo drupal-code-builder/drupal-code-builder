@@ -292,7 +292,8 @@ class ComponentCollection implements \IteratorAggregate {
    * Gets all components.
    *
    * @return array
-   *   The array of components.
+   *   The array of components. This is keyed by the unique ID of the component.
+   *   Values are the instantiated component generators.
    */
   public function getComponents() {
     return $this->components;
