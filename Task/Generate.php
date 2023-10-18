@@ -44,14 +44,11 @@ class Generate extends Base {
   public function __construct(
     $environment,
     $component_type,
-    ComponentClassHandler $class_handler,
-    ComponentCollector $component_collector,
-    FileAssembler $file_assembler
+    protected ComponentClassHandler $classHandler,
+    protected ComponentCollector $componentCollector,
+    protected FileAssembler $fileAssembler,
   ) {
     $this->environment = $environment;
-    $this->classHandler = $class_handler;
-    $this->componentCollector = $component_collector;
-    $this->fileAssembler = $file_assembler;
 
     $this->base = $component_type;
   }

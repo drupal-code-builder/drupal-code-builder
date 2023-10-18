@@ -127,13 +127,6 @@ class ComponentCollector {
   protected $requested_data_record = [];
 
   /**
-   * The class handler.
-   *
-   * @$var \DrupalCodeBuilder\Task\Generate\ComponentClassHandler $class_handler
-   */
-  protected $classHandler;
-
-  /**
    * The expression language to use for acquiring data from requesters.
    *
    * Acquiring data uses a separate expression language from the typed data
@@ -154,11 +147,9 @@ class ComponentCollector {
    *   The class handler helper.
    */
   public function __construct(
-    EnvironmentInterface $environment,
-    ComponentClassHandler $class_handler
+    protected EnvironmentInterface $environment,
+    protected ComponentClassHandler $classHandler
   ) {
-    $this->environment = $environment;
-    $this->classHandler = $class_handler;
   }
 
   /**

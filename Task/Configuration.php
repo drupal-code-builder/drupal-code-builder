@@ -25,9 +25,11 @@ class Configuration extends Base {
    * @param $environment
    *  The current environment handler.
    */
-  function __construct(EnvironmentInterface $environment, ComponentClassHandler $component_class_handler) {
+  function __construct(
+    EnvironmentInterface $environment,
+    protected ComponentClassHandler $componentClassHandler
+  ) {
     $this->environment = $environment;
-    $this->componentClassHandler = $component_class_handler;
   }
 
   /**
