@@ -117,6 +117,13 @@ class ComponentCollector {
   protected $component_collection;
 
   /**
+   * The existing extension, if applicable.
+   *
+   * @var \DrupalCodeBuilder\File\DrupalExtension
+   */
+  protected $extension;
+
+  /**
    * The record of requested data, keyed by generator ID.
    *
    * This allows us to prevent creation of duplicate generators which may be

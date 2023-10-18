@@ -172,6 +172,13 @@ abstract class BaseGenerator implements GeneratorInterface {
   protected $classHandler;
 
   /**
+   * The existing extension, if applicable.
+   *
+   * @var \DrupalCodeBuilder\File\DrupalExtension
+   */
+  protected $extension;
+
+  /**
    * Boolean to indicate whether this component already exists.
    *
    * @see detectExistence()

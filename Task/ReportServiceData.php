@@ -23,6 +23,13 @@ class ReportServiceData extends ReportHookDataFolder implements OptionsProviderI
   protected $sanity_level = 'component_data_processed';
 
   /**
+   * The service type data.
+   *
+   * @var array
+   */
+  protected $serviceTypesData;
+
+  /**
    * The name of the method providing an array of options as $value => $label.
    */
   protected static $optionsMethod = 'listServiceNamesOptionsAll';
