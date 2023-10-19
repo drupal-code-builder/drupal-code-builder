@@ -11,6 +11,13 @@ use DrupalCodeBuilder\Generator\Render\DocBlock;
 class AnnotationClass extends PHPClassFile {
 
   /**
+   * The collected properties.
+   *
+   * @var array
+   */
+  protected $properties;
+
+  /**
    * {@inheritdoc}
    */
   public static function getPropertyDefinition(): PropertyDefinition {

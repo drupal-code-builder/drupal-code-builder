@@ -30,6 +30,13 @@ class ReportServiceData extends ReportHookDataFolder implements OptionsProviderI
   protected $serviceTypesData;
 
   /**
+   * The services data.
+   *
+   * @var array
+   */
+  protected $serviceData;
+
+  /**
    * The name of the method providing an array of options as $value => $label.
    */
   protected static $optionsMethod = 'listServiceNamesOptionsAll';

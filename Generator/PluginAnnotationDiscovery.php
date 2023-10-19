@@ -27,6 +27,13 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   protected $hasStaticFactoryMethod = TRUE;
 
   /**
+   * The plugin type data.
+   *
+   * @var array
+   */
+  protected $plugin_type_data;
+
+  /**
    * The standard fixed create() parameters.
    *
    * These are the parameters to create() that come after the $container
