@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator for a render element constraint plugin.
+ * Generator for a render element plugin.
  *
  * This handles generating additional code such as hook_theme(), template, etc.
  *
