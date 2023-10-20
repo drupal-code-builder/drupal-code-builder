@@ -14,6 +14,13 @@ use MutableTypedData\Data\DataItem;
 class PHPClassFile extends PHPFile {
 
   /**
+   * The collected properties.
+   *
+   * @var array
+   */
+  protected $properties;
+
+  /**
    * Ordering of generated class methods.
    *
    * This allows easy overriding by child classes.
