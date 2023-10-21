@@ -26,6 +26,10 @@ class MethodCollector {
    *  - 'description': The description from the method's docblock first line.
    */
   public function collectMethods($name) {
+    if (!$name) {
+      return [];
+    }
+
     // Get a reflection class for the interface.
     $reflection = new \ReflectionClass($name);
     $methods = $reflection->getMethods();
