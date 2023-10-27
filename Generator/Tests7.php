@@ -2,10 +2,24 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+
 /**
  * Component generator: tests.
  */
 class Tests7 extends Tests {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPropertyDefinition(): PropertyDefinition {
+    $definition = parent::getPropertyDefinition();
+
+    $definition->getProperty('filename')
+      ->setLiteralDefault('tests/%module.test');
+
+    return $definition;
+  }
 
   /**
    * Return an array of subcomponent types.

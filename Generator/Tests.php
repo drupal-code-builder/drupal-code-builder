@@ -15,6 +15,9 @@ class Tests extends PHPFile {
   public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
+    $definition->getProperty('filename')
+      ->setExpressionDefault("'src/Tests/' ~ get('..:pascal_case_name') ~ 'TestCase.php'");
+
     $definition->addProperties([
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),

@@ -21,6 +21,7 @@ class File extends BaseGenerator {
    */
   public function getFilename(): string {
     $filename = $this->component_data->filename->value;
+    assert(!empty($filename));
     $filename = str_replace('%module', $this->component_data->root_component_name->value, $filename);
 
     $component_base_path = $this->component_data->component_base_path->value;
