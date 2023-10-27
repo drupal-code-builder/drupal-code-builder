@@ -14,6 +14,13 @@ use MutableTypedData\Data\DataItem;
 class PHPClassFile extends PHPFile {
 
   /**
+   * The collected traits.
+   *
+   * @var array
+   */
+  protected $traits;
+
+  /**
    * The collected properties.
    *
    * @var array
