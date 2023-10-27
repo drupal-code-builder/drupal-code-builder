@@ -18,6 +18,13 @@ class CodeAdheresToCodingStandards extends Constraint {
   protected static $composerVendorDir;
 
   /**
+   * The configuration for PHP_CodeSniffer.
+   *
+   * @var \PHP_CodeSniffer\Config
+   */
+  protected $PHPCodeSnifferConfig;
+
+  /**
    * Constructor.
    *
    * @param int $drupalMajorVersion
