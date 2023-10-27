@@ -50,6 +50,18 @@ class PluginTypeManager extends Service {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
+    // Add the getType() method,
+    $components['method-get-type'] = [
+      'component_type' => 'PHPFunction',
+      'function_name' => 'getType',
+      'containing_component' => '%requester',
+      'docblock_inherit' => TRUE,
+      'prefixes' => ['protected'],
+      'body' => [
+        "return '{$this->component_data['plugin_type']}';",
+      ],
+    ];
+
     if ($this->component_data['discovery_type'] == 'yaml') {
       $components['method-get-discovery'] = [
         'component_type' => 'PHPFunction',

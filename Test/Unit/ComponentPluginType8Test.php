@@ -112,6 +112,10 @@ class ComponentPluginType8Test extends TestBase {
     ],
     '__construct', 2);
 
+    // Check the getType() method.
+    $get_type_tester = $php_tester->getMethodTester('getType');
+    $get_type_tester->assertReturnsString('cat_feeder');
+
     // Check the annotation class file.
     $annotation_file = $files["src/Annotation/CatFeeder.php"];
 
@@ -309,6 +313,10 @@ class ComponentPluginType8Test extends TestBase {
     $get_discovery_tester->assertHasNoParameters();
     // TODO: assertion doesn't handle properties.
     //$get_discovery_tester->assertReturnsVariable('discovery');
+
+    // Check the getType() method.
+    $get_type_tester = $php_tester->getMethodTester('getType');
+    $get_type_tester->assertReturnsString('cat_feeder');
 
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeeder.php"];
