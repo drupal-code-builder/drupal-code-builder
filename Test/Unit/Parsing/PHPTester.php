@@ -28,18 +28,18 @@ use PHP_CodeSniffer\Files\DummyFile;
 class PHPTester {
 
   /**
-   * The Drupal major version of the code being tested.
-   *
-   * @var int
-   */
-  protected $drupalMajorVersion;
-
-  /**
    * The full syntax tree parsed by PhpParser.
    *
    * @var array
    */
   protected $ast;
+
+  /**
+   * Array of grouped parser nodes.
+   *
+   * @var array
+   */
+  public $parser_nodes;
 
   /**
    * The path of this project's vendor directory.
@@ -53,15 +53,19 @@ class PHPTester {
   /**
    * Construct a new PHPTester.
    *
-   * @param string $php_code
+   * @param int $drupalMajorVersion
+   *   The major version of Drupal.
+   * @param string $phpCode
    *   The PHP code that should be tested.
+   * @param string $phpCodeFilePath
+   *   The path to the code file.
    */
-  public function __construct($drupal_major_version, string $php_code, string $file_path = '') {
+  public function __construct(
+    protected int $drupalMajorVersion,
+    protected string $phpCode,
+    protected string $phpCodeFilePath = '',
+  ) {
     $this->findComposerVendorDir();
-
-    $this->drupalMajorVersion = $drupal_major_version;
-    $this->phpCodeFilePath = $file_path;
-    $this->phpCode = $php_code;
 
     $this->assertWellFormedPHP();
 
