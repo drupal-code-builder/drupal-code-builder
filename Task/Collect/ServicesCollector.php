@@ -34,13 +34,6 @@ class ServicesCollector extends CollectorBase  {
   ];
 
   /**
-   * The container builder helper.
-   *
-   * @var \DrupalCodeBuilder\Task\Collect\ContainerBuilderGetter
-   */
-  protected $containerBuilderGetter;
-
-  /**
    * Constructs a new helper.
    *
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
@@ -52,12 +45,10 @@ class ServicesCollector extends CollectorBase  {
    */
   public function __construct(
     EnvironmentInterface $environment,
-    ContainerBuilderGetter $container_builder_getter,
-    CodeAnalyser $code_analyser
+    protected ContainerBuilderGetter $containerBuilderGetter,
+    protected CodeAnalyser $codeAnalyser
   ) {
     $this->environment = $environment;
-    $this->containerBuilderGetter = $container_builder_getter;
-    $this->codeAnalyser = $code_analyser;
   }
 
   /**

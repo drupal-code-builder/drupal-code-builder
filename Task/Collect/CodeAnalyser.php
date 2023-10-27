@@ -38,9 +38,9 @@ class CodeAnalyser {
    * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
    *   The environment object.
    */
-  public function __construct(EnvironmentInterface $environment) {
-    $this->environment = $environment;
-  }
+  public function __construct(
+    protected EnvironmentInterface $environment,
+  ) { }
 
   /**
    * Determines whether a class may be instantiated safely.

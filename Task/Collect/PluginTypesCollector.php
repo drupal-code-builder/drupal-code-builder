@@ -21,16 +21,6 @@ class PluginTypesCollector extends CollectorBase  {
   protected $reportingString = 'plugin types';
 
   /**
-   * The container builder helper.
-   */
-  protected $containerBuilderGetter;
-
-  /**
-   * The method collector helper
-   */
-  protected $methodCollector;
-
-  /**
    * The names of plugin type managers to collect for testing sample data.
    */
   protected $testingPluginManagerServiceIds = [
@@ -62,14 +52,11 @@ class PluginTypesCollector extends CollectorBase  {
    */
   public function __construct(
     EnvironmentInterface $environment,
-    ContainerBuilderGetter $container_builder_getter,
-    MethodCollector $method_collector,
-    CodeAnalyser $code_analyser
+    protected ContainerBuilderGetter $containerBuilderGetter,
+    protected MethodCollector $methodCollector,
+    protected CodeAnalyser $codeAnalyser
   ) {
     $this->environment = $environment;
-    $this->containerBuilderGetter = $container_builder_getter;
-    $this->methodCollector = $method_collector;
-    $this->codeAnalyser = $code_analyser;
   }
 
   /**
