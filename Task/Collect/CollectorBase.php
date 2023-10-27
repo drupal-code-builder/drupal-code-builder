@@ -8,6 +8,13 @@ namespace DrupalCodeBuilder\Task\Collect;
 abstract class CollectorBase implements CollectorInterface {
 
   /**
+   * The environment object.
+   *
+   * @var \DrupalCodeBuilder\Environment\EnvironmentInterface
+   */
+  protected $environment;
+
+  /**
    * The key in the filename for the processed data.
    *
    * Child classes must override this.

@@ -27,6 +27,13 @@ class ReportAdminRoutes extends ReportHookDataFolder implements OptionsProviderI
   protected static $optionsMethod = 'listAdminRoutesOptions';
 
   /**
+   * The data.
+   *
+   * @var array
+   */
+  protected $adminRoutesData;
+
+  /**
    * {@inheritdoc}
    */
   public function getInfo(): array {

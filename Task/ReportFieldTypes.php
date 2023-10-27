@@ -23,6 +23,11 @@ class ReportFieldTypes extends ReportHookDataFolder implements OptionsProviderIn
   protected static $optionsMethod = 'listFieldTypesOptions';
 
   /**
+   * The data.
+   */
+  protected $fieldTypesData;
+
+  /**
    * {@inheritdoc}
    */
   public function getInfo(): array {
