@@ -17,6 +17,8 @@ class UnitLazyDefinitionTest extends TestCase {
   use ProphecyTrait;
   use VarDumperSetupTrait;
 
+  protected $container;
+
   protected function setUp(): void {
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     \DrupalCodeBuilder\Factory::setEnvironment($environment->reveal());
