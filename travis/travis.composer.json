@@ -11,9 +11,9 @@
   "require": {
       "composer/installers": "*",
       "drupal-code-builder/drupal-code-builder": "*",
-      "drupal/core-composer-scaffold": "^9.3",
-      "drupal/core-dev": "^9.3",
-      "drupal/core-recommended": "^9.3",
+      "drupal/core-composer-scaffold": "^10.1",
+      "drupal/core-dev": "^10.1",
+      "drupal/core-recommended": "^10.1",
       "phpunit/phpunit": "^9"
   },
   "conflict": {
