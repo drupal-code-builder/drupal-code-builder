@@ -1,7 +1,7 @@
 # See https://github.com/travis-ci/travis.rb for linting.
 language: php
 php:
-  - 7.4
+  - 8.2
 
 # Whether to run DCB's internal tests, or integration tests that require a
 # Drupal build.
