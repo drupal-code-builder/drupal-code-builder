@@ -20,7 +20,7 @@ class CollectionTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
       ->setCoreVersionNumber(\Drupal::VERSION);
 

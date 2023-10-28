@@ -26,7 +26,7 @@ class InstallationTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Drupal doesn't know about DCB, so won't have it in its autoloader, so
