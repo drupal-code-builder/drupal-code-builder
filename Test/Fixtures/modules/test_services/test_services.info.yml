@@ -2,4 +2,4 @@ name: 'Test services'
 type: module
 description: 'TODO: Description of module'
 core: 8.x
-core_version_requirement: '^8 || ^9'
+core_version_requirement: '^8 || ^9 || ^10'
