@@ -17,7 +17,7 @@ class ComponentInfo10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test generating a module info file.

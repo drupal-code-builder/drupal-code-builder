@@ -16,7 +16,7 @@ class ComponentPHPClassFile10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Tests the various class name and namespace properties work together.

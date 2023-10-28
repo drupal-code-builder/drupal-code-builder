@@ -15,7 +15,7 @@ class ComponentProfile10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Tests a UI can access all of the necessary methods on component data.

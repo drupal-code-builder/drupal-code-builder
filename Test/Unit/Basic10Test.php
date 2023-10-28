@@ -10,7 +10,7 @@ class Basic10Test extends TestBase {
   /**
    * {@inheritdoc}
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test the hook data is reported correctly.

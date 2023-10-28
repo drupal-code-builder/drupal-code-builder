@@ -14,7 +14,7 @@ class ComponentReadme10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Tests the README file.

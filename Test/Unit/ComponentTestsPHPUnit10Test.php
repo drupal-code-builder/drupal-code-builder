@@ -16,7 +16,7 @@ class ComponentTestsPHPUnit10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * The PHP CodeSniffer rules to exclude for this test class files.

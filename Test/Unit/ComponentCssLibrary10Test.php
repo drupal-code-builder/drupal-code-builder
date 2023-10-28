@@ -16,7 +16,7 @@ class ComponentCssLibrary10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test generating a module with a library with CSS and JS assets

@@ -15,7 +15,7 @@ class ComponentPHPFile10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test the qualified class name extraction.
