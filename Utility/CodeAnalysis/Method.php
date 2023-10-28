@@ -51,7 +51,15 @@ class Method extends PHPReflectionMethod {
       // it from the docblock so that we have something to generate docblocks
       // with.
       if ($parameter_reflection->hasType()) {
-        $type = $parameter_reflection->getType()->getName();
+        if ($parameter_reflection->getType() instanceof \ReflectionUnionType) {
+          $type = implode('|', array_map(
+            fn($type) => $type->getName(),
+            $parameter_reflection->getType()->getTypes(),
+          ));
+        }
+        else {
+          $type = $parameter_reflection->getType()->getName();
+        }
       }
       else {
         if (isset($docblock_types[$name])) {
