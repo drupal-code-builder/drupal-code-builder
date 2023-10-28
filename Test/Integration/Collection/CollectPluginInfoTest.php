@@ -37,7 +37,7 @@ class CollectPluginInfoTest extends CollectionTestBase {
     'help',
     'tour',
     // Provides a queue worker plugin.
-    'aggregator',
+    'media',
   ];
 
   protected function getPluginTypeInfoFromCollector($job) {
