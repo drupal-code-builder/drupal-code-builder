@@ -144,7 +144,7 @@ class ComponentHooks10Test extends TestBase {
     $yaml_tester = new YamlTester($info_file);
     $yaml_tester->assertPropertyHasValue('name', $module_data['readable_name']);
     $yaml_tester->assertPropertyHasValue('description', $module_data['short_description']);
-    $yaml_tester->assertPropertyHasValue('core', '8.x');
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10');
   }
 
   /**
