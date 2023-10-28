@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * @group yaml
  * @group di
  */
-class ComponentPluginType8Test extends TestBase {
+class ComponentPluginType10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

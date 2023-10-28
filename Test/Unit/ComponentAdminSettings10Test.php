@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * @group form
  * @group yaml
  */
-class ComponentAdminSettings8Test extends TestBase {
+class ComponentAdminSettings10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

@@ -10,7 +10,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * @group yaml
  * @group info
  */
-class ComponentInfo8Test extends TestBase {
+class ComponentInfo10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

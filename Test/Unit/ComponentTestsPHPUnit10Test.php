@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 /**
  * Tests the PHPUnit test class generator.
  */
-class ComponentTestsPHPUnit8Test extends TestBase {
+class ComponentTestsPHPUnit10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

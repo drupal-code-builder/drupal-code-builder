@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @group yaml
  */
-class ComponentService8Test extends TestBase {
+class ComponentService10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

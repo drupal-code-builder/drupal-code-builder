@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 /**
  * Basic test class.
  */
-class Basic8Test extends TestBase {
+class Basic10Test extends TestBase {
 
   /**
    * {@inheritdoc}

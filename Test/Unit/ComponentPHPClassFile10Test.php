@@ -9,7 +9,7 @@ use MutableTypedData\Definition\DefaultDefinition;
 /**
  * Tests the PHP Class File generator class.
  */
-class ComponentPHPClassFile8Test extends TestBase {
+class ComponentPHPClassFile10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group hooks
  */
-class ComponentHooks8Test extends TestBase {
+class ComponentHooks10Test extends TestBase {
 
   /**
    * The PHP CodeSniffer snifs to exclude for this test.

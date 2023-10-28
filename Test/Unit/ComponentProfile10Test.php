@@ -8,7 +8,7 @@ use MutableTypedData\Data\DataItem;
 /**
  * Tests basic profile generation.
  */
-class ComponentProfile8Test extends TestBase {
+class ComponentProfile10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.

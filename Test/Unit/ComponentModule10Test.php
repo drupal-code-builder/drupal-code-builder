@@ -10,7 +10,7 @@ use MutableTypedData\Data\DataItem;
  *
  * @group hooks
  */
-class ComponentModule8Test extends TestBase {
+class ComponentModule10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
