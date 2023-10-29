@@ -8,14 +8,14 @@ use MutableTypedData\Data\DataItem;
 /**
  * Tests basic profile generation.
  */
-class ComponentProfile8Test extends TestBase {
+class ComponentProfile10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Tests a UI can access all of the necessary methods on component data.

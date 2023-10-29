@@ -878,6 +878,8 @@ class PluginTypesCollector extends CollectorBase  {
    */
   protected function addConfigSchemaPrefix(&$data) {
     if (!is_subclass_of($data['plugin_interface'], \Drupal\Core\Field\PluginSettingsInterface::class)
+      && !is_subclass_of($data['plugin_interface'], \Drupal\Component\Plugin\ConfigurableInterface::class)
+      // Deprecated in Drupal 8.7.
       && !is_subclass_of($data['plugin_interface'], \Drupal\Component\Plugin\ConfigurablePluginInterface::class)
     ) {
       // Only look at configurable plugins, whose interface inherits from

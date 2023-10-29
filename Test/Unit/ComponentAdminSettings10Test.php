@@ -11,14 +11,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  * @group form
  * @group yaml
  */
-class ComponentAdminSettings8Test extends TestBase {
+class ComponentAdminSettings10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test Admin Settings component.
@@ -118,7 +118,7 @@ class ComponentAdminSettings8Test extends TestBase {
 
     $yaml_tester->assertPropertyHasValue('name', 'Test Module', "The info file declares the module name.");
     $yaml_tester->assertPropertyHasValue('description', $module_data['short_description'], "The info file declares the module description.");
-    $yaml_tester->assertPropertyHasValue('core', "8.x", "The info file declares the core version.");
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10', "The info file declares the core version.");
     $yaml_tester->assertPropertyHasValue('configure', "test_module.settings", "The info file declares the configuration route.");
   }
 

@@ -17,6 +17,7 @@ array (
     'annotation_id_only' => false,
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'base_class_has_di' => false,
+    'config_schema_prefix' => 'block.settings.',
     'plugin_properties' => 
     array (
       'id' => 
@@ -375,6 +376,7 @@ array (
     'annotation_id_only' => false,
     'base_class' => 'Drupal\\image\\ImageEffectBase',
     'base_class_has_di' => true,
+    'config_schema_prefix' => 'image.effect.',
     'construction' => 
     array (
       0 => 

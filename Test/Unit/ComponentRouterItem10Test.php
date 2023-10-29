@@ -10,14 +10,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentRouterItem8Test extends TestBase {
+class ComponentRouterItem10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test generating a module with routes.

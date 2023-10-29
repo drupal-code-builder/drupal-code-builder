@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group hooks
  */
-class ComponentHooks8Test extends TestBase {
+class ComponentHooks10Test extends TestBase {
 
   /**
    * The PHP CodeSniffer snifs to exclude for this test.
@@ -31,7 +31,7 @@ class ComponentHooks8Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Tests generating a single hook implementation.
@@ -144,7 +144,7 @@ class ComponentHooks8Test extends TestBase {
     $yaml_tester = new YamlTester($info_file);
     $yaml_tester->assertPropertyHasValue('name', $module_data['readable_name']);
     $yaml_tester->assertPropertyHasValue('description', $module_data['short_description']);
-    $yaml_tester->assertPropertyHasValue('core', '8.x');
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10');
   }
 
   /**

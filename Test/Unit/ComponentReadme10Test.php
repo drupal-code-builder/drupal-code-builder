@@ -7,14 +7,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests the README file.
  */
-class ComponentReadme8Test extends TestBase {
+class ComponentReadme10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Tests the README file.

@@ -9,14 +9,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 /**
  * Tests the PHPUnit test class generator.
  */
-class ComponentTestsPHPUnit8Test extends TestBase {
+class ComponentTestsPHPUnit10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * The PHP CodeSniffer rules to exclude for this test class files.
@@ -330,7 +330,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $yaml_tester = new YamlTester($info_file);
     $yaml_tester->assertPropertyHasValue('name', 'Generated module');
     $yaml_tester->assertPropertyHasValue('type', 'module');
-    $yaml_tester->assertPropertyHasValue('core', '8.x');
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10');
 
     // Check the test module .info file.
     $test_module_info_file = $files['tests/modules/my_test/my_test.info.yml'];
@@ -339,7 +339,7 @@ class ComponentTestsPHPUnit8Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('name', 'My Test');
     $yaml_tester->assertPropertyHasValue('type', 'module');
     $yaml_tester->assertPropertyHasValue('package', 'Testing');
-    $yaml_tester->assertPropertyHasValue('core', '8.x');
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10');
 
     // Check the main module plugin file.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];

@@ -8,14 +8,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests the PHP File generator class.
  */
-class ComponentPHPFile8Test extends TestBase {
+class ComponentPHPFile10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test the qualified class name extraction.

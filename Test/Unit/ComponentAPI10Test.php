@@ -9,14 +9,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 /**
  * Tests the API documentation file component.
  */
-class ComponentAPI8Test extends TestBase {
+class ComponentAPI10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test generating a module with an api.php file.

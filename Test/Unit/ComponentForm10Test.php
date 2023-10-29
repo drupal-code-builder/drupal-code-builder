@@ -9,14 +9,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
  *
  * @group form
  */
-class ComponentForm8Test extends TestBase {
+class ComponentForm10Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 8;
+  protected $drupalMajorVersion = 10;
 
   /**
    * Test generating a module with form.
