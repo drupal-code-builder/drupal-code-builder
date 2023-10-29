@@ -30,10 +30,17 @@ ag -g 8Test.php | perl -pe 'print $_; s/8/10/' | xargs -n2 mv
 
 Exclude any tests which are no longer relevant on the new major version.
 
-2. Rename classes inside the files: s/8Test/10Test/
+2. Rename classes inside the files:
+
+```
+perl -pi -e 's/8Test/10Test/' ./*10Test.php
+```
 
 3. Update the major version declared in the test:
-   s/drupalMajorVersion = 8;/drupalMajorVersion = 10;/
+
+```
+perl -pi -e 's/drupalMajorVersion = 8/drupalMajorVersion = 10/' ./*10Test.php
+```
 
 4. Update assertions for the 'core_version_requirement' property in info files:
    assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10'
