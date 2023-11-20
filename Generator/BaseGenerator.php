@@ -256,7 +256,12 @@ abstract class BaseGenerator implements GeneratorInterface {
    * TODO: move this to a task handler?
    *
    * @param string $component_type
+   *   The component type.
    * @param string $data_type
+   *   (optional) The data type, to override the data type defined by the
+   *   Generator class. This is necessary in cases where the property needs to
+   *   be a simple type such as boolean or string, while the generator for
+   *   that property is complex because it has internal properties.
    *
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition
    */
