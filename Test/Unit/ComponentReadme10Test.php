@@ -32,12 +32,12 @@ class ComponentReadme10Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'README.txt',
+      'README.md',
     ], $files);
 
-    $readme_file = $files['README.txt'];
+    $readme_file = $files['README.md'];
 
-    $this->assertStringContainsString("Test module", $readme_file);
+    $this->assertStringContainsString("# Test module", $readme_file);
     $this->assertStringContainsString("TODO: write some documentation.", $readme_file);
   }
 

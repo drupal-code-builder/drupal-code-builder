@@ -25,7 +25,7 @@ class Readme extends File {
     $definition->getProperty('filename')
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
-      ->setLiteralDefault('README.txt');
+      ->setLiteralDefault('README.md');
 
     return $definition;
   }
@@ -38,7 +38,7 @@ class Readme extends File {
       'path' => '', // Means the base folder.
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
-      'filename' => 'README.txt',
+      'filename' => 'README.md',
       'body' => $this->lines(),
       'build_list_tags' => ['readme'],
     ];
@@ -52,8 +52,7 @@ class Readme extends File {
    */
   function lines() {
     return [
-      $this->component_data['readable_name'],
-      str_repeat('=', strlen($this->component_data['readable_name'])),
+      '# ' . $this->component_data['readable_name'],
       '',
       'TODO: write some documentation.',
       '',

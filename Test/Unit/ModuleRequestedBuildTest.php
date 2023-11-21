@@ -57,7 +57,7 @@ class ModuleRequestedBuildTest extends TestBase {
     $this->assertArrayHasKey("$module_name.tokens.inc", $files, "The files list has a .tokens.inc file.");
     $this->assertArrayHasKey("$module_name.api.php", $files, "The files list has a .api.php file.");
     $this->assertArrayHasKey("tests/$module_name.test", $files, "The files list has a tests file.");
-    $this->assertArrayHasKey("README.txt", $files, "The files list has a README file.");
+    $this->assertArrayHasKey("README.md", $files, "The files list has a README file.");
 
     // Test the 'code' build list setting.
     $module_data = $module_data_base;
