@@ -53,8 +53,9 @@ class AnalyzeModule extends Base {
     // Get the module's folder.
     $module_folder = $this->environment->getExtensionPath('module', $module_root_name);
 
-    // Bail if the folder doesn't exist yet: there is nothing to do.
-    if (!file_exists($module_folder)) {
+    // Bail if Drupal core doesn't know about the module because it doesn't
+    // exist yet, or if the folder doesn't exist yet: there is nothing to do.
+    if (empty($module_folder) || !file_exists($module_folder)) {
       return [];
     }
 
