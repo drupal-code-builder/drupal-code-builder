@@ -18,7 +18,7 @@ class Permission extends BaseGenerator {
 
     $definition->addProperties([
       'permission' => PropertyDefinition::create('string')
-        ->setLabel('Permission human-readable name')
+        ->setLabel('Permission machine name')
         ->setRequired(TRUE)
         ->setLiteralDefault('access my_module'),
       'title' => PropertyDefinition::create('string')
