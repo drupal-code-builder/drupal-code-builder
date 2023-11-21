@@ -111,7 +111,7 @@ class API extends PHPFile {
     // Sanity checks already done at this point; no need to catch exception.
     $mb_task_handler_analyze = \DrupalCodeBuilder\Factory::getTask('AnalyzeModule');
 
-    $hooks = $mb_task_handler_analyze->getInventedHooks($this->component_data['root_component_name']);
+    $hooks = $mb_task_handler_analyze->getInventedHooks($this->component_data->root_component_name->value);
 
     // Build an array of code pieces.
     $code_pieces = [];
