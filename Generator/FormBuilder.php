@@ -51,7 +51,7 @@ class FormBuilder extends PHPFunction {
     // The function name for a form builder is not fixed: normal forms use
     // form() but entity form handlers use buildForm().
     $body_code = [];
-    $body_code[] = "£{$this->component_data['function_name']} = parent::form(£form, £form_state);";
+    $body_code[] = "£form = parent::{$this->component_data['function_name']}(£form, £form_state);";
     $body_code[] = '';
 
     // Don't need to filter by type; all our child items are form elements.
