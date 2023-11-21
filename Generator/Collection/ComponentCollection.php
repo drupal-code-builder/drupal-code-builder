@@ -31,6 +31,15 @@ use DrupalCodeBuilder\Generator\RootComponent;
 class ComponentCollection implements \IteratorAggregate {
 
   /**
+   * Whether debug mode is enabled.
+   *
+   * TODO: Make this use an environment settings so UIs can pass it in.
+   *
+   * @var boolean
+   */
+  const DEBUG = FALSE;
+
+  /**
    * The list of instantiated components.
    *
    * These are iterated over by this class.
@@ -369,8 +378,20 @@ class ComponentCollection implements \IteratorAggregate {
     $this->locked = TRUE;
 
     $this->tree = [];
+    if (self::DEBUG) {
+      dump("-- Components with request paths prior to assembling containment tree");
+      foreach ($this->components as $id => $component) {
+        dump($id . ' - ' . $this->requestPaths[$id]);
+      }
+      dump("-- Assembling containment tree");
+    }
+
     foreach ($this->components as $id => $component) {
       $containing_component_id = $this->getContainingComponentId($component);
+
+      if (self::DEBUG) {
+        dump($id . ' - ' . $this->requestPaths[$id] . ' - containing: ' . ($this->requestPaths[$containing_component_id] ?? 'NO CONTAINER'));
+      }
 
       // An empty containing component means the component does not participate
       // in the containment tree.
