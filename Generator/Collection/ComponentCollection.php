@@ -370,17 +370,17 @@ class ComponentCollection implements \IteratorAggregate {
 
     $this->tree = [];
     foreach ($this->components as $id => $component) {
-      $containing_component_name = $this->getContainingComponentName($component);
+      $containing_component_id = $this->getContainingComponentId($component);
 
       // An empty containing component means the component does not participate
       // in the containment tree.
-      if (empty($containing_component_name)) {
+      if (empty($containing_component_id)) {
         continue;
       }
 
-      assert(isset($this->components[$containing_component_name]), "Containing component '$containing_component_name' given by '$id' is not a component ID.");
+      assert(isset($this->components[$containing_component_id]), "Containing component '$containing_component_id' given by '$id' is not a component ID.");
 
-      $this->tree[$containing_component_name][] = $id;
+      $this->tree[$containing_component_id][] = $id;
     }
 
     return $this->tree;
@@ -398,7 +398,7 @@ class ComponentCollection implements \IteratorAggregate {
    *
    * @see \DrupalCodeBuilder\Generator\BaseGenerator::containingComponent()
    */
-  protected function getContainingComponentName(GeneratorInterface $component): ?string {
+  protected function getContainingComponentId(GeneratorInterface $component): ?string {
     $id = $this->getComponentKey($component);
     $containing_component_token = $component->containingComponent();
 
