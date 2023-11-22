@@ -805,6 +805,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
           'plugin_name' => 'alpha',
         ],
       ],
+      'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
 
@@ -846,6 +847,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
           'plugin_name' => 'alpha',
         ],
       ],
+      'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
 

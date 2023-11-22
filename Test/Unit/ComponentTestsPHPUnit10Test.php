@@ -57,6 +57,7 @@ class ComponentTestsPHPUnit10Test extends TestBase {
 
     $this->assertFiles([
       "test_module.info.yml",
+      'README.md',
       "tests/src/Kernel/MyTest.php"
     ], $files);
 

@@ -8,6 +8,9 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  * Generator base class for module README file.
  *
  * (You were going to write a README file, right?)
+ *
+ * Template text and ordering of sections is based on documentation at
+ * https://www.drupal.org/docs/develop/managing-a-drupalorg-theme-module-or-distribution-project/documenting-your-project/readmemd-template.
  */
 class Readme extends File {
 
@@ -38,6 +41,13 @@ class Readme extends File {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMergeTag() {
+    return 'readme';
+  }
+
+  /**
    * Collect the code files.
    */
   public function getFileInfo() {
@@ -65,7 +75,19 @@ class Readme extends File {
       '',
     ];
 
+    // Order for the sections.
+    $headings_order = [
+      'Requirements',
+      'Installation',
+      'Configuration',
+    ];
+
     $sections = $this->getContainedComponentSections();
+
+    // Order the sections by the ordering array, considering that some sections
+    // might not be present.
+    $sections = array_filter(array_merge(array_fill_keys($headings_order, NULL), $sections));
+
     foreach ($sections as $title => $section_text) {
       $body[] = '## ' . $title;
       $body[] = '';
@@ -75,7 +97,6 @@ class Readme extends File {
         $body = array_merge($body, explode("\n", $wrapped_line));
       }
     }
-
 
     return $body;
   }

@@ -418,6 +418,48 @@ class Module extends RootComponent {
       }
     }
 
+    // Add a section to the README about dependencies.
+    // Skip this in TestModule child class, which doesn't have the readme
+    // property.
+    if ($this->component_data->hasProperty('readme')) {
+      $contrib_dependencies = [];
+      foreach ($this->component_data->module_dependencies as $dependency) {
+        if (str_contains($dependency->value, ':') && !str_starts_with($dependency->value, 'drupal:')) {
+          [$dependency_project, ] = explode(':', $dependency->value);
+          // TODO: We can't feasibly fetch the project name from Drupal. Attempt
+          // to get a module readable name if the module exists locally.
+          // Key by project in case there are dependencies on multiple modules
+          // in the same d.org project.
+          $contrib_dependencies[$dependency_project] = "- [$dependency_project](https://www.drupal.org/project/$dependency_project)";
+        }
+      }
+
+      if ($contrib_dependencies) {
+        $text = [
+          'This module requires the following modules:',
+          '',
+        ];
+        $text = array_merge($text, array_values($contrib_dependencies));
+        $text[] = '';
+      }
+      else {
+        $text = [
+          'This module requires no modules outside of Drupal core.',
+          '',
+        ];
+      }
+
+      // Force a README if there are dependencies to document there. Otherwise,
+      // only say there are no dependencies if a README has been set.
+      if ($contrib_dependencies || $this->component_data->readme->value) {
+        $components['readme_dependencies'] = [
+          'component_type' => 'ReadmeSection',
+          'title' => 'Requirements',
+          'text' => $text,
+        ];
+      }
+    }
+
     return $components;
   }
 
