@@ -25,7 +25,7 @@ class MethodCollector {
    *  - 'declaration': The function declaration line.
    *  - 'description': The description from the method's docblock first line.
    */
-  public function collectMethods($name) {
+  public function collectMethods(string $name) {
     // Get a reflection class for the interface.
     $reflection = new \ReflectionClass($name);
     $methods = $reflection->getMethods();
