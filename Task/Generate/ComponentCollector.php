@@ -501,7 +501,7 @@ class ComponentCollector {
       // dump("Converting $required_item_name");
       // Conversion to data items!
       if (is_array($required_item_data)) {
-        // Allow the required item data to get set on a property on the
+        // Allow the required item data to be set on a property on the
         // component data.
         // This has to be requested explicitly rather than relying on matching
         // property names, as there are too many that happen to coincide.

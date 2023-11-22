@@ -211,7 +211,7 @@ class PluginType extends BaseGenerator {
 
     $plugin_type = $this->component_data['plugin_type'];
 
-    // Experimental. This corresponse to a property defined in the main data.
+    // Experimental. This corresponds to a property defined in the main data.
     // This is needed so that the PluginTypeManager generator has access to
     // the whole data structure, in particular, to access generation
     // configuration.
