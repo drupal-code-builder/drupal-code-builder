@@ -554,6 +554,10 @@ class ComponentCollector {
       }
 
       // Validate so defaults are filled in.
+      // TODO: This doesn't actually validate internal properties, so not that
+      // useful as many of them are marked as such. In particular, it doesn't
+      // check required properties are filled in! See
+      // https://github.com/drupal-code-builder/drupal-code-builder/issues/248.
       $required_item_data->validate();
 
       // Guard against a clash of required item key.
