@@ -31,6 +31,13 @@ class Readme extends File {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  function containingComponent() {
+    return '%nearest_root';
+  }
+
+  /**
    * Collect the code files.
    */
   public function getFileInfo() {
@@ -51,12 +58,45 @@ class Readme extends File {
    *  An array of lines of text.
    */
   function lines() {
-    return [
+    $body = [
       '# ' . $this->component_data['readable_name'],
       '',
       'TODO: write some documentation.',
       '',
     ];
+
+    $sections = $this->getContainedComponentSections();
+    foreach ($sections as $title => $section_text) {
+      $body[] = '## ' . $title;
+      $body[] = '';
+
+      foreach ($section_text as $line) {
+        $wrapped_line = wordwrap($line, 80);
+        $body = array_merge($body, explode("\n", $wrapped_line));
+      }
+    }
+
+
+    return $body;
   }
+
+  /**
+   * Gets additional info lines from contained components.
+   *
+   * @return array
+   */
+  protected function getContainedComponentSections(): array {
+    $lines = [];
+    foreach ($this->containedComponents['section'] as $key => $child_item) {
+      $contents = $child_item->getContents();
+
+      // Assume that children components don't tread on each others' toes and
+      // provide the same property names.
+      $lines[array_key_first($contents)] = reset($contents);
+    }
+
+    return $lines;
+  }
+
 
 }

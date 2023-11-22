@@ -62,6 +62,11 @@ class AdminSettingsForm extends Form {
       )
     );
 
+    $definition->addProperties([
+      'readable_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
+
     return $definition;
   }
 
@@ -163,6 +168,18 @@ class AdminSettingsForm extends Form {
       'component_type' => 'InfoProperty',
       'property_name' => 'configure',
       'property_value' => $this->component_data['route_name'],
+    ];
+
+    $components['readme_configure'] = [
+      'component_type' => 'ReadmeSection',
+      'title' => 'Configuration',
+      'text' => [
+        'To configure %Module:',
+        '',
+        "1. Go to Administration » {$parent_route_data['title']} » %Module",
+        '2. TODO: write instructions.',
+        '',
+      ],
     ];
 
     $components["config/schema/%module.schema.yml"] = [

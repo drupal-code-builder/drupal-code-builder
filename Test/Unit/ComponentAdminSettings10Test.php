@@ -41,6 +41,7 @@ class ComponentAdminSettings10Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
+      'README.md',
       'src/Form/AdminSettingsForm.php',
       'test_module.routing.yml',
       'test_module.links.menu.yml',
