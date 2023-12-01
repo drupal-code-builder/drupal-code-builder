@@ -9,7 +9,6 @@ use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
-use MutableTypedData\Definition\DefinitionProviderInterface;
 
 /**
  * Abstract Generator for root components.
@@ -21,7 +20,7 @@ use MutableTypedData\Definition\DefinitionProviderInterface;
  * \DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory to
  * instantiate data objects.
  */
-abstract class RootComponent extends BaseGenerator implements DefinitionProviderInterface {
+abstract class RootComponent extends BaseGenerator implements RootComponentInterface {
 
   /**
    * The sanity level this generator requires to operate.
@@ -39,17 +38,7 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
   }
 
   /**
-   * Defines the data for this root component's configuration.
-   *
-   * Configuration data is intended to be used by UIs to allow users to store
-   * their preferences in a persistent fashion.
-   *
-   * The properties here are merged into the main data by
-   * RootComponent::getPropertyDefinition(), as child properties of a
-   * 'configuration' complex property.
-   *
-   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
-   *   The data definition.
+   * {@inheritdoc}
    */
   public static function configurationDefinition(): PropertyDefinition {
     // Return an empty data definition by default.
@@ -80,16 +69,6 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
 
     static::rootComponentPropertyDefinitionAlter($definition);
   }
-
-  /**
-   * Alter the definition.
-   *
-   * This is mostly to allow easy skipping of this by TestModule.
-   *
-   * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
-   *   The definition from this class.
-   */
-  abstract public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void;
 
   /**
    * {@inheritdoc}
@@ -176,10 +155,7 @@ abstract class RootComponent extends BaseGenerator implements DefinitionProvider
   }
 
   /**
-   * Provides replacement strings for tokens in code body.
-   *
-   * @return
-   *  An array of tokens to replacements, suitable for use by strtr().
+   * {@inheritdoc}
    */
   function getReplacements() {
     // Root components should override this.
