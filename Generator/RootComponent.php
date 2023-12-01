@@ -8,7 +8,6 @@ use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
 
 /**
  * Abstract Generator for root components.
@@ -49,10 +48,8 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
 
   /**
    * Implements DefinitionProviderInterface's method.
-   *
-   * We need the base PropertyDefinition here for the interface compatibility.
    */
-  public static function getDefinition(): BasePropertyDefinition {
+  public static function getDefinition(): PropertyDefinition {
     $definition = static::getGeneratorDataDefinition();
 
     // Load all the lazy properties now we have the complete definition.
