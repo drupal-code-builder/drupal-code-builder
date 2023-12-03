@@ -612,6 +612,8 @@ class ComponentRouterItem10Test extends TestBase {
 
   /**
    * Test generating a route with a menu link.
+   *
+   * @group plugin
    */
   public function testRouteGenerationWithMenuLink() {
     // Assemble module data.
