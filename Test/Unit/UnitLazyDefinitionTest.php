@@ -78,7 +78,7 @@ class UnitLazyDefinitionTest extends TestCase {
    * exist.
    */
   public function testParentRootComponentPropertyRemoval() {
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
     $this->container->set('Generate\ComponentClassHandler', $class_handler);
 
     $generator_class = $class_handler->getGeneratorClass('RootGeneratorChild');
@@ -103,7 +103,7 @@ class UnitLazyDefinitionTest extends TestCase {
   protected function getComponentCollector(): ComponentCollector {
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
     $data_info_gatherer = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentDataInfoGatherer::class);
 
     // Create the helper, with dependencies passed in.
