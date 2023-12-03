@@ -658,14 +658,6 @@ class ComponentRouterItem10Test extends TestBase {
       "$module_name.links.menu.yml",
     ], $files);
 
-    $this->assertCount(5, $files, "The expected number of files is returned.");
-
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info file.");
-    $this->assertArrayHasKey("$module_name.routing.yml", $files, "The files list has a routing file.");
-    $this->assertArrayHasKey("src/Controller/MyPathController.php", $files, "The files list has a controller class file.");
-    $this->assertArrayHasKey("src/Controller/MyOtherPathController.php", $files, "The files list has a controller class file.");
-    $this->assertArrayHasKey("$module_name.links.menu.yml", $files, "The files list has a menu links file.");
-
     $menu_links_file = $files["$module_name.links.menu.yml"];
     $yaml_tester = new YamlTester($menu_links_file);
 
