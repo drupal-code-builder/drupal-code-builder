@@ -7,11 +7,25 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
 /**
- *  Task TODO helper for working with generator classes and instantiating them.
+ * Test class handler which returns generator classes from a fixture namespace.
+ *
+ * This is meant to work with a set of generator classes in the same namespace.
  */
 class TestComponentClassHandler extends ComponentClassHandler {
 
   protected $map = [];
+
+  /**
+   * Constructor.
+   *
+   * @param string $fixtureGeneratorNamespace
+   *   The namespace within \DrupalCodeBuilder\Test\Fixtures in which to look
+   *   for generator classes.
+   */
+  public function __construct(
+    protected string $fixtureGeneratorNamespace,
+  ) {
+  }
 
   // YAGNI?
   public function setClassMap(array $map) {
@@ -23,12 +37,13 @@ class TestComponentClassHandler extends ComponentClassHandler {
    */
   public function getGeneratorClass($type) {
     // Return generators in the fixtures namespace.
-    if (class_exists('\DrupalCodeBuilder\Test\Fixtures\Generator\\' . $type)) {
-      $class_name = '\DrupalCodeBuilder\Test\Fixtures\Generator\\' . $type;
+    $class_name = "\DrupalCodeBuilder\Test\Fixtures\\{$this->fixtureGeneratorNamespace}\\{$type}";
+    if (class_exists($class_name)) {
+      $class_name = $class_name;
       return $class_name;
     }
 
-    throw new \LogicException("No class found for '$type' in fixture namespace.");
+    throw new \LogicException("No class '$class_name' found for '$type' in fixture namespace.");
   }
 
   /**

@@ -30,7 +30,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   protected function getComponentCollector(): ComponentCollector {
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
 
     // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
@@ -59,7 +59,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
 
     // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
@@ -200,7 +200,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
     // Mock the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler;
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
 
     // Create the helper, with mocks passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
