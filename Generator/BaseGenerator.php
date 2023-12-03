@@ -269,7 +269,7 @@ abstract class BaseGenerator implements GeneratorInterface {
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($component_type);
 
-    return $generator_class::getGeneratorDataDefinition($data_type);
+    return $generator_class::getGeneratorDataDefinition($component_type, $data_type);
   }
 
   /**
@@ -281,6 +281,9 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * TODO: this should replace getPropertyDefinition()!
    *
+   * @param string $component_type
+   *   (optional) The component type. If omitted, is derived from the current
+   *   class.
    * @param string $data_type
    *   (optional) The data type, to override the data type defined by the
    *   Generator class. This is necessary in cases where the property needs to
@@ -290,11 +293,11 @@ abstract class BaseGenerator implements GeneratorInterface {
    * @return \DrupalCodeBuilder\Definition\LazyGeneratorDefinition
    *   The property definition.
    */
-  public static function getGeneratorDataDefinition(string $data_type = NULL): LazyGeneratorDefinition {
+  public static function getGeneratorDataDefinition(string $component_type = NULL, string $data_type = NULL): LazyGeneratorDefinition {
     // Check this isn't getting called on BaseGenerator.
     assert(static::class != __CLASS__);
 
-    $component_type = static::deriveType(static::class);
+    $component_type = $component_type ?? static::deriveType(static::class);
 
     $data_type = $data_type ?? static::$dataType;
 
