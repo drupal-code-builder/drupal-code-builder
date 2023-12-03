@@ -675,6 +675,56 @@ class ComponentRouterItem10Test extends TestBase {
   }
 
   /**
+   * Test generating a route with a menu tab.
+   *
+   * @group plugin
+   */
+  public function testRouteGenerationWithMenuTab() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'router_items' => [
+        0 => [
+          'path' => '/my/path',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'permission',
+          ],
+          'title' => 'My Page',
+          'menu_tab' => [
+            'title' => 'My link',
+            'base_route' => 'cake.route',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "$module_name.routing.yml",
+      "src/Controller/MyPathController.php",
+      "$module_name.links.task.yml",
+    ], $files);
+
+    $task_links_file = $files["$module_name.links.task.yml"];
+    $yaml_tester = new YamlTester($task_links_file);
+
+    $yaml_tester->assertHasProperty('test_module.my.path', "The menu links file has the property for the menu link.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'title'], 'My link', "The menu links file declares the link title.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'route_name'], 'test_module.my.path', "The menu links file declares the link route.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'base_route'], 'cake.route', "The menu links file declares the base route.");
+  }
+
+  /**
    * Tests adoption of existing form.
    *
    * @group adopt

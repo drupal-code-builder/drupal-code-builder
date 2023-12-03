@@ -49,6 +49,17 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setLabel('The title for the menu link')
             ->setLiteralDefault('My Page')
         ]),
+      'menu_tab' => PropertyDefinition::create('complex')
+        ->setLabel("Menu tab")
+        ->setProperties([
+          'title' => PropertyDefinition::create('string')
+            ->setLabel('The title for the menu tab')
+            ->setLiteralDefault('My Page'),
+          'base_route' => PropertyDefinition::create('string')
+            ->setLabel('Route that this tab shows on')
+            ->setLiteralDefault('My Page')
+        ]),
+
       // TODO: remove this if possible? Probably need to allow PHPClassFile
       // to take a full classname.
       'controller_relative_class_name' => PropertyDefinition::create('string')
@@ -573,7 +584,25 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
         'plugin_name' => $plugin_name,
         'plugin_properties' => [
           'title' => $this->component_data->menu_link->title->value,
+          'route_name' => $this->component_data->route_name->value,
+        ],
+      ];
+    }
+
+    if (!$this->component_data->menu_tab->isEmpty()) {
+      // Strip off the module name prefix from the route name to make the plugin
+      // name, as the plugin generator will add it back again.
+      $plugin_name = $this->component_data['route_name'];
+      $plugin_name = substr($plugin_name, strlen($this->component_data['root_component_name']) + 1);
+
+      $components['menu_tab'] = [
+        'component_type' => 'Plugin',
+        'plugin_type' => 'menu.local_task',
+        'plugin_name' => $plugin_name,
+        'plugin_properties' => [
+          'title' => $this->component_data->menu_tab->title->value,
           'route_name' => $this->component_data['route_name'],
+          'base_route' => $this->component_data->menu_tab->base_route->value,
         ],
       ];
     }
