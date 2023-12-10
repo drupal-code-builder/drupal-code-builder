@@ -69,7 +69,12 @@ class GeneratorDefinition extends PropertyDefinition {
     }
 
     // Add the properties from the generator class.
-    return $this->generatorClass::addProperties($this);
+    $this->generatorClass::addProperties($this);
+
+    // Call the parent so we don't recurse.
+    foreach (parent::getProperties() as $property) {
+      $property->getProperties();
+    }
   }
 
 }
