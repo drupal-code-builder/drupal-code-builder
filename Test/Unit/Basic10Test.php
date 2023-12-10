@@ -13,6 +13,15 @@ class Basic10Test extends TestBase {
   protected $drupalMajorVersion = 10;
 
   /**
+   * Test the component data is correctly formed.
+   */
+  public function testComponentData() {
+    $component_data = $this->getRootComponentBlankData('module');
+
+    $this->assertEquals('module', $component_data->getName());
+  }
+
+  /**
    * Test the hook data is reported correctly.
    */
   public function testReportHookData() {
