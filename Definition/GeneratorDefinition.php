@@ -15,13 +15,6 @@ namespace DrupalCodeBuilder\Definition;
 class GeneratorDefinition extends PropertyDefinition {
 
   /**
-   * The component type.
-   *
-   * @var string
-   */
-  protected $componentType;
-
-  /**
    * Constructor.
    *
    * @param string $data_type NO!
@@ -29,11 +22,14 @@ class GeneratorDefinition extends PropertyDefinition {
    * @param string $generator_type
    *   The generator type.
    */
-  public function __construct(string $generator_type) {
-    $this->componentType = $generator_type;
+  public function __construct(
+    protected string $componentType,
+    protected string $generatorClass,
+  ) {
+    // $this->componentType = $generator_type;
 
-    // get $data_type from Generator.
-    // TEMP!
+    // // get $data_type from Generator.
+    // // TEMP!
     $data_type = 'complex';
 
     parent::__construct($data_type);
@@ -57,7 +53,7 @@ class GeneratorDefinition extends PropertyDefinition {
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($generator_type);
 
-    return $generator_class::getDataDefinition();
+    return new static($generator_type, $generator_class);
   }
 
   /**
@@ -72,6 +68,10 @@ class GeneratorDefinition extends PropertyDefinition {
   }
 
   public function getProperties() {
+    if (empty($this->componentType)) {
+      throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
+    }
+
     // Get the properties from the generator class.
   }
 
