@@ -52,7 +52,6 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    */
   public static function getDefinition(): PropertyDefinition {
     $component_type = static::deriveType(static::class);
-    // WHAT DOES THIS MEAN???
     $definition = GeneratorDefinition::createFromGeneratorType($component_type);
 
     $definition

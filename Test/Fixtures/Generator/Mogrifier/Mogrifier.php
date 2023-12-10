@@ -25,15 +25,18 @@ class Mogrifier extends RootComponent {
   /**
    * {@inheritdoc}
    */
+  // TODO! rename! BAD -- is same name as property method!
   public static function addProperties(PropertyDefinition $definition) {
+    // TODO parent call!
     // $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),
-
-      //  this needs to be combined with the result of getDataDefinition.
-      'generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')
+      'complex_generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')
         ->setLabel("Compound Generator")
+        ->setMultiple(TRUE),
+      'mutable_generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierMutableComponent')
+        ->setLabel("Mutable Generator")
         ->setMultiple(TRUE),
     ]);
 

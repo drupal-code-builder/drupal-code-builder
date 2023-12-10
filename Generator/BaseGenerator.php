@@ -247,6 +247,9 @@ abstract class BaseGenerator implements GeneratorInterface {
     return static::$dataType;
   }
 
+  public static function addProperties(PropertyDefinition $definition) {
+    // TODO: common props./
+  }
 
   //  WTF ! FOUR!!! property  methods!!
 
