@@ -243,6 +243,9 @@ abstract class BaseGenerator implements GeneratorInterface {
     return preg_replace('@\d+$@', '', $short_class);
   }
 
+
+  //  WTF ! FOUR!!! property  methods!!
+
   /**
    * Gets the data definition for a given component type.
    *

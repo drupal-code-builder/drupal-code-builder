@@ -36,8 +36,10 @@ class TestComponentClassHandler extends ComponentClassHandler {
    * {@inheritdoc}
    */
   public function getGeneratorClass($type) {
+    $short_class_name = ucfirst($type);
+
     // Return generators in the fixtures namespace.
-    $class_name = "\DrupalCodeBuilder\Test\Fixtures\\{$this->fixtureGeneratorNamespace}\\{$type}";
+    $class_name = "\DrupalCodeBuilder\Test\Fixtures\\{$this->fixtureGeneratorNamespace}\\{$short_class_name}";
     if (class_exists($class_name)) {
       $class_name = $class_name;
       return $class_name;

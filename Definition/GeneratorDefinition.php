@@ -24,15 +24,17 @@ class GeneratorDefinition extends PropertyDefinition {
   /**
    * Constructor.
    *
-   * @param string $data_type
+   * @param string $data_type NO!
    *   The data type.
    * @param string $generator_type
    *   The generator type.
    */
-  public function __construct(string $data_type, string $generator_type) {
-    parent::__construct($data_type);
-
+  public function __construct(string $generator_type) {
     $this->componentType = $generator_type;
+
+    // get $data_type from Generator.
+
+    parent::__construct($data_type);
   }
 
   /**
@@ -41,14 +43,19 @@ class GeneratorDefinition extends PropertyDefinition {
    * @param string $generator_type
    *   The generator type; that is, the short class name without the version
    *   number.
-   * @param string $data_type
+   * @param string $data_type NO KILL, the GENERATOR tells us this.
    *   (optional) The data type. Defaults to 'complex'.
    *
    * @return static
    *   The new definition.
    */
-  static public function createFromGeneratorType(string $generator_type, string $data_type = 'complex'): self {
-    return new static($data_type, $generator_type);
+  // Should this go on a factory class? this class isn't the one getting
+  // instantiated!
+  static public function createFromGeneratorType(string $generator_type): self {
+    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
+    $generator_class = $class_handler->getGeneratorClass($generator_type);
+
+    return $generator_class::getDataDefinition();
   }
 
   /**
@@ -60,6 +67,10 @@ class GeneratorDefinition extends PropertyDefinition {
   public function getComponentType() :string {
     // TODO: Handle mutable data and switch the component class here!
     return $this->componentType;
+  }
+
+  public function getProperties() {
+    // Get the properties from the generator class.
   }
 
 }

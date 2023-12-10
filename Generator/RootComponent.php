@@ -50,7 +50,10 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    * Implements DefinitionProviderInterface's method.
    */
   public static function getDefinition(): PropertyDefinition {
-    $definition = static::getGeneratorDataDefinition();
+    $component_type = static::deriveType(static::class);
+    $data_type = static::$dataType;
+
+    $definition = LazyGeneratorDefinition::createFromGeneratorType($component_type, $data_type);
 
     // Load all the lazy properties now we have the complete definition.
     $definition->loadLazyProperties();
@@ -58,9 +61,18 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
     return $definition;
   }
 
+  function getDataDefinition() {
+    return PropertyDefinition::create('compound')
+      ->setProperties([
+
+      ]);
+  }
+
+
   /**
    * {@inheritdoc}
    */
+  // DIE!
   public static function setProperties(PropertyDefinition $definition): void {
     parent::setProperties($definition);
 
@@ -70,6 +82,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
   /**
    * {@inheritdoc}
    */
+  // DIE!??
   public static function getPropertyDefinition(): PropertyDefinition {
     $definition = parent::getPropertyDefinition();
 
