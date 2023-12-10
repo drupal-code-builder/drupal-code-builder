@@ -32,7 +32,7 @@ class Mogrifier extends RootComponent {
       'string_property' => PropertyDefinition::create('string'),
 
       //  this needs to be combined with the result of getDataDefinition.
-      'generator_property' => GeneratorDefinition::createFromGeneratorType('CompoundGenerator')
+      'generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')
         ->setLabel("Compound Generator")
         ->setMultiple(TRUE),
     ]);
@@ -84,7 +84,8 @@ Generate
   - do getDefinition()
 
 Module, Root, implement DefinitionProviderInterface::getDefinition()
-  - build GeneratorDefinition
+  - build GeneratorDefinition('CompoundGenerator') - WHO DOES THIS?
+    we need to get stuff from CompoundGenerator!
   - add name
   - add label ???????
   - lazy load properties NON RECURSIVE! since we go back into getDefinition anyway!
