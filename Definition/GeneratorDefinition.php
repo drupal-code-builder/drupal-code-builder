@@ -53,6 +53,8 @@ class GeneratorDefinition extends PropertyDefinition {
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($generator_type);
 
+    // NO WAIT the $generator_class needs to say stuff like we're complex or mutable!
+
     return new static($generator_type, $generator_class);
   }
 
