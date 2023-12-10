@@ -72,7 +72,8 @@ class GeneratorDefinition extends PropertyDefinition {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }
 
-    // Get the properties from the generator class.
+    // Add the properties from the generator class.
+    return $this->generatorClass::addProperties($this);
   }
 
 }

@@ -25,8 +25,8 @@ class Mogrifier extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addProperties(PropertyDefinition $definition) {
+    // $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),
