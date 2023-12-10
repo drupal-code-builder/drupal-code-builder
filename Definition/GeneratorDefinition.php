@@ -23,15 +23,10 @@ class GeneratorDefinition extends PropertyDefinition {
    *   The generator type.
    */
   public function __construct(
+    string $data_type,
     protected string $componentType,
     protected string $generatorClass,
   ) {
-    // $this->componentType = $generator_type;
-
-    // // get $data_type from Generator.
-    // // TEMP!
-    $data_type = 'complex';
-
     parent::__construct($data_type);
   }
 
@@ -52,10 +47,9 @@ class GeneratorDefinition extends PropertyDefinition {
   static public function createFromGeneratorType(string $generator_type): PropertyDefinition {
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($generator_type);
+    $data_type = $generator_class::getDefinitionDataType();
 
-    // NO WAIT the $generator_class needs to say stuff like we're complex or mutable!
-
-    return new static($generator_type, $generator_class);
+    return new static($data_type, $generator_type, $generator_class);
   }
 
   /**

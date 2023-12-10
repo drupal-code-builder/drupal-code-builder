@@ -243,6 +243,10 @@ abstract class BaseGenerator implements GeneratorInterface {
     return preg_replace('@\d+$@', '', $short_class);
   }
 
+  public static function getDefinitionDataType(): string {
+    return static::$dataType;
+  }
+
 
   //  WTF ! FOUR!!! property  methods!!
 
