@@ -52,7 +52,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    */
   public static function getDefinition(): PropertyDefinition {
     $component_type = static::deriveType(static::class);
-    $definition = LazyGeneratorDefinition::createFromGeneratorType($component_type);
+    $definition = GeneratorDefinition::createFromGeneratorType($component_type);
 
     $definition
       ->setLabel('Module') // TODO! vary!
