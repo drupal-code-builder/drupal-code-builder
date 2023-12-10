@@ -46,9 +46,9 @@ class Mogrifier extends RootComponent {
 
 }
 
+///////////////////////////////
 __halt_compiler();
 
-///////////////////////////////
 ///
 
 Generate

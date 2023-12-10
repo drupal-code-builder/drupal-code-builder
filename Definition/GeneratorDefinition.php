@@ -51,7 +51,7 @@ class GeneratorDefinition extends PropertyDefinition {
    */
   // Should this go on a factory class? this class isn't the one getting
   // instantiated!
-  static public function createFromGeneratorType(string $generator_type): self {
+  static public function createFromGeneratorType(string $generator_type): PropertyDefinition {
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($generator_type);
 

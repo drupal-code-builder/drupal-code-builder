@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
@@ -61,8 +62,8 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
     return $definition;
   }
 
-  function getDataDefinition() {
-    return PropertyDefinition::create('compound')
+  public static function getDataDefinition() {
+    return PropertyDefinition::create('complex')
       ->setProperties([
 
       ]);
