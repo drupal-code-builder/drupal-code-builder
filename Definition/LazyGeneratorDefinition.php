@@ -25,7 +25,7 @@ class LazyGeneratorDefinition extends GeneratorDefinition {
   /**
    * {@inheritdoc}
    */
-  public function getProperties() {
+  public function DIEEEEEgetProperties() {
     if (empty($this->componentType)) {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }

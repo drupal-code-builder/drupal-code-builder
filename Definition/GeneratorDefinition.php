@@ -33,6 +33,8 @@ class GeneratorDefinition extends PropertyDefinition {
     $this->componentType = $generator_type;
 
     // get $data_type from Generator.
+    // TEMP!
+    $data_type = 'complex';
 
     parent::__construct($data_type);
   }

@@ -49,14 +49,18 @@ class Mogrifier extends RootComponent {
 ///////////////////////////////
 __halt_compiler();
 
-///
+
+/// SIMPLE - no lazy
 
 Generate
   - get component data
   - resolve 'module' to Module class
   - do createFromProvider(Module)
 
-Module, Root, implement DefinitionProviderInterface::getDefinition()
+.. Data item factory, gets provider class.
+  - do getDefinition()
+
+Module, Root, implements DefinitionProviderInterface::getDefinition()
   - build Definition, add properties
     - do GeneratorDefinition::createFromGeneratorType('MogrifierCompoundComponent')
       - add label, multiple.
@@ -67,3 +71,40 @@ GeneratorDefinition::createFromGeneratorType
 
 MogrifierCompoundComponent::getDefinition -- same as on root! Is that ok?
   - build Definition, add properties
+
+
+/// With lazy!
+
+Generate
+  - get component data
+  - resolve 'module' to Module class
+  - do createFromProvider(Module)
+
+.. Data item factory, gets provider class.
+  - do getDefinition()
+
+Module, Root, implement DefinitionProviderInterface::getDefinition()
+  - build GeneratorDefinition
+  - add name
+  - add label ???????
+  - lazy load properties NON RECURSIVE! since we go back into getDefinition anyway!
+
+1. GeneratorDefinition::createFromGeneratorType
+
+2. lazy load of properties
+  GeneratorDefinition::getProperties()
+  - resolve class from generator type
+  - call Module::getProperties()
+
+Module::getProperties
+  - do GeneratorDefinition::createFromGeneratorType('MogrifierCompoundComponent')
+    - add label, multiple.
+
+GeneratorDefinition::createFromGeneratorType
+  - resolve class from generator type
+  - call Generator class::getDefinition
+
+MogrifierCompoundComponent::getDefinition -- same as on root! Is that ok? NO
+   use different, for label/name reasons.
+  - build Definition
+

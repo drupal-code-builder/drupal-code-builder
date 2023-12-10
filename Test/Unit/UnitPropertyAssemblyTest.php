@@ -47,8 +47,6 @@ class UnitPropertyAssemblyTest extends TestCase {
     \DrupalCodeBuilder\Factory::setEnvironment($environment)->setCoreVersionHelper($version_helper);
   }
 
-
-
   public function testFoo() {
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator\Mogrifier');
     $this->container->set('Generate\ComponentClassHandler', $class_handler);
@@ -65,11 +63,12 @@ class UnitPropertyAssemblyTest extends TestCase {
     //
 
     // We have to do the work of Generate::getRootComponentData() because non-
-    // standard root component.
-    // TODO! should accept lowercase! we need to put that through something elkse first!
+    // standard root component -- there isn't a flavour of the Generate task
+    // in the DI container for our root component.
+    // TODO! should accept lowercase! we need to put that through something else first!
     $class = $class_handler->getGeneratorClass('Mogrifier');
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
-
+    dump($data->getDefinition());
   }
 
 }
