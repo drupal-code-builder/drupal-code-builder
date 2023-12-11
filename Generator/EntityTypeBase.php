@@ -228,7 +228,7 @@ abstract class EntityTypeBase extends PHPClassFile {
             ->setDependencies('..:entity_type_id')
         );
 
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Put the parent definitions after ours.
     $properties += $definition->getProperties();

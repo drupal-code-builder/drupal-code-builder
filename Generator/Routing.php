@@ -17,7 +17,7 @@ class Routing extends YMLFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('filename')->setLiteralDefault("%module.routing.yml");
   }

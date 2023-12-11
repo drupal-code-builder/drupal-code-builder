@@ -13,7 +13,7 @@ class TwigFile extends File {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'theme_hook_name' => PropertyDefinition::create('string')

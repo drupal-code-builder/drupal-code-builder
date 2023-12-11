@@ -13,7 +13,7 @@ class Tests7 extends Tests {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('filename')
       ->setLiteralDefault('tests/%module.test');

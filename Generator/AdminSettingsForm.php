@@ -16,7 +16,7 @@ class AdminSettingsForm extends Form {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Because this component is declared in the Module root component, we
     // need defaults to work at the UI stage, including those that depend on

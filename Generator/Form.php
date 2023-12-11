@@ -23,7 +23,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $properties = [
       // Move the form class name property to the top, and override its default.

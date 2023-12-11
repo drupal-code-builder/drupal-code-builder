@@ -14,7 +14,7 @@ class RootGeneratorBase extends RootComponent {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'common' => PropertyDefinition::create('string'),

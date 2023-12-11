@@ -20,7 +20,7 @@ class Module7 extends Module8 {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->removeProperty('plugins');
     $definition->removeProperty('plugin_types');

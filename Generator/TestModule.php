@@ -15,7 +15,7 @@ class TestModule extends Module {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Remove properties for components that test modules don't need.
     foreach ([

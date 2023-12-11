@@ -35,7 +35,7 @@ class ConfigBundleEntityType extends ConfigEntityType {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Add this right at the start, before the ID, so the ID default value
     // can depend on it. TODO? order doesn't matter any more?

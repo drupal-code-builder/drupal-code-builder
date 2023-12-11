@@ -20,7 +20,7 @@ class EntityListBuilder extends EntityHandler {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // One of 'config' or 'content'.

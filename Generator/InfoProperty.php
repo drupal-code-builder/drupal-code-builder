@@ -13,7 +13,7 @@ class InfoProperty extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // An array of requested hooks, as long hook names.

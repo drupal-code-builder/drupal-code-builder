@@ -16,7 +16,7 @@ class FormBuilder extends PHPFunction {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('declaration')
       ->setDefault(DefaultDefinition::create()

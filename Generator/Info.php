@@ -14,7 +14,7 @@ class Info extends InfoBase {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperty(PropertyDefinition::create('string')
       ->setName('base')

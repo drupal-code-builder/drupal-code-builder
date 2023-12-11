@@ -126,7 +126,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     ];
 
     // Put the parent definitions after ours.
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
     $parent_properties = $definition->getProperties();
     $properties += $parent_properties;
     $definition->setProperties($properties);

@@ -14,7 +14,7 @@ class AdminSettingsForm7 extends Form7 {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('code_file')->setLiteralDefault('%module.admin.inc');
 

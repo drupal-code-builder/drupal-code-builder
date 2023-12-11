@@ -13,7 +13,7 @@ class HookImplementation6 extends HookImplementation {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('function_docblock_lines')->getDefault()
       ->setExpression("['Implementation of ' ~ get('..:hook_name') ~ '().']");

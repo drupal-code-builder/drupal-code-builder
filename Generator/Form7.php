@@ -16,7 +16,7 @@ class Form7 extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The code file to place the form's functions into. This may contain

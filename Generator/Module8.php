@@ -13,7 +13,7 @@ class Module8 extends Module {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'tests' => static::getLazyDataDefinitionForGeneratorType('Tests', 'boolean')

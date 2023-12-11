@@ -13,7 +13,7 @@ class HookPermission extends HookImplementation {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('hook_name')->setLiteralDefault('hook_permission');
   }

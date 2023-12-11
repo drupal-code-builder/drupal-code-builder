@@ -24,7 +24,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'path' => PropertyDefinition::create('string')

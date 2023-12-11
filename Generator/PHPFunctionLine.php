@@ -13,7 +13,7 @@ class PHPFunctionLine extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The line of code, without function indentation.

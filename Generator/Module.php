@@ -123,7 +123,7 @@ class Module extends RootComponent {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('root_name')
       ->setLabel('Module machine name')

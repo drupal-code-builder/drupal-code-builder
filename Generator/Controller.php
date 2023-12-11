@@ -15,7 +15,7 @@ class Controller extends PHPClassFileWithInjection {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $properties = [
       'injected_services' => PropertyDefinition::create('string')

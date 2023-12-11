@@ -29,7 +29,7 @@ class YMLFile extends File {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'yaml_data' => PropertyDefinition::create('mapping')

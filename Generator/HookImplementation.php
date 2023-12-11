@@ -16,7 +16,7 @@ class HookImplementation extends PHPFunction {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The name of the file that this hook implementation should be placed into.

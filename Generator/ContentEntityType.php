@@ -49,7 +49,7 @@ class ContentEntityType extends EntityTypeBase {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Set up the entity type functionality preset options.
     $definition->getProperty('functionality')->setPresets([

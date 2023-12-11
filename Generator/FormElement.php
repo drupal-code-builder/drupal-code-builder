@@ -11,7 +11,7 @@ use MutableTypedData\Definition\DefaultDefinition;
 class FormElement extends BaseGenerator {
 
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'form_key' => PropertyDefinition::create('string')

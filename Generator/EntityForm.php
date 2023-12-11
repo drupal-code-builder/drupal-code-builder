@@ -17,7 +17,7 @@ class EntityForm extends EntityHandler {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The entity link template that the form save() method redirects to.

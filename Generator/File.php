@@ -36,7 +36,7 @@ class File extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperty(PropertyDefinition::create('string')
       // The name of the file, without the path.

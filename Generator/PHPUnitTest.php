@@ -173,7 +173,7 @@ class PHPUnitTest extends PHPClassFile {
     ];
 
     // Put the parent definitions after ours.
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
     $properties += $definition->getProperties();
     $definition->setProperties($properties);
 

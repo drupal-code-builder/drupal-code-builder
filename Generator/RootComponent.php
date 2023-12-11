@@ -89,7 +89,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    */
   // DIE!??
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Define this here for completeness; child classes should specialize it.
     $definition->addProperties([

@@ -46,7 +46,7 @@ class PHPClassFile extends PHPFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The class name properties all form an interdependent set.

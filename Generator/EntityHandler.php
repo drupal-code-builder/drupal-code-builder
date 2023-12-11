@@ -15,7 +15,7 @@ class EntityHandler extends PHPClassFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'entity_type_id' => PropertyDefinition::create('string')

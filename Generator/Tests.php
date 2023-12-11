@@ -13,7 +13,7 @@ class Tests extends PHPFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('filename')
       ->setExpressionDefault("'src/Tests/' ~ get('..:pascal_case_name') ~ 'TestCase.php'");

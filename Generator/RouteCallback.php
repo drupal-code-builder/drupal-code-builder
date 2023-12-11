@@ -15,7 +15,7 @@ class RouteCallback extends BaseGenerator {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'provider_class_short_name' => PropertyDefinition::create('string')

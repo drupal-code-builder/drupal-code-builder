@@ -15,7 +15,7 @@ class ServiceProvider extends PHPClassFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('relative_class_name')
       ->setExpressionDefault("machineToClass(get('..:root_component_name')) ~ 'ServiceProvider'");

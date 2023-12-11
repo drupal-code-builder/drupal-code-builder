@@ -16,7 +16,7 @@ class JavaScriptFile extends AssetFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'readable_name' => PropertyDefinition::create('string')

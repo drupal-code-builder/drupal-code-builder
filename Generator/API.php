@@ -28,7 +28,7 @@ class API extends PHPFile {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('filename')
       ->setLiteralDefault('%module.api.php');
