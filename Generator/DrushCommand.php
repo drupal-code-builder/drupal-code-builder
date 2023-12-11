@@ -123,7 +123,7 @@ class DrushCommand extends BaseGenerator {
       // self::requiredComponents(). This is mostly needed so that the Service
       // generator has access to the whole data, because it expects to be able
       // to access module generator configuration options.
-      'commands_service' => static::getLazyDataDefinitionForGeneratorType('DrushCommandsService')
+      'commands_service' => GeneratorDefinition::createFromGeneratorType('DrushCommandsService')
         ->setInternal(TRUE),
     ]);
   }

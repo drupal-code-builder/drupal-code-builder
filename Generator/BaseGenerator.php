@@ -47,7 +47,7 @@ use MutableTypedData\Data\DataItem;
  * another generator: for example, the Module generator defines an admin
  * settings form complex property, and the child properties for that are
  * defined in the AdminSettingsForm generator. This is done with
- * static::getLazyDataDefinitionForGeneratorType().
+ * GeneratorDefinition::createFromGeneratorType().
  *
  * All generator classes use class inheritance to build the definition: for
  * example, this hiearchy reduces code repetition:
@@ -304,7 +304,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * Gets the data definition for this generator without the properties.
    *
    * This must be called on the generator class itself. Use
-   * static::getLazyDataDefinitionForGeneratorType() from a different generator
+   * GeneratorDefinition::createFromGeneratorType() from a different generator
    * class.
    *
    * TODO: this should replace getPropertyDefinition()!
@@ -355,7 +355,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * This shouldn't set things on its root data such as required, cardinality,
    * or label, as these may depend on where it's used.
    *
-   * Use static::getLazyDataDefinitionForGeneratorType() to use the definition
+   * Use GeneratorDefinition::createFromGeneratorType() to use the definition
    * from one generator inside another's.
    *
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition

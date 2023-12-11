@@ -26,10 +26,10 @@ class Library extends BaseGenerator {
         ->setLabel("The version number")
         ->setLiteralDefault("1.x")
         ->setRequired(TRUE),
-      'css_assets' => static::getLazyDataDefinitionForGeneratorType('LibraryCSSAsset')
+      'css_assets' => GeneratorDefinition::createFromGeneratorType('LibraryCSSAsset')
         ->setLabel("CSS file")
         ->setMultiple(TRUE),
-      'js_assets' => static::getLazyDataDefinitionForGeneratorType('LibraryJSAsset')
+      'js_assets' => GeneratorDefinition::createFromGeneratorType('LibraryJSAsset')
         ->setLabel("JS file")
         ->setMultiple(TRUE),
       'dependencies' => PropertyDefinition::create('string')

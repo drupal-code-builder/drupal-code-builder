@@ -161,21 +161,21 @@ class Module extends RootComponent {
       'module_help_text' => PropertyDefinition::create('string')
         ->setLabel('Module help text')
         ->setDescription('The text to show on the site help page. This automatically adds hook_help().'),
-      'settings_form' => static::getLazyDataDefinitionForGeneratorType('AdminSettingsForm')
+      'settings_form' => GeneratorDefinition::createFromGeneratorType('AdminSettingsForm')
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a router item."),
-      'forms' => static::getLazyDataDefinitionForGeneratorType('Form')
+      'forms' => GeneratorDefinition::createFromGeneratorType('Form')
         ->setLabel("Forms")
         ->setDescription("The forms for this module to provide.")
         ->setMultiple(TRUE),
-      'services' => static::getLazyDataDefinitionForGeneratorType('Service')
+      'services' => GeneratorDefinition::createFromGeneratorType('Service')
         ->setLabel("Services")
         ->setDescription('The services for this module to provide.')
         ->setMultiple(TRUE),
-      'service_provider' => static::getLazyDataDefinitionForGeneratorType('ServiceProvider', 'boolean')
+      'service_provider' => GeneratorDefinition::createFromGeneratorType('ServiceProvider', 'boolean')
         ->setLabel("Service provider")
         ->setDescription('A service provider alters existing services or defines services dynamically.'),
-      'permissions' => static::getLazyDataDefinitionForGeneratorType('Permission')
+      'permissions' => GeneratorDefinition::createFromGeneratorType('Permission')
         ->setLabel("Permissions")
         ->setDescription('The permissions for this module to provide.')
         ->setMultiple(TRUE),
@@ -277,39 +277,39 @@ class Module extends RootComponent {
       //     $component_data['hooks'] = $hooks;
       //   }
       // ),
-      'content_entity_types' => static::getLazyDataDefinitionForGeneratorType('ContentEntityType')
+      'content_entity_types' => GeneratorDefinition::createFromGeneratorType('ContentEntityType')
         ->setLabel('Content entity types')
         ->setMultiple(TRUE),
-      'config_entity_types' => static::getLazyDataDefinitionForGeneratorType('ConfigEntityType')
+      'config_entity_types' => GeneratorDefinition::createFromGeneratorType('ConfigEntityType')
         ->setLabel('Config entity types')
         ->setMultiple(TRUE),
-      'plugins' => static::getLazyDataDefinitionForGeneratorType('Plugin')
+      'plugins' => GeneratorDefinition::createFromGeneratorType('Plugin')
         ->setLabel('Plugins')
         ->setMultiple(TRUE),
-      'plugin_types' => static::getLazyDataDefinitionForGeneratorType('PluginType')
+      'plugin_types' => GeneratorDefinition::createFromGeneratorType('PluginType')
         ->setLabel('Plugin types')
         ->setMultiple(TRUE),
-      'theme_hooks' => static::getLazyDataDefinitionForGeneratorType('ThemeHook', 'string')
+      'theme_hooks' => GeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
         ->setLabel("Theme hooks")
         ->setDescription("The name of theme hooks, without the leading 'theme_'.")
         ->setMultiple(TRUE),
-      'router_items' => static::getLazyDataDefinitionForGeneratorType('RouterItem')
+      'router_items' => GeneratorDefinition::createFromGeneratorType('RouterItem')
         ->setLabel("Routes")
         ->setMultiple(TRUE),
-      'dynamic_routes' =>  static::getLazyDataDefinitionForGeneratorType('RouteCallback')
+      'dynamic_routes' =>  GeneratorDefinition::createFromGeneratorType('RouteCallback')
         ->setLabel('Dynamic route providers')
         ->setMultiple(TRUE),
-      'library' => static::getLazyDataDefinitionForGeneratorType('Library')
+      'library' => GeneratorDefinition::createFromGeneratorType('Library')
         ->setLabel('Libraries')
         ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
         ->setMultiple(TRUE),
-      'drush_commands' => static::getLazyDataDefinitionForGeneratorType('DrushCommand')
+      'drush_commands' => GeneratorDefinition::createFromGeneratorType('DrushCommand')
         ->setLabel("Drush commands")
         ->setMultiple(TRUE),
-      'api' => static::getLazyDataDefinitionForGeneratorType('API', 'boolean')
+      'api' => GeneratorDefinition::createFromGeneratorType('API', 'boolean')
         ->setLabel("api.php file")
         ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
-      'readme' => static::getLazyDataDefinitionForGeneratorType('Readme', 'boolean')
+      'readme' => GeneratorDefinition::createFromGeneratorType('Readme', 'boolean')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
       // 'phpunit_tests' go here, but can't be added at this point because it
@@ -342,7 +342,7 @@ class Module extends RootComponent {
       ->setLabel('Module')
       ->setName('module');
 
-    $definition->addPropertyAfter('readme', static::getLazyDataDefinitionForGeneratorType('PHPUnitTest')
+    $definition->addPropertyAfter('readme', GeneratorDefinition::createFromGeneratorType('PHPUnitTest')
       ->setName('phpunit_tests')
       ->setLabel("PHPUnit test case class")
       ->setMultiple(TRUE)

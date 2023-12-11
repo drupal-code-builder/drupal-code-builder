@@ -44,7 +44,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
-      'form_elements' => static::getLazyDataDefinitionForGeneratorType('FormElement')
+      'form_elements' => GeneratorDefinition::createFromGeneratorType('FormElement')
         ->setLabel('Form elements')
         ->setMultiple(TRUE),
     ];

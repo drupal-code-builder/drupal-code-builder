@@ -194,7 +194,7 @@ class PluginType extends BaseGenerator {
         }),
       // Experimental. Define the data here that will then be set by
       // self::requiredComponents().
-      'manager' => static::getLazyDataDefinitionForGeneratorType('PluginTypeManager')
+      'manager' => GeneratorDefinition::createFromGeneratorType('PluginTypeManager')
         ->setInternal(TRUE),
     ];
 

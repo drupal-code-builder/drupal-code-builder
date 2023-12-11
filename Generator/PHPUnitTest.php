@@ -167,7 +167,7 @@ class PHPUnitTest extends PHPClassFile {
         ->setAutoAcquiredFromRequester(),
       'use_module_dependencies' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE),
-      'test_modules' => static::getLazyDataDefinitionForGeneratorType('TestModule')
+      'test_modules' => GeneratorDefinition::createFromGeneratorType('TestModule')
         ->setLabel('Test modules')
         ->setMultiple(TRUE),
     ];

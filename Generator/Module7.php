@@ -37,11 +37,11 @@ class Module7 extends Module8 {
     $definition->removeProperty('forms');
 
     $definition->addProperties([
-      'router_items' => static::getLazyDataDefinitionForGeneratorType('RouterItem', 'string')
+      'router_items' => GeneratorDefinition::createFromGeneratorType('RouterItem', 'string')
         ->setLabel("Menu paths")
         ->setDescription("Paths for hook_menu(), eg 'path/foo'")
         ->setMultiple(TRUE),
-      'settings_form' => static::getLazyDataDefinitionForGeneratorType('AdminSettingsForm', 'boolean')
+      'settings_form' => GeneratorDefinition::createFromGeneratorType('AdminSettingsForm', 'boolean')
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
     ]);
