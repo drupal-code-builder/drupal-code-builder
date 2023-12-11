@@ -60,6 +60,12 @@ class UnitPropertyAssemblyTest extends TestCase {
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
     dump($data->getDefinition());
 
+    // Test complex property works.
+    $data->complex_generator_property[0]->string_property = 'cake';
+
+    // Test recursive generator properties work.
+    $data->complex_generator_property[0]->recursive->string_property = 'cake';
+
     // Test mutable property works.
     $data->mutable_generator_property[0]->type = 'alpha';
     $this->assertArrayHasKey('alpha_property', $data->mutable_generator_property[0]->getProperties());
