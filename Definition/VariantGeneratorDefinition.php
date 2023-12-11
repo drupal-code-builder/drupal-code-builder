@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Definition;
 
+use MutableTypedData\Definition\DataDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use MutableTypedData\Exception\InvalidDefinitionException;
 
@@ -46,6 +47,39 @@ class VariantGeneratorDefinition extends VariantDefinition {
    */
   public function getComponentType(): string {
     return $this->componentType;
+  }
+
+  public function addProperty(DataDefinition $property): self {
+    if (empty($property->getName())) {
+      throw new InvalidDefinitionException("Properties added with addProperty() must have a machine name set.");
+    }
+
+    $this->properties[$property->getName()] = $property;
+
+    return $this;
+  }
+
+  /**
+   * Gets a child property definition.
+   *
+   * @param string $name
+   *  The property name.
+   *
+   * @return static
+   *  The definition.
+   *
+   * @throws \Exception
+   *  Throws an exception if the property doesn't exit.
+   */
+  public function getProperty(string $name): DataDefinition {
+    if (!isset($this->properties[$name])) {
+      throw new \Exception(sprintf("Property definition '%s' has no child property '$name' defined.",
+        $this->name,
+        $name
+      ));
+    }
+
+    return $this->properties[$name];
   }
 
   /**
