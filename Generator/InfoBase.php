@@ -44,7 +44,7 @@ abstract class InfoBase extends File {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     // Properties acquired from the requesting root component.

@@ -48,7 +48,7 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     // Set up the entity type functionality preset options.

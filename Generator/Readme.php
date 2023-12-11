@@ -17,7 +17,7 @@ class Readme extends File {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     $definition->addProperties([

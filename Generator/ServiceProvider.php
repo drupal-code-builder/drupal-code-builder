@@ -14,7 +14,7 @@ class ServiceProvider extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     $definition->getProperty('relative_class_name')

@@ -15,7 +15,7 @@ class PHPInterfaceFile extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     // Remove properties that are not relevant.

@@ -266,6 +266,7 @@ abstract class BaseGenerator implements GeneratorInterface {
       // The path of the nearest root component.
       'component_base_path' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
+    ]);
   }
 
   //  WTF ! FOUR!!! property  methods!!

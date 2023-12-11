@@ -12,7 +12,7 @@ class HookImplementation6 extends HookImplementation {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     $definition->getProperty('function_docblock_lines')->getDefault()

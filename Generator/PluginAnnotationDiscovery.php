@@ -80,7 +80,7 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');

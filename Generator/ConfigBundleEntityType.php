@@ -34,7 +34,7 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     // Add this right at the start, before the ID, so the ID default value

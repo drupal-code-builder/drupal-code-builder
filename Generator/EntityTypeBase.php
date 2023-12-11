@@ -42,7 +42,7 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $properties = [
       'entity_type_id' => PropertyDefinition::create('string')
         ->setLabel('Entity type ID')

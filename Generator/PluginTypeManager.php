@@ -19,7 +19,7 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     // Properties acquired from the requesting PluginType component.

@@ -33,7 +33,7 @@ class GenericGenerator extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     return static::$definition;
   }
 

@@ -25,7 +25,7 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     // Presets for the different types of test.
     $test_type_presets = [
       'unit' => [

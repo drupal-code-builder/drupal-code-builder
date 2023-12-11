@@ -22,7 +22,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     $properties = [

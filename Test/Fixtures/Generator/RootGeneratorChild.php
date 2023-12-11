@@ -12,7 +12,7 @@ class RootGeneratorChild extends RootGeneratorBase {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition = parent::getPropertyDefinition();
 
     // Remove the property which the parent class set, which is not relevant
