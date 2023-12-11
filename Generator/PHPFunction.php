@@ -121,8 +121,6 @@ class PHPFunction extends BaseGenerator {
         ->setInternal(TRUE)
         ->setLiteralDefault(TRUE),
     ]);
-
-    return $definition;
   }
 
   public static function defaultDocblockLines($data_item) {

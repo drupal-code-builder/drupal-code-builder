@@ -38,8 +38,6 @@ class HookImplementation extends PHPFunction {
         $function_name = '%module_' . $short_hook_name;
         return $function_name;
       });
-
-    return $definition;
   }
 
   /**

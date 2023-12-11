@@ -45,8 +45,6 @@ class Module7 extends Module8 {
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
     ]);
-
-    return $definition;
   }
 
   /**

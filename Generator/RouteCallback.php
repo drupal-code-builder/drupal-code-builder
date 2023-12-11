@@ -38,8 +38,6 @@ class RouteCallback extends BaseGenerator {
           ->setDependencies('..:provider_class_short_name')
       ),
     ]);
-
-    return $definition;
   }
 
   /**

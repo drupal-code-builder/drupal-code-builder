@@ -27,8 +27,6 @@ class Form7 extends BaseGenerator {
       'form_id' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

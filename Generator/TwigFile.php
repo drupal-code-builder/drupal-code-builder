@@ -19,8 +19,6 @@ class TwigFile extends File {
       'theme_hook_name' => PropertyDefinition::create('string')
         ->setLabel('The theme hook name'),
     ]);
-
-    return $definition;
   }
 
   /**

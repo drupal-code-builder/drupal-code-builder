@@ -23,8 +23,6 @@ class Info extends InfoBase {
 
     $definition->getProperty('filename')
       ->setLiteralDefault('%module.info.yml');
-
-    return $definition;
   }
 
   /**

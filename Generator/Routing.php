@@ -20,8 +20,6 @@ class Routing extends YMLFile {
     $definition = parent::getPropertyDefinition();
 
     $definition->getProperty('filename')->setLiteralDefault("%module.routing.yml");
-
-    return $definition;
   }
 
 }

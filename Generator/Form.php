@@ -64,8 +64,6 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
     // Set the parent class.
     $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\Form\FormBase');
-
-    return $definition;
   }
 
   /**

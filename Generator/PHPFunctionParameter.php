@@ -25,8 +25,6 @@ class PHPFunctionParameter extends BaseGenerator {
       'class_name' => PropertyDefinition::create('string'),
       'method_name' => PropertyDefinition::create('string'),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -16,8 +16,6 @@ class HookMenu extends HookImplementation {
     $definition = parent::getPropertyDefinition();
 
     $definition->getProperty('hook_name')->setLiteralDefault('hook_menu');
-
-    return $definition;
   }
 
   /**

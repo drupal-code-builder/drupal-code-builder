@@ -17,8 +17,6 @@ class Tests7 extends Tests {
 
     $definition->getProperty('filename')
       ->setLiteralDefault('tests/%module.test');
-
-    return $definition;
   }
 
   /**

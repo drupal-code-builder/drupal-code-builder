@@ -230,8 +230,6 @@ class PHPUnitTest extends PHPClassFile {
       });
 
     $definition->getProperty('docblock_first_line')->setLiteralDefault("Test case class TODO.");
-
-    return $definition;
   }
 
   /**

@@ -172,8 +172,6 @@ class Plugin extends BaseGenerator {
           ->setLabel('Validaton constraint')
           ->setGenerator('PluginValidationConstraint'),
       ]);
-
-    return $definition;
   }
 
 }

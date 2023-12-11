@@ -38,8 +38,6 @@ class Hooks extends BaseGenerator {
       'hook_bodies' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

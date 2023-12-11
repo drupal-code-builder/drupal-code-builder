@@ -33,8 +33,6 @@ class LibraryCSSAsset extends BaseGenerator {
         ])
         ->setRequired(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

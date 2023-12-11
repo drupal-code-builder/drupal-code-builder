@@ -26,8 +26,6 @@ class Controller extends PHPClassFileWithInjection {
     ];
 
     $definition->addProperties($properties);
-
-    return $definition;
   }
 
   /**

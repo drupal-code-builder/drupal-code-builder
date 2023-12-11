@@ -33,8 +33,6 @@ class ReadmeSection extends BaseGenerator {
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

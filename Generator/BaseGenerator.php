@@ -330,7 +330,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     $data_type = $data_type ?? static::$dataType;
 
     $definition = LazyGeneratorDefinition::createFromGeneratorType($component_type, $data_type);
-    return $definition;
   }
 
   /**
@@ -379,8 +378,6 @@ abstract class BaseGenerator implements GeneratorInterface {
       'component_base_path' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   public function isRootComponent(): bool {

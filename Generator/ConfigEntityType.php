@@ -96,8 +96,6 @@ class ConfigEntityType extends EntityTypeBase {
       'id' => 'id',
       'label' => 'label',
     ]);
-
-    return $definition;
   }
 
   /**

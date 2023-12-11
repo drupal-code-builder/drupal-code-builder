@@ -168,8 +168,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
             ->setLiteral(['TODO: class docs.'])
         ),
     ]);
-
-    return $definition;
   }
 
   public static function defaultPluginTypeData($data_item) {

@@ -61,8 +61,6 @@ class PluginYamlDiscovery extends BaseGenerator {
         ),
 
     ]);
-
-    return $definition;
   }
 
   /**

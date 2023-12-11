@@ -27,8 +27,6 @@ abstract class InfoIni extends InfoBase {
 
     $definition->getProperty('filename')
       ->setLiteralDefault('%module.info');
-
-    return $definition;
   }
 
   /**

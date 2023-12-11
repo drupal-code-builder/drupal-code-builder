@@ -43,8 +43,6 @@ class Permission extends BaseGenerator {
         ->setRequired(TRUE)
         ->setLiteralDefault(FALSE),
     ]);
-
-    return $definition;
   }
 
   /**

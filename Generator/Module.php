@@ -327,8 +327,6 @@ class Module extends RootComponent {
             ->setDependencies('..:root_name')
         ),
     ]);
-
-    return $definition;
   }
 
   /**

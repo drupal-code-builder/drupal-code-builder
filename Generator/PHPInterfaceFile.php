@@ -30,8 +30,6 @@ class PHPInterfaceFile extends PHPClassFile {
         ->setMultiple(TRUE)
         ->setInternal(TRUE)
     ]);
-
-    return $definition;
   }
 
   /**

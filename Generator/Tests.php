@@ -24,8 +24,6 @@ class Tests extends PHPFile {
       'pascal_case_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

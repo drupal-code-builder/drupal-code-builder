@@ -23,8 +23,6 @@ class AdminSettingsForm7 extends Form7 {
         ->setExpression("get('..:root_component_name') ~ '_settings_form'")
         ->setDependencies('..:root_component_name')
       );
-
-    return $definition;
   }
 
   /**

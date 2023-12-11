@@ -350,8 +350,6 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
       //   },
       // ],
     ]);
-
-    return $definition;
   }
 
   /**

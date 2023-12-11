@@ -36,8 +36,6 @@ class FormElement extends BaseGenerator {
         ->setInternal(TRUE)
         ->setLiteralDefault([]),
     ]);
-
-    return $definition;
   }
 
   /**

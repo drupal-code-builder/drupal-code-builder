@@ -53,8 +53,6 @@ class TestModule extends Module {
 
     $definition->getProperty('component_base_path')
       ->setExpressionDefault('"tests/modules/" ~get("..:root_name")');
-
-    return $definition;
   }
 
   /**

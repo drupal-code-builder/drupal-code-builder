@@ -143,8 +143,6 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
     $definition->getProperty('relative_namespace')
       ->setCallableDefault([static::class, 'defaultRelativeNamespace']);
-
-    return $definition;
   }
 
   public static function defaultPlainClassName($data_item) {

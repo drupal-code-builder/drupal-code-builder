@@ -21,8 +21,6 @@ class RootGeneratorBase extends RootComponent {
       'only_base' => static::getLazyDataDefinitionForGeneratorType('UnrelatedVersionComponent')
         ->setMultiple(TRUE),
     ]);
-
-    return $definition;
   }
 
   public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {

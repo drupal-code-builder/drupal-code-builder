@@ -40,8 +40,6 @@ class PluginTypeManager extends Service {
           ->setAutoAcquiredFromRequester()
       );
     }
-
-    return $definition;
   }
 
   /**

@@ -303,8 +303,6 @@ class ContentEntityType extends EntityTypeBase {
       // Replace the existing value.
       $component_data->set($ordered_value);
     });
-
-    return $definition;
   }
 
   /**

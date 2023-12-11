@@ -66,8 +66,6 @@ class AdminSettingsForm extends Form {
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -18,8 +18,6 @@ class RootGeneratorChild extends RootGeneratorBase {
     // Remove the property which the parent class set, which is not relevant
     // to this root generator.
     $definition->removeProperty('only_base');
-
-    return $definition;
   }
 
 }

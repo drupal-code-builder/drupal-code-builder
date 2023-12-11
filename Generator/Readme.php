@@ -29,8 +29,6 @@ class Readme extends File {
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
       ->setLiteralDefault('README.md');
-
-    return $definition;
   }
 
   /**

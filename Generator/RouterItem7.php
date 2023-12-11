@@ -41,8 +41,6 @@ class RouterItem7 extends BaseGenerator {
         ->setInternal(TRUE)
         ->setLiteralDefault("array('access content')"),
     ]);
-
-    return $definition;
   }
 
   /**

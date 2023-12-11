@@ -255,8 +255,6 @@ abstract class EntityTypeBase extends PHPClassFile {
         // TODO: why do we have the separate entity_interface_name??
         ->setExpression("[get('..:entity_interface_name')]")
     );
-
-    return $definition;
   }
 
   /**

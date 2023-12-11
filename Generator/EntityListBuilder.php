@@ -27,8 +27,6 @@ class EntityListBuilder extends EntityHandler {
       'entity_type_group' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

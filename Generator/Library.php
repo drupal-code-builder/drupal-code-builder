@@ -52,8 +52,6 @@ class Library extends BaseGenerator {
             ->setExpression("machineToLabel(get('..:..:..:root_name'))")
         ),
     ]);
-
-    return $definition;
   }
 
   /**

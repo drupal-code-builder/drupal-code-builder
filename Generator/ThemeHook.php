@@ -23,8 +23,6 @@ class ThemeHook extends BaseGenerator {
         // TODO: doesn't work in UI!
         ->setValidators('machine_name'),
     ]);
-
-    return $definition;
   }
 
   /**

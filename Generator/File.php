@@ -44,8 +44,6 @@ class File extends BaseGenerator {
       ->setInternal(TRUE)
       ->setRequired(TRUE)
     );
-
-    return $definition;
   }
 
   /**

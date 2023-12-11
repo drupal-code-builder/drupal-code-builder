@@ -23,8 +23,6 @@ class FormBuilder extends PHPFunction {
         ->setCallable([static::class, 'defaultDeclaration'])
         ->setDependencies('..:function_name')
     );
-
-    return $definition;
   }
 
   public static function defaultDeclaration($data_item) {

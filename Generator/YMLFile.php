@@ -49,8 +49,6 @@ class YMLFile extends File {
       'inline_levels_extra' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

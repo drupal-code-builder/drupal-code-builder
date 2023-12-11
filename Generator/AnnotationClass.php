@@ -21,8 +21,6 @@ class AnnotationClass extends PHPClassFile {
       'plugin_relative_namespace' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

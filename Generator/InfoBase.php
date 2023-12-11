@@ -60,8 +60,6 @@ abstract class InfoBase extends File {
       ->setMultiple(TRUE)
       ->setAcquiringExpression('requester.module_dependencies.export()')
     );
-
-    return $definition;
   }
 
   /**

@@ -189,8 +189,6 @@ class PHPClassFile extends PHPFile {
         ->setMultiple(TRUE)
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

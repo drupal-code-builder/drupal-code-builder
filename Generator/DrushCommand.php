@@ -126,8 +126,6 @@ class DrushCommand extends BaseGenerator {
       'commands_service' => static::getLazyDataDefinitionForGeneratorType('DrushCommandsService')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

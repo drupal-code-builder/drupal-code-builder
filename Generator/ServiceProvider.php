@@ -25,8 +25,6 @@ class ServiceProvider extends PHPClassFile {
 
       $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\DependencyInjection\ServiceProviderBase');
-
-    return $definition;
   }
 
   /**

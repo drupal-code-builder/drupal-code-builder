@@ -16,8 +16,6 @@ class HookPermission extends HookImplementation {
     $definition = parent::getPropertyDefinition();
 
     $definition->getProperty('hook_name')->setLiteralDefault('hook_permission');
-
-    return $definition;
   }
 
   /**

@@ -22,8 +22,6 @@ class JavaScriptFile extends AssetFile {
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

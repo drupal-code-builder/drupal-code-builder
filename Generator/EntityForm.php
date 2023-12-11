@@ -24,8 +24,6 @@ class EntityForm extends EntityHandler {
       'redirect_link_template' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

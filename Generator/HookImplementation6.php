@@ -17,8 +17,6 @@ class HookImplementation6 extends HookImplementation {
 
     $definition->getProperty('function_docblock_lines')->getDefault()
       ->setExpression("['Implementation of ' ~ get('..:hook_name') ~ '().']");
-
-    return $definition;
   }
 
 }

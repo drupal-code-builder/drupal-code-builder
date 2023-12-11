@@ -40,8 +40,6 @@ class InjectedService extends BaseGenerator {
       'omit_assignment' => PropertyDefinition::create('boolean'),
       'class_name' => PropertyDefinition::create('string'),
     ]);
-
-    return $definition;
   }
 
   public static function defaultServiceInfo($data_item) {

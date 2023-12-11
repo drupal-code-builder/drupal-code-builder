@@ -123,8 +123,6 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
           'obsolete' => 'Obsolete',
         ]),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -32,8 +32,6 @@ class API extends PHPFile {
 
     $definition->getProperty('filename')
       ->setLiteralDefault('%module.api.php');
-
-    return $definition;
   }
 
 

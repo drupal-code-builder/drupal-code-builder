@@ -39,8 +39,6 @@ class Mogrifier extends RootComponent {
         ->setLabel("Mutable Generator")
         ->setMultiple(TRUE),
     ]);
-
-    return $definition;
   }
 
 }

@@ -25,8 +25,6 @@ class InfoProperty extends BaseGenerator {
         ->setLabel('The value of the property')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -34,8 +34,6 @@ class EntityHandler extends PHPClassFile {
 
     $definition->getProperty('class_docblock_lines')->setDefault(DefaultDefinition::create()
       ->setExpression("['Provides the ' ~ get('..:handler_label') ~ ' handler for the ' ~ get('..:entity_type_label') ~ ' entity.']"));
-
-    return $definition;
   }
 
 }

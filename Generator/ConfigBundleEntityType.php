@@ -57,8 +57,6 @@ class ConfigBundleEntityType extends ConfigEntityType {
     $definition->getProperty('parent_class_name')->setDefault(
       DefaultDefinition::create()->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBundleBase')
     );
-
-    return $definition;
   }
 
   /**

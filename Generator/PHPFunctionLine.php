@@ -20,8 +20,6 @@ class PHPFunctionLine extends BaseGenerator {
       'code' => PropertyDefinition::create('string')
         ->setRequired(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

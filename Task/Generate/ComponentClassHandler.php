@@ -53,8 +53,6 @@ class ComponentClassHandler {
     if (!$definition->getName()) {
       $definition->setName($machine_name);
     }
-
-    return $definition;
   }
 
   /**

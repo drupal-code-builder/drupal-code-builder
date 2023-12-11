@@ -22,8 +22,6 @@ class Module8 extends Module {
     ]);
 
     $definition->removeProperty('lifecycle');
-
-    return $definition;
   }
 
 }
