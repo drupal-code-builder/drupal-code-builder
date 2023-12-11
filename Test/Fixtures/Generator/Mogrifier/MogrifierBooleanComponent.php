@@ -10,7 +10,7 @@ class MogrifierBooleanComponent extends BaseGenerator {
 
   protected static $dataType = 'boolean';
 
-  public static function addProperties(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),
     ]);

@@ -247,7 +247,13 @@ abstract class BaseGenerator implements GeneratorInterface {
     return static::$dataType;
   }
 
-  public static function addProperties(PropertyDefinition $definition) {
+  /**
+   * Adds to the defintion for this generator.
+   *
+   * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
+   *   The basic definition.
+   */
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     // TODO: common props./
   }
 

@@ -7,8 +7,8 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class SubMogrifier extends Mogrifier {
 
-  public static function addProperties(PropertyDefinition $definition) {
-    parent::addProperties($definition);
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Remove the property that would cause circularity - this is the equivalent
     // of TestModule removing the tests property.

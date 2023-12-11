@@ -10,7 +10,7 @@ class MogrifierMutableComponent extends BaseGenerator {
 
   protected static $dataType = 'mutable';
 
-  public static function addProperties(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition->setProperties([
       'type' => PropertyDefinition::create('string')
         ->setLabel('Plugin discovery type')

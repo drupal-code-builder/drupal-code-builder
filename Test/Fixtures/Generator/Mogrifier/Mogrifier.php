@@ -25,10 +25,9 @@ class Mogrifier extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  // TODO! rename! BAD -- is same name as property method!
-  public static function addProperties(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     // TODO parent call!
-    // $definition = parent::getPropertyDefinition();
+    // parent::addToGeneratorDefinition();
 
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),

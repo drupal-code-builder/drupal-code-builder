@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class MogrifierComplexComponent extends BaseGenerator {
 
-  public static function addProperties(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),
       'recursive' => GeneratorDefinition::createFromGeneratorType('SubMogrifier')
