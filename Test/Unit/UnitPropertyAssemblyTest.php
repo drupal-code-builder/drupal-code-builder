@@ -51,24 +51,18 @@ class UnitPropertyAssemblyTest extends TestCase {
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator\Mogrifier');
     $this->container->set('Generate\ComponentClassHandler', $class_handler);
 
-    // $this->container->set(
-    //   'Generate|mogrifier',
-    //   \DI\factory([\DrupalCodeBuilder\DependencyInjection\ContainerBuilder::class, 'createGenerator'])
-    //     ->parameter('root_component_type', 'mogrifier')
-    // );
-
-
-    // $task_handler_generate = $this->container->get('Generate', $type);
-    // $component_data = $task_handler_generate->getRootComponentData();
-    //
-
-    // We have to do the work of Generate::getRootComponentData() because non-
-    // standard root component -- there isn't a flavour of the Generate task
-    // in the DI container for our root component.
-    // TODO! should accept lowercase! we need to put that through something else first!
+    // We have to do the work of Generate::getRootComponentData() because we're
+    // using a non- standard root component -- there isn't a flavour of the
+    // Generate task in the DI container for our root component.
+    // TODO! should accept lowercase! we need to put that through something else
+    // first!
     $class = $class_handler->getGeneratorClass('Mogrifier');
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
     dump($data->getDefinition());
+
+    // Test mutable property works.
+    $data->mutable_generator_property[0]->type = 'alpha';
+    $this->assertArrayHasKey('alpha_property', $data->mutable_generator_property[0]->getProperties());
   }
 
 }
