@@ -257,7 +257,15 @@ abstract class BaseGenerator implements GeneratorInterface {
    *   The basic definition.
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    // TODO: common props./
+    // Add the basic properties.
+    $definition->addProperties([
+      'root_component_name' => PropertyDefinition::create('string')
+        ->setAcquiringExpression("getRootComponentName(requester)"),
+      'containing_component' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+      // The path of the nearest root component.
+      'component_base_path' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
   }
 
   //  WTF ! FOUR!!! property  methods!!
