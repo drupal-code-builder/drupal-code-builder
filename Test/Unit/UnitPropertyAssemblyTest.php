@@ -47,7 +47,7 @@ class UnitPropertyAssemblyTest extends TestCase {
     \DrupalCodeBuilder\Factory::setEnvironment($environment)->setCoreVersionHelper($version_helper);
   }
 
-  public function testFoo() {
+  public function testComponentPropertyAssembly() {
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator\Mogrifier');
     $this->container->set('Generate\ComponentClassHandler', $class_handler);
 
