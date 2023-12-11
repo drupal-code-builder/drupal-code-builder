@@ -19,27 +19,16 @@ class MogrifierMutableComponent extends BaseGenerator {
       'alpha' => VariantDefinition::create()
         ->setLabel('Annotation plugin')
         ->setProperties([
-          'plugin_type' => PropertyDefinition::create('string')
-            ->setLabel('Plugin type ID')
-            ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
-            ->setRequired(TRUE)
-            ->setValidators('machine_name'),
+          'alpha_property' => PropertyDefinition::create('string')
+            ->setLabel('Alpha property'),
         ]),
       'beta' => VariantDefinition::create()
         ->setLabel('Annotation plugin')
         ->setProperties([
-          'plugin_type' => PropertyDefinition::create('string')
-            ->setLabel('Plugin type ID')
-            ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
-            ->setRequired(TRUE)
-            ->setValidators('machine_name'),
+          'beta_property' => PropertyDefinition::create('string')
+            ->setLabel('Beta property'),
         ]),
     ]);
-
-
-    // $definition->addProperties([
-    //   // 'string_property' => PropertyDefinition::create('string'),
-    // ]);
   }
 
 }
