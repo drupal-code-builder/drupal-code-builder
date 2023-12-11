@@ -14,6 +14,8 @@ namespace DrupalCodeBuilder\Definition;
  */
 class GeneratorDefinition extends PropertyDefinition {
 
+  protected bool $generatorPropertiesLoaded = FALSE;
+
   /**
    * Constructor.
    *
@@ -69,14 +71,21 @@ class GeneratorDefinition extends PropertyDefinition {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }
 
-    // Add the properties from the generator class.
-    $this->generatorClass::addToGeneratorDefinition($this);
-
     // Get the properties of all children to lazy load them.
-    foreach ($this->properties as $property) {
-      $property->getProperties();
-    }
+    if (!$this->generatorPropertiesLoaded) {
+      // Set this to TRUE now to avoid recursion, as addToGeneratorDefinition()
+      // may need access to properties.
+      // ARGH! UGLY!
+      $this->generatorPropertiesLoaded = TRUE;
 
+      // Add the properties from the generator class.
+      $this->generatorClass::addToGeneratorDefinition($this);
+
+      foreach ($this->properties as $property) {
+        $property->getProperties();
+      }
+
+    }
     return $this->properties;
   }
 
