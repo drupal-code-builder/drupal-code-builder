@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Utility\NestedArray;
