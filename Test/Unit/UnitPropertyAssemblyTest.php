@@ -11,7 +11,7 @@ use MutableTypedData\Test\VarDumperSetupTrait;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 
 /**
- * Unit tests TODO for the ComponentCollection class.
+ * Tests the assembly of a data definition from multiple Generator classes.
  *
  * Uses the 'Mogrifier' set of fixture generators.
  */
@@ -47,6 +47,9 @@ class UnitPropertyAssemblyTest extends TestCase {
     \DrupalCodeBuilder\Factory::setEnvironment($environment)->setCoreVersionHelper($version_helper);
   }
 
+  /**
+   * Tests data definition assembly.
+   */
   public function testComponentPropertyAssembly() {
     $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator\Mogrifier');
     $this->container->set('Generate\ComponentClassHandler', $class_handler);
