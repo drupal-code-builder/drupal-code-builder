@@ -20,7 +20,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
   /**
    * Define the component data this component needs to function.
    */
-  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition($definition) {
     // Create the presets definition for service tag type property.
     $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
     $service_types_data = $task_handler_report_services->listServiceTypeData();

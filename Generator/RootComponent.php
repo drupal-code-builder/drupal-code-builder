@@ -88,7 +88,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    * {@inheritdoc}
    */
   // DIE!??
-  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 
     // Define this here for completeness; child classes should specialize it.

@@ -16,7 +16,7 @@ class MogrifierMutableComponent extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition($definition) {
     $definition->setProperties([
       'type' => PropertyDefinition::create('string')
         ->setLabel('Plugin discovery type')

@@ -109,7 +109,7 @@ class Plugin extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition(PropertyDefinition $definition) {
+  public static function addToGeneratorDefinition($definition) {
     // We still need this because ComponentCollector gets a standalone data
     // item for this generator.
     // TODO: figure this out!
