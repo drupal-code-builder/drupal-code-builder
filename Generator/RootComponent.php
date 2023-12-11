@@ -58,10 +58,10 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
       ->setLabel('Module') // TODO! vary!
       ->setName('module');
 
-    // Load all the lazy properties now we have the complete definition.
-    // TODO!
-    $definition->getProperties();
-    // $definition->loadLazyProperties();
+    // // Load all the lazy properties now we have the complete definition.
+    // // TODO!
+    // $definition->getProperties();
+    // // $definition->loadLazyProperties();
 
     return $definition;
   }
