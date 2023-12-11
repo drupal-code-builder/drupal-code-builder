@@ -250,6 +250,9 @@ abstract class BaseGenerator implements GeneratorInterface {
   /**
    * Adds to the defintion for this generator.
    *
+   * This shouldn't set things on its root data such as required, cardinality,
+   * or label, as these may depend on where it's used.
+   *
    * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
    *   The basic definition.
    */
