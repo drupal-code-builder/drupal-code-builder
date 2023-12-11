@@ -60,6 +60,9 @@ class UnitPropertyAssemblyTest extends TestCase {
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
     dump($data->getDefinition());
 
+    // Test boolean property works.
+    $data->boolean_generator_property = TRUE;
+
     // Test complex property works.
     $data->complex_generator_property[0]->string_property = 'cake';
 
