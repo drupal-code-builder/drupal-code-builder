@@ -8,6 +8,9 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class MogrifierComplexComponent extends BaseGenerator {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),

@@ -7,6 +7,9 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class SubMogrifier extends Mogrifier {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     parent::addToGeneratorDefinition($definition);
 

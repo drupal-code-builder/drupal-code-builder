@@ -44,10 +44,6 @@ class Mogrifier extends RootComponent {
     return $definition;
   }
 
-  public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {
-    // Does nothing.
-  }
-
 }
 
 ///////////////////////////////

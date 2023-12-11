@@ -8,8 +8,14 @@ use MutableTypedData\Definition\VariantDefinition;
 
 class MogrifierMutableComponent extends BaseGenerator {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $dataType = 'mutable';
 
+  /**
+   * {@inheritdoc}
+   */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
     $definition->setProperties([
       'type' => PropertyDefinition::create('string')

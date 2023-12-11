@@ -63,6 +63,9 @@ class GeneratorDefinition extends PropertyDefinition {
     return $this->componentType;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getProperties() {
     if (empty($this->componentType)) {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
