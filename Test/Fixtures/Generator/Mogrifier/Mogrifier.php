@@ -26,8 +26,7 @@ class Mogrifier extends RootComponent {
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyDefinition $definition) {
-    // TODO parent call!
-    // parent::addToGeneratorDefinition();
+    // Omit the parent call so we don't get a ton of base properties.
 
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string'),
