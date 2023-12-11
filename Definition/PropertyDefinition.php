@@ -47,7 +47,10 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     }
 
     if ($this->type == 'mutable') {
-      throw new InvalidDefinitionException("Mutable data must have only the type property.");
+      throw new InvalidDefinitionException(sprintf(
+        "Mutable data at %s must have only the type property set.",
+        $this->name
+      ));
     }
 
     // Reverse the array of properties, as we keep adding them after the $after
