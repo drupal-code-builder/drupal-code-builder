@@ -22,7 +22,7 @@ class PluginType extends BaseGenerator {
    */
   protected static $dataType = 'mutable';
 
-  public static function setProperties(PropertyDefinition $definition): void {
+  public static function addToGeneratorDefinition($definition) {
     // ARGH common properties! -- root name!
     $definition
       ->setProperties([
