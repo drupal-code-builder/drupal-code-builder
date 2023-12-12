@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use Prophecy\Argument;
@@ -75,17 +76,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'two' => 'bar',
     ]);
 
-    // Set up the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
-
-    // Create the helper, with dependencies passed in.
-    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
-      $environment->reveal(),
-      $class_handler
-    );
-
-    $collection = $component_collector->assembleComponentList($component_data);
+    $collection = $this->getComponentCollector()->assembleComponentList($component_data);
 
     $component_paths = $collection->getComponentRequestPaths();
 
@@ -216,15 +207,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $component_data->set($data_value);
 
-    // Mock the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
-
-    // Create the helper, with mocks passed in.
-    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
-      $environment->reveal(),
-      $class_handler
-    );
+    $component_collector = $this->getComponentCollector();
 
     $collection = $component_collector->assembleComponentList($component_data);
 
@@ -244,7 +227,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       ->setName('my_root')
       ->setProperties([
         // TODO! bad!
-        'component_property_string_multiple' => GeneratorDefinition::createFromGeneratorType('compound_a', 'string')
+        'component_property_string_multiple' => SimpleGeneratorDefinition::createFromGeneratorType('compound_a', 'string')
           ->setMultiple(TRUE),
       ]);
 
