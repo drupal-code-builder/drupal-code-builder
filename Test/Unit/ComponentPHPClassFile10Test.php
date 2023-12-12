@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Generator\PHPClassFile;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -25,7 +26,7 @@ class ComponentPHPClassFile10Test extends TestBase {
    * work.
    */
   public function testClassNameInterdependentProperties() {
-    $definition = PHPClassFile::getPropertyDefinition();
+    $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
     $definition->setName('root');
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
@@ -45,7 +46,7 @@ class ComponentPHPClassFile10Test extends TestBase {
     // dump($value);
 
     // Now add a relative namespace literal default.
-    $definition = PHPClassFile::getPropertyDefinition();
+    $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
     $definition->getProperty('relative_namespace')
       ->setDefault(DefaultDefinition::create()
         ->setLiteral('Plugin\views')
@@ -64,7 +65,7 @@ class ComponentPHPClassFile10Test extends TestBase {
     $this->assertEquals('Drupal\%module\Plugin\views\MyClass', $data->qualified_class_name->value);
 
     // Set the relative class name.
-    $definition = PHPClassFile::getPropertyDefinition();
+    $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
