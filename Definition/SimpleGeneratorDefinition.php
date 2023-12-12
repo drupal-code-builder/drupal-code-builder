@@ -22,6 +22,8 @@ class SimpleGeneratorDefinition extends GeneratorDefinition {
    *   The new definition.
    */
   static public function createFromGeneratorType(string $generator_type, string $data_type = NULL): PropertyDefinition {
+    assert(!empty($data_type));
+
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($generator_type);
 
