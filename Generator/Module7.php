@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\BooleanGeneratorDefinition;
+use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 
 /**
@@ -39,11 +39,11 @@ class Module7 extends Module8 {
     $definition->removeProperty('forms');
 
     $definition->addProperties([
-      'router_items' => GeneratorDefinition::createFromGeneratorType('RouterItem', 'string')
+      'router_items' => GeneratorDefinition::createFromGeneratorType('RouterItem')
         ->setLabel("Menu paths")
         ->setDescription("Paths for hook_menu(), eg 'path/foo'")
         ->setMultiple(TRUE),
-      'settings_form' => BooleanGeneratorDefinition::createFromGeneratorType('AdminSettingsForm')
+      'settings_form' => SimpleGeneratorDefinition::createFromGeneratorType('AdminSettingsForm')
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
     ]);

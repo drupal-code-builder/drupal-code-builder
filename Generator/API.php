@@ -15,6 +15,11 @@ use DrupalCodeBuilder\File\DrupalExtension;
 class API extends PHPFile {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $dataType = 'boolean';
+
+  /**
    * Whether this file is merged with existing code.
    *
    * @todo Move this up the class hierarchy to PHPFIle when it's used there and

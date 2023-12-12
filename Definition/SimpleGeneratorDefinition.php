@@ -7,7 +7,7 @@ namespace DrupalCodeBuilder\Definition;
  *
  * TODO
  */
-class BooleanGeneratorDefinition extends GeneratorDefinition {
+class SimpleGeneratorDefinition extends GeneratorDefinition {
 
   /**
    * Creates a new definition from a component type.
@@ -24,8 +24,11 @@ class BooleanGeneratorDefinition extends GeneratorDefinition {
   static public function createFromGeneratorType(string $generator_type): PropertyDefinition {
     $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
     $generator_class = $class_handler->getGeneratorClass($generator_type);
+    $data_type = $generator_class::getDefinitionDataType();
+    assert($data_type != 'complex');
+    assert($data_type != 'mutable');
 
-    return new static('boolean', $generator_type, $generator_class);
+    return new static($data_type, $generator_type, $generator_class);
   }
 
   public function getProperties() {

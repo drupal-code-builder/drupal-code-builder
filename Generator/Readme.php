@@ -17,6 +17,11 @@ class Readme extends File {
   /**
    * {@inheritdoc}
    */
+  protected static $dataType = 'boolean';
+
+  /**
+   * {@inheritdoc}
+   */
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 

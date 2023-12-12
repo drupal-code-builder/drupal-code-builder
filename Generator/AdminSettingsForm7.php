@@ -13,6 +13,11 @@ class AdminSettingsForm7 extends Form7 {
   /**
    * {@inheritdoc}
    */
+  protected static $dataType = 'boolean';
+
+  /**
+   * {@inheritdoc}
+   */
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 

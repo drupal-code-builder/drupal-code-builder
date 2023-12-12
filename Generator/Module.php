@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use DrupalCodeBuilder\Definition\BooleanGeneratorDefinition;
+use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Definition\OptionDefinition;
@@ -177,7 +177,7 @@ class Module extends RootComponent {
         ->setLabel("Services")
         ->setDescription('The services for this module to provide.')
         ->setMultiple(TRUE),
-      'service_provider' => BooleanGeneratorDefinition::createFromGeneratorType('ServiceProvider')
+      'service_provider' => SimpleGeneratorDefinition::createFromGeneratorType('ServiceProvider')
         ->setLabel("Service provider")
         ->setDescription('A service provider alters existing services or defines services dynamically.'),
       'permissions' => GeneratorDefinition::createFromGeneratorType('Permission')
@@ -294,7 +294,7 @@ class Module extends RootComponent {
       'plugin_types' => GeneratorDefinition::createFromGeneratorType('PluginType')
         ->setLabel('Plugin types')
         ->setMultiple(TRUE),
-      'theme_hooks' => GeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
+      'theme_hooks' => GeneratorDefinition::createFromGeneratorType('ThemeHook')
         ->setLabel("Theme hooks")
         ->setDescription("The name of theme hooks, without the leading 'theme_'.")
         ->setMultiple(TRUE),
@@ -311,10 +311,10 @@ class Module extends RootComponent {
       'drush_commands' => GeneratorDefinition::createFromGeneratorType('DrushCommand')
         ->setLabel("Drush commands")
         ->setMultiple(TRUE),
-      'api' => BooleanGeneratorDefinition::createFromGeneratorType('API')
+      'api' => SimpleGeneratorDefinition::createFromGeneratorType('API')
         ->setLabel("api.php file")
         ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
-      'readme' => BooleanGeneratorDefinition::createFromGeneratorType('Readme')
+      'readme' => SimpleGeneratorDefinition::createFromGeneratorType('Readme')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
       'phpunit_tests' => GeneratorDefinition::createFromGeneratorType('PHPUnitTest')
