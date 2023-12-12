@@ -28,4 +28,8 @@ class BooleanGeneratorDefinition extends GeneratorDefinition {
     return new static('boolean', $generator_type, $generator_class);
   }
 
+  public function getProperties() {
+    return [];
+  }
+
 }
