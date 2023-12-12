@@ -286,6 +286,7 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
    * circularity?
    */
   public function loadLazyProperties() {
+    // TODO kill!
     foreach ($this->getProperties() as $property) {
       $property->loadLazyProperties();
     }
