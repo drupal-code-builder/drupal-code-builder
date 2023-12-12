@@ -370,6 +370,7 @@ class ComponentCollector {
           // data from the UI.
           // TODO: make this sort of expansion internal to MTD?
           $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($item_component_type, $item_name);
+          /// ARGH
 
           // Get the public property from the definition. There must be only
           // one for this to make sense!

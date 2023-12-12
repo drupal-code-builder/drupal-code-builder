@@ -39,7 +39,7 @@ class Module7 extends Module8 {
     $definition->removeProperty('forms');
 
     $definition->addProperties([
-      'router_items' => GeneratorDefinition::createFromGeneratorType('RouterItem')
+      'router_items' => SimpleGeneratorDefinition::createFromGeneratorType('RouterItem')
         ->setLabel("Menu paths")
         ->setDescription("Paths for hook_menu(), eg 'path/foo'")
         ->setMultiple(TRUE),
