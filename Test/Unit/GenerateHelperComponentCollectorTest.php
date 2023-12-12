@@ -225,6 +225,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $definition = GeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
       ->setProperties([
+        // TODO! bad!
         'component_property_string_multiple' => GeneratorDefinition::createFromGeneratorType('compound_a', 'string')
           ->setMultiple(TRUE),
       ]);
