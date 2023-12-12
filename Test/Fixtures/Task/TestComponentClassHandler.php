@@ -24,6 +24,7 @@ class TestComponentClassHandler extends ComponentClassHandler {
    */
   public function __construct(
     protected string $fixtureGeneratorNamespace,
+    protected bool $useFallbackClass,
   ) {
   }
 
@@ -43,6 +44,10 @@ class TestComponentClassHandler extends ComponentClassHandler {
     if (class_exists($class_name)) {
       $class_name = $class_name;
       return $class_name;
+    }
+
+    if ($this->useFallbackClass) {
+      return \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator::class;
     }
 
     throw new \LogicException("No class '$class_name' found for '$type' in fixture namespace.");

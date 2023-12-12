@@ -20,17 +20,35 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    */
   protected $drupalMajorVersion = 8;
 
+  public function setUp(): void {
+    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
+    \DrupalCodeBuilder\Factory::setEnvironment($environment->reveal());
+
+    $container = \DrupalCodeBuilder\Factory::getContainer();
+
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler(
+      fixtureGeneratorNamespace: 'Generator',
+      useFallbackClass: TRUE,
+    );
+    $container->set('Generate\ComponentClassHandler', $class_handler);
+  }
+
   /**
    * Get a component collector with mocked dependencies.
    *
    * This uses the TestComponentClassHandler from fixtures, which in turns
    * returns a \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator
    * for components.
+   *
+   * TODO: Why can't we get this from the container?
    */
   protected function getComponentCollector(): ComponentCollector {
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler(
+      fixtureGeneratorNamespace: 'Generator',
+      useFallbackClass: TRUE,
+    );
 
     // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
