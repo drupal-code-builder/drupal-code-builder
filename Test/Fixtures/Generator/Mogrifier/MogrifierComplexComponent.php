@@ -15,7 +15,7 @@ class MogrifierComplexComponent extends BaseGenerator {
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string')
         ->setLabel('label'),
-        'recursive' => GeneratorDefinition::createFromGeneratorType('SubMogrifier')
+      'recursive' => GeneratorDefinition::createFromGeneratorType('SubMogrifier')
         ->setLabel('label'),
     ]);
   }
