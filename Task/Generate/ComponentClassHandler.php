@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -36,23 +37,13 @@ class ComponentClassHandler {
    *   Throws an exception if there is no class found for the component type.
    */
   public function getStandaloneComponentPropertyDefinition(string $component_type, string $machine_name = NULL): PropertyDefinition {
-    $class = $this->getGeneratorClass($component_type);
+    $definition = GeneratorDefinition::createFromGeneratorType($component_type);
 
-    // Quick hack. TODO: clean up.
-    $machine_name = $machine_name ?? strtolower($component_type);
-    // TODO: argh! some component types contain ':' characters!!
-    // DIRTY HACK.
-    $machine_name = str_replace(':', '-', $machine_name);
-
-    if (!class_exists($class)) {
-      throw new \InvalidArgumentException(sprintf("No class found for type '%s'", $component_type));
-    }
-
-    $definition = $class::getPropertyDefinition();
-
-    if (!$definition->getName()) {
+    if (!$definition->getName() && !empty($machine_name)) {
       $definition->setName($machine_name);
     }
+
+    return $definition;
   }
 
   /**
