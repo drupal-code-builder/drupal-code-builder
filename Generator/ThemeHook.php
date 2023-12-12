@@ -12,11 +12,6 @@ class ThemeHook extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  protected static $dataType = 'string';
-
-  /**
-   * {@inheritdoc}
-   */
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 

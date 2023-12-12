@@ -14,11 +14,6 @@ class ServiceProvider extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected static $dataType = 'boolean';
-
-  /**
-   * {@inheritdoc}
-   */
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 

@@ -17,7 +17,7 @@ class Module8 extends Module {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
-      'tests' => SimpleGeneratorDefinition::createFromGeneratorType('Tests')
+      'tests' => SimpleGeneratorDefinition::createFromGeneratorType('Tests', 'boolean')
         ->setLabel("Simpletest test case class")
         ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
     ]);

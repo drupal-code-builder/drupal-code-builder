@@ -177,7 +177,7 @@ class Module extends RootComponent {
         ->setLabel("Services")
         ->setDescription('The services for this module to provide.')
         ->setMultiple(TRUE),
-      'service_provider' => SimpleGeneratorDefinition::createFromGeneratorType('ServiceProvider')
+      'service_provider' => SimpleGeneratorDefinition::createFromGeneratorType('ServiceProvider', 'boolean')
         ->setLabel("Service provider")
         ->setDescription('A service provider alters existing services or defines services dynamically.'),
       'permissions' => GeneratorDefinition::createFromGeneratorType('Permission')
@@ -294,7 +294,7 @@ class Module extends RootComponent {
       'plugin_types' => GeneratorDefinition::createFromGeneratorType('PluginType')
         ->setLabel('Plugin types')
         ->setMultiple(TRUE),
-      'theme_hooks' => GeneratorDefinition::createFromGeneratorType('ThemeHook')
+      'theme_hooks' => SimpleGeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
         ->setLabel("Theme hooks")
         ->setDescription("The name of theme hooks, without the leading 'theme_'.")
         ->setMultiple(TRUE),
@@ -311,10 +311,10 @@ class Module extends RootComponent {
       'drush_commands' => GeneratorDefinition::createFromGeneratorType('DrushCommand')
         ->setLabel("Drush commands")
         ->setMultiple(TRUE),
-      'api' => SimpleGeneratorDefinition::createFromGeneratorType('API')
+      'api' => SimpleGeneratorDefinition::createFromGeneratorType('API', 'boolean')
         ->setLabel("api.php file")
         ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
-      'readme' => SimpleGeneratorDefinition::createFromGeneratorType('Readme')
+      'readme' => SimpleGeneratorDefinition::createFromGeneratorType('Readme', 'boolean')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
       'phpunit_tests' => GeneratorDefinition::createFromGeneratorType('PHPUnitTest')

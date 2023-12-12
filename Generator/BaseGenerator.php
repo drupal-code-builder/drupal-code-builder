@@ -244,6 +244,10 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   public static function getDefinitionDataType(): string {
+    // The generator class data type can't be simple, as then the component
+    // generator can't have properties. See SimpleGeneratorDefinition.
+    assert(static::$dataType != 'boolean');
+    assert(static::$dataType != 'string');
     return static::$dataType;
   }
 

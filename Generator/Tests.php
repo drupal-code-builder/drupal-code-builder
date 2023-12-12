@@ -12,11 +12,6 @@ class Tests extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  protected static $dataType = 'boolean';
-
-  /**
-   * {@inheritdoc}
-   */
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 
