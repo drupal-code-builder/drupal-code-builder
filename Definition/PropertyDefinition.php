@@ -10,7 +10,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 /**
  * Extends the basic property definition with DCB extras.
  */
-class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess {
+class PropertyDefinition extends BasePropertyDefinition implements PropertyListInterface, \ArrayAccess {
 
   // TODO: can this be done with defaults instead??
   protected $acquiringExpression = FALSE;

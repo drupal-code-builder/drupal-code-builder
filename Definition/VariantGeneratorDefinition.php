@@ -16,7 +16,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
  * Variants gets their properties from the associated generator's
  * getPropertyDefinition() method.
  */
-class VariantGeneratorDefinition extends VariantDefinition {
+class VariantGeneratorDefinition extends VariantDefinition implements PropertyListInterface {
 
   /**
    * The component type.
