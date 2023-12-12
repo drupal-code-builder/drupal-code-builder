@@ -62,11 +62,8 @@ class UnitPropertyAssemblyTest extends TestCase {
     // first!
     $class = $class_handler->getGeneratorClass('Mogrifier');
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
-    // dump($data->getDefinition());
-    //
 
     $this->simulateUiWalk($data);
-
 
     // Test boolean property works.
     $data->boolean_generator_property = TRUE;
