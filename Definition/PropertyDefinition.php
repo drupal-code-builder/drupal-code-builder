@@ -278,7 +278,7 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
    * Load all the lazy properties.
    *
    * Iterates into all properties, so that any definitions which are instances
-   * of LazyGeneratorDefinition load their properties.
+   * of GeneratorDefinition load their properties.
    *
    * TODO: possibly rethink the lazy-loading thing? Can the problem it exists to
    * solve be dealt with instead by changing all report tasks to lazy option
@@ -286,7 +286,6 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
    * circularity?
    */
   public function loadLazyProperties() {
-    // TODO kill!
     foreach ($this->getProperties() as $property) {
       $property->loadLazyProperties();
     }

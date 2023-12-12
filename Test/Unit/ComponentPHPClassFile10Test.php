@@ -27,6 +27,8 @@ class ComponentPHPClassFile10Test extends TestBase {
    */
   public function testClassNameInterdependentProperties() {
     $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
+    // Need to explicitly lazy load.
+    $definition->loadLazyProperties();
     $definition->setName('root');
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
@@ -47,6 +49,7 @@ class ComponentPHPClassFile10Test extends TestBase {
 
     // Now add a relative namespace literal default.
     $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
+    $definition->loadLazyProperties();
     $definition->getProperty('relative_namespace')
       ->setDefault(DefaultDefinition::create()
         ->setLiteral('Plugin\views')
@@ -66,6 +69,7 @@ class ComponentPHPClassFile10Test extends TestBase {
 
     // Set the relative class name.
     $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
+    $definition->loadLazyProperties();
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
