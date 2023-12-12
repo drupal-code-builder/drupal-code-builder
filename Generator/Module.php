@@ -127,6 +127,9 @@ class Module extends RootComponent {
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 
+    $definition
+      ->setLabel('Module');
+
     $definition->getProperty('root_name')
       ->setLabel('Module machine name')
       ->setLiteralDefault('my_module');
@@ -314,6 +317,9 @@ class Module extends RootComponent {
       'readme' => BooleanGeneratorDefinition::createFromGeneratorType('Readme')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
+      'phpunit_tests' => GeneratorDefinition::createFromGeneratorType('PHPUnitTest')
+        ->setLabel("PHPUnit test case class")
+        ->setMultiple(TRUE),
       // 'phpunit_tests' go here, but can't be added at this point because it
       // would cause circularity with TestModule.
       // TODO: lazy load generator type property definitions?

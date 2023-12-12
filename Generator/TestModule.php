@@ -22,7 +22,7 @@ class TestModule extends Module {
       'module_help_text',
       'api',
       'readme',
-      // 'phpunit_tests',
+      'phpunit_tests',
       'tests',
     ] as $property) {
       $definition->removeProperty($property);

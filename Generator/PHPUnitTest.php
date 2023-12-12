@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
 use MutableTypedData\Data\DataItem;
