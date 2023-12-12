@@ -30,7 +30,8 @@ class Mogrifier extends RootComponent {
     // Omit the parent call so we don't get a ton of base properties.
 
     $definition->addProperties([
-      'string_property' => PropertyDefinition::create('string'),
+      'string_property' => PropertyDefinition::create('string')
+        ->setLabel("string_property"),
       'boolean_generator_property' => BooleanGeneratorDefinition::createFromGeneratorType('MogrifierBooleanComponent')
         ->setLabel("Boolean Generator"),
       'complex_generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')

@@ -18,7 +18,8 @@ class MogrifierBooleanComponent extends BaseGenerator {
    */
   public static function addToGeneratorDefinition($definition) {
     $definition->addProperties([
-      'string_property' => PropertyDefinition::create('string'),
+      'string_property' => PropertyDefinition::create('string')
+        ->setLabel("Should not be seen in Mogrifier data definition!"),
     ]);
   }
 

@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Generator\RootComponent;
 use Prophecy\PhpUnit\ProphecyTrait;
 use MutableTypedData\Test\VarDumperSetupTrait;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Tests the assembly of a data definition from multiple Generator classes.
@@ -61,7 +62,11 @@ class UnitPropertyAssemblyTest extends TestCase {
     // first!
     $class = $class_handler->getGeneratorClass('Mogrifier');
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
-    dump($data->getDefinition());
+    // dump($data->getDefinition());
+    //
+
+    $this->simulateUiWalk($data);
+
 
     // Test boolean property works.
     $data->boolean_generator_property = TRUE;
@@ -75,6 +80,43 @@ class UnitPropertyAssemblyTest extends TestCase {
     // Test mutable property works.
     $data->mutable_generator_property[0]->type = 'alpha';
     $this->assertArrayHasKey('alpha_property', $data->mutable_generator_property[0]->getProperties());
+  }
+
+  /**
+   * Helper recursively walking the data.
+   *
+   * Recursively accesses label, descriptions, options on data items, creating
+   * them as it goes to cover the whole data structure.
+   *
+   * TODO: doesn't handle mutable!
+   */
+  protected function simulateUiWalk(DataItem $data_item) {
+    // Get the label and description.
+    // If these are not properly defined, MTD will throw exceptions.
+    $data_item->getLabel();
+    $data_item->getDescription();
+
+    if ($data_item->hasOptions()) {
+      $options = $data_item->getOptions();
+      foreach ($options as $value => $option) {
+        // Get the label and description for the option.
+        // If these are not properly defined, MTD will throw exceptions.
+        $option->getLabel();
+        $option->getDescription();
+      }
+    }
+
+    // Recurse.
+    foreach ($data_item as $property => $property_data_item) {
+      // Ensure that data is created for complex properties and a single delta.
+      $property_data_item->access();
+
+      if ($property_data_item->isMultiple()) {
+        $property_data_item->createItem();
+      }
+
+      $this->simulateUiWalk($property_data_item);
+    }
   }
 
 }
