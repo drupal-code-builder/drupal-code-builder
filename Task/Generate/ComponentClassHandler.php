@@ -43,10 +43,11 @@ class ComponentClassHandler {
       if (empty($machine_name)) {
         // Quick hack. TODO: clean up.
         $machine_name = $machine_name ?? strtolower($component_type);
-        // TODO: argh! some component types contain ':' characters!!
-        // DIRTY HACK.
-        $machine_name = str_replace(':', '-', $machine_name);
       }
+
+      // TODO: argh! some component types contain ':' characters!!
+      // DIRTY HACK.
+      $machine_name = str_replace(':', '-', $machine_name);
 
       $definition->setName($machine_name);
     }
