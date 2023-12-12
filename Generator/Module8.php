@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\BooleanGeneratorDefinition;
 
 /**
  * Drupal 8 version of component.
@@ -16,7 +17,7 @@ class Module8 extends Module {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
-      'tests' => GeneratorDefinition::createFromGeneratorType('Tests', 'boolean')
+      'tests' => BooleanGeneratorDefinition::createFromGeneratorType('Tests')
         ->setLabel("Simpletest test case class")
         ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
     ]);
