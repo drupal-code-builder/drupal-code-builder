@@ -81,6 +81,10 @@ class Plugin extends BaseGenerator {
         'yaml' => VariantGeneratorDefinition::create()
           ->setLabel('YAML plugin')
           ->setGenerator('PluginYamlDiscovery'),
+        // Special cases. Note that these must be set up in ReportPluginData.
+        'element_info' => VariantGeneratorDefinition::create()
+          ->setLabel('Validaton constraint')
+          ->setGenerator('PluginRenderElement'),
         'validation.constraint' => VariantGeneratorDefinition::create()
           ->setLabel('Validaton constraint')
           ->setGenerator('PluginValidationConstraint'),
