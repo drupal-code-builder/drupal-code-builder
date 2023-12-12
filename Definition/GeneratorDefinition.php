@@ -71,6 +71,7 @@ class GeneratorDefinition extends PropertyDefinition {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }
 
+    // TODO: this is icky! make it an explicit lazy loader that has to be called!
     // Get the properties of all children to lazy load them.
     if (!$this->generatorPropertiesLoaded) {
       // Set this to TRUE now to avoid recursion, as addToGeneratorDefinition()
