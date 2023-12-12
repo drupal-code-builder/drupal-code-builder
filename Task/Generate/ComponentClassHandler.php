@@ -39,12 +39,14 @@ class ComponentClassHandler {
   public function getStandaloneComponentPropertyDefinition(string $component_type, string $machine_name = NULL): PropertyDefinition {
     $definition = GeneratorDefinition::createFromGeneratorType($component_type);
 
-    if (!$definition->getName() && !empty($machine_name)) {
-      // Quick hack. TODO: clean up.
-      $machine_name = $machine_name ?? strtolower($component_type);
-      // TODO: argh! some component types contain ':' characters!!
-      // DIRTY HACK.
-      $machine_name = str_replace(':', '-', $machine_name);
+    if (!$definition->getName()) {
+      if (empty($machine_name)) {
+        // Quick hack. TODO: clean up.
+        $machine_name = $machine_name ?? strtolower($component_type);
+        // TODO: argh! some component types contain ':' characters!!
+        // DIRTY HACK.
+        $machine_name = str_replace(':', '-', $machine_name);
+      }
 
       $definition->setName($machine_name);
     }
