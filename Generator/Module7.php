@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\BooleanGeneratorDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinition;
 
 /**
  * Drupal 7 version of component.
