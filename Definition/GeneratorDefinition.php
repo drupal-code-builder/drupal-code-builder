@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Definition;
 
 /**
- * Defines a data property that has an associated generator.
+ * Defines a data property from a generator.
  *
  * This gets the data type from the generator class, and lazily allows the
  * geneator class to add to the definition.
