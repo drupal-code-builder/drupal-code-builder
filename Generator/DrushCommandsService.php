@@ -21,7 +21,7 @@ class DrushCommandsService extends Service {
    */
   public function requiredComponents(): array {
     // This clobbers any other tags but we shouldn't need any. Setting this as
-    // a literal default in getPropertyDefinition() causes a PHP nesting level
+    // a literal default in addToGeneratorDefinition() causes a PHP nesting level
     // error. Not clobbering here causes duplication somehow.
     $this->component_data->tags = [
       0 => [

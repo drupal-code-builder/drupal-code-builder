@@ -341,37 +341,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     $definition = GeneratorDefinition::createFromGeneratorType($component_type, $data_type);
   }
 
-  /**
-   * Gets the data definition for this component.
-   *
-   * This shouldn't set things on its root data such as required, cardinality,
-   * or label, as these may depend on where it's used.
-   *
-   * Use GeneratorDefinition::createFromGeneratorType() to use the definition
-   * from one generator inside another's.
-   *
-   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
-   *   The data definition.
-   */
-  public static function getPropertyDefinition() :PropertyDefinition {
-    $type = static::deriveType(static::class);
-
-    $definition = GeneratorDefinition::createFromGeneratorType($type, 'complex');
-
-    // Add the basic properties.
-    // TODO: put these in setProperties() instead, but can't yet, probably
-    // because of standalone data for requested components.
-    $definition->addProperties([
-      'root_component_name' => PropertyDefinition::create('string')
-        ->setAcquiringExpression("getRootComponentName(requester)"),
-      'containing_component' => PropertyDefinition::create('string')
-        ->setInternal(TRUE),
-      // The path of the nearest root component.
-      'component_base_path' => PropertyDefinition::create('string')
-        ->setAutoAcquiredFromRequester(),
-    ]);
-  }
-
   public function isRootComponent(): bool {
     return FALSE;
   }

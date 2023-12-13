@@ -42,7 +42,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
   public static function configurationDefinition(): PropertyDefinition {
     // Return an empty data definition by default.
     // NOTE: this can't have a root name set because it's also embedded into
-    // data by self::getPropertyDefinition().
+    // data by self::addToGeneratorDefinition().
     return PropertyDefinition::create('complex');
   }
 
@@ -76,7 +76,6 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
   /**
    * {@inheritdoc}
    */
-  // DIE!??
   public static function addToGeneratorDefinition($definition) {
     parent::addToGeneratorDefinition($definition);
 

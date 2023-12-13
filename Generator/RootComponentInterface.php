@@ -14,7 +14,7 @@ interface RootComponentInterface extends GeneratorInterface, DefinitionProviderI
    * their preferences in a persistent fashion.
    *
    * The properties here are merged into the main data by
-   * RootComponent::getPropertyDefinition(), as child properties of a
+   * RootComponent::addToGeneratorDefinition(), as child properties of a
    * 'configuration' complex property.
    *
    * @return \DrupalCodeBuilder\Definition\PropertyDefinition

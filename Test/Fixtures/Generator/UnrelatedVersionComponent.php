@@ -18,7 +18,7 @@ class UnrelatedVersionComponent extends BaseGenerator {
     // We should not get here when getting properties for RootGeneratorChild,
     // because this generator is unrelated and might do things here which are
     // not possible in RootGeneratorChild's Drupal version environment.
-    Assert::fail("The UnrelatedVersionComponent generator's getPropertyDefinition() should not be called.");
+    Assert::fail("The UnrelatedVersionComponent generator's addToGeneratorDefinition() should not be called.");
   }
 
 }
