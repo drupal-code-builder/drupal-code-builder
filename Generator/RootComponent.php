@@ -66,13 +66,6 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
     return $definition;
   }
 
-  public static function getDataDefinition() {
-    return PropertyDefinition::create('complex')
-      ->setProperties([
-
-      ]);
-  }
-
   /**
    * {@inheritdoc}
    */
