@@ -24,7 +24,7 @@ class TestComponentClassHandler extends ComponentClassHandler {
    */
   public function __construct(
     protected string $fixtureGeneratorNamespace,
-    protected bool $useFallbackClass,
+    protected bool $useFallbackClass = FALSE,
   ) {
   }
 
