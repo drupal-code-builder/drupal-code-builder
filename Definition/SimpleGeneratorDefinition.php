@@ -20,8 +20,8 @@ class SimpleGeneratorDefinition extends GeneratorDefinition {
    * @param string $generator_type
    *   The generator type; that is, the short class name without the version
    *   number.
-   * @param string $data_type NO KILL, the GENERATOR tells us this.
-   *   (optional) The data type. Defaults to 'complex'.
+   * @param string $data_type
+   *   The data type to use for the simple property on the host definition.
    *
    * @return static
    *   The new definition.
