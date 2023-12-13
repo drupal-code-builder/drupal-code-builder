@@ -18,10 +18,6 @@ class SimpleGenerator implements GeneratorInterface {
 
   public $component_data;
 
-  public static function getDefinitionDataType() {
-    return 'complex';
-  }
-
   public static function addToGeneratorDefinition($definition) {
   }
 
