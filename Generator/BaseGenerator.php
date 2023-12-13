@@ -39,8 +39,8 @@ use MutableTypedData\Data\DataItem;
  * @section data_definition Data definition
  *
  * RootComponent classes implement DefinitionProviderInterface to return their
- * data definition. This hands over to getGeneratorDataDefinition(), which
- * assembles the full definition for the root component.
+ * data definition. This uses GeneratorDefinition with that class, which in turn
+ * allows the generator class to add properties in addToGeneratorDefinition().
  *
  * Some complex properties in the definition get their own properties from
  * another generator: for example, the Module generator defines an admin
@@ -276,38 +276,6 @@ abstract class BaseGenerator implements GeneratorInterface {
       'component_base_path' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-  }
-
-  /**
-   * Gets the data definition for this generator without the properties.
-   *
-   * This must be called on the generator class itself. Use
-   * GeneratorDefinition::createFromGeneratorType() from a different generator
-   * class.
-   *
-   * TODO: this should replace getPropertyDefinition()!
-   *
-   * @param string $component_type
-   *   (optional) The component type. If omitted, is derived from the current
-   *   class.
-   * @param string $data_type
-   *   (optional) The data type, to override the data type defined by the
-   *   Generator class. This is necessary in cases where the property needs to
-   *   be a simple type such as boolean or string, while the generator for
-   *   that property is complex because it has internal properties.
-   *
-   * @return \DrupalCodeBuilder\Definition\GeneratorDefinition
-   *   The property definition.
-   */
-  public static function getGeneratorDataDefinition(string $component_type = NULL, string $data_type = NULL): GeneratorDefinition {
-    // Check this isn't getting called on BaseGenerator.
-    assert(static::class != __CLASS__);
-
-    $component_type = $component_type ?? static::deriveType(static::class);
-
-    $data_type = $data_type ?? static::$dataType;
-
-    $definition = GeneratorDefinition::createFromGeneratorType($component_type, $data_type);
   }
 
   public function isRootComponent(): bool {

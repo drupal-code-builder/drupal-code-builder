@@ -61,7 +61,7 @@ use DrupalCodeBuilder\Generator\GeneratorInterface;
  *
  * Component data arrays have their structure defined by data property
  * definitions which each Generator class defines in its
- * getGeneratorDataDefinition() static method.
+ * addToGeneratorDefinition() static method.
  *
  * The component data array for the root component, and any subsequent component
  * data arrays, can produce generators in three ways:
