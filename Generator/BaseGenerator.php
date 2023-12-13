@@ -242,6 +242,12 @@ abstract class BaseGenerator implements GeneratorInterface {
     return preg_replace('@\d+$@', '', $short_class);
   }
 
+  /**
+   * Get the data type for the data definition of this generator.
+   *
+   * @return string
+   *   The data type set in static::$dataType.
+   */
   public static function getDefinitionDataType(): string {
     // The generator class data type can't be simple, as then the component
     // generator can't have properties. See SimpleGeneratorDefinition.
