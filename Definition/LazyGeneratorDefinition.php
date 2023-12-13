@@ -19,6 +19,9 @@ use MutableTypedData\Exception\InvalidDefinitionException;
  *
  * TODO: added in haste to update Module generator to use data definitions -
  * fold this into the parent?
+ *
+ *
+ * TODO REMOVE!
  */
 class LazyGeneratorDefinition extends GeneratorDefinition {
 
