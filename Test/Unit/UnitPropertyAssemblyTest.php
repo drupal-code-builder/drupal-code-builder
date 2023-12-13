@@ -58,9 +58,7 @@ class UnitPropertyAssemblyTest extends TestCase {
     // We have to do the work of Generate::getRootComponentData() because we're
     // using a non- standard root component -- there isn't a flavour of the
     // Generate task in the DI container for our root component.
-    // TODO! should accept lowercase! we need to put that through something else
-    // first!
-    $class = $class_handler->getGeneratorClass('Mogrifier');
+    $class = $class_handler->getGeneratorClass('mogrifier');
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider($class);
 
     $this->simulateUiWalk($data);
