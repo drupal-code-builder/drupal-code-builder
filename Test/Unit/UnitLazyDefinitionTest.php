@@ -136,11 +136,4 @@ namespace DrupalCodeBuilder\Fixture;
  */
 class LazyType {
 
-  public static function setProperties(\DrupalCodeBuilder\Definition\PropertyDefinition $definition): void {
-    $definition->setProperties([
-      'lazy_one' => \MutableTypedData\Definition\DataDefinition::create('string'),
-      'lazy_two' => \MutableTypedData\Definition\DataDefinition::create('boolean'),
-    ]);
-  }
-
 }

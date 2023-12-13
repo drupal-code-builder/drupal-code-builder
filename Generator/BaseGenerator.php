@@ -342,23 +342,6 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   /**
-   * Sets the properties on the generator data definition.
-   *
-   * The creation of the complete data definition is split between this and
-   * self::getGeneratorDataDefinition() in order to prevent various issues:
-   * see docs for GeneratorDefinition for details.
-   *
-   * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
-   *   The data definition.
-   */
-  public static function setProperties(PropertyDefinition $definition): void {
-    // Yet Another Sodding Shim.
-    $temporary_definition = static::getPropertyDefinition();
-
-    $definition->setProperties($temporary_definition->getProperties());
-  }
-
-  /**
    * Gets the data definition for this component.
    *
    * This shouldn't set things on its root data such as required, cardinality,

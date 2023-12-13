@@ -73,17 +73,6 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
       ]);
   }
 
-
-  /**
-   * {@inheritdoc}
-   */
-  // DIE!
-  public static function setProperties(PropertyDefinition $definition): void {
-    parent::setProperties($definition);
-
-    static::rootComponentPropertyDefinitionAlter($definition);
-  }
-
   /**
    * {@inheritdoc}
    */
