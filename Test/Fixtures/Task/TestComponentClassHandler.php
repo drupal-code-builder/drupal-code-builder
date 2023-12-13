@@ -10,6 +10,8 @@ use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
  * Test class handler which returns generator classes from a fixture namespace.
  *
  * This is meant to work with a set of generator classes in the same namespace.
+ *
+ * TODO: Clean up this class!
  */
 class TestComponentClassHandler extends ComponentClassHandler {
 
@@ -21,6 +23,8 @@ class TestComponentClassHandler extends ComponentClassHandler {
    * @param string $fixtureGeneratorNamespace
    *   The namespace within \DrupalCodeBuilder\Test\Fixtures in which to look
    *   for generator classes.
+   * @param bool $useFallbackClass
+   *   Whether to return SimpleGenerator when no class is found.
    */
   public function __construct(
     protected string $fixtureGeneratorNamespace,
