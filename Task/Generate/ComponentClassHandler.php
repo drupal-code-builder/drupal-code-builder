@@ -40,13 +40,13 @@ class ComponentClassHandler {
     $definition = GeneratorDefinition::createFromGeneratorType($component_type);
 
     if (!$definition->getName()) {
+      // TODO: Clean up all this machine name hackery.
       if (empty($machine_name)) {
-        // Quick hack. TODO: clean up.
+        // Quick hack.
         $machine_name = $machine_name ?? strtolower($component_type);
       }
 
-      // TODO: argh! some component types contain ':' characters!!
-      // DIRTY HACK.
+      // Some component types contain ':' characters! Argh!
       $machine_name = str_replace(':', '-', $machine_name);
 
       $definition->setName($machine_name);
