@@ -5,7 +5,8 @@ namespace DrupalCodeBuilder\Definition;
 /**
  * Defines a data property that has an associated generator. TODO
  *
- * TODO
+ * TODO Rename this - it's not about simple, it's about proxied - the property
+ * in the parent is not the same as the generator's properties.
  */
 class SimpleGeneratorDefinition extends GeneratorDefinition {
 
