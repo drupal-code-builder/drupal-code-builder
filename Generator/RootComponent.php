@@ -53,9 +53,10 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
     $component_type = static::deriveType(static::class);
     $definition = GeneratorDefinition::createFromGeneratorType($component_type);
 
-    $definition
-      ->setLabel('Module') // TODO! vary!
-      ->setName('module');
+    // Root label is set in the component-specific subclass, but name must be
+    // set here as it can't be changed by any further subclasses, e.g.
+    // Module / TestModule.
+    $definition->setName(strtolower($component_type));
 
     // // Load all the lazy properties now we have the complete definition.
     // // TODO!
