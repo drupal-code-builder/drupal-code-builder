@@ -4,7 +4,6 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
-use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use CaseConverter\CaseString;

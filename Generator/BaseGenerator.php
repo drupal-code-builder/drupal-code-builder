@@ -5,7 +5,6 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\GeneratorDefinition;
-use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -58,7 +57,7 @@ use MutableTypedData\Data\DataItem;
  *  - Form
  *
  * Property definitions are retrieved lazily for various reasons: see
- * LazyGeneratorDefinition for details.
+ * GeneratorDefinition for details.
  *
  * @section Code generation
  *
@@ -322,10 +321,10 @@ abstract class BaseGenerator implements GeneratorInterface {
    *   be a simple type such as boolean or string, while the generator for
    *   that property is complex because it has internal properties.
    *
-   * @return \DrupalCodeBuilder\Definition\LazyGeneratorDefinition
+   * @return \DrupalCodeBuilder\Definition\GeneratorDefinition
    *   The property definition.
    */
-  public static function getGeneratorDataDefinition(string $component_type = NULL, string $data_type = NULL): LazyGeneratorDefinition {
+  public static function getGeneratorDataDefinition(string $component_type = NULL, string $data_type = NULL): GeneratorDefinition {
     // Check this isn't getting called on BaseGenerator.
     assert(static::class != __CLASS__);
 
@@ -333,7 +332,7 @@ abstract class BaseGenerator implements GeneratorInterface {
 
     $data_type = $data_type ?? static::$dataType;
 
-    $definition = LazyGeneratorDefinition::createFromGeneratorType($component_type, $data_type);
+    $definition = GeneratorDefinition::createFromGeneratorType($component_type, $data_type);
   }
 
   /**
@@ -341,7 +340,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    *
    * The creation of the complete data definition is split between this and
    * self::getGeneratorDataDefinition() in order to prevent various issues:
-   * see docs for LazyGeneratorDefinition for details.
+   * see docs for GeneratorDefinition for details.
    *
    * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
    *   The data definition.

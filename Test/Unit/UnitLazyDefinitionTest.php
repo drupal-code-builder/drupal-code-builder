@@ -5,13 +5,14 @@ namespace DrupalCodeBuilder\Test\Unit;
 use PHPUnit\Framework\TestCase;
 use MutableTypedData\Definition\DataDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
-use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use MutableTypedData\Exception\InvalidDefinitionException;
 use MutableTypedData\Test\VarDumperSetupTrait;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Unit tests for the LazyGeneratorDefinition class.
+ *
+ * TODO: Update or remove these.
  */
 class UnitLazyDefinitionTest extends TestCase {
   use ProphecyTrait;
@@ -41,10 +42,10 @@ class UnitLazyDefinitionTest extends TestCase {
           'plain' => DataDefinition::create('string'),
           // This isn't defined yet in the container until later, but as it's
           // lazy, won't be accessed yet.
-          'lazy' => LazyGeneratorDefinition::createFromGeneratorType('LazyType'),
+          'lazy' => GeneratorDefinition::createFromGeneratorType('LazyType'),
           // This won't defined in the container at all, and so we expect an
           // exception when we try to access it.
-          'lazy_bad' => LazyGeneratorDefinition::createFromGeneratorType('LazyTypeDoesNotExist'),
+          'lazy_bad' => GeneratorDefinition::createFromGeneratorType('LazyTypeDoesNotExist'),
         ])
     );
 
