@@ -132,7 +132,9 @@ class CodeAnalyser {
     // Debug option for the script.
     $debug_int = (int) $this->debug;
 
-    $command = "{$php} {$script_name} '{$autoloader_filepath}' {$debug_int}";
+    // Redirect STDERR to /dev/null, as otherwise any PHP fatal errors show on
+    // the terminal in tests.
+    $command = "{$php} {$script_name} '{$autoloader_filepath}' {$debug_int} 2>/dev/null";
 
     // Open pipes for both input and output.
     $descriptorspec = [
