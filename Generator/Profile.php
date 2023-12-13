@@ -25,12 +25,11 @@ class Profile extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public static function setProperties(PropertyDefinition $definition): void {
-    parent::setProperties($definition);
+  public static function addToGeneratorDefinition($definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition
-      ->setLabel('Profile')
-      ->setName('profile');
+      ->setLabel('Profile');
 
     $definition->addProperties([
       'base' => PropertyDefinition::create('string')
