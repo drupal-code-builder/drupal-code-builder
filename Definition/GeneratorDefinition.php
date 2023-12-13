@@ -38,8 +38,6 @@ class GeneratorDefinition extends PropertyDefinition {
    * @param string $generator_type
    *   The generator type; that is, the short class name without the version
    *   number.
-   * @param string $data_type NO KILL, the GENERATOR tells us this.
-   *   (optional) The data type. Defaults to 'complex'.
    *
    * @return static
    *   The new definition.
