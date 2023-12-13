@@ -278,37 +278,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     ]);
   }
 
-  //  WTF ! FOUR!!! property  methods!!
-
-  /**
-   * Gets the data definition for a given component type.
-   *
-   * This is for use within getPropertyDefinition() and related methods that
-   * build up the overall definition for a root component using different
-   * generator classes.
-   *
-   * For standalone data used in static::requiredComponents(), use
-   * ComponentClassHandler::getStandaloneComponentPropertyDefinition().
-   *
-   * TODO: move this to a task handler?
-   *
-   * @param string $component_type
-   *   The component type.
-   * @param string $data_type
-   *   (optional) The data type, to override the data type defined by the
-   *   Generator class. This is necessary in cases where the property needs to
-   *   be a simple type such as boolean or string, while the generator for
-   *   that property is complex because it has internal properties.
-   *
-   * @return \DrupalCodeBuilder\Definition\PropertyDefinition
-   */
-  protected static function getLazyDataDefinitionForGeneratorType(string $component_type, string $data_type = NULL): PropertyDefinition {
-    $class_handler = \DrupalCodeBuilder\Factory::getContainer()->get('Generate\ComponentClassHandler');
-    $generator_class = $class_handler->getGeneratorClass($component_type);
-
-    return $generator_class::getGeneratorDataDefinition($component_type, $data_type);
-  }
-
   /**
    * Gets the data definition for this generator without the properties.
    *
