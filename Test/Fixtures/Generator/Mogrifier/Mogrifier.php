@@ -29,6 +29,8 @@ class Mogrifier extends RootComponent {
   public static function addToGeneratorDefinition($definition) {
     // Omit the parent call so we don't get a ton of base properties.
 
+    $definition->setLabel('Mogrifier');
+
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string')
         ->setLabel("string_property"),
