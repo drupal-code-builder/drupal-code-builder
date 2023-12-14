@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
 
@@ -10,7 +11,7 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class FormElement extends BaseGenerator {
 
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([

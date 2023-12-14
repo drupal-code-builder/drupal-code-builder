@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -12,7 +13,7 @@ class InfoProperty extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([

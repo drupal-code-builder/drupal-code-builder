@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
@@ -124,7 +125,7 @@ class Module extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
     $definition
