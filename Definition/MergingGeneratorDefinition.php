@@ -72,12 +72,8 @@ class MergingGeneratorDefinition extends PropertyDefinition implements Generator
 
       // Allow the generator class to add or change properties.
       $this->generatorClass::addToGeneratorDefinition($this);
-
-      foreach ($this->properties as $property) {
-        $property->getProperties();
-      }
-
     }
+
     return $this->properties;
   }
 
