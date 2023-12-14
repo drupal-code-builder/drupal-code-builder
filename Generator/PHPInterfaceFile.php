@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -15,8 +16,8 @@ class PHPInterfaceFile extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Remove properties that are not relevant.
     $definition->removeProperty('abstract');
@@ -30,8 +31,6 @@ class PHPInterfaceFile extends PHPClassFile {
         ->setMultiple(TRUE)
         ->setInternal(TRUE)
     ]);
-
-    return $definition;
   }
 
   /**

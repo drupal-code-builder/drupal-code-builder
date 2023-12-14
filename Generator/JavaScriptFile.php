@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -15,15 +16,13 @@ class JavaScriptFile extends AssetFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

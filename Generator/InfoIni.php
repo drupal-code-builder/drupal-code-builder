@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -22,13 +23,11 @@ abstract class InfoIni extends InfoBase {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('filename')
       ->setLiteralDefault('%module.info');
-
-    return $definition;
   }
 
   /**

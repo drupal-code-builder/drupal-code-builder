@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Utility\NestedArray;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
@@ -28,8 +29,8 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'yaml_data' => PropertyDefinition::create('mapping')
@@ -49,8 +50,6 @@ class YMLFile extends File {
       'inline_levels_extra' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

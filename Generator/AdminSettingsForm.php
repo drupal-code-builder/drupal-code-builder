@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Utility\InsertArray;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -15,8 +16,8 @@ class AdminSettingsForm extends Form {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Because this component is declared in the Module root component, we
     // need defaults to work at the UI stage, including those that depend on
@@ -66,8 +67,6 @@ class AdminSettingsForm extends Form {
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

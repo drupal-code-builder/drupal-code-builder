@@ -2,7 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Utility\NestedArray;
@@ -22,8 +24,8 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $properties = [
       // Move the form class name property to the top, and override its default.
@@ -44,7 +46,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
-      'form_elements' => static::getLazyDataDefinitionForGeneratorType('FormElement')
+      'form_elements' => MergingGeneratorDefinition::createFromGeneratorType('FormElement')
         ->setLabel('Form elements')
         ->setMultiple(TRUE),
     ];
@@ -64,8 +66,6 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
     // Set the parent class.
     $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\Form\FormBase');
-
-    return $definition;
   }
 
   /**

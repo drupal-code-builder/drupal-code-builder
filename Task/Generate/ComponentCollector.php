@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\GeneratorDefinitionInterface;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
@@ -61,7 +61,7 @@ use DrupalCodeBuilder\Generator\GeneratorInterface;
  *
  * Component data arrays have their structure defined by data property
  * definitions which each Generator class defines in its
- * getGeneratorDataDefinition() static method.
+ * addToGeneratorDefinition() static method.
  *
  * The component data array for the root component, and any subsequent component
  * data arrays, can produce generators in three ways:
@@ -327,7 +327,7 @@ class ComponentCollector {
     foreach ($component_data as $item_name => $data_item) {
       // dump("spawn $item_name?");
       // We're only interested in component properties.
-      if (!($data_item->getDefinition() instanceof GeneratorDefinition)) {
+      if (!($data_item->getDefinition() instanceof GeneratorDefinitionInterface)) {
         // dump("not spawning $item_name - not generator.");
         continue;
       }
@@ -370,6 +370,7 @@ class ComponentCollector {
           // data from the UI.
           // TODO: make this sort of expansion internal to MTD?
           $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($item_component_type, $item_name);
+          /// ARGH
 
           // Get the public property from the definition. There must be only
           // one for this to make sense!

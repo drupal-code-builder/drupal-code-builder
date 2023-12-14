@@ -2,12 +2,12 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
-use DrupalCodeBuilder\Definition\LazyGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 
 /**
@@ -22,7 +22,7 @@ class PluginType extends BaseGenerator {
    */
   protected static $dataType = 'mutable';
 
-  public static function setProperties(PropertyDefinition $definition): void {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // ARGH common properties! -- root name!
     $definition
       ->setProperties([
@@ -194,7 +194,7 @@ class PluginType extends BaseGenerator {
         }),
       // Experimental. Define the data here that will then be set by
       // self::requiredComponents().
-      'manager' => static::getLazyDataDefinitionForGeneratorType('PluginTypeManager')
+      'manager' => MergingGeneratorDefinition::createFromGeneratorType('PluginTypeManager')
         ->setInternal(TRUE),
     ];
 

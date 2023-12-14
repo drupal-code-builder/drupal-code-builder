@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -12,13 +13,11 @@ class HookImplementation6 extends HookImplementation {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('function_docblock_lines')->getDefault()
       ->setExpression("['Implementation of ' ~ get('..:hook_name') ~ '().']");
-
-    return $definition;
   }
 
 }

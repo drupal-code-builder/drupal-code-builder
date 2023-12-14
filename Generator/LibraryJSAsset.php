@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -12,8 +13,8 @@ class LibraryJSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'filename' => PropertyDefinition::create('string')
@@ -31,8 +32,6 @@ class LibraryJSAsset extends BaseGenerator {
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

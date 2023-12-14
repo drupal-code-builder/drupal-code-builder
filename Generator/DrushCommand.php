@@ -2,7 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -18,8 +20,8 @@ class DrushCommand extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'command_name' => PropertyDefinition::create('string')
@@ -123,11 +125,9 @@ class DrushCommand extends BaseGenerator {
       // self::requiredComponents(). This is mostly needed so that the Service
       // generator has access to the whole data, because it expects to be able
       // to access module generator configuration options.
-      'commands_service' => static::getLazyDataDefinitionForGeneratorType('DrushCommandsService')
+      'commands_service' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommandsService')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

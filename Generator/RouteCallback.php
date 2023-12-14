@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -14,8 +15,8 @@ class RouteCallback extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'provider_class_short_name' => PropertyDefinition::create('string')
@@ -38,8 +39,6 @@ class RouteCallback extends BaseGenerator {
           ->setDependencies('..:provider_class_short_name')
       ),
     ]);
-
-    return $definition;
   }
 
   /**

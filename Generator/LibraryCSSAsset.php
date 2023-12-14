@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -14,8 +15,8 @@ class LibraryCSSAsset extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'filename' => PropertyDefinition::create('string')
@@ -33,8 +34,6 @@ class LibraryCSSAsset extends BaseGenerator {
         ])
         ->setRequired(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

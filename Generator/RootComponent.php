@@ -2,7 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -42,7 +43,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
   public static function configurationDefinition(): PropertyDefinition {
     // Return an empty data definition by default.
     // NOTE: this can't have a root name set because it's also embedded into
-    // data by self::getPropertyDefinition().
+    // data by self::addToGeneratorDefinition().
     return PropertyDefinition::create('complex');
   }
 
@@ -50,10 +51,13 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    * Implements DefinitionProviderInterface's method.
    */
   public static function getDefinition(): PropertyDefinition {
-    $definition = static::getGeneratorDataDefinition();
+    $component_type = static::deriveType(static::class);
+    $definition = MergingGeneratorDefinition::createFromGeneratorType($component_type);
 
-    // Load all the lazy properties now we have the complete definition.
-    $definition->loadLazyProperties();
+    // Root label is set in the component-specific subclass, but name must be
+    // set here as it can't be changed by any further subclasses, e.g.
+    // Module / TestModule.
+    $definition->setName(strtolower($component_type));
 
     return $definition;
   }
@@ -61,17 +65,8 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
   /**
    * {@inheritdoc}
    */
-  public static function setProperties(PropertyDefinition $definition): void {
-    parent::setProperties($definition);
-
-    static::rootComponentPropertyDefinitionAlter($definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Define this here for completeness; child classes should specialize it.
     $definition->addProperties([
@@ -105,8 +100,6 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
           'obsolete' => 'Obsolete',
         ]),
     ]);
-
-    return $definition;
   }
 
   /**

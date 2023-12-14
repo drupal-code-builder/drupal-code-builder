@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -13,8 +14,8 @@ class Permission extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'permission' => PropertyDefinition::create('string')
@@ -43,8 +44,6 @@ class Permission extends BaseGenerator {
         ->setRequired(TRUE)
         ->setLiteralDefault(FALSE),
     ]);
-
-    return $definition;
   }
 
   /**

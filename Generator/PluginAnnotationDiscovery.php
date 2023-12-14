@@ -2,10 +2,11 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\Docblock;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -80,8 +81,8 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
@@ -168,8 +169,6 @@ class PluginAnnotationDiscovery extends PHPClassFileWithInjection {
             ->setLiteral(['TODO: class docs.'])
         ),
     ]);
-
-    return $definition;
   }
 
   public static function defaultPluginTypeData($data_item) {

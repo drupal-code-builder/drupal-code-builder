@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -19,16 +20,14 @@ class EntityListBuilder extends EntityHandler {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // One of 'config' or 'content'.
       'entity_type_group' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

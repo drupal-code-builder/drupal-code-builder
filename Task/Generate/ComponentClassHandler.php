@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -36,21 +37,18 @@ class ComponentClassHandler {
    *   Throws an exception if there is no class found for the component type.
    */
   public function getStandaloneComponentPropertyDefinition(string $component_type, string $machine_name = NULL): PropertyDefinition {
-    $class = $this->getGeneratorClass($component_type);
-
-    // Quick hack. TODO: clean up.
-    $machine_name = $machine_name ?? strtolower($component_type);
-    // TODO: argh! some component types contain ':' characters!!
-    // DIRTY HACK.
-    $machine_name = str_replace(':', '-', $machine_name);
-
-    if (!class_exists($class)) {
-      throw new \InvalidArgumentException(sprintf("No class found for type '%s'", $component_type));
-    }
-
-    $definition = $class::getPropertyDefinition();
+    $definition = MergingGeneratorDefinition::createFromGeneratorType($component_type);
 
     if (!$definition->getName()) {
+      // TODO: Clean up all this machine name hackery.
+      if (empty($machine_name)) {
+        // Quick hack.
+        $machine_name = $machine_name ?? strtolower($component_type);
+      }
+
+      // Some component types contain ':' characters! Argh!
+      $machine_name = str_replace(':', '-', $machine_name);
+
       $definition->setName($machine_name);
     }
 

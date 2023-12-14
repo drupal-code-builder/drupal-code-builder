@@ -13,16 +13,14 @@ class RootGeneratorBase extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition($definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'common' => PropertyDefinition::create('string'),
-      'only_base' => static::getLazyDataDefinitionForGeneratorType('UnrelatedVersionComponent')
+      'only_base' => MergingGeneratorDefinition::createFromGeneratorType('UnrelatedVersionComponent')
         ->setMultiple(TRUE),
     ]);
-
-    return $definition;
   }
 
   public static function rootComponentPropertyDefinitionAlter(PropertyDefinition $definition): void {

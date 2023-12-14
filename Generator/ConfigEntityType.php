@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Utility\InsertArray;
@@ -39,8 +40,8 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Set up the entity type functionality preset options.
     $definition->getProperty('functionality')->setPresets([
@@ -96,8 +97,6 @@ class ConfigEntityType extends EntityTypeBase {
       'id' => 'id',
       'label' => 'label',
     ]);
-
-    return $definition;
   }
 
   /**

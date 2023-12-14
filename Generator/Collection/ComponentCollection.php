@@ -173,7 +173,7 @@ class ComponentCollection implements \IteratorAggregate {
    * @param $local_name
    *   The local name for the component, that is, the name used within the
    *   requesting components list of components to spawn, whether from
-   *   data defined with GeneratorDefinition or from requests.
+   *   data defined with MergingGeneratorDefinition or from requests.
    * @param $component
    *   The component to add.
    * @param $requesting_component

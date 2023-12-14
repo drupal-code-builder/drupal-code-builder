@@ -91,7 +91,7 @@ class Generate extends Base {
    *
    * @param \MutableTypedData\Data\DataItem $component_data
    *  The data for the component. This is defined by the generator class; see
-   *  RootGenerator::getPropertyDefinition().
+   *  RootGenerator::getDefinition().
    * @param $existing_module_files
    *  (optional) An array of existing files for this module. Keys should be
    *  file paths relative to the module, values absolute paths.

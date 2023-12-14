@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -14,8 +15,8 @@ class ServiceProvider extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('relative_class_name')
       ->setExpressionDefault("machineToClass(get('..:root_component_name')) ~ 'ServiceProvider'");
@@ -25,8 +26,6 @@ class ServiceProvider extends PHPClassFile {
 
       $definition->getProperty('parent_class_name')
       ->setLiteralDefault('\Drupal\Core\DependencyInjection\ServiceProviderBase');
-
-    return $definition;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -15,8 +16,8 @@ class Form7 extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The code file to place the form's functions into. This may contain
@@ -27,8 +28,6 @@ class Form7 extends BaseGenerator {
       'form_id' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

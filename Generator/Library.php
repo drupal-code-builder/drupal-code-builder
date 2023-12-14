@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -14,8 +15,8 @@ class Library extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'library_name' => PropertyDefinition::create('string')
@@ -26,10 +27,10 @@ class Library extends BaseGenerator {
         ->setLabel("The version number")
         ->setLiteralDefault("1.x")
         ->setRequired(TRUE),
-      'css_assets' => static::getLazyDataDefinitionForGeneratorType('LibraryCSSAsset')
+      'css_assets' => MergingGeneratorDefinition::createFromGeneratorType('LibraryCSSAsset')
         ->setLabel("CSS file")
         ->setMultiple(TRUE),
-      'js_assets' => static::getLazyDataDefinitionForGeneratorType('LibraryJSAsset')
+      'js_assets' => MergingGeneratorDefinition::createFromGeneratorType('LibraryJSAsset')
         ->setLabel("JS file")
         ->setMultiple(TRUE),
       'dependencies' => PropertyDefinition::create('string')
@@ -52,8 +53,6 @@ class Library extends BaseGenerator {
             ->setExpression("machineToLabel(get('..:..:..:root_name'))")
         ),
     ]);
-
-    return $definition;
   }
 
   /**

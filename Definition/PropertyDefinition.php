@@ -10,7 +10,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 /**
  * Extends the basic property definition with DCB extras.
  */
-class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess {
+class PropertyDefinition extends BasePropertyDefinition implements PropertyListInterface, \ArrayAccess {
 
   // TODO: can this be done with defaults instead??
   protected $acquiringExpression = FALSE;
@@ -47,7 +47,10 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
     }
 
     if ($this->type == 'mutable') {
-      throw new InvalidDefinitionException("Mutable data must have only the type property.");
+      throw new InvalidDefinitionException(sprintf(
+        "Mutable data at %s must have only the type property set.",
+        $this->name
+      ));
     }
 
     // Reverse the array of properties, as we keep adding them after the $after
@@ -275,7 +278,7 @@ class PropertyDefinition extends BasePropertyDefinition implements \ArrayAccess 
    * Load all the lazy properties.
    *
    * Iterates into all properties, so that any definitions which are instances
-   * of LazyGeneratorDefinition load their properties.
+   * of MergingGeneratorDefinition load their properties.
    *
    * TODO: possibly rethink the lazy-loading thing? Can the problem it exists to
    * solve be dealt with instead by changing all report tasks to lazy option

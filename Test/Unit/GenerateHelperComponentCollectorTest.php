@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use Prophecy\Argument;
@@ -20,17 +21,35 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    */
   protected $drupalMajorVersion = 8;
 
+  public function setUp(): void {
+    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
+    \DrupalCodeBuilder\Factory::setEnvironment($environment->reveal());
+
+    $container = \DrupalCodeBuilder\Factory::getContainer();
+
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler(
+      fixtureGeneratorNamespace: 'Generator',
+      useFallbackClass: TRUE,
+    );
+    $container->set('Generate\ComponentClassHandler', $class_handler);
+  }
+
   /**
    * Get a component collector with mocked dependencies.
    *
    * This uses the TestComponentClassHandler from fixtures, which in turns
    * returns a \DrupalCodeBuilder\Test\Fixtures\Generator\SimpleGenerator
    * for components.
+   *
+   * TODO: Why can't we get this from the container?
    */
   protected function getComponentCollector(): ComponentCollector {
     // Set up the ComponentCollector's injected dependencies.
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
+    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler(
+      fixtureGeneratorNamespace: 'Generator',
+      useFallbackClass: TRUE,
+    );
 
     // Create the helper, with dependencies passed in.
     $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
@@ -45,7 +64,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with only the root generator, which itself has no requirements.
    */
   public function testSingleGeneratorNoRequirements() {
-    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setProperties([
         'one' => PropertyDefinition::create('string'),
         'two' => PropertyDefinition::create('string'),
@@ -57,17 +76,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
       'two' => 'bar',
     ]);
 
-    // Set up the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
-
-    // Create the helper, with dependencies passed in.
-    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
-      $environment->reveal(),
-      $class_handler
-    );
-
-    $collection = $component_collector->assembleComponentList($component_data);
+    $collection = $this->getComponentCollector()->assembleComponentList($component_data);
 
     $component_paths = $collection->getComponentRequestPaths();
 
@@ -175,20 +184,20 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @dataProvider providerGeneratorChildNoRequests
    */
   public function testGeneratorChildNoRequests($data_value, $expected_paths) {
-    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
       ->setProperties([
         'one' => PropertyDefinition::create('string'),
-        'component_property_compound_single' => GeneratorDefinition::createFromGeneratorType('compound_a')
+        'component_property_compound_single' => MergingGeneratorDefinition::createFromGeneratorType('compound_a')
           ->setProperties([
             'child_one' => PropertyDefinition::create('string'),
             'child_two' => PropertyDefinition::create('string'),
           ]),
-        'component_property_compound_multiple' => GeneratorDefinition::createFromGeneratorType('compound_b')
+        'component_property_compound_multiple' => MergingGeneratorDefinition::createFromGeneratorType('compound_b')
           ->setMultiple(TRUE)
           ->setProperties([
             'child_one' => PropertyDefinition::create('string'),
-            'child_compound' => GeneratorDefinition::createFromGeneratorType('compound_b_child')
+            'child_compound' => MergingGeneratorDefinition::createFromGeneratorType('compound_b_child')
               ->setProperties([
                 'grandchild_one' => PropertyDefinition::create('string'),
               ]),
@@ -198,15 +207,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $component_data->set($data_value);
 
-    // Mock the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
-    $class_handler = new \DrupalCodeBuilder\Test\Fixtures\Task\TestComponentClassHandler('Generator');
-
-    // Create the helper, with mocks passed in.
-    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
-      $environment->reveal(),
-      $class_handler
-    );
+    $component_collector = $this->getComponentCollector();
 
     $collection = $component_collector->assembleComponentList($component_data);
 
@@ -222,10 +223,10 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * is created for each value.
    */
   public function testMultipleStringGeneratorChildNoRequests() {
-    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
       ->setProperties([
-        'component_property_string_multiple' => GeneratorDefinition::createFromGeneratorType('compound_a', 'string')
+        'component_property_string_multiple' => DeferredGeneratorDefinition::createFromGeneratorType('compound_a', 'string')
           ->setMultiple(TRUE),
       ]);
 

@@ -98,7 +98,7 @@ class Adopt extends Base {
     // data auto-vivifies elements which we don't want to happen, and as we
     // may find components to adopt into empty values.
     foreach ($definition->getProperties() as $name => $definition) {
-      if (!$definition instanceof \DrupalCodeBuilder\Definition\GeneratorDefinition) {
+      if (!$definition instanceof \DrupalCodeBuilder\Definition\MergingGeneratorDefinition) {
         continue;
       }
 

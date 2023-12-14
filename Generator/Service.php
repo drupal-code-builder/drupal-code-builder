@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\StringAssembler;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -20,7 +21,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
   /**
    * Define the component data this component needs to function.
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // Create the presets definition for service tag type property.
     $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
     $service_types_data = $task_handler_report_services->listServiceTypeData();
@@ -126,7 +127,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     ];
 
     // Put the parent definitions after ours.
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
     $parent_properties = $definition->getProperties();
     $properties += $parent_properties;
     $definition->setProperties($properties);
@@ -143,8 +144,6 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
     $definition->getProperty('relative_namespace')
       ->setCallableDefault([static::class, 'defaultRelativeNamespace']);
-
-    return $definition;
   }
 
   public static function defaultPlainClassName($data_item) {

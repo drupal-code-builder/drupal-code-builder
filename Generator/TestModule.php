@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -14,15 +15,15 @@ class TestModule extends Module {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Remove properties for components that test modules don't need.
     foreach ([
       'module_help_text',
       'api',
       'readme',
-      // 'phpunit_tests',
+      'phpunit_tests',
       'tests',
     ] as $property) {
       $definition->removeProperty($property);
@@ -53,8 +54,6 @@ class TestModule extends Module {
 
     $definition->getProperty('component_base_path')
       ->setExpressionDefault('"tests/modules/" ~get("..:root_name")');
-
-    return $definition;
   }
 
   /**

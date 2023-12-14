@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
@@ -45,8 +46,8 @@ class PHPClassFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The class name properties all form an interdependent set.
@@ -189,8 +190,6 @@ class PHPClassFile extends PHPFile {
         ->setMultiple(TRUE)
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
 
@@ -10,8 +11,8 @@ use MutableTypedData\Definition\DefaultDefinition;
  */
 class FormElement extends BaseGenerator {
 
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'form_key' => PropertyDefinition::create('string')
@@ -36,8 +37,6 @@ class FormElement extends BaseGenerator {
         ->setInternal(TRUE)
         ->setLiteralDefault([]),
     ]);
-
-    return $definition;
   }
 
   /**

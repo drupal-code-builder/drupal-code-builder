@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -12,8 +13,8 @@ class PHPFunctionParameter extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'parameter_name' => PropertyDefinition::create('string')
@@ -25,8 +26,6 @@ class PHPFunctionParameter extends BaseGenerator {
       'class_name' => PropertyDefinition::create('string'),
       'method_name' => PropertyDefinition::create('string'),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -2,7 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
 use MutableTypedData\Data\DataItem;
@@ -25,7 +27,7 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // Presets for the different types of test.
     $test_type_presets = [
       'unit' => [
@@ -167,13 +169,13 @@ class PHPUnitTest extends PHPClassFile {
         ->setAutoAcquiredFromRequester(),
       'use_module_dependencies' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE),
-      'test_modules' => static::getLazyDataDefinitionForGeneratorType('TestModule')
+      'test_modules' => MergingGeneratorDefinition::createFromGeneratorType('TestModule')
         ->setLabel('Test modules')
         ->setMultiple(TRUE),
     ];
 
     // Put the parent definitions after ours.
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
     $properties += $definition->getProperties();
     $definition->setProperties($properties);
 
@@ -230,8 +232,6 @@ class PHPUnitTest extends PHPClassFile {
       });
 
     $definition->getProperty('docblock_first_line')->setLiteralDefault("Test case class TODO.");
-
-    return $definition;
   }
 
   /**

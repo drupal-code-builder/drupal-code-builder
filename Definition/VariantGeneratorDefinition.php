@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Definition;
 
+use MutableTypedData\Definition\DataDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use MutableTypedData\Exception\InvalidDefinitionException;
 
@@ -13,9 +14,16 @@ use MutableTypedData\Exception\InvalidDefinitionException;
  * are the ones that get actually instantiated as components.
  *
  * Variants gets their properties from the associated generator's
- * getPropertyDefinition() method.
+ * addToGeneratorDefinition() method.
  */
-class VariantGeneratorDefinition extends VariantDefinition {
+class VariantGeneratorDefinition extends VariantDefinition implements PropertyListInterface {
+
+  /**
+   * Whether properties have been obtained from the generator class yet.
+   *
+   * @var bool
+   */
+  protected bool $generatorPropertiesLoaded = FALSE;
 
   /**
    * The component type.
@@ -49,24 +57,53 @@ class VariantGeneratorDefinition extends VariantDefinition {
   }
 
   /**
-   * Gets the properties for this variant.
-   *
-   * @return array
-   *   The array of property definitions.
-   *
-   * @throws \MutableTypedData\Exception\InvalidDefinitionException
-   *   Throws an exception if the component type has not yet been set.
+   * {@inheritdoc}
+   */
+  public function addProperty(DataDefinition $property): self {
+    if (empty($property->getName())) {
+      throw new InvalidDefinitionException("Properties added with addProperty() must have a machine name set.");
+    }
+
+    $this->properties[$property->getName()] = $property;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProperty(string $name): DataDefinition {
+    if (!isset($this->properties[$name])) {
+      throw new \Exception(sprintf("Property definition '%s' has no child property '$name' defined.",
+        $this->name,
+        $name
+      ));
+    }
+
+    return $this->properties[$name];
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getProperties(): array {
     if (empty($this->componentType)) {
       throw new InvalidDefinitionException("Call to getProperties() when no component type has been set.");
     }
 
-    $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
-    $definition = $class_handler->getStandaloneComponentPropertyDefinition($this->componentType);
+    if (!$this->generatorPropertiesLoaded) {
+      // Set this to TRUE now to avoid recursion, as addToGeneratorDefinition()
+      // may need access to properties.
+      $this->generatorPropertiesLoaded = TRUE;
 
-    return $definition->getProperties();
+      $class_handler = \DrupalCodeBuilder\Factory::getTask('Generate\ComponentClassHandler');
+      $generator_class = $class_handler->getGeneratorClass($this->componentType);
+
+      // Allow the generator class to add or change properties.
+      $generator_class::addToGeneratorDefinition($this);
+    }
+
+    return parent::getProperties();
   }
-
 
 }

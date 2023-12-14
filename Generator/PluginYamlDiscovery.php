@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use CaseConverter\CaseString;
@@ -21,8 +22,8 @@ class PluginYamlDiscovery extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
 
@@ -61,8 +62,6 @@ class PluginYamlDiscovery extends BaseGenerator {
         ),
 
     ]);
-
-    return $definition;
   }
 
   /**

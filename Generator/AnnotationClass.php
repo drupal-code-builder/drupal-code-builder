@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
 
@@ -13,16 +14,14 @@ class AnnotationClass extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // TODO: this is specific to plugins.
       'plugin_relative_namespace' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -14,8 +15,8 @@ class Controller extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $properties = [
       'injected_services' => PropertyDefinition::create('string')
@@ -26,8 +27,6 @@ class Controller extends PHPClassFileWithInjection {
     ];
 
     $definition->addProperties($properties);
-
-    return $definition;
   }
 
   /**

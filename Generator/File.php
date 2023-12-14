@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -35,8 +36,8 @@ class File extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperty(PropertyDefinition::create('string')
       // The name of the file, without the path.
@@ -44,8 +45,6 @@ class File extends BaseGenerator {
       ->setInternal(TRUE)
       ->setRequired(TRUE)
     );
-
-    return $definition;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -34,8 +35,8 @@ class ConfigBundleEntityType extends ConfigEntityType {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Add this right at the start, before the ID, so the ID default value
     // can depend on it. TODO? order doesn't matter any more?
@@ -57,8 +58,6 @@ class ConfigBundleEntityType extends ConfigEntityType {
     $definition->getProperty('parent_class_name')->setDefault(
       DefaultDefinition::create()->setLiteral('\Drupal\Core\Config\Entity\ConfigEntityBundleBase')
     );
-
-    return $definition;
   }
 
   /**

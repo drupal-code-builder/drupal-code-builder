@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -24,8 +25,8 @@ class Hooks extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // An array of requested hooks, as long hook names.
@@ -38,8 +39,6 @@ class Hooks extends BaseGenerator {
       'hook_bodies' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

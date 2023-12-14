@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
 
@@ -13,8 +14,8 @@ class AdminSettingsForm7 extends Form7 {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('code_file')->setLiteralDefault('%module.admin.inc');
 
@@ -23,8 +24,6 @@ class AdminSettingsForm7 extends Form7 {
         ->setExpression("get('..:root_component_name') ~ '_settings_form'")
         ->setDependencies('..:root_component_name')
       );
-
-    return $definition;
   }
 
   /**

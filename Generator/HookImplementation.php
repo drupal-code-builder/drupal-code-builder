@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Utility\InsertArray;
 
@@ -15,8 +16,8 @@ class HookImplementation extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The name of the file that this hook implementation should be placed into.
@@ -38,8 +39,6 @@ class HookImplementation extends PHPFunction {
         $function_name = '%module_' . $short_hook_name;
         return $function_name;
       });
-
-    return $definition;
   }
 
   /**

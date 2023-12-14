@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Utility\NestedArray;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use CaseConverter\CaseString;
@@ -23,8 +24,8 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'path' => PropertyDefinition::create('string')
@@ -349,8 +350,6 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
       //   },
       // ],
     ]);
-
-    return $definition;
   }
 
   /**

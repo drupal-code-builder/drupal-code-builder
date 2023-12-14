@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
@@ -42,7 +43,7 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     $properties = [
       'entity_type_id' => PropertyDefinition::create('string')
         ->setLabel('Entity type ID')
@@ -228,7 +229,7 @@ abstract class EntityTypeBase extends PHPClassFile {
             ->setDependencies('..:entity_type_id')
         );
 
-    $definition = parent::getPropertyDefinition();
+    parent::addToGeneratorDefinition($definition);
 
     // Put the parent definitions after ours.
     $properties += $definition->getProperties();
@@ -255,8 +256,6 @@ abstract class EntityTypeBase extends PHPClassFile {
         // TODO: why do we have the separate entity_interface_name??
         ->setExpression("[get('..:entity_interface_name')]")
     );
-
-    return $definition;
   }
 
   /**

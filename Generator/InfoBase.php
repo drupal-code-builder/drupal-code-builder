@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use Ckr\Util\ArrayMerger;
 
@@ -44,8 +45,8 @@ abstract class InfoBase extends File {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Properties acquired from the requesting root component.
     foreach (static::$propertiesAcquiredFromRoot as $property_name) {
@@ -60,8 +61,6 @@ abstract class InfoBase extends File {
       ->setMultiple(TRUE)
       ->setAcquiringExpression('requester.module_dependencies.export()')
     );
-
-    return $definition;
   }
 
   /**

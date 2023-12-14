@@ -2,7 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
@@ -48,8 +49,8 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Set up the entity type functionality preset options.
     $definition->getProperty('functionality')->setPresets([
@@ -175,7 +176,7 @@ class ContentEntityType extends EntityTypeBase {
             ->setExpression("get('..:entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
-      static::getLazyDataDefinitionForGeneratorType('ConfigBundleEntityType')
+      MergingGeneratorDefinition::createFromGeneratorType('ConfigBundleEntityType')
         ->setName('bundle_entity')
         ->setLabel('Bundle config entity type')
         ->setDescription("Creates a config entity type which provides the bundles for this entity type. "
@@ -303,8 +304,6 @@ class ContentEntityType extends EntityTypeBase {
       // Replace the existing value.
       $component_data->set($ordered_value);
     });
-
-    return $definition;
   }
 
   /**

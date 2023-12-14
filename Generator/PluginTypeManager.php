@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -19,8 +20,8 @@ class PluginTypeManager extends Service {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Properties acquired from the requesting PluginType component.
     $plugin_type_properties = [
@@ -40,8 +41,6 @@ class PluginTypeManager extends Service {
           ->setAutoAcquiredFromRequester()
       );
     }
-
-    return $definition;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -17,8 +18,8 @@ class Readme extends File {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'readable_name' => PropertyDefinition::create('string')
@@ -29,8 +30,6 @@ class Readme extends File {
       // The extension is in lowercase for good reasons which I don't remember
       // right now, but probably to do with Windows being rubbish.
       ->setLiteralDefault('README.md');
-
-    return $definition;
   }
 
   /**

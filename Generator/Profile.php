@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
 
@@ -25,12 +26,11 @@ class Profile extends RootComponent {
   /**
    * {@inheritdoc}
    */
-  public static function setProperties(PropertyDefinition $definition): void {
-    parent::setProperties($definition);
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition
-      ->setLabel('Profile')
-      ->setName('profile');
+      ->setLabel('Profile');
 
     $definition->addProperties([
       'base' => PropertyDefinition::create('string')

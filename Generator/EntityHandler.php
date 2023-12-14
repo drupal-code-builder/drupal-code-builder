@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -14,8 +15,8 @@ class EntityHandler extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'entity_type_id' => PropertyDefinition::create('string')
@@ -34,8 +35,6 @@ class EntityHandler extends PHPClassFile {
 
     $definition->getProperty('class_docblock_lines')->setDefault(DefaultDefinition::create()
       ->setExpression("['Provides the ' ~ get('..:handler_label') ~ ' handler for the ' ~ get('..:entity_type_label') ~ ' entity.']"));
-
-    return $definition;
   }
 
 }

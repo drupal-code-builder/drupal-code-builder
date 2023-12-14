@@ -2,7 +2,10 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 
 /**
  * Drupal 7 version of component.
@@ -19,8 +22,8 @@ class Module7 extends Module8 {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->removeProperty('plugins');
     $definition->removeProperty('plugin_types');
@@ -37,16 +40,14 @@ class Module7 extends Module8 {
     $definition->removeProperty('forms');
 
     $definition->addProperties([
-      'router_items' => static::getLazyDataDefinitionForGeneratorType('RouterItem', 'string')
+      'router_items' => DeferredGeneratorDefinition::createFromGeneratorType('RouterItem', 'string')
         ->setLabel("Menu paths")
         ->setDescription("Paths for hook_menu(), eg 'path/foo'")
         ->setMultiple(TRUE),
-      'settings_form' => static::getLazyDataDefinitionForGeneratorType('AdminSettingsForm', 'boolean')
+      'settings_form' => DeferredGeneratorDefinition::createFromGeneratorType('AdminSettingsForm', 'boolean')
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
     ]);
-
-    return $definition;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -16,16 +17,14 @@ class EntityForm extends EntityHandler {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // The entity link template that the form save() method redirects to.
       'redirect_link_template' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
     ]);
-
-    return $definition;
   }
 
   /**

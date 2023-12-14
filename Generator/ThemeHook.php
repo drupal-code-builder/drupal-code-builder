@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -12,8 +13,8 @@ class ThemeHook extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       // Needs to be set to public even though this is not actually seen.
@@ -23,8 +24,6 @@ class ThemeHook extends BaseGenerator {
         // TODO: doesn't work in UI!
         ->setValidators('machine_name'),
     ]);
-
-    return $definition;
   }
 
   /**

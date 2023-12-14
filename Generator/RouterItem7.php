@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -15,8 +16,8 @@ class RouterItem7 extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'path' => PropertyDefinition::create('string')
@@ -41,8 +42,6 @@ class RouterItem7 extends BaseGenerator {
         ->setInternal(TRUE)
         ->setLiteralDefault("array('access content')"),
     ]);
-
-    return $definition;
   }
 
   /**

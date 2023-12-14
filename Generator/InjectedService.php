@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use CaseConverter\StringAssembler;
@@ -18,8 +19,8 @@ class InjectedService extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
       'service_id' => PropertyDefinition::create('string')
@@ -40,8 +41,6 @@ class InjectedService extends BaseGenerator {
       'omit_assignment' => PropertyDefinition::create('boolean'),
       'class_name' => PropertyDefinition::create('string'),
     ]);
-
-    return $definition;
   }
 
   public static function defaultServiceInfo($data_item) {

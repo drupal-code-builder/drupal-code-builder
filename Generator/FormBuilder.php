@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -15,16 +16,14 @@ class FormBuilder extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  public static function getPropertyDefinition(): PropertyDefinition {
-    $definition = parent::getPropertyDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('declaration')
       ->setDefault(DefaultDefinition::create()
         ->setCallable([static::class, 'defaultDeclaration'])
         ->setDependencies('..:function_name')
     );
-
-    return $definition;
   }
 
   public static function defaultDeclaration($data_item) {
