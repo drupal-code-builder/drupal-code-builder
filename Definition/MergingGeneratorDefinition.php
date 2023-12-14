@@ -17,6 +17,11 @@ namespace DrupalCodeBuilder\Definition;
  */
 class MergingGeneratorDefinition extends PropertyDefinition implements GeneratorDefinitionInterface {
 
+  /**
+   * Whether properties have been obtained from the generator class yet.
+   *
+   * @var bool
+   */
   protected bool $generatorPropertiesLoaded = FALSE;
 
   /**
