@@ -278,7 +278,7 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
    * Load all the lazy properties.
    *
    * Iterates into all properties, so that any definitions which are instances
-   * of GeneratorDefinition load their properties.
+   * of MergingGeneratorDefinition load their properties.
    *
    * TODO: possibly rethink the lazy-loading thing? Can the problem it exists to
    * solve be dealt with instead by changing all report tasks to lazy option

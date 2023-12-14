@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
 use MutableTypedData\Data\DataItem;
@@ -168,7 +168,7 @@ class PHPUnitTest extends PHPClassFile {
         ->setAutoAcquiredFromRequester(),
       'use_module_dependencies' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE),
-      'test_modules' => GeneratorDefinition::createFromGeneratorType('TestModule')
+      'test_modules' => MergingGeneratorDefinition::createFromGeneratorType('TestModule')
         ->setLabel('Test modules')
         ->setMultiple(TRUE),
     ];

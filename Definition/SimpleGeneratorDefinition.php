@@ -10,9 +10,9 @@ namespace DrupalCodeBuilder\Definition;
  * TODO Rename this - it's not about simple, it's about proxied - the property
  * in the parent is not the same as the generator's properties.
  *
- * TODO don't subclass GeneratorDefinition, it's different.
+ * TODO don't subclass MergingGeneratorDefinition, it's different.
  */
-class SimpleGeneratorDefinition extends GeneratorDefinition {
+class SimpleGeneratorDefinition extends MergingGeneratorDefinition {
 
   /**
    * Creates a new definition from a component type.

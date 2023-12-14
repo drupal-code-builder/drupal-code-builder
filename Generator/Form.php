@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\DefaultDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Utility\NestedArray;
@@ -45,7 +45,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
-      'form_elements' => GeneratorDefinition::createFromGeneratorType('FormElement')
+      'form_elements' => MergingGeneratorDefinition::createFromGeneratorType('FormElement')
         ->setLabel('Form elements')
         ->setMultiple(TRUE),
     ];

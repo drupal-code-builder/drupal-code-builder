@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
@@ -327,7 +327,7 @@ class ComponentCollector {
     foreach ($component_data as $item_name => $data_item) {
       // dump("spawn $item_name?");
       // We're only interested in component properties.
-      if (!($data_item->getDefinition() instanceof GeneratorDefinition)) {
+      if (!($data_item->getDefinition() instanceof MergingGeneratorDefinition)) {
         // dump("not spawning $item_name - not generator.");
         continue;
       }

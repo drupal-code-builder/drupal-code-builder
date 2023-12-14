@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Generator\PHPClassFile;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -26,7 +26,7 @@ class ComponentPHPClassFile10Test extends TestBase {
    * work.
    */
   public function testClassNameInterdependentProperties() {
-    $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('PHPClassFile');
     // Need to explicitly lazy load.
     $definition->loadLazyProperties();
     $definition->setName('root');
@@ -48,7 +48,7 @@ class ComponentPHPClassFile10Test extends TestBase {
     // dump($value);
 
     // Now add a relative namespace literal default.
-    $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('PHPClassFile');
     $definition->loadLazyProperties();
     $definition->getProperty('relative_namespace')
       ->setDefault(DefaultDefinition::create()
@@ -68,7 +68,7 @@ class ComponentPHPClassFile10Test extends TestBase {
     $this->assertEquals('Drupal\%module\Plugin\views\MyClass', $data->qualified_class_name->value);
 
     // Set the relative class name.
-    $definition = GeneratorDefinition::createFromGeneratorType('PHPClassFile');
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('PHPClassFile');
     $definition->loadLazyProperties();
 
     $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);

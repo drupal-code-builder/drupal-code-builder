@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -37,7 +37,7 @@ class ComponentClassHandler {
    *   Throws an exception if there is no class found for the component type.
    */
   public function getStandaloneComponentPropertyDefinition(string $component_type, string $machine_name = NULL): PropertyDefinition {
-    $definition = GeneratorDefinition::createFromGeneratorType($component_type);
+    $definition = MergingGeneratorDefinition::createFromGeneratorType($component_type);
 
     if (!$definition->getName()) {
       // TODO: Clean up all this machine name hackery.

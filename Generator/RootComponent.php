@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -51,7 +51,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    */
   public static function getDefinition(): PropertyDefinition {
     $component_type = static::deriveType(static::class);
-    $definition = GeneratorDefinition::createFromGeneratorType($component_type);
+    $definition = MergingGeneratorDefinition::createFromGeneratorType($component_type);
 
     // Root label is set in the component-specific subclass, but name must be
     // set here as it can't be changed by any further subclasses, e.g.

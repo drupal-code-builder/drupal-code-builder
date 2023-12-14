@@ -18,7 +18,7 @@ class RootGeneratorBase extends RootComponent {
 
     $definition->addProperties([
       'common' => PropertyDefinition::create('string'),
-      'only_base' => GeneratorDefinition::createFromGeneratorType('UnrelatedVersionComponent')
+      'only_base' => MergingGeneratorDefinition::createFromGeneratorType('UnrelatedVersionComponent')
         ->setMultiple(TRUE),
     ]);
   }

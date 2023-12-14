@@ -5,6 +5,9 @@ namespace DrupalCodeBuilder\Definition;
 /**
  * Defines a data property from a generator.
  *
+ * The data definition from the generator is merged into this definition
+ * object.
+ *
  * This gets the data type from the generator class, and lazily allows the
  * geneator class to add to the definition.
  *
@@ -12,7 +15,7 @@ namespace DrupalCodeBuilder\Definition;
  * care of removing properties from a parent class that would cause recursion:
  * for example the Module and TestModule generators.
  */
-class GeneratorDefinition extends PropertyDefinition {
+class MergingGeneratorDefinition extends PropertyDefinition {
 
   protected bool $generatorPropertiesLoaded = FALSE;
 

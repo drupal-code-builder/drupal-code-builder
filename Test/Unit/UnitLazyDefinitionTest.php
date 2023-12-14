@@ -42,10 +42,10 @@ class UnitLazyDefinitionTest extends TestCase {
           'plain' => DataDefinition::create('string'),
           // This isn't defined yet in the container until later, but as it's
           // lazy, won't be accessed yet.
-          'lazy' => GeneratorDefinition::createFromGeneratorType('LazyType'),
+          'lazy' => MergingGeneratorDefinition::createFromGeneratorType('LazyType'),
           // This won't defined in the container at all, and so we expect an
           // exception when we try to access it.
-          'lazy_bad' => GeneratorDefinition::createFromGeneratorType('LazyTypeDoesNotExist'),
+          'lazy_bad' => MergingGeneratorDefinition::createFromGeneratorType('LazyTypeDoesNotExist'),
         ])
     );
 

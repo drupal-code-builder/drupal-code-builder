@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Fixtures\Task;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 
@@ -73,7 +73,7 @@ class TestComponentClassHandler extends ComponentClassHandler {
 
   public function getStandaloneComponentPropertyDefinition($component_type, $machine_name = NULL): PropertyDefinition {
     // ARGH too test-specific!
-    return GeneratorDefinition::createFromGeneratorType($component_type, 'complex')
+    return MergingGeneratorDefinition::createFromGeneratorType($component_type, 'complex')
       ->setProperties([
         'primary' => PropertyDefinition::create('string'),
       ]);

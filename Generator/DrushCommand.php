@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -124,7 +124,7 @@ class DrushCommand extends BaseGenerator {
       // self::requiredComponents(). This is mostly needed so that the Service
       // generator has access to the whole data, because it expects to be able
       // to access module generator configuration options.
-      'commands_service' => GeneratorDefinition::createFromGeneratorType('DrushCommandsService')
+      'commands_service' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommandsService')
         ->setInternal(TRUE),
     ]);
   }

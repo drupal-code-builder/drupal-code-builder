@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Test\Fixtures\Generator\Mogrifier;
 
 use DrupalCodeBuilder\Generator\BaseGenerator;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class MogrifierComplexComponent extends BaseGenerator {
@@ -15,7 +15,7 @@ class MogrifierComplexComponent extends BaseGenerator {
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string')
         ->setLabel('label'),
-      'recursive' => GeneratorDefinition::createFromGeneratorType('SubMogrifier')
+      'recursive' => MergingGeneratorDefinition::createFromGeneratorType('SubMogrifier')
         ->setLabel('label'),
     ]);
   }

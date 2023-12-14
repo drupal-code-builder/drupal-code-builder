@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\VariantDefinition;
@@ -166,21 +166,21 @@ class Module extends RootComponent {
       'module_help_text' => PropertyDefinition::create('string')
         ->setLabel('Module help text')
         ->setDescription('The text to show on the site help page. This automatically adds hook_help().'),
-      'settings_form' => GeneratorDefinition::createFromGeneratorType('AdminSettingsForm')
+      'settings_form' => MergingGeneratorDefinition::createFromGeneratorType('AdminSettingsForm')
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a router item."),
-      'forms' => GeneratorDefinition::createFromGeneratorType('Form')
+      'forms' => MergingGeneratorDefinition::createFromGeneratorType('Form')
         ->setLabel("Forms")
         ->setDescription("The forms for this module to provide.")
         ->setMultiple(TRUE),
-      'services' => GeneratorDefinition::createFromGeneratorType('Service')
+      'services' => MergingGeneratorDefinition::createFromGeneratorType('Service')
         ->setLabel("Services")
         ->setDescription('The services for this module to provide.')
         ->setMultiple(TRUE),
       'service_provider' => SimpleGeneratorDefinition::createFromGeneratorType('ServiceProvider', 'boolean')
         ->setLabel("Service provider")
         ->setDescription('A service provider alters existing services or defines services dynamically.'),
-      'permissions' => GeneratorDefinition::createFromGeneratorType('Permission')
+      'permissions' => MergingGeneratorDefinition::createFromGeneratorType('Permission')
         ->setLabel("Permissions")
         ->setDescription('The permissions for this module to provide.')
         ->setMultiple(TRUE),
@@ -282,33 +282,33 @@ class Module extends RootComponent {
       //     $component_data['hooks'] = $hooks;
       //   }
       // ),
-      'content_entity_types' => GeneratorDefinition::createFromGeneratorType('ContentEntityType')
+      'content_entity_types' => MergingGeneratorDefinition::createFromGeneratorType('ContentEntityType')
         ->setLabel('Content entity types')
         ->setMultiple(TRUE),
-      'config_entity_types' => GeneratorDefinition::createFromGeneratorType('ConfigEntityType')
+      'config_entity_types' => MergingGeneratorDefinition::createFromGeneratorType('ConfigEntityType')
         ->setLabel('Config entity types')
         ->setMultiple(TRUE),
-      'plugins' => GeneratorDefinition::createFromGeneratorType('Plugin')
+      'plugins' => MergingGeneratorDefinition::createFromGeneratorType('Plugin')
         ->setLabel('Plugins')
         ->setMultiple(TRUE),
-      'plugin_types' => GeneratorDefinition::createFromGeneratorType('PluginType')
+      'plugin_types' => MergingGeneratorDefinition::createFromGeneratorType('PluginType')
         ->setLabel('Plugin types')
         ->setMultiple(TRUE),
       'theme_hooks' => SimpleGeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
         ->setLabel("Theme hooks")
         ->setDescription("The name of theme hooks, without the leading 'theme_'.")
         ->setMultiple(TRUE),
-      'router_items' => GeneratorDefinition::createFromGeneratorType('RouterItem')
+      'router_items' => MergingGeneratorDefinition::createFromGeneratorType('RouterItem')
         ->setLabel("Routes")
         ->setMultiple(TRUE),
-      'dynamic_routes' =>  GeneratorDefinition::createFromGeneratorType('RouteCallback')
+      'dynamic_routes' =>  MergingGeneratorDefinition::createFromGeneratorType('RouteCallback')
         ->setLabel('Dynamic route providers')
         ->setMultiple(TRUE),
-      'library' => GeneratorDefinition::createFromGeneratorType('Library')
+      'library' => MergingGeneratorDefinition::createFromGeneratorType('Library')
         ->setLabel('Libraries')
         ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
         ->setMultiple(TRUE),
-      'drush_commands' => GeneratorDefinition::createFromGeneratorType('DrushCommand')
+      'drush_commands' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommand')
         ->setLabel("Drush commands")
         ->setMultiple(TRUE),
       'api' => SimpleGeneratorDefinition::createFromGeneratorType('API', 'boolean')
@@ -317,7 +317,7 @@ class Module extends RootComponent {
       'readme' => SimpleGeneratorDefinition::createFromGeneratorType('Readme', 'boolean')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
-      'phpunit_tests' => GeneratorDefinition::createFromGeneratorType('PHPUnitTest')
+      'phpunit_tests' => MergingGeneratorDefinition::createFromGeneratorType('PHPUnitTest')
         ->setLabel("PHPUnit test case class")
         ->setMultiple(TRUE),
       // 'phpunit_tests' go here, but can't be added at this point because it
@@ -350,7 +350,7 @@ class Module extends RootComponent {
       ->setLabel('Module')
       ->setName('module');
 
-    $definition->addPropertyAfter('readme', GeneratorDefinition::createFromGeneratorType('PHPUnitTest')
+    $definition->addPropertyAfter('readme', MergingGeneratorDefinition::createFromGeneratorType('PHPUnitTest')
       ->setName('phpunit_tests')
       ->setLabel("PHPUnit test case class")
       ->setMultiple(TRUE)

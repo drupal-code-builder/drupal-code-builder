@@ -6,7 +6,7 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 
 /**
@@ -193,7 +193,7 @@ class PluginType extends BaseGenerator {
         }),
       // Experimental. Define the data here that will then be set by
       // self::requiredComponents().
-      'manager' => GeneratorDefinition::createFromGeneratorType('PluginTypeManager')
+      'manager' => MergingGeneratorDefinition::createFromGeneratorType('PluginTypeManager')
         ->setInternal(TRUE),
     ];
 

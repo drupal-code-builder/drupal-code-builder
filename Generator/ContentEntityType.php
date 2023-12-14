@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
 use DrupalCodeBuilder\Generator\Render\FluentMethodCall;
@@ -175,7 +175,7 @@ class ContentEntityType extends EntityTypeBase {
             ->setExpression("get('..:entity_type_id') ~ '_type'")
             ->setDependencies('..:entity_type_id')
         ),
-      GeneratorDefinition::createFromGeneratorType('ConfigBundleEntityType')
+      MergingGeneratorDefinition::createFromGeneratorType('ConfigBundleEntityType')
         ->setName('bundle_entity')
         ->setLabel('Bundle config entity type')
         ->setDescription("Creates a config entity type which provides the bundles for this entity type. "

@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\DefaultDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -26,10 +26,10 @@ class Library extends BaseGenerator {
         ->setLabel("The version number")
         ->setLiteralDefault("1.x")
         ->setRequired(TRUE),
-      'css_assets' => GeneratorDefinition::createFromGeneratorType('LibraryCSSAsset')
+      'css_assets' => MergingGeneratorDefinition::createFromGeneratorType('LibraryCSSAsset')
         ->setLabel("CSS file")
         ->setMultiple(TRUE),
-      'js_assets' => GeneratorDefinition::createFromGeneratorType('LibraryJSAsset')
+      'js_assets' => MergingGeneratorDefinition::createFromGeneratorType('LibraryJSAsset')
         ->setLabel("JS file")
         ->setMultiple(TRUE),
       'dependencies' => PropertyDefinition::create('string')

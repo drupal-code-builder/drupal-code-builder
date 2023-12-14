@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -64,7 +64,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * Request with only the root generator, which itself has no requirements.
    */
   public function testSingleGeneratorNoRequirements() {
-    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setProperties([
         'one' => PropertyDefinition::create('string'),
         'two' => PropertyDefinition::create('string'),
@@ -184,20 +184,20 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @dataProvider providerGeneratorChildNoRequests
    */
   public function testGeneratorChildNoRequests($data_value, $expected_paths) {
-    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
       ->setProperties([
         'one' => PropertyDefinition::create('string'),
-        'component_property_compound_single' => GeneratorDefinition::createFromGeneratorType('compound_a')
+        'component_property_compound_single' => MergingGeneratorDefinition::createFromGeneratorType('compound_a')
           ->setProperties([
             'child_one' => PropertyDefinition::create('string'),
             'child_two' => PropertyDefinition::create('string'),
           ]),
-        'component_property_compound_multiple' => GeneratorDefinition::createFromGeneratorType('compound_b')
+        'component_property_compound_multiple' => MergingGeneratorDefinition::createFromGeneratorType('compound_b')
           ->setMultiple(TRUE)
           ->setProperties([
             'child_one' => PropertyDefinition::create('string'),
-            'child_compound' => GeneratorDefinition::createFromGeneratorType('compound_b_child')
+            'child_compound' => MergingGeneratorDefinition::createFromGeneratorType('compound_b_child')
               ->setProperties([
                 'grandchild_one' => PropertyDefinition::create('string'),
               ]),
@@ -223,7 +223,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * is created for each value.
    */
   public function testMultipleStringGeneratorChildNoRequests() {
-    $definition = GeneratorDefinition::createFromGeneratorType('my_root')
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
       ->setProperties([
         'component_property_string_multiple' => SimpleGeneratorDefinition::createFromGeneratorType('compound_a', 'string')

@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -39,14 +39,14 @@ use MutableTypedData\Data\DataItem;
  * @section data_definition Data definition
  *
  * RootComponent classes implement DefinitionProviderInterface to return their
- * data definition. This uses GeneratorDefinition with that class, which in turn
+ * data definition. This uses MergingGeneratorDefinition with that class, which in turn
  * allows the generator class to add properties in addToGeneratorDefinition().
  *
  * Some complex properties in the definition get their own properties from
  * another generator: for example, the Module generator defines an admin
  * settings form complex property, and the child properties for that are
  * defined in the AdminSettingsForm generator. This is done with
- * GeneratorDefinition::createFromGeneratorType().
+ * MergingGeneratorDefinition::createFromGeneratorType().
  *
  * All generator classes use class inheritance to build the definition: for
  * example, this hiearchy reduces code repetition:
@@ -57,7 +57,7 @@ use MutableTypedData\Data\DataItem;
  *  - Form
  *
  * Property definitions are retrieved lazily for various reasons: see
- * GeneratorDefinition for details.
+ * MergingGeneratorDefinition for details.
  *
  * @section Code generation
  *

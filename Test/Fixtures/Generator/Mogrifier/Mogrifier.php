@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Test\Fixtures\Generator\Mogrifier;
 
 use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
 use DrupalCodeBuilder\Generator\RootComponent;
-use DrupalCodeBuilder\Definition\GeneratorDefinition;
+use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -36,10 +36,10 @@ class Mogrifier extends RootComponent {
         ->setLabel("string_property"),
       'boolean_generator_property' => SimpleGeneratorDefinition::createFromGeneratorType('MogrifierBooleanComponent', 'boolean')
         ->setLabel("Boolean Generator"),
-      'complex_generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')
+      'complex_generator_property' => MergingGeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')
         ->setLabel("Compound Generator")
         ->setMultiple(TRUE),
-      'mutable_generator_property' => GeneratorDefinition::createFromGeneratorType('MogrifierMutableComponent')
+      'mutable_generator_property' => MergingGeneratorDefinition::createFromGeneratorType('MogrifierMutableComponent')
         ->setLabel("Mutable Generator")
         ->setMultiple(TRUE),
     ]);
@@ -63,10 +63,10 @@ Generate
 
 Module, Root, implements DefinitionProviderInterface::getDefinition()
   - build Definition, add properties
-    - do GeneratorDefinition::createFromGeneratorType('MogrifierCompoundComponent')
+    - do MergingGeneratorDefinition::createFromGeneratorType('MogrifierCompoundComponent')
       - add label, multiple.
 
-GeneratorDefinition::createFromGeneratorType
+MergingGeneratorDefinition::createFromGeneratorType
   - resolve class from generator type
   - call Generator class::getDefinition
 
@@ -85,24 +85,24 @@ Generate
   - do getDefinition()
 
 Module, Root, implement DefinitionProviderInterface::getDefinition()
-  - build GeneratorDefinition('CompoundGenerator') - WHO DOES THIS?
+  - build MergingGeneratorDefinition('CompoundGenerator') - WHO DOES THIS?
     we need to get stuff from CompoundGenerator!
   - add name
   - add label ???????
   - lazy load properties NON RECURSIVE! since we go back into getDefinition anyway!
 
-1. GeneratorDefinition::createFromGeneratorType
+1. MergingGeneratorDefinition::createFromGeneratorType
 
 2. lazy load of properties
-  GeneratorDefinition::getProperties()
+  MergingGeneratorDefinition::getProperties()
   - resolve class from generator type
   - call Module::getProperties()
 
 Module::getProperties
-  - do GeneratorDefinition::createFromGeneratorType('MogrifierCompoundComponent')
+  - do MergingGeneratorDefinition::createFromGeneratorType('MogrifierCompoundComponent')
     - add label, multiple.
 
-GeneratorDefinition::createFromGeneratorType
+MergingGeneratorDefinition::createFromGeneratorType
   - resolve class from generator type
   - call Generator class::getDefinition
 
