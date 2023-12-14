@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
@@ -48,7 +49,7 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
     // Set up the entity type functionality preset options.

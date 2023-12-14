@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -14,7 +15,7 @@ class Controller extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
     $properties = [
