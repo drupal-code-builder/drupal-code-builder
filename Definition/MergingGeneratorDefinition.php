@@ -65,15 +65,12 @@ class MergingGeneratorDefinition extends PropertyDefinition implements Generator
    * {@inheritdoc}
    */
   public function getProperties() {
-    // TODO: this is icky! make it an explicit lazy loader that has to be called!
-    // Get the properties of all children to lazy load them.
     if (!$this->generatorPropertiesLoaded) {
       // Set this to TRUE now to avoid recursion, as addToGeneratorDefinition()
       // may need access to properties.
-      // ARGH! UGLY!
       $this->generatorPropertiesLoaded = TRUE;
 
-      // Add the properties from the generator class.
+      // Allow the generator class to add or change properties.
       $this->generatorClass::addToGeneratorDefinition($this);
 
       foreach ($this->properties as $property) {
