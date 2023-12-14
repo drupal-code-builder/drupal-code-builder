@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\StringAssembler;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -20,7 +21,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
   /**
    * Define the component data this component needs to function.
    */
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // Create the presets definition for service tag type property.
     $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
     $service_types_data = $task_handler_report_services->listServiceTypeData();
