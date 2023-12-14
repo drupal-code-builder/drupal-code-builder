@@ -13,7 +13,7 @@ namespace DrupalCodeBuilder\Definition;
  * For example, API, Readme, ServiceProvider, where a boolean property on the
  * host data suffices, but a generator is used to create the code.
  */
-class DeferredGeneratorDefinition extends PropertyDefinition {
+class DeferredGeneratorDefinition extends PropertyDefinition implements GeneratorDefinitionInterface {
 
   /**
    * Constructor.
@@ -51,12 +51,9 @@ class DeferredGeneratorDefinition extends PropertyDefinition {
   }
 
   /**
-   * Gets the component type for this property.
-   *
-   * @return string
-   *   The component type.
+   * {@inheritdoc}
    */
-  public function getComponentType() :string {
+  public function getComponentType(): string {
     return $this->componentType;
   }
 

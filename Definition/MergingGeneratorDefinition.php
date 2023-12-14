@@ -15,7 +15,7 @@ namespace DrupalCodeBuilder\Definition;
  * care of removing properties from a parent class that would cause recursion:
  * for example the Module and TestModule generators.
  */
-class MergingGeneratorDefinition extends PropertyDefinition {
+class MergingGeneratorDefinition extends PropertyDefinition implements GeneratorDefinitionInterface {
 
   protected bool $generatorPropertiesLoaded = FALSE;
 
@@ -54,12 +54,9 @@ class MergingGeneratorDefinition extends PropertyDefinition {
   }
 
   /**
-   * Gets the component type for this property.
-   *
-   * @return string
-   *   The component type.
+   * {@inheritdoc}
    */
-  public function getComponentType() :string {
+  public function getComponentType(): string {
     // TODO: Handle mutable data and switch the component class here!
     return $this->componentType;
   }
