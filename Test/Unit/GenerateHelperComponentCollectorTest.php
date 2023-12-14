@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use Prophecy\Argument;
@@ -226,7 +226,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
     $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
       ->setProperties([
-        'component_property_string_multiple' => SimpleGeneratorDefinition::createFromGeneratorType('compound_a', 'string')
+        'component_property_string_multiple' => DeferredGeneratorDefinition::createFromGeneratorType('compound_a', 'string')
           ->setMultiple(TRUE),
       ]);
 

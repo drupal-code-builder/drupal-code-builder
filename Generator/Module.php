@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Definition\OptionDefinition;
@@ -177,7 +177,7 @@ class Module extends RootComponent {
         ->setLabel("Services")
         ->setDescription('The services for this module to provide.')
         ->setMultiple(TRUE),
-      'service_provider' => SimpleGeneratorDefinition::createFromGeneratorType('ServiceProvider', 'boolean')
+      'service_provider' => DeferredGeneratorDefinition::createFromGeneratorType('ServiceProvider', 'boolean')
         ->setLabel("Service provider")
         ->setDescription('A service provider alters existing services or defines services dynamically.'),
       'permissions' => MergingGeneratorDefinition::createFromGeneratorType('Permission')
@@ -294,7 +294,7 @@ class Module extends RootComponent {
       'plugin_types' => MergingGeneratorDefinition::createFromGeneratorType('PluginType')
         ->setLabel('Plugin types')
         ->setMultiple(TRUE),
-      'theme_hooks' => SimpleGeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
+      'theme_hooks' => DeferredGeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
         ->setLabel("Theme hooks")
         ->setDescription("The name of theme hooks, without the leading 'theme_'.")
         ->setMultiple(TRUE),
@@ -311,10 +311,10 @@ class Module extends RootComponent {
       'drush_commands' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommand')
         ->setLabel("Drush commands")
         ->setMultiple(TRUE),
-      'api' => SimpleGeneratorDefinition::createFromGeneratorType('API', 'boolean')
+      'api' => DeferredGeneratorDefinition::createFromGeneratorType('API', 'boolean')
         ->setLabel("api.php file")
         ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
-      'readme' => SimpleGeneratorDefinition::createFromGeneratorType('Readme', 'boolean')
+      'readme' => DeferredGeneratorDefinition::createFromGeneratorType('Readme', 'boolean')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
       'phpunit_tests' => MergingGeneratorDefinition::createFromGeneratorType('PHPUnitTest')

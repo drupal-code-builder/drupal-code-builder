@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Definition;
  *
  * TODO don't subclass MergingGeneratorDefinition, it's different.
  */
-class SimpleGeneratorDefinition extends MergingGeneratorDefinition {
+class DeferredGeneratorDefinition extends MergingGeneratorDefinition {
 
   /**
    * Creates a new definition from a component type.

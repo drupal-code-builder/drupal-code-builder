@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 
 /**
  * Drupal 8 version of component.
@@ -17,7 +17,7 @@ class Module8 extends Module {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
-      'tests' => SimpleGeneratorDefinition::createFromGeneratorType('Tests', 'boolean')
+      'tests' => DeferredGeneratorDefinition::createFromGeneratorType('Tests', 'boolean')
         ->setLabel("Simpletest test case class")
         ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
     ]);

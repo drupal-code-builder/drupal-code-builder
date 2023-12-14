@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Fixtures\Generator\Mogrifier;
 
-use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\Generator\RootComponent;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -34,7 +34,7 @@ class Mogrifier extends RootComponent {
     $definition->addProperties([
       'string_property' => PropertyDefinition::create('string')
         ->setLabel("string_property"),
-      'boolean_generator_property' => SimpleGeneratorDefinition::createFromGeneratorType('MogrifierBooleanComponent', 'boolean')
+      'boolean_generator_property' => DeferredGeneratorDefinition::createFromGeneratorType('MogrifierBooleanComponent', 'boolean')
         ->setLabel("Boolean Generator"),
       'complex_generator_property' => MergingGeneratorDefinition::createFromGeneratorType('MogrifierComplexComponent')
         ->setLabel("Compound Generator")

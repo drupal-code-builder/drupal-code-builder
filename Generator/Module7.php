@@ -3,7 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\SimpleGeneratorDefinition;
+use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 
 /**
@@ -39,11 +39,11 @@ class Module7 extends Module8 {
     $definition->removeProperty('forms');
 
     $definition->addProperties([
-      'router_items' => SimpleGeneratorDefinition::createFromGeneratorType('RouterItem', 'string')
+      'router_items' => DeferredGeneratorDefinition::createFromGeneratorType('RouterItem', 'string')
         ->setLabel("Menu paths")
         ->setDescription("Paths for hook_menu(), eg 'path/foo'")
         ->setMultiple(TRUE),
-      'settings_form' => SimpleGeneratorDefinition::createFromGeneratorType('AdminSettingsForm', 'boolean')
+      'settings_form' => DeferredGeneratorDefinition::createFromGeneratorType('AdminSettingsForm', 'boolean')
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
     ]);
