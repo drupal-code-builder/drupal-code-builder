@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
@@ -265,7 +266,7 @@ abstract class BaseGenerator implements GeneratorInterface {
    * @param \DrupalCodeBuilder\Definition\PropertyDefinition $definition
    *   The basic definition.
    */
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // Add the basic properties.
     $definition->addProperties([
       'root_component_name' => PropertyDefinition::create('string')
