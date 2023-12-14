@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
@@ -21,7 +22,7 @@ class PluginType extends BaseGenerator {
    */
   protected static $dataType = 'mutable';
 
-  public static function addToGeneratorDefinition($definition) {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // ARGH common properties! -- root name!
     $definition
       ->setProperties([
