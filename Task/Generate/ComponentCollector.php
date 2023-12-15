@@ -388,8 +388,6 @@ class ComponentCollector {
           $single_property_name = reset($component_property_names);
 
           foreach ($data_item as $delta => $simple_delta_item) {
-            $definition = $this->classHandler->getStandaloneComponentPropertyDefinition($item_component_type, $item_name);
-
             $new_data_item = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
             $new_data_item->setParent($data_item, $delta);
 
