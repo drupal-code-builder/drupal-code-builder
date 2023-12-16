@@ -371,7 +371,7 @@ class Module extends RootComponent {
       'short_description' => $info_file_data['description'] ?? '',
       'module_package' => $info_file_data['package'] ?? '',
       'module_dependencies' => $info_file_data['dependencies'] ?? [],
-      'lifecycle' => $info_file_data['lifecycle'] ?? '',
+      'lifecycle' => $info_file_data['lifecycle'] ?? NULL,
     ];
 
     $data = DrupalCodeBuilderDataItemFactory::createFromProvider(static::class);
