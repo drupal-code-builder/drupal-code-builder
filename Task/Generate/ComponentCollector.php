@@ -213,19 +213,16 @@ class ComponentCollector {
    * - Components which the component itself requests in its
    *   requiredComponents() method.
    *
+   * The new component is added to the current component collection.
+   *
    * @param \MutableTypedData\Data\DataItem $component_data
    *   The component data array.
    * @param \DrupalCodeBuilder\Generator\GeneratorInterface|null $requesting_component
    *   (optiona) The generator that is in scope when the components are
    *   requested, or NULL if this is the first iteration and we are building the
    *   root component.
-   *
-   * @return
-   *   The new generator that the top level of the data array is requesting, or
-   *   NULL if the data is a duplicate set. Note that nothing needs to be done
-   *   with the return; the generator gets added to $this->component_collection.
    */
-  protected function getComponentsFromData(DataItem $component_data, ?GeneratorInterface $requesting_component) {
+  protected function getComponentsFromData(DataItem $component_data, ?GeneratorInterface $requesting_component): void {
     $name = $component_data->getName();
 
     // Prepend the parent name to array data items, as their name is just the
@@ -491,9 +488,6 @@ class ComponentCollector {
     // TODO: lots to figure out here!
     $item_required_subcomponent_list = $generator->requiredComponents();
 
-    // Collect the resulting components so we can set IDs for containment.
-    $required_components = [];
-
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
@@ -570,14 +564,11 @@ class ComponentCollector {
 
       // dump($required_item_data);
 
-      $main_required_component = $this->getComponentsFromData($required_item_data, $generator);
-      $required_components[$required_item_name] = $main_required_component;
+      $this->getComponentsFromData($required_item_data, $generator);
     }
 
     $this->debug($chain, "done");
     array_pop($chain);
-
-    return $generator;
   }
 
   /**
