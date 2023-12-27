@@ -53,7 +53,10 @@ class DependencyInjection {
       return [];
     }
 
-    $parameters = explode(',', $matches[1]);
+    // Trim whitespace and filter, to allow for a terminal comma after the
+    // last create() parameter, which will result in an empty final item in the
+    // exploded array.
+    $parameters = array_filter(explode(',', trim($matches[1])));
 
     $create_container_extractions = [];
     foreach (array_slice($parameters, $fixed_parameter_count) as $i => $parameter) {
