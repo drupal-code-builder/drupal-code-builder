@@ -61,6 +61,7 @@ class ComponentForm10Test extends TestBase {
     $method_tester->assertReturnsString('test_module_my_form');
 
     $form_builder_tester = $php_tester->getFormBuilderTester('buildForm');
+    $form_builder_tester->assertHasLine('// $form = parent::buildForm($form, $form_state);');
     $form_builder_tester->assertElementCount(1);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
 
@@ -69,6 +70,60 @@ class ComponentForm10Test extends TestBase {
 
     $method_tester = $php_tester->getMethodTester('submitForm');
     $method_tester->assertMethodDocblockHasInheritdoc();
+  }
+
+  /**
+   * Test generating a form with custom form elements.
+   */
+  public function testFormGenerationWithCustomElements() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'forms' => [
+        0 => [
+          'plain_class_name' => 'MyForm',
+          'form_elements' => [
+            0 => [
+              'form_key' => 'my_element',
+              'element_type' => 'textfield',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Form/MyForm.php",
+    ], $files);
+
+    $form_file = $files["src/Form/MyForm.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $form_file);
+    $php_tester->assertDrupalCodingStandards([
+      // Excluded because of the buildForm() commented-out code.
+      'Drupal.Commenting.InlineComment.SpacingAfter',
+      'Drupal.Commenting.InlineComment.InvalidEndChar',
+    ]);
+    $php_tester->assertHasClass('Drupal\test_module\Form\MyForm');
+    $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
+
+    $method_tester = $php_tester->getMethodTester('getFormId');
+    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->assertReturnsString('test_module_my_form');
+
+    // TODO: Can't use FormBuilderTester because the assertions in its
+    // constructor will fail. See
+    // https://github.com/drupal-code-builder/drupal-code-builder/issues/323.
+    $form_builder_tester = $php_tester->getMethodTester('buildForm');
+    $form_builder_tester->assertHasLine('// $form = parent::buildForm($form, $form_state);');
   }
 
   /**
