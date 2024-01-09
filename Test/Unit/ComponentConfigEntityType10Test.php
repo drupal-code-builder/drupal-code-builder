@@ -465,7 +465,7 @@ class ComponentConfigEntityType10Test extends TestBase {
     $php_tester->assertHasMethods(['form', 'submitForm']);
 
     // Check the form elements in the entity's form handler.
-    $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    $form_builder_tester = $php_tester->getFormBuilderTester('form');
     $form_builder_tester->assertElementCount(3);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
     $form_builder_tester->assertElementType('id', 'machine_name');

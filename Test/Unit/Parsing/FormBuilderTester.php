@@ -39,14 +39,14 @@ class FormBuilderTester extends PHPMethodTester {
    *   The PhpParser method node.
    * @param $file_tester
    *   The file tester.
+   * @param string $php_code
+   *   The complete PHP code being tested.
    * @param $extra_statement_count
    *   (optional) The number of statements between the parent constructor call
    *   (if present) and the first form element. Defaults to 0.
    */
-  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $extra_statement_count = 0) {
-    $this->methodNode = $method_node;
-    $this->methodName = $method_node->name;
-    $this->fileTester = $file_tester;
+  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $php_code, $extra_statement_count = 0) {
+    parent::__construct($method_node, $file_tester, $php_code);
 
     // Check the parent class.
     $class_node = reset($this->fileTester->parser_nodes['classes']);

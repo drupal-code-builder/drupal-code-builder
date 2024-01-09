@@ -75,22 +75,6 @@ class PHPMethodTester {
   }
 
   /**
-   * Gets a form builder tester for this method.
-   *
-   * TODO: move this to PHPTester.
-   *
-   * @param $extra_statement_count
-   *   (optional) The number of statements between the parent constructor call
-   *   (if present) and the first form element. Defaults to 0.
-   *
-   * @return FormBuilderTester
-   *   The form builder tester object.
-   */
-  public function getFormBuilderTester($extra_statement_count = 0) {
-    return new FormBuilderTester($this->methodNode, $this->fileTester, $extra_statement_count);
-  }
-
-  /**
    * Assert the method docblock has an 'inheritdoc' tag.
    *
    * @param string $message

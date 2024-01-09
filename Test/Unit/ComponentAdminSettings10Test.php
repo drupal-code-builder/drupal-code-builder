@@ -65,7 +65,7 @@ class ComponentAdminSettings10Test extends TestBase {
     $method_tester->assertMethodDocblockHasInheritdoc();
     $method_tester->assertReturnsString('test_module_settings_form');
 
-    $form_builder_tester = $php_tester->getMethodTester('buildForm')->getFormBuilderTester(1);
+    $form_builder_tester = $php_tester->getFormBuilderTester('buildForm', 1);
     $form_builder_tester->assertElementCount(1);
 
     $php_tester->assertHasMethod('validateForm');

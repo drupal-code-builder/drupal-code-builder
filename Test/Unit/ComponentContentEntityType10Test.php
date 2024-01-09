@@ -1470,7 +1470,7 @@ class ComponentContentEntityType10Test extends TestBase {
 
     // Check the form elements in the bundle entity's form handler.
     // TODO: allow call to parent in the form builder.
-    // $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    // $form_builder_tester = $php_tester->getFormBuilderTester('form');
     // $form_builder_tester->assertElementCount(0);
 
     $save_method_tester = $php_tester->getMethodTester('save');
@@ -1536,7 +1536,7 @@ class ComponentContentEntityType10Test extends TestBase {
     $entity_type_form_file = $files['src/Form/KittyCatTypeForm.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_type_form_file);
-    $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    $form_builder_tester = $php_tester->getFormBuilderTester('form');
     $form_builder_tester->assertElementCount(4);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
     $form_builder_tester->assertElementType('id', 'machine_name');
@@ -1697,7 +1697,7 @@ class ComponentContentEntityType10Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Entity\ContentEntityForm');
     $php_tester->assertHasMethods(['form', 'submitForm', 'save']);
 
-    $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    $form_builder_tester = $php_tester->getFormBuilderTester('form');
     $form_builder_tester->assertElementCount(0);
 
     $save_method_tester = $php_tester->getMethodTester('save');
@@ -1715,7 +1715,7 @@ class ComponentContentEntityType10Test extends TestBase {
     $php_tester->assertHasMethods(['form', 'submitForm']);
 
     // Check the bundle entity form.
-    $form_builder_tester = $php_tester->getMethodTester('form')->getFormBuilderTester();
+    $form_builder_tester = $php_tester->getFormBuilderTester('form');
     $form_builder_tester->assertElementCount(4);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
     $form_builder_tester->assertElementType('id', 'machine_name');

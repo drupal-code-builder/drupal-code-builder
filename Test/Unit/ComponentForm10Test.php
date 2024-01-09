@@ -60,7 +60,7 @@ class ComponentForm10Test extends TestBase {
     $method_tester->assertMethodDocblockHasInheritdoc();
     $method_tester->assertReturnsString('test_module_my_form');
 
-    $form_builder_tester = $php_tester->getMethodTester('buildForm')->getFormBuilderTester();
+    $form_builder_tester = $php_tester->getFormBuilderTester('buildForm');
     $form_builder_tester->assertElementCount(1);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
 

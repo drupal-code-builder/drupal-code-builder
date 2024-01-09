@@ -1046,6 +1046,23 @@ class PHPTester {
   }
 
   /**
+   * Gets a form builder tester for the form builder method method.
+   *
+   * @param string $method_name
+   *   The method name of the form builder. This is 'buildForm' for plain forms
+   *   and 'form' for entity forms.
+   * @param $extra_statement_count
+   *   (optional) The number of statements between the parent constructor call
+   *   (if present) and the first form element. Defaults to 0.
+   *
+   * @return FormBuilderTester
+   *   The form builder tester object.
+   */
+  public function getFormBuilderTester(string $method_name, $extra_statement_count = 0): FormBuilderTester {
+    return new FormBuilderTester($this->parser_nodes['methods'][$method_name], $this, $this->phpCode, $extra_statement_count);
+  }
+
+  /**
    * Gets a specialized method tester for the baseFieldDefinitions() method.
    *
    * @return DrupalCodeBuilder\Test\Unit\Parsing\BaseFieldDefinitionsTester
