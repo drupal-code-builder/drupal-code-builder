@@ -24,6 +24,11 @@ class FormBuilder extends PHPFunction {
         ->setCallable([static::class, 'defaultDeclaration'])
         ->setDependencies('..:function_name')
     );
+
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('form_type')
+      ->setInternal(TRUE)
+    );
   }
 
   public static function defaultDeclaration($data_item) {
@@ -53,9 +58,7 @@ class FormBuilder extends PHPFunction {
 
     $parent_call_line = "£form = parent::{$this->component_data['function_name']}(£form, £form_state);";
 
-    // Ideally we'd switch on the form base class here, but we don't know it
-    // here.
-    if ($this->component_data->function_name->value == 'buildForm') {
+    if ($this->component_data->form_type->value == 'plain form') {
       $body_code[] = "// Uncomment this line if you change the base class.";
       $body_code[] = "// $parent_call_line";
     }
@@ -82,6 +85,16 @@ class FormBuilder extends PHPFunction {
       $body_code = array_merge($body_code, $element_lines);
 
       $body_code[] = '];';
+    }
+
+    if ($this->component_data->form_type->value == 'plain form') {
+      $body_code = array_merge($body_code, [
+        '',
+        "£form['submit'] = [",
+        "  '#type' => 'submit',",
+        "  '#value' => £this->t('Submit'),",
+        "];",
+      ]);
     }
 
     $body_code[] = '';

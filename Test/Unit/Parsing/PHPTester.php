@@ -1054,12 +1054,15 @@ class PHPTester {
    * @param $extra_statement_count
    *   (optional) The number of statements between the parent constructor call
    *   (if present) and the first form element. Defaults to 0.
+   * @param $lenient_for_descriptions
+   *   (optional) If TRUE, skip the assertion that all form elements must have
+   *   a #description.
    *
    * @return FormBuilderTester
    *   The form builder tester object.
    */
-  public function getFormBuilderTester(string $method_name, $extra_statement_count = 0): FormBuilderTester {
-    return new FormBuilderTester($this->parser_nodes['methods'][$method_name], $this, $this->phpCode, $extra_statement_count);
+  public function getFormBuilderTester(string $method_name, $extra_statement_count = 0, $lenient_for_descriptions = FALSE): FormBuilderTester {
+    return new FormBuilderTester($this->parser_nodes['methods'][$method_name], $this, $this->phpCode, $extra_statement_count, $lenient_for_descriptions);
   }
 
   /**

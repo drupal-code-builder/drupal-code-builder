@@ -44,8 +44,11 @@ class FormBuilderTester extends PHPMethodTester {
    * @param $extra_statement_count
    *   (optional) The number of statements between the parent constructor call
    *   (if present) and the first form element. Defaults to 0.
+   * @param $lenient_for_descriptions
+   *   (optional) If TRUE, skip the assertion that all form elements must have
+   *   a #description.
    */
-  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $php_code, $extra_statement_count = 0) {
+  public function __construct(ClassMethod $method_node, PHPTester $file_tester, $php_code, $extra_statement_count = 0, $lenient_for_descriptions = FALSE) {
     parent::__construct($method_node, $file_tester, $php_code);
 
     // Check the parent class.
@@ -99,6 +102,18 @@ class FormBuilderTester extends PHPMethodTester {
       Assert::assertEquals('submit', $submit_button_element_data['type'], "The last form element is a submit button.");
       Assert::assertArrayHasKey('#value', $submit_button_element_data['attributes'], "The submit button has a value attribute.");
     }
+    else {
+      if (empty($form_element_statements)) {
+        // Trivially passes that there is no submit button.
+      }
+      else {
+        $last_element_statement = end($form_element_statements);
+        reset($form_element_statements);
+
+        $submit_button_element_data = $this->analyseElementArrayNode($last_element_statement->expr->expr);
+        Assert::assertNotEquals('submit', $submit_button_element_data['type'], "The last form element is a submit button.");
+      }
+    }
 
     // Analyse each statement to build up information about the form element
     // it represents.
@@ -141,7 +156,9 @@ class FormBuilderTester extends PHPMethodTester {
       foreach ($this->formElements as $form_element_name => $form_element) {
         Assert::assertArrayHasKey('type', $form_element, "The form element {$form_element_name} has a type set.");
         Assert::assertArrayHasKey('#title', $form_element['attributes'], "The form element {$form_element_name} has a title.");
-        Assert::assertArrayHasKey('#description', $form_element['attributes'], "The form element {$form_element_name} has a description.");
+        if (!$lenient_for_descriptions) {
+          Assert::assertArrayHasKey('#description', $form_element['attributes'], "The form element {$form_element_name} has a description.");
+        }
       }
     }
   }

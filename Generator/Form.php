@@ -173,6 +173,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
+        'form_type' => 'plain form',
         'function_name' => 'buildForm',
         'body' => [
           "// Uncomment this line if you change the base class.",

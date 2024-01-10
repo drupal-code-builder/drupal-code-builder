@@ -39,6 +39,7 @@ class EntityForm extends EntityHandler {
         'component_type' => 'FormBuilder',
         'containing_component' => '%requester',
         'docblock_inherit' => TRUE,
+        'form_type' => 'entity form',
         'function_name' => 'form',
         'body' => [
           '$form = parent::form($form, $form_state);',
