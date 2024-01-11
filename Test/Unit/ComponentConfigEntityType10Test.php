@@ -469,7 +469,9 @@ class ComponentConfigEntityType10Test extends TestBase {
     $form_builder_tester->assertElementCount(3);
     $form_builder_tester->assertAllElementsHaveDefaultValue();
     $form_builder_tester->assertElementType('id', 'machine_name');
+    $form_builder_tester->assertElementIsRequired('id');
     $form_builder_tester->assertElementType('label', 'textfield');
+    $form_builder_tester->assertElementIsRequired('label');
     $form_builder_tester->assertElementType('breed', 'textfield');
 
     // Check the list builder file.

@@ -246,6 +246,23 @@ class FormBuilderTester extends PHPMethodTester {
   }
 
   /**
+   * Asserts a specified form element is required.
+   *
+   * @param string $element_name
+   *   The element name.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertElementIsRequired($element_name, $message = NULL) {
+    $message = $message ?? "The form's '{$element_name}' element is required.";
+
+    $this->assertHasElementName($element_name);
+
+    Assert::assertArrayHasKey('#required', $this->formElements[$element_name]['attributes']);
+    // TODO: Can't do attribute values yet.
+  }
+
+  /**
    * Asserts a specified form element has an attribute.
    *
    * TODO: Should allow checking the value as well, but that's going to be
