@@ -446,6 +446,16 @@ class ComponentRouterItem10Test extends TestBase {
             'access_type' => 'access',
           ],
         ],
+        [
+          'path' => '/my/path/with-params/{node}/{param}',
+          'title' => 'My Controller Base Page',
+          'controller' => [
+            'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -458,6 +468,7 @@ class ComponentRouterItem10Test extends TestBase {
       "src/Controller/MyPathNoBaseController.php",
       "src/Controller/MyPathControllerBaseController.php",
       "src/Controller/MyPathStringTranslationController.php",
+      "src/Controller/MyPathWithParamsNodeParamController.php",
     ], $files);
 
     $controller_file = $files["src/Controller/MyPathNoBaseController.php"];
@@ -487,6 +498,17 @@ class ComponentRouterItem10Test extends TestBase {
     $php_tester->assertHasMethod('content');
     $php_tester->assertClassHasTraits([
       'Drupal\Core\StringTranslation\StringTranslationTrait',
+    ]);
+
+    $controller_file = $files["src/Controller/MyPathWithParamsNodeParamController.php"];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathWithParamsNodeParamController");
+    $php_tester->assertClassHasNoParent();
+    $method_tester = $php_tester->getMethodTester('content');
+    $method_tester->assertHasParameters([
+      'node' => 'Drupal\node\NodeInterface',
+      'param' => NULL,
     ]);
   }
 

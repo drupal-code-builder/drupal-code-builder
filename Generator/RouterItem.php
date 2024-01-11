@@ -495,11 +495,31 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     if ($this->component_data->controller->controller_type->value == 'controller') {
       $controller_class_required = TRUE;
 
+      $path = $this->component_data->path->value;
+      $path_parameters = array_filter(explode('/', $path), fn ($piece) => str_starts_with($piece, '{'));
+      $entity_types = \DrupalCodeBuilder\Factory::getTask('ReportEntityTypes')->getAllData();
+      $content_method_parameters = [];
+      foreach ($path_parameters as $path_parameter) {
+        $parameter_variable_name = trim($path_parameter, '{}');
+        $parameter_definition = [
+          'name' => $parameter_variable_name,
+        ];
+
+        // Determine if the parameter is intended to be an upcasted entity, and
+        // add the entity interface as a type if so.
+        if (isset($entity_types[$parameter_variable_name]['interface'])) {
+          $parameter_definition['typehint'] = $entity_types[$parameter_variable_name]['interface'];
+        }
+
+        $content_method_parameters[] = $parameter_definition;
+      }
+
       $components["controller-content"] = [
         'component_type' => 'PHPFunction',
         'function_name' => 'content',
         'containing_component' => "%requester:controller",
         'prefixes' => ['public'],
+        'parameters' => $content_method_parameters,
         'function_docblock_lines' => ["Callback for the {$this->component_data['route_name']} route."],
       ];
     }
