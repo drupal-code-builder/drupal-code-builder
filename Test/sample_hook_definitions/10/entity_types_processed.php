@@ -4,21 +4,25 @@ array (
   array (
     'label' => 'Block',
     'group' => 'configuration',
+    'interface' => '\\Drupal\\block\\BlockInterface',
   ),
   'node_type' => 
   array (
     'label' => 'Content type',
     'group' => 'configuration',
+    'interface' => '\\Drupal\\node\\NodeTypeInterface',
   ),
   'node' => 
   array (
     'label' => 'Content',
     'group' => 'content',
+    'interface' => '\\Drupal\\node\\NodeInterface',
   ),
   'user' => 
   array (
     'label' => 'User',
     'group' => 'content',
+    'interface' => '\\Drupal\\user\\UserInterface',
   ),
   'user_role' => 
   array (
