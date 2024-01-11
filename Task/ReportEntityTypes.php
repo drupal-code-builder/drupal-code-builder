@@ -52,4 +52,19 @@ class ReportEntityTypes extends ReportHookDataFolder implements OptionsProviderI
     return $list;
   }
 
+  /**
+   * Gets all the data.
+   *
+   * @return array
+   *   An array keyed by the item ID.
+   */
+  public function getAllData(): array {
+    // TODO: move this to a trait.
+    if (!isset($this->data)) {
+      $this->data = $this->environment->getStorage()->retrieve('entity_types');
+    }
+
+    return $this->data;
+  }
+
 }
