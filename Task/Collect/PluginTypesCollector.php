@@ -364,6 +364,7 @@ class PluginTypesCollector extends CollectorBase  {
     // we handle.
     $known_discovery_classes = [
       'Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery',
+      'Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations',
       'Drupal\Core\Plugin\Discovery\YamlDiscovery',
       // We don't handle this type; only migrations use it. But we don't want
       // to ascend the class hierarchy for this type as then we'll get
@@ -411,6 +412,7 @@ class PluginTypesCollector extends CollectorBase  {
 
     switch ($discovery_short_name) {
       case 'AnnotatedClassDiscovery':
+      case 'AttributeDiscoveryWithAnnotations':
         $this->addPluginTypeServiceDataAnnotated($data, $service, $discovery);
         break;
       case 'YamlDiscovery':
