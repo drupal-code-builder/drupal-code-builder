@@ -6,6 +6,7 @@ use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
+use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Data\DataItem;
 
@@ -257,9 +258,11 @@ class PHPClassFile extends PHPFile {
    */
   protected function phpClassCode(): array {
     $class_doc_block = $this->getClassDocBlock();
+    $class_attributes = $this->getClassAttributes();
 
     $class_code = array_merge(
       $class_doc_block->render(),
+      $class_attributes?->render() ?? [],
       $this->class_declaration(),
       $this->classCodeBody(),
       [
@@ -295,6 +298,16 @@ class PHPClassFile extends PHPFile {
     }
 
     return $docblock;
+  }
+
+  /**
+   * Produces the class attributes.
+   *
+   * @return \DrupalCodeBuilder\Generator\Render\PhpAttributes|null
+   *   An attribute object if this class has attributes.
+   */
+  protected function getClassAttributes(): ?PhpAttributes {
+    return NULL;
   }
 
   /**
