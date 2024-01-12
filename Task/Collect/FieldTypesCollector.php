@@ -67,13 +67,26 @@ class FieldTypesCollector extends CollectorBase  {
     $field_types_data = [];
 
     foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+      // Some field types brokenly don't define a description.
+      if (isset($plugin_definition['description'])) {
+        // Babysit field type descriptions which have gone crazy in 10.2.
+        if (is_array($plugin_definition['description'])) {
+          $description = (string) $plugin_definition['description'][0];
+        }
+        else {
+          $description = (string) $plugin_definition['description'];
+        }
+      }
+      else {
+        $description = (string) $plugin_definition['label'];
+      }
+
       $field_types_data[$plugin_id] = [
         'type' => $plugin_id,
         // Labels and descriptions need to be stringified from
         // TranslatableMarkup.
         'label' => (string) $plugin_definition['label'],
-        // Some field types brokenly don't define a description.
-        'description' => (string) ( $plugin_definition['description'] ?? $plugin_definition['label'] ),
+        'description' => $description,
         // Some of the weirder plugins don't have these.
         'default_widget' => $plugin_definition['default_widget'] ?? '',
         'default_formatter' => $plugin_definition['default_formatter'] ?? '',
