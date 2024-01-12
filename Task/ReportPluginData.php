@@ -64,6 +64,7 @@ class ReportPluginData extends ReportHookDataFolder
    *   (optional) The short name of a discovery class to limit the plugin list
    *   by. Possible values include:
    *    - AnnotatedClassDiscovery
+   *    - AttributeDiscoveryWithAnnotations
    *    - YamlDiscovery
    *
    * @return
@@ -145,6 +146,8 @@ class ReportPluginData extends ReportHookDataFolder
     // TODO: move all this to analysis!
     $types = [
       'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery' => 'annotation',
+      // TODO: temporary, until attribute discovery plugins are supported.
+      'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations' => 'annotation',
       'Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery' => 'yaml',
       'Drupal\Core\Config\Schema\ConfigSchemaDiscovery' => 'yaml', // ????
     ];
