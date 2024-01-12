@@ -8,7 +8,7 @@ array (
   'label' => 
   array (
     'type' => 'label',
-    'label' => 'Label',
+    'label' => 'Optional label',
   ),
   'text' => 
   array (

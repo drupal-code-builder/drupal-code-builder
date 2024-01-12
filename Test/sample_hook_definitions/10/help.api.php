@@ -8,6 +8,28 @@
 use Drupal\Core\Url;
 
 /**
+ * @defgroup help_docs Help and documentation
+ * @{
+ * Documenting modules, themes, and install profiles
+ *
+ * @section sec_topics Help Topics
+ * Modules, themes, and install profiles can have a subdirectory help_topics
+ * that contains one or more Help Topics, to provide help to administrative
+ * users. These are shown on the main admin/help page. See
+ * @link https://www.drupal.org/docs/develop/documenting-your-project/help-topic-standards Help Topic Standards @endlink
+ * for more information.
+ *
+ * @section sec_hook hook_help
+ * Modules can implement hook_help() to provide a module overview (shown on the
+ * main admin/help page). This hook implementation can also provide help text
+ * that is shown in the Help block at the top of administrative pages. See the
+ * hook_help() documentation and
+ * @link https://www.drupal.org/docs/develop/documenting-your-project/help-text-standards Help text standards @endlink
+ * for more information.
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -31,7 +53,7 @@ use Drupal\Core\Url;
  * - Module overview help, see content_translation_help(). Module overview
  *   help should follow
  *   @link https://www.drupal.org/node/632280 the standard help template. @endlink
- * - Page-specific help using only routes, see book_help().
+ * - Page-specific help using only routes, see node_help().
  * - Page-specific help using routes and $request, see block_help().
  *
  * @param string $route_name
@@ -77,6 +99,17 @@ function hook_help_section_info_alter(array &$info) {
   $info['hook_help']['title'] = t('Overviews of modules');
   // Move the module overviews section to the end.
   $info['hook_help']['weight'] = 500;
+}
+
+/**
+ * Perform alterations on help topic definitions.
+ *
+ * @param array $info
+ *   Array of help topic plugin definitions keyed by their plugin ID.
+ */
+function hook_help_topics_info_alter(array &$info) {
+  // Alter the help topic to be displayed on admin/help.
+  $info['example.help_topic']['top_level'] = TRUE;
 }
 
 /**

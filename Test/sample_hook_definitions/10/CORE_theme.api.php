@@ -68,6 +68,23 @@
  * rendered by the Twig template; the processed variables that the Twig template
  * receives are documented in the header of the default Twig template file.
  *
+ * Theme hooks can declare a variable deprecated using the reserved
+ * 'deprecations' variable. For example:
+ * @code
+ *  search_result' => [
+ *   'variables' => [
+ *     'result' => NULL,
+ *     'new_result' => NULL,
+ *     'plugin_id' => NULL,
+ *     'deprecations' => [
+ *       'result' => "'result' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_result' instead. See https://www.example.com."
+ *     ]
+ *   ],
+ * ],
+ * @endcode
+ * Template engines should trigger a deprecation error if a deprecated
+ * variable is used in a template.
+ *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
  * it is more common for themes to override default implementations provided by
@@ -688,9 +705,6 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   (in this case 'node__article') is available in
  *   $variables['theme_hook_original'].
  *
- * @return array
- *   An array of theme suggestions.
- *
  * @see hook_theme_suggestions_HOOK_alter()
  */
 function hook_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
@@ -1225,13 +1239,15 @@ function hook_page_bottom(array &$page_bottom) {
  *     the standard preprocess functions to run. This can be used to give a
  *     theme FULL control over how variables are set. For example, if a theme
  *     wants total control over how certain variables in the page.html.twig are
- *     set, this can be set to true. Please keep in mind that when this is used
- *     by a theme, that theme becomes responsible for making sure necessary
- *     variables are set.
+ *     set, this can be set to true. Keep in mind that when this is used by a
+ *     theme, that theme becomes responsible for making sure necessary variables
+ *     are set.
  *   - type: (automatically derived) Where the theme hook is defined:
  *     'module', 'theme_engine', or 'theme'.
  *   - theme path: The directory path of the theme or module. If not defined,
  *     it is determined during the registry process.
+ *   - deprecated: The deprecated key marks a twig template as deprecated with
+ *     a custom message.
  *
  * @see themeable
  * @see hook_theme_registry_alter()

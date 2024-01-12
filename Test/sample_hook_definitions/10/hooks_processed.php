@@ -1757,5 +1757,23 @@ array (
   $info[\'hook_help\'][\'weight\'] = 500;
 ',
     ),
+    'hook_help_topics_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_help_topics_info_alter',
+      'definition' => 'function hook_help_topics_info_alter(array &$info)',
+      'description' => 'Perform alterations on help topic definitions.',
+      'destination' => '%module.module',
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'help',
+      'core' => true,
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/10/help.api.php',
+      'body' => '
+  // Alter the help topic to be displayed on admin/help.
+  $info[\'example.help_topic\'][\'top_level\'] = TRUE;
+',
+    ),
   ),
 );

@@ -8,7 +8,7 @@ array (
     'service_component_namespace' => 'Drupal\\Core\\Block',
     'type_label' => 'block',
     'alter_hook_name' => 'block_alter',
-    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
     'subdir' => 'Plugin/Block',
     'plugin_interface' => 'Drupal\\Core\\Block\\BlockPluginInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
