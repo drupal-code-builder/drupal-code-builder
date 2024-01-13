@@ -26,15 +26,31 @@ class RenderAttributesTest extends TestCase {
           'purr' => 'value',
         ],
       ],
+      [
+        'id' => 'The plugin ID.',
+        'admin_label' => 'The noise it makes.',
+        // Keep words short around the wrap point as potential bugs are likely
+        // to be a small amount off.
+        'extra' => 'This is a comment that is too long because it is going over the limit of 80 characters in a line here we go.',
+      ],
     );
 
     $lines = $attribute->render();
+
+    foreach ($lines as $line) {
+      $this->assertLessThanOrEqual(80, strlen($line), "Line '$line' is wrapped to 80 characters.");
+    }
+
     $attribute = implode("\n", $lines);
 
     $expected_attribute = <<<EOT
     #[\Drupal\Core\Block\Attribute\Block(
+      // The plugin ID.
       id: "cat",
+      // The noise it makes.
       admin_label: new \Drupal\Core\StringTranslation\TranslatableMarkup("Miaow"),
+      // This is a comment that is too long because it is going over the limit of 80
+      // characters in a line here we go.
       extra: [
         'purr' => "value",
       ],

@@ -19,12 +19,16 @@ class PhpAttributes {
    *   stored without, and plugin property types are stored with, WTF.)
    * @param mixed $data
    *   The data for the attribute.
+   * @param $comments
+   *   An array of comments for the attribute's top-level properties. Keys are
+   *   property names, values are the comment text.
    * @param int $indentLevel
    *   The overall indent level for the code lines.
    */
   public function __construct(
     protected string $attributeClassName,
     protected mixed $data,
+    protected array $comments,
     protected int $indentLevel,
   ) {
   }
@@ -32,16 +36,16 @@ class PhpAttributes {
   /**
    * Creates a new attribute for a class.
    */
-  public static function class($attribute_class_name, $data) {
-    return new static($attribute_class_name, $data, 0);
+  public static function class($attribute_class_name, $data, $comments = []) {
+    return new static($attribute_class_name, $data, $comments, 0);
   }
 
   /**
    * Creates a new attribute for a nested object.
    */
-  public static function object($attribute_class_name, $data) {
+  public static function object($attribute_class_name, $data, $comments = []) {
     // TODO: indent level is meaningless here.
-    return new static($attribute_class_name, $data, 0);
+    return new static($attribute_class_name, $data, $comments, 0);
   }
 
   /**
@@ -104,6 +108,19 @@ class PhpAttributes {
         $declaration_line = "{$indent}";
       }
       else {
+        // Render a comment if there is a description for this key.
+        // Comments only go on the top-level keys of the attribute, not inner
+        // data arrays.
+        if (!$attribute_nesting) {
+          // dump($thicomments);
+          if (isset($this->comments[$key])) {
+            $wrapped_comment_lines = $this->wrapLine($this->comments[$key], $nesting);
+            foreach ($wrapped_comment_lines as $comment_line) {
+              $lines[] = $indent. '// ' . $comment_line;
+            }
+          }
+        }
+
         // Keys need to be quoted for all levels except the first level of an
         // attribute.
         if ($attribute_nesting) {
@@ -146,6 +163,25 @@ class PhpAttributes {
         $lines[] = $indent . "],";
       }
     }
+  }
+
+  /**
+   * Wraps a line to the specified width.
+   *
+   * @param string $line
+   *   The line of text to wrap.
+   * @param int $indent_level
+   *   The indent level that this line should be indented by.
+   *
+   * @return array
+   *   An array of lines.
+   */
+  protected function wrapLine(string $line, int $indent_level): array {
+    // Wrap the description to 80 characters minus the indentation and the
+    // comment marker.
+    $wrapped_line = wordwrap($line, 80 - (($indent_level + 1 ) * 2) - 3);
+    $wrapped_lines = explode("\n", $wrapped_line);
+    return $wrapped_lines;
   }
 
 }
