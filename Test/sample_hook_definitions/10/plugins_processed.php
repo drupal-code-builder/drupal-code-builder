@@ -374,6 +374,122 @@ array (
       ),
     ),
   ),
+  'filter' => 
+  array (
+    'type_id' => 'filter',
+    'service_id' => 'plugin.manager.filter',
+    'service_class_name' => 'Drupal\\filter\\FilterPluginManager',
+    'service_component_namespace' => 'Drupal\\filter',
+    'type_label' => 'filter',
+    'alter_hook_name' => 'filter_info_alter',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'subdir' => 'Plugin/Filter',
+    'plugin_interface' => 'Drupal\\filter\\Plugin\\FilterInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\filter\\Annotation\\Filter',
+    'plugin_definition_attribute_name' => NULL,
+    'yaml_file_suffix' => NULL,
+    'yaml_properties' => NULL,
+    'annotation_id_only' => false,
+    'base_class' => 'Drupal\\filter\\Plugin\\FilterBase',
+    'base_class_has_di' => false,
+    'config_schema_prefix' => 'filter_settings.',
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The plugin ID.',
+        'type' => 'string',
+      ),
+      'provider' => 
+      array (
+        'name' => 'provider',
+        'description' => 'The name of the provider that owns the filter.',
+        'type' => 'string',
+      ),
+      'title' => 
+      array (
+        'name' => 'title',
+        'description' => 'The human-readable name of the filter.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'description' => 
+      array (
+        'name' => 'description',
+        'description' => 'Additional administrative information about the filter\'s behavior.',
+        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+      ),
+      'weight' => 
+      array (
+        'name' => 'weight',
+        'description' => 'A default weight for the filter in new text formats.',
+        'type' => 'int',
+      ),
+      'status' => 
+      array (
+        'name' => 'status',
+        'description' => 'Whether this filter is enabled or disabled by default.',
+        'type' => 'bool',
+      ),
+      'settings' => 
+      array (
+        'name' => 'settings',
+        'description' => 'The default settings for the filter.',
+        'type' => 'array',
+      ),
+    ),
+    'plugin_interface_methods' => 
+    array (
+      'getType' => 
+      array (
+        'name' => 'getType',
+        'declaration' => 'public function getType();',
+        'description' => 'Returns the processing type of this filter plugin.',
+      ),
+      'getLabel' => 
+      array (
+        'name' => 'getLabel',
+        'declaration' => 'public function getLabel();',
+        'description' => 'Returns the administrative label for this filter plugin.',
+      ),
+      'getDescription' => 
+      array (
+        'name' => 'getDescription',
+        'declaration' => 'public function getDescription();',
+        'description' => 'Returns the administrative description for this filter plugin.',
+      ),
+      'settingsForm' => 
+      array (
+        'name' => 'settingsForm',
+        'declaration' => 'public function settingsForm(array $form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Generates a filter\'s settings form.',
+      ),
+      'prepare' => 
+      array (
+        'name' => 'prepare',
+        'declaration' => 'public function prepare($text, $langcode);',
+        'description' => 'Prepares the text for processing.',
+      ),
+      'process' => 
+      array (
+        'name' => 'process',
+        'declaration' => 'public function process($text, $langcode);',
+        'description' => 'Performs the filter processing.',
+      ),
+      'getHTMLRestrictions' => 
+      array (
+        'name' => 'getHTMLRestrictions',
+        'declaration' => 'public function getHTMLRestrictions();',
+        'description' => 'Returns HTML allowed by this filter\'s configuration.',
+      ),
+      'tips' => 
+      array (
+        'name' => 'tips',
+        'declaration' => 'public function tips($long = FALSE);',
+        'description' => 'Generates a filter\'s tip.',
+      ),
+    ),
+  ),
   'image.effect' => 
   array (
     'type_id' => 'image.effect',
