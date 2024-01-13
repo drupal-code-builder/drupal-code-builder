@@ -12,9 +12,10 @@ array (
     'subdir' => 'Plugin/Block',
     'plugin_interface' => 'Drupal\\Core\\Block\\BlockPluginInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
+    'plugin_definition_attribute_name' => 'Drupal\\Core\\Block\\Attribute\\Block',
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
-    'annotation_id_only' => false,
+    'annotation_id_only' => NULL,
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'block.settings.',
@@ -30,19 +31,31 @@ array (
       array (
         'name' => 'admin_label',
         'description' => 'The administrative label of the block.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
       'category' => 
       array (
         'name' => 'category',
-        'description' => 'The category in the admin UI where the block will be listed.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'description' => '(optional) The category in the admin UI where the block will be listed.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
       'context_definitions' => 
       array (
         'name' => 'context_definitions',
-        'description' => 'An array of context definitions describing the context used by the plugin.',
-        'type' => '\\Drupal\\Core\\Annotation\\ContextDefinition[]',
+        'description' => '(optional) An array of context definitions describing the context used by the plugin. The array is keyed by context names.',
+        'type' => 'array',
+      ),
+      'deriver' => 
+      array (
+        'name' => 'deriver',
+        'description' => '(optional) The deriver class.',
+        'type' => 'string',
+      ),
+      'forms' => 
+      array (
+        'name' => 'forms',
+        'description' => '(optional) An array of form class names keyed by a string.',
+        'type' => 'array',
       ),
     ),
     'plugin_interface_methods' => 
@@ -145,6 +158,7 @@ array (
     'subdir' => 'Element',
     'plugin_interface' => 'Drupal\\Core\\Render\\Element\\ElementInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Render\\Annotation\\RenderElement',
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => true,
@@ -193,6 +207,7 @@ array (
     'subdir' => 'Plugin/Field/FieldFormatter',
     'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
@@ -371,6 +386,7 @@ array (
     'subdir' => 'Plugin/ImageEffect',
     'plugin_interface' => 'Drupal\\image\\ImageEffectInterface',
     'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
@@ -470,6 +486,7 @@ array (
     'subdir' => NULL,
     'plugin_interface' => NULL,
     'plugin_definition_annotation_name' => NULL,
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => 'links.menu',
     'yaml_properties' => 
     array (
@@ -517,6 +534,7 @@ array (
     'subdir' => NULL,
     'plugin_interface' => NULL,
     'plugin_definition_annotation_name' => NULL,
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => 'links.action',
     'yaml_properties' => 
     array (
@@ -565,6 +583,7 @@ array (
     'subdir' => NULL,
     'plugin_interface' => NULL,
     'plugin_definition_annotation_name' => NULL,
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => 'links.task',
     'yaml_properties' => 
     array (
@@ -603,6 +622,7 @@ array (
     'subdir' => 'Plugin/Validation/Constraint',
     'plugin_interface' => '',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Validation\\Annotation\\Constraint',
+    'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
