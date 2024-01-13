@@ -24,9 +24,13 @@ class PluginTypesCollector extends CollectorBase  {
    * The names of plugin type managers to collect for testing sample data.
    */
   protected $testingPluginManagerServiceIds = [
-    // Annotation plugins.
+    // Attribute plugins.
     'plugin.manager.block',
+    // Annotation plugins.
+    'plugin.manager.filter',
+    // ... with extra plun construction parameters.
     'plugin.manager.field.formatter',
+    // ... with a create() method.
     'plugin.manager.image.effect',
     // Annotation plugin using only the plugin ID in its annotation.
     'plugin.manager.element_info',
