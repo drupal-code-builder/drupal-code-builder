@@ -26,6 +26,26 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
   protected $autoAcquired = FALSE;
 
   /**
+   * Adds properties before the named property.
+   *
+   * @param string $before
+   *   The name of the property to insert before.
+   * @param \MutableTypedData\Definition\DataDefinition $properties
+   *   The properties to insert before the specified property name, in the order
+   *   to insert them.
+   *
+   * @return \MutableTypedData\Definition\DataDefinition
+   *   Returns the same instance for chaining. (This is typed as the parent
+   *   class so it can be moved to MTD in future without causing incompatibility
+   *   issues.)
+   */
+  public function addPropertyBefore(string $before, self ...$properties): self {
+    $this->addPropertyHelper($before, TRUE, ...$properties);
+
+    return $this;
+  }
+
+  /**
    * Adds a property after the named property.
    *
    * @param string $after
@@ -40,6 +60,23 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
    *   issues.)
    */
   public function addPropertyAfter(string $after, self ...$properties): self {
+    $this->addPropertyHelper($after, FALSE, ...$properties);
+
+    return $this;
+  }
+
+  /**
+   * Helper for inserting properties.
+   *
+   * @param string $existing
+   *   The name of the property to insert before or after.
+   * @param bool $before
+   *   Whether to insert before or after.
+   * @param self ...$properties
+   *   The properties to insert after the specified property name, in the order
+   *   to insert them.
+   */
+  protected function addPropertyHelper(string $existing, bool $before, self ...$properties): void {
     // TODO! this won't catch child classes of SimpleData!!!
     if ($this->type == 'string' || $this->type == 'boolean') {
       // TODO: needs tests
@@ -53,21 +90,26 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
       ));
     }
 
-    // Reverse the array of properties, as we keep adding them after the $after
-    // property.
-    $properties = array_reverse($properties);
+    if (!$before) {
+      // Reverse the array of properties, as we keep adding them after the
+      // $existing property.
+      $properties = array_reverse($properties);
+    }
+
+    $method_name = match ($before) {
+      TRUE  => 'insertBefore',
+      FALSE => 'insertAfter',
+    };
 
     foreach ($properties as $property) {
       if (empty($property->getName())) {
-        throw new InvalidDefinitionException("Properties added with addPropertyAfter() must have a machine name set.");
+        throw new InvalidDefinitionException("Properties added with addPropertyBefore() or addPropertyAfter() must have a machine name set.");
       }
 
-      InsertArray::insertAfter($this->properties, $after, [
+      InsertArray::$method_name($this->properties, $existing, [
         $property->getName() => $property,
       ]);
     }
-
-    return $this;
   }
 
   public function getDeltaDefinition(): self {

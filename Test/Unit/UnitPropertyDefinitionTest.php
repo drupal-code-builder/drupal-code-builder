@@ -38,6 +38,25 @@ class UnitPropertyDefinitionTest extends TestCase {
       ],
       $definition->getPropertyNames(),
     );
+
+    $definition->addPropertyBefore(
+      'three',
+      PropertyDefinition::create('string')->setName('two-a'),
+      PropertyDefinition::create('string')->setName('two-b'),
+    );
+
+    $this->assertEquals(
+      [
+        'one',
+        'one-a',
+        'one-b',
+        'two',
+        'two-a',
+        'two-b',
+        'three',
+      ],
+      $definition->getPropertyNames(),
+    );
   }
 
 }
