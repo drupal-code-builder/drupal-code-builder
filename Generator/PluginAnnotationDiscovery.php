@@ -68,7 +68,7 @@ class PluginAnnotationDiscovery extends PluginClassDiscovery {
         continue;
       }
 
-      if (in_array($annotation_variable, ['label', 'admin_label'])) {
+      if ($annotation_variable == $this->plugin_type_data['plugin_label_property']) {
         $annotation_data[$annotation_variable] = ClassAnnotation::Translation($this->component_data->plugin_label->value);
         continue;
       }

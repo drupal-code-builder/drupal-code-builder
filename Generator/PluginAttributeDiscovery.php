@@ -38,7 +38,7 @@ class PluginAttributeDiscovery extends PluginClassDiscovery {
         continue;
       }
 
-      if (in_array($attribute_variable, ['label', 'admin_label'])) {
+      if ($attribute_variable == $this->plugin_type_data['plugin_label_property']) {
         $attribute_data[$attribute_variable] = PhpAttributes::object(
           // Assume the label will be translatable and therefore have a type.
           $attribute_variable_info['type'],
