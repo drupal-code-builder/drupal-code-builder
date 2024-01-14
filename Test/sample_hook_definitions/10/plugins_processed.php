@@ -393,7 +393,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
-    'plugin_label_property' => NULL,
+    'plugin_label_property' => 'title',
     'base_class' => 'Drupal\\filter\\Plugin\\FilterBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'filter_settings.',

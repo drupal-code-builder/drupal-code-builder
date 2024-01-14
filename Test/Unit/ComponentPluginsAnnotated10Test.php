@@ -70,8 +70,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Filter');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    // TODO: add title to label-ish properties.
-    // $annotation_tester->assertPropertyHasValue('title', 'Alpha');
+    $annotation_tester->assertPropertyHasValue('title', 'Alpha');
     $annotation_tester->assertHasProperty('status');
     $annotation_tester->assertHasProperty('weight');
 
@@ -281,8 +280,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Filter');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    // TODO labels
-    // $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
+    $annotation_tester->assertPropertyHasValue('title', 'Alpha');
 
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Filter\Alpha');
     $php_tester->assertClassHasParent('Drupal\somemodule\Plugin\Filter\ParentFilter');
@@ -572,8 +570,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('Filter');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    // TODO: label.
-    // $annotation_tester->assertHasProperty('admin_label');
+    $annotation_tester->assertHasProperty('title');
     $annotation_tester->assertHasProperty('status');
   }
 

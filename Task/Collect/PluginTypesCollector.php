@@ -28,6 +28,7 @@ class PluginTypesCollector extends CollectorBase  {
   protected $potentialAdminLabelProperties = [
     'label',
     'admin_label',
+    'title',
   ];
 
   /**
