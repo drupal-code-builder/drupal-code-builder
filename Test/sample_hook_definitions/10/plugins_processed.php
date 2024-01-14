@@ -16,6 +16,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => NULL,
+    'plugin_label_property' => 'admin_label',
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'block.settings.',
@@ -162,6 +163,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => true,
+    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Render\\Element\\RenderElement',
     'base_class_has_di' => false,
     'plugin_properties' => 
@@ -211,6 +213,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
+    'plugin_label_property' => 'label',
     'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
     'base_class_has_di' => true,
     'config_schema_prefix' => 'field.formatter.settings.',
@@ -390,6 +393,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
+    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\filter\\Plugin\\FilterBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'filter_settings.',
@@ -506,6 +510,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
+    'plugin_label_property' => 'label',
     'base_class' => 'Drupal\\image\\ImageEffectBase',
     'base_class_has_di' => true,
     'config_schema_prefix' => 'image.effect.',
@@ -629,6 +634,7 @@ array (
       'form_class' => 'Drupal\\Core\\Menu\\Form\\MenuLinkDefaultForm',
     ),
     'annotation_id_only' => NULL,
+    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\MenuLinkBase',
     'base_class_has_di' => false,
     'plugin_properties' => 
@@ -669,6 +675,7 @@ array (
       'class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
     ),
     'annotation_id_only' => NULL,
+    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
     'base_class_has_di' => true,
     'construction' => 
@@ -717,6 +724,7 @@ array (
       'class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
     ),
     'annotation_id_only' => NULL,
+    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
     'base_class_has_di' => false,
     'plugin_properties' => 
@@ -742,6 +750,7 @@ array (
     'yaml_file_suffix' => NULL,
     'yaml_properties' => NULL,
     'annotation_id_only' => false,
+    'plugin_label_property' => 'label',
     'base_class' => 'Symfony\\Component\\Validator\\Constraint',
     'base_class_has_di' => false,
     'plugin_properties' => 

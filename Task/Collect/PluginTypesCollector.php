@@ -21,6 +21,16 @@ class PluginTypesCollector extends CollectorBase  {
   protected $reportingString = 'plugin types';
 
   /**
+   * The names of potential admin label plugin properties.
+   *
+   * @var array
+   */
+  protected $potentialAdminLabelProperties = [
+    'label',
+    'admin_label',
+  ];
+
+  /**
    * The names of plugin type managers to collect for testing sample data.
    */
   protected $testingPluginManagerServiceIds = [
@@ -230,6 +240,8 @@ class PluginTypesCollector extends CollectorBase  {
    *      - 'description': The description, taken from the docblock of the class
    *        property on the annotation class.
    *      - 'type': The data type.
+   *    - 'plugin_label_property': The name of a property which is (assumed) to
+   *      hold the admin label for a plugin.
    *    - 'annotation_id_only': Boolean indicating whether the annotation
    *      consists of only the plugin ID.
    *    - 'construction': An array of injected service parameters for the plugin
@@ -309,6 +321,9 @@ class PluginTypesCollector extends CollectorBase  {
 
       // Add data from the plugin annotation class.
       $this->addPluginAnnotationData($plugin_type_data[$plugin_type_id]);
+
+      // Try to detect a label property.
+      $this->addPluginLabelProperty($plugin_type_data[$plugin_type_id]);
 
       // Add data from the plugin interface (which the manager service gave us).
       $this->addPluginMethods($plugin_type_data[$plugin_type_id]);
@@ -417,6 +432,7 @@ class PluginTypesCollector extends CollectorBase  {
       'yaml_file_suffix',
       'yaml_properties',
       'annotation_id_only',
+      'plugin_label_property',
     ];
     foreach ($discovery_dependent_properties as $property) {
       $data[$property] = NULL;
@@ -731,6 +747,30 @@ class PluginTypesCollector extends CollectorBase  {
       }
 
       $data['plugin_properties'][$property_reflection->name] = $annotation_property_data;
+    }
+  }
+
+  /**
+   * Tries to detect an admin label property.
+   *
+   * This adds:
+   *  - 'plugin_label_property': The property which is (probably) the plugin
+   *    admin label.
+   *
+   * @param array &$data
+   *  The data for a single plugin type.
+   */
+  protected function addPluginLabelProperty(array &$data) {
+    // Skip if there are no properties.
+    if (!isset($data['plugin_properties'])) {
+      return;
+    }
+
+    foreach ($this->potentialAdminLabelProperties as $potential_property_name) {
+      if (isset($data['plugin_properties'][$potential_property_name])) {
+        $data['plugin_label_property'] = $potential_property_name;
+        return;
+      }
     }
   }
 
