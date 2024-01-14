@@ -24,9 +24,13 @@ class PluginTypesCollector extends CollectorBase  {
    * The names of plugin type managers to collect for testing sample data.
    */
   protected $testingPluginManagerServiceIds = [
-    // Annotation plugins.
+    // Attribute plugins.
     'plugin.manager.block',
+    // Annotation plugins.
+    'plugin.manager.filter',
+    // ... with extra plun construction parameters.
     'plugin.manager.field.formatter',
+    // ... with a create() method.
     'plugin.manager.image.effect',
     // Annotation plugin using only the plugin ID in its annotation.
     'plugin.manager.element_info',
@@ -209,6 +213,9 @@ class PluginTypesCollector extends CollectorBase  {
    *    - 'plugin_definition_annotation_name': The class that the plugin
    *      annotation uses, as a qualified name (but without initial '\').
    *      E.g, 'Drupal\filter\Annotation\Filter'.
+   *    - 'plugin_definition_attribute_name': The class for the plugin
+   *      attribute, as a qualified name (but without initial '\'). E.g,
+   *      'Drupal\Core\Block\Attribute\Block'.
    *    - 'plugin_interface_methods': An array of methods that the plugin's
    *      interface has. This is keyed by the method name, with each value an
    *      array with these properties:
@@ -296,6 +303,10 @@ class PluginTypesCollector extends CollectorBase  {
 
       // Do the large arrays last, so they are last in the stored data so it's
       // easier to read.
+
+      // Add data from the plugin attribute class.
+      $this->addPluginAttributeData($plugin_type_data[$plugin_type_id]);
+
       // Add data from the plugin annotation class.
       $this->addPluginAnnotationData($plugin_type_data[$plugin_type_id]);
 
@@ -402,6 +413,7 @@ class PluginTypesCollector extends CollectorBase  {
       'subdir',
       'plugin_interface',
       'plugin_definition_annotation_name',
+      'plugin_definition_attribute_name',
       'yaml_file_suffix',
       'yaml_properties',
       'annotation_id_only',
@@ -411,14 +423,64 @@ class PluginTypesCollector extends CollectorBase  {
     }
 
     switch ($discovery_short_name) {
-      case 'AnnotatedClassDiscovery':
       case 'AttributeDiscoveryWithAnnotations':
+        $this->addPluginTypeServiceDataAttribute($data, $service, $discovery);
+        break;
+      case 'AnnotatedClassDiscovery':
         $this->addPluginTypeServiceDataAnnotated($data, $service, $discovery);
         break;
       case 'YamlDiscovery':
         $this->addPluginTypeServiceDataYaml($data, $service, $discovery);
         break;
     }
+  }
+
+  /**
+   * Analyse the plugin type manager service for annotated plugins.
+   *
+   * This adds:
+   *  - subdir
+   *  - plugin_interface
+   *  - plugin_definition_attribute_name
+   *  - plugin_definition_annotation_name
+   *
+   * @param &$data
+   *  The data for a single plugin type.
+   * @param $service
+   *  The plugin manager service.
+   * @param $discovery
+   *  The plugin discovery object.
+   */
+  protected function addPluginTypeServiceDataAttribute(&$data, $service, $discovery) {
+    $reflection = new \ReflectionClass($service);
+
+    // Get the properties that the plugin manager constructor sets.
+    // E.g., most plugin managers pass this to the parent:
+    //   parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+    // See Drupal\Core\Plugin\DefaultPluginManager
+    // The list of properties we want to grab out of the plugin manager
+    //  => the key in the plugin type data array we want to set this into.
+    $plugin_manager_properties = [
+      'subdir' => 'subdir',
+      'pluginInterface' => 'plugin_interface',
+      'pluginDefinitionAttributeName' => 'plugin_definition_attribute_name',
+      // Keep this in for plugin adoption?
+      'pluginDefinitionAnnotationName' => 'plugin_definition_annotation_name',
+    ];
+    foreach ($plugin_manager_properties as $property_name => $data_key) {
+      if (!$reflection->hasProperty($property_name)) {
+        // plugin.manager.menu.link is different.
+        $data[$data_key] = '';
+        continue;
+      }
+
+      $property = $reflection->getProperty($property_name);
+      $property->setAccessible(TRUE);
+      $data[$data_key] = $property->getValue($service) ?? '';
+    }
+
+    // Babysit code that puts an initial backslash on the interface.
+    $data['plugin_interface'] = ltrim($data['plugin_interface'], '\\');
   }
 
   /**
@@ -506,6 +568,103 @@ class PluginTypesCollector extends CollectorBase  {
   }
 
   /**
+   * Analyse the plugin attribute class.
+   *
+   * This adds:
+   *  - 'plugin_properties': The properties from the annotation class.
+   *
+   * @param &$data
+   *  The data for a single plugin type.
+   */
+  protected function addPluginAttributeData(&$data) {
+    // This needs to go before annotation class analysis.
+    assert(!isset($data['plugin_properties']));
+
+    if (!isset($data['plugin_definition_attribute_name'])) {
+      return;
+    }
+    if (!class_exists($data['plugin_definition_attribute_name'])) {
+      return;
+    }
+
+    // Only set this if we're going to populate it, as annotation class analysis
+    // checks if it's set.
+    $data['plugin_properties'] = [];
+
+    // Get a reflection class for the annotation class.
+    // Each property of the annotation class describes a property for the
+    // plugin annotation.
+    $attribute_reflection = new \ReflectionClass($data['plugin_definition_attribute_name']);
+    $properties_reflection = $attribute_reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+    $constructor_doc_comment = $attribute_reflection->getConstructor()->getDocComment();
+
+    // Assemble descriptions from the constructor docblock.
+    $descriptions = [];
+    $current_name = NULL;
+    foreach (explode("\n", $constructor_doc_comment) as $line) {
+      if (str_contains($line, '/**')) {
+        continue;
+      }
+      if (str_contains($line, '*/')) {
+        continue;
+      }
+
+      if (str_contains($line, '@param')) {
+        $matches = [];
+        preg_match('@\$(\w+)@', $line, $matches);
+
+        if (!isset($matches[1])) {
+          // Bad docs! Skip!
+          $current_name = NULL;
+          continue;
+        }
+
+        $current_name = $matches[1];
+        continue;
+      }
+
+      if ($current_name) {
+        // TODO Argh could really do to use a docblock parser here!
+        $line = trim($line, ' *');
+        $descriptions[$current_name][] = $line;
+      }
+    }
+
+    // The reflection properties are the authority for building the array, not
+    // the docblock as the latter may be badly-formed.
+    foreach ($properties_reflection as $property_reflection) {
+      // Assemble data about this annotation property.
+      $annotation_property_data = [];
+      $annotation_property_data['name'] = $property_reflection->name;
+
+      if (isset($descriptions[$property_reflection->name])) {
+        $annotation_property_data['description'] = implode(' ', $descriptions[$property_reflection->name]);
+      }
+      else {
+        $annotation_property_data['description'] = '';
+      }
+
+      $type_reflection = $property_reflection->getType();
+      if ($type_reflection) {
+        // Assume that there aren't any compound types for now!
+        assert($type_reflection instanceof \ReflectionNamedType);
+
+        $type = $type_reflection->getName();
+
+        // Prefix a class with a '\'. We can assume that class types start with
+        // an uppercase letter, and that there are no static / self etc types.
+        if (ctype_upper(substr($type, 0, 1))) {
+          $type = '\\' . $type;
+        }
+
+        $annotation_property_data['type'] = $type;
+      }
+
+      $data['plugin_properties'][$property_reflection->name] = $annotation_property_data;
+    }
+  }
+
+  /**
    * Analyse the plugin annotation class.
    *
    * This adds:
@@ -517,6 +676,11 @@ class PluginTypesCollector extends CollectorBase  {
    *  The data for a single plugin type.
    */
   protected function addPluginAnnotationData(&$data) {
+    // Skip if attribute class analysis already set this.
+    if (isset($data['plugin_properties'])) {
+      return;
+    }
+
     $data['plugin_properties'] = [];
 
     if (!isset($data['plugin_definition_annotation_name'])) {
