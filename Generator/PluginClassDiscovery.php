@@ -86,6 +86,15 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
 
     $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
+    $definition->addPropertyBefore(
+      'plain_class_name',
+      PropertyDefinition::create('string')
+        ->setName('plugin_name')
+        ->setLabel('Plugin ID')
+        ->setRequired(TRUE)
+        ->setValidators('plugin_name'),
+    );
+
     $definition->addProperties([
       'plugin_type_data' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
@@ -93,10 +102,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultPluginTypeData'])
         ),
-      'plugin_name' => PropertyDefinition::create('string')
-        ->setLabel('Plugin ID')
-        ->setRequired(TRUE)
-        ->setValidators('plugin_name'),
       'prefixed_plugin_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setRequired(TRUE)
