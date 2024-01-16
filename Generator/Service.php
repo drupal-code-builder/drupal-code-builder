@@ -251,18 +251,15 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
-  public function requiredComponents(): array {
-    $components = parent::requiredComponents();
-
-    $yaml_data_arguments = [];
-
-    $requested_services = [];
-    foreach ($this->component_data['injected_services'] as $service_id) {
-      $requested_services[] = $service_id;
+  protected function getExistingInjectedServices(): array {
+    // Statically cache as we come here several times.
+    if (isset($this->existingServices)) {
+      return $this->existingServices;
     }
-    $existing_services = [];
+
+    $this->existingServices = [];
     if ($this->exists) {
       $services_yml_filename = str_replace('%module', $this->component_data->root_component_name->value, '%module.services.yml');
 
@@ -278,15 +275,30 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'])) {
         foreach ($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'] as $argument) {
           $service_id = ltrim($argument, '@');
-          $existing_services[] = $service_id;
+          $this->existingServices[] = $service_id;
         }
       }
+    }
+    return $this->existingServices;
+  }
+
+  /**
+   * Return an array of subcomponent types.
+   */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    $yaml_data_arguments = [];
+
+    $requested_services = [];
+    foreach ($this->component_data['injected_services'] as $service_id) {
+      $requested_services[] = $service_id;
     }
 
     // Use the ArrayMerger even though these are flat arrays, so we get the same
     // behaviour as the YAML data will in the YMLFile generator.
     // Put the existing services first.
-    $merger = new ArrayMerger($existing_services, $requested_services);
+    $merger = new ArrayMerger($this->getExistingInjectedServices(), $requested_services);
     $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
     $service_ids = $merger->mergeData();
 

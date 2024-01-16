@@ -857,11 +857,99 @@ class ComponentService10Test extends TestBase {
   }
 
   /**
+   * Data provider for testExistingServiceMerge().
+   */
+  public function dataExistingServiceMerge() {
+    return [
+      'basic' => [
+        // The data for a single service to generate as the existing module.
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+        ],
+        // The data for a single service being generated.
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+            'module_handler',
+          ],
+        ],
+        // Expected injected services.
+        [
+          [
+            'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+            'service_name' => 'current_user',
+            'property_name' => 'currentUser',
+            'parameter_name' => 'current_user',
+          ],
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'entityTypeManager',
+            'parameter_name' => 'entity_type_manager',
+          ],
+          [
+            'typehint' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+            'service_name' => 'module_handler',
+            'property_name' => 'moduleHandler',
+            'parameter_name' => 'module_handler',
+          ],
+        ],
+      ],
+      'none-generated' => [
+        // The data for a single service to generate as the existing module.
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+        ],
+        // The data for a single service being generated.
+        [
+          'service_name' => 'alpha',
+          'injected_services' => [],
+        ],
+        // Expected injected services.
+        [
+          [
+            'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+            'service_name' => 'current_user',
+            'property_name' => 'currentUser',
+            'parameter_name' => 'current_user',
+          ],
+          [
+            'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+            'service_name' => 'entity_type.manager',
+            'property_name' => 'entityTypeManager',
+            'parameter_name' => 'entity_type_manager',
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
    * Test merging of injected services in an existing service.
    *
    * @group existing
+   *
+   * @dataProvider dataExistingServiceMerge
+   *
+   * @param array $existing_service_data
+   *   The module data for a single service to generate as the mocked existing
+   *   module.
+   * @param array $generated_service_data
+   *   The module data for a single service to generate as the requested code.
+   * @param array $expected_injected_services
+   *   The expected injected services, in the format expected by
+   *   assertInjectedServices().
    */
-  public function testExistingServiceMerge() {
+  public function testExistingServiceMerge($existing_service_data, $generated_service_data, $expected_injected_services) {
     // First pass: generate the files we'll mock as existing.
     $module_name = 'existing';
     $module_data = [
@@ -872,13 +960,7 @@ class ComponentService10Test extends TestBase {
       'module_package' => 'Test Package',
       'readme' => FALSE,
       'services' => [
-        0 => [
-          'service_name' => 'alpha',
-          'injected_services' => [
-            'current_user',
-            'entity_type.manager',
-          ],
-        ],
+        0 => $existing_service_data,
       ],
     ];
 
@@ -915,13 +997,7 @@ class ComponentService10Test extends TestBase {
       'module_package' => 'Test Package',
       'readme' => FALSE,
       'services' => [
-        0 => [
-          'service_name' => 'alpha',
-          'injected_services' => [
-            'current_user',
-            'module_handler',
-          ],
-        ],
+        0 => $generated_service_data,
       ],
     ];
 
@@ -936,11 +1012,7 @@ class ComponentService10Test extends TestBase {
 
     // We expect the order to be existing services first, in their original
     // order, and then new ones from the generate request.
-    $yaml_arguments = [
-      '@current_user',
-      '@entity_type.manager',
-      '@module_handler',
-    ];
+    $yaml_arguments = array_map(fn ($item) => '@' . $item['service_name'], $expected_injected_services);
     foreach ($yaml_arguments as $index => $argument) {
       $yaml_tester->assertPropertyHasValue(['services', "$module_name.alpha", 'arguments', $index], $argument);
     }
@@ -958,27 +1030,7 @@ class ComponentService10Test extends TestBase {
     // implemented.
     $php_tester->assertNotHasMethod('existingMethod', 'The existing method is overwritten.');
 
-    $assert_injected_services = [
-      [
-        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
-        'service_name' => 'current_user',
-        'property_name' => 'currentUser',
-        'parameter_name' => 'current_user',
-      ],
-      [
-        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
-        'service_name' => 'entity_type.manager',
-        'property_name' => 'entityTypeManager',
-        'parameter_name' => 'entity_type_manager',
-      ],
-      [
-        'typehint' => 'Drupal\Core\Extension\ModuleHandlerInterface',
-        'service_name' => 'module_handler',
-        'property_name' => 'moduleHandler',
-        'parameter_name' => 'module_handler',
-      ],
-    ];
-    $php_tester->assertInjectedServices($assert_injected_services);
+    $php_tester->assertInjectedServices($expected_injected_services);
   }
 
   /**

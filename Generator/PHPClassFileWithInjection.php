@@ -26,12 +26,31 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected $forceConstructComponent = FALSE;
 
   /**
+   * Static cache of services detected in an existing copy of this class.
+   *
+   * @var array
+   */
+  protected array $existingServices;
+
+  /**
+   * Get any existing services from the existing class, if any.
+   *
+   * @return array
+   *   A numeric array of service names.
+   */
+  protected function getExistingInjectedServices(): array {
+    // We only support this for services so far, but this base class needs to be
+    // aware.
+    return [];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    if (!$this->component_data->injected_services->isEmpty() || $this->forceConstructComponent) {
+    if (!$this->component_data->injected_services->isEmpty() || $this->getExistingInjectedServices() || $this->forceConstructComponent) {
       // The static factory create() method.
       if ($this->hasStaticFactoryMethod) {
         $create_parameters = [
