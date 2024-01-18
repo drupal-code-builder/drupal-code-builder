@@ -8,12 +8,38 @@ namespace DrupalCodeBuilder\Test\Integration\Collection;
 class CollectHooksTest extends CollectionTestBase {
 
   /**
+   * @inheritdoc
+   */
+  protected static $modules = [
+    'system',
+    'node',
+  ];
+
+  /**
    * Tests collection of hooks info.
    */
   public function testHooksCollection() {
     $hooks_collector = new \DrupalCodeBuilder\Task\Collect\HooksCollector8(
       $this->environment
     );
+
+    $job_list = $hooks_collector->getJobList();
+    $this->assertContains([
+      "uri" => "core/lib/Drupal/Core/Entity/entity.api.php",
+      "filename" => "CORE_entity.api.php",
+      "name" => "entity.api",
+      "group" => "core:entity",
+      "module" => "core",
+      "process_label" => "hooks",
+      "item_label" => "entity.api.php",
+    ], $job_list);
+    $this->assertContains([
+      "uri" => "core/modules/node/node.api.php",
+      "filename" => "node.api.php",
+      "name" => "node.api",
+      "process_label" => "hooks",
+      "item_label" => "node.api.php",
+    ], $job_list);
 
     $test_hook_jobs = [
       [
