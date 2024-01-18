@@ -90,6 +90,48 @@ abstract class CollectorBase implements CollectorInterface {
   }
 
   /**
+   * Find files matching a regex in modules and Core components.
+   *
+   * @param string $mask
+   *   A regex to match with, WITHOUT the regex delimiters.
+   *
+   * @return array
+   *   A numeric array of arrays of file info.
+   */
+  protected function findFiles(string $mask): array {
+    $files = [];
+
+    $system_listing = \DrupalCodeBuilder\Factory::getEnvironment()->systemListing("@$mask@", 'modules', 'filename');
+    foreach ($system_listing as $filename => $file) {
+      $files[] = (array) $file;
+    }
+
+    $core_directory_iterator = new \RecursiveDirectoryIterator('core/lib/Drupal');
+    $recursive_iterator = new \RecursiveIteratorIterator($core_directory_iterator);
+    // We need to make the regex grab everything from the start to get the
+    // whole relative pathname in the result.
+    $regex_iterator = new \RegexIterator($recursive_iterator, "@^.+$mask@", \RecursiveRegexIterator::GET_MATCH);
+    foreach ($regex_iterator as $regex_files) {
+      foreach ($regex_files as $file) {
+        $filename = basename($file);
+
+        // TODO: component name, which gets complicated as we might find things
+        // in /Core **or** /Component!
+        // $component_name = explode('.', $filename)[0];
+
+        $files[] = [
+          'uri' => $file,
+          'filename' => basename($file),
+          'name' => basename($file, '.php'),
+          'module' => 'core',
+          'item_label' => $filename,
+        ];
+      }
+    }
+    return $files;
+  }
+
+  /**
    * Merge incrementally collected data.
    *
    * @param array $existing_data
