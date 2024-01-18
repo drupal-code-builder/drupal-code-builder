@@ -23,6 +23,15 @@ class EventNamesCollector extends CollectorBase {
   protected $reportingString = 'event_names';
 
   /**
+   * The event names to collect for testing sample data.
+   */
+  protected $testingIds = [
+    '\Drupal\Core\Entity\EntityTypeEvents::CREATE',
+    '\Drupal\Core\Entity\EntityTypeEvents::UPDATE',
+    '\Drupal\Core\Entity\EntityTypeEvents::DELETE',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function getJobList() {
