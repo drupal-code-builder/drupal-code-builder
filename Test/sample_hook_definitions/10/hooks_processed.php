@@ -1041,7 +1041,7 @@ array (
     array (
       'type' => 'hook',
       'name' => 'hook_theme_suggestions_alter',
-      'definition' => 'function hook_theme_suggestions_alter(array &$suggestions, array $variables, $hook)',
+      'definition' => 'function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $hook)',
       'description' => 'Alters named suggestions for all theme hooks.',
       'destination' => '%module.module',
       'dependencies' => 
@@ -1059,7 +1059,7 @@ array (
     array (
       'type' => 'hook',
       'name' => 'hook_theme_suggestions_HOOK_alter',
-      'definition' => 'function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables)',
+      'definition' => 'function hook_theme_suggestions_HOOK_alter(array &$suggestions, array &$variables)',
       'description' => 'Alters named suggestions for a specific theme hook.',
       'destination' => '%module.module',
       'dependencies' => 
