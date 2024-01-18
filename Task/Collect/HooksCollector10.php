@@ -45,6 +45,8 @@ class HooksCollector10 extends HooksCollector {
     // Add in api.php files in core/lib.
     $core_directory = new \RecursiveDirectoryIterator('core/lib/Drupal');
     $iterator = new \RecursiveIteratorIterator($core_directory);
+    // We need to make the regex grab everything from the start to get the
+    // whole relative pathname in the result.
     $regex = new \RegexIterator($iterator, '/^.+\.api.php$/i', \RecursiveRegexIterator::GET_MATCH);
     $core_api_files = [];
     foreach ($regex as $regex_files) {
