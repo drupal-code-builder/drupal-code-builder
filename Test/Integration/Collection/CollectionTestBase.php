@@ -21,7 +21,7 @@ class CollectionTestBase extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('DrupalLibrary')
+    \DrupalCodeBuilder\Factory::setEnvironmentLocalClass('TestsIntegrationCollection')
       ->setCoreVersionNumber(\Drupal::VERSION);
 
     $this->environment = \DrupalCodeBuilder\Factory::getEnvironment();
