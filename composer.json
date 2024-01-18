@@ -28,7 +28,7 @@
     }
   },
   "scripts": {
-    "cr": "DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder::rebuildCachedContainer"
+    "dcb-cr": "DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder::rebuildCachedContainer"
   },
   "config": {
     "allow-plugins": {
