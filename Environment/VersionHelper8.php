@@ -114,7 +114,7 @@ class VersionHelper8 {
     if (isset($setting_name_lookup[$name])) {
       $config = \Drupal::config('module_builder.settings');
       $value = $config->get($setting_name_lookup[$name]);
-      return $value;
+      return $value ?? $default;
     }
     else {
       return $default;
