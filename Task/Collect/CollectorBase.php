@@ -132,6 +132,29 @@ abstract class CollectorBase implements CollectorInterface {
   }
 
   /**
+   * Gets the first line from a docblock string.
+   *
+   * @param string $docblock
+   *   The docblock as a single string.
+   *
+   * @return string
+   *   The first line, without the '*' or indent.
+   */
+  protected function getDocblockFirstLine(string $docblock): string {
+    $method_docblock_lines = explode("\n", $docblock);
+    foreach ($method_docblock_lines as $line) {
+      // Take the first actual docblock line to be the description.
+      $matches = [];
+      if (preg_match('@^ +\* (.+)@', $line, $matches)) {
+        $description = $matches[1];
+        break;
+      }
+    }
+
+    return $description ?? '';
+  }
+
+  /**
    * Merge incrementally collected data.
    *
    * @param array $existing_data
