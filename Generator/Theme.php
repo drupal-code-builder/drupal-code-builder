@@ -2,6 +2,10 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Definition\PropertyListInterface;
+use MutableTypedData\Definition\DefaultDefinition;
+
 /**
  * Component generator: theme.
  *
@@ -38,6 +42,40 @@ class Theme extends RootComponent {
    *      the themeables.
    */
   public $component_data;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
+
+    $definition
+      ->setLabel('Theme');
+
+    $definition->getProperty('root_name')
+      ->setLabel('Theme machine name')
+      ->setLiteralDefault('my_theme');
+
+    $definition->addProperties([
+      'base' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault('theme')
+        ->setRequired(TRUE),
+      // TODO: move to RootComponent.
+      'readable_name' => PropertyDefinition::create('string')
+        ->setLabel('Theme readable name')
+        ->setRequired(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("machineToLabel(get('..:root_name'))")
+            ->setDependencies('..:root_name')
+        ),
+      'short_description' => PropertyDefinition::create('string')
+        ->setLabel('Theme .info file description')
+        ->setLiteralDefault('TODO: Description of theme')
+        ->setRequired(TRUE),
+    ]);
+  }
 
   /**
    * Declares the subcomponents for this component.
