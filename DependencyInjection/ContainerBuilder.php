@@ -31,7 +31,7 @@ use Psr\Container\ContainerInterface;
  *
  * To rebuild the container, do:
  *
- * $ composer cr
+ * $ composer dcb-cr
  *
  * This should only be used locally; the compiled container is committed to
  * the codebase repository.
