@@ -12,7 +12,7 @@ namespace DrupalCodeBuilder\Generator;
  *  - info
  *  - readme
  */
-class Theme extends BaseGenerator {
+class Theme extends RootComponent {
 
   /**
    * The sanity level this generator requires to operate.
