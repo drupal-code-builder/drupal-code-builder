@@ -74,7 +74,24 @@ class Theme extends RootComponent {
         ->setLabel('Theme .info file description')
         ->setLiteralDefault('TODO: Description of theme')
         ->setRequired(TRUE),
+      'base_theme' => PropertyDefinition::create('string')
+      ->setLabel('Base theme'),
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    // Themes always have a .info file.
+    // TODO doesn't work becuase Info files are too module-specific!!!
+    $components['info'] = [
+      'component_type' => 'Info',
+    ];
+
+    return $components;
   }
 
   /**
@@ -85,7 +102,7 @@ class Theme extends RootComponent {
    * @return
    *  An array of subcomponent types.
    */
-  public function requiredComponents(): array {
+  public function XXXrequiredComponents(): array {
     $theme_data = $this->component_data;
     //drush_print_r($theme_data);
 
