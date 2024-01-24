@@ -178,6 +178,10 @@ class Module extends RootComponent {
         ->setLabel("Services")
         ->setDescription('The services for this module to provide.')
         ->setMultiple(TRUE),
+      'event_subscribers' => MergingGeneratorDefinition::createFromGeneratorType('ServiceEventSubscriber')
+        ->setLabel("Event subscribers")
+        ->setDescription('Services that subscribe to events.')
+        ->setMultiple(TRUE),
       'service_provider' => DeferredGeneratorDefinition::createFromGeneratorType('ServiceProvider', 'boolean')
         ->setLabel("Service provider")
         ->setDescription('A service provider alters existing services or defines services dynamically.'),

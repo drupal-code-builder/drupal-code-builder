@@ -28,6 +28,7 @@ class Module7 extends Module8 {
     $definition->removeProperty('plugins');
     $definition->removeProperty('plugin_types');
     $definition->removeProperty('services');
+    $definition->removeProperty('event_subscribers');
     $definition->removeProperty('service_provider');
     $definition->removeProperty('phpunit_tests');
     $definition->getProperty('tests')->setDescription('');
