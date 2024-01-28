@@ -411,6 +411,14 @@ abstract class BaseGenerator implements GeneratorInterface {
    * This is called by the ComponentCollection when it assembles a tree of
    * components by containment.
    *
+   * Because collectComponentContents() is only called on File components, and
+   * recursively their contained components, returning something from this
+   * method only has an effect if it puts this component in a chain of
+   * containment descending from a File component.
+   *
+   * Components which return a root as their containing component are assumed
+   * by the FileAssembler to be File components.
+   *
    * @return string|NULL
    *  A string that defines another component as a chain of local names from a
    *  component. Tokens define the starting point. The following patterns are
