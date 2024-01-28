@@ -181,8 +181,9 @@ class ComponentCollection implements \IteratorAggregate {
    *   the component being added is the root component.
    */
   public function addComponent(string $local_name, GeneratorInterface $component, $requesting_component) {
-    // $component_address = $component->getAddress();
-    // dump("adding $local_name - $component_address");
+    if (self::DEBUG) {
+      dump("adding {$component->getAddress()} as local $local_name");
+    }
     // Components may not be added once the collection is locked.
     if ($this->locked) {
       throw new \LogicException("Attempt to add component to locked collection.");
