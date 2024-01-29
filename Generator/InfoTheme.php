@@ -20,6 +20,7 @@ class InfoTheme extends BaseGenerator {
     'name',
     'type',
     'description',
+    'base_theme',
     'version',
     'dependencies',
   ];
@@ -33,6 +34,7 @@ class InfoTheme extends BaseGenerator {
     'base',
     'readable_name',
     'short_description',
+    'base_theme',
   ];
 
   /**
@@ -95,6 +97,7 @@ class InfoTheme extends BaseGenerator {
     $lines['name'] = $this->component_data->readable_name->value;
     $lines['type'] = $this->component_data->base->value;
     $lines['description'] = $this->component_data->short_description->value;
+    $lines['base_theme'] = $this->component_data->base_theme->value;
     // For lines which form a set with the same key and array markers,
     // simply make an array.
     foreach ($this->component_data->dependencies as $dependency) {
