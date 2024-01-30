@@ -9,7 +9,7 @@ namespace DrupalCodeBuilder\Definition;
  * object.
  *
  * This gets the data type from the generator class, and lazily allows the
- * geneator class to add to the definition.
+ * generator class to add to the definition.
  *
  * The laziness is so that generator classes can be used repeatedly and take
  * care of removing properties from a parent class that would cause recursion:
