@@ -86,7 +86,6 @@ class Theme extends RootComponent {
     $components = parent::requiredComponents();
 
     // Themes always have a .info file.
-    // TODO doesn't work becuase Info files are too module-specific!!!
     $components['info'] = [
       'component_type' => 'InfoTheme',
     ];
