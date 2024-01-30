@@ -545,6 +545,7 @@ class ComponentCollector {
         // we NEED per-item because:
         // we could be adding more than one local ymlfile data item!
       }
+      assert($required_item_data instanceof DataItem, 'Items returned by requiredComponents() must be arrays or DataItem objects, got ' . gettype($required_item_data));
 
       // Validate so defaults are filled in.
       // TODO: This doesn't actually validate internal properties, so not that
