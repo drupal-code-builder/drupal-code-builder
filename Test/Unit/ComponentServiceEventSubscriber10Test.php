@@ -37,7 +37,8 @@ class ComponentServiceEventSubscriber10Test extends TestBase {
         0 => [
           'service_name' => 'event_subscriber',
           'event_names' => [
-            '\\Drupal\\Core\\Entity\\EntityTypeEvents::CREATE',
+            '\\Drupal\\Core\\Entity\\EntityTypeEvents::DELETE',
+            '\\Drupal\\Core\\Config\\ConfigEvents::DELETE',
           ],
         ],
       ],
@@ -74,11 +75,18 @@ class ComponentServiceEventSubscriber10Test extends TestBase {
     $method_tester = $php_tester->getMethodTester('getSubscribedEvents');
     $method_tester->assertMethodDocblockHasInheritdoc();
     $method_tester->assertHasNoParameters();
-    $method_tester->assertHasLine('$events[EntityTypeEvents::CREATE] = [\'onCreate\'];');
+    $method_tester->assertHasLine('$events[EntityTypeEvents::DELETE] = [\'onDelete\'];');
+    $method_tester->assertHasLine('$events[ConfigEvents::DELETE] = [\'onConfigEventsDelete\'];');
     $method_tester->assertHasLine('return $events;');
 
-    $method_tester = $php_tester->getMethodTester('onCreate');
-    $method_tester->assertMethodHasDocblockLine('Reacts to the CREATE event.');
+    $method_tester = $php_tester->getMethodTester('onDelete');
+    $method_tester->assertMethodHasDocblockLine('Reacts to the DELETE event.');
+    $method_tester->assertHasParameters([
+      'event' => 'Drupal\Component\EventDispatcher\Event',
+    ]);
+
+    $method_tester = $php_tester->getMethodTester('onConfigEventsDelete');
+    $method_tester->assertMethodHasDocblockLine('Reacts to the DELETE event.');
     $method_tester->assertHasParameters([
       'event' => 'Drupal\Component\EventDispatcher\Event',
     ]);

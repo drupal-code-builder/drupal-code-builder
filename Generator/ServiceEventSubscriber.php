@@ -67,10 +67,44 @@ class ServiceEventSubscriber extends Service {
 
     // Add a method for each event we subscribe to.
     $event_name_data = \DrupalCodeBuilder\Factory::getTask('ReportEventNames')->listEventNames();
+    // Array of method names used so far (but without the 'on' prefix, for
+    // simplicity).
+    $method_names = [];
     foreach ($this->component_data->event_names as $event_name) {
+      // We need to ensure the method names are unique, so we work back up the
+      // event name from the constant name (which may not be unique) up fully-
+      // qualified class name.
+      // TODO: if there is a clash and a need to differentiate, then BOTH
+      // methods should get prefixed, not just the one that comes second.
       $fully_qualified_constant = $event_name->value;
-      [, $short_constant] = explode('::', $fully_qualified_constant);
-      $method_name = 'on' . CaseString::snake(strtolower($short_constant))->pascal();
+      $pieces = preg_split('@(\\\\|::)@', $fully_qualified_constant);
+      // We'll get an empty first element because of the initial '\'.
+      $pieces = array_filter($pieces);
+      // Pop off the constant, leaving only the namespace.
+      $short_constant = array_pop($pieces);
+
+      // Start by taking the short constant name as the potential method name.
+      // That won't be suitable if another subscribed event uses the same
+      // constant name in a different class.
+      $potential_method_name = CaseString::snake(strtolower($short_constant))->pascal();
+      while (TRUE) {
+        // Check this at the top of the loop because we've already got a
+        // potential method name of just the constant name.
+        if (!isset($method_names[$potential_method_name])) {
+          $method_names[$potential_method_name] = TRUE;
+          break;
+        }
+
+        if (empty($pieces)) {
+          // We really shouldn't get here, we should have found something
+          // unique by now!
+          break;
+        }
+
+        $potential_method_name = array_pop($pieces) . $potential_method_name;
+      };
+
+      $method_name = 'on' . $potential_method_name;
 
       // Add the method in the getSubscribedEvents() method, with a comment
       // with the event name constant definition's comment.
@@ -82,6 +116,7 @@ class ServiceEventSubscriber extends Service {
         'component_type' => 'PHPFunction',
         'function_name' => $method_name,
         'function_docblock_lines' => [
+          // TODO: differentiate this?
           "Reacts to the $short_constant event.",
         ],
         'prefixes' => ['public'],

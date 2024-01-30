@@ -29,6 +29,7 @@ class EventNamesCollector extends CollectorBase {
     '\Drupal\Core\Entity\EntityTypeEvents::CREATE',
     '\Drupal\Core\Entity\EntityTypeEvents::UPDATE',
     '\Drupal\Core\Entity\EntityTypeEvents::DELETE',
+    '\Drupal\Core\Config\ConfigEvents::DELETE',
   ];
 
   /**
