@@ -507,7 +507,9 @@ class Module extends RootComponent {
 
     return [
       '%base'         => $module_data->base->value,
+      // Deprecated; remove.
       '%module'       => $module_data['root_name'],
+      '%extension'    => $module_data->root_name->value,
       '%readable'     => str_replace("'", "\'", $module_data->readable_name->value),
       '%Module'       => CaseString::title($module_data['readable_name'])->title(),
       '%sentence'     => CaseString::title($module_data['readable_name'])->sentence(),
