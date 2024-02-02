@@ -81,6 +81,7 @@ class ExtensionCodeFile extends PHPFile {
 
       $function_name = $child_item->component_data->function_name->value;
       $function_name = str_replace('%module', $this->component_data['root_component_name'], $function_name);
+      $function_name = str_replace('%extension', $this->component_data['root_component_name'], $function_name);
       $generated_function_names[$function_name] = TRUE;
       if (preg_match('@\d+$@', $function_name)) {
         $generated_function_names_without_suffixes[$function_name] = preg_replace('@\d+$@', '', $function_name);
@@ -234,8 +235,9 @@ class ExtensionCodeFile extends PHPFile {
     $filename_pieces = explode('.', $this->component_data['filename']);
 
     return match (end($filename_pieces)) {
-      'module' => 'Contains hook implementations for the %readable module.',
-      'install' => 'Contains install and update hooks for the %readable module.',
+      'module',
+      'profile' => 'Contains hook implementations for the %readable %base.',
+      'install' => 'Contains install and update hooks for the %readable %base.',
       default => parent::fileDocblockSummary(),
     };
   }
