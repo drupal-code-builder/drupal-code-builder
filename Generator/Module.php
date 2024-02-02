@@ -506,6 +506,7 @@ class Module extends RootComponent {
     $module_data = $this->component_data;
 
     return [
+      '%base'         => $module_data->base->value,
       '%module'       => $module_data['root_name'],
       '%readable'     => str_replace("'", "\'", $module_data->readable_name->value),
       '%Module'       => CaseString::title($module_data['readable_name'])->title(),
