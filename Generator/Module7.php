@@ -66,7 +66,7 @@ class Module7 extends Module8 {
 
     // On D7 and lower, modules need a .module file, even if empty.
     $components['%module.module'] = [
-      'component_type' => 'ModuleCodeFile',
+      'component_type' => 'ExtensionCodeFile',
       'filename' => '%module.module',
     ];
 

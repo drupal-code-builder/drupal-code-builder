@@ -115,8 +115,8 @@ use MutableTypedData\Data\DataItem;
  *
  * There are three distinct hierarchies at work here:
  *  - A plain PHP class hierarchy, which is just there to allow us to make use
- *    of method inheritance. So for instance, ModuleCodeFile inherits from File.
- *    This is just for code re-use.
+ *    of method inheritance. So for instance, ExtensionCodeFile inherits from
+ *    File. This is just for code re-use.
  *  - A hierarchy formed by components that request other components in turn.
  *    This fans out from the initially requested root component, e.g. 'module'.
  *    This is based on how things fit together conceptually: a module may need

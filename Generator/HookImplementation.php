@@ -65,7 +65,7 @@ class HookImplementation extends PHPFunction {
 
     return [
       'code_file' => [
-        'component_type' => 'ModuleCodeFile',
+        'component_type' => 'ExtensionCodeFile',
         'filename' => $code_file,
       ],
     ];

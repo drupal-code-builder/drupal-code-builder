@@ -5,9 +5,9 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
- * Generator class for module code files.
+ * Generator class for procedural code files.
  */
-class ModuleCodeFile extends PHPFile {
+class ExtensionCodeFile extends PHPFile {
 
   /**
    * Whether this file is merged with existing code.

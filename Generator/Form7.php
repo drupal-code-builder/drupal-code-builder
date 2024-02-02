@@ -42,7 +42,7 @@ class Form7 extends BaseGenerator {
     $components = [
       // Request the file we belong to.
       $this->component_data['code_file'] => [
-        'component_type' => 'ModuleCodeFile',
+        'component_type' => 'ExtensionCodeFile',
         'filename' => $this->component_data['code_file'],
       ],
       // Request the form functions.

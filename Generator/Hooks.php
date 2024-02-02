@@ -14,11 +14,11 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  *
  * A module component requests a hook component, and this component in turn
  * requests one or more HookImplementation components. Those will then in turn
- * request ModuleCodeFile components for the file they should reside in.
+ * request ExtensionCodeFile components for the file they should reside in.
  *
  * TODO: make this work for theme hooks too?
  *
- * @see DrupalCodeBuilder\Generator\ModuleCodeFile
+ * @see DrupalCodeBuilder\Generator\ExtensionCodeFile
  */
 class Hooks extends BaseGenerator {
 
