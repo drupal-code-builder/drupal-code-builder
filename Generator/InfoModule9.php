@@ -3,9 +3,9 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator class for module info file for Drupal 9.
+ * Generator class for module info data for Drupal 9.
  */
-class Info9 extends Info {
+class InfoModule9 extends InfoModule {
 
   /**
    * {@inheritdoc}

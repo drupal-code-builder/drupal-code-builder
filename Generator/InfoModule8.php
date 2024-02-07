@@ -3,14 +3,15 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator class for module info file for Drupal 8.
+ * Generator class for module info data for Drupal 8.
  */
-class Info8 extends Info {
+class InfoModule8 extends InfoModule {
 
   /**
    * {@inheritdoc}
    */
   protected static $propertiesAcquiredFromRoot = [
+    'base',
     'readable_name',
     'short_description',
     'module_dependencies',

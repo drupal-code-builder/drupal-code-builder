@@ -6,7 +6,7 @@ use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
- * Represents a single property in a .info file.
+ * Represents a single property in an extension's info.
  */
 class InfoProperty extends BaseGenerator {
 
@@ -32,7 +32,7 @@ class InfoProperty extends BaseGenerator {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    // We don't need to request the .info file, as that's always required.
+    // We don't need to request the info component, as that's always required.
     return [];
   }
 

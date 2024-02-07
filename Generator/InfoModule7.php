@@ -3,9 +3,30 @@
 namespace DrupalCodeBuilder\Generator;
 
 /**
- * Generator class for module info file for Drupal 7.
+ * Generator class for module info data for Drupal 7.
  */
-class Info7 extends InfoIni {
+class InfoModule7 extends InfoModule {
+
+  /**
+   * {@inheritdoc}
+   */
+  const INFO_COMPONENT_TYPE = 'IniFile';
+
+  /**
+   * {@inheritdoc}
+   */
+  const INFO_FILENAME = '%module.info';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $propertiesAcquiredFromRoot = [
+    'base',
+    'readable_name',
+    'short_description',
+    'module_dependencies',
+    'module_package',
+  ];
 
   /**
    * Create lines of file body for Drupal 7.

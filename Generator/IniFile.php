@@ -2,32 +2,35 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use Ckr\Util\ArrayMerger;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
- * Abstract parent class for .ini syntax info files.
+ * Generator for ini files used for pre-D8 info files.
  */
-abstract class InfoIni extends InfoBase {
+class IniFile extends File {
 
   /**
    * {@inheritdoc}
    */
-  protected static $propertiesAcquiredFromRoot = [
-    'readable_name',
-    'short_description',
-    'module_dependencies',
-    'module_package',
-  ];
+  public function getFileInfo() {
+    $ini_data = [];
+    foreach ($this->containedComponents['element'] as $key => $child_item) {
+      $child_item_data = $child_item->getContents();
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
-    parent::addToGeneratorDefinition($definition);
+      // Use array merge as child items may provide numerically-keyed lists,
+      // which should not clobber each other.
+      $ini_data = ArrayMerger::doMerge($ini_data, $child_item_data);
+    }
 
-    $definition->getProperty('filename')
-      ->setLiteralDefault('%module.info');
+    $file_info = [
+      'path' => '', // Means base folder.
+      'filename' => $this->component_data['filename'],
+      'body' => $this->process_info_lines($ini_data),
+    ];
+
+    return $file_info;
   }
 
   /**

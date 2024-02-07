@@ -392,16 +392,9 @@ class Module extends RootComponent {
     $components = parent::requiredComponents();
 
     // Modules always have a .info file.
-    // TODO: this was an experiment for how to do required components with
-    // DataItems and it's not very nice DX. Figure out a better way.
-    $definition = $this->classHandler->getStandaloneComponentPropertyDefinition('Info');
-
-    $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
-    $components['info'] = $data;
-
-    // $components['info'] = [
-    //   'component_type' => 'Info',
-    // ];
+    $components['info'] = [
+      'component_type' => 'InfoModule',
+    ];
 
     // Turn the hooks property into the Hooks component.
     if (!$this->component_data->hooks->isEmpty()) {
