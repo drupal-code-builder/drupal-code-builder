@@ -75,7 +75,7 @@ class Theme extends RootComponent {
         ->setLiteralDefault('TODO: Description of theme')
         ->setRequired(TRUE),
       'base_theme' => PropertyDefinition::create('string')
-      ->setLabel('Base theme'),
+        ->setLabel('Base theme'),
     ]);
   }
 
