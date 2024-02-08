@@ -2,9 +2,11 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Component generator: profile.
@@ -46,6 +48,32 @@ class Profile extends RootComponent {
       'short_description' => PropertyDefinition::create('string')
         ->setLabel('Profile .info file description')
         ->setLiteralDefault('TODO: Description of profile'),
+      'dependencies' => PropertyDefinition::create('string')
+        ->setLabel('Profile dependencies')
+        ->setDescription('The machine names of the modules this profile has as dependencies.')
+        ->setMultiple(TRUE)
+        // We need a value for this, as other generators acquire it.
+        ->setLiteralDefault([]),
+      'install' => PropertyDefinition::create('string')
+        ->setLabel('Profile installs')
+        ->setDescription('The machine names of the modules this profile installs but does not depend on.')
+        ->setMultiple(TRUE)
+        // We need a value for this, as other generators acquire it.
+        ->setLiteralDefault([]),
+      'hooks' => PropertyDefinition::create('string')
+        ->setLabel('Hook implementations')
+        ->setMultiple(TRUE)
+        // TODO: Make ReportHookData into an options provider.
+        ->setOptions(...array_map(
+          function($hook_data_item) {
+            return OptionDefinition::create(
+              $hook_data_item['name'],
+              $hook_data_item['name'],
+              $hook_data_item['description'] ?? ''
+            );
+          },
+          array_values(\DrupalCodeBuilder\Factory::getTask('ReportHookData')->getHookDeclarations())
+        )),
     ]);
 
     $definition->getProperty('root_name')
@@ -60,23 +88,40 @@ class Profile extends RootComponent {
  }
 
   /**
-   * Declares the subcomponents for this component.
-   *
-   * These are not necessarily child classes, just components this needs.
-   *
-   * @return
-   *  An array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $root_name = $this->component_data['root_name'];
 
-    $components = [
-      "$root_name.install" => 'PHPFile',
-      "$root_name.profile" => 'PHPFile',
+    $components['info'] = [
+      'component_type' => 'InfoProfile',
+    ];
+
+    $components['install'] = [
+      'component_type' => 'ExtensionCodeFile',
+      'filename' => '%extension.install',
+    ];
+
+    $components['profile'] = [
+      'component_type' => 'ExtensionCodeFile',
+      'filename' => '%extension.profile',
     ];
 
     return $components;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  function getReplacements() {
+    return [
+      '%base'         => $this->component_data->base->value,
+      '%extension'    => $this->component_data->root_name->value,
+      '%readable'     => str_replace("'", "\'", $this->component_data->readable_name->value),
+      '%sentence'     => CaseString::title($this->component_data->readable_name->value)->sentence(),
+      '%lower'        => strtolower($this->component_data->readable_name->value),
+      '%description'  => str_replace("'", "\'", $this->component_data->short_description->value),
+    ];
+  }
 
 }

@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use MutableTypedData\Data\DataItem;
 
 /**
@@ -78,18 +78,16 @@ class ComponentProfile10Test extends TestBase {
   }
 
   /**
-   * Test requesting a module with no options produces basic files.
+   * Test requesting a profile with no options produces basic files.
    */
   function testNoOptions() {
-    $this->markTestSkipped("Profile don't work at all.");
-
     // Create a profile.
     $profile_name = 'myprofile';
     $profile_data = [
       'base' => 'profile',
       'root_name' => $profile_name,
-      'readable_name' => 'Test module',
-      'short_description' => 'Test Module description',
+      'readable_name' => 'Test profile',
+      'short_description' => 'Test profile description',
       // 'readme' => FALSE,
     ];
 
@@ -97,12 +95,60 @@ class ComponentProfile10Test extends TestBase {
     $component_data = $this->getRootComponentBlankData('profile');
     $component_data->set($profile_data);
     $files = $this->generateComponentFilesFromData($component_data);
+    $this->assertFiles([
+      'myprofile.info.yml',
+      'myprofile.install',
+      'myprofile.profile',
+    ], $files,);
 
-    $file_names = array_keys($files);
+    // Check the .info file.
+    $info_file = $files['myprofile.info.yml'];
+    $yaml_tester = new YamlTester($info_file);
 
-    $this->assertCount(1, $files, "One file is returned.");
+    $yaml_tester->assertPropertyHasValue('name', 'Test profile');
+    $yaml_tester->assertPropertyHasValue('type', 'profile');
+    $yaml_tester->assertPropertyHasValue('description', $profile_data['short_description'], "The info file declares the profile description.");
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10', "The info file declares the core version.");
+  }
 
-    $this->assertArrayHasKey("$profile_name.info.yml", $files, "The files list has a .info.yml file.");
+  /**
+   * Tests info file options.
+   */
+  function testInfoOptions() {
+    // Create a profile.
+    $profile_name = 'myprofile';
+    $profile_data = [
+      'base' => 'profile',
+      'root_name' => $profile_name,
+      'readable_name' => 'Test profile',
+      'short_description' => 'Test profile description',
+      'install' => [
+        'jsonapi',
+      ],
+      'dependencies' => [
+        'node',
+        'block',
+      ],
+      // 'readme' => FALSE,
+    ];
+
+    // Can't call generateModuleFiles() as that uses module data.
+    $component_data = $this->getRootComponentBlankData('profile');
+    $component_data->set($profile_data);
+    $files = $this->generateComponentFilesFromData($component_data);
+    $this->assertFiles([
+      'myprofile.info.yml',
+      'myprofile.install',
+      'myprofile.profile',
+    ], $files,);
+
+    // Check the .info file.
+    $info_file = $files['myprofile.info.yml'];
+    $yaml_tester = new YamlTester($info_file);
+
+    $yaml_tester->assertPropertyHasValue('name', 'Test profile');
+    $yaml_tester->assertPropertyHasValue('install', ['jsonapi']);
+    $yaml_tester->assertPropertyHasValue('dependencies', ['node', 'block']);
   }
 
 }
