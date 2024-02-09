@@ -66,7 +66,7 @@ class InfoTheme extends BaseGenerator {
 
     $components['info_file'] = [
       'component_type' => 'YMLFile',
-      'filename' => '%theme.info.yml',
+      'filename' => '%extension.info.yml',
       // Too early to pass yaml_data, as we need to collect contents for that.
     ];
 
