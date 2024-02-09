@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
@@ -84,6 +85,20 @@ class Theme extends RootComponent {
     ];
 
     return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getReplacements() {
+    return [
+      '%base'         => $this->component_data->base->value,
+      '%extension'    => $this->component_data->root_name->value,
+      '%readable'     => str_replace("'", "\'", $this->component_data->readable_name->value),
+      '%sentence'     => CaseString::title($this->component_data->readable_name->value)->sentence(),
+      '%lower'        => strtolower($this->component_data->readable_name->value),
+      '%description'  => str_replace("'", "\'", $this->component_data->short_description->value),
+    ];
   }
 
 }
