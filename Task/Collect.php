@@ -114,6 +114,8 @@ class Collect extends Base {
    *   value of collectComponentData().
    */
   public function collectComponentDataIncremental($job_list, &$results) {
+    $exceptions_caught = [];
+
     // Populate an array of incremental data that we collect for the given job
     // list, so array_merge() works.
     $incremental_data = array_fill_keys(array_keys($this->collectors), []);
@@ -133,7 +135,16 @@ class Collect extends Base {
     foreach ($grouped_jobs as $collector_service_name => $jobs) {
       $collector_helper = $this->collectors[$collector_service_name];
 
-      $incremental_data[$collector_service_name] = $collector_helper->collect($jobs);
+      try {
+        $incremental_data[$collector_service_name] = $collector_helper->collect($jobs);
+      }
+      catch (\Exception $e) {
+        // Catch and hold an exception, so that the next collector helper is
+        // not skipped.
+        // TODO: Make this more granular, as this could still mean some of the
+        // current collector's jobs are skipped.
+        $exceptions_caught[] = $e;
+      }
 
       // Filter the data if we're collecting sample data for tests.
       if (!empty($this->environment->sample_data_write)) {
@@ -184,6 +195,15 @@ class Collect extends Base {
       else {
         $storage->store($temporary_storage_key, $data);
       }
+    }
+
+    // Now throw a single exception for everything we caught.
+    // TODO: Make this a custom exception class which properly holds multiple
+    // exceptions.
+    if ($exceptions_caught) {
+      $message = implode(', ', array_map(fn ($exception) => $exception->getMessage(), $exceptions_caught));
+      // TODO: say in which collect and job these were!
+      throw new \Exception($message);
     }
   }
 
