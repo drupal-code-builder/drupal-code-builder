@@ -85,6 +85,7 @@ class TestTraits extends CollectorBase implements SectionReportInterface, Option
     $traits = [];
     foreach ($finder->getIterator() as $file) {
       $relative_pathname = $file->getRelativePathname();
+      $classname = '';
 
       // TODO: use DIRECTORY_SEPARATOR for people on Windows :/
       if (str_starts_with($relative_pathname, 'core/tests/Drupal/')) {
