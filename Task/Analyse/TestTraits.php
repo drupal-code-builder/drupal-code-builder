@@ -98,6 +98,15 @@ class TestTraits extends CollectorBase implements SectionReportInterface, Option
 
         $classname = "\\Drupal\\Tests\\{$matches['module']}\\" . str_replace(DIRECTORY_SEPARATOR, '\\', $matches['namespace']);
       }
+      elseif (str_starts_with($relative_pathname, 'modules')) {
+        $matches = [];
+        // Don't anchor the regex at the front, as could be a submodule, or
+        // in /custom or /contrib or top-level.
+        preg_match('@(?P<module>\w+)/tests/src/(?P<namespace>.+).php@', $relative_pathname, $matches);
+
+        $classname = "\\Drupal\\Tests\\{$matches['module']}\\" . str_replace(DIRECTORY_SEPARATOR, '\\', $matches['namespace']);
+      }
+      // TODO: Module in a profile.
 
       $short_trait_name = $file->getFilenameWithoutExtension();
 
