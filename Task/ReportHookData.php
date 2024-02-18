@@ -7,6 +7,8 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionsProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
@@ -14,7 +16,7 @@ use DrupalCodeBuilder\Task\Report\SectionReportInterface;
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  */
-class ReportHookData extends ReportHookDataFolder implements SectionReportInterface {
+class ReportHookData extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
 
   /**
    * The sanity level this task requires to operate.
@@ -112,7 +114,32 @@ class ReportHookData extends ReportHookDataFolder implements SectionReportInterf
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    $options = [];
+
+    $data = $this->listHookData();
+    foreach ($data as $group => $hooks) {
+      foreach ($hooks as $key => $hook) {
+        // Standardize to lowercase for values.
+        $lowercase_hook_name = strtolower($hook['name']);
+
+        $options[$lowercase_hook_name] = OptionDefinition::create(
+          $lowercase_hook_name,
+          $hook['name'],
+          $hook['description'] ?? ''
+        );
+      }
+    }
+
+    return $options;
+  }
+
+  /**
    * Get hooks as a list of options.
+   *
+   * @deprecated Use getOptions() instead.
    *
    * @return
    *   An array of hooks as options suitable for FormAPI, where each key is a

@@ -7,7 +7,6 @@ use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
-use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
@@ -244,19 +243,7 @@ class Module extends RootComponent {
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE)
-        ->setOptions(...array_map(
-          function($hook_data_item) {
-            return OptionDefinition::create(
-              $hook_data_item['name'],
-              $hook_data_item['name'],
-              $hook_data_item['description'] ?? ''
-            );
-          },
-          // ARGH PITA that we have to zap out the keys here for the splat to
-          // work!
-          // TODO: make the API actually be what we need here!
-          array_values(\DrupalCodeBuilder\Factory::getTask('ReportHookData')->getHookDeclarations())
-        )),
+        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportHookData')),
       //   // TODO: restore this as validation.
       //   'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
       //     $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');
