@@ -24,7 +24,7 @@ class RouterItem7 extends BaseGenerator {
         ->setLabel("The menu item path")
         ->setRequired(TRUE),
       'title' => PropertyDefinition::create('string')
-        ->setLabel("The page title for the route.")
+        ->setLabel("The page title for the route")
         ->setInternal(TRUE)
         ->setLiteralDefault('myPage'),
       'description' => PropertyDefinition::create('string')

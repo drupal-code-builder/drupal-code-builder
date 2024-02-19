@@ -74,7 +74,7 @@ class PHPFunction extends BaseGenerator {
           ->setCallable([static::class, 'defaultDocblockLines'])
       ),
       'doxygen_tag_lines' => PropertyDefinition::create('mapping')
-        ->setLabel("Doxygen tags to go after the standard ones.")
+        ->setLabel("Doxygen tags to go after the standard ones")
         ->setInternal(TRUE),
       'declaration' => PropertyDefinition::create('string')
         ->setInternal(TRUE),

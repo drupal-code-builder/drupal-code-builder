@@ -30,7 +30,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
     $properties = [
       // Move the form class name property to the top, and override its default.
       'plain_class_name' => $definition->getProperty('plain_class_name')
-        ->setLabel("Form class name.")
+        ->setLabel("Form class name")
         ->setDescription("The form class's plain class name, e.g. \"MyForm\"."),
       'form_id' => PropertyDefinition::create('string')
         ->setLabel('The form ID.')

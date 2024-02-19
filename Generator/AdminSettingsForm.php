@@ -54,7 +54,7 @@ class AdminSettingsForm extends Form {
 
     $definition->addProperty(PropertyDefinition::create('string')
       ->setName('route_name')
-      ->setLabel("The name of the route.")
+      ->setLabel("The name of the route")
       ->setRequired(TRUE)
       ->setDefault(
         DefaultDefinition::create()

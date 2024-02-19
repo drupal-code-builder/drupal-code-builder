@@ -41,7 +41,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setDependencies('..:path')
         ),
       'title' => PropertyDefinition::create('string')
-        ->setLabel("The page title for the route.")
+        ->setLabel("The page title for the route")
         ->setLiteralDefault('myPage'),
       'menu_link' => PropertyDefinition::create('complex')
         ->setLabel("Menu link")
