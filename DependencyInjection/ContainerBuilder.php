@@ -88,10 +88,9 @@ class ContainerBuilder {
     // contains classes that are filtered out and not defined as services.
     $all_classes = [];
 
-    // The service names of services that have versioned versions. For example,
+    // The service names of services that have versioned variants. For example,
     // would contain Foo if there is a Foo8.
-    // TODO: Rename!
-    $versioned_services = [];
+    $services_with_versioned_variants = [];
 
     // Change directory to DCB's root directory. In an environment where DCB is
     // being developed with other packages (e.g. UIs that make use of it), it
@@ -126,7 +125,7 @@ class ContainerBuilder {
       // these should not be registered in the bulk list.
       if (is_numeric(substr($service_name, -1))) {
         $unversioned_service_name = preg_replace('@\d+$@', '', $service_name);
-        $versioned_services[$unversioned_service_name] = TRUE;
+        $services_with_versioned_variants[$unversioned_service_name] = TRUE;
       }
 
       // Don't register abtract classes, interfaces, or traits.
@@ -153,7 +152,7 @@ class ContainerBuilder {
 
     // Define the services.
     foreach ($services as $service_name => $class_name) {
-      if (!isset($versioned_services[$service_name])) {
+      if (!isset($services_with_versioned_variants[$service_name])) {
         // Autowire anything that's not versioned.
         $definitions[$service_name] = \DI\autowire($class_name);
       }
@@ -199,7 +198,7 @@ class ContainerBuilder {
 
     // Define the unversioned services. This needs a separate loop because some
     // of these classes are abstract, and so not in $services.
-    foreach (array_keys($versioned_services) as $service_name) {
+    foreach (array_keys($services_with_versioned_variants) as $service_name) {
       // These can all use the same factory because the versioned class is also
       // a service, that gets autowired and the factory doesn't need to worry
       // about it.
