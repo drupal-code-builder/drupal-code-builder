@@ -24,7 +24,7 @@ interface PropertyListInterface {
    * @param string $name
    *  The property name.
    *
-   * @return static
+   * @return \MutableTypedData\Definition\DataDefinition
    *  The definition.
    *
    * @throws \Exception
@@ -33,15 +33,10 @@ interface PropertyListInterface {
   public function getProperty(string $name): DataDefinition;
 
   /**
-   * Adds properties to this definition.
+   * Gets this defintion's properties.
    *
-   * @param array $properties
-   *  An array of data definitions. These are appended to existing properties.
-   *  If any keys in this array correspond to existing properties, the existing
-   *  definition is overwritten. The replacement property will be in the order
-   *  given in the $properties array, not in its original position.
-   *
-   * @return static
+   * @return \MutableTypedData\Definition\DataDefinition[]
+   *  An array of property definitions, keyed by the property name.
    */
   public function getProperties();
 
