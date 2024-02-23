@@ -327,7 +327,7 @@ class PHPTester {
     // TODO: assert it's NOT imported!
     if (!empty($this->parser_nodes['namespace'])) {
       $expected_class_namespace = array_slice($class_name_parts, 0, -1);
-      if ($expected_class_namespace == $this->parser_nodes['namespace'][0]->name->parts) {
+      if ($expected_class_namespace == $this->parser_nodes['namespace'][0]->name->getParts()) {
         return;
       }
     }
@@ -335,11 +335,11 @@ class PHPTester {
     // Find the matching import statement.
     $seen = [];
     foreach ($this->parser_nodes['imports'] as $use_node) {
-      if ($use_node->uses[0]->name->parts === $class_name_parts) {
+      if ($use_node->uses[0]->name->getParts() === $class_name_parts) {
         return;
       }
 
-      $seen[] = implode('\\', $use_node->uses[0]->name->parts);
+      $seen[] = implode('\\', $use_node->uses[0]->name->getParts());
     }
 
     // Add the seen array, as PHPUnit doesn't output the searched array when
@@ -360,7 +360,7 @@ class PHPTester {
     $message = $message ?? 'The use statements are sorted in a case-sensitive manner.';
 
     $seen = array_map(function ($use_node) {
-      return implode('\\', $use_node->uses[0]->name->parts);
+      return implode('\\', $use_node->uses[0]->name->getParts());
     }, $this->parser_nodes['imports']);
     $sorted = $seen;
     sort($sorted);
@@ -389,7 +389,7 @@ class PHPTester {
     // Check the namespace of the class.
     if (count($class_name_parts) > 1) {
       Assert::assertCount(1, $this->parser_nodes['namespace']);
-      Assert::assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts, $message);
+      Assert::assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->getParts(), $message);
     }
   }
 
@@ -499,7 +499,7 @@ class PHPTester {
 
     // Check the namespace of the interface.
     Assert::assertCount(1, $this->parser_nodes['namespace']);
-    Assert::assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->parts);
+    Assert::assertEquals($namespace_parts, $this->parser_nodes['namespace'][0]->name->getParts());
   }
 
   /**
@@ -521,7 +521,7 @@ class PHPTester {
 
     $actual_parent_interface_full_names = [];
     foreach ($interface_node->extends as $parent_name_node) {
-      $actual_parent_interface_full_names[] = $this->resolveImportedClassLike($parent_name_node->parts[0]);
+      $actual_parent_interface_full_names[] = $this->resolveImportedClassLike($parent_name_node->getParts()[0]);
     }
 
     Assert::assertNotEmpty($actual_parent_interface_full_names, "The interface has parents.");
@@ -612,8 +612,8 @@ class PHPTester {
 
     $class_node_interfaces = [];
     foreach ($class_node->implements as $implements) {
-      Assert::assertCount(1, $implements->parts);
-      $class_node_interfaces[] = $implements->parts[0];
+      Assert::assertCount(1, $implements->getParts());
+      $class_node_interfaces[] = $implements->getParts()[0];
     }
 
     foreach ($expected_interface_names as $interface_full_name) {
@@ -652,7 +652,7 @@ class PHPTester {
 
     $actual_trait_full_names = [];
     foreach ($this->parser_nodes['traits'] as $trait_node) {
-      $actual_trait_full_names[] = $this->resolveImportedClassLike($trait_node->traits[0]->parts[0]);
+      $actual_trait_full_names[] = $this->resolveImportedClassLike($trait_node->traits[0]->getParts()[0]);
     }
 
     // Sort both arrays, as PHPUnit does not have an order-irrelevant array
@@ -679,8 +679,8 @@ class PHPTester {
 
     $class_node_interfaces = [];
     foreach ($class_node->implements as $implements) {
-      Assert::assertCount(1, $implements->parts);
-      $class_node_interfaces[] = $implements->parts[0];
+      Assert::assertCount(1, $implements->getParts());
+      $class_node_interfaces[] = $implements->getParts()[0];
     }
 
     foreach ($not_expected_interface_names as $interface_full_name) {
@@ -984,7 +984,7 @@ class PHPTester {
     // the base parameters.
     $parent_call_node = $this->parser_nodes['methods']['__construct']->stmts[0]->expr;
     Assert::assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $parent_call_node);
-    Assert::assertEquals('parent', $parent_call_node->class->parts[0]);
+    Assert::assertEquals('parent', $parent_call_node->class->getParts()[0]);
     Assert::assertEquals('__construct', $parent_call_node->name);
     $call_arg_names = [];
     foreach ($parent_call_node->args as $arg) {
@@ -1211,7 +1211,7 @@ class PHPTester {
       elseif ($param_node->type instanceof \PhpParser\Node\Name) {
         // PHP CodeSniffer will have already caught a non-imported class, so
         // safe to assume there is only one part to the class name.
-        $actual_parameter_types_slice[] = $param_node->type->parts[0];
+        $actual_parameter_types_slice[] = $param_node->type->getParts()[0];
 
         $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
 
@@ -1436,8 +1436,8 @@ class PHPTester {
     Assert::assertInstanceOf(\PhpParser\Node\Stmt\Expression::class, $statement_node, $message);
     $expression = $statement_node->expr;
     Assert::assertInstanceOf(\PhpParser\Node\Expr\StaticCall::class, $expression, $message);
-    Assert::assertCount(1, $expression->class->parts);
-    Assert::assertEquals('parent', $expression->class->parts[0]);
+    Assert::assertCount(1, $expression->class->getParts());
+    Assert::assertEquals('parent', $expression->class->getParts()[0]);
   }
 
   /**
@@ -1510,7 +1510,7 @@ class PHPTester {
           Assert::assertEquals('class', $actual_arg->value->name);
 
           $class_name_parts = explode('\\', $expected_arg_name);
-          Assert::assertEquals(end($class_name_parts), $actual_arg->value->class->parts[0]);
+          Assert::assertEquals(end($class_name_parts), $actual_arg->value->class->getParts()[0]);
           $this->assertImportsClassLike($class_name_parts);
           break;
 

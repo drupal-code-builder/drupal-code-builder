@@ -114,7 +114,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
       $form_id = $methods['getFormId']->stmts[0]->expr->value;
     }
 
-    $relative_namespace_pieces = array_slice($namespace[0]->name->parts, 2);
+    $relative_namespace_pieces = array_slice($namespace[0]->name->getParts(), 2);
     $relative_namespace = implode('\\', $relative_namespace_pieces);
     $relative_class_name = $relative_namespace . '\\' . $classes[0]->name->name;
 

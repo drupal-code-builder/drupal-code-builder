@@ -102,7 +102,7 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
           // actual source code: check that is a call to
           // BaseFieldDefinition::create() and get the type.
           Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($method_call), "The chained call starts with a static call");
-          Assert::assertEquals('BaseFieldDefinition', $method_call->class->parts[0], "The chained call starts with BaseFieldDefinition.");
+          Assert::assertEquals('BaseFieldDefinition', $method_call->class->getParts()[0], "The chained call starts with BaseFieldDefinition.");
           Assert::assertEquals('create', $method_call->name, "The chained call starts with a call to create().");
           Assert::assertCount(1, $method_call->args, "The chained call starts with a call to create().");
 
