@@ -124,11 +124,15 @@ class Collect extends Base {
     // know to write to the real storage file rather than temporary.
     $final_jobs = [];
 
-    // Group the jobs by collector.
     $grouped_jobs = [];
+    // Group the jobs by collector.
     foreach ($job_list as $job) {
       $collector_service_name = $job['collector'];
       $grouped_jobs[$collector_service_name][] = $job;
+
+      if (!empty($job['last'])) {
+        $final_jobs[$collector_service_name] = TRUE;
+      }
     }
 
     // Pass each set of jobs to its respective collective.
@@ -153,11 +157,6 @@ class Collect extends Base {
 
           $incremental_data[$collector_service_name] = array_intersect_key($incremental_data[$collector_service_name], $filter);
         }
-      }
-
-      $last_job = end($jobs);
-      if (!empty($last_job['last'])) {
-        $final_jobs[$collector_service_name] = TRUE;
       }
     }
 
