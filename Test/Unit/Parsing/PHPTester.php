@@ -256,7 +256,7 @@ class PHPTester {
    * resetting it from any previous call to this method.
    */
   protected function parseCode() {
-    $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+    $parser = (new ParserFactory)->createForHostVersion();
     try {
       $this->ast = $parser->parse($this->phpCode);
     }

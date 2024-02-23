@@ -148,7 +148,7 @@ class DrupalExtension {
 
     $php = $this->getFileContents($relative_file_path);
 
-    $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+    $parser = (new ParserFactory)->createForHostVersion();
     try {
       $ast = $parser->parse($php);
     }
