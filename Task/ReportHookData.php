@@ -122,11 +122,8 @@ class ReportHookData extends ReportHookDataFolder implements OptionsProviderInte
     $data = $this->listHookData();
     foreach ($data as $group => $hooks) {
       foreach ($hooks as $key => $hook) {
-        // Standardize to lowercase for values.
-        $lowercase_hook_name = strtolower($hook['name']);
-
-        $options[$lowercase_hook_name] = OptionDefinition::create(
-          $lowercase_hook_name,
+        $options[$hook['name']] = OptionDefinition::create(
+          $hook['name'],
           $hook['name'],
           $hook['description'] ?? ''
         );
