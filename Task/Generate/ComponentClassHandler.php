@@ -2,9 +2,10 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
+use DI\Attribute\Inject;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DI\Attribute\Inject;
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
 
 /**
  *  Task helper for working with generator classes and instantiating them.
@@ -14,6 +15,8 @@ class ComponentClassHandler {
   /**
    * Constructor.
    *
+   * @param EnvironmentInterface $environment
+   *   The environment object.
    * @param array $generator_classmap
    *   The classmap of version-specific generator classes. Keys are the base
    *   class name, then the version, value is the short class name of the
@@ -27,6 +30,7 @@ class ComponentClassHandler {
    *   @endcode
    */
   public function __construct(
+    protected EnvironmentInterface $environment,
     #[Inject('generator_classmap')]
     protected array $generator_classmap
   ) { }
