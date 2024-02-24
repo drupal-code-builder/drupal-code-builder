@@ -627,7 +627,6 @@ array (
       'destination' => '%module.install',
       'dependencies' => 
       array (
-        0 => 'callback_batch_operation',
       ),
       'group' => 'core:module',
       'core' => true,
@@ -696,7 +695,6 @@ array (
       'destination' => '%module.module',
       'dependencies' => 
       array (
-        0 => 'callback_batch_operation',
       ),
       'group' => 'core:module',
       'core' => true,

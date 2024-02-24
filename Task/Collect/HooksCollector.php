@@ -235,12 +235,16 @@ abstract class HooksCollector extends CollectorBase {
         // See if the hook has any callbacks as dependencies. We assume that
         // mention of a string of the form 'callback_foo()' means it's needed
         // for the hook.
+        // Ugly special case for install hooks which mention Batch API callbacks
+        // in their docs but shouldn't have these as dependencies.
         // TODO: see if there's a way to label this in the resulting source
         // as associated with the hook that requested this.
-        $matches = [];
-        preg_match_all("@(callback_\w+)\(\)@", $hook_data_raw['documentation'][$key], $matches);
-        if (!empty($matches[1])) {
-          $hook_dependencies += $matches[1];
+        if ($file_data['group'] != 'core:module') {
+          $matches = [];
+          preg_match_all("@(callback_\w+)\(\)@", $hook_data_raw['documentation'][$key], $matches);
+          if (!empty($matches[1])) {
+            $hook_dependencies += $matches[1];
+          }
         }
 
         // Because we're working through the raw data array, we keep the incoming
