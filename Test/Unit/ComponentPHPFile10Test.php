@@ -203,8 +203,8 @@ class ComponentPHPFile10Test extends TestBase {
         EOT,
       ],
     ]);
-    $report_hook_data->listHookNamesOptions()->willReturn([
-      'cake' => 'hook_cake()',
+    $report_hook_data->getOptions()->willReturn([
+      'hook_cake' => 'hook_cake()',
     ]);
 
     $this->container->set('ReportHookData', $report_hook_data->reveal());
