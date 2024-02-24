@@ -85,6 +85,7 @@ class ComponentHooks10Test extends TestBase {
         'hook_tokens',
         // This goes in the .install file.
         'hook_install',
+        'hook_update_N',
       ],
       'readme' => FALSE,
     ];
@@ -121,9 +122,13 @@ class ComponentHooks10Test extends TestBase {
     $install_file = $files["$module_name.install"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $install_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards([
+      // The code sample for hook_update_N() has an empty line after a comment.
+      'Drupal.Commenting.InlineComment.InvalidEndChar',
+    ]);
     $php_tester->assertFileDocblockHasLine("Contains install and update hooks for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
+    $php_tester->assertHasFunction("{$module_name}_update_{$this->drupalMajorVersion}001");
     $php_tester->assertNotHasHookImplementation('hook_help', $module_name);
     $php_tester->assertNotHasHookImplementation('hook_form_alter', $module_name);
     $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
