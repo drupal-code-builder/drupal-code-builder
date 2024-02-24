@@ -194,7 +194,8 @@ class ReportHookData extends ReportHookDataFolder implements OptionsProviderInte
    *  - 'description': The first line of the hook docblock.
    *  - 'destination': The file this hook should be placed in, as a module file
    *    pattern such as '%module.module'.
-   *  - 'dependencies': TODO!
+   *  - 'dependencies': An array of other hooks and callbacks which should also
+   *    be generated if this hook is generated.
    *  - 'group': Erm write this later.
    *  - 'file_path': The absolute path of the file this definition was taken
    *    from.
