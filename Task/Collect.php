@@ -164,8 +164,9 @@ class Collect extends Base {
     $storage = $this->environment->getStorage();
     foreach ($incremental_data as $collector_service_name => $collector_incremental_data) {
       // We have a key for every collector in $incremental_data, but have not
-      // necessarily run jobs for that collector in this batch. Skip if empty.
-      if (empty($collector_incremental_data)) {
+      // necessarily run jobs for that collector in this batch. Skip if empty
+      // and we're not on the last job.
+      if (empty($collector_incremental_data) && !isset($final_jobs[$collector_service_name])) {
         continue;
       }
 
