@@ -392,6 +392,7 @@ class ContainerBuilder {
 
       // Have to pass in the services as an array, as method() only works with a
       // single parameter!!
+      // See https://github.com/PHP-DI/PHP-DI/issues/881.
       $definition->method(
         $collector_service_methods[$service_name],
         $collections[$interface]
