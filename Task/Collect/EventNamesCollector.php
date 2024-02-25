@@ -47,7 +47,7 @@ class EventNamesCollector extends CollectorBase {
     // will get some false positives!
     $files = $this->findFiles('Events.php$');
     // dsm($files);
-    $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+    $parser = (new ParserFactory)->createForHostVersion();
 
     // Node visitor which collects class constants.
     // We can instantiate this just the once, because the keys of the $events

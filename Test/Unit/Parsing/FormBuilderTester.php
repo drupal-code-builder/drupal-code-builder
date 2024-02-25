@@ -53,7 +53,7 @@ class FormBuilderTester extends PHPMethodTester {
 
     // Check the parent class.
     $class_node = reset($this->fileTester->parser_nodes['classes']);
-    $parent_class_short_name = $class_node->extends->parts[0];
+    $parent_class_short_name = $class_node->extends->getParts()[0];
     // Strictly speaking we should check the whole class name but eh CBA.
     $this->immediateParentIsBase = ($parent_class_short_name == 'FormBase');
 

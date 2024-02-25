@@ -200,7 +200,7 @@ class PHPMethodTester {
       elseif ($param_node->type instanceof \PhpParser\Node\Name) {
         // PHP CodeSniffer will have already caught a non-imported class, so
         // safe to assume there is only one part to the class name.
-        $actual_parameter_types_slice[] = $param_node->type->parts[0];
+        $actual_parameter_types_slice[] = $param_node->type->getParts()[0];
 
         $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
 
@@ -334,8 +334,7 @@ class PHPMethodTester {
     Assert::assertObjectHasProperty('expr', $expression, $message);
     Assert::assertEquals(\PhpParser\Node\Expr\StaticCall::class, get_class($expression->expr), $message);
     Assert::assertObjectHasProperty('class', $expression->expr, $message);
-    Assert::assertObjectHasProperty('parts', $expression->expr->class, $message);
-    Assert::assertEquals('parent', $expression->expr->class->parts[0], $message);
+    Assert::assertEquals('parent', $expression->expr->class->getParts()[0], $message);
     Assert::assertEquals($this->methodName->toString(), $expression->expr->name->toString(), $message);
 
     // TODO: check the method parameter names match the method call arguments.
