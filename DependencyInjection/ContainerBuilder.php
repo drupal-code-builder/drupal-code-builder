@@ -5,7 +5,6 @@ namespace DrupalCodeBuilder\DependencyInjection;
 use Composer\Script\Event;
 use DI\ContainerBuilder as DIContainerBuilder;
 use DrupalCodeBuilder\Attribute\InjectImplementations;
-use Psr\Container\ContainerInterface;
 
 /**
  * Service container builder.
@@ -251,7 +250,7 @@ class ContainerBuilder {
       $root_component_type = strtolower($reflection_class->getShortName());
       $service_name = 'Generate|' . $root_component_type;
 
-      static::$definitions[$service_name] = \DI\factory([static::class, 'createGenerator'])
+      static::$definitions[$service_name] = \DI\factory([ServiceFactories::class, 'createGenerator'])
         ->parameter('root_component_type', $root_component_type);
     } // foreach class map
   }
@@ -275,6 +274,8 @@ class ContainerBuilder {
    *  - Foo: might return Foo9 or Foo.unversioned
    *  - Foo9: version of Foo for Drupal 9
    *  - Foo.unversioned: version of Foo for all other Drupal core versions.
+   *
+   * @see DrupalCodeBuilder\DependencyInjection\ServiceFactories::createVersioned()
    */
   protected static function unversionedAliasesPass() {
     // This needs a separate loop because some of these classes are abstract,
@@ -283,7 +284,7 @@ class ContainerBuilder {
       // These can all use the same factory because the versioned class is also
       // a service, that gets autowired and the factory doesn't need to worry
       // about it.
-      static::$definitions[$service_name] = \DI\factory([static::class, 'createVersioned']);
+      static::$definitions[$service_name] = \DI\factory([ServiceFactories::class, 'createVersioned']);
 
       if (isset(static::$services[$service_name])) {
         // Create a normal autowired version of the unversioned service name, so
@@ -361,8 +362,9 @@ class ContainerBuilder {
       // array of collections for that interface.
       foreach (array_intersect($class->getInterfaceNames(), $collection_interfaces) as $interface) {
         // Don't add versioned services: we only want the plain one to be used;
-        // when it is obtained from the container, the self::createVersioned()
-        // factory will take care of providing the right version.
+        // when it is obtained from the container, the
+        // ServiceFactories::createVersioned() factory will take care of
+        // providing the right version.
         if (is_numeric(substr($service_name, -1))) {
           continue;
         }
@@ -395,71 +397,6 @@ class ContainerBuilder {
         $collections[$interface]
       );
     }
-  }
-
-  /**
-   * Factory for versioned services which have no construction parameters.
-   *
-   * This is registered as the factory for the service name without a version
-   * suffix, for example, 'Foo'. Instead of 'Foo', it will return:
-   *  1. The service with the version suffix for the current major version, for
-   *     example 'Foo10', if it exists.
-   *  2. The service formed by adding the '.unversioned' suffix otherwise. This
-   *     is an alias for the 'Foo' class, which is needed because trying to get
-   *     'Foo' from the container will bring us right back to this factory
-   *     method.
-   *
-   * @param \Psr\Container\ContainerInterface $container
-   *   The container.
-   * @param \DI\Factory\RequestedEntry $entry
-   *   The requested service name.
-   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-   *   The environment.
-   */
-  public static function createVersioned(
-    ContainerInterface $container,
-    \DI\Factory\RequestedEntry $entry,
-    \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-  ) {
-    $requested_name = $entry->getName();
-    $versioned_name = $requested_name . $environment->getCoreMajorVersion();
-
-    if ($container->has($versioned_name)) {
-      return $container->get($versioned_name);
-    }
-    else {
-      // Get the plain version of the requested service, as otherwise we'd just
-      // be requesting the service that brought us here.
-      if (!$container->has($requested_name . '.unversioned')) {
-        throw new \LogicException("There is no service '$versioned_name' or its unversioned fallback '$requested_name'.");
-      }
-
-      return $container->get($requested_name . '.unversioned');
-    }
-  }
-
-  /**
-   * Factory for flavours of the Generate task.
-   *
-   * @param \Psr\Container\ContainerInterface $container
-   *   The container.
-   * @param string $root_component_type
-   *   The root component type.
-   * @param \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-   *   The environment.
-   */
-  public static function createGenerator(
-    ContainerInterface $container,
-    string $root_component_type,
-    \DrupalCodeBuilder\Environment\EnvironmentInterface $environment
-  ) {
-    return new \DrupalCodeBuilder\Task\Generate(
-      $environment,
-      $root_component_type,
-      $container->get('Generate\ComponentClassHandler'),
-      $container->get('Generate\ComponentCollector'),
-      $container->get('Generate\FileAssembler'),
-    );
   }
 
 }

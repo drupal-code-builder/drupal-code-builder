@@ -1046,7 +1046,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get153()
     {
         return $this->resolveFactory([
-            0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
+            0 => 'DrupalCodeBuilder\\DependencyInjection\\ServiceFactories',
             1 => 'createGenerator',
         ], 'Generate|module', [
             'root_component_type' => 'module',
@@ -1056,7 +1056,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get154()
     {
         return $this->resolveFactory([
-            0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
+            0 => 'DrupalCodeBuilder\\DependencyInjection\\ServiceFactories',
             1 => 'createGenerator',
         ], 'Generate|profile', [
             'root_component_type' => 'profile',
@@ -1066,7 +1066,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get155()
     {
         return $this->resolveFactory([
-            0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
+            0 => 'DrupalCodeBuilder\\DependencyInjection\\ServiceFactories',
             1 => 'createVersioned',
         ], 'Collect\\HooksCollector');
     }
@@ -1074,7 +1074,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get156()
     {
         return $this->resolveFactory([
-            0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
+            0 => 'DrupalCodeBuilder\\DependencyInjection\\ServiceFactories',
             1 => 'createVersioned',
         ], 'Collect');
     }
@@ -1166,7 +1166,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get171()
     {
         return $this->resolveFactory([
-            0 => 'DrupalCodeBuilder\\DependencyInjection\\ContainerBuilder',
+            0 => 'DrupalCodeBuilder\\DependencyInjection\\ServiceFactories',
             1 => 'createVersioned',
         ], 'Testing\\CollectTesting');
     }
