@@ -368,7 +368,7 @@ class PHPFunction extends BaseGenerator {
 
       $last_index = count($declaration_line_params) - 1;
       foreach ($declaration_line_params as $index => $param) {
-        $code[] = '  ' . $param . ( $index == $last_index ? '' : ',' );
+        $code[] = '  ' . $param . ',';
       }
 
       $code[] = $closing;
