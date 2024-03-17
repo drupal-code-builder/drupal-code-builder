@@ -101,6 +101,7 @@ class PHPFunction extends BaseGenerator {
             ->setLiteralDefault('string'),
           // The description of the parameter. This may be omitted if
           // 'docblock_inherit' is TRUE.
+          'nullable' => PropertyDefinition::create('boolean'),
           'description' => PropertyDefinition::create('string')
             ->setLiteralDefault('Parameter description.'),
           'default_value' => PropertyDefinition::create('string'),
@@ -416,7 +417,9 @@ class PHPFunction extends BaseGenerator {
     }
 
     if (!empty($parameter_should_use_type)) {
-      $parameter_pieces[] = $parameter_info['typehint'];
+      $parameter_pieces[] =
+        (!empty($parameter_info['nullable']) ? '?' : '')
+        . $parameter_info['typehint'];
     }
 
     $parameter_symbol =
