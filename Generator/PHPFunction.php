@@ -359,27 +359,7 @@ class PHPFunction extends BaseGenerator {
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
     foreach ($parameters as $parameter_info) {
-      // Allow for parameter info from both code analysis and from a
-      // PHPFunctionParameter component, which don't use the same key (because
-      // using 'name' as a data property name causes issues as it's also a class
-      // property name on the DataItem class.
-      $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
-
-      $parameter_symbol =
-        (!empty($parameter_info['by_reference']) ? '&' : '')
-        . '$'
-        . $parameter_name;
-
-      if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
-        // Don't type hint scalar types.
-        $declaration_line_params[] = $parameter_symbol;
-      }
-      elseif (!empty($parameter_info['typehint'])) {
-        $declaration_line_params[] = $parameter_info['typehint'] . ' ' . $parameter_symbol;
-      }
-      else {
-        $declaration_line_params[] = $parameter_symbol;
-      }
+      $declaration_line_params[] = $this->buildParameter($parameter_info);
     }
 
     if ($options['break_declaration']) {
@@ -401,6 +381,40 @@ class PHPFunction extends BaseGenerator {
     }
 
     return $code;
+  }
+
+  /**
+   * Builds the string for a single function parameter.
+   *
+   * @param array $parameter_info
+   *   The array of data for the parameter from the 'parameters' property.
+   *
+   * @return string
+   *   The string for the parameter in the function declaration, with any
+   *   prefixes and the type.
+   */
+  protected function buildParameter(array $parameter_info): string {
+    // Allow for parameter info from both code analysis and from a
+    // PHPFunctionParameter component, which don't use the same key (because
+    // using 'name' as a data property name causes issues as it's also a class
+    // property name on the DataItem class.
+    $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
+
+    $parameter_symbol =
+      (!empty($parameter_info['by_reference']) ? '&' : '')
+      . '$'
+      . $parameter_name;
+
+    if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
+      // Don't type hint scalar types.
+      return $parameter_symbol;
+    }
+    elseif (!empty($parameter_info['typehint'])) {
+      return $parameter_info['typehint'] . ' ' . $parameter_symbol;
+    }
+    else {
+      return $parameter_symbol;
+    }
   }
 
   /**
