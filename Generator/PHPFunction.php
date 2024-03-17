@@ -400,21 +400,25 @@ class PHPFunction extends BaseGenerator {
     // property name on the DataItem class.
     $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
 
+    $parameter_pieces = [];
+
+    if (!empty($parameter_info['typehint']) && !in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
+      // Don't type hint scalar types.
+      $parameter_pieces[] = $parameter_info['typehint'];
+    }
+
     $parameter_symbol =
       (!empty($parameter_info['by_reference']) ? '&' : '')
       . '$'
       . $parameter_name;
 
-    if (!empty($parameter_info['typehint']) && in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
-      // Don't type hint scalar types.
-      return $parameter_symbol;
+    $parameter_pieces[] = $parameter_symbol;
+
+    if (isset($parameter_info['default_value'])) {
+      $parameter_pieces[] = '= ' . $parameter_info['default_value'];
     }
-    elseif (!empty($parameter_info['typehint'])) {
-      return $parameter_info['typehint'] . ' ' . $parameter_symbol;
-    }
-    else {
-      return $parameter_symbol;
-    }
+
+    return implode(' ', $parameter_pieces);
   }
 
   /**
