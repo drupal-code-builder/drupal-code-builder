@@ -105,6 +105,10 @@ class PHPFunction extends BaseGenerator {
             ->setLiteralDefault('Parameter description.'),
           'default_value' => PropertyDefinition::create('string'),
         ]),
+      // Whether to put parameter type declarations for PHP primitive types.
+      // Defaults to FALSE as lots of Drupal functions do this for BC.
+      'use_primitive_parameter_type_declarations' => PropertyDefinition::create('boolean')
+          ->setLiteralDefault(FALSE),
       // NOTE: only works when 'declaration' is not used.
       'return_type' => PropertyDefinition::create('string'),
       'body' => PropertyDefinition::create('string')
@@ -402,8 +406,16 @@ class PHPFunction extends BaseGenerator {
 
     $parameter_pieces = [];
 
-    if (!empty($parameter_info['typehint']) && !in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])) {
-      // Don't type hint scalar types.
+    $parameter_has_type = !empty($parameter_info['typehint']);
+    if ($parameter_has_type) {
+      // Don't type hint primitive types unless explicitly set to do so.
+      $parameter_should_use_type =
+        !in_array($parameter_info['typehint'], ['string', 'bool', 'mixed', 'int'])
+        ||
+        $this->component_data->use_primitive_parameter_type_declarations->value;
+    }
+
+    if (!empty($parameter_should_use_type)) {
       $parameter_pieces[] = $parameter_info['typehint'];
     }
 
