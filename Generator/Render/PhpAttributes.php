@@ -139,7 +139,11 @@ class PhpAttributes {
       }
 
       if (is_string($value)) {
-        $value = '"' . $value . '"';
+        // Special case for class constants: we assume a string starting with a
+        // '\' is such and thus is not quoted.
+        if (!str_starts_with($value, '\\')) {
+          $value = '"' . $value . '"';
+        }
 
         $declaration_line .= "{$value},";
         $lines[] = $declaration_line;
