@@ -21,6 +21,65 @@ class ComponentPluginType10Test extends TestBase {
   protected $drupalMajorVersion = 10;
 
   /**
+   * Test Plugin Type component for attribute plugins.
+   */
+  function testAttributePluginTypeBasic() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugin_types' => [
+        0 => [
+          'discovery_type' => 'attribute',
+          'plugin_type' => 'cat_feeder',
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/CatFeederManager.php',
+      'src/Attribute/CatFeeder.php',
+      'src/Plugin/CatFeeder/CatFeederBase.php',
+      'src/Plugin/CatFeeder/CatFeederInterface.php',
+      'test_module.services.yml',
+      'test_module.plugin_type.yml',
+      'test_module.api.php',
+    ], $files);
+
+    // Check the attribute class file.
+    $annotation_file = $files["src/Attribute/CatFeeder.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $annotation_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Attribute\CatFeeder');
+    $php_tester->assertClassHasParent('Drupal\Component\Plugin\Attribute\Plugin');
+    $php_tester->assertClassDocBlockHasLine('Defines a Cat Feeder attribute object.');
+    $php_tester->assertClassDocBlockHasLine('Plugin namespace: CatFeeder.');
+    // TODO: Attribute testing.
+    $this->assertStringContainsString('#[\Attribute(', $annotation_file);
+
+    // Check the services.yml file.
+    $services_file = $files["test_module.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.test_module_cat_feeder"]);
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'class'], 'Drupal\test_module\CatFeederManager');
+    $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_cat_feeder", 'parent'], "default_plugin_manager");
+    $yaml_tester->assertNotHasProperty(['services', "plugin.manager.test_module_cat_feeder", 'arguments'], "The plugin manager service has no injected arguments.");
+
+    // TODO: Move/copy more testing from testAnnotationPluginTypeBasic().
+  }
+
+  /**
    * Test Plugin Type component.
    */
   function testAnnotationPluginTypeBasic() {

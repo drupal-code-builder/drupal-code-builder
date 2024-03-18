@@ -33,7 +33,12 @@ class PluginType extends BaseGenerator {
             OptionDefinition::create(
               'annotation',
               'Annotation plugin',
-              "Each plugins is a class with an annotation to declare the plugin data."
+              "Each plugin is a class with an annotation to declare the plugin data. WARNING: This plugin discovery type will soon be deprecated in Drupal core."
+            ),
+            OptionDefinition::create(
+              'attribute',
+              'Attribute plugin',
+              "Each plugin is a class with an attribute to declare the plugin data."
             ),
             OptionDefinition::create(
               'yaml',
@@ -71,6 +76,50 @@ class PluginType extends BaseGenerator {
             // TODO: other computed.
             'annotation_class' => PropertyDefinition::create('string')
               ->setLabel('Annotation class name')
+              ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToClass(get('..:plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              )
+              ->setValidators('class_name'),
+            'info_alter_hook' => PropertyDefinition::create('string')
+              ->setLabel('Alter hook name')
+              ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
+              ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("get('..:plugin_type') ~ '_info'")
+                ->setDependencies('..:plugin_type')
+              )
+              ->setValidators('machine_name'),
+        ]),
+        'attribute' => VariantDefinition::create()
+          ->setLabel('Attribute plugin')
+          ->setProperties([
+            'plugin_type' => PropertyDefinition::create('string')
+              ->setLabel('Plugin type ID')
+              ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
+              ->setRequired(TRUE)
+              ->setValidators('machine_name'),
+            'plugin_label' => PropertyDefinition::create('string')
+              ->setLabel('Plugin type label')
+              ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
+              ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToLabel(get('..:plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              ),
+            'plugin_subdirectory' => PropertyDefinition::create('string')
+              ->setLabel('Plugin subdirectory')
+              ->setDescription("The subdirectory within the Plugins directory for plugins of this type.")
+              ->setRequired(TRUE)
+              ->setDefault(DefaultDefinition::create()
+                ->setExpression("machineToClass(get('..:plugin_type'))")
+                ->setDependencies('..:plugin_type')
+              ),
+            // TODO: 'plugin_relative_namespace' => PropertyDefinition::create('string')
+            // TODO: other computed.
+            'attribute_class' => PropertyDefinition::create('string')
+              ->setLabel('Attribute class name')
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
                 ->setExpression("machineToClass(get('..:plugin_type'))")
@@ -171,11 +220,11 @@ class PluginType extends BaseGenerator {
         ->setCallableDefault(function ($component_data) {
           $short_class_name = CaseString::snake($component_data->getParent()->plugin_type->value)->pascal();
 
-          // Append 'Base' to the base class name for annotation plugins, where
-          // the base class is actually a base class, but not for YAML plugins,
-          // where the base class really is the class that's mostly used for
-          // all plugins.
-          if ($component_data->getParent()->discovery_type->value == 'annotation') {
+          // Append 'Base' to the base class name for annotation and attribute
+          // plugins, where the base class is actually a base class, but not for
+          // YAML plugins, where the base class really is the class that's
+          // mostly used for all plugins.
+          if (in_array($component_data->getParent()->discovery_type->value, ['annotation', 'attribute'])) {
             $short_class_name .= 'Base';
           }
 
@@ -224,8 +273,9 @@ class PluginType extends BaseGenerator {
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
     ];
 
-    if ($this->component_data['discovery_type'] == 'annotation') {
-      // Annotation plugin managers inherit from DefaultPluginManager.
+    if (in_array($this->component_data['discovery_type'], ['annotation', 'attribute'])) {
+      // Annotation and attribute plugin managers inherit from
+      // DefaultPluginManager.
       $components['manager']['parent'] = 'default_plugin_manager';
       // TODO: a service should be able to detect the parent class name from
       // service definitions.... if we had all of them.
@@ -271,6 +321,44 @@ class PluginType extends BaseGenerator {
         // TODO: Some annotation properties such as ID and label.
       ];
     }
+    if ($this->component_data['discovery_type'] == 'attribute') {
+      $components['attribute'] = [
+        'component_type' => 'AttributeClass',
+        'relative_class_name' => 'Attribute\\' . $this->component_data->attribute_class->value,
+        'parent_class_name' => '\Drupal\Component\Plugin\Attribute\Plugin',
+        'class_docblock_lines' => [
+          "Defines a {$this->component_data['plugin_label']} attribute object.",
+          "Plugin namespace: {$this->component_data['plugin_relative_namespace']}.",
+        ],
+      ];
+
+      $components['attribute_constructor'] = [
+        'component_type' => 'PHPConstructor',
+        'containing_component' => '%requester:attribute',
+        'function_docblock_lines' => ["Constructs a {$this->component_data->attribute_class->value} attribute."],
+        // We want the __construct() method declaration's parameters to be
+        // broken over multiple lines for legibility.
+        // This is a Drupal coding standard still under discussion: see
+        // https://www.drupal.org/node/1539712.
+        'break_declaration' => TRUE,
+        'parameters' => [
+          [
+            'name' => 'id',
+            'description' => 'The plugin ID.',
+            'typehint' => 'string',
+            'visibility' => 'public',
+            'readonly' => TRUE,
+          ],
+          [
+            'visibility' => 'public',
+            'description' => 'The plugin label.',
+            'typehint' => '\Drupal\Core\StringTranslation\TranslatableMarkup',
+            'readonly' => TRUE,
+            'name' => 'label',
+          ],
+        ],
+      ];
+    }
 
     $plugin_relative_namespace_pieces = explode('\\', $this->component_data['plugin_relative_namespace']);
 
@@ -295,9 +383,10 @@ class PluginType extends BaseGenerator {
       'interfaces' => [
         $this->component_data['interface'],
       ],
-      // Abstract for annotation plugins, where each plugin provides a class;
-      // for YAML plugins, each plugin will typically just use this class.
-      'abstract'=> ($this->component_data['discovery_type'] == 'annotation'),
+      // Abstract for annotation or attribute plugins, where each plugin
+      // provides a class; for YAML plugins, each plugin will typically just use
+      // this class.
+      'abstract'=> (in_array($this->component_data['discovery_type'], ['annotation', 'attribute'])),
       'docblock_first_line' => "Base class for {$this->component_data['plugin_label']} plugins.",
     ];
 

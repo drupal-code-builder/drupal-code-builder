@@ -80,7 +80,7 @@ class PluginTypeManager extends Service {
 
     $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data['plain_class_name']}Manager."];
 
-    if ($this->component_data->discovery_type->value == 'annotation') {
+    if (in_array($this->component_data->discovery_type->value, ['annotation', 'attribute'])) {
       $components['construct']['parameters'] = [
         [
           'name' => 'namespaces',
@@ -122,6 +122,25 @@ class PluginTypeManager extends Service {
         // property and so not always present. Use this instead.
         $this->component_data['plugin_plain_class_name'],
       ]) . '::class';
+      $code[] = ');';
+      $code[] = '';
+    }
+    elseif ($this->component_data->discovery_type->value == 'attribute') {
+      $code[] = 'parent::__construct(';
+      $code[] = '  ' . "'Plugin/{$this->component_data['plugin_subdirectory']}',";
+      $code[] = '  $namespaces,';
+      $code[] = '  $module_handler,';
+      $code[] = "  " . $this->component_data['interface'] . '::class' . ",";
+      $code[] = "  " . '\\' . $this->makeQualifiedClassName([
+        'Drupal',
+        $this->component_data['root_component_name'],
+        'Attribute',
+        // We can't acquire the attribute class name, as it's a mutable
+        // property and so not always present. Use this instead.
+        $this->component_data['plugin_plain_class_name'],
+      ]) . '::class';
+      // Don't bother setting an annotation for BC, since we're generating a new
+      // plugin type.
       $code[] = ');';
       $code[] = '';
     }
