@@ -146,6 +146,7 @@ class ReportPluginData extends ReportHookDataFolder
     // TODO: move all this to analysis!
     $types = [
       'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery' => 'annotation',
+      'Drupal\\Core\\Plugin\\Discovery\\AttributeClassDiscovery' => 'attribute',
       'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations' => 'attribute',
       'Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery' => 'yaml',
       'Drupal\Core\Config\Schema\ConfigSchemaDiscovery' => 'yaml', // ????
