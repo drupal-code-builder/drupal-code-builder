@@ -77,6 +77,7 @@ class ComponentPluginType10Test extends TestBase {
     $construct_tester->assertHasParameters([
       'id' => 'string',
       'label' => 'Drupal\Core\StringTranslation\TranslatableMarkup',
+      'description' => 'Drupal\Core\StringTranslation\TranslatableMarkup',
       'fishiness' => 'int',
     ]);
 

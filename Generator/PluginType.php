@@ -137,7 +137,7 @@ class PluginType extends BaseGenerator {
               ->setValidators('machine_name'),
             'attribute_properties' => PropertyDefinition::create('complex')
               ->setLabel("Attribute properties")
-              ->setDescription("Properties for the plugin type's attribute class, which define the properties of individual plugins to be set in their own attribute.")
+              ->setDescription("Properties for the plugin type's attribute class, which define the properties of individual plugins to be set in their own attribute. The ID, label, and description are automatically added.")
               ->setMultiple(TRUE)
               ->setProperties([
                 'name' => PropertyDefinition::create('string')
@@ -362,6 +362,13 @@ class PluginType extends BaseGenerator {
           'typehint' => '\Drupal\Core\StringTranslation\TranslatableMarkup',
           'readonly' => TRUE,
           'name' => 'label',
+        ],
+        [
+          'name' => 'description',
+          'visibility' => 'public',
+          'description' => 'The plugin description.',
+          'typehint' => '\Drupal\Core\StringTranslation\TranslatableMarkup',
+          'readonly' => TRUE,
         ],
       ];
       foreach ($this->component_data->attribute_properties as $attribute_property) {
