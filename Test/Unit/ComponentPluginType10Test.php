@@ -37,6 +37,13 @@ class ComponentPluginType10Test extends TestBase {
         0 => [
           'discovery_type' => 'attribute',
           'plugin_type' => 'cat_feeder',
+          'attribute_properties' => [
+            0 => [
+              'name' => 'fishiness',
+              'type' => 'int',
+              'description' => 'How fishy is it?',
+            ],
+          ],
         ]
       ],
       'readme' => FALSE,
@@ -65,6 +72,13 @@ class ComponentPluginType10Test extends TestBase {
     $php_tester->assertClassDocBlockHasLine('Plugin namespace: CatFeeder.');
     // TODO: Attribute testing.
     $this->assertStringContainsString('#[\Attribute(', $annotation_file);
+
+    $construct_tester = $php_tester->getMethodTester('__construct');
+    $construct_tester->assertHasParameters([
+      'id' => 'string',
+      'label' => 'Drupal\Core\StringTranslation\TranslatableMarkup',
+      'fishiness' => 'int',
+    ]);
 
     // Check the services.yml file.
     $services_file = $files["test_module.services.yml"];

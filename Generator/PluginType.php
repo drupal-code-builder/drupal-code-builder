@@ -135,6 +135,22 @@ class PluginType extends BaseGenerator {
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('machine_name'),
+            'attribute_properties' => PropertyDefinition::create('complex')
+              ->setLabel("Attribute properties")
+              ->setDescription("Properties for the plugin type's attribute class, which define the properties of individual plugins to be set in their own attribute.")
+              ->setMultiple(TRUE)
+              ->setProperties([
+                'name' => PropertyDefinition::create('string')
+                  ->setLabel('Parameter name')
+                  ->setRequired(TRUE),
+                'type' => PropertyDefinition::create('string')
+                  ->setLabel('Parameter type')
+                  ->setRequired(TRUE)
+                  ->setLiteralDefault('string'),
+                'description' => PropertyDefinition::create('string')
+                  ->setLabel('Parameter description')
+                  ->setLiteralDefault('TODO: parameter description.'),
+              ]),
         ]),
         'yaml' => VariantDefinition::create()
           ->setLabel('Annotation plugin')
@@ -332,6 +348,32 @@ class PluginType extends BaseGenerator {
         ],
       ];
 
+      $attribute_constructor_parameters = [
+        [
+          'name' => 'id',
+          'description' => 'The plugin ID.',
+          'typehint' => 'string',
+          'visibility' => 'public',
+          'readonly' => TRUE,
+        ],
+        [
+          'visibility' => 'public',
+          'description' => 'The plugin label.',
+          'typehint' => '\Drupal\Core\StringTranslation\TranslatableMarkup',
+          'readonly' => TRUE,
+          'name' => 'label',
+        ],
+      ];
+      foreach ($this->component_data->attribute_properties as $attribute_property) {
+        $attribute_constructor_parameters[] = [
+          'name' => $attribute_property->name->value,
+          'description' => $attribute_property->description->value,
+          'typehint' => $attribute_property->type->value,
+          'visibility' => 'public',
+          'readonly' => TRUE,
+        ];
+      }
+
       $components['attribute_constructor'] = [
         'component_type' => 'PHPConstructor',
         'containing_component' => '%requester:attribute',
@@ -341,22 +383,7 @@ class PluginType extends BaseGenerator {
         // This is a Drupal coding standard still under discussion: see
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
-        'parameters' => [
-          [
-            'name' => 'id',
-            'description' => 'The plugin ID.',
-            'typehint' => 'string',
-            'visibility' => 'public',
-            'readonly' => TRUE,
-          ],
-          [
-            'visibility' => 'public',
-            'description' => 'The plugin label.',
-            'typehint' => '\Drupal\Core\StringTranslation\TranslatableMarkup',
-            'readonly' => TRUE,
-            'name' => 'label',
-          ],
-        ],
+        'parameters' => $attribute_constructor_parameters,
       ];
     }
 
