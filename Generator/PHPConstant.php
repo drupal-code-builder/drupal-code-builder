@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 
 /**
  * Generator for PHP constants.
@@ -27,7 +28,8 @@ class PHPConstant extends BaseGenerator {
       'type' => PropertyDefinition::create('string')
         ->setLabel('Data type')
         ->setRequired(TRUE),
-      'docblock_lines' => PropertyDefinition::create('mapping'),
+      'docblock_lines' => PropertyDefinition::create('mapping')
+        ->setRequired(TRUE),
     ]);
   }
 
@@ -36,6 +38,24 @@ class PHPConstant extends BaseGenerator {
    */
   public function getContentType(): string {
     return 'constant';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContents(): array {
+    $docblock = Docblock::constant();
+    foreach ($this->component_data->docblock_lines->export() as $line) {
+      $docblock[] = $line;
+    }
+
+    $docblock->var($this->component_data->type->value);
+
+    $lines = $docblock->render();
+
+    $lines[] = 'const ' . $this->component_data->name->value . ' = ' . $this->component_data->value->value . ';';
+
+    return $lines;
   }
 
 }

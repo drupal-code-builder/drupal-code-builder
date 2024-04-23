@@ -430,6 +430,10 @@ class PHPClassFile extends PHPFile {
         "use {$trait};",
       ];
     }
+
+    foreach ($this->containedComponents['constant'] as $key => $child_item) {
+      $this->constants[] = $child_item->getContents();
+    }
   }
 
   /**
