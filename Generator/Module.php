@@ -315,17 +315,6 @@ class Module extends RootComponent {
       // 'phpunit_tests' go here, but can't be added at this point because it
       // would cause circularity with TestModule.
       // TODO: lazy load generator type property definitions?
-
-      // The following properties shouldn't be offered as UI options.
-      'pascal_case_name' => PropertyDefinition::create('string')
-        ->setLabel('Module human-readable name')
-        ->setInternal(TRUE)
-        ->setRequired(TRUE)
-        ->setDefault(
-          DefaultDefinition::create()
-            ->setExpression("machineToClass(get('..:root_name'))")
-            ->setDependencies('..:root_name')
-        ),
     ]);
   }
 

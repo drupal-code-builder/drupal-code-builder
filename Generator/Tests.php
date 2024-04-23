@@ -17,12 +17,12 @@ class Tests extends PHPFile {
     parent::addToGeneratorDefinition($definition);
 
     $definition->getProperty('filename')
-      ->setExpressionDefault("'src/Tests/' ~ get('..:pascal_case_name') ~ 'TestCase.php'");
+      ->setExpressionDefault("'src/Tests/' ~ get('..:root_name_pascal') ~ 'TestCase.php'");
 
     $definition->addProperties([
       'readable_name' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
-      'pascal_case_name' => PropertyDefinition::create('string')
+      'root_name_pascal' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
     ]);
   }
@@ -39,7 +39,7 @@ class Tests extends PHPFile {
    * Build the code files.
    */
   public function getFileInfo() {
-    $module_root_name = $this->component_data['pascal_case_name'];
+    $module_root_name = $this->component_data['root_name_pascal'];
     $test_file_name = $module_root_name . "TestCase.php";
 
     return [
@@ -63,7 +63,7 @@ class Tests extends PHPFile {
    */
   function phpCodeBody() {
     $module_root_name = $this->component_data['root_component_name'];
-    $module_camel_case = $this->component_data['pascal_case_name'];
+    $module_camel_case = $this->component_data['root_name_pascal'];
     $module_readable_name = $this->component_data['readable_name'];
 
     $code = <<<EOT

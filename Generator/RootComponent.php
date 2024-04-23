@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -74,6 +75,9 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
         ->setLabel('Extension machine name')
         ->setValidators('machine_name')
         ->setRequired(TRUE),
+      'root_name_pascal' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(fn ($component_data) => CaseString::snake($component_data->getParent()->root_name->value)->pascal()),
     ]);
 
     // Remove the root_component_name property that's come from the parent
