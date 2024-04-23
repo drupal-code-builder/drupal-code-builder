@@ -75,6 +75,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
         ->setLabel('Extension machine name')
         ->setValidators('machine_name')
         ->setRequired(TRUE),
+        // FUCK already pascal_case_name.
       'root_name_pascal' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setCallableDefault(fn ($component_data) => CaseString::snake($component_data->getParent()->root_name->value)->pascal()),
