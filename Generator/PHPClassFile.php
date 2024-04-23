@@ -23,6 +23,13 @@ class PHPClassFile extends PHPFile {
   protected $traits;
 
   /**
+   * The collected constants.
+   *
+   * @var array
+   */
+  protected $constants;
+
+  /**
    * The collected properties.
    *
    * @var array
