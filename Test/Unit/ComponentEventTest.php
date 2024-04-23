@@ -36,11 +36,17 @@ class ComponentEventTest extends TestBase {
           'event_constant' => 'MOO',
           'event_value' => 'moo',
         ],
+        // FUCK. Merging issues.
+        // 1 => [
+        //   'event_constant' => 'MIAOW',
+        //   'event_value' => 'miaow',
+        // ],
       ],
       'readme' => FALSE,
     ];
 
     $files = $this->generateModuleFiles($module_data);
+    dump($files);
 
     $this->assertFiles([
       'test_module.info.yml',

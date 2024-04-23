@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 
@@ -54,13 +55,23 @@ class Event extends BaseGenerator {
         'The name of the event fired when TODO.',
         // TODO: use the tag call?
         '@Event',
-        // TODO: @see to event class.
+        // TODO: DRY!
+        '@see \Drupal\%module\Event\\' . $this->component_data->event_constant->value . 'Event',
       ],
       'type' => 'string',
       'containing_component' => '%requester:event_constants_class',
     ];
 
-    // TODO need the actual event!
+    $components['event_class'] = [
+      'component_type' => 'PHPClassFile',
+      // But wrong case!
+      'plain_class_name' => CaseString::upper($this->component_data->event_constant->value)->pascal() . 'Event',
+      'relative_namespace' => 'Event',
+      'parent_class_name' => '\Drupal\Component\EventDispatcher\Event',
+      'class_docblock_lines' => [
+        'The ' . $this->component_data->event_description->value . ' event.',
+      ],
+    ];
 
     return $components;
   }
