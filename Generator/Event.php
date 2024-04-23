@@ -21,6 +21,7 @@ class Event extends BaseGenerator {
         ->setLabel('Event constant'),
       'event_value' => PropertyDefinition::create('string')
         ->setLabel('Event value'),
+        // TODO we should take care of prefixing!
       'event_description' => PropertyDefinition::create('string')
         ->setLabel('Event description'),
       'root_name_pascal' => PropertyDefinition::create('string')
