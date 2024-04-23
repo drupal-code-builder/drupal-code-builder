@@ -447,7 +447,7 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   /**
-   * Allow file components to gather data from their child components.
+   * Allow components to gather data from their child components.
    *
    * This allows, for example, a module code file component to collect the
    * functions it contains.
