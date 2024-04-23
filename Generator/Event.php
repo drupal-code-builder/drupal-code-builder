@@ -18,13 +18,32 @@ class Event extends BaseGenerator {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
-      'event_constant' => PropertyDefinition::create('string')
-        ->setLabel('Event constant'),
+      'event_name' => PropertyDefinition::create('string')
+        ->setLabel('Event name')
+        ->setDescription('The snake case string name of the event. The module prefix is added automatically.'),
       'event_value' => PropertyDefinition::create('string')
-        ->setLabel('Event value'),
-        // TODO we should take care of prefixing!
+        ->setInternal(TRUE)
+        ->setCallableDefault(
+          fn ($component_data) =>
+          $component_data->getParent()->root_name->value . '.' . $component_data->getParent()->event_name->value
+        ),
+      'event_constant' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(
+          fn ($component_data) =>
+          strtoupper($component_data->getParent()->event_name->value)
+        ),
+      'event_class_short_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(
+          fn ($component_data) =>
+          CaseString::snake($component_data->getParent()->event_name->value)->pascal() . 'Event'
+        ),
       'event_description' => PropertyDefinition::create('string')
-        ->setLabel('Event description'),
+        ->setLabel('Event description')
+        ->setLiteralDefault('TODO: description'),
+      'root_name' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
       'root_name_pascal' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
       'readable_name' => PropertyDefinition::create('string')
@@ -56,7 +75,7 @@ class Event extends BaseGenerator {
         // TODO: use the tag call?
         '@Event',
         // TODO: DRY!
-        '@see \Drupal\%module\Event\\' . $this->component_data->event_constant->value . 'Event',
+        '@see \Drupal\%module\Event\\' . $this->component_data->event_class_short_name->value,
       ],
       'type' => 'string',
       'containing_component' => '%requester:event_constants_class',
@@ -65,7 +84,7 @@ class Event extends BaseGenerator {
     $components['event_class'] = [
       'component_type' => 'PHPClassFile',
       // But wrong case!
-      'plain_class_name' => CaseString::upper($this->component_data->event_constant->value)->pascal() . 'Event',
+      'plain_class_name' => $this->component_data->event_class_short_name->value,
       'relative_namespace' => 'Event',
       'parent_class_name' => '\Drupal\Component\EventDispatcher\Event',
       'class_docblock_lines' => [

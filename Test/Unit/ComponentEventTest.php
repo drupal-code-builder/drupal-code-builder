@@ -33,8 +33,7 @@ class ComponentEventTest extends TestBase {
       'short_description' => 'Test Module description',
       'events' => [
         0 => [
-          'event_constant' => 'MOO',
-          'event_value' => 'moo',
+          'event_name' => 'cow_moo',
         ],
         // FUCK. Merging issues.
         // 1 => [
@@ -51,6 +50,7 @@ class ComponentEventTest extends TestBase {
     $this->assertFiles([
       'test_module.info.yml',
       "src/Event/TestModuleEvents.php",
+      "src/Event/CowMooEvent.php",
     ], $files);
 
     $event_constants_file = $files['src/Event/TestModuleEvents.php'];
