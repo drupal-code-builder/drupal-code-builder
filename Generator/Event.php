@@ -46,6 +46,14 @@ class Event extends BaseGenerator {
       ],
     ];
 
+    $components['event_constant'] = [
+      'component_type' => 'PHPConstant',
+      'name' => $this->component_data->event_constant->value,
+      'value' => $this->component_data->event_value->value,
+      'type' => 'string',
+      'containing_component' => '%requester:event_constants_class',
+    ];
+
     // TODO need the actual event!
 
     return $components;
