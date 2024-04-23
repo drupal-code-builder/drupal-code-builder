@@ -50,6 +50,12 @@ class Event extends BaseGenerator {
       'component_type' => 'PHPConstant',
       'name' => $this->component_data->event_constant->value,
       'value' => $this->component_data->event_value->value,
+      'docblock_lines' => [
+        'The name of the event fired when TODO.',
+        // TODO: use the tag call?
+        '@Event',
+        // TODO: @see to event class.
+      ],
       'type' => 'string',
       'containing_component' => '%requester:event_constants_class',
     ];
