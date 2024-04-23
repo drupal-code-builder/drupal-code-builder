@@ -23,6 +23,13 @@ class PHPClassFile extends PHPFile {
   protected $traits;
 
   /**
+   * The collected constants.
+   *
+   * @var array
+   */
+  protected $constants;
+
+  /**
    * The collected properties.
    *
    * @var array
@@ -429,6 +436,10 @@ class PHPClassFile extends PHPFile {
       $this->traits[] = [
         "use {$trait};",
       ];
+    }
+
+    foreach ($this->containedComponents['constant'] as $key => $child_item) {
+      $this->constants[] = $child_item->getContents();
     }
   }
 

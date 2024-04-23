@@ -90,6 +90,13 @@ class DocBlock implements \ArrayAccess {
   }
 
   /**
+   * Creates a new DocBlock for a class constant.
+   */
+  public static function constant() {
+    return new static(1);
+  }
+
+  /**
    * Creates a new '@inheritdoc' DocBlock.
    */
   public static function inheritdoc() {
