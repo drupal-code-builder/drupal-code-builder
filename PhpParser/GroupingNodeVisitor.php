@@ -45,6 +45,9 @@ class GroupingNodeVisitor extends NodeVisitorAbstract {
       case \PhpParser\Node\Stmt\Interface_::class:
         $this->nodes['interfaces'][$node->name->toString()] = $node;
         break;
+      case \PhpParser\Node\Stmt\ClassConst::class:
+        $this->nodes['constants'][$node->consts[0]->name->toString()] = $node;
+        break;
       case \PhpParser\Node\Stmt\Property::class:
         $this->nodes['properties'][$node->props[0]->name->toString()] = $node;
         break;
