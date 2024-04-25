@@ -53,7 +53,13 @@ class PHPConstant extends BaseGenerator {
 
     $lines = $docblock->render();
 
-    $lines[] = 'const ' . $this->component_data->name->value . ' = ' . $this->component_data->value->value . ';';
+    $value = $this->component_data->value->value;
+
+    if (!is_numeric($value)) {
+      $value = "'$value'";
+    }
+
+    $lines[] = 'const ' . $this->component_data->name->value . ' = ' . $value . ';';
 
     return $lines;
   }
