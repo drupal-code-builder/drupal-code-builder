@@ -89,6 +89,8 @@ class Event extends BaseGenerator {
       'parent_class_name' => '\Drupal\Component\EventDispatcher\Event',
       'class_docblock_lines' => [
         'The ' . $this->component_data->event_description->value . ' event.',
+        // DRY!
+        '@see \Drupal\%module\Event\\' . $this->component_data->root_name_pascal->value . 'Events::' . $this->component_data->event_constant->value,
       ],
     ];
 
