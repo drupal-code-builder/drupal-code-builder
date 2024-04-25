@@ -695,6 +695,20 @@ class PHPTester {
   }
 
   /**
+   * Asserts the parsed class has the given constant.
+   *
+   * @param string $name
+   *   The constant name.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassHasConstant(string $name, string $message = NULL) {
+    $message ??= "The class has the constant '$name'.";
+
+    Assert::assertArrayHasKey($name, $this->parser_nodes['constants'], $message);
+  }
+
+  /**
    * Assert the parsed class has the given public property.
    *
    * @param string $property_name
