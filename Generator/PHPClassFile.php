@@ -194,6 +194,13 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMergeTag() {
+    return $this->component_data->relative_class_name->value;
+  }
+
+  /**
    * Build the code files.
    *
    * Subclasses should override this to add their file data to the list.
