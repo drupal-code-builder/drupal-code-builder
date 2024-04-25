@@ -53,7 +53,12 @@ class ComponentEventTest extends TestBase {
     ], $files);
 
     $event_constants_file = $files['src/Event/TestModuleEvents.php'];
-    dump($event_constants_file);
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $event_constants_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertClassHasConstant('COW_MOO');
+
+    // dump($php_tester);
   }
 
 }
