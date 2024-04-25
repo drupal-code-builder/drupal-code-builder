@@ -35,11 +35,9 @@ class ComponentEventTest extends TestBase {
         0 => [
           'event_name' => 'cow_moo',
         ],
-        // FUCK. Merging issues.
-        // 1 => [
-        //   'event_constant' => 'MIAOW',
-        //   'event_value' => 'miaow',
-        // ],
+        1 => [
+          'event_name' => 'cat_miaow',
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -51,6 +49,7 @@ class ComponentEventTest extends TestBase {
       'test_module.info.yml',
       "src/Event/TestModuleEvents.php",
       "src/Event/CowMooEvent.php",
+      "src/Event/CatMiaowEvent.php",
     ], $files);
 
     $event_constants_file = $files['src/Event/TestModuleEvents.php'];
