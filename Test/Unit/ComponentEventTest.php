@@ -43,7 +43,6 @@ class ComponentEventTest extends TestBase {
     ];
 
     $files = $this->generateModuleFiles($module_data);
-    dump($files);
 
     $this->assertFiles([
       'test_module.info.yml',
@@ -56,9 +55,18 @@ class ComponentEventTest extends TestBase {
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $event_constants_file);
     $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Event\TestModuleEvents');
+    $php_tester->assertClassHasNoParent();
+    $php_tester->assertClassDocBlockHasLine('Defines events for the Test Module module.');
     $php_tester->assertClassHasConstant('COW_MOO');
+    $php_tester->assertClassHasConstant('CAT_MIAOW');
 
-    // dump($php_tester);
+    $event_file = $files['src/Event/CowMooEvent.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $event_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Event\CowMooEvent');
+    $php_tester->assertClassHasParent('Drupal\Component\EventDispatcher\Event');
   }
 
 }
