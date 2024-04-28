@@ -20,19 +20,17 @@ class InfoModule extends BaseGenerator {
   /**
    * The component type for the info file.
    */
-  const INFO_COMPONENT_TYPE = 'YMLFile';
+  protected const INFO_COMPONENT_TYPE = 'YMLFile';
 
   /**
    * The filename for the info file.
    */
-  const INFO_FILENAME = '%module.info.yml';
+  protected const INFO_FILENAME = '%module.info.yml';
 
   /**
    * The order of keys in the info file.
-   *
-   * @todo: Make this protected once our minimum PHP version is 7.1.
    */
-  const INFO_LINE_ORDER = [
+  protected const INFO_LINE_ORDER = [
     'name',
     'type',
     'description',

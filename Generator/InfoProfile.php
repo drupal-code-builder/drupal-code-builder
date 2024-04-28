@@ -13,10 +13,8 @@ class InfoProfile extends BaseGenerator {
 
   /**
    * The order of keys in the info file.
-   *
-   * @todo: Make this protected once our minimum PHP version is 7.1.
    */
-  const INFO_LINE_ORDER = [
+  protected const INFO_LINE_ORDER = [
     'name',
     'type',
     'description',
