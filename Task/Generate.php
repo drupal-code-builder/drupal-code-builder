@@ -28,7 +28,7 @@ class Generate extends Base {
   protected $sanity_level = NULL;
 
   /**
-   * The base component type being generated, i.e. either 'module' or 'theme'.
+   * The base component type being generated, e.g. 'module' or 'profile'.
    */
   private $base;
 
@@ -38,7 +38,7 @@ class Generate extends Base {
    * @param $environment
    *  The current environment handler.
    * @param $component_type
-   *  A component type. Currently supports 'module' and 'theme'.
+   *  A root component type.
    *  (We need this early on so we can use it to determine our sanity level.)
    */
   public function __construct(
