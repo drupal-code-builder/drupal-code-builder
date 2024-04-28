@@ -36,7 +36,7 @@ class Tests extends PHPFile {
   }
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     $module_root_name = $this->component_data['root_name_pascal'];

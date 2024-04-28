@@ -36,7 +36,7 @@ class Tests7 extends Tests {
   }
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     $file = parent::getFileInfo();

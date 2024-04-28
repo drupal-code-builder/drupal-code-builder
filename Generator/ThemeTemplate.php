@@ -16,7 +16,7 @@ class ThemeTemplate extends BaseGenerator {
   }
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     $theme_registry = theme_get_registry();

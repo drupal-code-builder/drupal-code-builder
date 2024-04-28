@@ -78,7 +78,7 @@ class YMLFile extends File {
   }
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     $yaml_data = [];

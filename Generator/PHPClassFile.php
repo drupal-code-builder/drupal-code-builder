@@ -208,9 +208,7 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Build the code files.
-   *
-   * Subclasses should override this to add their file data to the list.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     return [

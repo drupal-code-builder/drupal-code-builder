@@ -23,7 +23,7 @@ class TwigFile extends File {
   }
 
   /**
-   * Return the data for the file this component provides.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     return [

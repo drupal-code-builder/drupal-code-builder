@@ -35,7 +35,7 @@ class ExtensionCodeFile extends PHPFile {
   }
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     // Create a build list tag from the filename.

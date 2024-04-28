@@ -47,7 +47,7 @@ class Readme extends File {
   }
 
   /**
-   * Collect the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     return [

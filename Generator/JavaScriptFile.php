@@ -26,7 +26,7 @@ class JavaScriptFile extends AssetFile {
   }
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     $camel_name = CaseString::snake($this->component_data['root_component_name'])->camel();

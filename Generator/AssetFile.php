@@ -10,7 +10,7 @@ namespace DrupalCodeBuilder\Generator;
 class AssetFile extends File  {
 
   /**
-   * Build the code files.
+   * {@inheritdoc}
    */
   public function getFileInfo() {
     return [
