@@ -6,9 +6,9 @@ use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
- * Abstract Generator base class for files.
+ * Abstract base class for file generators.
  */
-class File extends BaseGenerator {
+abstract class File extends BaseGenerator {
 
   /**
    * Gets the filename, relative to the main root component.
@@ -92,20 +92,15 @@ class File extends BaseGenerator {
    *  - use_file_info_filename: Dirty hack to deal with some components that
    *    want to use the filename and path from this array, and some that
    *    should use the result of getFilename() instead. WTF. TODO: remove this.
+   *  For example:
+   *  @code
+   *     return [
+   *       'path' => '', // Means base folder.
+   *       'filename' => '%module.info',
+   *       'body' => $this->phpCodeBody(),
+   *     ];
+   *  @endcode
    */
-  public function getFileInfo() {
-    // Subclasses should override this.
-
-    /*
-    // Example:
-    return array(
-      'path' => '', // Means base folder.
-      'filename' => '%module.info',
-      'body' => $this->phpCodeBody(),
-    );
-    */
-
-    return NULL;
-  }
+  abstract public function getFileInfo();
 
 }

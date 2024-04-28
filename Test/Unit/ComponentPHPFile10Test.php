@@ -237,4 +237,8 @@ class PHPFile extends RealPHPFile {
     return [];
   }
 
+  public function getFileInfo() {
+    return [];
+  }
+
 }
