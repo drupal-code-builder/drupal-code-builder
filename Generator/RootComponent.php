@@ -24,6 +24,15 @@ use MutableTypedData\Definition\DefaultDefinition;
 abstract class RootComponent extends BaseGenerator implements RootComponentInterface {
 
   /**
+   * The base of this root component.
+   *
+   * This is typically the Drupal extension type that it generates.
+   *
+   * Must be overriden by child classes.
+   */
+  const BASE = NULL;
+
+  /**
    * The sanity level this generator requires to operate.
    */
   protected static $sanity_level = 'none';
@@ -58,7 +67,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
     // Root label is set in the component-specific subclass, but name must be
     // set here as it can't be changed by any further subclasses, e.g.
     // Module / TestModule.
-    $definition->setName(strtolower($component_type));
+    $definition->setName(static::BASE);
 
     return $definition;
   }
@@ -71,6 +80,10 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
 
     // Define this here for completeness; child classes should specialize it.
     $definition->addProperties([
+      'base' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(static::BASE)
+        ->setRequired(TRUE),
       'root_name' => PropertyDefinition::create('string')
         ->setLabel('Extension machine name')
         ->setValidators('machine_name')

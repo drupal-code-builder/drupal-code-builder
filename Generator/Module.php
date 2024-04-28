@@ -41,6 +41,11 @@ use MutableTypedData\Definition\DefaultDefinition;
 class Module extends RootComponent {
 
   /**
+   * {@inheritdoc}
+   */
+  const BASE = 'module';
+
+  /**
    * The sanity level this generator requires to operate.
    */
   public static $sanity_level = 'component_data_processed';
@@ -135,10 +140,6 @@ class Module extends RootComponent {
       ->setLiteralDefault('my_module');
 
     $definition->addProperties([
-      'base' => PropertyDefinition::create('string')
-        ->setInternal(TRUE)
-        ->setLiteralDefault('module')
-        ->setRequired(TRUE),
       // TODO: move to RootComponent.
       'readable_name' => PropertyDefinition::create('string')
         ->setLabel('Module readable name')

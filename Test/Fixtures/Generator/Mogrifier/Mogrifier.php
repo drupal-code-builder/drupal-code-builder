@@ -26,6 +26,11 @@ class Mogrifier extends RootComponent {
   /**
    * {@inheritdoc}
    */
+  const BASE = 'mogrifier';
+
+  /**
+   * {@inheritdoc}
+   */
   public static function addToGeneratorDefinition($definition) {
     // Omit the parent call so we don't get a ton of base properties.
 

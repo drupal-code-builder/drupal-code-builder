@@ -21,6 +21,11 @@ use MutableTypedData\Definition\OptionDefinition;
 class Profile extends RootComponent {
 
   /**
+   * {@inheritdoc}
+   */
+  const BASE = 'profile';
+
+  /**
    * The sanity level this generator requires to operate.
    */
   public static $sanity_level = 'none';
@@ -35,9 +40,6 @@ class Profile extends RootComponent {
       ->setLabel('Profile');
 
     $definition->addProperties([
-      'base' => PropertyDefinition::create('string')
-        ->setInternal(TRUE)
-        ->setLiteralDefault('profile'),
       'readable_name' => PropertyDefinition::create('string')
         ->setLabel('Profile readable name')
         ->setDefault(
