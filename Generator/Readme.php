@@ -52,9 +52,7 @@ class Readme extends File {
   public function getFileInfo() {
     return [
       'path' => '', // Means the base folder.
-      // The extension is in lowercase for good reasons which I don't remember
-      // right now, but probably to do with Windows being rubbish.
-      'filename' => 'README.md',
+      'filename' => $this->component_data->filename->value,
       'body' => $this->lines(),
       'build_list_tags' => ['readme'],
     ];
