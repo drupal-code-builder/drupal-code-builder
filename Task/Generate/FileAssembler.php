@@ -21,10 +21,10 @@ class FileAssembler {
    * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
    *   The component collection.
    *
-   * @return
-   *  An array of files ready for output. Keys are the filepath and filename
-   *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
-   *  values are strings of the contents for each file.
+   * @return \DrupalCodeBuilder\File\CodeFileInterface[]
+   *  An array of \DrupalCodeBuilder\File\CodeFileInterface onjects, whose keys
+   *  are filepaths relative to the module folder (eg, 'foo.module',
+   *  'tests/module.test').
    */
   public function generateFiles($component_data, ComponentCollection $component_collection, DrupalExtension $existing_extension = NULL) {
     $component_list = $component_collection->getComponents();
@@ -130,10 +130,10 @@ class FileAssembler {
    * @param $files
    *  An array of file info, as compiled by collectFiles().
    *
-   * @return
-   *  An array of files ready for output. Keys are the filepath and filename
-   *  relative to the module folder (eg, 'foo.module', 'tests/module.test');
-   *  values are strings of the contents for each file.
+   * @return \DrupalCodeBuilder\File\CodeFileInterface[]
+   *  An array of \DrupalCodeBuilder\File\CodeFileInterface onjects, whose keys
+   *  are filepaths relative to the module folder (eg, 'foo.module',
+   *  'tests/module.test').
    */
   protected function assembleFiles(ComponentCollection $component_collection, $files, DrupalExtension $existing_extension = NULL) {
     $return = [];
