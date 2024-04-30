@@ -40,7 +40,8 @@ abstract class File extends BaseGenerator {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperty(PropertyDefinition::create('string')
-      // The name of the file, without the path.
+      // The filename with the path relative to the nearest containing
+      // component. E.g. 'templates/foo.twig.html'.
       ->setName('filename')
       ->setInternal(TRUE)
       ->setRequired(TRUE)
