@@ -19,6 +19,7 @@ class LibraryCSSAsset extends BaseGenerator {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
+      // Note this is not the same as the File component's 'filename' property!
       'filename' => PropertyDefinition::create('string')
         ->setLabel('Filename')
         ->setDescription("The filename, without the extension or the subfolder.")
