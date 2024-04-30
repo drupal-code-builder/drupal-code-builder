@@ -41,7 +41,7 @@ class ThemeHook extends BaseGenerator {
       ],
       $twig_file_name => [
         'component_type' => 'TwigFile',
-        'filename' => $twig_file_name,
+        'template_name' => $twig_file_name,
         'theme_hook_name' => $this->component_data['theme_hook_name'],
       ],
     ];

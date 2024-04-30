@@ -19,7 +19,12 @@ class TwigFile extends File {
     $definition->addProperties([
       'theme_hook_name' => PropertyDefinition::create('string')
         ->setLabel('The theme hook name'),
+      // The filename of the template.
+      'template_name' => PropertyDefinition::create('string'),
     ]);
+
+    $definition->getProperty('filename')
+      ->setCallableDefault(fn ($component_data) => 'templates/' . $component_data->getParent()->template_name->value);
   }
 
   /**
