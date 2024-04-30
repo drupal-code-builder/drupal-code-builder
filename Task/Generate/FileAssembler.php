@@ -141,18 +141,8 @@ class FileAssembler {
     foreach ($files as $file_id => $file_info) {
       $file_component = $component_collection->getComponent($file_info['source_component_id']);
 
-      // Try the filepath from the component first, but in some cases this is
-      // only hardcoded in the file info and not defined in the property
-      // system, WTF!
+      // Get the filepath from the component.
       $filepath = $file_component->getFilename();
-      if (empty($filepath)) {
-        if (!empty($file_info['path'])) {
-          $filepath = $file_info['path'] . '/' . $file_info['filename'];
-        }
-        else {
-          $filepath = $file_info['filename'];
-        }
-      }
 
       // Set the flags relating to existing files on the file info.
       // This must be done before tokens are replaced, as tests use the filename
