@@ -53,7 +53,6 @@ class ThemeTemplate extends BaseGenerator {
       'path' => $file_path,
       // TODO: declare a property for this.
       'filename' => $this->name . '.tpl.php',
-      'use_file_info_filename' => TRUE,
       'body' => [
         $tpl_code,
       ],

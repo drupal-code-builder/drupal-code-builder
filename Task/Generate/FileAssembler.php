@@ -145,7 +145,7 @@ class FileAssembler {
       // only hardcoded in the file info and not defined in the property
       // system, WTF!
       $filepath = $file_component->getFilename();
-      if (!empty($file_info['use_file_info_filename']) || empty($filepath)) {
+      if (empty($filepath)) {
         if (!empty($file_info['path'])) {
           $filepath = $file_info['path'] . '/' . $file_info['filename'];
         }

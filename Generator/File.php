@@ -90,9 +90,6 @@ abstract class File extends BaseGenerator {
    *    up by assembleFiles(). The array may be keyed numerically, or the keys
    *    can be meaningful to the generator class: they are immaterial to the
    *    caller.
-   *  - use_file_info_filename: Dirty hack to deal with some components that
-   *    want to use the filename and path from this array, and some that
-   *    should use the result of getFilename() instead. WTF. TODO: remove this.
    *  For example:
    *  @code
    *     return [

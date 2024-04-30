@@ -34,7 +34,6 @@ class TwigFile extends File {
     return [
       'path' => 'templates',
       'filename' => $this->component_data['filename'],
-      'use_file_info_filename' => TRUE,
       'body' => [
         $this->getTwigContents(),
       ],
