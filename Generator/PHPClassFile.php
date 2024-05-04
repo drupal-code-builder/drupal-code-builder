@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -210,13 +211,11 @@ class PHPClassFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
-    return [
-      'path' => $this->component_data['path'],
-      'filename' => $this->component_data['plain_class_name'] . '.php',
-      'body' => $this->fileContents(),
-      'build_list_tags' => ['code'],
-    ];
+  public function getFileInfo(): CodeFile {
+    return new CodeFile(
+      $this->fileContents(),
+      build_list_tags: ['code'],
+    );
   }
 
   /**

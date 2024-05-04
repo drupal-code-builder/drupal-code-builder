@@ -32,20 +32,16 @@ class FileAssembler {
     // Let each file component in the tree gather data from its own children.
     $this->collectFileContents($component_collection);
 
-    // Build files.
-    // Get info on files. All components that wish to provide a file should have
+    // Collect and assemble files.
+    // All components that wish to provide a file should have
     // registered themselves as first-level children of the root component.
-    $files = $this->collectFiles($component_collection);
+    $files_assembled = $this->collectFiles($component_collection, $existing_extension);
 
     // Filter files according to the requested build list.
     // TODO: TEMP!
     // if (isset($component_data['requested_build'])) {
     //   $component_collection->getRootComponent()->applyBuildListFilter($files, $component_data['requested_build'], $component_data);
     // }
-
-    // Then we assemble the files into a simple array of full filename and
-    // contents.
-    $files_assembled = $this->assembleFiles($component_collection, $files, $existing_extension);
 
     return $files_assembled;
   }
@@ -68,91 +64,43 @@ class FileAssembler {
   }
 
   /**
-   * Collect file data from components.
+   * Collects file data from components.
    *
-   * This assembles an array, keyed by an arbitrary ID for the file, whose
-   * values are arrays with the following properties:
-   *  - 'body': An array of lines of content for the file.
-   *  - 'path': The path for the file, relative to the module folder.
-   *  - 'filename': The filename for the file.
+   * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
+   *   The component collection.
+   * @param \DrupalCodeBuilder\File\DrupalExtension $existing_extension
+   *   (optional) The existing extension object, if one was found.
    *
-   * @param $component_list
-   *  The component list.
-   *
-   * @return
-   *  An array of file info, keyed by arbitrary file ID. Each array contains:
-   *    - filename
-   *    - path
-   *    - body
-   *    - source_component_id
-   *    - merged: TRUE if the file has been merged with an existing file. Unset
-   *      otherwise.
+   * @return \DrupalCodeBuilder\File\CodeFileInterface[]
+   *   An array of \DrupalCodeBuilder\File\CodeFileInterface onjects, whose keys
+   *   are filepaths relative to the module folder (eg, 'foo.module',
+   *   'tests/module.test').
    */
-  protected function collectFiles(ComponentCollection $component_collection) {
-    $file_info = [];
+  protected function collectFiles(ComponentCollection $component_collection, DrupalExtension $existing_extension = NULL): array {
+    $code_files = [];
 
     // Components which provide a file should have registered themselves as
-    // children of the root component.
+    // being contained by the root component.
     $file_components = $component_collection->getContainmentTreeChildren($component_collection->getRootComponent());
     /** $var \DrupalCodeBuilder\Generator\File $child_component */
     foreach ($file_components as $id => $child_component) {
       $file_info_item = $child_component->getFileInfo();
-      if (is_array($file_info_item)) {
-        // Prepend the component_base_path to the path.
-        // @todo Make use of File::getFilename().
-        $component_base_path = $child_component->component_data->component_base_path->value;
-        if (!empty($component_base_path)) {
-          if (empty($file_info_item['path'])) {
-            $file_info_item['path'] = $child_component->component_data->component_base_path->value;
-          }
-          else {
-            $file_info_item['path'] = $child_component->component_data->component_base_path->value
-            . '/'
-            . $file_info_item['path'];
-          }
-        }
-
-        // Add the source component ID.
-        $file_info_item['source_component_id'] = $id;
-
-        $file_info[$id] = $file_info_item;
-      }
-    }
-
-    return $file_info;
-  }
-
-  /**
-   * Assemble file info into filename and code.
-   *
-   * @param \DrupalCodeBuilder\Generator\Collection\ComponentCollection $component_collection
-   *   The component collection.
-   * @param $files
-   *  An array of file info, as compiled by collectFiles().
-   *
-   * @return \DrupalCodeBuilder\File\CodeFileInterface[]
-   *  An array of \DrupalCodeBuilder\File\CodeFileInterface onjects, whose keys
-   *  are filepaths relative to the module folder (eg, 'foo.module',
-   *  'tests/module.test').
-   */
-  protected function assembleFiles(ComponentCollection $component_collection, $files, DrupalExtension $existing_extension = NULL) {
-    $return = [];
-
-    foreach ($files as $file_id => $file_info) {
-      $file_component = $component_collection->getComponent($file_info['source_component_id']);
 
       // Get the filepath from the component.
-      $filepath = $file_component->getFilename();
+      $filepath = $child_component->getFilename();
+      assert(!empty($filepath));
+      $file_info_item->setFilepath($filepath);
 
       // Set the flags relating to existing files on the file info.
       // This must be done before tokens are replaced, as tests use the filename
       // with the token.
-      // @todo: Use valuue from component once all File generator classes
+      // @todo: Use value from component once all File generator classes
       // check for existence.
       $exists = $existing_extension ? $existing_extension->hasFile($filepath) : FALSE;
-      $merged = $file_info['merged'] ?? FALSE;
+      $file_info_item->setExists($exists);
 
-      $code = implode("\n", $file_info['body']);
+      // Assemble the code into a single string.
+      $file_info_item->assembleCode();
 
       // Replace tokens in file contents and file path.
       // We get the tokens from the root component that was the nearest
@@ -160,18 +108,19 @@ class FileAssembler {
       // TODO: consider changing this to be nearest root component; though
       // would require a change to File::containingComponent() among other
       // things.
-      $closest_requesting_root = $component_collection->getClosestRequestingRootComponent($file_component);
-      $variables = $closest_requesting_root->getReplacements();
-      $code = strtr($code, $variables);
-      $filepath = strtr($filepath, $variables);
+      $closest_requesting_root = $component_collection->getClosestRequestingRootComponent($child_component);
+      $file_info_item->replaceTokens($closest_requesting_root);
+
+      // Get the filepath back with tokens replaced.
+      $filepath = $file_info_item->getFilePath();
 
       // Verify that no two components are trying to generate the same file.
-      assert(!isset($return[$filepath]), "$filepath already set in list of returned files");
+      assert(!isset($code_files[$filepath]), "$filepath already set in list of returned files");
 
-      $return[$filepath] = new CodeFile($filepath, $code, $exists, $merged);
+      $code_files[$filepath] = $file_info_item;
     }
 
-    return $return;
+    return $code_files;
   }
 
 }

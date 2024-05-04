@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -69,36 +70,11 @@ abstract class File extends BaseGenerator {
   }
 
   /**
-   * Return the data for the file this component provides.
+   * Returns the data for the file this component provides.
    *
-   * Subclasses should override this.
-   *
-   * TODO: make this return CodeFile objects.
-   *
-   * @return
-   *  An array of file info, or NULL to provide no file. The file info array
-   *  should have the following properties:
-   *  - path: The path to the file, relative to the future component folder,
-   *    without the trailing slash. An empty string means the base folder of the
-   *    component.
-   *  - filename: The file name. This MUST use the '%module' token for the root
-   *    component name, so that FileAssembler correctly detects existing files.
-   *    Other tokens may also be used and will be replaced using
-   *    the root component class's getReplacements().
-   *  - body: An array of pieces to assemble in order to form the body of the
-   *    file. These can be single lines, or larger chunks: they will be joined
-   *    up by assembleFiles(). The array may be keyed numerically, or the keys
-   *    can be meaningful to the generator class: they are immaterial to the
-   *    caller.
-   *  For example:
-   *  @code
-   *     return [
-   *       'path' => '', // Means base folder.
-   *       'filename' => '%module.info',
-   *       'body' => $this->phpCodeBody(),
-   *     ];
-   *  @endcode
+   * @return \DrupalCodeBuilder\File\CodeFile
+   *  A CodeFile object holding at least the array of code lines for the file.
    */
-  abstract public function getFileInfo();
+  abstract public function getFileInfo(): CodeFile;
 
 }

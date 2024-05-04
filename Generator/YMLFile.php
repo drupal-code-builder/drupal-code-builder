@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Utility\NestedArray;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 use Ckr\Util\ArrayMerger;
 
@@ -80,7 +81,7 @@ class YMLFile extends File {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): \DrupalCodeBuilder\File\CodeFile {
     $yaml_data = [];
     foreach ($this->containedComponents['element'] as $key => $child_item) {
       $child_item_yaml_data = $child_item->getContents();
@@ -103,16 +104,13 @@ class YMLFile extends File {
       $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
       $yaml_data = $merger->mergeData();
 
-      $file_info['merged'] = TRUE;
+      $merged = TRUE;
     }
 
-    $file_info += [
-      'path' => '', // Means base folder.
-      'filename' => $this->component_data['filename'],
-      'body' => $this->getYamlBody($yaml_data),
-    ];
-
-    return $file_info;
+    return new CodeFile(
+      body_pieces: $this->getYamlBody($yaml_data),
+      merged: $merged ?? FALSE,
+    );
   }
 
   /**

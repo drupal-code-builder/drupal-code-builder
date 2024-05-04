@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -30,14 +31,10 @@ class TwigFile extends File {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
-    return [
-      'path' => 'templates',
-      'filename' => $this->component_data['filename'],
-      'body' => [
-        $this->getTwigContents(),
-      ],
-    ];
+  public function getFileInfo(): CodeFile {
+    return new CodeFile([
+      $this->getTwigContents(),
+    ]);
   }
 
   protected function getTwigContents() {

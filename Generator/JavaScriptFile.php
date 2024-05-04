@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -28,7 +29,7 @@ class JavaScriptFile extends AssetFile {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): CodeFile {
     $camel_name = CaseString::snake($this->component_data['root_component_name'])->camel();
 
     $body = <<<EOT
@@ -48,11 +49,7 @@ class JavaScriptFile extends AssetFile {
 
       EOT;
 
-    return [
-      'path' => '', // Means base folder.
-      'filename' => $this->component_data['filename'],
-      'body' => [$body],
-    ];
+    return new CodeFile([$body]);
   }
 
 }

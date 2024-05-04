@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
+
 /**
  * Asset file generator.
  *
@@ -12,12 +14,8 @@ class AssetFile extends File  {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
-    return [
-      'path' => '', // Means base folder.
-      'filename' => $this->component_data['filename'],
-      'body' => [],
-    ];
+  public function getFileInfo(): CodeFile {
+    return new CodeFile([]);
   }
 
 }

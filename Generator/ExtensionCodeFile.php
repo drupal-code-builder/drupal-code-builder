@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
@@ -37,7 +38,7 @@ class ExtensionCodeFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): CodeFile {
     // Create a build list tag from the filename.
     $filename_pieces = explode('.', $this->component_data['filename']);
     if ($filename_pieces[0] == '%module') {
@@ -51,13 +52,11 @@ class ExtensionCodeFile extends PHPFile {
     // Implode whatever's left.
     $file_key_tag = implode('.', $filename_pieces);
 
-    return [
-      'path' => '', // Means base folder.
-      'filename' => $this->component_data['filename'],
-      'body' => $this->fileContents(),
-      'build_list_tags' => ['code', $file_key_tag],
-      'merged' => $this->merged,
-    ];
+    return new CodeFile(
+      $this->fileContents(),
+      build_list_tags: ['code', $file_key_tag],
+      merged: $this->merged,
+    );
   }
 
   /**

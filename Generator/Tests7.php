@@ -35,17 +35,4 @@ class Tests7 extends Tests {
     return $components;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getFileInfo() {
-    $file = parent::getFileInfo();
-
-    // Change the file location for D7.
-    $file['path'] = 'tests';
-    $file['filename'] = "%module.test";
-
-    return $file;
-  }
-
 }

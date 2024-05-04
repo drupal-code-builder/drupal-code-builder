@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Generator\PHPFile as RealPHPFile;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
@@ -237,8 +238,8 @@ class PHPFile extends RealPHPFile {
     return [];
   }
 
-  public function getFileInfo() {
-    return [];
+  public function getFileInfo(): CodeFile {
+    return new CodeFile([]);
   }
 
 }

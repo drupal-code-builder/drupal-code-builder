@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
+
 /**
  * Component generator: theme TPL file.
  */
@@ -18,7 +20,7 @@ class ThemeTemplate extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): CodeFile {
     $theme_registry = theme_get_registry();
     // Our theme base was set in our incoming component data.
     // TODO: Broken! No longer have $this->root_component! Acquire this as a
@@ -49,14 +51,9 @@ class ThemeTemplate extends BaseGenerator {
       $file_path = '';
     }
 
-    return [
-      'path' => $file_path,
-      // TODO: declare a property for this.
-      'filename' => $this->name . '.tpl.php',
-      'body' => [
-        $tpl_code,
-      ],
-    ];
+    return new CodeFile([
+      $tpl_code,
+    ]);
   }
 
 }

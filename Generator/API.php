@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
@@ -84,16 +85,14 @@ class API extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): CodeFile {
     $module_root_name = $this->component_data->root_component_name->value;
 
-    return [
-      'path' => '', // Means base folder.
-      'filename' => $this->component_data->filename->value,
-      'body' => $this->fileContents(),
-      'build_list_tags' => ['code', 'api'],
-      'merged' => $this->merged,
-    ];
+    return new CodeFile(
+      $this->fileContents(),
+      build_list_tags: ['code', 'api'],
+      merged: $this->merged)
+    ;
   }
 
   /**

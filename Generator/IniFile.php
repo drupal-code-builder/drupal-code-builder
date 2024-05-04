@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use Ckr\Util\ArrayMerger;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -14,7 +15,7 @@ class IniFile extends File {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): CodeFile {
     $ini_data = [];
     foreach ($this->containedComponents['element'] as $key => $child_item) {
       $child_item_data = $child_item->getContents();
@@ -24,11 +25,7 @@ class IniFile extends File {
       $ini_data = ArrayMerger::doMerge($ini_data, $child_item_data);
     }
 
-    $file_info = [
-      'path' => '', // Means base folder.
-      'filename' => $this->component_data['filename'],
-      'body' => $this->process_info_lines($ini_data),
-    ];
+    $file_info = new CodeFile($this->process_info_lines($ini_data));
 
     return $file_info;
   }

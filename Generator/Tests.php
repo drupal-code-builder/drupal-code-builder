@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -38,16 +39,14 @@ class Tests extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
+  public function getFileInfo(): CodeFile {
     $module_root_name = $this->component_data['root_name_pascal'];
     $test_file_name = $module_root_name . "TestCase.php";
 
-    return [
-      'path' => 'src/Tests',
-      'filename' => $test_file_name,
-      'body' => $this->fileContents(),
-      'build_list_tags' => ['code', 'tests'],
-    ];
+    return new CodeFile(
+      $this->fileContents(),
+      build_list_tags: ['code', 'tests'],
+    );
   }
 
   /**

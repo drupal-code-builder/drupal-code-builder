@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -49,13 +50,11 @@ class Readme extends File {
   /**
    * {@inheritdoc}
    */
-  public function getFileInfo() {
-    return [
-      'path' => '', // Means the base folder.
-      'filename' => $this->component_data->filename->value,
-      'body' => $this->lines(),
-      'build_list_tags' => ['readme'],
-    ];
+  public function getFileInfo(): CodeFile {
+    return new CodeFile(
+      $this->lines(),
+      build_list_tags: ['readme'],
+    );
   }
 
   /**
