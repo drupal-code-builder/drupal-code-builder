@@ -162,6 +162,95 @@ class ComponentTestsPHPUnit10Test extends TestBase {
   }
 
   /**
+   * Create a basic browser test.
+   */
+  function testBrowserTest() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Generated module',
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'browser',
+          'plain_class_name' => 'MyTest',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "test_module.info.yml",
+      "tests/src/Functional/MyTest.php"
+    ], $files);
+
+    $test_file = $files["tests/src/Functional/MyTest.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $test_file);
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+    $php_tester->assertHasClass('Drupal\Tests\test_module\Functional\MyTest');
+    $php_tester->assertClassHasParent('Drupal\Tests\BrowserTestBase');
+    $php_tester->assertClassHasProtectedProperty('modules', 'array', [
+      'system',
+      'user',
+      'test_module',
+    ]);
+    $php_tester->assertClassHasProtectedProperty('defaultTheme', NULL, 'stark');
+    $php_tester->assertHasMethodOrder(['setUp', 'testMyTest']);
+    $php_tester->assertStatementIsParentCall('setUp', 0);
+    $setup_method_tester = $php_tester->getMethodTester('setUp');
+    $setup_method_tester->assertReturnType('void');
+  }
+
+  /**
+   * Create a basic JavaScript test.
+   */
+  function testJavaScriptTest() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Generated module',
+      'phpunit_tests' => [
+        0 => [
+          'test_type' => 'javascript',
+          'plain_class_name' => 'MyTest',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "test_module.info.yml",
+      "tests/src/FunctionalJavascript/MyTest.php"
+    ], $files);
+
+    $test_file = $files["tests/src/FunctionalJavascript/MyTest.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $test_file);
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+    $php_tester->assertHasClass('Drupal\Tests\test_module\FunctionalJavascript\MyTest');
+    $php_tester->assertClassHasParent('Drupal\FunctionalJavascriptTests\WebDriverTestBase');
+    $php_tester->assertClassHasProtectedProperty('modules', 'array', [
+      'system',
+      'user',
+      'test_module',
+    ]);
+    $php_tester->assertClassHasProtectedProperty('defaultTheme', NULL, 'stark');
+    $php_tester->assertHasMethodOrder(['setUp', 'testMyTest']);
+    $php_tester->assertStatementIsParentCall('setUp', 0);
+    $setup_method_tester = $php_tester->getMethodTester('setUp');
+    $setup_method_tester->assertReturnType('void');
+  }
+
+
+  /**
    * Create a test class with services.
    *
    * @group di

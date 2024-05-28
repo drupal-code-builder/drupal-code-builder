@@ -370,6 +370,18 @@ class PHPUnitTest extends PHPClassFile {
       );
     }
 
+    if (in_array($this->component_data->test_type->value, ['browser', 'javascript'])) {
+      $this->properties[] = $this->createPropertyBlock(
+        'defaultTheme',
+        NULL,
+        [
+          'docblock_inherit' => TRUE,
+          'prefixes' => ['protected'],
+          'default' => 'stark',
+        ]
+      );
+    }
+
     // Add properties for services obtained from the container.
     if (!empty($this->getContentsElement('service_property_container'))) {
       // Service class property.
