@@ -498,12 +498,15 @@ class PHPClassFile extends PHPFile {
    *
    * @param string $property_name
    *   The property's name, without the initial '$'.
-   * @param string $type
+   * @param string|null $type
    *   The typehint. Classes and interfaces should be fully-qualified, with the
    *   initial '\'.
    * @param $options
    *  An array of options. May contain:
-   *  - 'docblock_first_line' The text for the first line of the docblock.
+   *  - 'docblock_first_line' (optional) The text for the first line of the
+   *    docblock. Required unless 'docblock_inherit' is TRUE.
+   *  - 'docblock_inherit' (optional) Set to TRUE to make the block an
+   *    'inheritdoc'.
    *  - 'docblock_lines' (optional) An array of further docblock lines.
    *  - 'default': (optional) The default value, as the actual value. May be any
    *    type.
@@ -524,12 +527,19 @@ class PHPClassFile extends PHPFile {
 
     $docblock = Docblock::property();
 
-    $docblock[] = $options['docblock_first_line'];
-    foreach ($options['docblock_lines'] ?? [] as $docblock_line) {
-      $docblock[] = $docblock_line;
+    if (isset($options['docblock_inherit'])) {
+      $docblock->inheritdoc();
     }
+    else {
+      $docblock[] = $options['docblock_first_line'];
+      foreach ($options['docblock_lines'] ?? [] as $docblock_line) {
+        $docblock[] = $docblock_line;
+      }
 
-    $docblock->var($type);
+      if (isset($type)) {
+        $docblock->var($type);
+      }
+    }
 
     $declaration_lines = [];
     $declaration_first_line = '';
