@@ -757,7 +757,7 @@ class PHPTester {
    *
    * @param string $property_name
    *   The name of the property, without the initial '$'.
-   * @param string $typehint
+   * @param string|null $typehint
    *   The typehint for the property, without the initial '\' if a class or
    *   interface.
    * @param mixed $default
@@ -795,7 +795,10 @@ class PHPTester {
 
     $property_docblock = $property_node->getAttribute('comments')[0]->getText();
 
-    if (ucfirst($typehint) == $typehint) {
+    if (is_null($typehint)) {
+      Assert::assertStringNotContainsString('@var $', $property_docblock, "The docblock for property \${$property_name} does not have a typehint.");
+    }
+    elseif (ucfirst($typehint) == $typehint) {
       // The typehint is a class, e.g. 'Drupal\foo', or 'Exception'.
       Assert::assertStringContainsString("@var \\{$typehint}", $property_docblock, "The docblock for property \${$property_name} contains the typehint.");
     }
