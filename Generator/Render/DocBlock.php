@@ -97,12 +97,11 @@ class DocBlock implements \ArrayAccess {
   }
 
   /**
-   * Creates a new '@inheritdoc' DocBlock.
+   * Adds an '@inheritdoc' line to the docblock.
    */
-  public static function inheritdoc() {
-    $docblock = new static(0);
-    $docblock[] = '{@inheritdoc}';
-    return $docblock;
+  public function inheritdoc(): static {
+    $this->paragraphs[] = '{@inheritdoc}';
+    return $this;
   }
 
   public function offsetExists(mixed $offset): bool {

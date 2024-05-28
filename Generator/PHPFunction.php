@@ -270,17 +270,17 @@ class PHPFunction extends BaseGenerator {
    *   An array of lines.
    */
   protected function getFunctionDocBlockLines() {
-    // TODO: no need for default value in properties
-    // An inherit docblock is handled as a default value. Nothing else to do.
-    if ($this->component_data->docblock_inherit->value) {
-      return DocBlock::inheritdoc()->render();
-    }
-
     if ($this->component_data->method->value) {
       $docblock = DocBlock::method();
     }
     else {
       $docblock = DocBlock::function();
+    }
+
+    // TODO: no need for default value in properties
+    // An inherit docblock is handled as a default value. Nothing else to do.
+    if ($this->component_data->docblock_inherit->value) {
+      return $docblock->inheritdoc()->render();
     }
 
     $lines = $this->component_data->function_docblock_lines->value;
