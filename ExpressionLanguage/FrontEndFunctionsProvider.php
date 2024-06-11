@@ -16,7 +16,7 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFunctions() {
+  public function getFunctions(): array {
     return [
       // Converts a machine name in snake case to a label in title case.
       new ExpressionFunction('machineToLabel', function ($str) { },

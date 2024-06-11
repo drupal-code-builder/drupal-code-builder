@@ -17,7 +17,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
   /**
    * {@inheritdoc}
    */
-  public function getFunctions() {
+  public function getFunctions(): array {
     return [
       new ExpressionFunction('arrayAppend',
         function (array $array, string $suffix) {},
