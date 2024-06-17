@@ -77,6 +77,13 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       ];
     }
 
+    // Hardcoded extras for presets.
+    // TODO: This is only wrapped because test data doesn't have the logger tag!
+    if (isset($presets['logger'])) {
+      // TODO: Add test coverage for this.
+      $presets['logger']['data']['force']['service_name_prefix']['value'] = 'logger';
+    }
+
     // TODO: implement this once we have a processing system.
     //$presets['event_subscriber']['data']['force']['relative_class_name'] ...
 
@@ -94,12 +101,15 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
         ->setDescription("The name of the service, without the module name prefix.")
         ->setRequired(TRUE)
         ->setValidators('service_name'),
+      'service_name_prefix' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setExpressionDefault("parent.root_component_name.get()"),
       'prefixed_service_name' => PropertyDefinition::create('string')
         ->setLabel('The plain class name, e.g. "MyClass"')
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("parent.root_component_name.get() ~ '.' ~ parent.service_name.get()")
+            ->setExpression("parent.service_name_prefix.get() ~ '.' ~ parent.service_name.get()")
             ->setDependencies('..:root_component_name')
         ),
       'injected_services' => PropertyDefinition::create('string')
