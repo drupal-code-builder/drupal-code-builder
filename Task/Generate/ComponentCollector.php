@@ -736,9 +736,9 @@ class ComponentCollector {
     // dump($component_data->getParent()->export());
 
 
-    $presets = $component_data->getPresets();
+    $preset_definitions = $component_data->getPresets();
     // dump("APPLYING PRESETS FOR " . $component_data->getAddress());
-    // dump($presets);
+    // dump($preset_definitions);
     // dump($componpent_data);
 
     // First, gather up the values that the selected preset items want to set
@@ -753,7 +753,7 @@ class ComponentCollector {
 
       // dump("DOING " . $preset_item->value);
       // dump($preset_item);
-      $preset_item_preset_data = $presets[$preset_item->value];
+      $preset_item_preset_data = $preset_definitions[$preset_item->value];
       // dump($preset_item_preset_data);
       if (isset($preset_item_preset_data['data']['force'])) {
         foreach ($preset_item_preset_data['data']['force'] as $forced_property_name => $forced_data) {
