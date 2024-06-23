@@ -762,6 +762,11 @@ class ComponentCollector {
         continue;
       }
 
+      // Skip if there are no presets defined for this value.
+      if (!isset($preset_definitions[$preset_item->value])) {
+        continue;
+      }
+
       // dump("DOING " . $preset_item->value);
       // dump($preset_item);
       $preset_item_preset_data = $preset_definitions[$preset_item->value];

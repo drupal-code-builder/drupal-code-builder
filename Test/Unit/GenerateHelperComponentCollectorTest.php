@@ -305,15 +305,30 @@ class GenerateHelperComponentCollectorTest extends TestBase {
         'suggested_property_filled' => PropertyDefinition::create('string'),
         'suggested_property_empty' => PropertyDefinition::create('string'),
       ]);
-    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
+    // Test a value without a preset.
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
+    $component_data->set([
+      'preset_property' => 'Z',
+    ]);
+    $this->getComponentCollector()->assembleComponentList($component_data);
+
+    $this->assertEquals([
+      'preset_property' => 'Z',
+      'forced_property' => NULL,
+      'suggested_property_filled' => NULL,
+      'suggested_property_empty' => NULL,
+
+    ], $component_data->export());
+
+    // Test a value with a preset.
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
     $component_data->set([
       'preset_property' => 'A',
       // The user supplies a value for the suggested property.
       'suggested_property_filled' => 'user_filled',
     ]);
-
-    $collection = $this->getComponentCollector()->assembleComponentList($component_data);
+    $this->getComponentCollector()->assembleComponentList($component_data);
 
     $this->assertEquals([
       'preset_property' => 'A',
