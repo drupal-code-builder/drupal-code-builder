@@ -260,120 +260,70 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @group presets
    */
   public function testSingleGeneratorSinglePresetsNoRequirements() {
-    $this->markTestSkipped();
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
+      ->setProperties([
+        'preset_property' => PropertyDefinition::create('string')
+          ->setPresets([
+              'A' => [
+                'label' => 'option_a',
+                'data' => [
+                  'force' => [
+                    'forced_property' => [
+                      'value' => 'forced_A',
+                    ],
+                  ],
+                  'suggest' => [
+                    'suggested_property_filled' => [
+                      'value' => 'suggested_A',
+                    ],
+                    'suggested_property_empty' => [
+                      'value' => 'suggested_A',
+                    ],
+                  ],
+                ],
+              ],
+              'B' => [
+                'label' => 'option_b',
+                'data' => [
+                  'force' => [
+                    'forced_property' => [
+                      'value' => 'forced_B',
+                    ],
+                  ],
+                  'suggest' => [
+                    'suggested_property_filled' => [
+                      'value' => 'suggested_B',
+                    ],
+                    'suggested_property_empty' => [
+                      'value' => 'suggested_B',
+                    ],
+                  ],
+                ],
+              ],
+            ]),
+        'forced_property' => PropertyDefinition::create('string'),
+        'suggested_property_filled' => PropertyDefinition::create('string'),
+        'suggested_property_empty' => PropertyDefinition::create('string'),
+      ]);
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
-    // The mocked root component's data info.
-    $root_data_info = [
-      // This property is assumed to exist by the collector.
-      'root_name' => [
-        'label' => 'Component machine name',
-        'required' => TRUE,
-      ],
-      'preset_property' => [
-        'label' => 'Label',
-        'presets' => [
-          'A' => [
-            'label' => 'option_a',
-            'data' => [
-              'force' => [
-                'forced_property' => [
-                  'value' => 'forced_A',
-                ],
-              ],
-              'suggest' => [
-                'suggested_property_filled' => [
-                  'value' => 'suggested_A',
-                ],
-                'suggested_property_empty' => [
-                  'value' => 'suggested_A',
-                ],
-              ],
-            ],
-          ],
-          'B' => [
-            'label' => 'option_b',
-            'data' => [
-              'force' => [
-                'forced_property' => [
-                  'value' => 'forced_B',
-                ],
-              ],
-              'suggest' => [
-                'suggested_property_filled' => [
-                  'value' => 'suggested_B',
-                ],
-                'suggested_property_empty' => [
-                  'value' => 'suggested_B',
-                ],
-              ],
-            ],
-          ],
-        ],
-      ],
-      'forced_property' => [
-      ],
-      'suggested_property_filled' => [
-      ],
-      'suggested_property_empty' => [
-      ],
-    ];
-    $this->componentDataInfoAddDefaults($root_data_info);
-    // The request data we pass in to the system.
-    $root_data = [
-      'base' => 'my_root',
-      'root_name' => 'my_component',
+    $component_data->set([
       'preset_property' => 'A',
       // The user supplies a value for the suggested property.
       'suggested_property_filled' => 'user_filled',
-    ];
-    // Expected data for the root component.
-    // This is $root_data once it's been processed.
-    $root_component_construction_data = [
-      'base' => 'my_root',
-      'root_name' => 'my_component',
+    ]);
+
+    $collection = $this->getComponentCollector()->assembleComponentList($component_data);
+
+    $this->assertEquals([
       'preset_property' => 'A',
-      // The suggested value isn't used, because the user supplied a value.
-      'suggested_property_filled' => 'user_filled',
       // The force value is used.
       'forced_property' => 'forced_A',
+      // The suggested value isn't used, because the user supplied a value.
+      'suggested_property_filled' => 'user_filled',
       // The suggested value is used, because the user didn't supply a value.
       'suggested_property_empty' => 'suggested_A',
-      'component_type' => 'my_root',
-    ];
-
-    // Mock the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
-    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-
-    // Mock the root component generator, and methods on the dependencies which
-    // return things relating to it.
-    $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
-
-    $root_component->getMergeTag()->willReturn(NULL);
-    $root_component->requiredComponents()->willReturn([]);
-    $root_component->getType()->willReturn('my_root');
-
-    // The ClassHandler mock returns the generator mock.
-    $class_handler->getGenerator(
-      'my_root',
-      Argument::that(function ($arg) use ($root_component_construction_data) {
-        // Prophecy insists on the same array item order, so use a callback
-        // so we don't have to care.
-        // Assert the equality so thta we get nice output from PHPUnit for a
-        // failure.
-        $this->assertEquals($root_component_construction_data, $arg);
-
-        return ($arg == $root_component_construction_data);
-      })
-    )->willReturn($root_component->reveal());
-
-    // Create the helper, with mocks passed in.
-    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
-      $environment->reveal(),
-      $class_handler->reveal()
-    );
-
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    ], $component_data->export());
   }
 
   /**
@@ -382,144 +332,75 @@ class GenerateHelperComponentCollectorTest extends TestBase {
    * @group presets
    */
   public function testSingleGeneratorMultiPresetsNoRequirements() {
-    $this->markTestSkipped();
+    $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
+      ->setProperties([
+        'preset_property' => PropertyDefinition::create('string')
+          ->setMultiple(TRUE)
+          ->setPresets([
+              'A' => [
+                'label' => 'option_a',
+                'data' => [
+                  'force' => [
+                    'forced_property' => [
+                      'value' => ['forced_A'],
+                    ],
+                  ],
+                  'suggest' => [
+                    'suggested_property_filled' => [
+                      'value' => ['suggested_A'],
+                    ],
+                    'suggested_property_empty' => [
+                      'value' => ['suggested_A'],
+                    ],
+                  ],
+                ],
+              ],
+              'B' => [
+                'label' => 'option_b',
+                'data' => [
+                  'force' => [
+                    'forced_property' => [
+                      'value' => ['forced_B'],
+                    ],
+                  ],
+                  'suggest' => [
+                    'suggested_property_filled' => [
+                      'value' => ['suggested_B'],
+                    ],
+                    'suggested_property_empty' => [
+                      'value' => ['suggested_B'],
+                    ],
+                  ],
+                ],
+              ],
+            ]),
+        'forced_property' => PropertyDefinition::create('string')
+          ->setMultiple(TRUE),
+        'suggested_property_filled' => PropertyDefinition::create('string')
+          ->setMultiple(TRUE),
+        'suggested_property_empty' => PropertyDefinition::create('string')
+          ->setMultiple(TRUE),
+      ]);
+    $component_data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
 
-    // The mocked root component's data info.
-    $root_data_info = [
-      // This property is assumed to exist by the collector.
-      'root_name' => [
-        'label' => 'Component machine name',
-        'required' => TRUE,
-      ],
-      'preset_property' => [
-        'label' => 'Label',
-        'format' => 'array',
-        'presets' => [
-          'A' => [
-            'label' => 'option_a',
-            'data' => [
-              'force' => [
-                'forced_property' => [
-                  'value' => ['forced_A'],
-                ],
-              ],
-              'suggest' => [
-                'suggested_property_filled' => [
-                  'value' => ['suggested_A'],
-                ],
-                'suggested_property_empty' => [
-                  'value' => ['suggested_A'],
-                ],
-              ],
-            ],
-          ],
-          'B' => [
-            'label' => 'option_b',
-            'data' => [
-              'force' => [
-                'forced_property' => [
-                  'value' => ['forced_B'],
-                ],
-              ],
-              'suggest' => [
-                'suggested_property_filled' => [
-                  'value' => ['suggested_B'],
-                ],
-                'suggested_property_empty' => [
-                  'value' => ['suggested_B'],
-                ],
-              ],
-            ],
-          ],
-          'C' => [
-            'label' => 'option_c',
-            'data' => [
-              'force' => [
-                'forced_property' => [
-                  'value' => ['forced_C'],
-                ],
-              ],
-              'suggest' => [
-                'suggested_property_filled' => [
-                  'value' => ['suggested_C'],
-                ],
-                'suggested_property_empty' => [
-                  'value' => ['suggested_C'],
-                ],
-              ],
-            ],
-          ],
-        ],
-      ],
-      'forced_property' => [
-        'format' => 'array',
-      ],
-      'suggested_property_filled' => [
-        'format' => 'array',
-      ],
-      'suggested_property_empty' => [
-        'format' => 'array',
-      ],
-    ];
-    $this->componentDataInfoAddDefaults($root_data_info);
-    // The request data we pass in to the system.
-    $root_data = [
-      'base' => 'my_root',
-      'root_name' => 'my_component',
+    $component_data->set([
       'preset_property' => ['A', 'B'],
       // The user supplies a value for the suggested property.
       'suggested_property_filled' => ['user_filled'],
-    ];
-    // Expected data for the root component.
-    // This is $root_data once it's been processed.
-    $root_component_construction_data = [
-      'base' => 'my_root',
-      'root_name' => 'my_component',
+    ]);
+
+    $collection = $this->getComponentCollector()->assembleComponentList($component_data);
+
+    $this->assertEquals([
       'preset_property' => ['A', 'B'],
-      // The suggested value isn't used, because the user supplied a value.
-      'suggested_property_filled' => ['user_filled'],
       // The force value is used.
       'forced_property' => ['forced_A', 'forced_B'],
+      // The suggested value isn't used, because the user supplied a value.
+      'suggested_property_filled' => ['user_filled'],
       // The suggested value is used, because the user didn't supply a value.
       'suggested_property_empty' => ['suggested_A', 'suggested_B'],
-      'component_type' => 'my_root',
-    ];
-
-    // Mock the ComponentCollector's injected dependencies.
-    $environment = $this->prophesize('\DrupalCodeBuilder\Environment\EnvironmentInterface');
-    $class_handler = $this->prophesize(\DrupalCodeBuilder\Task\Generate\ComponentClassHandler::class);
-
-    // Mock the root component generator, and methods on the dependencies which
-    // return things relating to it.
-    $root_component = $this->prophesize(\DrupalCodeBuilder\Generator\RootComponent::class);
-
-    $root_component->getMergeTag()->willReturn(NULL);
-    $root_component->requiredComponents()->willReturn([]);
-    $root_component->getType()->willReturn('my_root');
-
-    // The ClassHandler mock returns the generator mock.
-    $class_handler->getGenerator(
-      'my_root',
-      Argument::that(function ($arg) use ($root_component_construction_data) {
-        // Prophecy insists on the same array item order, so use a callback
-        // so we don't have to care.
-        // Assert the equality so thta we get nice output from PHPUnit for a
-        // failure.
-        $this->assertEquals($root_component_construction_data, $arg);
-
-        return ($arg == $root_component_construction_data);
-      })
-    )->willReturn($root_component->reveal());
-
-    // Create the helper, with mocks passed in.
-    $component_collector = new \DrupalCodeBuilder\Task\Generate\ComponentCollector(
-      $environment->reveal(),
-      $class_handler->reveal()
-    );
-
-    $component_list = $component_collector->assembleComponentList($root_data)->getComponents();
+    ], $component_data->export());
   }
-
 
   /**
    * Request with only the root generator, which has a child requirement.

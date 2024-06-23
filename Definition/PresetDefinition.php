@@ -8,7 +8,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 /**
  * Defines a single preset.
  *
- * This does not support preset suggestions yet, but then, nothing else does.
+ * This does not support preset suggestions yet.
  */
 class PresetDefinition {
 
