@@ -719,6 +719,18 @@ class ComponentCollector {
   /**
    * Walk callback to set values from a presets property into other properties.
    *
+   * Presets allow one property to set values into other properties.
+   *
+   * The preset property holds a set of preset definitions. Each one specifies
+   * the values to set on other property for a particular value on the preset
+   * property.
+   *
+   * Values are specified as one of:
+   *  - 'force': The value overwrites any value set in the target property by
+   *    the user.
+   *  - 'suggest': The value is only set in the target property if the user has
+   *    not set a value.
+   *
    * @param DataItem $component_data
    *  The component data item.
    */
@@ -741,11 +753,10 @@ class ComponentCollector {
     // dump($preset_definitions);
     // dump($componpent_data);
 
-    // First, gather up the values that the selected preset items want to set
-    // as suggestions.
+    // Values that selected preset items set as suggestions need to be gathered
+    // up and applied collectively.
     $suggested_values = [];
 
-    // Values which are forced by the preset.
     foreach ($component_data->items() as $preset_item) {
       if (empty($preset_item->value)) {
         continue;
