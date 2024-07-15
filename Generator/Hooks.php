@@ -16,6 +16,11 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  * requests one or more HookImplementation components. Those will then in turn
  * request ExtensionCodeFile components for the file they should reside in.
  *
+ * By default, hook implementations will contain sample code taken from the
+ * api.php file documentation. This will be overridden if the HookImplementation
+ * component has contained content. Furthermore, some specific hook
+ * implmentation generator classes provide their own function body.
+ *
  * TODO: make this work for theme hooks too?
  *
  * @see DrupalCodeBuilder\Generator\ExtensionCodeFile

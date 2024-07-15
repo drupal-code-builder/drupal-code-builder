@@ -19,7 +19,7 @@ class PHPFunctionLine extends BaseGenerator {
     $definition->addProperties([
       // The line of code, without function indentation.
       'code' => PropertyDefinition::create('string')
-        ->setRequired(TRUE),
+        ->setMultiple(TRUE),
     ]);
   }
 
@@ -34,11 +34,7 @@ class PHPFunctionLine extends BaseGenerator {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    $contents = [];
-
-    $contents[] = $this->component_data->code->value;
-
-    return $contents;
+    return $this->component_data->code->values();
   }
 
 }

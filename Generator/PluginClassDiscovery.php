@@ -320,13 +320,16 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
           'hooks' => [
             $alter_hook_name,
           ],
-          'hook_bodies' => [
-            $alter_hook_name => [
-              "// Override the class for the '{$this->component_data['parent_plugin_id']}' plugin.",
-              "if (isset(£info['{$this->component_data['parent_plugin_id']}'])) {",
-              "  £info['{$this->component_data['parent_plugin_id']}']['class'] = \\{$this->component_data['qualified_class_name']}::class;",
-              "}",
-            ],
+        ];
+
+        $components['hook_lines'] = [
+          'component_type' => 'PHPFunctionLine',
+          'containing_component' => '%requester:hooks:' . $alter_hook_name,
+          'code' => [
+            "// Override the class for the '{$this->component_data['parent_plugin_id']}' plugin.",
+            "if (isset(£info['{$this->component_data['parent_plugin_id']}'])) {",
+            "  £info['{$this->component_data['parent_plugin_id']}']['class'] = \\{$this->component_data['qualified_class_name']}::class;",
+            "}",
           ],
         ];
       }

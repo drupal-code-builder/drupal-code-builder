@@ -115,6 +115,13 @@ class PHPFunction extends BaseGenerator {
       'body' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setInternal(TRUE),
+      // Whether the contents of contained components of content type 'line'
+      // overrides the 'body' property, or are merged. If merging, the magic
+      // string 'CONTAINED_COMPONENTS' can be used to insert the components
+      // instead of appending them.
+      'body_overriden_by_contained' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
       // Whether code lines in the 'body' property are already indented relative
       // to the indentation of function as a whole.
       'body_indented' => PropertyDefinition::create('boolean')
@@ -215,8 +222,18 @@ class PHPFunction extends BaseGenerator {
       // Do nothing; assignment suffices.
     }
     else {
-      // Use both property data and contained components.
-      if (isset($this->component_data['body'])) {
+      // There may be both property data and contained components. Contained
+      // components override the body if it is set and if
+      // 'body_overriden_by_contained' is TRUE.
+      $has_body_from_component_data = !$this->component_data->body->isEmpty();
+      $has_body_from_contained_components = $this->hasContainedComponentsOfContentType('line');
+
+      $let_body_from_contained_components_override_body_from_component_data =
+        $this->component_data->body_overriden_by_contained->value
+        &&
+        $has_body_from_contained_components;
+
+      if ($has_body_from_component_data && !$let_body_from_contained_components_override_body_from_component_data) {
         $body = is_array($this->component_data['body'])
           ? $this->component_data['body']
           : [$this->component_data['body']];

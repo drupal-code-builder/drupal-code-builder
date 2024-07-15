@@ -39,6 +39,11 @@ class HookImplementation extends PHPFunction {
         $function_name = '%module_' . $short_hook_name;
         return $function_name;
       });
+
+    // Hook bodies are just sample code from the code documentation, so if
+    // there are contained components, these should override the sample code.
+    $definition->getProperty('body_overriden_by_contained')
+      ->setLiteralDefault(TRUE);
   }
 
   /**
