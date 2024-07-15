@@ -339,12 +339,15 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $drupal_container
       ->get('plugin.manager.element_info')
       ->willReturn(new class {
-        public function getDefinition($plugin_id) {
-          Assert::assertEquals('parent', $plugin_id);
+        public function getDefinition(string $plugin_id) {
+          // Assert::assertEquals('parent', $plugin_id);
 
           return [
-            // The definition doesn't have the initial '\'.
-            'class' => 'Drupal\somemodule\Element\ParentElement',
+            'class' => match ($plugin_id) {
+              // The definition doesn't have the initial '\'.
+              'parent_alpha' => 'Drupal\somemodule\Element\ParentElement',
+              'parent_beta' => 'Drupal\somemodule\Element\ParentElement',
+            },
           ];
         }
       });
@@ -363,7 +366,13 @@ class ComponentPluginsAnnotated10Test extends TestBase {
         0 => [
           'plugin_type' => 'element_info',
           'plugin_name' => 'alpha',
-          'parent_plugin_id' => 'parent',
+          'parent_plugin_id' => 'parent_alpha',
+          'replace_parent_plugin' => TRUE,
+        ],
+        1 => [
+          'plugin_type' => 'element_info',
+          'plugin_name' => 'beta',
+          'parent_plugin_id' => 'parent_beta',
           'replace_parent_plugin' => TRUE,
         ]
       ],
@@ -375,6 +384,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       "test_module.info.yml",
       "test_module.module",
       "src/Element/Alpha.php",
+      "src/Element/Beta.php",
     ], $files);
 
     $plugin_file = $files["src/Element/Alpha.php"];
@@ -392,7 +402,8 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $php_tester->assertHasHookImplementation('hook_element_plugin_alter', $module_name);
 
     $function_tester = $php_tester->getFunctionTester('test_module_element_plugin_alter');
-    $function_tester->assertHasLine("\$info['parent']['class'] = Alpha::class;");
+    $function_tester->assertHasLine("\$info['parent_alpha']['class'] = Alpha::class;");
+    $function_tester->assertHasLine("\$info['parent_beta']['class'] = Beta::class;");
   }
 
   /**
