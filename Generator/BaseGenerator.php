@@ -484,6 +484,21 @@ abstract class BaseGenerator implements GeneratorInterface {
   }
 
   /**
+   * Determines if there is contained component content of the given type.
+   *
+   * @param string $content_type
+   *   The content type to check for. This corresponds to a return value from
+   *   self::getContentType().
+   *
+   * @return boolean
+   *   TRUE if there is contained component content with this content type,
+   *   FALSE if not.
+   */
+  protected function hasContainedComponentsOfContentType(string $content_type): bool {
+    return isset($this->containedComponents[$content_type]);
+  }
+
+  /**
    * Gets the contents of the component.
    *
    * @return array
