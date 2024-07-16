@@ -440,13 +440,14 @@ class PluginTypesCollector extends CollectorBase  {
       'plugin_definition_annotation_name',
       'plugin_definition_attribute_name',
       'yaml_file_suffix',
-      'yaml_properties',
       'annotation_id_only',
       'plugin_label_property',
     ];
     foreach ($discovery_dependent_properties as $property) {
       $data[$property] = NULL;
     }
+    $data['yaml_properties'] = [];
+
 
     // Use the full class names, as some classes with the same name exist in
     // Component\Plugin and Core\Plugin.
