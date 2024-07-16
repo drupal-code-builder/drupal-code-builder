@@ -356,11 +356,11 @@ class PluginTypesCollector extends CollectorBase  {
   protected function addPluginTypeServiceData(&$data) {
     // Get a reflection for the plugin manager service.
     $service = \Drupal::service($data['service_id']);
-    $reflection = new \ReflectionClass($service);
+    $service_reflection = new \ReflectionClass($service);
 
     // Determine the alter hook name.
-    if ($reflection->hasProperty('alterHook')) {
-      $property_alter_hook = $reflection->getProperty('alterHook');
+    if ($service_reflection->hasProperty('alterHook')) {
+      $property_alter_hook = $service_reflection->getProperty('alterHook');
       $property_alter_hook->setAccessible(TRUE);
       $alter_hook_name = $property_alter_hook->getValue($service);
       if (!empty($alter_hook_name)) {
@@ -370,19 +370,19 @@ class PluginTypesCollector extends CollectorBase  {
 
     // Determine the plugin discovery type.
     // Get the discovery object from the plugin manager.
-    $method_getDiscovery = $reflection->getMethod('getDiscovery');
+    $method_getDiscovery = $service_reflection->getMethod('getDiscovery');
     $method_getDiscovery->setAccessible(TRUE);
     $discovery = $method_getDiscovery->invoke($service);
-    $class_dicovery = new \ReflectionClass($discovery);
+    $reflection_discovery = new \ReflectionClass($discovery);
 
     // This is typically decorated at least once, for derivative discover.
     // Ascend up the chain of decorated objects to the innermost discovery
     // object.
-    while ($class_dicovery->hasProperty('decorated')) {
-      $property_decorated = $class_dicovery->getProperty('decorated');
+    while ($reflection_discovery->hasProperty('decorated')) {
+      $property_decorated = $reflection_discovery->getProperty('decorated');
       $property_decorated->setAccessible(TRUE);
       $discovery = $property_decorated->getValue($discovery);
-      $class_dicovery = new \ReflectionClass($discovery);
+      $reflection_discovery = new \ReflectionClass($discovery);
     }
 
     $inner_discovery_class = get_class($discovery);
