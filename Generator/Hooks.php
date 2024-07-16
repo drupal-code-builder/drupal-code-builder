@@ -38,11 +38,6 @@ class Hooks extends BaseGenerator {
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE),
-      // The body code for any hook implementations. An array whose keys are
-      // the full hook names, and whose values are the value to pass on to
-      // that HookImplementation component.
-      'hook_bodies' => PropertyDefinition::create('mapping')
-        ->setInternal(TRUE),
     ]);
   }
 
@@ -108,40 +103,34 @@ class Hooks extends BaseGenerator {
           'declaration' => $hook['definition'],
         ];
 
-        // The body for the hook implementation can come either from this
-        // component's requester, as the 'hook_bodies' property, or from
-        // template  code, or finally, the hook documentation's example code.
-        // In the last two cases, the code is in $hook['template'].
-        // (Note that further down the line, some specific hook implementation
+        // The body for the hook implementation can come either template  code,
+        // or the hook documentation's example code. (Note that this will be
+        // overridden further down the line if the HookImplementation component
+        // has contained components, and also some specific hook implementation
         // generators assemble body from their own child components.)
-        if (isset($this->component_data['hook_bodies'][$hook_name])) {
-          $components[$hook_name]['body'] = $this->component_data['hook_bodies'][$hook_name];
+        // Strip out INFO: comments for advanced users.
+        // This has to be done before we split this into lines.
+        // TODO: No need to do this if this is hook api.php file sample code!
+        if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
+          // Used to strip INFO messages out of generated file for advanced users.
+          $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
+          $hook['template'] = preg_replace($pattern, '', $hook['template']);
         }
-        else {
-          // Strip out INFO: comments for advanced users.
-          // This has to be done before we split this into lines.
-          // TODO: No need to do this if this is hook api.php file sample code!
-          if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
-            // Used to strip INFO messages out of generated file for advanced users.
-            $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
-            $hook['template'] = preg_replace($pattern, '', $hook['template']);
-          }
 
-          // This needs to be split into an array of lines for things such as
-          // PHPFile::extractFullyQualifiedClasses() to work.
-          $hook['template'] = explode("\n", $hook['template']);
+        // This needs to be split into an array of lines for things such as
+        // PHPFile::extractFullyQualifiedClasses() to work.
+        $hook['template'] = explode("\n", $hook['template']);
 
-          // Trim lines from start and end of body, as hook definitions
-          // have newlines at start and end.
-          $hook['template'] = array_slice($hook['template'], 1, -1);
+        // Trim lines from start and end of body, as hook definitions
+        // have newlines at start and end.
+        $hook['template'] = array_slice($hook['template'], 1, -1);
 
-          // Set it as the method body.
-          $components[$hook['name']]['body'] = $hook['template'];
+        // Set it as the method body.
+        $components[$hook['name']]['body'] = $hook['template'];
 
-          // The code is a single string, already indented. Ensure we don't
-          // indent it again.
-          $components[$hook['name']]['body_indented'] = TRUE;
-        }
+        // The code is a single string, already indented. Ensure we don't
+        // indent it again.
+        $components[$hook['name']]['body_indented'] = TRUE;
       }
     }
 
