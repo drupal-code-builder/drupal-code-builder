@@ -375,11 +375,22 @@ class PluginTypesCollector extends CollectorBase  {
     $discovery = $method_getDiscovery->invoke($service);
     $reflection_discovery = new \ReflectionClass($discovery);
 
-    // This is typically decorated at least once, for derivative discover.
-    // Ascend up the chain of decorated objects to the innermost discovery
-    // object.
-    while ($reflection_discovery->hasProperty('decorated')) {
-      $property_decorated = $reflection_discovery->getProperty('decorated');
+    // This is typically decorated at least once, for derivative discovery.
+    // Also, some discovery classes have an inner $discovery property for
+    // totally undocumented reasons.
+    // Ascend up the chain of decorated objects to
+    // the innermost discovery object.
+    while (TRUE) {
+      if ($reflection_discovery->hasProperty('decorated')) {
+        $property_decorated = $reflection_discovery->getProperty('decorated');
+      }
+      elseif ($reflection_discovery->hasProperty('discovery')) {
+        $property_decorated = $reflection_discovery->getProperty('discovery');
+      }
+      else {
+        break;
+      }
+
       $property_decorated->setAccessible(TRUE);
       $discovery = $property_decorated->getValue($discovery);
       $reflection_discovery = new \ReflectionClass($discovery);
@@ -421,9 +432,6 @@ class PluginTypesCollector extends CollectorBase  {
 
     // Get more data from the service, depending on the discovery type of the
     // plugin.
-    $discovery_pieces = explode('\\', $data['discovery']);
-    $discovery_short_name = array_pop($discovery_pieces);
-
     // Add in empty properties from the different discovery types analyses so
     // they are always present.
     $discovery_dependent_properties = [
@@ -440,15 +448,17 @@ class PluginTypesCollector extends CollectorBase  {
       $data[$property] = NULL;
     }
 
-    switch ($discovery_short_name) {
-      case 'AttributeClassDiscovery':
-      case 'AttributeDiscoveryWithAnnotations':
+    // Use the full class names, as some classes with the same name exist in
+    // Component\Plugin and Core\Plugin.
+    switch ($data['discovery']) {
+      case 'Drupal\Core\Plugin\Discovery\AttributeClassDiscovery':
+      case 'Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations':
         $this->addPluginTypeServiceDataAttribute($data, $service, $discovery);
         break;
-      case 'AnnotatedClassDiscovery':
+      case 'Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery':
         $this->addPluginTypeServiceDataAnnotated($data, $service, $discovery);
         break;
-      case 'YamlDiscovery':
+      case 'Drupal\Core\Plugin\Discovery\YamlDiscovery':
         $this->addPluginTypeServiceDataYaml($data, $service, $discovery);
         break;
     }
