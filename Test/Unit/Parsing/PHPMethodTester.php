@@ -252,6 +252,18 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts the function body is not empty.
+   *
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertBodyNotEmpty($message = NULL) {
+    $message = $message ?? "The method {$this->methodName} has body code.";
+
+    Assert::assertNotEmpty($this->methodBody, $message);
+  }
+
+  /**
    * Asserts the method returns the given string.
    *
    * This expects the final statement to be a return. Other return statements
