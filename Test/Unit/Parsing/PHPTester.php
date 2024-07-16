@@ -1042,7 +1042,7 @@ class PHPTester {
    *
    * @return \DrupalCodeBuilder\Test\Unit\Parsing\PHPMethodTester
    */
-  public function getFunctionTester($function_name) {
+  public function getFunctionTester($function_name): PHPMethodTester {
     $this->assertHasFunction($function_name);
 
     return new PHPMethodTester($this->parser_nodes['functions'][$function_name], $this, $this->phpCode);
@@ -1056,7 +1056,7 @@ class PHPTester {
    *
    * @return \DrupalCodeBuilder\Test\Unit\Parsing\PHPMethodTester
    */
-  public function getMethodTester($method_name) {
+  public function getMethodTester($method_name): PHPMethodTester {
     $this->assertHasMethod($method_name);
 
     return new PHPMethodTester($this->parser_nodes['methods'][$method_name], $this, $this->phpCode);
