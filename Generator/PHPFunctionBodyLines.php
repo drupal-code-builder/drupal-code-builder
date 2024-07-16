@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Generator class for a function line.
  */
-class PHPFunctionLine extends BaseGenerator {
+class PHPFunctionBodyLines extends BaseGenerator {
 
   /**
    * {@inheritdoc}

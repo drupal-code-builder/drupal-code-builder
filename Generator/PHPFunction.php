@@ -27,10 +27,10 @@ use MutableTypedData\Definition\DefaultDefinition;
  * - The code of the function can either come from:
  *    - The getFunctionBody() method if a subclass overrides it.
  *    - The property value.
- *    - Contained PHPFunctionLine components.
- *    - Both the property value and contained PHPFunctionLine components, in
- *      which case contained component lines either go last, or are inserted to
- *      replace a token: see self::getContents().
+ *    - Contained PHPFunctionBodyLines components.
+ *    - Both the property value and contained PHPFunctionBodyLines components,
+ *      in which case contained component lines either go last, or are inserted
+ *      to replace a token: see self::getContents().
  *
  * Properties include:
  *    - 'declaration': The function declaration, including the function name

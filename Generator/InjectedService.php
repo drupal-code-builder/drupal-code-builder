@@ -138,7 +138,7 @@ class InjectedService extends BaseGenerator {
         }
 
         $components['constructor_line'] = [
-          'component_type' => 'PHPFunctionLine',
+          'component_type' => 'PHPFunctionBodyLines',
           'containing_component' => '%requester:%requester:construct',
           'code' => $code_line,
         ];
@@ -168,7 +168,7 @@ class InjectedService extends BaseGenerator {
       }
 
       $components['create_line'] = [
-        'component_type' => 'PHPFunctionLine',
+        'component_type' => 'PHPFunctionBodyLines',
         'containing_component' => '%requester:%requester:create',
         'code' => '  ' . $container_extraction,
       ];

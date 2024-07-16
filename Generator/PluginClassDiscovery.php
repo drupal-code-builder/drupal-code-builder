@@ -323,7 +323,7 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
         ];
 
         $components['hook_lines'] = [
-          'component_type' => 'PHPFunctionLine',
+          'component_type' => 'PHPFunctionBodyLines',
           'containing_component' => '%requester:hooks:' . $alter_hook_name,
           'code' => [
             "// Override the class for the '{$this->component_data['parent_plugin_id']}' plugin.",
