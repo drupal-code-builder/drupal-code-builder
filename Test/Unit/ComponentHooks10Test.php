@@ -59,6 +59,9 @@ class ComponentHooks10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_help', $module_name);
+
+    $function_tester = $php_tester->getFunctionTester('testmodule_8_help');
+    $function_tester->assertHasLine('return t("TODO: Create admin help text.");');
   }
 
   /**
@@ -118,6 +121,11 @@ class ComponentHooks10Test extends TestBase {
     $php_tester->assertNotHasHookImplementation('hook_install', $module_name);
     $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
 
+    $function_tester = $php_tester->getFunctionTester('testmodule_8_form_alter');
+    // Don't assert for specific body code as that is brittle, because Drupal's
+    // api.php docs might change their sample code.
+    $function_tester->assertBodyNotEmpty();
+
     // Check the .install file.
     $install_file = $files["$module_name.install"];
 
@@ -133,6 +141,9 @@ class ComponentHooks10Test extends TestBase {
     $php_tester->assertNotHasHookImplementation('hook_form_alter', $module_name);
     $php_tester->assertNotHasHookImplementation('hook_tokens', $module_name);
 
+    $function_tester = $php_tester->getFunctionTester('testmodule_8_install');
+    $function_tester->assertBodyNotEmpty();
+
     // Check the .tokens.inc file.
     $tokens_file = $files["$module_name.tokens.inc"];
 
@@ -142,6 +153,9 @@ class ComponentHooks10Test extends TestBase {
     $php_tester->assertNotHasHookImplementation('hook_help', $module_name);
     $php_tester->assertNotHasHookImplementation('hook_form_alter', $module_name);
     $php_tester->assertNotHasHookImplementation('hook_install', $module_name);
+
+    $function_tester = $php_tester->getFunctionTester('testmodule_8_tokens');
+    $function_tester->assertBodyNotEmpty();
 
     // Check the .info file.
     $info_file = $files["$module_name.info.yml"];
