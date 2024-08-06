@@ -108,7 +108,7 @@ class ComponentProfile10Test extends TestBase {
     $yaml_tester->assertPropertyHasValue('name', 'Test profile');
     $yaml_tester->assertPropertyHasValue('type', 'profile');
     $yaml_tester->assertPropertyHasValue('description', $profile_data['short_description'], "The info file declares the profile description.");
-    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10', "The info file declares the core version.");
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10 || ^11', "The info file declares the core version.");
   }
 
   /**

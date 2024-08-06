@@ -119,7 +119,7 @@ class ComponentAdminSettings10Test extends TestBase {
 
     $yaml_tester->assertPropertyHasValue('name', 'Test Module', "The info file declares the module name.");
     $yaml_tester->assertPropertyHasValue('description', $module_data['short_description'], "The info file declares the module description.");
-    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10', "The info file declares the core version.");
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10 || ^11', "The info file declares the core version.");
     $yaml_tester->assertPropertyHasValue('configure', "test_module.settings", "The info file declares the configuration route.");
   }
 

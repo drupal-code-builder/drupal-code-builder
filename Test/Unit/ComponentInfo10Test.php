@@ -45,7 +45,7 @@ class ComponentInfo10Test extends TestBase {
     $yaml_tester = new YamlTester($info_file);
     $yaml_tester->assertPropertyHasValue('name', 'Test Module');
     $yaml_tester->assertPropertyHasValue('type', 'module');
-    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10');
+    $yaml_tester->assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10 || ^11');
   }
 
   /**

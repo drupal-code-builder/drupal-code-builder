@@ -127,7 +127,7 @@ abstract class InfoComponent extends BaseGenerator {
    *   The version compatibility value string.
    */
   protected function getCoreVersionCompatibilityValue(): string {
-    return '^8 || ^9 || ^10';
+    return '^8 || ^9 || ^10 || ^11';
   }
 
 }
