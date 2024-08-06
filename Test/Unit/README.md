@@ -43,7 +43,7 @@ perl -pi -e 's/drupalMajorVersion = 8/drupalMajorVersion = 10/' ./*10Test.php
 ```
 
 4. Update assertions for the 'core_version_requirement' property in info files:
-   assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10'
+   assertPropertyHasValue('core_version_requirement', '^8 || ^9 || ^10 || ^11'
 
 5. Add hook templates for the new major version:
    cp templates/8/ templates/10/
