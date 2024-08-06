@@ -1,4 +1,4 @@
 name: 'Existing'
 type: module
 description: 'Module for tests with an existing module. Use with MockableExtension and add extra files dynamically.'
-core_version_requirement: '^8 || ^9 || ^10'
+core_version_requirement: '^8 || ^9 || ^10 || ^11'
