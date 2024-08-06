@@ -77,8 +77,7 @@ class InfoProfile extends InfoComponent {
       $lines['install'][] = $install->value;
     }
 
-    // TODO: Move this to a helper method.
-    $lines['core_version_requirement'] = '^8 || ^9 || ^10';
+    $lines['core_version_requirement'] = $this->getCoreVersionCompatibilityValue();
 
     if (!empty($extra_lines = $this->getContainedComponentInfoLines())) {
       $lines = array_merge($lines, $extra_lines);

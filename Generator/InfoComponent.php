@@ -120,4 +120,14 @@ abstract class InfoComponent extends BaseGenerator {
     return $data;
   }
 
+  /**
+   * Gets the value for the 'core_version_requirement' property.
+   *
+   * @return string
+   *   The version compatibility value string.
+   */
+  protected function getCoreVersionCompatibilityValue(): string {
+    return '^8 || ^9 || ^10';
+  }
+
 }
