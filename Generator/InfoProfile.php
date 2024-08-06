@@ -9,10 +9,10 @@ use Ckr\Util\ArrayMerger;
 /**
  * Abstract generator for profile info data.
  */
-class InfoProfile extends BaseGenerator {
+class InfoProfile extends InfoComponent {
 
   /**
-   * The order of keys in the info file.
+   * {@inheritdoc}
    */
   protected const INFO_LINE_ORDER = [
     'name',
@@ -24,9 +24,7 @@ class InfoProfile extends BaseGenerator {
   ];
 
   /**
-   * Properties that should be automatically defined and acquired from the root.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $propertiesAcquiredFromRoot = [
     'base',
@@ -42,14 +40,6 @@ class InfoProfile extends BaseGenerator {
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
-    // Properties acquired from the requesting root component.
-    foreach (static::$propertiesAcquiredFromRoot as $property_name) {
-      $definition->addProperty(PropertyDefinition::create('string')
-        ->setName($property_name)
-        ->setAutoAcquiredFromRequester()
-      );
-    }
-
     // TODO: make auto-acquired work with multiple values.
     $definition->addProperty(PropertyDefinition::create('string')
       ->setName('dependencies')
@@ -61,30 +51,6 @@ class InfoProfile extends BaseGenerator {
       ->setMultiple(TRUE)
       ->setAcquiringExpression('requester.install.export()')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function requiredComponents(): array {
-    $components = parent::requiredComponents();
-
-    $components['info_file'] = [
-      'component_type' => 'YMLFile',
-      'filename' => '%extension.info.yml',
-      // Too early to pass yaml_data, as we need to collect contents for that.
-    ];
-
-    return $components;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function containingComponent() {
-    // This needs to be contained by the info file, as it has to be contained by
-    // something that's a file in order to assemble its own contents.
-    return '%self:info_file';
   }
 
   /**
@@ -119,47 +85,6 @@ class InfoProfile extends BaseGenerator {
     }
 
     return $lines;
-  }
-
-  /**
-   * Gets additional info lines from contained components.
-   *
-   * @return array
-   */
-  protected function getContainedComponentInfoLines(): array {
-    $lines = [];
-    foreach ($this->containedComponents['element'] ?? [] as $key => $child_item) {
-      $contents = $child_item->getContents();
-
-      // Assume that children components don't tread on each others' toes and
-      // provide the same property names.
-      $lines[array_key_first($contents)] = reset($contents);
-    }
-
-    return $lines;
-  }
-
-  /**
-   * Gets an array of info file lines in the correct order to be populated.
-   *
-   * @return array
-   *   The array of lines.
-   */
-  protected function getInfoFileEmptyLines() {
-    return array_fill_keys(self::INFO_LINE_ORDER, []);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContents(): array {
-    $data = $this->infoData();
-
-    // Filter before merging with existing, as if scalar properties have not
-    // been set, they will have the empty arrays from getInfoFileEmptyLines();
-    $data = array_filter($data);
-
-    return $data;
   }
 
 }
