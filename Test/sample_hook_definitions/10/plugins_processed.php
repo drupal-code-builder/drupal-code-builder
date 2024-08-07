@@ -1,6 +1,6 @@
 <?php $data =
 array (
-  'block' => 
+  'block' =>
   array (
     'type_id' => 'block',
     'service_id' => 'plugin.manager.block',
@@ -14,132 +14,134 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
     'plugin_definition_attribute_name' => 'Drupal\\Core\\Block\\Attribute\\Block',
     'yaml_file_suffix' => NULL,
-    'yaml_properties' => NULL,
     'annotation_id_only' => NULL,
     'plugin_label_property' => 'admin_label',
+    'yaml_properties' =>
+    array (
+    ),
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'block.settings.',
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
-      'id' => 
+      'id' =>
       array (
         'name' => 'id',
         'description' => 'The plugin ID.',
         'type' => 'string',
       ),
-      'admin_label' => 
+      'admin_label' =>
       array (
         'name' => 'admin_label',
         'description' => 'The administrative label of the block.',
         'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'category' => 
+      'category' =>
       array (
         'name' => 'category',
         'description' => '(optional) The category in the admin UI where the block will be listed.',
         'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'context_definitions' => 
+      'context_definitions' =>
       array (
         'name' => 'context_definitions',
         'description' => '(optional) An array of context definitions describing the context used by the plugin. The array is keyed by context names.',
         'type' => 'array',
       ),
-      'deriver' => 
+      'deriver' =>
       array (
         'name' => 'deriver',
         'description' => '(optional) The deriver class.',
         'type' => 'string',
       ),
-      'forms' => 
+      'forms' =>
       array (
         'name' => 'forms',
         'description' => '(optional) An array of form class names keyed by a string.',
         'type' => 'array',
       ),
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
-      'label' => 
+      'label' =>
       array (
         'name' => 'label',
         'declaration' => 'public function label();',
         'description' => 'Returns the user-facing block label.',
       ),
-      'access' => 
+      'access' =>
       array (
         'name' => 'access',
         'declaration' => 'public function access(\\Drupal\\Core\\Session\\AccountInterface $account, $return_as_object = FALSE);',
         'description' => 'Indicates whether the block should be shown.',
       ),
-      'build' => 
+      'build' =>
       array (
         'name' => 'build',
         'declaration' => 'public function build();',
         'description' => 'Builds and returns the renderable array for this block plugin.',
       ),
-      'setConfigurationValue' => 
+      'setConfigurationValue' =>
       array (
         'name' => 'setConfigurationValue',
         'declaration' => 'public function setConfigurationValue($key, $value);',
         'description' => 'Sets a particular value in the block settings.',
       ),
-      'blockForm' => 
+      'blockForm' =>
       array (
         'name' => 'blockForm',
         'declaration' => 'public function blockForm($form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Returns the configuration form elements specific to this block plugin.',
       ),
-      'blockValidate' => 
+      'blockValidate' =>
       array (
         'name' => 'blockValidate',
         'declaration' => 'public function blockValidate($form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Adds block type-specific validation for the block form.',
       ),
-      'blockSubmit' => 
+      'blockSubmit' =>
       array (
         'name' => 'blockSubmit',
         'declaration' => 'public function blockSubmit($form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Adds block type-specific submission handling for the block form.',
       ),
-      'getMachineNameSuggestion' => 
+      'getMachineNameSuggestion' =>
       array (
         'name' => 'getMachineNameSuggestion',
         'declaration' => 'public function getMachineNameSuggestion();',
         'description' => 'Suggests a machine name to identify an instance of this block.',
       ),
-      'buildConfigurationForm' => 
+      'buildConfigurationForm' =>
       array (
         'name' => 'buildConfigurationForm',
         'declaration' => 'public function buildConfigurationForm(array $form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Form constructor.',
       ),
-      'validateConfigurationForm' => 
+      'validateConfigurationForm' =>
       array (
         'name' => 'validateConfigurationForm',
         'declaration' => 'public function validateConfigurationForm(array &$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Form validation handler.',
       ),
-      'submitConfigurationForm' => 
+      'submitConfigurationForm' =>
       array (
         'name' => 'submitConfigurationForm',
         'declaration' => 'public function submitConfigurationForm(array &$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Form submission handler.',
       ),
-      'getCacheContexts' => 
+      'getCacheContexts' =>
       array (
         'name' => 'getCacheContexts',
         'declaration' => 'public function getCacheContexts();',
         'description' => 'The cache contexts associated with this object.',
       ),
-      'getCacheTags' => 
+      'getCacheTags' =>
       array (
         'name' => 'getCacheTags',
         'declaration' => 'public function getCacheTags();',
         'description' => 'The cache tags associated with this object.',
       ),
-      'getCacheMaxAge' => 
+      'getCacheMaxAge' =>
       array (
         'name' => 'getCacheMaxAge',
         'declaration' => 'public function getCacheMaxAge();',
@@ -147,7 +149,7 @@ array (
       ),
     ),
   ),
-  'element_info' => 
+  'element_info' =>
   array (
     'type_id' => 'element_info',
     'service_id' => 'plugin.manager.element_info',
@@ -155,41 +157,43 @@ array (
     'service_component_namespace' => 'Drupal\\Core\\Render',
     'type_label' => 'element_info',
     'alter_hook_name' => 'element_plugin_alter',
-    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
     'subdir' => 'Element',
     'plugin_interface' => 'Drupal\\Core\\Render\\Element\\ElementInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Render\\Annotation\\RenderElement',
-    'plugin_definition_attribute_name' => NULL,
+    'plugin_definition_attribute_name' => 'Drupal\\Core\\Render\\Attribute\\RenderElement',
     'yaml_file_suffix' => NULL,
-    'yaml_properties' => NULL,
-    'annotation_id_only' => true,
+    'annotation_id_only' => NULL,
     'plugin_label_property' => NULL,
-    'base_class' => 'Drupal\\Core\\Render\\Element\\RenderElement',
-    'base_class_has_di' => false,
-    'plugin_properties' => 
+    'yaml_properties' =>
     array (
-      'value' => 
-      array (
-        'name' => 'value',
-        'description' => 'The plugin ID.',
-        'type' => 'string',
-      ),
-      'id' => 
+    ),
+    'base_class' => 'Drupal\\Core\\Render\\Element\\RenderElementBase',
+    'base_class_has_di' => false,
+    'plugin_properties' =>
+    array (
+      'id' =>
       array (
         'name' => 'id',
-        'description' => 'The annotated class ID.',
+        'description' => 'The attribute class ID.',
+        'type' => 'string',
+      ),
+      'deriver' =>
+      array (
+        'name' => 'deriver',
+        'description' => '(optional) The deriver class.',
         'type' => 'string',
       ),
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
-      'getInfo' => 
+      'getInfo' =>
       array (
         'name' => 'getInfo',
         'declaration' => 'public function getInfo();',
         'description' => 'Returns the element properties for this element.',
       ),
-      'setAttributes' => 
+      'setAttributes' =>
       array (
         'name' => 'setAttributes',
         'declaration' => 'public static function setAttributes(&$element, $class = []);',
@@ -197,7 +201,7 @@ array (
       ),
     ),
   ),
-  'field.formatter' => 
+  'field.formatter' =>
   array (
     'type_id' => 'field.formatter',
     'service_id' => 'plugin.manager.field.formatter',
@@ -205,171 +209,173 @@ array (
     'service_component_namespace' => 'Drupal\\Core\\Field',
     'type_label' => 'field.formatter',
     'alter_hook_name' => 'field_formatter_info_alter',
-    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
     'subdir' => 'Plugin/Field/FieldFormatter',
     'plugin_interface' => 'Drupal\\Core\\Field\\FormatterInterface',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
-    'plugin_definition_attribute_name' => NULL,
+    'plugin_definition_attribute_name' => 'Drupal\\Core\\Field\\Attribute\\FieldFormatter',
     'yaml_file_suffix' => NULL,
-    'yaml_properties' => NULL,
-    'annotation_id_only' => false,
+    'annotation_id_only' => NULL,
     'plugin_label_property' => 'label',
+    'yaml_properties' =>
+    array (
+    ),
     'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
     'base_class_has_di' => true,
     'config_schema_prefix' => 'field.formatter.settings.',
-    'constructor_fixed_parameters' => 
+    'constructor_fixed_parameters' =>
     array (
-      0 => 
+      0 =>
       array (
         'extraction' => '$plugin_id',
         'type' => 'string',
         'name' => 'plugin_id',
       ),
-      1 => 
+      1 =>
       array (
         'extraction' => '$plugin_definition',
         'type' => 'mixed',
         'name' => 'plugin_definition',
       ),
-      2 => 
+      2 =>
       array (
         'extraction' => '$configuration[\'field_definition\']',
         'type' => 'Drupal\\Core\\Field\\FieldDefinitionInterface',
         'name' => 'field_definition',
       ),
-      3 => 
+      3 =>
       array (
         'extraction' => '$configuration[\'settings\']',
         'type' => 'array',
         'name' => 'settings',
       ),
-      4 => 
+      4 =>
       array (
         'extraction' => '$configuration[\'label\']',
         'type' => 'string',
         'name' => 'label',
       ),
-      5 => 
+      5 =>
       array (
         'extraction' => '$configuration[\'view_mode\']',
         'type' => 'string',
         'name' => 'view_mode',
       ),
-      6 => 
+      6 =>
       array (
         'extraction' => '$configuration[\'third_party_settings\']',
         'type' => 'array',
         'name' => 'third_party_settings',
       ),
     ),
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
-      'id' => 
+      'id' =>
       array (
         'name' => 'id',
         'description' => 'The plugin ID.',
         'type' => 'string',
       ),
-      'label' => 
+      'label' =>
       array (
         'name' => 'label',
-        'description' => 'The human-readable name of the formatter type.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'description' => '(optional) The human-readable name of the formatter type.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'description' => 
+      'description' =>
       array (
         'name' => 'description',
-        'description' => 'A short description of the formatter type.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'description' => '(optional) A short description of the formatter type.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'class' => 
-      array (
-        'name' => 'class',
-        'description' => 'The name of the field formatter class.',
-        'type' => 'string',
-      ),
-      'field_types' => 
+      'field_types' =>
       array (
         'name' => 'field_types',
-        'description' => 'An array of field types the formatter supports.',
+        'description' => '(optional) An array of field types the formatter supports.',
         'type' => 'array',
       ),
-      'weight' => 
+      'weight' =>
       array (
         'name' => 'weight',
-        'description' => 'An integer to determine the weight of this formatter.',
+        'description' => '(optional) An integer to determine the weight of this formatter. Weight is relative to other formatters in the Field UI when selecting a formatter for a given field instance.',
         'type' => 'int',
       ),
+      'deriver' =>
+      array (
+        'name' => 'deriver',
+        'description' => '(optional) The deriver class.',
+        'type' => 'string',
+      ),
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
-      'settingsForm' => 
+      'settingsForm' =>
       array (
         'name' => 'settingsForm',
         'declaration' => 'public function settingsForm(array $form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Returns a form to configure settings for the formatter.',
       ),
-      'settingsSummary' => 
+      'settingsSummary' =>
       array (
         'name' => 'settingsSummary',
         'declaration' => 'public function settingsSummary();',
         'description' => 'Returns a short summary for the current formatter settings.',
       ),
-      'prepareView' => 
+      'prepareView' =>
       array (
         'name' => 'prepareView',
         'declaration' => 'public function prepareView(array $entities_items);',
         'description' => 'Allows formatters to load information for field values being displayed.',
       ),
-      'view' => 
+      'view' =>
       array (
         'name' => 'view',
         'declaration' => 'public function view(\\Drupal\\Core\\Field\\FieldItemListInterface $items, $langcode = NULL);',
         'description' => 'Builds a renderable array for a fully themed field.',
       ),
-      'viewElements' => 
+      'viewElements' =>
       array (
         'name' => 'viewElements',
         'declaration' => 'public function viewElements(\\Drupal\\Core\\Field\\FieldItemListInterface $items, $langcode);',
         'description' => 'Builds a renderable array for a field value.',
       ),
-      'isApplicable' => 
+      'isApplicable' =>
       array (
         'name' => 'isApplicable',
         'declaration' => 'public static function isApplicable(\\Drupal\\Core\\Field\\FieldDefinitionInterface $field_definition);',
         'description' => 'Returns if the formatter can be used for the provided field.',
       ),
-      'defaultSettings' => 
+      'defaultSettings' =>
       array (
         'name' => 'defaultSettings',
         'declaration' => 'public static function defaultSettings();',
         'description' => 'Defines the default settings for this plugin.',
       ),
-      'getSettings' => 
+      'getSettings' =>
       array (
         'name' => 'getSettings',
         'declaration' => 'public function getSettings();',
         'description' => 'Returns the array of settings, including defaults for missing settings.',
       ),
-      'getSetting' => 
+      'getSetting' =>
       array (
         'name' => 'getSetting',
         'declaration' => 'public function getSetting($key);',
         'description' => 'Returns the value of a setting, or its default value if absent.',
       ),
-      'setSettings' => 
+      'setSettings' =>
       array (
         'name' => 'setSettings',
         'declaration' => 'public function setSettings(array $settings);',
         'description' => 'Sets the settings for the plugin.',
       ),
-      'setSetting' => 
+      'setSetting' =>
       array (
         'name' => 'setSetting',
         'declaration' => 'public function setSetting($key, $value);',
         'description' => 'Sets the value of a setting for the plugin.',
       ),
-      'onDependencyRemoval' => 
+      'onDependencyRemoval' =>
       array (
         'name' => 'onDependencyRemoval',
         'declaration' => 'public function onDependencyRemoval(array $dependencies);',
@@ -377,7 +383,7 @@ array (
       ),
     ),
   ),
-  'filter' => 
+  'filter' =>
   array (
     'type_id' => 'filter',
     'service_id' => 'plugin.manager.filter',
@@ -385,108 +391,116 @@ array (
     'service_component_namespace' => 'Drupal\\filter',
     'type_label' => 'filter',
     'alter_hook_name' => 'filter_info_alter',
-    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
     'subdir' => 'Plugin/Filter',
     'plugin_interface' => 'Drupal\\filter\\Plugin\\FilterInterface',
     'plugin_definition_annotation_name' => 'Drupal\\filter\\Annotation\\Filter',
-    'plugin_definition_attribute_name' => NULL,
+    'plugin_definition_attribute_name' => 'Drupal\\filter\\Attribute\\Filter',
     'yaml_file_suffix' => NULL,
-    'yaml_properties' => NULL,
-    'annotation_id_only' => false,
+    'annotation_id_only' => NULL,
     'plugin_label_property' => 'title',
+    'yaml_properties' =>
+    array (
+    ),
     'base_class' => 'Drupal\\filter\\Plugin\\FilterBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'filter_settings.',
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
-      'id' => 
+      'id' =>
       array (
         'name' => 'id',
         'description' => 'The plugin ID.',
         'type' => 'string',
       ),
-      'provider' => 
-      array (
-        'name' => 'provider',
-        'description' => 'The name of the provider that owns the filter.',
-        'type' => 'string',
-      ),
-      'title' => 
+      'title' =>
       array (
         'name' => 'title',
-        'description' => 'The human-readable name of the filter.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'description' => 'The human-readable name of the filter. This is used as an administrative summary of what the filter does.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'description' => 
+      'type' =>
       array (
-        'name' => 'description',
-        'description' => 'Additional administrative information about the filter\'s behavior.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
-      ),
-      'weight' => 
-      array (
-        'name' => 'weight',
-        'description' => 'A default weight for the filter in new text formats.',
+        'name' => 'type',
+        'description' => 'The filter type. Values are defined in \\Drupal\\filter\\Plugin\\FilterInterface.',
         'type' => 'int',
       ),
-      'status' => 
+      'description' =>
+      array (
+        'name' => 'description',
+        'description' => '(optional) Additional administrative information about the filter\'s behavior.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
+      ),
+      'weight' =>
+      array (
+        'name' => 'weight',
+        'description' => '(optional) A default weight for the filter in new text formats.',
+        'type' => 'int',
+      ),
+      'status' =>
       array (
         'name' => 'status',
-        'description' => 'Whether this filter is enabled or disabled by default.',
+        'description' => '(optional) Whether this filter is enabled or disabled by default.',
         'type' => 'bool',
       ),
-      'settings' => 
+      'settings' =>
       array (
         'name' => 'settings',
-        'description' => 'The default settings for the filter.',
+        'description' => '(optional) The default settings for the filter.',
         'type' => 'array',
       ),
+      'deriver' =>
+      array (
+        'name' => 'deriver',
+        'description' => '',
+        'type' => 'string',
+      ),
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
-      'getType' => 
+      'getType' =>
       array (
         'name' => 'getType',
         'declaration' => 'public function getType();',
         'description' => 'Returns the processing type of this filter plugin.',
       ),
-      'getLabel' => 
+      'getLabel' =>
       array (
         'name' => 'getLabel',
         'declaration' => 'public function getLabel();',
         'description' => 'Returns the administrative label for this filter plugin.',
       ),
-      'getDescription' => 
+      'getDescription' =>
       array (
         'name' => 'getDescription',
         'declaration' => 'public function getDescription();',
         'description' => 'Returns the administrative description for this filter plugin.',
       ),
-      'settingsForm' => 
+      'settingsForm' =>
       array (
         'name' => 'settingsForm',
         'declaration' => 'public function settingsForm(array $form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
         'description' => 'Generates a filter\'s settings form.',
       ),
-      'prepare' => 
+      'prepare' =>
       array (
         'name' => 'prepare',
         'declaration' => 'public function prepare($text, $langcode);',
         'description' => 'Prepares the text for processing.',
       ),
-      'process' => 
+      'process' =>
       array (
         'name' => 'process',
         'declaration' => 'public function process($text, $langcode);',
         'description' => 'Performs the filter processing.',
       ),
-      'getHTMLRestrictions' => 
+      'getHTMLRestrictions' =>
       array (
         'name' => 'getHTMLRestrictions',
         'declaration' => 'public function getHTMLRestrictions();',
         'description' => 'Returns HTML allowed by this filter\'s configuration.',
       ),
-      'tips' => 
+      'tips' =>
       array (
         'name' => 'tips',
         'declaration' => 'public function tips($long = FALSE);',
@@ -494,7 +508,7 @@ array (
       ),
     ),
   ),
-  'image.effect' => 
+  'image.effect' =>
   array (
     'type_id' => 'image.effect',
     'service_id' => 'plugin.manager.image.effect',
@@ -502,93 +516,101 @@ array (
     'service_component_namespace' => 'Drupal\\image',
     'type_label' => 'image.effect',
     'alter_hook_name' => 'image_effect_info_alter',
-    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
     'subdir' => 'Plugin/ImageEffect',
     'plugin_interface' => 'Drupal\\image\\ImageEffectInterface',
     'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
-    'plugin_definition_attribute_name' => NULL,
+    'plugin_definition_attribute_name' => 'Drupal\\image\\Attribute\\ImageEffect',
     'yaml_file_suffix' => NULL,
-    'yaml_properties' => NULL,
-    'annotation_id_only' => false,
+    'annotation_id_only' => NULL,
     'plugin_label_property' => 'label',
+    'yaml_properties' =>
+    array (
+    ),
     'base_class' => 'Drupal\\image\\ImageEffectBase',
     'base_class_has_di' => true,
     'config_schema_prefix' => 'image.effect.',
-    'construction' => 
+    'construction' =>
     array (
-      0 => 
+      0 =>
       array (
         'type' => 'Psr\\Log\\LoggerInterface',
         'name' => 'logger',
         'extraction' => '$container->get(\'logger.factory\')->get(\'image\')',
       ),
     ),
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
-      'id' => 
+      'id' =>
       array (
         'name' => 'id',
         'description' => 'The plugin ID.',
         'type' => 'string',
       ),
-      'label' => 
+      'label' =>
       array (
         'name' => 'label',
         'description' => 'The human-readable name of the image effect.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'description' => 
+      'description' =>
       array (
         'name' => 'description',
-        'description' => 'A brief description of the image effect.',
-        'type' => '\\Drupal\\Core\\Annotation\\Translation',
+        'description' => '(optional) A brief description of the image effect. This will be shown when adding or configuring this image effect.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
+      ),
+      'deriver' =>
+      array (
+        'name' => 'deriver',
+        'description' => '(optional) The deriver class.',
+        'type' => 'string',
       ),
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
-      'applyEffect' => 
+      'applyEffect' =>
       array (
         'name' => 'applyEffect',
         'declaration' => 'public function applyEffect(\\Drupal\\Core\\Image\\ImageInterface $image);',
         'description' => 'Applies an image effect to the image object.',
       ),
-      'transformDimensions' => 
+      'transformDimensions' =>
       array (
         'name' => 'transformDimensions',
         'declaration' => 'public function transformDimensions(array &$dimensions, $uri);',
         'description' => 'Determines the dimensions of the styled image.',
       ),
-      'getDerivativeExtension' => 
+      'getDerivativeExtension' =>
       array (
         'name' => 'getDerivativeExtension',
         'declaration' => 'public function getDerivativeExtension($extension);',
         'description' => 'Returns the extension of the derivative after applying this image effect.',
       ),
-      'getSummary' => 
+      'getSummary' =>
       array (
         'name' => 'getSummary',
         'declaration' => 'public function getSummary();',
         'description' => 'Returns a render array summarizing the configuration of the image effect.',
       ),
-      'label' => 
+      'label' =>
       array (
         'name' => 'label',
         'declaration' => 'public function label();',
         'description' => 'Returns the image effect label.',
       ),
-      'getUuid' => 
+      'getUuid' =>
       array (
         'name' => 'getUuid',
         'declaration' => 'public function getUuid();',
         'description' => 'Returns the unique ID representing the image effect.',
       ),
-      'getWeight' => 
+      'getWeight' =>
       array (
         'name' => 'getWeight',
         'declaration' => 'public function getWeight();',
         'description' => 'Returns the weight of the image effect.',
       ),
-      'setWeight' => 
+      'setWeight' =>
       array (
         'name' => 'setWeight',
         'declaration' => 'public function setWeight($weight);',
@@ -596,7 +618,7 @@ array (
       ),
     ),
   ),
-  'menu.link' => 
+  'menu.link' =>
   array (
     'type_id' => 'menu.link',
     'service_id' => 'plugin.manager.menu.link',
@@ -609,11 +631,13 @@ array (
     'plugin_definition_annotation_name' => NULL,
     'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => 'links.menu',
-    'yaml_properties' => 
+    'annotation_id_only' => NULL,
+    'plugin_label_property' => NULL,
+    'yaml_properties' =>
     array (
       'menu_name' => 'tools',
       'route_name' => '',
-      'route_parameters' => 
+      'route_parameters' =>
       array (
       ),
       'url' => '',
@@ -621,30 +645,28 @@ array (
       'description' => '',
       'parent' => '',
       'weight' => 0,
-      'options' => 
+      'options' =>
       array (
       ),
       'expanded' => 0,
       'enabled' => 1,
       'provider' => '',
-      'metadata' => 
+      'metadata' =>
       array (
       ),
       'class' => 'Drupal\\Core\\Menu\\MenuLinkDefault',
       'form_class' => 'Drupal\\Core\\Menu\\Form\\MenuLinkDefaultForm',
     ),
-    'annotation_id_only' => NULL,
-    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\MenuLinkBase',
     'base_class_has_di' => false,
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
     ),
   ),
-  'menu.local_action' => 
+  'menu.local_action' =>
   array (
     'type_id' => 'menu.local_action',
     'service_id' => 'plugin.manager.menu.local_action',
@@ -658,43 +680,43 @@ array (
     'plugin_definition_annotation_name' => NULL,
     'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => 'links.action',
-    'yaml_properties' => 
+    'annotation_id_only' => NULL,
+    'plugin_label_property' => NULL,
+    'yaml_properties' =>
     array (
       'title' => '',
       'weight' => NULL,
       'route_name' => NULL,
-      'route_parameters' => 
+      'route_parameters' =>
       array (
       ),
-      'options' => 
+      'options' =>
       array (
       ),
-      'appears_on' => 
+      'appears_on' =>
       array (
       ),
       'class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
     ),
-    'annotation_id_only' => NULL,
-    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalActionDefault',
     'base_class_has_di' => true,
-    'construction' => 
+    'construction' =>
     array (
-      0 => 
+      0 =>
       array (
         'type' => 'Drupal\\Core\\Routing\\RouteProviderInterface',
         'name' => 'route_provider',
         'extraction' => '$container->get(\'router.route_provider\')',
       ),
     ),
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
     ),
   ),
-  'menu.local_task' => 
+  'menu.local_task' =>
   array (
     'type_id' => 'menu.local_task',
     'service_id' => 'plugin.manager.menu.local_task',
@@ -708,33 +730,33 @@ array (
     'plugin_definition_annotation_name' => NULL,
     'plugin_definition_attribute_name' => NULL,
     'yaml_file_suffix' => 'links.task',
-    'yaml_properties' => 
+    'annotation_id_only' => NULL,
+    'plugin_label_property' => NULL,
+    'yaml_properties' =>
     array (
       'route_name' => '',
-      'route_parameters' => 
+      'route_parameters' =>
       array (
       ),
       'title' => '',
       'base_route' => '',
       'parent_id' => NULL,
       'weight' => NULL,
-      'options' => 
+      'options' =>
       array (
       ),
       'class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
     ),
-    'annotation_id_only' => NULL,
-    'plugin_label_property' => NULL,
     'base_class' => 'Drupal\\Core\\Menu\\LocalTaskDefault',
     'base_class_has_di' => false,
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
     ),
   ),
-  'validation.constraint' => 
+  'validation.constraint' =>
   array (
     'type_id' => 'validation.constraint',
     'service_id' => 'validation.constraint',
@@ -742,39 +764,47 @@ array (
     'service_component_namespace' => 'Drupal\\Core\\Validation',
     'type_label' => 'validation.constraint',
     'alter_hook_name' => 'validation_constraint_alter',
-    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AnnotatedClassDiscovery',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
     'subdir' => 'Plugin/Validation/Constraint',
     'plugin_interface' => '',
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Validation\\Annotation\\Constraint',
-    'plugin_definition_attribute_name' => NULL,
+    'plugin_definition_attribute_name' => 'Drupal\\Core\\Validation\\Attribute\\Constraint',
     'yaml_file_suffix' => NULL,
-    'yaml_properties' => NULL,
-    'annotation_id_only' => false,
+    'annotation_id_only' => NULL,
     'plugin_label_property' => 'label',
+    'yaml_properties' =>
+    array (
+    ),
     'base_class' => 'Symfony\\Component\\Validator\\Constraint',
     'base_class_has_di' => false,
-    'plugin_properties' => 
+    'plugin_properties' =>
     array (
-      'id' => 
+      'id' =>
       array (
         'name' => 'id',
         'description' => 'The constraint plugin ID.',
         'type' => 'string',
       ),
-      'label' => 
+      'label' =>
       array (
         'name' => 'label',
-        'description' => 'The human-readable name of the constraint plugin.',
-        'type' => 'string|\\Drupal\\Core\\Annotation\\Translation',
+        'description' => '(optional) The human-readable name of the constraint plugin.',
+        'type' => '\\Drupal\\Core\\StringTranslation\\TranslatableMarkup',
       ),
-      'type' => 
+      'type' =>
       array (
         'name' => 'type',
-        'description' => 'DataType plugin IDs for which this constraint applies.',
-        'type' => 'string|string[]|false',
+        'description' => '(optional) DataType plugin IDs for which this constraint applies. Valid values are any types registered by the typed data API, or an array of multiple type names. For supporting all types, FALSE may be specified. The key defaults to an empty array, which indicates no types are supported.',
+        'type' => 'array|string|false',
+      ),
+      'deriver' =>
+      array (
+        'name' => 'deriver',
+        'description' => '(optional) The deriver class.',
+        'type' => 'string',
       ),
     ),
-    'plugin_interface_methods' => 
+    'plugin_interface_methods' =>
     array (
     ),
   ),

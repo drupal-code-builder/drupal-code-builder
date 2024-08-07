@@ -6,17 +6,17 @@ array (
     'group' => 'configuration',
     'interface' => '\\Drupal\\block\\BlockInterface',
   ),
-  'node_type' => 
-  array (
-    'label' => 'Content type',
-    'group' => 'configuration',
-    'interface' => '\\Drupal\\node\\NodeTypeInterface',
-  ),
   'node' => 
   array (
     'label' => 'Content',
     'group' => 'content',
     'interface' => '\\Drupal\\node\\NodeInterface',
+  ),
+  'node_type' => 
+  array (
+    'label' => 'Content type',
+    'group' => 'configuration',
+    'interface' => '\\Drupal\\node\\NodeTypeInterface',
   ),
   'user' => 
   array (

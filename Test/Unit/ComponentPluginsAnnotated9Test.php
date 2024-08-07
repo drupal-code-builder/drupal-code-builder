@@ -9,19 +9,24 @@ use PHPUnit\Framework\Assert;
 use Psr\Container\ContainerInterface;
 
 /**
- * Tests the Plugins generator class.
+ * Tests generation of annotation plugins.
+ * 
+ * This is on Drupal 9 because Drupal 10 core has very few annotation plugin 
+ * types left.
+ * 
+ * TODO: Restore this to Drupal 10 if I CBA.
  *
  * @group yaml
  * @group plugin
  */
-class ComponentPluginsAnnotated10Test extends TestBase {
+class ComponentPluginsAnnotated9Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 10;
+  protected $drupalMajorVersion = 9;
 
   /**
    * Test Plugins component.
@@ -38,7 +43,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
         ]
       ],
@@ -47,40 +52,36 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);
 
-    $this->assertFiles([
-      "$module_name.info.yml",
-      "src/Plugin/Filter/Alpha.php",
-      "config/schema/test_module.schema.yml"
-    ], $files);
+    $this->assertCount(3, $files, "Expected number of files is returned.");
+    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
+    $this->assertArrayHasKey("config/schema/test_module.schema.yml", $files, "The files list has a schema file.");
 
     // Check the plugin file.
-    $plugin_file = $files["src/Plugin/Filter/Alpha.php"];
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
-    $php_tester->assertDrupalCodingStandards([
-      // Needed because of getHTMLRestrictions().
-      'Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps',
-    ]);
-    $php_tester->assertHasClass('Drupal\test_module\Plugin\Filter\Alpha');
-    $php_tester->assertClassHasParent('Drupal\filter\Plugin\FilterBase');
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
     // Interface methods.
-    $php_tester->assertHasMethod('prepare');
-    $php_tester->assertHasMethod('process');
+    $php_tester->assertHasMethod('blockForm');
+    $php_tester->assertHasMethod('blockValidate');
+    $php_tester->assertHasMethod('blockForm');
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
-    $annotation_tester->assertAnnotationClass('Filter');
+    $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    $annotation_tester->assertPropertyHasValue('title', 'Alpha');
-    $annotation_tester->assertHasProperty('status');
-    $annotation_tester->assertHasProperty('weight');
+    $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
+    $annotation_tester->assertHasProperty('category');
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
     $yaml_tester = new YamlTester($config_yaml_file);
-    $yaml_tester->assertHasProperty('filter_settings.test_module_alpha');
-    $yaml_tester->assertPropertyHasValue(['filter_settings.test_module_alpha', 'type'], 'mapping');
-    $yaml_tester->assertPropertyHasValue(['filter_settings.test_module_alpha', 'label'], 'test_module_alpha');
-    $yaml_tester->assertPropertyHasValue(['filter_settings.test_module_alpha', 'mapping'], []);
+    $yaml_tester->assertHasProperty('block.settings.test_module_alpha');
+    $yaml_tester->assertPropertyHasValue(['block.settings.test_module_alpha', 'type'], 'mapping');
+    $yaml_tester->assertPropertyHasValue(['block.settings.test_module_alpha', 'label'], 'test_module_alpha');
+    $yaml_tester->assertPropertyHasValue(['block.settings.test_module_alpha', 'mapping'], []);
   }
 
   /**
@@ -98,7 +99,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
           'plain_class_name' => 'OtherClassName',
         ],
@@ -112,17 +113,15 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $file_names = array_keys($files);
 
     $this->assertCount(3, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("src/Plugin/Filter/OtherClassName.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
+    $this->assertArrayHasKey("src/Plugin/Block/OtherClassName.php", $files, "The files list has a plugin file, without the derivative prefix in the filename.");
 
     // Check the plugin file.
-    $plugin_file = $files["src/Plugin/Filter/OtherClassName.php"];
+    $plugin_file = $files["src/Plugin/Block/OtherClassName.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
-    $php_tester->assertDrupalCodingStandards([
-      'Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps',
-    ]);
-    $php_tester->assertHasClass('Drupal\test_module\Plugin\Filter\OtherClassName');
-    $php_tester->assertClassHasParent('Drupal\filter\Plugin\FilterBase');
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\OtherClassName');
+    $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
   }
 
   /**
@@ -144,7 +143,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => $plugin_id,
         ],
       ],
@@ -155,13 +154,13 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $this->assertFiles([
       "$module_name.info.yml",
       "config/schema/test_module.schema.yml",
-      "src/Plugin/Filter/$filename",
+      "src/Plugin/Block/$filename",
     ], $files);
 
-    $plugin_file = $files["src/Plugin/Filter/$filename"];
+    $plugin_file = $files["src/Plugin/Block/$filename"];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
-    $annotation_tester->assertAnnotationClass('Filter');
+    $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', $plugin_id, "The plugin ID has no module prefix.");
   }
 
@@ -200,7 +199,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
           'deriver' => TRUE,
         ]
@@ -209,41 +208,39 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     ];
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertArrayHasKey('src/Plugin/Derivative/AlphaFilterDeriver.php', $files);
+    $this->assertArrayHasKey('src/Plugin/Derivative/AlphaBlockDeriver.php', $files);
 
-    $deriver = $files['src/Plugin/Derivative/AlphaFilterDeriver.php'];
+    $deriver = $files['src/Plugin/Derivative/AlphaBlockDeriver.php'];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
     $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
     $php_tester->assertHasMethod('getDerivativeDefinitions');
 
     // Check the plugin file declares the deriver.
-    $plugin_file = $files["src/Plugin/Filter/Alpha.php"];
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertHasProperty('deriver');
-    $annotation_tester->assertPropertyHasValue('deriver', '\Drupal\test_module\Plugin\Derivative\AlphaFilterDeriver');
+    $annotation_tester->assertPropertyHasValue('deriver', '\Drupal\test_module\Plugin\Derivative\AlphaBlockDeriver');
   }
 
   /**
    * Tests an existing plugin class as parent.
    */
   public function testPluginsGenerationParentPluginClass() {
-    // $this->markTestSkipped("Test needs converting fully to filter plugin type.");
-
     // Mock the Drupal container and the block plugin manager. Use an anonymous
     // class for the plugin manager as we don't have an interface for it within
     // a test environment.
     $drupal_container = $this->prophesize(ContainerInterface::class);
     $drupal_container
-      ->get('plugin.manager.filter')
+      ->get('plugin.manager.block')
       ->willReturn(new class {
         public function getDefinition($plugin_id) {
           Assert::assertEquals('parent', $plugin_id);
 
           return [
             // The definition doesn't have the initial '\'.
-            'class' => 'Drupal\somemodule\Plugin\Filter\ParentFilter',
+            'class' => 'Drupal\somemodule\Plugin\Block\ParentBlock',
           ];
         }
       });
@@ -260,7 +257,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
           'parent_plugin_id' => 'parent',
         ]
@@ -272,18 +269,18 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $this->assertFiles([
       "$module_name.info.yml",
       "config/schema/test_module.schema.yml",
-      "src/Plugin/Filter/Alpha.php",
+      "src/Plugin/Block/Alpha.php",
     ], $files);
 
-    $plugin_file = $files["src/Plugin/Filter/Alpha.php"];
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
-    $annotation_tester->assertAnnotationClass('Filter');
+    $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    $annotation_tester->assertPropertyHasValue('title', 'Alpha');
+    $annotation_tester->assertPropertyHasValue('admin_label', 'Alpha');
 
-    $php_tester->assertHasClass('Drupal\test_module\Plugin\Filter\Alpha');
-    $php_tester->assertClassHasParent('Drupal\somemodule\Plugin\Filter\ParentFilter');
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertClassHasParent('Drupal\somemodule\Plugin\Block\ParentBlock');
   }
 
   /**
@@ -295,7 +292,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     // a test environment.
     $drupal_container = $this->prophesize(ContainerInterface::class);
     $drupal_container
-      ->get('plugin.manager.filter')
+      ->get('plugin.manager.block')
       ->willReturn(new class {
         public function getDefinition($plugin_id) {
           // throw new \Exception("$plugin_id not found.");
@@ -315,7 +312,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
           'parent_plugin_id' => 'parent',
         ]
@@ -339,15 +336,12 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $drupal_container
       ->get('plugin.manager.element_info')
       ->willReturn(new class {
-        public function getDefinition(string $plugin_id) {
-          // Assert::assertEquals('parent', $plugin_id);
+        public function getDefinition($plugin_id) {
+          Assert::assertEquals('parent', $plugin_id);
 
           return [
-            'class' => match ($plugin_id) {
-              // The definition doesn't have the initial '\'.
-              'parent_alpha' => 'Drupal\somemodule\Element\ParentElement',
-              'parent_beta' => 'Drupal\somemodule\Element\ParentElement',
-            },
+            // The definition doesn't have the initial '\'.
+            'class' => 'Drupal\somemodule\Element\ParentElement',
           ];
         }
       });
@@ -366,13 +360,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
         0 => [
           'plugin_type' => 'element_info',
           'plugin_name' => 'alpha',
-          'parent_plugin_id' => 'parent_alpha',
-          'replace_parent_plugin' => TRUE,
-        ],
-        1 => [
-          'plugin_type' => 'element_info',
-          'plugin_name' => 'beta',
-          'parent_plugin_id' => 'parent_beta',
+          'parent_plugin_id' => 'parent',
           'replace_parent_plugin' => TRUE,
         ]
       ],
@@ -384,7 +372,6 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       "test_module.info.yml",
       "test_module.module",
       "src/Element/Alpha.php",
-      "src/Element/Beta.php",
     ], $files);
 
     $plugin_file = $files["src/Element/Alpha.php"];
@@ -402,8 +389,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $php_tester->assertHasHookImplementation('hook_element_plugin_alter', $module_name);
 
     $function_tester = $php_tester->getFunctionTester('test_module_element_plugin_alter');
-    $function_tester->assertHasLine("\$info['parent_alpha']['class'] = Alpha::class;");
-    $function_tester->assertHasLine("\$info['parent_beta']['class'] = Beta::class;");
+    $function_tester->assertHasLine("\$info['parent']['class'] = Alpha::class;");
   }
 
   /**
@@ -523,7 +509,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
           'injected_services' => [
             'current_user',
@@ -538,17 +524,15 @@ class ComponentPluginsAnnotated10Test extends TestBase {
 
     $this->assertCount(3, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Plugin/Filter/Alpha.php", $files, "The files list has a plugin file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
 
     // Check the plugin file.
-    $plugin_file = $files["src/Plugin/Filter/Alpha.php"];
+    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
-    $php_tester->assertDrupalCodingStandards([
-      'Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps',
-    ]);
-    $php_tester->assertHasClass('Drupal\test_module\Plugin\Filter\Alpha');
-    $php_tester->assertClassHasParent('Drupal\filter\Plugin\FilterBase');
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Block\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Block\BlockBase');
 
     // Check service injection.
     $php_tester->assertClassHasInterfaces([
@@ -579,10 +563,10 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $this->assertFunctionCode($plugin_file, '__construct', 'parent::__construct($configuration, $plugin_id, $plugin_definition);');
 
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
-    $annotation_tester->assertAnnotationClass('Filter');
+    $annotation_tester->assertAnnotationClass('Block');
     $annotation_tester->assertPropertyHasValue('id', 'test_module_alpha');
-    $annotation_tester->assertHasProperty('title');
-    $annotation_tester->assertHasProperty('status');
+    $annotation_tester->assertHasProperty('admin_label');
+    $annotation_tester->assertHasProperty('category');
   }
 
   /**
@@ -769,7 +753,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
       'short_description' => 'Test Module description',
       'plugins' => [
         0 => [
-          'plugin_type' => 'filter',
+          'plugin_type' => 'block',
           'plugin_name' => 'alpha',
         ],
       ],
@@ -795,7 +779,7 @@ class ComponentPluginsAnnotated10Test extends TestBase {
 
     $this->assertCount(5, $files, "Expected number of files is returned.");
     $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("src/Plugin/Filter/Alpha.php", $files, "The files list has a plugin file.");
+    $this->assertArrayHasKey("src/Plugin/Block/Alpha.php", $files, "The files list has a plugin file.");
     $this->assertArrayHasKey("src/Entity/Cake.php", $files);
     $this->assertArrayHasKey("src/Entity/CakeInterface.php", $files);
 
@@ -803,9 +787,9 @@ class ComponentPluginsAnnotated10Test extends TestBase {
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
 
     $yaml_tester = new YamlTester($config_yaml_file);
-    $yaml_tester->assertHasProperty('filter_settings.test_module_alpha');
+    $yaml_tester->assertHasProperty('block.settings.test_module_alpha');
     $yaml_tester->assertHasProperty('test_module.cake.*');
-    $yaml_tester->assertPropertyHasBlankLineBefore(['filter_settings.test_module_alpha']);
+    $yaml_tester->assertPropertyHasBlankLineBefore(['block.settings.test_module_alpha']);
     // TODO: assert deeper into the YAML.
   }
 
