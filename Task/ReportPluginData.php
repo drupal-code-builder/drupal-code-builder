@@ -33,6 +33,13 @@ class ReportPluginData extends ReportHookDataFolder
   protected static $optionsMethod = 'listPluginNamesOptions';
 
   /**
+   * Cached plugin type data.
+   *
+   * @var array
+   */
+  protected $cache;
+
+  /**
    * {@inheritdoc}
    */
   public function getInfo(): array {
@@ -75,10 +82,8 @@ class ReportPluginData extends ReportHookDataFolder
   function listPluginData($discovery_type = NULL) {
     // We may come here several times, so cache this.
     // TODO: look into finer-grained caching higher up.
-    static $cache;
-
-    if (isset($cache[$discovery_type])) {
-      return $cache[$discovery_type];
+    if (isset($this->cache[$discovery_type])) {
+      return $this->cache[$discovery_type];
     }
 
     $plugin_data = $this->environment->getStorage()->retrieve('plugins');
@@ -93,7 +98,7 @@ class ReportPluginData extends ReportHookDataFolder
       });
     }
 
-    $cache[$discovery_type] = $plugin_data;
+    $this->cache[$discovery_type] = $plugin_data;
 
     return $plugin_data;
   }
