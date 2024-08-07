@@ -146,6 +146,14 @@ class ServicesCollector extends CollectorBase  {
       // A single service collector service can collect on more than one tag.
       foreach ($tag_infos as $tag_info) {
         $tag = $tag_info['tag'];
+
+        // Cache bins are collected by the invalidator, but we still want them
+        // to be available to inject.
+        // TODO: ARRRRRGH!
+        if ($tag == 'cache.bin') {
+          continue;
+        }
+
         $collector_tags[$tag] = TRUE;
       }
     }
