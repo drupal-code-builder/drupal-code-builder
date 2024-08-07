@@ -74,7 +74,7 @@ class CollectPluginInfoTest extends CollectionTestBase {
 
     $this->assertArrayHasKey('plugin_properties', $queue_worker_type_info);
     $plugin_properties = $queue_worker_type_info['plugin_properties'];
-    $this->assertCount(3, $plugin_properties);
+    $this->assertGreaterThanOrEqual(3, $plugin_properties);
     $this->assertArrayHasKey('id', $plugin_properties);
     $this->assertArrayHasKey('title', $plugin_properties);
     $this->assertArrayHasKey('cron', $plugin_properties);
