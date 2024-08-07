@@ -80,6 +80,9 @@ class PluginYamlDiscovery extends BaseGenerator {
     parent::__construct($component_data);
   }
 
+  /**
+   * Default property value callback for 'plugin_properties'.
+   */
   public static function defaultPluginProperties($data_item) {
     // Group the plugin properties into those with default values given, and
     // those with empty defaults. We can then put the ones with defaults later,
