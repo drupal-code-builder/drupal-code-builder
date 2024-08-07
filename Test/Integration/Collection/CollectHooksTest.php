@@ -79,7 +79,7 @@ class CollectHooksTest extends CollectionTestBase {
 
     $this->assertNotEmpty($body);
     $this->assertStringContainsStringIgnoringCase(
-      "\$fields['mymodule_text'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')",
+      "\$fields['my_module_text'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')",
       $body,
       'The short class name in hook body code is replaced with the fully-qualified version.'
     );
