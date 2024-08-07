@@ -49,4 +49,5 @@ perl -pi -e 's/drupalMajorVersion = 8/drupalMajorVersion = 10/' ./*10Test.php
    cp templates/8/ templates/10/
 
 6. Generate sample analysis data for the new version. This can be done with the
-   Module Builder Devel module, for instance.
+   Module Builder Devel module, for instance or the `drush cb-update-test`
+   command in the 'drupal-code-builder/drupal-code-builder-drush' package.
