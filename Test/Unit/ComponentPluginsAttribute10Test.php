@@ -79,6 +79,54 @@ class ComponentPluginsAttribute10Test extends TestBase {
   }
 
   /**
+   * Tests sample values for a plugin attribute.
+   *
+   * TODO Expand this.
+   */
+  function testPluginsGenerationSampleAttributeValues() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'field.formatter',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      'src/Plugin/Field/FieldFormatter/Alpha.php',
+      'config/schema/test_module.schema.yml',
+    ], $files, "Expected number of files is returned.");
+
+    // Check the plugin file.
+    $plugin_file = $files["src/Plugin/Field/FieldFormatter/Alpha.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Field\FieldFormatter\Alpha');
+    $php_tester->assertClassHasParent('Drupal\Core\Field\FormatterBase');
+    // Interface methods.
+    $php_tester->assertHasMethod('settingsForm');
+    $php_tester->assertHasMethod('prepareView');
+    $php_tester->assertHasMethod('getSettings');
+
+    // TODO: Further attribute testing.
+    $this->assertStringContainsString('#[FieldFormatter(', $plugin_file);
+    $this->assertStringContainsString('weight: "42"', $plugin_file, 'The sample attribute value is of the right type.');
+  }
+
+  /**
    * Test plugin with specified class name.
    */
   function testPluginsGenerationClassName() {

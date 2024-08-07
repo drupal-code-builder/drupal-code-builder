@@ -53,18 +53,28 @@ class PluginAttributeDiscovery extends PluginClassDiscovery {
       }
 
       if (str_starts_with($attribute_variable_info['type'], '\\')) {
+        // Object type.
         $attribute_data[$attribute_variable] = PhpAttributes::object(
           $attribute_variable_info['type'],
+          // TODO: This will fail if the object's parameter is not a single
+          // string! But so far it's usually always TranslatableMarkup.
           "TODO: replace this with a value",
         );
       }
-      elseif ($attribute_variable_info['type'] == 'array') {
-        $attribute_data[$attribute_variable] = [
-          "TODO: key" => "TODO: replace this with a value",
-        ];
-      }
       else {
-        $attribute_data[$attribute_variable] = "TODO: replace this with a value";
+        // Scalar type or array.
+        $attribute_sample_value = match($attribute_variable_info['type']) {
+          'int' => '42',
+          'float' => '42.0',
+          'bool' => 'FALSE',
+          'string' => "TODO: replace this with a value",
+          'array' => [
+            "TODO: key" => "TODO: replace this with a value",
+          ],
+          default => "TODO: replace this with a value",
+        };
+
+        $attribute_data[$attribute_variable] = $attribute_sample_value;
       }
 
       if (isset($attribute_variable_info['description'])) {
