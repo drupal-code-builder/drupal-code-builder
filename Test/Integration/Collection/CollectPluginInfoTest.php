@@ -49,6 +49,7 @@ class CollectPluginInfoTest extends CollectionTestBase {
    */
   public function testPluginTypesInfoCollection() {
     $this->pluginTypeQueueWorker();
+    $this->pluginTypeMenuLink();
     $this->pluginTypeFieldType();
     $this->pluginTypeHelpSection();
   }
@@ -86,6 +87,25 @@ class CollectPluginInfoTest extends CollectionTestBase {
     $this->assertArrayHasKey('id', $plugin_properties);
     $this->assertArrayHasKey('title', $plugin_properties);
     $this->assertArrayHasKey('cron', $plugin_properties);
+  }
+
+  /**
+   * In core, YAML discovery.
+   */
+  protected function pluginTypeMenuLink() {
+    $plugin_types_info = $this->getPluginTypeInfoFromCollector(
+      [
+        'service_id' => 'plugin.manager.menu.link',
+        'type_id' => 'menu.link',
+      ]
+    );
+    $this->assertArrayHasKey('menu.link', $plugin_types_info, "The plugin types list has the menu.link plugin type.");
+
+    $menu_link_type_info = $plugin_types_info['menu.link'];
+    $this->assertEquals('menu.link', $menu_link_type_info['type_id']);
+    $this->assertEquals('menu.link', $menu_link_type_info['type_label']);
+    $this->assertEquals('links.menu', $menu_link_type_info['yaml_file_suffix']);
+    $this->assertArrayHasKey('menu_name', $menu_link_type_info['yaml_properties']);
   }
 
   /**

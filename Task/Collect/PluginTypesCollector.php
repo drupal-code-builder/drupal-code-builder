@@ -392,7 +392,14 @@ class PluginTypesCollector extends CollectorBase  {
       }
 
       $property_decorated->setAccessible(TRUE);
-      $discovery = $property_decorated->getValue($discovery);
+      $decorated_discovery = $property_decorated->getValue($discovery);
+
+      // We don't go in to a decorated class that's not in a Plugin component.
+      if (!str_contains(get_class($decorated_discovery), '\Plugin')) {
+        break;
+      }
+
+      $discovery = $decorated_discovery;
       $reflection_discovery = new \ReflectionClass($discovery);
     }
 
@@ -583,7 +590,9 @@ class PluginTypesCollector extends CollectorBase  {
 
     $data['yaml_properties'] = $defaults;
 
-    // The YAML discovery wraps another discovery object.
+    // The YAML discovery wraps another discovery object which is a
+    // \Drupal\Core\Discovery\YamlDiscovery. We purposefully didn't get this
+    // when recursively getting the decorated discovery.
     $discovery_reflection = new \ReflectionClass($discovery);
     $property = $discovery_reflection->getProperty('discovery');
     $property->setAccessible(TRUE);
