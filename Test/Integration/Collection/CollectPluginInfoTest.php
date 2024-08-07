@@ -48,7 +48,15 @@ class CollectPluginInfoTest extends CollectionTestBase {
    * Tests collection of plugin type info.
    */
   public function testPluginTypesInfoCollection() {
-    // In Core, and other modules provide plugins.
+    $this->pluginTypeQueueWorker();
+    $this->pluginTypeFieldType();
+    $this->pluginTypeHelpSection();
+  }
+
+  /**
+   * In Core, and other modules provide plugins.
+   */
+  protected function pluginTypeQueueWorker() {
     $plugin_types_info = $this->getPluginTypeInfoFromCollector(
       [
         'service_id' => 'plugin.manager.queue_worker',
@@ -78,8 +86,12 @@ class CollectPluginInfoTest extends CollectionTestBase {
     $this->assertArrayHasKey('id', $plugin_properties);
     $this->assertArrayHasKey('title', $plugin_properties);
     $this->assertArrayHasKey('cron', $plugin_properties);
+  }
 
-    // In Core, and our name doesn't match Plugin module's name.
+  /**
+   * In Core, and our name doesn't match Plugin module's name.
+   */
+  protected function pluginTypeFieldType() {
     $plugin_types_info = $this->getPluginTypeInfoFromCollector(
       [
         'service_id' => 'plugin.manager.field.field_type',
@@ -117,8 +129,12 @@ class CollectPluginInfoTest extends CollectionTestBase {
     $this->assertArrayHasKey('default_widget', $plugin_properties);
     $this->assertArrayHasKey('default_formatter', $plugin_properties);
     // ... TODO loads more!
+  }
 
-    // In a module, and other modules provide plugins.
+  /**
+   * In a module, and other modules provide plugins.
+   */
+  protected function pluginTypeHelpSection() {
     $plugin_types_info = $this->getPluginTypeInfoFromCollector(
       [
         'service_id' => 'plugin.manager.help_section',
