@@ -244,7 +244,7 @@ class ExtensionCodeFile extends PHPFile {
   /**
    * {@inheritdoc}
    */
-  function code_footer() {
+  function codeFooter() {
     $footer = \DrupalCodeBuilder\Factory::getEnvironment()->getSetting('footer', NULL);
     return $footer;
   }

@@ -127,7 +127,7 @@ class API extends PHPFile {
     $generated_function_names = [];
 
     foreach ($hooks as $hook_short_name => $parameters) {
-      $code_pieces['hook_' . $hook_short_name] = $this->hook_code($hook_short_name, $parameters);
+      $code_pieces['hook_' . $hook_short_name] = $this->hookCode($hook_short_name, $parameters);
 
       $generated_function_names['hook_' . $hook_short_name] = TRUE;
     }
@@ -195,7 +195,7 @@ class API extends PHPFile {
    * @return
    *  A string of formatted code for inclusion in the api.php file.
    */
-  function hook_code($hook_short_name, $parameters_string) {
+  function hookCode($hook_short_name, $parameters_string) {
     $parameters = explode(', ', $parameters_string);
     $parameters_doc_lines = [];
     foreach ($parameters as $parameter) {

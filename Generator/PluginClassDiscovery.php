@@ -345,7 +345,7 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
   /**
    * Produces the class declaration.
    */
-  function class_declaration() {
+  function classDeclaration() {
     if ($this->component_data->parent_plugin_class->value) {
       $this->component_data->parent_class_name->value = '\\' . $this->component_data['parent_plugin_class'];
     }
@@ -383,7 +383,7 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
       $this->component_data->interfaces->add(['ContainerFactoryPluginInterface' => '\Drupal\Core\Plugin\ContainerFactoryPluginInterface']);
     }
 
-    return parent::class_declaration();
+    return parent::classDeclaration();
   }
 
   /**

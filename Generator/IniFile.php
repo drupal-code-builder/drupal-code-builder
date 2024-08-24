@@ -25,7 +25,7 @@ class IniFile extends File {
       $ini_data = ArrayMerger::doMerge($ini_data, $child_item_data);
     }
 
-    $file_info = new CodeFile($this->process_info_lines($ini_data));
+    $file_info = new CodeFile($this->processInfoLines($ini_data));
 
     return $file_info;
   }
@@ -44,7 +44,7 @@ class IniFile extends File {
    * @return
    *  An array of lines for the .info file.
    */
-  function process_info_lines($lines) {
+  function processInfoLines($lines) {
     foreach ($lines as $label => $data) {
       if (is_array($data)) {
         foreach ($data as $data_piece) {

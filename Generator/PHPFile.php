@@ -45,14 +45,14 @@ abstract class PHPFile extends File {
 
     // File contents are built up.
     $file_contents = array_merge(
-      $this->file_header(),
+      $this->fileHeader(),
       // The code header and body are themselves arrays.
-      $this->code_header(),
+      $this->codeHeader(),
       $this->phpCodeBody()
     );
 
-    if (!empty($this->code_footer())) {
-      $file_contents[] = $this->code_footer();
+    if (!empty($this->codeFooter())) {
+      $file_contents[] = $this->codeFooter();
     }
 
     return $file_contents;
@@ -61,7 +61,7 @@ abstract class PHPFile extends File {
   /**
    * Return the PHP file header lines.
    */
-   function file_header()  {
+   function fileHeader()  {
      return [
        "<?php",
        '',
@@ -71,7 +71,7 @@ abstract class PHPFile extends File {
   /**
    * Return the file doxygen header and any custom header code.
    */
-  function code_header() {
+  function codeHeader() {
     $docblock = DocBlock::file();
 
     $docblock[] = $this->fileDocblockSummary();
@@ -194,6 +194,6 @@ abstract class PHPFile extends File {
    *
    * This is only used if non-empty.
    */
-  function code_footer() {}
+  function codeFooter() {}
 
 }

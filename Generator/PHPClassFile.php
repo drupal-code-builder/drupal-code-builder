@@ -221,7 +221,7 @@ class PHPClassFile extends PHPFile {
   /**
    * Returns file header code.
    */
-  function code_header() {
+  function codeHeader() {
     // Class files have no file docblock. Return an empty array.
     return [];
   }
@@ -240,7 +240,7 @@ class PHPClassFile extends PHPFile {
     $this->extractFullyQualifiedClasses($class_code, $imported_classes, $this->component_data['namespace']);
 
     $return = array_merge(
-      $this->code_namespace(),
+      $this->codeNamespace(),
       $this->imports($imported_classes),
       $class_code,
       [
@@ -252,7 +252,7 @@ class PHPClassFile extends PHPFile {
   /**
    * Produces the namespace and 'use' lines.
    */
-  function code_namespace() {
+  function codeNamespace() {
     $code = [];
 
     $code[] = 'namespace ' . $this->component_data['namespace'] . ';';
@@ -274,7 +274,7 @@ class PHPClassFile extends PHPFile {
     $class_code = array_merge(
       $class_doc_block->render(),
       $class_attributes?->render() ?? [],
-      $this->class_declaration(),
+      $this->classDeclaration(),
       $this->classCodeBody(),
       [
         '}',
@@ -324,7 +324,7 @@ class PHPClassFile extends PHPFile {
   /**
    * Produces the class declaration.
    */
-  function class_declaration() {
+  function classDeclaration() {
     $line = '';
     if ($this->component_data['abstract']) {
       $line .= 'abstract ';

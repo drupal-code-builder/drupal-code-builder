@@ -61,14 +61,14 @@ class Controller extends PHPClassFileWithInjection {
   /**
    * Produces the class declaration.
    */
-  function class_declaration() {
+  function classDeclaration() {
     if (isset($this->containedComponents['injected_service'])) {
       // Numeric key will clobber, so make something up!
       // TODO: fix!
       $this->component_data->interfaces->add(['ContainerInjectionInterface' => '\Drupal\Core\DependencyInjection\ContainerInjectionInterface']);
     }
 
-    return parent::class_declaration();
+    return parent::classDeclaration();
   }
 
 }
