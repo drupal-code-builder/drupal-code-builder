@@ -416,7 +416,8 @@ class ParserPHPTest extends TestCase {
     catch (ExpectationFailedException $e) {
       // We get here if the assertion failed.
       if ($pass) {
-        $this->fail("The assertion {$assertion_name}() should pass with the following parameters: {$message_parameters}");
+        $failure_message = $e->getMessage();
+        $this->fail("The assertion {$assertion_name}() should pass with the following parameters:\n{$message_parameters}. Got failure:\n{$failure_message}.");
       }
     }
 
