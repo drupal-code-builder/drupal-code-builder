@@ -30,7 +30,7 @@ class ParserPHPTest extends TestCase {
    */
   public function providerAssertDrupalCodingStandards() {
     return [
-      [
+      'procedural-file-pass' => [
         <<<EOT
           <?php
 
@@ -42,18 +42,45 @@ class ParserPHPTest extends TestCase {
           EOT,
         TRUE,
       ],
-      [
-        <<<EOT
+      'class-file-pass' => [
+        <<<'EOT'
           <?php
 
           /**
            * Class documentation.
            */
           class Foo {
+
+            /**
+             * Function documentation.
+             */
+            public function myFunc() {
+              $a = 4;
+            }
+
           }
 
           EOT,
         TRUE,
+      ],
+      // Missing method docblock.
+      'class-file-fail-Drupal' => [
+        <<<'EOT'
+          <?php
+
+          /**
+           * Class documentation.
+           */
+          class Foo {
+
+            public function myFunc() {
+              $a = 4;
+            }
+
+          }
+
+          EOT,
+        FALSE,
       ],
     ];
   }
