@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset name="Drupal Code Builder">
+  <description>Sniffs that DCB generated code should pass in addition to the Drupal ruleset.</description>
+  <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+  <!-- No good, enforces a newline and we want the opposite! -->
+  <!-- <rule ref="Squiz.WhiteSpace.FunctionClosingBraceSpace"/> -->
+</ruleset>

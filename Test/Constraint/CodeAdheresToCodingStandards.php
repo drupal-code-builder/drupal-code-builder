@@ -157,10 +157,14 @@ class CodeAdheresToCodingStandards extends Constraint {
     $runner->config->setConfigData('installed_paths', implode(',', [
       static::$composerVendorDir . '/drupal/coder/coder_sniffer',
       static::$composerVendorDir . '/slevomat/coding-standard',
+      static::$composerVendorDir . '/drupal-code-builder/drupal-code-builder/Test/PHP_CodeSniffer',
     ]));
 
     $runner->config->setConfigData('drupal_core_version', $this->drupalMajorVersion);
-    $runner->config->standards = ['Drupal'];
+    $runner->config->standards = [
+      'Drupal',
+      'DrupalCodeBuilder',
+    ];
     $runner->config->exclude = $excluded_sniffs;
     $runner->init();
     // Hard-code some other config settings.

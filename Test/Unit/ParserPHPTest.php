@@ -82,6 +82,29 @@ class ParserPHPTest extends TestCase {
           EOT,
         FALSE,
       ],
+      // Surplus blank line at start of function.
+      'class-file-fail-DCB' => [
+        <<<'EOT'
+          <?php
+
+          /**
+           * Class documentation.
+           */
+          class Foo {
+
+            /**
+             * Function documentation.
+             */
+            public function myFunc() {
+
+              $a = 4;
+            }
+
+          }
+
+          EOT,
+        FALSE,
+      ],
     ];
   }
 
