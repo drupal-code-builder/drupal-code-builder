@@ -249,13 +249,33 @@ class ComponentTestsPHPUnit10Test extends TestBase {
     $setup_method_tester->assertReturnType('void');
   }
 
+  /**
+   * Data provider for testModuleGenerationTestsWithServices().
+   */
+  public static function dataModuleGenerationTestsWithServices(): array {
+    // Bummer: data providers don't work with named parameters.
+    // $data = [
+    //   'container_services' => ['container_services' => TRUE],
+    //   'mocked_services' => ['mocked_services' => TRUE],
+    // ];
+    // $data['both'] = array_merge(...array_values($data));
+    $data = [
+      'container_services' => [TRUE],
+      'mocked_services' => [FALSE, TRUE],
+      'both' => [TRUE, TRUE],
+    ];
+
+    return $data;
+  }
 
   /**
    * Create a test class with services.
    *
    * @group di
+   *
+   * @dataProvider dataModuleGenerationTestsWithServices
    */
-  function testModuleGenerationTestsWithServices() {
+  function testModuleGenerationTestsWithServices(bool $container_services = FALSE, bool $mocked_services = FALSE) {
     // Create a module.
     $module_name = 'test_module';
     $module_data = [
@@ -266,17 +286,22 @@ class ComponentTestsPHPUnit10Test extends TestBase {
         0 => [
           'test_type' => 'kernel',
           'plain_class_name' => 'MyTest',
-          'container_services' => [
-            'current_user',
-            'entity_type.manager',
-          ],
-          'mocked_services' => [
-            'module_handler',
-          ],
         ],
       ],
       'readme' => FALSE,
     ];
+
+    if ($container_services) {
+      $module_data['phpunit_tests'][0]['container_services'] = [
+        'current_user',
+        'entity_type.manager',
+      ];
+    }
+    if ($mocked_services) {
+      $module_data['phpunit_tests'][0]['mocked_services'] = [
+        'module_handler',
+      ];
+    }
 
     $files = $this->generateModuleFiles($module_data);
 
@@ -295,16 +320,21 @@ class ComponentTestsPHPUnit10Test extends TestBase {
     $php_tester->assertStatementIsParentCall('setUp', 0);
 
     // Container services.
-    $php_tester->assertClassHasProtectedProperty('currentUser', 'Drupal\Core\Session\AccountProxyInterface');
-    $php_tester->assertClassHasProtectedProperty('entityTypeManager', 'Drupal\Core\Entity\EntityTypeManagerInterface');
+    if ($container_services) {
+      $php_tester->assertClassHasProtectedProperty('currentUser', 'Drupal\Core\Session\AccountProxyInterface');
+      $php_tester->assertClassHasProtectedProperty('entityTypeManager', 'Drupal\Core\Entity\EntityTypeManagerInterface');
 
-    $setup_method_tester = $php_tester->getMethodTester('setUp');
-    // Quick and dirty; TODO: better!
-    $setup_method_tester->assertHasLine('$this->currentUser = $this->container->get(\'current_user\');');
-    $setup_method_tester->assertHasLine('$this->entityTypeManager = $this->container->get(\'entity_type.manager\');');
+      $setup_method_tester = $php_tester->getMethodTester('setUp');
+      // Quick and dirty; TODO: better!
+      $setup_method_tester->assertHasLine('$this->currentUser = $this->container->get(\'current_user\');');
+      $setup_method_tester->assertHasLine('$this->entityTypeManager = $this->container->get(\'entity_type.manager\');');
+    }
 
-    $setup_method_tester->assertHasLine('$module_handler = $this->prophesize(ModuleHandlerInterface::class);');
-    $setup_method_tester->assertHasLine('$this->container->set(\'module_handler\', $module_handler->reveal());');
+    // Mocked services.
+    if ($mocked_services) {
+      $setup_method_tester->assertHasLine('$module_handler = $this->prophesize(ModuleHandlerInterface::class);');
+      $setup_method_tester->assertHasLine('$this->container->set(\'module_handler\', $module_handler->reveal());');
+    }
   }
 
   /**

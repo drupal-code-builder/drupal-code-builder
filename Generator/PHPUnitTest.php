@@ -416,24 +416,25 @@ class PHPUnitTest extends PHPClassFile {
     $setup_lines = [];
 
     $setup_lines[] = 'parent::setUp();';
-    $setup_lines[] = '';
 
     // $this->containedComponents->dump();
 
     // Container services setup.
     if (!empty($this->getContentsElement('service_container'))) {
+      $setup_lines[] = '';
+
       // Use the main service infor rather than 'container_extraction', as
       // that is intended for use in an array and so has a terminal comma.
       // TODO: remove the terminal comma so we can use it here!
       foreach ($this->getContentsElement('service_container') as $service_info) {
         $setup_lines[] = "£this->{$service_info['property_name']} = £this->container->get('{$service_info['id']}');";
       }
-
-      $setup_lines[] = '';
     }
 
     // Mocked services.
     if (!empty($this->getContentsElement('service_mocked'))) {
+      $setup_lines[] = '';
+
       foreach ($this->getContentsElement('service_mocked') as $service_info) {
         $setup_lines[] = "// Mock the {$service_info['label']}.";
         $setup_lines[] = "£{$service_info['variable_name']} = £this->prophesize({$service_info['typehint']}::class);";
