@@ -176,7 +176,9 @@ class ContainerBuilder {
       static::$all_classes[$service_name] = $class_name;
 
       // With versioned classes, keep track of the base unversioned name, as
-      // these should not be registered in the bulk list.
+      // that should not be registered in this pass, but handled separately in
+      // static::unversionedAliasesPass(). This includes abstract classes, and
+      // even potentially class names that don't exist.
       if (is_numeric(substr($service_name, -1))) {
         $unversioned_service_name = preg_replace('@\d+$@', '', $service_name);
         static::$services_with_versioned_variants[$unversioned_service_name] = TRUE;
@@ -205,7 +207,8 @@ class ContainerBuilder {
     // Define the services.
     foreach (static::$services as $service_name => $class_name) {
       if (!isset(static::$services_with_versioned_variants[$service_name])) {
-        // Autowire anything that's not versioned.
+        // Add all services, with autowiring, except for unversioned variants.
+        // That is, if 'Foo9' exists, then 'Foo' is not added here.
         static::$definitions[$service_name] = \DI\autowire($class_name);
       }
     }
