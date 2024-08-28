@@ -154,7 +154,7 @@ class ContainerBuilder {
     static::environmentPass();
     static::basicTasksPass();
     static::generateTaskPass();
-    static::unversionedAliasesPass();
+    static::baseClassPass();
     static::specialCasesPass();
     static::attributeMethodInjectionPass();
 
@@ -212,7 +212,7 @@ class ContainerBuilder {
 
       // With versioned classes, keep track of the base unversioned name, as
       // that should not be registered in this pass, but handled separately in
-      // static::unversionedAliasesPass(). This includes abstract classes, and
+      // static::baseClassPass(). This includes abstract classes, and
       // even potentially class names that don't exist.
       if (is_numeric(substr($service_name, -1))) {
         $unversioned_service_name = preg_replace('@\d+$@', '', $service_name);
@@ -315,7 +315,7 @@ class ContainerBuilder {
    *
    * @see DrupalCodeBuilder\DependencyInjection\ServiceFactories::createVersioned()
    */
-  protected static function unversionedAliasesPass() {
+  protected static function baseClassPass() {
     // This needs a separate loop because some of these classes are abstract,
     // and so not in $services.
     foreach (array_keys(static::$base_class_service_names) as $service_name) {
