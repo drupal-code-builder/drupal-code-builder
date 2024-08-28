@@ -9,6 +9,14 @@ use DrupalCodeBuilder\Attribute\InjectImplementations;
 /**
  * Service container builder.
  *
+ * This class is for use during development. The compiled container is committed
+ * to the codebase repository.
+ *
+ * The container should be rebuilt whenever Generator or Task classes are added
+ * or have their version attributes changed. To rebuild the container, do:
+ *
+ * $ composer dcb-cr
+ *
  * The following services are registered:
  * - The environment, as 'environment'.
  * - All classes in the \DrupalCodeBuilder\Task namespace except 'Generate',
@@ -29,12 +37,39 @@ use DrupalCodeBuilder\Attribute\InjectImplementations;
  * in versions 3 and 4 of Symfony to make this impossible. Therefore the
  * simplest solution is to use a completely different DI package.
  *
- * To rebuild the container, do:
+ * The terminology around versioned classes in the context of the container is
+ * as follows:
+ *  - 'versioned class': A class with a version number suffix, e.g. 'Foo9'. In
+ *    the documentation, 'FooN' is used with 'N' meaning any version number.
+ *  - 'singleton class': A class which has no version number, for which no
+ *    versioned class exists. E.g., 'Foo', and there is no 'FooN'.
+ *  - 'base class': The class with no version number that corresponds to a
+ *    versioned class. For example, given 'Foo9', then 'Foo' is the base class.
+ *    This is not necessarily a PHP parent class; in the service container
+ *    domain we are not concerned with class inheritance.
+ *  - 'unversioned class': Ambiguous term, as could mean either 'singleton
+ *    class' or 'base class'. Avoid.
  *
- * $ composer dcb-cr
- *
- * This should only be used locally; the compiled container is committed to
- * the codebase repository.
+ * With classes that may be versioned, such as Task classes, the following
+ * services are registered in the container:
+ * - For a singleton class, the class itself is a service, registered as
+ *   autowired.
+ * - For a versioned class, the class itself is a service, registered as
+ *   autowired.
+ * - A base class is registered as a service, even if the base class does not
+ *   actually exist! That is, if there is a 'FooN' class for every supported
+ *   Drupal cover version and no 'Foo' class, then 'Foo' is still registered as
+ *   a service because that is what the calling code will ask the container for.
+ *   Whether the class exists or not, the service is registered with the factory
+ *   method ServiceFactories::createVersioned(), which handles finding the
+ *   service for the versioned class to return instead.
+ * - A base class (that actually exists) is additionally registered as a service
+ *   whose name has the suffix '.unversioned', registered with autowiring. This
+ *   allows that actual class to be obtained from the container, because the
+ *   name without that suffix leads to the ServiceFactories::createVersioned()
+ *   factory. This is for the case where there is no versioned class for the
+ *   current core version. E.g., class 'Foo' is requested on version 9, but
+ *   there is no class 'Foo9' and so the actual class 'Foo' should be returned
  */
 class ContainerBuilder {
 
