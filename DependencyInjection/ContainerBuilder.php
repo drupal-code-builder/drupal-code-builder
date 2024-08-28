@@ -110,7 +110,7 @@ class ContainerBuilder {
    *
    * @var array
    */
-  protected static $services_with_versioned_variants = [];
+  protected static $base_class_service_names = [];
 
   /**
    * Composer script callback to rebuild the cached container.
@@ -216,7 +216,7 @@ class ContainerBuilder {
       // even potentially class names that don't exist.
       if (is_numeric(substr($service_name, -1))) {
         $unversioned_service_name = preg_replace('@\d+$@', '', $service_name);
-        static::$services_with_versioned_variants[$unversioned_service_name] = TRUE;
+        static::$base_class_service_names[$unversioned_service_name] = TRUE;
       }
 
       // Don't register abtract classes, interfaces, or traits.
@@ -241,7 +241,7 @@ class ContainerBuilder {
 
     // Define the services.
     foreach (static::$services as $service_name => $class_name) {
-      if (!isset(static::$services_with_versioned_variants[$service_name])) {
+      if (!isset(static::$base_class_service_names[$service_name])) {
         // Add all services, with autowiring, except for unversioned variants.
         // That is, if 'Foo9' exists, then 'Foo' is not added here.
         static::$definitions[$service_name] = \DI\autowire($class_name);
@@ -318,7 +318,7 @@ class ContainerBuilder {
   protected static function unversionedAliasesPass() {
     // This needs a separate loop because some of these classes are abstract,
     // and so not in $services.
-    foreach (array_keys(static::$services_with_versioned_variants) as $service_name) {
+    foreach (array_keys(static::$base_class_service_names) as $service_name) {
       // These can all use the same factory because the versioned class is also
       // a service, that gets autowired and the factory doesn't need to worry
       // about it.
