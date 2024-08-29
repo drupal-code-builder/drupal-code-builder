@@ -59,48 +59,6 @@ class Module extends RootComponent {
   public $component_data;
 
   /**
-   * Constructor method; sets the component data.
-   *
-   * @param $component_name
-   *   The identifier for the component.
-   * @param $component_data
-   *   (optional) An array of data for the module. The properties are as
-   *   follows:
-   *    - 'base': The type of component: 'module'.
-   *    - 'root_name': The machine name for the module.
-   *    - 'readable_name': The human readable name for the module.
-   *    - 'short_description': The module's description text.
-   *    - 'module_help_text': Help text for the module. If this is given, then
-   *       hook_help() is automatically added to the list of required hooks.
-   *    - 'hooks': An associative array whose keys are full hook names
-   *      (eg 'hook_menu'), where requested hooks have a value of TRUE.
-   *      Unwanted hooks may also be included as keys provided their value is
-   *      FALSE.
-   *    - 'module_dependencies': A string of module dependencies, separated by
-   *       spaces, e.g. 'forum views'.
-   *    - 'module_package': The module package.
-   *    - 'component_folder': (optional) The destination folder to write the
-   *      module files to.
-   *    - 'module_files': ??? OBSOLETE!? added by this function. A flat array
-   *      of filenames that have been generated.
-   *    - 'requested_build': An array whose keys are names of subcomponents to
-   *       build. Component names are defined in requiredComponents(), and include:
-   *       - 'all': everything we can do.
-   *       - 'code': PHP code files.
-   *       - 'info': the info file.
-   *       - 'module': the .module file.
-   *       - 'install': the .install file.
-   *       - 'tests': test file.
-   *       - 'api': api.php hook documentation file.
-   *       - FILE ID: requests a particular code file, by the abbreviated name.
-   *         This is the filename without the initial 'MODULE.' or the '.inc'
-   *         extension.
-   */
-  function __construct($component_data) {
-    parent::__construct($component_data);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function configurationDefinition(): PropertyDefinition {
@@ -140,6 +98,7 @@ class Module extends RootComponent {
       ->setLiteralDefault('my_module');
 
     $definition->addProperties([
+      // The human readable name for the module.
       // TODO: move to RootComponent.
       'readable_name' => PropertyDefinition::create('string')
         ->setLabel('Module readable name')
@@ -156,6 +115,8 @@ class Module extends RootComponent {
       'module_package' => PropertyDefinition::create('string')
         ->setLabel('Module .info file package')
         ->setLiteralDefault(''),
+      // A string of module dependencies, separated by spaces, e.g. 'forum
+      // views'.
       'module_dependencies' => PropertyDefinition::create('string')
         ->setLabel('Module dependencies')
         ->setDescription('The machine names of the modules this module should have as dependencies.')

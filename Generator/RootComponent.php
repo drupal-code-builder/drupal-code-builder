@@ -80,10 +80,12 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
 
     // Define this here for completeness; child classes should specialize it.
     $definition->addProperties([
+      // The type of Drupal extension: 'module'.
       'base' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setLiteralDefault(static::BASE)
         ->setRequired(TRUE),
+      // The machine name for the extension.
       'root_name' => PropertyDefinition::create('string')
         ->setLabel('Extension machine name')
         ->setValidators('machine_name')
