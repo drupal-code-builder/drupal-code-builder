@@ -319,12 +319,13 @@ class ComponentTestsPHPUnit10Test extends TestBase {
     $php_tester->assertHasMethodOrder(['setUp', 'testMyTest']);
     $php_tester->assertStatementIsParentCall('setUp', 0);
 
+    $setup_method_tester = $php_tester->getMethodTester('setUp');
+
     // Container services.
     if ($container_services) {
       $php_tester->assertClassHasProtectedProperty('currentUser', 'Drupal\Core\Session\AccountProxyInterface');
       $php_tester->assertClassHasProtectedProperty('entityTypeManager', 'Drupal\Core\Entity\EntityTypeManagerInterface');
 
-      $setup_method_tester = $php_tester->getMethodTester('setUp');
       // Quick and dirty; TODO: better!
       $setup_method_tester->assertHasLine('$this->currentUser = $this->container->get(\'current_user\');');
       $setup_method_tester->assertHasLine('$this->entityTypeManager = $this->container->get(\'entity_type.manager\');');
