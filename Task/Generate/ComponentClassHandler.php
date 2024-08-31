@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DI\Attribute\Inject;
 
 /**
  *  Task helper for working with generator classes and instantiating them.
@@ -11,13 +12,16 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 class ComponentClassHandler {
 
   /**
-   * Cache of classes for types.
+   * Constructor.
    *
-   * Keys are the types in Title case, values are the class names.
-   *
-   * @var array
+   * @param array $generator_classmap
+   *   The classmap of version-specific generator classes. Keys are the base
+   *   class name, then the version, value is the short class name.
    */
-  protected $classes = [];
+  public function __construct(
+    #[Inject('generator_classmap')]
+    protected array $generator_classmap
+  ) { }
 
   /**
    * Gets the data definition for a standalone component.
@@ -106,19 +110,18 @@ class ComponentClassHandler {
   public function getGeneratorClass($type) {
     $type = ucfirst($type);
 
-    if (!isset($this->classes[$type])) {
-      $version  = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
-      $class    = 'DrupalCodeBuilder\\Generator\\' . $type . $version;
+    $version  = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
 
-      // If there is no version-specific class, use the base class.
-      if (!class_exists($class)) {
-        $class  = 'DrupalCodeBuilder\\Generator\\' . $type;
-      }
-
-      $this->classes[$type] = $class;
+    if (isset($this->generator_classmap[$type][$version])) {
+      $short_class = $this->generator_classmap[$type][$version];
+    }
+    else {
+      $short_class = $type;
     }
 
-    return $this->classes[$type];
+    $class = 'DrupalCodeBuilder\\Generator\\' . $short_class;
+
+    return $class;
   }
 
 }
