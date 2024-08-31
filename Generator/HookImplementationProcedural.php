@@ -5,13 +5,20 @@ namespace DrupalCodeBuilder\Generator;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Utility\InsertArray;
+use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 
 /**
  * Generator for a single hook implementation.
  *
  * This should not be requested directly; use the Hooks component instead.
  */
-class HookImplementation extends PHPFunction {
+#[DrupalCoreVersion(10)]
+#[DrupalCoreVersion(9)]
+#[DrupalCoreVersion(8)]
+#[DrupalCoreVersion(7)]
+#[RelatedBaseClass('HookImplementation')]
+class HookImplementationProcedural extends PHPFunction {
 
   /**
    * {@inheritdoc}

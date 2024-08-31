@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Generator for hook_permission() implementation.
  */
-class HookPermission extends HookImplementation {
+class HookPermission extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}

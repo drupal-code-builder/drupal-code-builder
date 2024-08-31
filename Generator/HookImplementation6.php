@@ -8,7 +8,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 /**
  * Generator class for hook implementations for Drupal 6.
  */
-class HookImplementation6 extends HookImplementation {
+class HookImplementation6 extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}

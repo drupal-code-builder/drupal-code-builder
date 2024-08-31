@@ -9,7 +9,8 @@ use DrupalCodeBuilder\File\DrupalExtension;
 /**
  * Generator for hook_update_N() implementation.
  */
-class HookUpdateN extends HookImplementation {
+// same, use a trait
+class HookUpdateN extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}

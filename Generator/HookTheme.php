@@ -5,7 +5,10 @@ namespace DrupalCodeBuilder\Generator;
 /**
  * Generator for hook_theme() implementation.
  */
-class HookTheme extends HookImplementation {
+// argh this needs to be BOTH procedural AND OO!
+// TOO BAD to decouple hook CONTENTS from hook function/OO method.
+// - use a trait!
+class HookTheme extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}
