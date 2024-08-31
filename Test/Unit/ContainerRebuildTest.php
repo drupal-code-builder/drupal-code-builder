@@ -42,6 +42,13 @@ class ContainerRebuildTest extends TestCase {
 
     $container = \DrupalCodeBuilder\Factory::getContainer();
 
+    // Check the generator classmap.
+    $generator_classmap = $container->get('generator_classmap');
+    $this->assertIsArray($generator_classmap);
+    $this->assertArrayHasKey('Module', $generator_classmap);
+    $this->assertArrayHasKey(7, $generator_classmap['Module']);
+    $this->assertEquals('Module7AndLower', $generator_classmap['Module'][7]);
+
     $new_cached_container_timestamp = filemtime($cached_file);
 
     $this->assertNotEquals($original_cached_container_timestamp, $new_cached_container_timestamp);

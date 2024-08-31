@@ -6,11 +6,17 @@ use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
+use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 
 /**
- * Drupal 7 version of component.
+ * Module generator for Drupal versions 5, 6, and 7.
  */
-class Module7 extends Module8 {
+#[DrupalCoreVersion(7)]
+#[DrupalCoreVersion(6)]
+#[DrupalCoreVersion(5)]
+#[RelatedBaseClass('Module')]
+class Module7AndLower extends Module8 {
 
   /**
    * {@inheritdoc}
