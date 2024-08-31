@@ -65,6 +65,17 @@ class Module extends RootComponent {
     return PropertyDefinition::create('complex')
       ->setLabel("Module settings")
       ->setProperties([
+        // TODO: When procedural hooks are removed from core, this setting will
+        // need to be removed, and so the Module class won't have it, but
+        // Module11 (or whatever) will add it in.
+        'hook_implementation_type' => PropertyDefinition::create('string')
+          ->setLabel("Hook implementation type")
+          ->setDescription("The type of hook implementation to generate.")
+          ->setOptionsArray([
+            'procedural' => 'Functions in procedural files, such as .module',
+            'oo' => 'Class methods on a Hooks class',
+          ])
+          ->setLiteralDefault('oo'),
         'service_namespace' => PropertyDefinition::create('string')
           ->setLabel("Service class namespace")
           ->setDescription("The relative namespace within a module in which to place services. Do not include '\\' at either end. Leave empty to place in the module namespace.")

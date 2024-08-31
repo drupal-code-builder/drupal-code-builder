@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
 /**
  * Drupal 8 version of component.
  */
-class Module8 extends Module {
+class Module8 extends Module9And10 {
 
   /**
    * {@inheritdoc}
