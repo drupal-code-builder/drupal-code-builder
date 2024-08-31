@@ -204,6 +204,7 @@ class ContainerBuilder {
     chdir($previous_dir);
 
     // Get files in the Task folder and its immediate subfolders.
+    $services = [];
     foreach ($task_files as $task_file) {
       $matches = [];
       preg_match('@Task/((?:\w+/)?\w+).php@', $task_file, $matches);
@@ -244,11 +245,12 @@ class ContainerBuilder {
         continue;
       }
 
+      $services[$service_name] = $class_name;
       static::$services[$service_name] = $class_name;
     } // foreach $task_files
 
     // Define the services.
-    foreach (static::$services as $service_name => $class_name) {
+    foreach ($services as $service_name => $class_name) {
       if (!isset(static::$base_class_service_names[$service_name])) {
         // Add all services, with autowiring, except for unversioned variants.
         // That is, if 'Foo9' exists, then 'Foo' is not added here.
