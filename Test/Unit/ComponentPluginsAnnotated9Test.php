@@ -10,10 +10,10 @@ use Psr\Container\ContainerInterface;
 
 /**
  * Tests generation of annotation plugins.
- * 
- * This is on Drupal 9 because Drupal 10 core has very few annotation plugin 
+ *
+ * This is on Drupal 9 because Drupal 10 core has very few annotation plugin
  * types left.
- * 
+ *
  * TODO: Restore this to Drupal 10 if I CBA.
  *
  * @group yaml
