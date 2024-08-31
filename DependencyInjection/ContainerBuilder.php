@@ -164,7 +164,15 @@ class ContainerBuilder {
     // name like PHP 5 savages??
     $builder->enableCompilation(__DIR__ . '/cache', 'DrupalCodeBuilderCompiledContainer');
 
-    $container = $builder->build();
+    try {
+      $container = $builder->build();
+    }
+    catch (\Exception $e) {
+      // Composer doesn't show a backtrace for an exception WTF.
+      dump($e->getTrace());
+
+      throw $e;
+    }
 
     return $container;
   }
