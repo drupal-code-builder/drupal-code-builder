@@ -239,6 +239,10 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     {
         return [
             6 => 'HookImplementation6',
+            10 => 'HookImplementationProcedural',
+            9 => 'HookImplementationProcedural',
+            8 => 'HookImplementationProcedural',
+            7 => 'HookImplementationProcedural',
         ];
     }
 
