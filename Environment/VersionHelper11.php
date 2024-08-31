@@ -27,7 +27,7 @@ namespace DrupalCodeBuilder\Environment;
  */
 class VersionHelper11 {
 
-  protected $major_version = 10;
+  protected $major_version = 11;
 
   /**
    * {@inheritdoc}
