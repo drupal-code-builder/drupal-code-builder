@@ -13,6 +13,7 @@ use DrupalCodeBuilder\Attribute\RelatedBaseClass;
  *
  * This should not be requested directly; use the Hooks component instead.
  */
+#[DrupalCoreVersion(11)]
 #[DrupalCoreVersion(10)]
 #[DrupalCoreVersion(9)]
 #[DrupalCoreVersion(8)]
