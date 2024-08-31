@@ -7,6 +7,7 @@ use CaseConverter\CaseString;
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
+use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -162,6 +163,10 @@ class PHPFunction extends BaseGenerator {
   public function getContents(): array {
     $function_code = [];
     $function_code = array_merge($function_code, $this->getFunctionDocBlockLines());
+
+    if ($function_attributes = $this->getFunctionAttributes()) {
+      $function_code = array_merge($function_code, $function_attributes->render());
+    }
 
     // If the declaration isn't set, built it from property values and contained
     // parameter components.
@@ -330,6 +335,16 @@ class PHPFunction extends BaseGenerator {
     }
 
     return $docblock->render();
+  }
+
+  /**
+   * Produces the function attributes.
+   *
+   * @return \DrupalCodeBuilder\Generator\Render\PhpAttributes|null
+   *   An attribute object if this function has attributes.
+   */
+  protected function getFunctionAttributes(): ?PhpAttributes {
+    return NULL;
   }
 
   /**

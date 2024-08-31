@@ -41,6 +41,13 @@ class PhpAttributes {
   }
 
   /**
+   * Creates a new attribute for a method.
+   */
+  public static function method($attribute_class_name, $data, $comments = []) {
+    return new static($attribute_class_name, $data, $comments, 2);
+  }
+
+  /**
    * Creates a new attribute for a nested object.
    */
   public static function object($attribute_class_name, $data, $comments = []) {
