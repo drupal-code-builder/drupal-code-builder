@@ -5,6 +5,8 @@ namespace DrupalCodeBuilder\DependencyInjection;
 use Composer\Script\Event;
 use DI\ContainerBuilder as DIContainerBuilder;
 use DrupalCodeBuilder\Attribute\InjectImplementations;
+use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 
 /**
  * Service container builder.
@@ -41,6 +43,9 @@ use DrupalCodeBuilder\Attribute\InjectImplementations;
  * as follows:
  *  - 'versioned class': A class with a version number suffix, e.g. 'Foo9'. In
  *    the documentation, 'FooN' is used with 'N' meaning any version number.
+ *  - 'multi-versioned class': A class with multiple
+ *    \DrupalCodeBuilder\Attribute\DrupalCoreVersion attributes, which declare
+ *    it as being for several specific versions.
  *  - 'singleton class': A class which has no version number, for which no
  *    versioned class exists. E.g., 'Foo', and there is no 'FooN'.
  *  - 'base class': The class with no version number that corresponds to a
@@ -152,12 +157,14 @@ class ContainerBuilder {
     // building it. Therefore we build up an array of $definitions, and pass
     // that to the container builder once we're done.
     static::environmentPass();
+    static::generatorClassmapPass();
     static::basicTasksPass();
     static::generateTaskPass();
     static::baseClassPass();
     static::specialCasesPass();
     static::attributeMethodInjectionPass();
 
+    $builder->useAttributes(TRUE);
     $builder->addDefinitions(static::$definitions);
 
     // Wot no namespace for the compiled container? We're prefixing the class
@@ -189,6 +196,68 @@ class ContainerBuilder {
     // Alias the environment to the interface, so autowiring picks up the
     // environment parameter type.
     static::$definitions[\DrupalCodeBuilder\Environment\EnvironmentInterface::class] = \DI\get('environment');
+  }
+
+  /**
+   * Defines the generator classmap.
+   *
+   * This is a lookup for versioned and multiversioned generator classes, used
+   * by ComponentClassHandler.
+   *
+   * Generators aren't registered as services, because:
+   *  - As well as being instantiated objects, the classes are used statically,
+   *    and the container doesn't support getting the class for a service, and
+   *    having two separate systems for getting the generator, one static and
+   *    one instantiated, seems fiddly.
+   *  - A bug in PHP-DI doesn't allow using make() to instantiate an object with
+   *    a compiled container, and the workaround of making the constructor
+   *    parameters optional is ugly. (see
+   *    https://github.com/PHP-DI/PHP-DI/issues/893.)
+   */
+  protected static function generatorClassmapPass() {
+    $previous_dir = getcwd();
+    chdir(static::$drupal_code_builder_path);
+    $generator_files = glob('Generator/*.php');
+    chdir($previous_dir);
+
+    // Build up a mapping of component types to versioned class names.
+    $component_type_mapping = [];
+
+    foreach ($generator_files as $generator_file) {
+      $short_class_name = basename($generator_file, '.php');
+      $full_class_name = '\DrupalCodeBuilder\Generator\\' . $short_class_name;
+
+      $reflector = new \ReflectionClass($full_class_name);
+
+      // Multi-versioned classes use attributes to declare the versions they are
+      // for and the plain class.
+      if ($core_version_attributes = $reflector->getAttributes(DrupalCoreVersion::class)) {
+        $base_class_attributes = $reflector->getAttributes(RelatedBaseClass::class);
+        if (empty($base_class_attributes)) {
+          throw new \LogicException("Class $full_class_name has DrupalCoreVersion attributes but no RelatedBaseClass attribute.");
+        }
+        $base_class = $base_class_attributes[0]->newInstance()->base_class;
+
+        // Register a mapping item for each version the class supports.
+        foreach ($core_version_attributes as $attribute) {
+          $component_type_mapping[$base_class][$attribute->newInstance()->core_version] = $short_class_name;
+        }
+
+        // Done with this class.
+        continue;
+      }
+
+      // Versioned classes use a numeric suffix on the plain class name.
+      if (is_numeric(substr($short_class_name, -1))) {
+        // A class is versioned if its name has a numeric suffix, e.g. 'Foo10'.
+        [$base_class, $version_number] = preg_split('/(\d+$)/', $short_class_name, flags: PREG_SPLIT_DELIM_CAPTURE);
+
+        $component_type_mapping[$base_class][$version_number] = $short_class_name;
+      }
+    }
+
+    // Add the classmap to service definitions as a constant value.
+    static::$definitions['generator_classmap'] = $component_type_mapping;
   }
 
   /**
