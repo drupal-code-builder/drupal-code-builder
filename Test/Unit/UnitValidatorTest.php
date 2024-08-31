@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  */
 class UnitValidatorTest extends TestCase {
 
-  public function providerClassNameValidator() {
+  public static function providerClassNameValidator() {
     return [
       'one-part name' => [
         'Name',
@@ -53,7 +53,7 @@ class UnitValidatorTest extends TestCase {
   /**
    * Data provider for testMachineNameValidator().
    */
-  public function providerMachineNameValidator() {
+  public static function providerMachineNameValidator() {
     return [
       'one-part name' => [
         'name',
@@ -127,7 +127,7 @@ class UnitValidatorTest extends TestCase {
   /**
    * Data provider for testPluginNameValidator().
    */
-  public function providerPluginNameValidator() {
+  public static function providerPluginNameValidator() {
     return [
       'one-part name' => [
         'plugin',
@@ -186,7 +186,7 @@ class UnitValidatorTest extends TestCase {
   /**
    * Data provider for testPluginNameValidator().
    */
-  public function providerYamlPluginNameValidator() {
+  public static function providerYamlPluginNameValidator() {
     return [
       'one-part name' => [
         'plugin',

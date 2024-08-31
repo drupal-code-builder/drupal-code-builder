@@ -87,7 +87,7 @@ class GenerateHelperComponentCollectorTest extends TestBase {
   /**
    * Data provider.
    */
-  public function providerGeneratorChildNoRequests() {
+  public static function providerGeneratorChildNoRequests() {
     return [
       'string_only' => [
         'data_value' => [

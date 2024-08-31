@@ -98,7 +98,7 @@ class ComponentInfo9Test extends TestBase {
   /**
    * Data provider for testExistingInfoFile().
    */
-  public function dataExistingInfoFile() {
+  public static function dataExistingInfoFile() {
     return [
       'only existing' => [
         ['node', 'block'],

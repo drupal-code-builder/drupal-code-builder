@@ -69,7 +69,7 @@ class ComponentPHPFile10Test extends TestBase {
   /**
    * Data provider for testQualifiedClassNameExtraction().
    */
-  public function providerQualifiedClassNameExtraction() {
+  public static function providerQualifiedClassNameExtraction() {
     return [
       'nothing' => [
         '$foo = 1 + 2;',

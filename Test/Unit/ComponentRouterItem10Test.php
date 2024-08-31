@@ -297,7 +297,7 @@ class ComponentRouterItem10Test extends TestBase {
   /**
    * Data provider for testRouteAccessTypes().
    */
-  public function dataRouteAccessTypes() {
+  public static function dataRouteAccessTypes() {
     return [
       'none' => [
         // The value for the 'access' property in the component data.

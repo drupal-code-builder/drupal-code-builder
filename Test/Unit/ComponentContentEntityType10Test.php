@@ -246,7 +246,7 @@ class ComponentContentEntityType10Test extends TestBase {
   /**
    * Data provider for testContentEntityTypeFunctionalityOptions.
    */
-  public function providerContentEntityTypeFunctionalityOptions() {
+  public static function providerContentEntityTypeFunctionalityOptions() {
     return [
       'empty' => [
         // Option value.
@@ -796,7 +796,7 @@ class ComponentContentEntityType10Test extends TestBase {
   /**
    * Data provider for testContentEntityTypeHandlers()
    */
-  public function providerHandlers() {
+  public static function providerHandlers() {
     return [
       'custom access' => [
         // Handler properties.

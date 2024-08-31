@@ -344,7 +344,7 @@ class ComponentService10Test extends TestBase {
   /**
    * Data provider for testServiceGenerationWithServices().
    */
-  public function providerServiceGenerationWithServices() {
+  public static function providerServiceGenerationWithServices() {
     return [
       // Basic service.
       'basic' => [
@@ -718,7 +718,7 @@ class ComponentService10Test extends TestBase {
   /**
    * Data provider for testExistingServicesYamlFile().
    */
-  public function dataExistingServicesYamlFile() {
+  public static function dataExistingServicesYamlFile() {
     return [
       'only-existing' => [
         <<<EOT
@@ -859,7 +859,7 @@ class ComponentService10Test extends TestBase {
   /**
    * Data provider for testExistingServiceMerge().
    */
-  public function dataExistingServiceMerge() {
+  public static function dataExistingServiceMerge() {
     return [
       'basic' => [
         // The data for a single service to generate as the existing module.
@@ -1036,7 +1036,7 @@ class ComponentService10Test extends TestBase {
   /**
    * Data provider for testExistingServicesAdoption().
    */
-  public function dataExistingServicesAdoption() {
+  public static function dataExistingServicesAdoption() {
     return [
       'top_level' => [
         'data_services' => [],

@@ -209,7 +209,7 @@ class ComponentPluginsAttribute10Test extends TestBase {
   /**
    * Data provder for testPluginsGenerationNamePrefixing().
    */
-  public function providerPluginsGenerationNamePrefixing() {
+  public static function providerPluginsGenerationNamePrefixing() {
     return [
       'derivative-plugin' => [
         'system_menu_block:alpha',

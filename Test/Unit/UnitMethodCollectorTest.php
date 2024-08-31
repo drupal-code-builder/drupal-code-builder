@@ -30,7 +30,7 @@ class UnitMethodCollectorTest extends TestCase {
   /**
    * Data provider for testMethodCollector().
    */
-  public function providerMethodCollector() {
+  public static function providerMethodCollector() {
     return [
       'no params' => [
         // Method name.

@@ -72,7 +72,7 @@ class ComponentReadme10Test extends TestBase {
   /**
    * Data provider for testReadmeWithDependencies().
    */
-  function dataReadmeWithDependencies() {
+  public static function dataReadmeWithDependencies() {
     return [
       'readme_with_contrib_deps' => [
         // Readme.

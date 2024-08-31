@@ -528,7 +528,7 @@ class ComponentTestsPHPUnit10Test extends TestBase {
    *  - testTestModuleWithExistingFunctions()
    *  - testTestModuleWithExistingServices()
    */
-  public function dataTestModuleWithExistingFunctions() {
+  public static function dataTestModuleWithExistingFunctions() {
     $data = [];
 
     $options = [

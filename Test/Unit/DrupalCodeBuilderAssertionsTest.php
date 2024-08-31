@@ -41,7 +41,7 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Data provider for testAssertNoTrailingWhitespace().
    */
-  public function providerAssertNoTrailingWhitespace() {
+  public static function providerAssertNoTrailingWhitespace() {
     return [
       ["", TRUE],
       ["code();", TRUE],
@@ -84,7 +84,7 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Data provider for testAssertFunctionParameter().
    */
-  public function providerAssertFunctionParameter() {
+  public static function providerAssertFunctionParameter() {
     return [
       ['$foo', TRUE],
       ['&$foo', TRUE],
@@ -134,7 +134,7 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Data provider for testAssertDocBlock().
    */
-  public function providerAssertDocBlock() {
+  public static function providerAssertDocBlock() {
     $data = [];
 
     $data['simple docblock'] = [
@@ -281,7 +281,7 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Data provider for testAssertFunction().
    */
-  public function providerAssertFunction() {
+  public static function providerAssertFunction() {
     $data = [];
 
     $data[0] = [

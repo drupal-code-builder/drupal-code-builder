@@ -64,7 +64,7 @@ class UnitDataItemMergeTest extends TestCase {
   /**
    * Data provider for testMultipleSimpleData().
    */
-  public function dataMultipleSimpleData() {
+  public static function dataMultipleSimpleData() {
     return [
       'nothing all round' => [
         [],
@@ -165,7 +165,7 @@ class UnitDataItemMergeTest extends TestCase {
   /**
    * Data provider for testSingleComplexData().
    */
-  public function dataSingleComplexData() {
+  public static function dataSingleComplexData() {
     return [
       'identical' => [
         [
@@ -235,7 +235,7 @@ class UnitDataItemMergeTest extends TestCase {
   /**
    * Data provider for testMultipleComplexData().
    */
-  public function dataMultipleComplexData() {
+  public static function dataMultipleComplexData() {
     return [
       'nothing all round' => [
         [],
@@ -367,7 +367,7 @@ class UnitDataItemMergeTest extends TestCase {
   /**
    * Data provider for testMappingData().
    */
-  public function dataMappingData() {
+  public static function dataMappingData() {
     return [
       'nothing all round' => [
         [],

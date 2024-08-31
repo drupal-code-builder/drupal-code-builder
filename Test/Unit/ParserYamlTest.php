@@ -56,7 +56,7 @@ class ParserYamlTest extends TestCase {
   /**
    * Data provider for testAssertHasProperty().
    */
-  public function providerAssertHasProperty() {
+  public static function providerAssertHasProperty() {
     return [
       'root' => [
         ['alpha'],
@@ -141,7 +141,7 @@ class ParserYamlTest extends TestCase {
   /**
    * Data provider for testAssertPropertyExpandedInline().
    */
-  public function providerAssertPropertyExpandedInline() {
+  public static function providerAssertPropertyExpandedInline() {
     return [
       'root' => [
         ['services'],

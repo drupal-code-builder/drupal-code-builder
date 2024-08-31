@@ -31,7 +31,7 @@ class UnitDependencyInjectionAnalysisTest extends TestCase {
   /**
    * Data provider for testDependencyInjection().
    */
-  public function dataDependencyInjection() {
+  public static function dataDependencyInjection() {
     return [
       'nothing' => [
         new class {},

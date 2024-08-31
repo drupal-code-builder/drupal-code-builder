@@ -28,7 +28,7 @@ class ParserPHPTest extends TestCase {
   /**
    * Data provider for testAssertDrupalCodingStandards().
    */
-  public function providerAssertDrupalCodingStandards() {
+  public static function providerAssertDrupalCodingStandards() {
     return [
       'procedural-file-pass' => [
         <<<EOT
@@ -207,7 +207,7 @@ class ParserPHPTest extends TestCase {
   /**
    * Data provider for testAssertHasProperty().
    */
-  public function providerAssertClassInterfaces() {
+  public static function providerAssertClassInterfaces() {
     return [
       'single plain interface' => [
         ['Plain'],

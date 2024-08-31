@@ -197,7 +197,7 @@ class ComponentForm10Test extends TestBase {
   /**
    * Data provider for testExistingFormAdoption().
    */
-  public function dataAdoptionMerge() {
+  public static function dataAdoptionMerge() {
     return [
       'no-merge' => [FALSE],
       'merge' => [TRUE],
