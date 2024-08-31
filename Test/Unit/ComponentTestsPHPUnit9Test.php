@@ -483,7 +483,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
    *
    * @dataProvider dataTestModuleWithExistingFunctions
    *
-   * @param string $generated_hook
+   * @param string $generated
    *   Where the generated hook goes. One of:
    *    - 'main': The main generated module.
    *    - 'test': The test module.
@@ -492,13 +492,13 @@ class ComponentTestsPHPUnit9Test extends TestBase {
    *    - 'main': The main generated module.
    *    - 'test': The test module.
    */
-  public function testTestModuleWithExistingFunctions(string $generated_hook, string $existing_code) {
+  public function testTestModuleWithExistingFunctions(string $generated, string $existing_code) {
     // Create a module.
     $module_data = [
       'base' => 'module',
       'root_name' => 'generated_module',
       'readable_name' => 'Generated module',
-      'hooks' => match ($generated_hook) {
+      'hooks' => match ($generated) {
         'main' => ['hook_form_alter'],
         'test' => [],
       },
@@ -509,7 +509,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
           'test_modules' => [
             0 => [
               // Don't specify root_name so the default is applied.
-              'hooks' => match ($generated_hook) {
+              'hooks' => match ($generated) {
                 'main' => [],
                 'test' => ['hook_form_alter'],
               },
@@ -553,14 +553,14 @@ class ComponentTestsPHPUnit9Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data, $extension);
 
-    if ($generated_hook == 'main') {
+    if ($generated == 'main') {
       $this->assertArrayHasKey('generated_module.module', $files);
     }
     else {
       $this->assertArrayNotHasKey('generated_module.module', $files);
     }
 
-    if ($generated_hook == 'test') {
+    if ($generated == 'test') {
       $this->assertArrayHasKey('tests/modules/my_test/my_test.module', $files);
     }
     else {
@@ -568,7 +568,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     }
 
     // In all cases, only one module file is generated.
-    $module_file = match ($generated_hook) {
+    $module_file = match ($generated) {
       'main' => $files['generated_module.module'],
       'test' => $files['tests/modules/my_test/my_test.module'],
     };
@@ -581,14 +581,14 @@ class ComponentTestsPHPUnit9Test extends TestBase {
       'Drupal.Files.LineLength.TooLong',
     ];
     $php_tester->assertDrupalCodingStandards($phpcs_excluded_sniffs);
-    $php_tester->assertHasHookImplementation('hook_form_alter', match ($generated_hook) {
+    $php_tester->assertHasHookImplementation('hook_form_alter', match ($generated) {
       'main' => 'generated_module',
       'test' => 'my_test',
     });
 
     // If the existing function was in the same module as where we're generating
     // a hook, the function should have been merged.
-    if ($generated_hook == $existing_code) {
+    if ($generated == $existing_code) {
       $php_tester->assertHasFunction($existing_function_name);
     }
     else {
@@ -607,7 +607,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
    *
    * @dataProvider dataTestModuleWithExistingFunctions
    *
-   * @param string $generated_service
+   * @param string $generated
    *   Where the generated service goes. One of:
    *    - 'main': The main generated module.
    *    - 'test': The test module.
@@ -616,7 +616,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
    *    - 'main': The main generated module.
    *    - 'test': The test module.
    */
-  public function testTestModuleWithExistingServices(string $generated_service, string $existing_code) {
+  public function testTestModuleWithExistingServices(string $generated, string $existing_code) {
     $services_value = [
       [
         'service_name' => 'test_service',
@@ -632,7 +632,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
       'base' => 'module',
       'root_name' => 'generated_module',
       'readable_name' => 'Main module',
-      'services' => match ($generated_service) {
+      'services' => match ($generated) {
         'main' => $services_value,
         'test' => [],
       },
@@ -643,7 +643,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
           'test_modules' => [
             0 => [
               // Don't specify root_name so the default is applied.
-              'services' => match ($generated_service) {
+              'services' => match ($generated) {
                 'main' => [],
                 'test' => $services_value,
               },
@@ -671,14 +671,14 @@ class ComponentTestsPHPUnit9Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data, $extension);
 
-    if ($generated_service == 'main') {
+    if ($generated == 'main') {
       $this->assertArrayHasKey('generated_module.services.yml', $files);
     }
     else {
       $this->assertArrayNotHasKey('generated_module.services.yml', $files);
     }
 
-    if ($generated_service == 'test') {
+    if ($generated == 'test') {
       $this->assertArrayHasKey('tests/modules/my_test/my_test.services.yml', $files);
     }
     else {
@@ -686,7 +686,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     }
 
     // In all cases, only one services file is generated.
-    $services_file = match ($generated_service) {
+    $services_file = match ($generated) {
       'main' => $files['generated_module.services.yml'],
       'test' => $files['tests/modules/my_test/my_test.services.yml'],
     };
@@ -694,14 +694,14 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     $yaml_tester = new YamlTester($services_file);
     $yaml_tester->assertHasProperty('services');
 
-    $yaml_tester->assertHasProperty(['services', match ($generated_service) {
+    $yaml_tester->assertHasProperty(['services', match ($generated) {
       'main' => 'generated_module.test_service',
       'test' => 'my_test.test_service',
     }]);
 
     // If the existing function was in the same module as where we're generating
     // a hook, the function should have been merged.
-    if ($generated_service == $existing_code) {
+    if ($generated == $existing_code) {
       $yaml_tester->assertHasProperty(['services', 'existing.alpha']);
     }
     else {

@@ -348,13 +348,13 @@ class ComponentService10Test extends TestBase {
     return [
       // Basic service.
       'basic' => [
-        '$injected_services' => [
+        'injected_services' => [
           'entity_type.manager',
         ],
-        '$yaml_arguments' => [
+        'yaml_arguments' => [
           '@entity_type.manager',
         ],
-        '$assert_injected_services' => [
+        'assert_injected_services' => [
           [
             'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
             'service_name' => 'entity_type.manager',
@@ -365,16 +365,16 @@ class ComponentService10Test extends TestBase {
       ],
       // Pseudoservice with the real service also present as a parameter.
       'pseudo-with-real' => [
-        '$injected_services' => [
+        'injected_services' => [
           'current_user',
           'entity_type.manager',
           'storage:node',
         ],
-        '$yaml_arguments' => [
+        'yaml_arguments' => [
           0 => '@current_user',
           1 => '@entity_type.manager',
         ],
-        '$assert_injected_services' => [
+        'assert_injected_services' => [
           [
             'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
             'service_name' => 'current_user',
@@ -401,15 +401,15 @@ class ComponentService10Test extends TestBase {
       ],
       // Pseudoservice without the real service also as a parameter.
       'pseudo-without-real' => [
-        '$injected_services' => [
+        'injected_services' => [
           'current_user',
           'storage:node',
         ],
-        '$yaml_arguments' => [
+        'yaml_arguments' => [
           0 => '@current_user',
           1 => '@entity_type.manager',
         ],
-        '$assert_injected_services' => [
+        'assert_injected_services' => [
           [
             'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
             'service_name' => 'current_user',
@@ -427,13 +427,13 @@ class ComponentService10Test extends TestBase {
         ],
       ],
       'pseudo-only' => [
-        '$injected_services' => [
+        'injected_services' => [
           'storage:node',
         ],
-        '$yaml_arguments' => [
+        'yaml_arguments' => [
           0 => '@entity_type.manager',
         ],
-        '$assert_injected_services' => [
+        'assert_injected_services' => [
           [
             'typehint' => 'Drupal\Core\Entity\EntityStorageInterface',
             'service_name' => 'entity_type.manager',
