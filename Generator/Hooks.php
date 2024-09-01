@@ -27,6 +27,8 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  */
 class Hooks extends BaseGenerator {
 
+  public static $hook_implementation_type;
+
   /**
    * {@inheritdoc}
    */

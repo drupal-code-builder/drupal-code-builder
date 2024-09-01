@@ -338,6 +338,21 @@ class Module extends RootComponent {
     return $data;
   }
 
+  function __construct(DataItem $component_data) {
+    parent::__construct($component_data);
+
+    // DIRTY HACK.
+    // The Hooks component can't get configuration by accessing the data,
+    // because it's created as standalone data. Using data acquisition won't
+    // work (or at least not without a lot of pain) because Hooks are requested
+    // in various different places.
+    // We have to do this in the constructor because requiredComponents() is
+    // called too late on this generator.
+    if ($component_data->configuration->hasProperty('hook_implementation_type')) {
+      Hooks::$hook_implementation_type = $this->component_data->configuration->hook_implementation_type->value;
+    }
+  }
+
   /**
    * {@inheritdoc}
    */
