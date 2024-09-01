@@ -51,6 +51,16 @@ class HookImplementationClassMethod extends HookImplementationBase {
   /**
    * {@inheritdoc}
    */
+  public function getContents(): array {
+    // Add the 'public' prefix.
+    $this->component_data->declaration->value = 'public ' . $this->component_data->declaration->value;
+
+    return parent::getContents();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getFunctionAttributes(): ?PhpAttributes {
     $attribute = PhpAttributes::method(
       // TODO: This will change in the MR!
