@@ -41,9 +41,6 @@ class HookImplementationClassMethod extends HookImplementationBase {
     return [
       'class' => [
         'component_type' => 'PHPClassFile',
-        // TODO: prefix with pascal name!
-        // $this->component_data->root_name_pascal->value
-        // but need to acquire AARRRGH
         'plain_class_name' => '%PascalHooks',
         'relative_namespace' => 'Hooks',
         'class_docblock_lines' => [
