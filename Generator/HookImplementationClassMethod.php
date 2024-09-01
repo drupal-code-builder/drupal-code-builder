@@ -78,9 +78,11 @@ class HookImplementationClassMethod extends HookImplementationBase {
    * {@inheritdoc}
    */
   protected function getFunctionAttributes(): ?PhpAttributes {
+    $short_hook_name = preg_replace('/^hook_/', '', $this->component_data->hook_name->value);
+
     $attribute = PhpAttributes::method(
       '\Drupal\Core\Hook\Attribute\Hook',
-      $this->component_data['hook_name'],
+      $short_hook_name,
     );
     return $attribute;
   }
