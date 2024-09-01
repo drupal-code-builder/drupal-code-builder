@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 use DrupalCodeBuilder\Utility\InsertArray;
 
 /**
- * Generator for a single hook implementation.
+ * Generator for a single OO hook implementation.
  *
  * This should not be requested directly; use the Hooks component instead.
  *

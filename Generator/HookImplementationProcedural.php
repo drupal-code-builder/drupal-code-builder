@@ -9,7 +9,7 @@ use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
 use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 
 /**
- * Generator for a single hook implementation.
+ * Generator for a single procedural function hook implementation.
  *
  * This should not be requested directly; use the Hooks component instead.
  */
