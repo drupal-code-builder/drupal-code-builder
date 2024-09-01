@@ -8,8 +8,11 @@ use DrupalCodeBuilder\File\DrupalExtension;
 
 /**
  * Generator for hook_update_N() implementation.
+ *
+ * Ugly as this duplicates HookTheme but I haven't the energy to figure out an
+ * orthogonal system for hook implementation contents.
  */
-class HookUpdateN extends HookImplementationProcedural {
+class HookUpdateNClassMethod extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}
