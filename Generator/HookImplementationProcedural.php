@@ -62,4 +62,14 @@ class HookImplementationProcedural extends HookImplementationBase {
     return '%self:code_file';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getContents(): array {
+    // Replace the 'hook_' part of the function declaration.
+    $this->component_data->declaration->value = preg_replace('/(?<=function )hook/', '%module', $this->component_data->declaration->value);
+
+    return parent::getContents();
+  }
+
 }

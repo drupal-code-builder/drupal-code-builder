@@ -57,9 +57,6 @@ abstract class HookImplementationBase extends PHPFunction {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    // Replace the 'hook_' part of the function declaration.
-    $this->component_data->declaration->value = preg_replace('/(?<=function )hook/', '%module', $this->component_data->declaration->value);
-
     // Allow for subclasses that provide their own body code, which is not
     // indented.
     // TODO: clean this up!

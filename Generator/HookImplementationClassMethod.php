@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
 use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
@@ -55,6 +56,13 @@ class HookImplementationClassMethod extends HookImplementationBase {
    * {@inheritdoc}
    */
   public function getContents(): array {
+    // Make the method name out of the hook name in camel case.
+    $this->component_data->declaration->value = preg_replace_callback(
+      '/(?<=function )(hook\w+)/',
+      fn ($matches) => CaseString::snake($matches[1])->camel(),
+      $this->component_data->declaration->value
+    );
+
     // Add the 'public' prefix.
     $this->component_data->declaration->value = 'public ' . $this->component_data->declaration->value;
 
