@@ -58,7 +58,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
   public function getContents(): array {
     // Make the method name out of the hook name in camel case.
     $this->component_data->declaration->value = preg_replace_callback(
-      '/(?<=function )(hook\w+)/',
+      '/(?<=function )hook_(\w+)/',
       fn ($matches) => CaseString::snake($matches[1])->camel(),
       $this->component_data->declaration->value
     );
