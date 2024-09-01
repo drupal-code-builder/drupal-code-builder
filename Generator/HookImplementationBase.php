@@ -32,10 +32,6 @@ abstract class HookImplementationBase extends PHPFunction {
       'hook_name' => PropertyDefinition::create('string'),
     ]);
 
-    $definition->getProperty('function_docblock_lines')->getDefault()
-      // Expression Language lets us define arrays, which is nice.
-      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
-
     $definition->getProperty('function_name')
       ->setCallableDefault(function ($component_data) {
         $long_hook_name = $component_data->getParent()->hook_name->value;
