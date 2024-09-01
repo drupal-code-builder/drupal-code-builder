@@ -37,6 +37,9 @@ class HookImplementationClassMethod extends HookImplementationBase {
         // but need to acquire AARRRGH
         'plain_class_name' => 'Hooks',
         'relative_namespace' => 'Hooks',
+        'class_docblock_lines' => [
+          'Contains hook implementations for the %readable %base.'
+        ],
       ],
     ];
   }
