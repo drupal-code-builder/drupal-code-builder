@@ -2,11 +2,12 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Utility\InsertArray;
 use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
 use DrupalCodeBuilder\Attribute\RelatedBaseClass;
+use DrupalCodeBuilder\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\PhpAttributes;
+use DrupalCodeBuilder\Utility\InsertArray;
 
 /**
  * Generator for a single hook implementation.
