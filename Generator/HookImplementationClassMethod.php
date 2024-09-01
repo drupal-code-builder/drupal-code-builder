@@ -35,7 +35,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
         // TODO: prefix with pascal name!
         // $this->component_data->root_name_pascal->value
         // but need to acquire AARRRGH
-        'plain_class_name' => 'Hooks',
+        'plain_class_name' => '%PascalHooks',
         'relative_namespace' => 'Hooks',
         'class_docblock_lines' => [
           'Contains hook implementations for the %readable %base.'
