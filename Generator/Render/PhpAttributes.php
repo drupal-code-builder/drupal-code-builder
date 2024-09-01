@@ -62,11 +62,19 @@ class PhpAttributes {
     $lines = [];
 
     $class_name_prefix = str_starts_with($this->attributeClassName, '\\') ? '' : '\\';
-    $lines[] = '#[' . $class_name_prefix . $this->attributeClassName . '(';
 
-    $this->renderArray($lines, $this->data);
+    if (is_scalar($this->data)) {
+      $lines[] = '#[' .
+        $class_name_prefix . $this->attributeClassName .
+        '(' . $this->renderScalarValue($this->data) . ')]';
+    }
+    else {
+      $lines[] = '#[' . $class_name_prefix . $this->attributeClassName . '(';
 
-    $lines[] = ')]';
+      $this->renderArray($lines, $this->data);
+
+      $lines[] = ')]';
+    }
 
     return $lines;
   }
@@ -145,20 +153,8 @@ class PhpAttributes {
         }
       }
 
-      if (is_string($value)) {
-        // Special case for class constants: we assume a string starting with a
-        // '\' is such and thus is not quoted.
-        if (!str_starts_with($value, '\\')) {
-          $value = '"' . $value . '"';
-        }
-
-        $declaration_line .= "{$value},";
-        $lines[] = $declaration_line;
-      }
-      elseif (is_bool($value)) {
-        $value = $value ? 'TRUE' : 'FALSE';
-
-        $declaration_line .= "{$value},";
+      if (is_scalar($value)) {
+        $declaration_line .= $this->renderScalarValue($value) . ',';
         $lines[] = $declaration_line;
       }
       elseif (is_object($value)) {
@@ -174,6 +170,35 @@ class PhpAttributes {
         $lines[] = $indent . "],";
       }
     }
+  }
+
+  /**
+   * Renders a scalar value as a PHP string.
+   *
+   * TODO Move this to common code for other renderers.
+   *
+   * @param mixed $value
+   *   The value to render.
+   *
+   * @return string
+   *   A string of PHP code representing the value.
+   */
+  protected function renderScalarValue(mixed $value): string {
+    if (is_string($value)) {
+      // Special case for class constants: we assume a string starting with a
+      // '\' is such and thus is not quoted.
+      if (!str_starts_with($value, '\\')) {
+        $value_string = '"' . $value . '"';
+      }
+      else {
+        $value_string = $value;
+      }
+    }
+    elseif (is_bool($value)) {
+      $value_string = $value ? 'TRUE' : 'FALSE';
+    }
+
+    return $value_string;
   }
 
   /**
