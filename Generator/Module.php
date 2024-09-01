@@ -456,6 +456,7 @@ class Module extends RootComponent {
       '%Module'       => CaseString::title($module_data['readable_name'])->title(),
       '%sentence'     => CaseString::title($module_data['readable_name'])->sentence(),
       '%lower'        => strtolower($module_data['readable_name']),
+      '%Pascal'       => CaseString::snake($module_data->root_name->value)->pascal(),
       '%description'  => str_replace("'", "\'", $module_data['short_description']),
       '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : 'TODO: Create admin help text.',
     ];
