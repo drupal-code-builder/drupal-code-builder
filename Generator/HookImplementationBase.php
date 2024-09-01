@@ -30,6 +30,8 @@ abstract class HookImplementationBase extends PHPFunction {
         ->setLiteralDefault('%module.module'),
       // The long hook name.
       'hook_name' => PropertyDefinition::create('string'),
+      // The first docblock line from the hook's api.php definition.
+      'description' => PropertyDefinition::create('string'),
     ]);
 
     // This appears to be necessary even though it's not used. WTF!

@@ -94,6 +94,7 @@ class Hooks extends BaseGenerator {
           'code_file' => $hook['destination'],
           'hook_name' => $hook['name'],
           'declaration' => $hook['definition'],
+          'description' => $hook['description'],
         ];
 
         // The body for the hook implementation can come either template  code,

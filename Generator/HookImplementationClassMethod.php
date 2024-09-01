@@ -27,6 +27,14 @@ class HookImplementationClassMethod extends HookImplementationBase {
   /**
    * {@inheritdoc}
    */
+  public static function defaultDocblockLines($data_item) {
+    // Use the api.php first docblock line.
+    return [$data_item->getParent()->description->value];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents(): array {
     $code_file = $this->component_data['code_file'];
 
