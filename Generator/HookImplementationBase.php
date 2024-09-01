@@ -32,6 +32,7 @@ abstract class HookImplementationBase extends PHPFunction {
       'hook_name' => PropertyDefinition::create('string'),
     ]);
 
+    // This appears to be necessary even though it's not used. WTF!
     $definition->getProperty('function_name')
       ->setCallableDefault(function ($component_data) {
         $long_hook_name = $component_data->getParent()->hook_name->value;
