@@ -26,6 +26,9 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
   /**
    * The base of this root component.
    *
+   * This is expected to match, within case difference, the plain class name
+   * of the generator. See self::getDefinition().
+   *
    * This is typically the Drupal extension type that it generates.
    *
    * Must be overriden by child classes.
@@ -61,7 +64,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
    * Implements DefinitionProviderInterface's method.
    */
   public static function getDefinition(): PropertyDefinition {
-    $component_type = static::deriveType(static::class);
+    $component_type = ucfirst(static::BASE);
     $definition = MergingGeneratorDefinition::createFromGeneratorType($component_type);
 
     // Root label is set in the component-specific subclass, but name must be
