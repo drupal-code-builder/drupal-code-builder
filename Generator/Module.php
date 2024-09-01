@@ -338,6 +338,9 @@ class Module extends RootComponent {
     return $data;
   }
 
+  /**
+   * Constructor.
+   */
   function __construct(DataItem $component_data) {
     parent::__construct($component_data);
 
