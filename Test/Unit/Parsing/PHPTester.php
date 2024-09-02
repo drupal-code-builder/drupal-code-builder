@@ -557,6 +557,45 @@ class PHPTester {
   }
 
   /**
+   * Asserts that the class has an attribute of the given class.
+   *
+   * This expects the PHP file to contain only a single class.
+   *
+   * @param string $expected_attribute_class
+   *   The full class name of the expected attribute class, WITH the leading '\'
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassHasAttribute(string $expected_attribute_class, $message = NULL) {
+    assert(str_starts_with($expected_attribute_class, '\\'));
+
+    $message ??= "Attribute $expected_attribute_class not found on the class.";
+
+    $class_node = reset($this->parser_nodes['classes']);
+
+    Assert::assertNotEmpty($class_node->attrGroups, $message);
+
+    // AFAICT, an AttributeGroup only has a single attribute in it, despite the
+    // class name -- even if there are multiple copies of the same attribute
+    // class, for instance.
+    /** @var \PhpParser\Node\AttributeGroup $attribute */
+    foreach ($class_node->attrGroups as $attribute) {
+      if (substr_count($expected_attribute_class, '\\') > 1) {
+        $full_attribute_class_name = '\\' . $this->resolveImportedClassLike($attribute->attrs[0]->name->name);
+      }
+      else {
+        $full_attribute_class_name = '\\' . $attribute->attrs[0]->name->name;
+      }
+
+      if ($expected_attribute_class === $full_attribute_class_name) {
+        return;
+      }
+    }
+
+    Assert::fail($message);
+  }
+
+  /**
    * Asserts the parsed code's class extends the given parent class.
    *
    * @param string $class_name

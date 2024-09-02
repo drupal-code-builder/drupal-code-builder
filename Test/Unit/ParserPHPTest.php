@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Unit tests for the PHPTester test helper.
@@ -270,6 +271,44 @@ class ParserPHPTest extends TestCase {
   }
 
   /**
+   * Tests the assertClassHasAttribute() assertion.
+   */
+  public function testAssertClassHasAttributeAssertion(): void {
+    $php = <<<EOT
+      <?php
+
+      class Foo {
+
+      }
+
+      EOT;
+
+    $php_tester = new PHPTester(11, $php);
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassHasAttribute', '\DoesNotExist');
+
+
+    $php = <<<EOT
+      <?php
+
+      use MyNamespace\Bar;
+      use MyNamespace\Biz;
+
+      #[Bar('param-bar')]
+      #[Biz('param-biz-1')]
+      #[Biz('param-biz-2')]
+      class Foo {
+
+      }
+
+      EOT;
+
+    $php_tester = new PHPTester(11, $php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassHasAttribute', '\MyNamespace\Bar');
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassHasAttribute', '\DoesNotExist');
+  }
+
+  /**
    * Tests the assertHasFunction() assertion.
    */
   public function testAssertHasFunctionAssertion() {
@@ -463,7 +502,7 @@ class ParserPHPTest extends TestCase {
         $this->fail("The assertion {$assertion_name}() should fail with the following parameters: {$message_parameters}");
       }
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException|AssertionFailedError $e) {
       // We get here if the assertion failed.
       if ($pass) {
         $failure_message = $e->getMessage();
