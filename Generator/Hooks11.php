@@ -23,17 +23,23 @@ class Hooks11 extends Hooks {
     // Determine whether to switch the generators to the class method hook
     // implementations versions.
     // Hooks that go in the .install file are always procedural.
-    if ($hook_info['destination'] != '%module.install') {
-      // Only generate hooks if the configuration is set.
-      if (Hooks::$hook_implementation_type == 'oo') {
-        if ($hook_class_name == 'HookImplementation') {
-          $hook_class_name = 'HookImplementationClassMethod';
-        }
-        else {
-          // Specialised hook generators.
-          $hook_class_name .= 'ClassMethod';
-        }
-      }
+    if ($hook_info['destination'] == '%module.install') {
+      return $hook_class_name;
+    }
+
+    // Only generate hooks if the configuration is set.
+    if (Hooks::$hook_implementation_type != 'oo') {
+      return $hook_class_name;
+    }
+
+    // Which class we switch to depends on which class the parent method
+    // returned.
+    if ($hook_class_name == 'HookImplementation') {
+      $hook_class_name = 'HookImplementationClassMethod';
+    }
+    else {
+      // Specialised hook generators.
+      $hook_class_name .= 'ClassMethod';
     }
 
     return $hook_class_name;
