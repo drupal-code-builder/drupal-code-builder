@@ -17,16 +17,22 @@ class Hooks11 extends Hooks {
   /**
    * {@inheritdoc}
    */
-  protected function getHookImplementationComponentType(string $hook_name): string {
-    $hook_class_name = parent::getHookImplementationComponentType($hook_name);
+  protected function getHookImplementationComponentType(array $hook_info): string {
+    $hook_class_name = parent::getHookImplementationComponentType($hook_info);
 
-    if (Hooks::$hook_implementation_type == 'oo') {
-      if ($hook_class_name == 'HookImplementation') {
-        $hook_class_name = 'HookImplementationClassMethod';
-      }
-      else {
-        // Specialised hook generators.
-        $hook_class_name .= 'ClassMethod';
+    // Determine whether to switch the generators to the class method hook
+    // implementations versions.
+    // Hooks that go in the .install file are always procedural.
+    if ($hook_info['destination'] != '%module.install') {
+      // Only generate hooks if the configuration is set.
+      if (Hooks::$hook_implementation_type == 'oo') {
+        if ($hook_class_name == 'HookImplementation') {
+          $hook_class_name = 'HookImplementationClassMethod';
+        }
+        else {
+          // Specialised hook generators.
+          $hook_class_name .= 'ClassMethod';
+        }
       }
     }
 

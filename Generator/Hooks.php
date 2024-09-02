@@ -97,7 +97,7 @@ class Hooks extends BaseGenerator {
 
       // Add a HookImplementation component for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
-        $hook_class_name = $this->getHookImplementationComponentType($hook['name']);
+        $hook_class_name = $this->getHookImplementationComponentType($hook);
 
         $components[$hook['name']] = [
           'component_type' => $hook_class_name,
@@ -144,15 +144,15 @@ class Hooks extends BaseGenerator {
   /**
    * Gets the component type for the implementation of a hook.
    *
-   * @param string $hook_name
-   *   The full name of the hook.
+   * @param array $hook_info
+   *   The array of hook info.
    *
    * @return string
    *   The component type to use.
    */
-  protected function getHookImplementationComponentType(string $hook_name): string {
+  protected function getHookImplementationComponentType(array $hook_info): string {
     // Figure out if there is a dedicated generator class for this hook.
-    $hook_name_pieces = explode('_', strtolower($hook_name));
+    $hook_name_pieces = explode('_', strtolower($hook_info['name']));
     $hook_name_pieces = array_map(function($word) { return ucwords($word); }, $hook_name_pieces);
     // Make the class name, eg HookMenu.
     $hook_class_name = implode('', $hook_name_pieces);
