@@ -24,6 +24,7 @@ class ComponentHooks11Test extends TestBase {
     // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
     // is fixed.
     'Drupal.Files.LineLength.TooLong',
+    'Drupal.Arrays.Array.LongLineDeclaration',
   ];
 
   /**
@@ -34,10 +35,37 @@ class ComponentHooks11Test extends TestBase {
   protected $drupalMajorVersion = 11;
 
   /**
-   * Tests generating OO hooks
+   * Tests procedural hooks can also be generated on 11.
+   */
+  public function testHookImplementationTypeConfig() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+        'hook_theme',
+        'hook_form_alter',
+      ],
+      'readme' => FALSE,
+      'configuration' => [
+        'hook_implementation_type' => 'procedural',
+      ],
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.module',
+    ], $files);
+  }
+
+  /**
+   * Tests generating OO hooks.
    */
   public function testOOHooks() {
-    // Assemble module data.
     $module_name = 'test_module';
     $module_data = [
       'base' => 'module',
@@ -58,8 +86,8 @@ class ComponentHooks11Test extends TestBase {
 
     $hooks_file = $files['src/Hooks/TestModuleHooks.php'];
 
-    // $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
-    // $php_tester->assertDrupalCodingStandards();
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
+    $php_tester->assertDrupalCodingStandards();
 
     dump($hooks_file->getCode());
   }
