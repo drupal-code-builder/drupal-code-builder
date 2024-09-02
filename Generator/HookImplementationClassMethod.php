@@ -19,19 +19,11 @@ use DrupalCodeBuilder\Utility\InsertArray;
  * Drupal 11 we support both styles of hook implementation, controlled with a
  * setting on the Module component.
  *
- * TODO: For Drupal 12, this class WILL get declared as a versioned
- * HookImplementation.
+ * TODO: For Drupal 12, this class might get declared as a versioned
+ * HookImplementation -- need to figure out install hooks, which remain
+ * procedural.
  */
 class HookImplementationClassMethod extends HookImplementationBase {
-
-  // /**
-  //  * {@inheritdoc}
-  //  */
-  // public static function defaultDocblockLines($data_item) {
-  //   // Use the api.php first docblock line.
-  //   // NOO keep the implements line!!!
-  //   return [$data_item->getParent()->description->value];
-  // }
 
   /**
    * {@inheritdoc}
