@@ -70,8 +70,7 @@ class ComponentPluginType10Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Attribute\Plugin');
     $php_tester->assertClassDocBlockHasLine('Defines a Cat Feeder attribute object.');
     $php_tester->assertClassDocBlockHasLine('Plugin namespace: CatFeeder.');
-    // TODO: Attribute testing.
-    $this->assertStringContainsString('#[\Attribute(', $annotation_file);
+    $php_tester->assertClassHasAttribute('\Attribute');
 
     $construct_tester = $php_tester->getMethodTester('__construct');
     $construct_tester->assertHasParameters([
