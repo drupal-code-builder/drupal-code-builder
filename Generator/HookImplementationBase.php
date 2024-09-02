@@ -34,6 +34,10 @@ abstract class HookImplementationBase extends PHPFunction {
       'description' => PropertyDefinition::create('string'),
     ]);
 
+    $definition->getProperty('function_docblock_lines')->getDefault()
+      // Expression Language lets us define arrays, which is nice.
+      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
+
     // This appears to be necessary even though it's not used. WTF!
     $definition->getProperty('function_name')
       ->setCallableDefault(function ($component_data) {
@@ -42,10 +46,6 @@ abstract class HookImplementationBase extends PHPFunction {
         $function_name = '%module_' . $short_hook_name;
         return $function_name;
       });
-
-    $definition->getProperty('function_docblock_lines')->getDefault()
-      // Expression Language lets us define arrays, which is nice.
-      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
 
     // Hook bodies are just sample code from the code documentation, so if
     // there are contained components, these should override the sample code.
