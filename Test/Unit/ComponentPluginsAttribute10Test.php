@@ -66,7 +66,7 @@ class ComponentPluginsAttribute10Test extends TestBase {
     $php_tester->assertHasMethod('blockValidate');
     $php_tester->assertHasMethod('blockForm');
     $php_tester->assertClassHasAttribute('\Drupal\Core\Block\Attribute\Block');
-    // TODO: Attribute value testing.
+    $php_tester->assertClassAttributeHasNamedParameterValue('id', 'test_module_alpha', 'Block');
 
     // Check the config yml file.
     $config_yaml_file = $files["config/schema/test_module.schema.yml"];
@@ -121,8 +121,7 @@ class ComponentPluginsAttribute10Test extends TestBase {
     $php_tester->assertHasMethod('getSettings');
 
     $php_tester->assertClassHasAttribute('\Drupal\Core\Field\Attribute\FieldFormatter');
-    // TODO: Further attribute testing.
-    $this->assertStringContainsString('weight: "42"', $plugin_file, 'The sample attribute value is of the right type.');
+    $php_tester->assertClassAttributeHasNamedParameterValue('weight', '42', 'FieldFormatter');
   }
 
   /**
