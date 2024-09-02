@@ -596,6 +596,82 @@ class PHPTester {
   }
 
   /**
+   * Asserts that a class attribute has a value as a parameter.
+   *
+   * @param mixed $expected_value
+   *   The expected parameter value. This only supports scalar values.
+   * @param string $attribute_short_class
+   *   The short class name of the attribute, that is, the string seen in the
+   *   attribute declaration.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassAttributeHasParameterValue(mixed $expected_value, string $attribute_short_class, ?string $message = NULL) {
+    $message ??= "Parameter with value '$expected_value' not found on $attribute_short_class.";
+
+    $class_node = reset($this->parser_nodes['classes']);
+
+    foreach ($class_node->attrGroups as $attribute) {
+      // Not our attribute: skip.
+      if ($attribute->attrs[0]->name->name != $attribute_short_class) {
+        continue;
+      }
+
+      foreach ($attribute->attrs[0]->args as $arg) {
+        // We don't handle parameters which are objects; too complicated!
+        if (!isset($arg->value->value)) {
+          continue;
+        }
+
+        if ($arg->value->value === $expected_value) {
+          return;
+        }
+      }
+    }
+
+    Assert::fail($message);
+  }
+
+  /**
+   * Asserts that a class attribute has a value as a named parameter.
+   *
+   * @param mixed $expected_name
+   *   The expected parameter name.
+   * @param mixed $expected_value
+   *   The expected parameter value. This only supports scalar values.
+   * @param string $attribute_short_class
+   *   The short class name of the attribute, that is, the string seen in the
+   *   attribute declaration.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertClassAttributeHasNamedParameterValue(string $expected_name, mixed $expected_value, string $attribute_short_class, ?string $message = NULL) {
+    $message ??= "Named parameter '$expected_name' with value '$expected_value' not found on $attribute_short_class.";
+
+    $class_node = reset($this->parser_nodes['classes']);
+
+    foreach ($class_node->attrGroups as $attribute) {
+      // Not our attribute: skip.
+      if ($attribute->attrs[0]->name->name != $attribute_short_class) {
+        continue;
+      }
+
+      foreach ($attribute->attrs[0]->args as $arg) {
+        // We don't handle parameters which are objects; too complicated!
+        if (!isset($arg->value->value)) {
+          continue;
+        }
+
+        if ($arg->value->value == $expected_value && $arg->name->name == $expected_name) {
+          return;
+        }
+      }
+    }
+
+    Assert::fail($message);
+  }
+
+  /**
    * Asserts the parsed code's class extends the given parent class.
    *
    * @param string $class_name

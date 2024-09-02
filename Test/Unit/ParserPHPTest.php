@@ -309,6 +309,62 @@ class ParserPHPTest extends TestCase {
   }
 
   /**
+   * Tests the assertClassAttributeHasParameterValue() assertion.
+   */
+  public function testAssertClassAttributeHasParameterValueAssertion(): void {
+    $php = <<<EOT
+      <?php
+
+      use MyNamespace\Bar;
+
+      #[Bar(42)]
+      #[Bar('param-bar')]
+      #[Bar(name: 'named-param')]
+      class Foo {
+
+      }
+
+      EOT;
+
+    $php_tester = new PHPTester(11, $php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassAttributeHasParameterValue', 42, 'Bar');
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassAttributeHasParameterValue', 'param-bar', 'Bar');
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassAttributeHasParameterValue', 'named-param', 'Bar');
+
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassAttributeHasParameterValue', 'value-does-not-exist', 'Bar');
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassAttributeHasParameterValue', 'named-param', 'DoesNotExist');
+  }
+
+  /**
+   * Tests the assertClassAttributeHasNamedParameterValue() assertion.
+   */
+  public function testAssertClassAttributeHasNamedParameterValueAssertion(): void {
+    $php = <<<EOT
+      <?php
+
+      use MyNamespace\Bar;
+
+      #[Bar(id: 42)]
+      #[Bar(id: 'param-bar')]
+      #[Bar(id: 42, name: 'named-param')]
+      class Foo {
+
+      }
+
+      EOT;
+
+    $php_tester = new PHPTester(11, $php);
+
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassAttributeHasNamedParameterValue', 'id', 42, 'Bar');
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassAttributeHasNamedParameterValue', 'id', 'param-bar', 'Bar');
+    $this->assertAssertion(TRUE, $php_tester, 'assertClassAttributeHasNamedParameterValue', 'name', 'named-param', 'Bar');
+
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassAttributeHasNamedParameterValue', 'name', 'value-does-not-exist', 'Bar');
+    $this->assertAssertion(FALSE, $php_tester, 'assertClassAttributeHasNamedParameterValue', 'name-does-not-exist', 'named-param', 'Bar');
+  }
+
+  /**
    * Tests the assertHasFunction() assertion.
    */
   public function testAssertHasFunctionAssertion() {
