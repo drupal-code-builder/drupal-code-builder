@@ -79,6 +79,7 @@ class ComponentHooks11Test extends TestBase {
       'hooks' => [
         'hook_theme',
         'hook_form_alter',
+        'hook_install',
       ],
       'readme' => FALSE,
       'configuration' => [
@@ -90,6 +91,7 @@ class ComponentHooks11Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
+      'test_module.install',
       'src/Hooks/TestModuleHooks.php',
     ], $files);
 
@@ -101,10 +103,20 @@ class ComponentHooks11Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
     $php_tester->assertHasMethod('formAlter');
     $php_tester->assertHasMethod('theme');
+    $php_tester->assertNotHasMethod('install');
 
     // TODO: Attribute testing.
     $this->assertStringContainsString('#[Hook("form_alter")]', $hooks_file);
     $this->assertStringContainsString('#[Hook("theme")]', $hooks_file);
+
+    // Check the .install file has a procedural implementation for
+    // hook_install().
+    $install_file = $files['test_module.install'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $install_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertFileDocblockHasLine("Contains install and update hooks for the Test Module module.");
+    $php_tester->assertHasHookImplementation('hook_install', $module_name);
   }
 
 }
