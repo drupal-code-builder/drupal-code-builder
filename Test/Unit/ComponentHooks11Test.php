@@ -24,6 +24,10 @@ class ComponentHooks11Test extends TestBase {
     // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
     // is fixed.
     'Drupal.Files.LineLength.TooLong',
+    // Temporarily exclude the sniff for array lines being too long, as code in
+    // hook_theme() violates this.
+    // TODO: remove this when https://www.drupal.org/project/drupal/issues/3471544
+    // is fixed.
     'Drupal.Arrays.Array.LongLineDeclaration',
   ];
 
@@ -84,12 +88,23 @@ class ComponentHooks11Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Hooks/TestModuleHooks.php',
+    ], $files);
+
     $hooks_file = $files['src/Hooks/TestModuleHooks.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards(static::$phpcsExcludedSniffs);
 
-    dump($hooks_file->getCode());
+    $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
+    $php_tester->assertHasMethod('formAlter');
+    $php_tester->assertHasMethod('theme');
+
+    // TODO: Attribute testing.
+    $this->assertStringContainsString('#[Hook("form_alter")]', $hooks_file);
+    $this->assertStringContainsString('#[Hook("theme")]', $hooks_file);
   }
 
 }
