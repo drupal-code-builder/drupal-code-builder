@@ -55,6 +55,8 @@ class HookImplementationClassMethod extends HookImplementationBase {
    */
   public function getContents(): array {
     // Make the method name out of the short hook name in camel case.
+    // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
+    // formFORMIDAlter().
     $this->component_data->declaration->value = preg_replace_callback(
       '/(?<=function )hook_(\w+)/',
       fn ($matches) => CaseString::snake($matches[1])->camel(),
