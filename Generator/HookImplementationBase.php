@@ -43,6 +43,10 @@ abstract class HookImplementationBase extends PHPFunction {
         return $function_name;
       });
 
+    $definition->getProperty('function_docblock_lines')->getDefault()
+      // Expression Language lets us define arrays, which is nice.
+      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
+
     // Hook bodies are just sample code from the code documentation, so if
     // there are contained components, these should override the sample code.
     $definition->getProperty('body_overriden_by_contained')

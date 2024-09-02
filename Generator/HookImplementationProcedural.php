@@ -22,17 +22,6 @@ use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 class HookImplementationProcedural extends HookImplementationBase {
 
   /**
-   * {@inheritdoc}
-   */
-  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
-    parent::addToGeneratorDefinition($definition);
-
-    $definition->getProperty('function_docblock_lines')->getDefault()
-      // Expression Language lets us define arrays, which is nice.
-      ->setExpression("['Implements ' ~ get('..:hook_name') ~ '().']");
-  }
-
-  /**
    * Declares the subcomponents for this component.
    *
    * These are not necessarily child classes, just components this needs.

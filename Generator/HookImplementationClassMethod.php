@@ -24,13 +24,14 @@ use DrupalCodeBuilder\Utility\InsertArray;
  */
 class HookImplementationClassMethod extends HookImplementationBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultDocblockLines($data_item) {
-    // Use the api.php first docblock line.
-    return [$data_item->getParent()->description->value];
-  }
+  // /**
+  //  * {@inheritdoc}
+  //  */
+  // public static function defaultDocblockLines($data_item) {
+  //   // Use the api.php first docblock line.
+  //   // NOO keep the implements line!!!
+  //   return [$data_item->getParent()->description->value];
+  // }
 
   /**
    * {@inheritdoc}
