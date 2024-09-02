@@ -29,7 +29,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $code_file = $this->component_data['code_file'];
+    $code_file = $this->component_data->code_file->value;
 
     return [
       'class' => [
@@ -54,7 +54,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    // Make the method name out of the hook name in camel case.
+    // Make the method name out of the short hook name in camel case.
     $this->component_data->declaration->value = preg_replace_callback(
       '/(?<=function )hook_(\w+)/',
       fn ($matches) => CaseString::snake($matches[1])->camel(),
