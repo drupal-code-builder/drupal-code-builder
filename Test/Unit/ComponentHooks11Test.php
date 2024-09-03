@@ -141,6 +141,17 @@ class ComponentHooks11Test extends TestBase {
 
     dump($files);
 
+    $module_file = $files['test_module.module'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
+    $php_tester->assertDrupalCodingStandards([
+      // The call to the hooks service class is not imported.
+      'Drupal.Classes.FullyQualifiedNamespace.UseStatementMissing',
+    ]);
+    $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
+    $php_tester->assertHasHookImplementation('hook_block_access', $module_name);
+
+
   }
 
   // TODO: test merging of services.yml!

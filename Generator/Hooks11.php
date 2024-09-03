@@ -123,9 +123,9 @@ class Hooks11 extends Hooks {
         // Class extraction is not working, but that's probably a good thing
         // as it reduces future maintanance work to not have to remove an
         // import statement too!
-        // FUCK TODO! THAT IS NOT THE METHOD NAME!
         "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}(...func_get_args());",
       ];
+      $components[$hook_name]['body_indented'] = FALSE;
 
       // Explicitly declare the Hooks class as a service.
       // ARGH, can't use the 'Service' generator, as that will want to create a
