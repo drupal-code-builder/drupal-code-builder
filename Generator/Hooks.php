@@ -138,6 +138,7 @@ class Hooks extends BaseGenerator {
   protected function addHookComponents(array &$components, array $hook_info): void {
     $hook_class_name = $this->getHookImplementationComponentType($hook_info);
 
+    // Add a procedural hook implementation.
     $components[$hook_info['name']] = [
       'component_type' => $hook_class_name,
       'code_file' => $hook_info['destination'],
