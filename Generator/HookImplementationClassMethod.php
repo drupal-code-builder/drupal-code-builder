@@ -29,8 +29,6 @@ class HookImplementationClassMethod extends HookImplementationBase {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $code_file = $this->component_data->code_file->value;
-
     return [
       'class' => [
         'component_type' => 'PHPClassFile',
@@ -54,7 +52,8 @@ class HookImplementationClassMethod extends HookImplementationBase {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    // Replace the hook name from the hook info's declaration with the method name.
+    // Replace the hook name from the hook info's declaration with the method
+    // name.
     $this->component_data->declaration->value = preg_replace(
       '/(?<=function )hook_(\w+)/',
       $this->component_data->hook_method_name->value,
