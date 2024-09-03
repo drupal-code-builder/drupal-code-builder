@@ -19,17 +19,12 @@ class Module9And10 extends Module {
   /**
    * {@inheritdoc}
    */
-  // TODO KILL
-  public static function configurationDefinition(): PropertyDefinition {
-    $definition = parent::configurationDefinition();
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
 
     // Remove the hook implementation type config setting, as OO hooks are new
     // in Drupal 11.
     $definition->removeProperty('hook_implementation_type');
-
-    return $definition;
   }
-
-  // remove hook type in props
 
 }
