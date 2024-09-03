@@ -129,6 +129,14 @@ class ComponentHooks11Test extends TestBase {
       'src/Hooks/TestModuleHooks.php',
     ], $files);
 
+    $services_file = $files["$module_name.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', 'Drupal\test_module\Hooks\TestModuleHooks']);
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'class'], 'Drupal\test_module\Hooks\TestModuleHooks');
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'autowire'], 'true');
+
     $module_file = $files['test_module.module'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
