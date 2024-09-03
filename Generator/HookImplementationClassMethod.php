@@ -28,6 +28,18 @@ class HookImplementationClassMethod extends HookImplementationBase {
   /**
    * {@inheritdoc}
    */
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
+
+    $definition->addProperties([
+      'hook_method_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents(): array {
     $code_file = $this->component_data->code_file->value;
 
