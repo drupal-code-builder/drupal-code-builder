@@ -224,7 +224,9 @@ class ComponentPHPFile10Test extends TestBase {
     $module_file = $files['test_module.module'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
-    $php_tester->assertImportsSorted();
+    $php_tester->assertDrupalCodingStandards([
+      'Drupal.Classes.ClassCreateInstance.ParenthesisMissing',
+    ]);
   }
 
 }

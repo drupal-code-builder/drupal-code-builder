@@ -351,23 +351,6 @@ class PHPTester {
   }
 
   /**
-   * Asserts the imports are sorted in a case-insensitive manner.
-   *
-   * @param string $message
-   *  (optional) The assertion message.
-   */
-  public function assertImportsSorted($message = NULL) {
-    $message = $message ?? 'The use statements are sorted in a case-sensitive manner.';
-
-    $seen = array_map(function ($use_node) {
-      return implode('\\', $use_node->uses[0]->name->getParts());
-    }, $this->parser_nodes['imports']);
-    $sorted = $seen;
-    sort($sorted);
-    Assert::assertEquals($sorted, $seen, $message);
-  }
-
-  /**
    * Asserts the parsed code contains the class name.
    *
    * @param string $class_name

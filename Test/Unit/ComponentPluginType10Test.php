@@ -282,7 +282,6 @@ class ComponentPluginType10Test extends TestBase {
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertImportsSorted();
     $php_tester->assertHasClass('Drupal\a_test_module\CatFeederManager');
 
     // Check the files that go in the nested folder.
@@ -351,7 +350,6 @@ class ComponentPluginType10Test extends TestBase {
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_manager_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertImportsSorted();
     $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
     $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
 
