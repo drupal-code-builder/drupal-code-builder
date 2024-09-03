@@ -144,7 +144,7 @@ class ComponentHooks11Test extends TestBase {
       'Drupal.Classes.FullyQualifiedNamespace.UseStatementMissing',
     ]);
     $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
-    $php_tester->assertHasHookImplementation('hook_block_access', $module_name);
+    $php_tester->assertHasFunction('test_module_block_access');
   }
 
   /**
