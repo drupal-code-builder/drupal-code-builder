@@ -28,19 +28,6 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 class Hooks extends BaseGenerator {
 
   /**
-   * Dirty hack to get configuration.
-   * TODO KILL
-   *
-   * This generator can't get configuration by accessing the data, because it's
-   * created as standalone data. Using data acquisition won't work (or at least
-   * not without a lot of pain) because Hooks are requested in various different
-   * places.
-   *
-   * @var string
-   */
-  public static $hook_implementation_type;
-
-  /**
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
