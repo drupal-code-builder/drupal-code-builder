@@ -127,6 +127,14 @@ class Hooks extends BaseGenerator {
     return $components;
   }
 
+  /**
+   * Add the components for a single hook.
+   *
+   * @param array &$components
+   *   The array of requested components, passed by reference.
+   * @param array $hook_info
+   *   The array of hook info.
+   */
   protected function addHookComponents(array &$components, array $hook_info): void {
     $hook_class_name = $this->getHookImplementationComponentType($hook_info);
 
