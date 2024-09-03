@@ -239,12 +239,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get6()
     {
         return [
-            6 => 'HookImplementation6',
-            11 => 'HookImplementationProcedural',
-            10 => 'HookImplementationProcedural',
-            9 => 'HookImplementationProcedural',
-            8 => 'HookImplementationProcedural',
-            7 => 'HookImplementationProcedural',
+            6 => 'HookImplementationProcedural6',
         ];
     }
 
@@ -305,7 +300,7 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
         return [
             'AdminSettingsForm' => $this->get4(),
             'Form' => $this->get5(),
-            'HookImplementation' => $this->get6(),
+            'HookImplementationProcedural' => $this->get6(),
             'Hooks' => $this->get7(),
             'InfoModule' => $this->get8(),
             'Module' => $this->get9(),

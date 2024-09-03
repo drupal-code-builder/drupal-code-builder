@@ -27,6 +27,8 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  */
 class Hooks extends BaseGenerator {
 
+  const HOOK_IMPLENTATION_GENERATOR_SUFFIX = 'Procedural';
+
   /**
    * Dirty hack to get configuration.
    * TODO KILL
@@ -169,9 +171,16 @@ class Hooks extends BaseGenerator {
     // Make the class name, eg HookMenu.
     $hook_class_name = implode('', $hook_name_pieces);
     // Make the fully qualified class name.
+    // make it.
+    // HookMenuProcedural
+    // Put \Procedural' as a class constant HERE and add as a suffix.
+    // Override in Hooks11.
+    // soething like HookTypeSuffix ?
+    //
     $hook_class = $this->classHandler->getGeneratorClass($hook_class_name);
     if (!class_exists($hook_class)) {
-      $hook_class_name = 'HookImplementation';
+      $hook_class_name = 'HookImplementationProcedural';
+      //  . static::HOOK_IMPLENTATION_GENERATOR_SUFFIX;
     }
 
     return $hook_class_name;

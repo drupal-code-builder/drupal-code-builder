@@ -15,7 +15,7 @@ use DrupalCodeBuilder\Utility\InsertArray;
  *
  * This should not be requested directly; use the Hooks component instead.
  *
- * This is NOT the Drupal 11 version of HookImplementationProcedural, because on
+ * TODO REWRITE This is NOT the Drupal 11 version of HookImplementationProcedural, because on
  * Drupal 11 we support both styles of hook implementation, controlled with a
  * setting on the Module component.
  *
