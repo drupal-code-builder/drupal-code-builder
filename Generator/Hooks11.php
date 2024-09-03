@@ -85,6 +85,8 @@ class Hooks11 extends Hooks {
     }
 
     $hook_name = $hook_info['name'];
+    // TODO: centralise this.
+    $short_hook_name = preg_replace('@^hook_@', '', $long_hook_name);
 
     // Make the class method hook.
     $components[$hook_name . '_method'] = [
@@ -108,6 +110,15 @@ class Hooks11 extends Hooks {
       $components[$hook_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
 
       // todo replace the hook body
+      $components[$hook_name]['body'] = [
+        // TODO: put this in function_docblock_lines instead?
+        '// TODO: Remove this method support for Drupal core < 11.1 is dropped.',
+        // Class extraction is not working, but that's probably a good thing
+        // as it reduces future maintanance work to not have to remove an
+        // import statement too!
+        // FUCK TODO! THAT IS NOT THE METHOD NAME!
+        "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$short_hook_name}(...func_get_args());",
+      ];
 
       // Explicitly declare the Hooks class as a service.
       // ARGH, can't use the 'Service' generator, as that will want to create a
