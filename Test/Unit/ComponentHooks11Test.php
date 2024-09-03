@@ -18,6 +18,7 @@ class ComponentHooks11Test extends TestBase {
    *
    * @var string[]
    */
+  // TODO move this, not everything needs it!
   static protected $phpcsExcludedSniffs = [
     // Temporarily exclude the sniff for comment lines being too long, as a
     // comment in hook_form_alter() violates this.
