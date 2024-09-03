@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
 
@@ -131,7 +132,9 @@ abstract class PHPFile extends File {
       // and should be left alone.
       // Do not match after a letter or number, as then that's also part of the
       // namespace and we shouldn't be matching only the tail end.
-      if (preg_match_all('@(?<![\'"[:alnum:]])(?:\\\\(\w+)){2,}@', $line, $matches, PREG_SET_ORDER)) {
+      // Match any number of sequences '\Portion', where 'Portion' can contain
+      // a '%' symbol for tokens.
+      if (preg_match_all('@(?<![\'"[:alnum:]])(?:\\\\([\w%]+)){2,}@', $line, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];
@@ -166,6 +169,23 @@ abstract class PHPFile extends File {
         $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
         $imports[] = "use $fully_qualified_class_name;";
       }
+
+      // Bit of a hack. We have to perform token replacement before sorting the
+      // imports, because otherwise they'll be in the wrong order. But token
+      // replacement is done later, during file assembly. Fortunately, in
+      // class names we can be certain that only the %extension and %Pascal
+      // tokens are used, so hackily replace those now.
+      $imports = str_replace(
+        [
+          '%extension',
+          '%Pascal'
+        ],
+        [
+          $this->component_data->root_component_name->value,
+          CaseString::snake($this->component_data->root_component_name->value)->pascal(),
+        ],
+        $imports,
+      );
 
       // Sort the imported classes.
       sort($imports);
