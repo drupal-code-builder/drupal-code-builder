@@ -7,7 +7,7 @@ use MutableTypedData\Definition\PropertyListInterface;
 /**
  * Generator class for hook implementations for Drupal 6.
  */
-class HookImplementation6 extends HookImplementation {
+class HookImplementationProcedural6 extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}

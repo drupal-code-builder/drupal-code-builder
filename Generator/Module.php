@@ -205,6 +205,19 @@ class Module extends RootComponent {
       //     }
       //   },
       // ],
+      // TODO: When procedural hooks are removed from core, this property will
+      // need to be removed, and so the Module class won't have it, but
+      // Module11 (or whatever) will add it in.
+      'hook_implementation_type' => PropertyDefinition::create('string')
+        ->setLabel("Hook implementation type")
+        ->setDescription("The type of hook implementation to generate.")
+        ->setRequired(TRUE)
+        ->setOptionsArray([
+          'procedural' => 'Functions in procedural files, such as .module',
+          'oo' => 'Class methods on a Hooks class',
+          'oo_legacy' => 'Both types, with legacy support for Drupal core < 11.1',
+        ])
+        ->setLiteralDefault('oo_legacy'),
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE)

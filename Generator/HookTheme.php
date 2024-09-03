@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 /**
  * Generator for hook_theme() implementation.
  */
-class HookTheme extends HookImplementation {
+class HookTheme extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}

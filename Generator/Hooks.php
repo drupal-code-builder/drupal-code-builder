@@ -83,25 +83,9 @@ class Hooks extends BaseGenerator {
       // always obtained by removing '%module.' from the filename!
       $build_list_key = str_replace('%module.', '', $filename);
 
-      // Add a HookImplementation component for each hook.
+      // Add components for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
-        // Figure out if there is a dedicated generator class for this hook.
-        $hook_name_pieces = explode('_', strtolower($hook['name']));
-        $hook_name_pieces = array_map(function($word) { return ucwords($word); }, $hook_name_pieces);
-        // Make the class name, eg HookMenu.
-        $hook_class_name = implode('', $hook_name_pieces);
-        // Make the fully qualified class name.
-        $hook_class = $this->classHandler->getGeneratorClass($hook_class_name);
-        if (!class_exists($hook_class)) {
-          $hook_class_name = 'HookImplementation';
-        }
-
-        $components[$hook['name']] = [
-          'component_type' => $hook_class_name,
-          'code_file' => $hook['destination'],
-          'hook_name' => $hook['name'],
-          'declaration' => $hook['definition'],
-        ];
+        $hook['short_hook_name'] = preg_replace('@^hook_@', '', $hook_name);
 
         // The body for the hook implementation can come either template  code,
         // or the hook documentation's example code. (Note that this will be
@@ -125,16 +109,76 @@ class Hooks extends BaseGenerator {
         // have newlines at start and end.
         $hook['template'] = array_slice($hook['template'], 1, -1);
 
-        // Set it as the method body.
-        $components[$hook['name']]['body'] = $hook['template'];
-
-        // The code is a single string, already indented. Ensure we don't
-        // indent it again.
-        $components[$hook['name']]['body_indented'] = TRUE;
+        $this->addHookComponents($components, $hook);
       }
     }
 
     return $components;
+  }
+
+  /**
+   * Adds the components for a single hook.
+   *
+   * @param array &$components
+   *   The array of requested components, passed by reference.
+   * @param array $hook_info
+   *   The array of hook info.
+   */
+  protected function addHookComponents(array &$components, array $hook_info): void {
+    // On versions prior to 11 with no OO hooks, the hook is always procedural.
+    $this->addProceduralHookComponent($components, $hook_info);
+  }
+
+  /**
+   * Adds a component for a procedural function hook implementation.
+   *
+   * @param array &$components
+   *   The array of requested components, passed by reference.
+   * @param array $hook_info
+   *   The array of hook info.
+   */
+  protected function addProceduralHookComponent(array &$components, array $hook_info): void {
+    $hook_class_name = $this->getHookImplementationComponentType($hook_info);
+
+    // Add a procedural hook implementation.
+    $components[$hook_info['name']] = [
+      'component_type' => $hook_class_name,
+      'code_file' => $hook_info['destination'],
+      'hook_name' => $hook_info['name'],
+      'declaration' => $hook_info['definition'],
+      'description' => $hook_info['description'],
+      // Set the hook template as the method body.
+      'body' => $hook_info['template'],
+      // The code is a single string, already indented. Ensure we don't
+      // indent it again.
+      'body_indented' => TRUE,
+    ];
+  }
+
+  /**
+   * Gets the component type for the implementation of a hook.
+   *
+   * @param array $hook_info
+   *   The array of hook info.
+   *
+   * @return string
+   *   The component type to use.
+   */
+  protected function getHookImplementationComponentType(array $hook_info): string {
+    // Figure out if there is a dedicated generator class for this hook.
+    $hook_name_pieces = explode('_', strtolower($hook_info['name']));
+    $hook_name_pieces = array_map(function($word) { return ucwords($word); }, $hook_name_pieces);
+    // Make the class name, eg HookMenu.
+    // The specialised hook classes don't need the 'Procedural' suffix as (so
+    // far!!!) they are only for hooks which remain procedural on Drupal 11.
+    $hook_class_name = implode('', $hook_name_pieces);
+    // Make the fully qualified class name.
+    $hook_class = $this->classHandler->getGeneratorClass($hook_class_name);
+    if (!class_exists($hook_class)) {
+      $hook_class_name = 'HookImplementationProcedural';
+    }
+
+    return $hook_class_name;
   }
 
   /**

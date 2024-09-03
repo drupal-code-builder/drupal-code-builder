@@ -7,7 +7,7 @@ use MutableTypedData\Definition\PropertyListInterface;
 /**
  * Generator for hook_menu() implementation.
  */
-class HookMenu extends HookImplementation {
+class HookMenu extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}

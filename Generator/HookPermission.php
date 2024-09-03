@@ -7,7 +7,7 @@ use MutableTypedData\Definition\PropertyListInterface;
 /**
  * Generator for hook_permission() implementation.
  */
-class HookPermission extends HookImplementation {
+class HookPermission extends HookImplementationProcedural {
 
   /**
    * {@inheritdoc}
