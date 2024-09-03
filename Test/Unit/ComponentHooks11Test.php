@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
