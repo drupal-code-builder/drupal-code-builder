@@ -114,9 +114,6 @@ class Hooks11 extends Hooks {
 
       // Replace the hook body with a call to the Hooks class.
       $components[$hook_name]['body'] = [
-        // Class extraction is not working, but that's probably a good thing
-        // as it reduces future maintanance work to not have to remove an
-        // import statement too!
         "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}(...func_get_args());",
       ];
       $components[$hook_name]['body_indented'] = FALSE;
