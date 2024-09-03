@@ -70,7 +70,7 @@ class Hooks11 extends Hooks {
 
     // For a procedural hook, just use the parent method.
     if ($use_procedural_hook) {
-      parent::addHookComponents($components, $hook_info);
+      $this->addProceduralHookComponent($components, $hook_info);
       return;
     }
 
@@ -103,7 +103,7 @@ class Hooks11 extends Hooks {
     // If we want legacy procedural hooks too.
     if ($this->component_data->hook_implementation_type->value == 'oo_legacy') {
       // Add the procedural hook.
-      parent::addHookComponents($components, $hook_info);
+      $this->addProceduralHookComponent($components, $hook_info);
 
       $components[$hook_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
 

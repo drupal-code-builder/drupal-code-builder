@@ -115,7 +115,7 @@ class Hooks extends BaseGenerator {
   }
 
   /**
-   * Add the components for a single hook.
+   * Adds the components for a single hook.
    *
    * @param array &$components
    *   The array of requested components, passed by reference.
@@ -123,6 +123,19 @@ class Hooks extends BaseGenerator {
    *   The array of hook info.
    */
   protected function addHookComponents(array &$components, array $hook_info): void {
+    // On versions prior to 11 with no OO hooks, the hook is always procedural.
+    $this->addProceduralHookComponent($components, $hook_info);
+  }
+
+  /**
+   * Adds a component for a procedural function hook implementation.
+   *
+   * @param array &$components
+   *   The array of requested components, passed by reference.
+   * @param array $hook_info
+   *   The array of hook info.
+   */
+  protected function addProceduralHookComponent(array &$components, array $hook_info): void {
     $hook_class_name = $this->getHookImplementationComponentType($hook_info);
 
     // Add a procedural hook implementation.
