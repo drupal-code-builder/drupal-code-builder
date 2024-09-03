@@ -135,11 +135,14 @@ class ComponentHooks11Test extends TestBase {
     $this->assertFiles([
       'test_module.info.yml',
       'test_module.module',
+      'test_module.services.yml',
       'src/Hooks/TestModuleHooks.php',
     ], $files);
 
     dump($files);
 
   }
+
+  // TODO: test merging of services.yml!
 
 }
