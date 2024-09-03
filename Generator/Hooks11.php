@@ -84,10 +84,13 @@ class Hooks11 extends Hooks {
       $hook_class_name .= 'ClassMethod';
     }
 
-    $components[$hook_info['name'] . '_method'] = [
+    $hook_name = $hook_info['name'];
+
+    // Make the class method hook.
+    $components[$hook_name . '_method'] = [
       'component_type' => $hook_class_name,
       'code_file' => $hook_info['destination'],
-      'hook_name' => $hook_info['name'],
+      'hook_name' => $hook_name,
       'declaration' => $hook_info['definition'],
       'description' => $hook_info['description'],
       // Set the hook template as the method body.
@@ -102,9 +105,8 @@ class Hooks11 extends Hooks {
       // Add the procedural hook.
       parent::addHookComponents($components, $hook_info);
 
-      $components[$hook_info['name']]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
+      $components[$hook_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
 
-      // todo legacy hook attribute
       // todo replace the hook body
 
       // todo service
