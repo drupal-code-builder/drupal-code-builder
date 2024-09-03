@@ -11,11 +11,11 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  *
  * This is a bit of a special case, as normally class inheritance is higher
  * versions as the parent class. But here 11 is a weird case as it needs to
- * check the module configuration setting when determining whether to switch the
- * HookImplementation component type.
+ * check the hook_implementation_type property when determining whether to
+ * switch the HookImplementation component type.
  *
  * Hooks12 and higher will have this logic for install hooks, but without the
- * configuration setting check.
+ * hook_implementation_type property check.
  */
 class Hooks11 extends Hooks {
 
