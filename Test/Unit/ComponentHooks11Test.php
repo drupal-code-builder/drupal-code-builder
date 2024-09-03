@@ -148,6 +148,48 @@ class ComponentHooks11Test extends TestBase {
     $php_tester->assertHasHookImplementation('hook_block_access', $module_name);
   }
 
-  // TODO: test merging of services.yml!
+  /**
+   * Tests generation of legacy hooks merges with other generated services.
+   */
+  public function testOtherServicesHookImplementationLegacy() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo_legacy',
+      'hooks' => [
+        'hook_block_access',
+      ],
+      'services' => [
+        0 => [
+          'service_name' => 'my_service',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.module',
+      'test_module.services.yml',
+      'src/MyService.php',
+      'src/Hooks/TestModuleHooks.php',
+    ], $files);
+
+    $services_file = $files["$module_name.services.yml"];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', 'Drupal\test_module\Hooks\TestModuleHooks']);
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'class'], 'Drupal\test_module\Hooks\TestModuleHooks');
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'autowire'], 'true');
+
+    $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
+    $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
+  }
 
 }
