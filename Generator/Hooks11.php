@@ -14,8 +14,12 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  * check the hook_implementation_type property when determining whether to
  * switch the HookImplementation component type.
  *
- * Hooks12 and higher will have this logic for install hooks, but without the
- * hook_implementation_type property check.
+ * When Drupal core removes legacy procedural hooks, the Hooks class inheritance
+ * hierarchy will probably be:
+ *  - Hooks (can generate both types of hook)
+ *    - Hooks11 (can generate both types of hook, legacy hooks, and has a
+ *      setting for selecting which type)
+ *    - Hooks10AndLower
  */
 class Hooks11 extends Hooks {
 
