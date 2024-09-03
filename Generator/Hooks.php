@@ -29,6 +29,7 @@ class Hooks extends BaseGenerator {
 
   /**
    * Dirty hack to get configuration.
+   * TODO KILL
    *
    * This generator can't get configuration by accessing the data, because it's
    * created as standalone data. Using data acquisition won't work (or at least
@@ -95,18 +96,8 @@ class Hooks extends BaseGenerator {
       // always obtained by removing '%module.' from the filename!
       $build_list_key = str_replace('%module.', '', $filename);
 
-      // Add a HookImplementation component for each hook.
+      // Add components for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
-        $hook_class_name = $this->getHookImplementationComponentType($hook);
-
-        $components[$hook['name']] = [
-          'component_type' => $hook_class_name,
-          'code_file' => $hook['destination'],
-          'hook_name' => $hook['name'],
-          'declaration' => $hook['definition'],
-          'description' => $hook['description'],
-        ];
-
         // The body for the hook implementation can come either template  code,
         // or the hook documentation's example code. (Note that this will be
         // overridden further down the line if the HookImplementation component
@@ -129,16 +120,28 @@ class Hooks extends BaseGenerator {
         // have newlines at start and end.
         $hook['template'] = array_slice($hook['template'], 1, -1);
 
-        // Set it as the method body.
-        $components[$hook['name']]['body'] = $hook['template'];
-
-        // The code is a single string, already indented. Ensure we don't
-        // indent it again.
-        $components[$hook['name']]['body_indented'] = TRUE;
+        $this->addHookComponents($components, $hook);
       }
     }
 
     return $components;
+  }
+
+  protected function addHookComponents(array &$components, array $hook_info): void {
+    $hook_class_name = $this->getHookImplementationComponentType($hook_info);
+
+    $components[$hook_info['name']] = [
+      'component_type' => $hook_class_name,
+      'code_file' => $hook_info['destination'],
+      'hook_name' => $hook_info['name'],
+      'declaration' => $hook_info['definition'],
+      'description' => $hook_info['description'],
+      // Set the hook template as the method body.
+      'body' => $hook_info['template'],
+      // The code is a single string, already indented. Ensure we don't
+      // indent it again.
+      'body_indented' => TRUE,
+    ];
   }
 
   /**
