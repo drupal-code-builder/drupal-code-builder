@@ -115,4 +115,30 @@ class ComponentHooks11Test extends TestBase {
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
   }
 
+  public function testHookImplementationLegacy() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo_legacy',
+      'hooks' => [
+        'hook_block_access',
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.module',
+      'src/Hooks/TestModuleHooks.php',
+    ], $files);
+
+    dump($files);
+
+  }
+
 }
