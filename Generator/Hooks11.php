@@ -114,8 +114,9 @@ class Hooks11 extends Hooks {
       // class!
       $yaml_data = [
         'services' => [
-          '%extension.hooks' => [
-            // Argh DRY!
+          // Argh DRY class name!
+          // TODO: move the class name to being created in this generator.
+          'Drupal\%extension\Hooks\%PascalHooks' => [
             'class' => 'Drupal\%extension\Hooks\%PascalHooks',
             'autowire' => TRUE,
           ],
