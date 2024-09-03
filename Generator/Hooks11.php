@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -63,7 +64,7 @@ class Hooks11 extends Hooks {
 
     // If the hook implementation type is set to procedural, then it's
     // procedural.
-    dump($this->component_data->hook_implementation_type->value);
+    // dump($this->component_data->hook_implementation_type->value);
     if ($this->component_data->hook_implementation_type->value == 'procedural') {
       // arGH no this fucks up because it gets back to getHookImplementationComponentType!!
       parent::addHookComponents($components, $hook_info);
@@ -86,13 +87,19 @@ class Hooks11 extends Hooks {
 
     $hook_name = $hook_info['name'];
     // TODO: centralise this.
-    $short_hook_name = preg_replace('@^hook_@', '', $long_hook_name);
+    $short_hook_name = preg_replace('@^hook_@', '', $hook_name);
+
+    // Make the method name out of the short hook name in camel case.
+    // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
+    // formFORMIDAlter().
+    $hook_method_name = CaseString::snake($short_hook_name)->camel();
 
     // Make the class method hook.
     $components[$hook_name . '_method'] = [
       'component_type' => $hook_class_name,
       'code_file' => $hook_info['destination'],
       'hook_name' => $hook_name,
+      'hook_method_name' => $hook_method_name,
       'declaration' => $hook_info['definition'],
       'description' => $hook_info['description'],
       // Set the hook template as the method body.
@@ -117,7 +124,7 @@ class Hooks11 extends Hooks {
         // as it reduces future maintanance work to not have to remove an
         // import statement too!
         // FUCK TODO! THAT IS NOT THE METHOD NAME!
-        "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$short_hook_name}(...func_get_args());",
+        "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}(...func_get_args());",
       ];
 
       // Explicitly declare the Hooks class as a service.
