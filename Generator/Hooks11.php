@@ -102,14 +102,15 @@ class Hooks11 extends Hooks {
 
     // If we want legacy procedural hooks too.
     if ($this->component_data->hook_implementation_type->value == 'oo_legacy') {
-      // Add the procedural hook.
+      // Add the procedural hook component.
       $this->addProceduralHookComponent($components, $hook_info);
 
       $components[$hook_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
 
       // Replace the hook body with a call to the Hooks class.
       $components[$hook_name]['body'] = [
-        // TODO: put this in function_docblock_lines instead?
+        // TODO: put this in function_docblock_lines instead? but too much
+        // faff with merging with the first line from default value.
         '// TODO: Remove this method support for Drupal core < 11.1 is dropped.',
         // Class extraction is not working, but that's probably a good thing
         // as it reduces future maintanance work to not have to remove an
