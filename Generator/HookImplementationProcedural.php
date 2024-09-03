@@ -2,10 +2,6 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Utility\InsertArray;
-
 /**
  * Generator for a single procedural function hook implementation.
  *
@@ -14,16 +10,7 @@ use DrupalCodeBuilder\Utility\InsertArray;
 class HookImplementationProcedural extends HookImplementationBase {
 
   /**
-   * Declares the subcomponents for this component.
-   *
-   * These are not necessarily child classes, just components this needs.
-   *
-   * A hook implementation adds the module code file that it should go in. It's
-   * safe for the same code file to be requested multiple times by different
-   * hook implementation components.
-   *
-   * @return
-   *  An array of subcomponent names and types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $code_file = $this->component_data['code_file'];
@@ -37,7 +24,7 @@ class HookImplementationProcedural extends HookImplementationBase {
   }
 
   /**
-   * Return this component's parent in the component tree.
+   * {@inheritdoc}
    */
   function containingComponent() {
     return '%self:code_file';
