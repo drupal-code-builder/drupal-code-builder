@@ -18,7 +18,8 @@ class PhpAttributes {
    *   (We have to support both forms because plugin attribute classes are
    *   stored without, and plugin property types are stored with, WTF.)
    * @param mixed $data
-   *   The data for the attribute.
+   *   The data for the attribute. For an attribute with no parameters, use
+   *   NULL.
    * @param $comments
    *   An array of comments for the attribute's top-level properties. Keys are
    *   property names, values are the comment text.
@@ -36,21 +37,21 @@ class PhpAttributes {
   /**
    * Creates a new attribute for a class.
    */
-  public static function class($attribute_class_name, $data, $comments = []) {
+  public static function class($attribute_class_name, $data = NULL, $comments = []) {
     return new static($attribute_class_name, $data, $comments, 0);
   }
 
   /**
    * Creates a new attribute for a method.
    */
-  public static function method($attribute_class_name, $data, $comments = []) {
+  public static function method($attribute_class_name, $data = NULL, $comments = []) {
     return new static($attribute_class_name, $data, $comments, 2);
   }
 
   /**
    * Creates a new attribute for a nested object.
    */
-  public static function object($attribute_class_name, $data, $comments = []) {
+  public static function object($attribute_class_name, $data = NULL, $comments = []) {
     // TODO: indent level is meaningless here.
     return new static($attribute_class_name, $data, $comments, 0);
   }
@@ -62,14 +63,18 @@ class PhpAttributes {
     $lines = [];
 
     $class_name_prefix = str_starts_with($this->attributeClassName, '\\') ? '' : '\\';
+    $class_name = $class_name_prefix . $this->attributeClassName;
 
-    if (is_scalar($this->data)) {
+    if (empty($this->data)) {
+      $lines[] = '#[' . $class_name . ']';
+    }
+    elseif (is_scalar($this->data)) {
       $lines[] = '#[' .
-        $class_name_prefix . $this->attributeClassName .
+        $class_name .
         '(' . $this->renderScalarValue($this->data) . ')]';
     }
     else {
-      $lines[] = '#[' . $class_name_prefix . $this->attributeClassName . '(';
+      $lines[] = '#[' . $class_name . '(';
 
       $this->renderArray($lines, $this->data);
 
