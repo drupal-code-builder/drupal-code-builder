@@ -48,25 +48,28 @@ class Hooks11 extends Hooks {
    * {@inheritdoc}
    */
   protected function addHookComponents(array &$components, array $hook_info): void {
+    $use_procedural_hook = FALSE;
+
     // Determine whether to switch the generators to the class method hook
     // implementations versions.
     // Hooks that go in the .install file are always procedural.
     if ($hook_info['destination'] == '%module.install') {
-      parent::addHookComponents($components, $hook_info);
-      return;
+      $use_procedural_hook = TRUE;
     }
 
     // Other random hooks that aren't documented as such are always procedural.
     if (in_array($hook_info['name'], static::PROCEDURAL_HOOKS)) {
-      parent::addHookComponents($components, $hook_info);
-      return;
+      $use_procedural_hook = TRUE;
     }
 
     // If the hook implementation type is set to procedural, then it's
     // procedural.
-    // dump($this->component_data->hook_implementation_type->value);
     if ($this->component_data->hook_implementation_type->value == 'procedural') {
-      // arGH no this fucks up because it gets back to getHookImplementationComponentType!!
+      $use_procedural_hook = TRUE;
+    }
+
+    // For a procedural hook, just use the parent method.
+    if ($use_procedural_hook) {
       parent::addHookComponents($components, $hook_info);
       return;
     }
