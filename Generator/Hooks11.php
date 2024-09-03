@@ -72,19 +72,6 @@ class Hooks11 extends Hooks {
     }
 
     // If we're still here, make a class method hook.
-    $hook_class_name = $this->getHookImplementationComponentType($hook_info);
-
-    // // Change to a class method generator. Which class we switch to depends on
-    // // which class the method returned.
-    // // TODO refactor!
-    // if ($hook_class_name == 'HookImplementation') {
-    //   $hook_class_name = 'HookImplementationClassMethod';
-    // }
-    // else {
-    //   // Specialised hook generators.
-    //   $hook_class_name .= 'ClassMethod';
-    // }
-
     $hook_name = $hook_info['name'];
     // TODO: centralise this.
     $short_hook_name = preg_replace('@^hook_@', '', $hook_name);
@@ -152,5 +139,3 @@ class Hooks11 extends Hooks {
   }
 
 }
-
-
