@@ -49,7 +49,7 @@ class ComponentHooks11Test extends TestBase {
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
       'hooks' => [
-        'hook_theme',
+        'hook_block_access',
         'hook_form_alter',
       ],
       'readme' => FALSE,
@@ -77,7 +77,7 @@ class ComponentHooks11Test extends TestBase {
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
       'hooks' => [
-        'hook_theme',
+        'hook_block_access',
         'hook_form_alter',
         'hook_install',
       ],
@@ -102,12 +102,12 @@ class ComponentHooks11Test extends TestBase {
 
     $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
     $php_tester->assertHasMethod('formAlter');
-    $php_tester->assertHasMethod('theme');
+    $php_tester->assertHasMethod('blockAccess');
     $php_tester->assertNotHasMethod('install');
 
     // TODO: Attribute testing.
     $this->assertStringContainsString('#[Hook("form_alter")]', $hooks_file);
-    $this->assertStringContainsString('#[Hook("theme")]', $hooks_file);
+    $this->assertStringContainsString('#[Hook("block_access")]', $hooks_file);
 
     // Check the .install file has a procedural implementation for
     // hook_install().

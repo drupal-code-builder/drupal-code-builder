@@ -19,6 +19,19 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 class Hooks11 extends Hooks {
 
   /**
+   * Theme hooks which remain procedural.
+   *
+   * TODO: Move this to analysis? Although there's no sodding documentation.
+   */
+  const PROCEDURAL_HOOKS = [
+    'hook_theme',
+    'hook_theme_suggestion_HOOK',
+    'hook_preprocess_hook',
+    'hook_process_hook',
+    'hook_theme_suggestions_HOOK_alter',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function getHookImplementationComponentType(array $hook_info): string {
@@ -28,6 +41,10 @@ class Hooks11 extends Hooks {
     // implementations versions.
     // Hooks that go in the .install file are always procedural.
     if ($hook_info['destination'] == '%module.install') {
+      return $hook_class_name;
+    }
+
+    if (in_array($hook_info['name'], static::PROCEDURAL_HOOKS)) {
       return $hook_class_name;
     }
 
