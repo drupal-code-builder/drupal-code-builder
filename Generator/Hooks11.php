@@ -76,13 +76,11 @@ class Hooks11 extends Hooks {
 
     // If we're still here, make a class method hook.
     $hook_name = $hook_info['name'];
-    // TODO: centralise this.
-    $short_hook_name = preg_replace('@^hook_@', '', $hook_name);
 
     // Make the method name out of the short hook name in camel case.
     // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
     // formFORMIDAlter().
-    $hook_method_name = CaseString::snake($short_hook_name)->camel();
+    $hook_method_name = CaseString::snake($hook_info['short_hook_name'])->camel();
 
     // Make the class method hook.
     $components[$hook_name . '_method'] = [

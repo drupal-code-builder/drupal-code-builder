@@ -85,6 +85,8 @@ class Hooks extends BaseGenerator {
 
       // Add components for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
+        $hook['short_hook_name'] = preg_replace('@^hook_@', '', $hook_name);
+
         // The body for the hook implementation can come either template  code,
         // or the hook documentation's example code. (Note that this will be
         // overridden further down the line if the HookImplementation component
