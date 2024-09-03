@@ -188,7 +188,7 @@ abstract class PHPFile extends File {
       );
 
       // Sort the imported classes.
-      sort($imports);
+      natcasesort($imports);
 
       // Remove duplicates.
       $imports = array_unique($imports);
