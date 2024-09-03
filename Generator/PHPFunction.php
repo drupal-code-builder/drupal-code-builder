@@ -77,6 +77,11 @@ class PHPFunction extends BaseGenerator {
       'doxygen_tag_lines' => PropertyDefinition::create('mapping')
         ->setLabel("Doxygen tags to go after the standard ones")
         ->setInternal(TRUE),
+      // An attribute class for the method.
+      // WARNING: Only for methods, only supports one attribute, only supports
+      // a class with no parameters.
+      'attribute' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
       'declaration' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
       // An array of prefixes such as 'static', 'public'.
@@ -344,7 +349,12 @@ class PHPFunction extends BaseGenerator {
    *   An attribute object if this function has attributes.
    */
   protected function getFunctionAttributes(): ?PhpAttributes {
-    return NULL;
+    if ($this->component_data->attribute->isEmpty()) {
+      return NULL;
+    }
+    else {
+      return PhpAttributes::method($this->component_data->attribute->value);
+    }
   }
 
   /**
