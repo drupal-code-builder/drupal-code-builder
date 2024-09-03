@@ -41,21 +41,19 @@ class ComponentHooks11Test extends TestBase {
   /**
    * Tests procedural hooks can also be generated on 11.
    */
-  public function testHookImplementationTypeConfig() {
+  public function testHookImplementationTypeProcedural() {
     $module_name = 'test_module';
     $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'procedural',
       'hooks' => [
         'hook_block_access',
         'hook_form_alter',
       ],
       'readme' => FALSE,
-      'configuration' => [
-        'hook_implementation_type' => 'procedural',
-      ],
     ];
 
     $files = $this->generateModuleFiles($module_data);
@@ -76,15 +74,13 @@ class ComponentHooks11Test extends TestBase {
       'root_name' => $module_name,
       'readable_name' => 'Test Module',
       'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo',
       'hooks' => [
         'hook_block_access',
         'hook_form_alter',
         'hook_install',
       ],
       'readme' => FALSE,
-      'configuration' => [
-        'hook_implementation_type' => 'oo',
-      ],
     ];
 
     $files = $this->generateModuleFiles($module_data);

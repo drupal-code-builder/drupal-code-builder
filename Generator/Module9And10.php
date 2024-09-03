@@ -19,6 +19,7 @@ class Module9And10 extends Module {
   /**
    * {@inheritdoc}
    */
+  // TODO KILL
   public static function configurationDefinition(): PropertyDefinition {
     $definition = parent::configurationDefinition();
 
@@ -28,5 +29,7 @@ class Module9And10 extends Module {
 
     return $definition;
   }
+
+  // remove hook type in props
 
 }

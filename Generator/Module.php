@@ -70,6 +70,7 @@ class Module extends RootComponent {
         // Module11 (or whatever) will add it in.
         // TODO REMOVE!
         // TODO ALSO remove the static shit
+        // TODO unset in 10 and lower
         'hook_implementation_type' => PropertyDefinition::create('string')
           ->setLabel("Hook implementation type")
           ->setDescription("The type of hook implementation to generate.")

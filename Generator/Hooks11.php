@@ -34,7 +34,90 @@ class Hooks11 extends Hooks {
   /**
    * {@inheritdoc}
    */
-  protected function getHookImplementationComponentType(array $hook_info): string {
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
+
+    $definition->addProperties([
+      'hook_implementation_type' => PropertyDefinition::create('string')
+        ->setAutoAcquiredFromRequester(),
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function addHookComponents(array &$components, array $hook_info): void {
+    // Determine whether to switch the generators to the class method hook
+    // implementations versions.
+    // Hooks that go in the .install file are always procedural.
+    if ($hook_info['destination'] == '%module.install') {
+      parent::addHookComponents($components, $hook_info);
+      return;
+    }
+
+    // Other random hooks that aren't documented as such are always procedural.
+    if (in_array($hook_info['name'], static::PROCEDURAL_HOOKS)) {
+      parent::addHookComponents($components, $hook_info);
+      return;
+    }
+
+    // If the hook implementation type is set to procedural, then it's
+    // procedural.
+    dump($this->component_data->hook_implementation_type->value);
+    if ($this->component_data->hook_implementation_type->value == 'procedural') {
+      // arGH no this fucks up because it gets back to getHookImplementationComponentType!!
+      parent::addHookComponents($components, $hook_info);
+      return;
+    }
+
+    // If we're still here, make a class method hook.
+    $hook_class_name = $this->getHookImplementationComponentType($hook_info);
+
+    // Change to a class method generator. Which class we switch to depends on
+    // which class the method returned.
+    // TODO refactor!
+    if ($hook_class_name == 'HookImplementation') {
+      $hook_class_name = 'HookImplementationClassMethod';
+    }
+    else {
+      // Specialised hook generators.
+      $hook_class_name .= 'ClassMethod';
+    }
+
+    $components[$hook_info['name'] . '_method'] = [
+      'component_type' => $hook_class_name,
+      'code_file' => $hook_info['destination'],
+      'hook_name' => $hook_info['name'],
+      'declaration' => $hook_info['definition'],
+      'description' => $hook_info['description'],
+      // Set the hook template as the method body.
+      'body' => $hook_info['template'],
+      // The code is a single string, already indented. Ensure we don't
+      // indent it again.
+      'body_indented' => TRUE,
+    ];
+
+    // If we want legacy procedural hooks too.
+    if ($this->component_data->hook_implementation_type->value == 'oo_legacy') {
+      // Add the procedural hook.
+      parent::addHookComponents($components, $hook_info);
+
+      $components[$hook_info['name']]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
+
+      // todo legacy hook attribute
+      // todo replace the hook body
+
+      // todo service
+      // $components
+
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  // KILL
+  protected function XXXgetHookImplementationComponentType(array $hook_info): string {
     $hook_class_name = parent::getHookImplementationComponentType($hook_info);
 
     // Determine whether to switch the generators to the class method hook
