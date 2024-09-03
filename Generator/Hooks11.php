@@ -109,9 +109,25 @@ class Hooks11 extends Hooks {
 
       // todo replace the hook body
 
-      // todo service
-      // $components
-
+      // Explicitly declare the Hooks class as a service.
+      // ARGH, can't use the 'Service' generator, as that will want to create a
+      // class!
+      $yaml_data = [
+        'services' => [
+          '%extension.hooks' => [
+            // Argh DRY!
+            'class' => 'Drupal\%extension\Hooks\%PascalHooks',
+            'autowire' => TRUE,
+          ],
+        ],
+      ];
+      $components['%module.services.yml'] = [
+        'component_type' => 'YMLFile',
+        // Probably have to use this deprecated token so the component merge
+        // works?
+        'filename' => '%module.services.yml',
+        'yaml_data' => $yaml_data,
+      ];
     }
   }
 
