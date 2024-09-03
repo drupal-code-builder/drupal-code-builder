@@ -2,26 +2,14 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use CaseConverter\CaseString;
-use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
-use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use DrupalCodeBuilder\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\PhpAttributes;
-use DrupalCodeBuilder\Utility\InsertArray;
 
 /**
  * Generator for a single OO hook implementation.
  *
  * This should not be requested directly; use the Hooks component instead.
- *
- * TODO REWRITE This is NOT the Drupal 11 version of HookImplementationProcedural, because on
- * Drupal 11 we support both styles of hook implementation, controlled with a
- * setting on the Module component.
- *
- * TODO: For Drupal 12, this class might get declared as a versioned
- * HookImplementation -- need to figure out install hooks, which remain
- * procedural.
  */
 class HookImplementationClassMethod extends HookImplementationBase {
 
