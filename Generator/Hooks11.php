@@ -19,8 +19,6 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  */
 class Hooks11 extends Hooks {
 
-  const HOOK_IMPLENTATION_GENERATOR_SUFFIX = 'ClassMethod';
-
   /**
    * Theme hooks which remain procedural.
    *
