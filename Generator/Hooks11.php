@@ -116,7 +116,7 @@ class Hooks11 extends Hooks {
 
       $components[$hook_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
 
-      // todo replace the hook body
+      // Replace the hook body with a call to the Hooks class.
       $components[$hook_name]['body'] = [
         // TODO: put this in function_docblock_lines instead?
         '// TODO: Remove this method support for Drupal core < 11.1 is dropped.',

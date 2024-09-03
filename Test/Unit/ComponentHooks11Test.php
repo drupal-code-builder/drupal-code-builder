@@ -14,25 +14,6 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 class ComponentHooks11Test extends TestBase {
 
   /**
-   * The PHP CodeSniffer snifs to exclude for this test.
-   *
-   * @var string[]
-   */
-  // TODO move this, not everything needs it!
-  static protected $phpcsExcludedSniffs = [
-    // Temporarily exclude the sniff for comment lines being too long, as a
-    // comment in hook_form_alter() violates this.
-    // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
-    // is fixed.
-    'Drupal.Files.LineLength.TooLong',
-    // Temporarily exclude the sniff for array lines being too long, as code in
-    // hook_theme() violates this.
-    // TODO: remove this when https://www.drupal.org/project/drupal/issues/3471544
-    // is fixed.
-    'Drupal.Arrays.Array.LongLineDeclaration',
-  ];
-
-  /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
@@ -95,7 +76,13 @@ class ComponentHooks11Test extends TestBase {
     $hooks_file = $files['src/Hooks/TestModuleHooks.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
-    $php_tester->assertDrupalCodingStandards(static::$phpcsExcludedSniffs);
+    $php_tester->assertDrupalCodingStandards([
+      // Temporarily exclude the sniff for comment lines being too long, as a
+      // comment in hook_form_alter() violates this.
+      // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
+      // is fixed.
+      'Drupal.Files.LineLength.TooLong',
+    ]);
 
     $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
     $php_tester->assertHasMethod('formAlter');
@@ -116,6 +103,9 @@ class ComponentHooks11Test extends TestBase {
     $php_tester->assertHasHookImplementation('hook_install', $module_name);
   }
 
+  /**
+   * Tests generation of legacy hooks.
+   */
   public function testHookImplementationLegacy() {
     $module_name = 'test_module';
     $module_data = [
@@ -139,8 +129,6 @@ class ComponentHooks11Test extends TestBase {
       'src/Hooks/TestModuleHooks.php',
     ], $files);
 
-    dump($files);
-
     $module_file = $files['test_module.module'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
@@ -150,8 +138,6 @@ class ComponentHooks11Test extends TestBase {
     ]);
     $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
     $php_tester->assertHasHookImplementation('hook_block_access', $module_name);
-
-
   }
 
   // TODO: test merging of services.yml!
