@@ -30,6 +30,10 @@ class GroupingNodeVisitor extends NodeVisitorAbstract {
 
   /**
    * {@inheritdoc}
+   *
+   * Silence symfony/error-handler:
+   *
+   * @return null|int|Node|Node[] Replacement node (or special return value)
    */
   public function enterNode(Node $node) {
     switch (get_class($node)) {
