@@ -17,6 +17,12 @@ class CodeAdheresToCodingStandards extends Constraint {
 
   protected static $composerVendorDir;
 
+  protected string $code;
+
+  protected array $reportData;
+
+  protected Reporter $reporting;
+
   /**
    * The configuration for PHP_CodeSniffer.
    *
