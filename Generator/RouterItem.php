@@ -98,7 +98,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
                 ->setLabel('Injected services')
                 ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
                 ->setMultiple(TRUE)
-                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+                ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
             ]),
           'form' => VariantDefinition::create()
             ->setLabel('Form')
@@ -118,7 +118,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
-                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'entity_view_mode' => PropertyDefinition::create('string')
                 ->setLabel("Entity view mode")
@@ -132,7 +132,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
-                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'entity_form_mode' => PropertyDefinition::create('string')
                 ->setLabel("Entity form mode")
@@ -146,7 +146,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
-                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
@@ -234,7 +234,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setProperties([
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
-                ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
                 ->setRequired(TRUE),
               'entity_access_operation' => PropertyDefinition::create('string')
                 ->setLabel("Access operation")

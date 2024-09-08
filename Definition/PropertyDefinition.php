@@ -38,13 +38,6 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return $delta_definition;
   }
 
-  // TODO: move all options provider stuff upstream.
-  public function setOptionsProvider(OptionsProviderInterface $provider): self {
-    $this->optionsProvider = $provider;
-
-    return $this;
-  }
-
   public function addOption(OptionDefinition $option): self {
     if ($this->optionsProvider) {
       throw new InvalidDefinitionException("Can't add options if using an options provider.");

@@ -41,7 +41,7 @@ class AdminSettingsForm extends Form {
       ->setName('parent_route')
       ->setLabel('Parent menu item')
       ->setRequired(TRUE)
-      ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes'));
+      ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes'));
 
     $definition->addPropertyAfter('injected_services', $parent_route_property);
 

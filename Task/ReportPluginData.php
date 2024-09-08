@@ -7,7 +7,7 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
@@ -18,7 +18,7 @@ use DrupalCodeBuilder\Task\Report\SectionReportInterface;
  * Consider merging into a ReportComponentData Task.
  */
 class ReportPluginData extends ReportHookDataFolder
-  implements OptionsProviderInterface, VariantMappingProviderInterface, SectionReportInterface {
+  implements OptionSetDefininitionInterface, VariantMappingProviderInterface, SectionReportInterface {
   use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 

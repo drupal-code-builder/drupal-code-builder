@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Analyse;
 
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Task\Collect\CollectorBase;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
@@ -15,7 +15,7 @@ use MutableTypedData\Definition\OptionDefinition;
  * TODO: Experimental hybrid collector/reporter task. If this seems nice DX,
  * move and merge the other tasks to this namespace.
  */
-class TestTraits extends CollectorBase implements SectionReportInterface, OptionsProviderInterface {
+class TestTraits extends CollectorBase implements SectionReportInterface, OptionSetDefininitionInterface {
   use SectionReportSimpleCountTrait;
 
   /**

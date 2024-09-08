@@ -120,7 +120,7 @@ class DrushCommand extends BaseGenerator {
         ->setLabel('Injected services')
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // Experimental. Define the data here that will then be set by
       // self::requiredComponents(). This is mostly needed so that the Service
       // generator has access to the whole data, because it expects to be able

@@ -33,7 +33,7 @@ class Plugin extends BaseGenerator {
     $definition->setProperties([
         'plugin_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')
-          ->setOptionsProvider($plugin_data_task)
+          ->setOptionSetDefinition($plugin_data_task)
 
         // TODO: contains the code to support using the plugin folder name.
         // TODO: restore this later, but currently there's no CLI UI for this

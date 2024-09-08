@@ -153,17 +153,17 @@ class PHPUnitTest extends PHPClassFile {
         ->setLabel('Services from the container')
         ->setDescription("The services that this test class gets from the container, to use normally.")
         ->setMultiple(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'mocked_services' => PropertyDefinition::create('string')
         ->setLabel('Services to mock')
         ->setDescription("The services that this test class creates mocks for.")
         ->setMultiple(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'creation_traits' => PropertyDefinition::create('string')
         ->setLabel('Creation traits')
         ->setDescription("Traits which provide useful methods for creating various kinds of test data.")
         ->setMultiple(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('Analyse\TestTraits')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('Analyse\TestTraits')),
       'module_dependencies' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setAutoAcquiredFromRequester(),

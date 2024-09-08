@@ -134,7 +134,7 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
         ->setLabel('Injected services')
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
-        ->setOptionsProvider($services_data_task),
+        ->setOptionSetDefinition($services_data_task),
       'deriver' => PropertyDefinition::create('boolean')
         ->setLabel('Use deriver')
         ->setDescription("Adds a deriver class to dynamically derive plugins from a template."),

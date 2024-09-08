@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Generator\PHPFile as RealPHPFile;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use Prophecy\Argument;
 
 /**
  * Tests the PHP File generator class.
@@ -204,7 +205,7 @@ class ComponentPHPFile10Test extends TestBase {
         EOT,
       ],
     ]);
-    $report_hook_data->getOptions()->willReturn([
+    $report_hook_data->getOptions(Argument::any())->willReturn([
       'hook_cake' => 'hook_cake()',
     ]);
 

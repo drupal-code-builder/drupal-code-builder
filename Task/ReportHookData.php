@@ -8,7 +8,7 @@
 namespace DrupalCodeBuilder\Task;
 
 use MutableTypedData\Definition\OptionDefinition;
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
@@ -16,7 +16,7 @@ use DrupalCodeBuilder\Task\Report\SectionReportInterface;
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  */
-class ReportHookData extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+class ReportHookData extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
 
   /**
    * The sanity level this task requires to operate.

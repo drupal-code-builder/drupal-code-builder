@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting on event names.
  */
-class ReportEventNames extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+class ReportEventNames extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
   use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 

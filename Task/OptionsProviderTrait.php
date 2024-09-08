@@ -3,9 +3,10 @@
 namespace DrupalCodeBuilder\Task;
 
 use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 
 /**
- * Trait implementing \DrupalCodeBuilder\Definition\OptionsProviderInterface.
+ * Trait for \MutableTypedData\Definition\OptionSetDefininitionInterface.
  *
  * Expects using class to define the static property $optionsMethod.
  *

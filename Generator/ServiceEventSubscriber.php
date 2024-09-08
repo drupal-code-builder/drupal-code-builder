@@ -46,7 +46,7 @@ class ServiceEventSubscriber extends Service {
       ->setLabel('Event names')
       ->setDescription("The events this subscribers reacts to.")
       ->setMultiple(TRUE)
-      ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportEventNames')),
+      ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEventNames')),
     );
 
     $definition->getProperty('relative_namespace')

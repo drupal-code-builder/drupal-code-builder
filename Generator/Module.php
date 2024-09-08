@@ -209,7 +209,7 @@ class Module extends RootComponent {
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportHookData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportHookData')),
       //   // TODO: restore this as validation.
       //   'XXprocessing' => function($value, &$component_data, $property_name, &$property_info) {
       //     $mb_task_handler_report_hooks = \DrupalCodeBuilder\Factory::getTask('ReportHookData');

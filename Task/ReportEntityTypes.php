@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting on entity types.
  */
-class ReportEntityTypes extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+class ReportEntityTypes extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
   use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 

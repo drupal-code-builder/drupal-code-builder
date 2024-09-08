@@ -7,13 +7,13 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting on service data.
  */
-class ReportServiceData extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+class ReportServiceData extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
   use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 

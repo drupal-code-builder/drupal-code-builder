@@ -78,7 +78,7 @@ class ConfigEntityType extends EntityTypeBase {
         'type' => PropertyDefinition::create('string')
           ->setLabel('Data type')
           ->setRequired(TRUE)
-          ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportDataTypes')),
+          ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportDataTypes')),
       ]);
     $definition->addPropertyAfter('interface_parents', $config_schema_property);
 

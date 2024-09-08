@@ -22,7 +22,7 @@ class FormElement extends BaseGenerator {
       'element_type' => PropertyDefinition::create('string')
         ->setLabel('Element type')
         ->setRequired(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportElementTypes')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportElementTypes')),
       // Not required; elements such as #machine_name don't use it.
       'element_title' => PropertyDefinition::create('string')
         ->setLabel('Element title')

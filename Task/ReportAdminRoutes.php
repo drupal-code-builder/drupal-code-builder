@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use DrupalCodeBuilder\Definition\OptionsProviderInterface;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
@@ -12,7 +12,7 @@ use DrupalCodeBuilder\Task\Report\SectionReportInterface;
  *
  * @internal
  */
-class ReportAdminRoutes extends ReportHookDataFolder implements OptionsProviderInterface, SectionReportInterface {
+class ReportAdminRoutes extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
   use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 

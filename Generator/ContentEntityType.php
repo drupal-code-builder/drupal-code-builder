@@ -237,7 +237,7 @@ class ContentEntityType extends EntityTypeBase {
           'type' => PropertyDefinition::create('string')
             ->setLabel('Field type')
             ->setRequired(TRUE)
-            ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes')),
+            ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes')),
           // TODO: options for revisionable and translatable in 3.3.x once
           // we have conditional properties.
         ]),

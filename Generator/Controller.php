@@ -23,7 +23,7 @@ class Controller extends PHPClassFileWithInjection {
         ->setLabel('Injected services')
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
-        ->setOptionsProvider(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
     ];
 
     $definition->addProperties($properties);
