@@ -54,7 +54,7 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
   }
 
   public function hasOptions(): bool {
-    return !empty($this->options) || !empty($this->optionsProvider);
+    return parent::hasOptions() || !empty($this->optionsProvider);
   }
 
   public function getOptions(): array {
@@ -71,7 +71,7 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
   }
 
   public function hasVariantMapping(): bool {
-    return !is_null($this->variantMapping) || $this->variantMappingProvider;
+    return parent::hasVariantMapping() || $this->variantMappingProvider;
   }
 
   public function getVariantMapping(): ?array {
