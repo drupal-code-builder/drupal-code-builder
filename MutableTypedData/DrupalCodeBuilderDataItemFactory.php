@@ -52,6 +52,11 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   /**
    * {@inheritdoc}
    */
+  static protected $multipleData = MergeableArrayData::class;
+
+  /**
+   * {@inheritdoc}
+   */
   static protected $expressionLanguageProviders = [
     DataAddressLanguageProvider::class,
     FrontEndFunctionsProvider::class,
@@ -73,55 +78,5 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
     'service_name' => ServiceName::class,
     'path' => Path::class,
   ];
-
-  // TODO: this exists only to override ArrayData. Move ability to do this
-  // upstream!
-  public static function createFromDefinition(DataDefinition $definition, DataItem $parent = NULL, int $delta = NULL): DataItem {
-    // Ensure a machine name.
-    if ($parent) {
-      $machine_name = $definition->getName();
-
-      // Allow an empty machine name if this is a delta.
-      // TODO: this is inconsistent, as this only happens with a root that has
-      // no name! See TODO on ArrayData::createItem().
-      if (is_null($machine_name) && is_int($delta)) {
-        $machine_name = $delta;
-      }
-
-      if (!is_string($machine_name) && !is_numeric($machine_name)) {
-        throw new InvalidDefinitionException("Machine name must be a string or number.");
-      }
-
-      //  We allow a 0 machine name because the first delta in a multiple value
-      //  will be 0.
-      if (is_null($machine_name)) {
-        throw new InvalidDefinitionException("Non-root properties must have a machine name.");
-      }
-    }
-
-    if ($definition->isMultiple()) {
-      $item = new MergeableArrayData($definition);
-    }
-    else {
-      if (!isset(static::$types[$definition->getType()])) {
-        throw new InvalidDefinitionException(sprintf("Unknown data type '%s' at '%s'.",
-          $definition->getType(),
-          $definition->getName()
-        ));
-      }
-
-      $class = static::$types[$definition->getType()];
-
-      $item = new $class($definition);
-    }
-
-    if ($parent) {
-      $item->setParent($parent, $delta);
-    }
-
-    $item->setFactory(static::class);
-
-    return $item;
-  }
 
 }
