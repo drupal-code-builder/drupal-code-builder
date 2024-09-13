@@ -2,7 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use DrupalCodeBuilder\Definition\PropertyListInterface;
+use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use CaseConverter\StringAssembler;

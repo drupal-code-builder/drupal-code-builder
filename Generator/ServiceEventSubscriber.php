@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\PropertyListInterface;
+use MutableTypedData\Definition\PropertyListInterface;
 
 /**
  * Generator for an event subscriber service.

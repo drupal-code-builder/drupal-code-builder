@@ -4,7 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\File\CodeFile;
 use Ckr\Util\ArrayMerger;
-use DrupalCodeBuilder\Definition\PropertyListInterface;
+use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**

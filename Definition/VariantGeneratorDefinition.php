@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Definition;
 
 use MutableTypedData\Definition\DataDefinition;
+use MutableTypedData\Definition\PropertyListInterface;
 use MutableTypedData\Definition\VariantDefinition;
 use MutableTypedData\Exception\InvalidDefinitionException;
 

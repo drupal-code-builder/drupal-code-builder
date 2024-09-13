@@ -69,7 +69,7 @@ class MergingGeneratorDefinition extends PropertyDefinition implements Generator
   /**
    * {@inheritdoc}
    */
-  public function getProperties() {
+  public function getProperties(): array {
     if (!$this->generatorPropertiesLoaded) {
       // Set this to TRUE now to avoid recursion, as addToGeneratorDefinition()
       // may need access to properties.
