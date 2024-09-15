@@ -37,6 +37,9 @@ class AdminSettingsForm extends Form {
     // Make one of the basic class name properties internal.
     $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
+    // Remove the parent's form_route property.
+    $definition->removeProperty('form_route');
+
     $parent_route_property = PropertyDefinition::create('string')
       ->setName('parent_route')
       ->setLabel('Parent menu item')

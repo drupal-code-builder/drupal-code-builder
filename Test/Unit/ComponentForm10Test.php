@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Form component.
@@ -192,6 +193,49 @@ class ComponentForm10Test extends TestBase {
         'extraction_call' => 'getStorage',
       ],
     ]);
+  }
+
+  /**
+   * Test generating a form with a route.
+   */
+  public function testFormGenerationWithRoute() {
+    // Assemble module data.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'forms' => [
+        0 => [
+          'plain_class_name' => 'MyForm',
+          'form_route' => [
+            'path' => '/my/path',
+            'access' => [
+              'access_type' => 'permission',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Form/MyForm.php",
+      'test_module.routing.yml',
+    ], $files);
+
+    $routing_file = $files['test_module.routing.yml'];
+    $yaml_tester = new YamlTester($routing_file);
+
+    $yaml_tester->assertHasProperty('test_module.my.path', "The routing file has the property for the route.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'path'], '/my/path', "The routing file declares the route path.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'defaults', '_form'], '\Drupal\test_module\Form\MyForm', "The routing file declares the route controller.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'defaults', '_title'], 'myPage', "The routing file declares the route title.");
+    $yaml_tester->assertPropertyHasValue(['test_module.my.path', 'requirements', '_permission'], 'access content', "The routing file declares the route permission.");
   }
 
   /**

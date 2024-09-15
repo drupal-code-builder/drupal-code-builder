@@ -49,6 +49,8 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
       'form_elements' => MergingGeneratorDefinition::createFromGeneratorType('FormElement')
         ->setLabel('Form elements')
         ->setMultiple(TRUE),
+      'form_route' => MergingGeneratorDefinition::createFromGeneratorType('RouterItemForm')
+        ->setLabel('Form route'),
     ];
 
     // Put the rest of the parent definitions after ours.
