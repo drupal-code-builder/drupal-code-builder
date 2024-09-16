@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\PropertyListInterface;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Generator for an event subscriber service.
@@ -46,7 +47,8 @@ class ServiceEventSubscriber extends Service {
       ->setLabel('Event names')
       ->setDescription("The events this subscribers reacts to.")
       ->setMultiple(TRUE)
-      ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEventNames')),
+      ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEventNames'))
+      ->setOptionsSorting(OptionsSortOrder::Label),
     );
 
     $definition->getProperty('relative_namespace')

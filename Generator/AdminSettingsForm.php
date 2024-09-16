@@ -7,6 +7,7 @@ use DrupalCodeBuilder\Utility\InsertArray;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Component generator: admin form for modules.
@@ -44,7 +45,8 @@ class AdminSettingsForm extends Form {
       ->setName('parent_route')
       ->setLabel('Parent menu item')
       ->setRequired(TRUE)
-      ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes'));
+      ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes'))
+      ->setOptionsSorting(OptionsSortOrder::Label);
 
     $definition->addPropertyAfter('injected_services', $parent_route_property);
 

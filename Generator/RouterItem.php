@@ -11,6 +11,7 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\VariantDefinition;
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Generator for router item on Drupal 8 and higher.
@@ -119,6 +120,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
                 ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionsSorting(OptionsSortOrder::Label)
                 ->setRequired(TRUE),
               'entity_view_mode' => PropertyDefinition::create('string')
                 ->setLabel("Entity view mode")
@@ -133,6 +135,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
                 ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionsSorting(OptionsSortOrder::Label)
                 ->setRequired(TRUE),
               'entity_form_mode' => PropertyDefinition::create('string')
                 ->setLabel("Entity form mode")
@@ -147,6 +150,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
                 ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionsSorting(OptionsSortOrder::Label)
                 ->setRequired(TRUE),
               'routing_value' => PropertyDefinition::create('string')
                 ->setInternal(TRUE)
@@ -235,6 +239,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
               'entity_type_id' => PropertyDefinition::create('string')
                 ->setLabel("Entity type ID")
                 ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportEntityTypes'))
+                ->setOptionsSorting(OptionsSortOrder::Label)
                 ->setRequired(TRUE),
               'entity_access_operation' => PropertyDefinition::create('string')
                 ->setLabel("Access operation")

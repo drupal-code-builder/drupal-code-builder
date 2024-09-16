@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Generator for a plugin.
@@ -34,6 +35,8 @@ class Plugin extends BaseGenerator {
         'plugin_type' => PropertyDefinition::create('string')
           ->setLabel('Plugin type')
           ->setOptionSetDefinition($plugin_data_task)
+          ->setOptionsSorting(OptionsSortOrder::Label)
+
 
         // TODO: contains the code to support using the plugin folder name.
         // TODO: restore this later, but currently there's no CLI UI for this

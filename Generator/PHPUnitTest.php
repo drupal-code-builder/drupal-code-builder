@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
 use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Component generator: PHPUnit test class.
@@ -163,7 +164,8 @@ class PHPUnitTest extends PHPClassFile {
         ->setLabel('Creation traits')
         ->setDescription("Traits which provide useful methods for creating various kinds of test data.")
         ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('Analyse\TestTraits')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('Analyse\TestTraits'))
+        ->setOptionsSorting(OptionsSortOrder::Label),
       'module_dependencies' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setAutoAcquiredFromRequester(),

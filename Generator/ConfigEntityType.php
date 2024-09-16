@@ -9,6 +9,7 @@ use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Generator for a config entity type.
@@ -78,7 +79,8 @@ class ConfigEntityType extends EntityTypeBase {
         'type' => PropertyDefinition::create('string')
           ->setLabel('Data type')
           ->setRequired(TRUE)
-          ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportDataTypes')),
+          ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportDataTypes'))
+          ->setOptionsSorting(OptionsSortOrder::Label),
       ]);
     $definition->addPropertyAfter('interface_parents', $config_schema_property);
 

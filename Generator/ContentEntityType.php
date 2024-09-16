@@ -11,6 +11,7 @@ use DrupalCodeBuilder\Utility\InsertArray;
 use CaseConverter\CaseString;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
  * Generator for a content entity type.
@@ -237,7 +238,8 @@ class ContentEntityType extends EntityTypeBase {
           'type' => PropertyDefinition::create('string')
             ->setLabel('Field type')
             ->setRequired(TRUE)
-            ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes')),
+            ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes'))
+            ->setOptionsSorting(OptionsSortOrder::Label),
           // TODO: options for revisionable and translatable in 3.3.x once
           // we have conditional properties.
         ]),
