@@ -47,8 +47,14 @@ class PluginAttributeDiscovery extends PluginClassDiscovery {
         continue;
       }
 
-      // Skip a deriver property.
       if ($attribute_variable == 'deriver') {
+        if ($this->component_data->deriver->value) {
+          $attribute_data['deriver'] = '\Drupal\%module\Plugin\Derivative\\' . $this->component_data->deriver_plain_class_name->value . '::class';
+        }
+        else {
+          // Skip a deriver property if not using a deriver.
+        }
+
         continue;
       }
 

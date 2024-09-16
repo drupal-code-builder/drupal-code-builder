@@ -259,9 +259,8 @@ class ComponentPluginsAttribute10Test extends TestBase {
     // Check the plugin file declares the deriver.
     $plugin_file = $files["src/Plugin/Block/Alpha.php"];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
-    // $annotation_tester = $php_tester->getAnnotationTesterForClass();
-    // $annotation_tester->assertHasProperty('deriver');
-    // $annotation_tester->assertPropertyHasValue('deriver', '\Drupal\test_module\Plugin\Derivative\AlphaBlockDeriver');
+    $php_tester->assertImportsClassLike(['Drupal\test_module\Plugin\Derivative\AlphaBlockDeriver']);
+    $php_tester->assertClassAttributeHasNamedParameterValue('deriver', 'AlphaBlockDeriver::class', 'Block');
   }
 
   /**

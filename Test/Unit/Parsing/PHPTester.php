@@ -640,6 +640,17 @@ class PHPTester {
       }
 
       foreach ($attribute->attrs[0]->args as $arg) {
+        // Handle a parameter that's a class name. The expected value should end
+        // in '::class'. Both expected value and the parameter's value will be a
+        // short class name.
+        if ($arg->value instanceof \PhpParser\Node\Expr\ClassConstFetch) {
+          if (str_ends_with($expected_value, '::class')) {
+            if ($expected_value == $arg->value->class->name . '::class') {
+              return;
+            }
+          }
+        }
+
         // We don't handle parameters which are objects; too complicated!
         if (!isset($arg->value->value)) {
           continue;
