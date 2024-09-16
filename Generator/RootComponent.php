@@ -10,6 +10,7 @@ use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
+use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Abstract Generator for root components.
@@ -116,11 +117,11 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
         ->setInternal(TRUE),
       'lifecycle' => PropertyDefinition::create('string')
         ->setLabel('Lifecycle')
-        ->setOptionsArray([
-          'experimental' => 'Experimental',
-          'deprecated' => 'Deprecated',
-          'obsolete' => 'Obsolete',
-        ]),
+        ->setOptions(
+          OptionDefinition::create('experimental', 'Experimental', weight: 0),
+          OptionDefinition::create('deprecated', 'Deprecated', weight: 10),
+          OptionDefinition::create('obsolete', 'Obsolete', weight: 20),
+        ),
     ]);
   }
 
