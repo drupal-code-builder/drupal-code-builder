@@ -59,6 +59,50 @@ class ComponentPluginsYAML10Test extends TestBase {
   }
 
   /**
+   * Tests plugin derivers.
+   */
+  function testYamlPluginsGenerationDeriver() {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'menu.link',
+          'plugin_name' => 'alpha',
+          'deriver' => TRUE,
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.links.menu.yml',
+      'src/Plugin/Derivative/AlphaMenuLinkDeriver.php',
+    ], $files);
+
+    $deriver = $files['src/Plugin/Derivative/AlphaMenuLinkDeriver.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
+    $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
+    $php_tester->assertHasMethod('getDerivativeDefinitions');
+
+    // Check the plugin YAML file declares the deriver.
+    $plugin_file = $files["$module_name.links.menu.yml"];
+
+    $yaml_tester = new YamlTester($plugin_file);
+    $yaml_tester->assertHasProperty('test_module.alpha');
+    $yaml_tester->assertPropertyHasValue(['test_module.alpha', 'deriver'], '\Drupal\test_module\Plugin\Derivative\AlphaMenuLinkDeriver');
+  }
+
+  /**
    * Test PluginYAML component with annotated plugins too.
    */
   function testYAMLPluginsGenerationWithAnnotated() {

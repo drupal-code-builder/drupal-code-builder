@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use CaseConverter\CaseString;
+use CaseConverter\StringAssembler;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 
@@ -32,6 +33,27 @@ class PluginYamlDiscovery extends BaseGenerator {
         ->setLabel('Plugin ID')
         ->setRequired(TRUE)
         ->setValidators('yaml_plugin_name'),
+      'deriver' => PropertyDefinition::create('boolean')
+        ->setLabel('Use deriver')
+        ->setDescription("Adds a deriver class to dynamically derive plugins from a template."),
+      'deriver_plain_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(DefaultDefinition::create()
+          ->setCallable(function (DataItem $component_data) {
+            $plugin_data = $component_data->getParent();
+
+            // Convert the plugin type ID to pascal case. It may contain dots
+            // and other non-snake case characters that need special handling.
+            $plugin_type_id = $plugin_data->plugin_type_data->value['type_id'];
+            $plugin_type_id_pieces = preg_split('@[^[:alpha:]]@', $plugin_type_id);
+            $pascal_plugin_type_id = (new StringAssembler($plugin_type_id_pieces))->pascal();
+
+            return
+              CaseString::snake($plugin_data->plugin_name->value)->pascal() .
+              $pascal_plugin_type_id .
+              'Deriver';
+          })
+        ),
       'prefix_name' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
         ->setLiteralDefault(TRUE),
@@ -84,6 +106,14 @@ class PluginYamlDiscovery extends BaseGenerator {
    * Default property value callback for 'plugin_properties'.
    */
   public static function defaultPluginProperties($data_item) {
+    // Bypass the plugin type data if there's a deriver, as that is the only
+    // property needed in that case.
+    if (!empty($data_item->getParent()->deriver->value)) {
+      $properties['deriver'] = '\Drupal\%module\Plugin\Derivative\\' . $data_item->getParent()->deriver_plain_class_name->value;
+
+      return $properties;
+    }
+
     // Group the plugin properties into those with default values given, and
     // those with empty defaults. We can then put the ones with defaults later,
     // as these are the most likely to be the less frequently used ones.
@@ -113,6 +143,33 @@ class PluginYamlDiscovery extends BaseGenerator {
         'filename' => "%module.{$yaml_file_suffix}.yml",
       ],
     ];
+
+    if (!empty($this->component_data->deriver->value)) {
+      $components['deriver'] = [
+        'component_type' => 'PHPClassFile',
+        'class_docblock_lines' => [
+          'Plugin deriver for ' . $this->component_data->plugin_name->value . '.',
+        ],
+        'plain_class_name' => $this->component_data->deriver_plain_class_name->value,
+        'relative_namespace' => 'Plugin\Derivative',
+        'parent_class_name' => '\Drupal\Component\Plugin\Derivative\DeriverBase',
+        'interfaces' => [
+          '\Drupal\Core\Plugin\Discovery\ContainerDeriverInterface',
+        ],
+      ];
+
+      $components['getDerivativeDefinitions'] = [
+        'component_type' => 'PHPFunction',
+        'function_name' => 'getDerivativeDefinitions',
+        'containing_component' => '%requester:deriver',
+        'docblock_inherit' => TRUE,
+        'parameters' => [
+          0 => [
+            'name' => 'base_plugin_definition',
+          ],
+        ],
+      ];
+    }
 
     return $components;
   }
