@@ -503,6 +503,8 @@ class ComponentCollector {
           unset($required_item_data['component_type']);
           unset($required_item_data['use_data_definition']);
 
+          assert($component_data->hasProperty($required_item_name), "Use of 'use_data_definition' on required item named '$required_item_name', but matching property does not exist.");
+
           $component_data->{$required_item_name}->set($required_item_data);
 
           $required_item_data = $component_data->{$required_item_name};
