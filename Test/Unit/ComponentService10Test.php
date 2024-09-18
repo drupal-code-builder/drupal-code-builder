@@ -880,6 +880,7 @@ class ComponentService10Test extends TestBase {
         ],
         // Expected injected services.
         [
+          // We expect existing services to be in the same order.
           [
             'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
             'service_name' => 'current_user',
@@ -892,6 +893,7 @@ class ComponentService10Test extends TestBase {
             'property_name' => 'entityTypeManager',
             'parameter_name' => 'entity_type_manager',
           ],
+          // We expect the new service to be at the end.
           [
             'typehint' => 'Drupal\Core\Extension\ModuleHandlerInterface',
             'service_name' => 'module_handler',

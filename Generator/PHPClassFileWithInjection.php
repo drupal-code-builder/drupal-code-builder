@@ -70,6 +70,17 @@ class PHPClassFileWithInjection extends PHPClassFile {
     $components = parent::requiredComponents();
 
     if (!$this->component_data->injected_services->isEmpty() || $this->getExistingInjectedServices() || $this->forceConstructComponent) {
+      foreach ($this->component_data->injected_services->values() as $service_id) {
+        $components['service_' . $service_id] = [
+          'component_type' => 'InjectedService',
+          'containing_component' => '%requester',
+          'service_id' => $service_id,
+          'class_has_static_factory' => $this->hasStaticFactoryMethod,
+          'class_has_constructor' => TRUE,
+          'class_name' => $this->component_data->qualified_class_name->value,
+        ];
+      }
+
       // The static factory create() method.
       if ($this->hasStaticFactoryMethod) {
         $create_parameters = [

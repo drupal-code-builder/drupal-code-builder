@@ -231,18 +231,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    // TODO: really need a way to iterate over the scalar values!
-    foreach ($this->component_data->injected_services->export() as $service_id) {
-      $components['service_' . $service_id] = [
-        'component_type' => 'InjectedService',
-        'containing_component' => '%requester',
-        'service_id' => $service_id,
-        'class_has_static_factory' => $this->hasStaticFactoryMethod,
-        'class_has_constructor' => TRUE,
-        'class_name' => $this->component_data->qualified_class_name->value,
-      ];
-    }
-
     if (empty($this->component_data->replace_parent_plugin->value)) {
       if (!empty($this->plugin_type_data['config_schema_prefix'])) {
         $schema_id = $this->plugin_type_data['config_schema_prefix']
