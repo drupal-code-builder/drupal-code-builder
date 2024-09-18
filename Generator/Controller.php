@@ -15,23 +15,6 @@ class Controller extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
-    parent::addToGeneratorDefinition($definition);
-
-    $properties = [
-      'injected_services' => PropertyDefinition::create('string')
-        ->setLabel('Injected services')
-        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-        ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
-    ];
-
-    $definition->addProperties($properties);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 

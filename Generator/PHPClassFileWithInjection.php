@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
 
 /**
@@ -31,6 +33,23 @@ class PHPClassFileWithInjection extends PHPClassFile {
    * @var array
    */
   protected array $existingServices;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
+
+    $properties = [
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services')
+        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+        ->setMultiple(TRUE)
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+    ];
+
+    $definition->addProperties($properties);
+  }
 
   /**
    * Get any existing services from the existing class, if any.

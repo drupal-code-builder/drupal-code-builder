@@ -112,11 +112,6 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
             ->setExpression("parent.service_name_prefix.get() ~ '.' ~ parent.service_name.get()")
             ->setDependencies('..:root_component_name')
         ),
-      'injected_services' => PropertyDefinition::create('string')
-        ->setLabel('Injected services')
-        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-        ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
         ->setInternal(TRUE),

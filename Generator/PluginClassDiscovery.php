@@ -82,7 +82,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
     parent::addToGeneratorDefinition($definition);
 
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-    $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
     $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
@@ -130,11 +129,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultRelativeNamespace'])
         ),
-      'injected_services' => PropertyDefinition::create('string')
-        ->setLabel('Injected services')
-        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-        ->setMultiple(TRUE)
-        ->setOptionSetDefinition($services_data_task),
       'deriver' => PropertyDefinition::create('boolean')
         ->setLabel('Use deriver')
         ->setDescription("Adds a deriver class to dynamically derive plugins from a template."),

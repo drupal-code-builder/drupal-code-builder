@@ -41,11 +41,6 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
             ->setExpression("get('..:root_component_name') ~ '_' ~ machineFromPlainClassName(get('..:plain_class_name'))")
             ->setDependencies('..:root_component_name', '..:plain_class_name')
         ),
-      'injected_services' => PropertyDefinition::create('string')
-        ->setLabel('Injected services')
-        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-        ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'form_elements' => MergingGeneratorDefinition::createFromGeneratorType('FormElement')
         ->setLabel('Form elements')
         ->setMultiple(TRUE),
