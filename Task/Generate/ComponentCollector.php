@@ -275,9 +275,10 @@ class ComponentCollector {
     // Instantiate the generator in question.
     $generator = $this->classHandler->getGenerator($component_type, $component_data);
 
-    $this->debug($chain, sprintf("instantiated name %s; type: %s; ID, requester %s",
+    $this->debug($chain, sprintf("instantiated name %s; type: %s; classname: %s; ID, requester %s",
       $name,
       $component_type,
+      end(...[explode('\\', get_class($generator))]),
       $requesting_component ? $requesting_component->getAddress() : '-none-'
     ));
 
