@@ -189,11 +189,7 @@ abstract class TestBase extends TestCase {
   public static function assertFiles($filenames, $actual_files) {
     $actual_file_names = array_keys($actual_files);
 
-    sort($filenames);
-    sort($actual_file_names);
-
-    // TODO! min PHPUnit 7.5?
-    static::assertEquals($filenames, $actual_file_names, "The expected files were generated.");
+    static::assertEqualsCanonicalizing($filenames, $actual_file_names, "The expected files were generated.");
   }
 
   /**
