@@ -13,15 +13,6 @@ class Controller extends PHPClassFileWithInjection {
   protected $hasStaticFactoryMethod = TRUE;
 
   /**
-   * {@inheritdoc}
-   */
-  protected function collectSectionBlocks() {
-    parent::collectSectionBlocks();
-
-    $this->collectSectionBlocksForDependencyInjection();
-  }
-
-  /**
    * Produces the class declaration.
    */
   function classDeclaration() {

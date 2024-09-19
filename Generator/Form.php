@@ -213,11 +213,4 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
     return $components;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function collectSectionBlocks() {
-    $this->collectSectionBlocksForDependencyInjection();
-  }
-
 }

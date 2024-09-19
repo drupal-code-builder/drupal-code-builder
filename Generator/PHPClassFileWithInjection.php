@@ -247,6 +247,15 @@ class PHPClassFileWithInjection extends PHPClassFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function collectSectionBlocks() {
+    parent::collectSectionBlocks();
+
+    $this->collectSectionBlocksForDependencyInjection();
+  }
+
+  /**
    * Helper for collectSectionBlocks().
    */
   protected function collectSectionBlocksForDependencyInjection() {

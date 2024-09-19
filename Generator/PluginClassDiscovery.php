@@ -371,13 +371,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  protected function collectSectionBlocks() {
-    $this->collectSectionBlocksForDependencyInjection();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getConstructBaseParameters() {
     if (isset($this->plugin_type_data['constructor_fixed_parameters'])) {
       // Plugin type has non-standard constructor fixed parameters.

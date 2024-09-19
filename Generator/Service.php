@@ -426,13 +426,4 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     return $components;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function collectSectionBlocks() {
-    parent::collectSectionBlocks();
-
-    $this->collectSectionBlocksForDependencyInjection();
-  }
-
 }
