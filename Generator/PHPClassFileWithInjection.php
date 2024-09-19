@@ -19,6 +19,13 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected $hasStaticFactoryMethod = FALSE;
 
   /**
+   * The interface to use for the static create() method's container parameter.
+   *
+   * @var string
+   */
+  protected string $containerInterface = '\\Symfony\\Component\\DependencyInjection\\ContainerInterface';
+
+  /**
    * Forces the requesting of a constructor method component.
    *
    * If FALSE, a constructor is only requested if there are injected services.
@@ -86,7 +93,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
         $create_parameters = [
           [
             'name' => 'container',
-            'typehint' => '\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
+            'typehint' => $this->containerInterface,
           ],
         ];
 

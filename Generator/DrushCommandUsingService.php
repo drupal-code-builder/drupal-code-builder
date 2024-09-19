@@ -13,13 +13,16 @@ use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 
 /**
- * Generator for a Drush 12/13 command.
+ * Generator for an older Drush command.
+ *
+ * (Not sure how far back this supports.)
  */
-#[DrupalCoreVersion(11)]
-#[DrupalCoreVersion(10)]
-#[DrupalCoreVersion(9)]
+#[DrupalCoreVersion(8)]
+#[DrupalCoreVersion(7)]
+#[DrupalCoreVersion(6)]
+#[DrupalCoreVersion(5)]
 #[RelatedBaseClass('DrushCommand')]
-class DrushCommand extends BaseGenerator {
+class DrushCommandUsingService extends BaseGenerator {
 
   use NameFormattingTrait;
 
@@ -131,7 +134,7 @@ class DrushCommand extends BaseGenerator {
       // self::requiredComponents(). This is mostly needed so that the Service
       // generator has access to the whole data, because it expects to be able
       // to access module generator configuration options.
-      'commands_class' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommandsClass')
+      'commands_service' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommandsService')
         ->setInternal(TRUE),
     ]);
   }
@@ -142,10 +145,11 @@ class DrushCommand extends BaseGenerator {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    $components['commands_class'] = [
-      'component_type' => 'DrushCommandsClass',
+    $components['commands_service'] = [
+      'component_type' => 'DrushCommandsService',
       // Makes this get matched up with the data definition.
       'use_data_definition' => TRUE,
+      'prefixed_service_name' => $this->component_data->root_component_name->value . '.commands',
       'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
       'relative_namespace' => 'Commands',
       'parent_class_name' => '\Drush\Commands\DrushCommands',
@@ -228,7 +232,7 @@ class DrushCommand extends BaseGenerator {
     $components['command_method'] = [
       'component_type' => 'PHPFunction',
       'function_name' => $this->component_data['command_method_name'],
-      'containing_component' => '%requester:commands_class',
+      'containing_component' => '%requester:commands_service',
       'declaration' => "public function {$this->component_data['command_method_name']}()",
       'function_docblock_lines' => $docblock_lines,
       'doxygen_tag_lines' => $doxygen_tag_lines,

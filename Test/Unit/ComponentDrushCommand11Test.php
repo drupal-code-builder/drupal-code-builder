@@ -11,14 +11,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentDrushCommand10Test extends TestBase {
+class ComponentDrushCommand11Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 10;
+  protected $drupalMajorVersion = 11;
 
   /**
    * Test generating a Drush command file.
@@ -48,17 +48,8 @@ class ComponentDrushCommand10Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'drush.services.yml',
       'src/Commands/TestModuleCommands.php',
     ], $files);
-
-    $drush_services_file = $files["drush.services.yml"];
-
-    $yaml_tester = new YamlTester($drush_services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "test_module.commands"]);
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'class'], "Drupal\\test_module\\Commands\\TestModuleCommands");
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'tags', 0, 'name'], 'drush.command');
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
@@ -118,17 +109,8 @@ class ComponentDrushCommand10Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'drush.services.yml',
       'src/Commands/TestModuleCommands.php',
     ], $files);
-
-    $drush_services_file = $files["drush.services.yml"];
-
-    $yaml_tester = new YamlTester($drush_services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "test_module.commands"]);
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'class'], "Drupal\\test_module\\Commands\\TestModuleCommands");
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'tags', 0, 'name'], 'drush.command');
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
@@ -199,20 +181,8 @@ class ComponentDrushCommand10Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'drush.services.yml',
       'src/Commands/TestModuleCommands.php',
     ], $files);
-
-    $drush_services_file = $files["drush.services.yml"];
-    // dump($drush_services_file);
-
-    $yaml_tester = new YamlTester($drush_services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "test_module.commands"]);
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'class'], "Drupal\\test_module\\Commands\\TestModuleCommands");
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'tags', 0, 'name'], 'drush.command');
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'arguments', 0], '@current_user');
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'arguments', 1], '@entity_type.manager');
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
@@ -236,6 +206,11 @@ class ComponentDrushCommand10Test extends TestBase {
         'property_name' => 'entityTypeManager',
         'parameter_name' => 'entity_type_manager',
       ],
+      ]);
+
+    $create_tester = $php_tester->getMethodTester('create');
+    $create_tester->assertHasParameters([
+      'container' => 'Psr\Container\ContainerInterface',
     ]);
   }
 
@@ -274,17 +249,8 @@ class ComponentDrushCommand10Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'drush.services.yml',
       'src/Commands/TestModuleCommands.php',
     ], $files);
-
-    $drush_services_file = $files["drush.services.yml"];
-
-    $yaml_tester = new YamlTester($drush_services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "test_module.commands"]);
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'class'], "Drupal\\test_module\\Commands\\TestModuleCommands");
-    $yaml_tester->assertPropertyHasValue(['services', "test_module.commands", 'tags', 0, 'name'], 'drush.command');
 
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
