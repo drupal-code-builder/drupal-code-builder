@@ -112,11 +112,6 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
             ->setExpression("parent.service_name_prefix.get() ~ '.' ~ parent.service_name.get()")
             ->setDependencies('..:root_component_name')
         ),
-      'injected_services' => PropertyDefinition::create('string')
-        ->setLabel('Injected services')
-        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-        ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
@@ -305,14 +300,19 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       $requested_services[] = $service_id;
     }
 
+    $existing_services = $this->getExistingInjectedServices();
+
     // Use the ArrayMerger even though these are flat arrays, so we get the same
     // behaviour as the YAML data will in the YMLFile generator.
     // Put the existing services first.
-    $merger = new ArrayMerger($this->getExistingInjectedServices(), $requested_services);
+    $merger = new ArrayMerger($existing_services, $requested_services);
     $merger->preventDoubleValuesWhenAppendingNumericKeys(TRUE);
     $service_ids = $merger->mergeData();
 
-    foreach ($service_ids as $service_id) {
+    $existing_only_services = array_diff($existing_services, $requested_services);
+
+    // Existing services need a component too.
+    foreach ($existing_only_services as $service_id) {
       $components['service_' . $service_id] = [
         'component_type' => 'InjectedService',
         'containing_component' => '%requester',
@@ -321,6 +321,19 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
         'class_has_constructor' => TRUE,
         'class_name' => $this->component_data->qualified_class_name->value,
       ];
+    }
+
+    // Rearrange the order of the generated services, so the existing ones go
+    // first and in the existing order.
+    $service_components = [];
+    foreach ($service_ids as $service_id) {
+      $service_components[$service_id] = $components['service_' . $service_id];
+      unset($components['service_' . $service_id]);
+    }
+
+    foreach ($service_ids as $service_id) {
+      // Put the service components in the right order.
+      $components['service_' . $service_id] = $service_components[$service_id];
 
       // Add the service ID to the arguments in the YAML data.
       if (substr_count($service_id, ':') != 0) {
@@ -411,15 +424,6 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     }
 
     return $components;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function collectSectionBlocks() {
-    parent::collectSectionBlocks();
-
-    $this->collectSectionBlocksForDependencyInjection();
   }
 
 }

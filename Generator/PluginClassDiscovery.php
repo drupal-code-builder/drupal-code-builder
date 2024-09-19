@@ -82,7 +82,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
     parent::addToGeneratorDefinition($definition);
 
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-    $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
     $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
@@ -130,11 +129,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
           DefaultDefinition::create()
             ->setCallable([static::class, 'defaultRelativeNamespace'])
         ),
-      'injected_services' => PropertyDefinition::create('string')
-        ->setLabel('Injected services')
-        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
-        ->setMultiple(TRUE)
-        ->setOptionSetDefinition($services_data_task),
       'deriver' => PropertyDefinition::create('boolean')
         ->setLabel('Use deriver')
         ->setDescription("Adds a deriver class to dynamically derive plugins from a template."),
@@ -236,18 +230,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
-
-    // TODO: really need a way to iterate over the scalar values!
-    foreach ($this->component_data->injected_services->export() as $service_id) {
-      $components['service_' . $service_id] = [
-        'component_type' => 'InjectedService',
-        'containing_component' => '%requester',
-        'service_id' => $service_id,
-        'class_has_static_factory' => $this->hasStaticFactoryMethod,
-        'class_has_constructor' => TRUE,
-        'class_name' => $this->component_data->qualified_class_name->value,
-      ];
-    }
 
     if (empty($this->component_data->replace_parent_plugin->value)) {
       if (!empty($this->plugin_type_data['config_schema_prefix'])) {
@@ -384,13 +366,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
     }
 
     return parent::classDeclaration();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function collectSectionBlocks() {
-    $this->collectSectionBlocksForDependencyInjection();
   }
 
   /**

@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
 
 /**
@@ -33,6 +35,23 @@ class PHPClassFileWithInjection extends PHPClassFile {
   protected array $existingServices;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
+
+    $properties = [
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services')
+        ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
+        ->setMultiple(TRUE)
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+    ];
+
+    $definition->addProperties($properties);
+  }
+
+  /**
    * Get any existing services from the existing class, if any.
    *
    * @return array
@@ -51,6 +70,17 @@ class PHPClassFileWithInjection extends PHPClassFile {
     $components = parent::requiredComponents();
 
     if (!$this->component_data->injected_services->isEmpty() || $this->getExistingInjectedServices() || $this->forceConstructComponent) {
+      foreach ($this->component_data->injected_services->values() as $service_id) {
+        $components['service_' . $service_id] = [
+          'component_type' => 'InjectedService',
+          'containing_component' => '%requester',
+          'service_id' => $service_id,
+          'class_has_static_factory' => $this->hasStaticFactoryMethod,
+          'class_has_constructor' => TRUE,
+          'class_name' => $this->component_data->qualified_class_name->value,
+        ];
+      }
+
       // The static factory create() method.
       if ($this->hasStaticFactoryMethod) {
         $create_parameters = [
@@ -214,6 +244,15 @@ class PHPClassFileWithInjection extends PHPClassFile {
    */
   protected function getCreateParameters() {
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function collectSectionBlocks() {
+    parent::collectSectionBlocks();
+
+    $this->collectSectionBlocksForDependencyInjection();
   }
 
   /**
