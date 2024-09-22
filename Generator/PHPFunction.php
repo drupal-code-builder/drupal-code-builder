@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
 use DrupalCodeBuilder\Generator\Render\PhpAttributes;
+use DrupalCodeBuilder\Generator\Render\PhpValue;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -472,7 +473,7 @@ class PHPFunction extends BaseGenerator {
     $parameter_pieces[] = $parameter_symbol;
 
     if (isset($parameter_info['default_value'])) {
-      $parameter_pieces[] = '= ' . $parameter_info['default_value'];
+      $parameter_pieces[] = '= ' . PhpValue::create($parameter_info['default_value'])->renderInline();
     }
 
     return implode(' ', $parameter_pieces);
