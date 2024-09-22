@@ -171,7 +171,13 @@ class PHPFunction extends BaseGenerator {
     $function_code = array_merge($function_code, $this->getFunctionDocBlockLines());
 
     if ($function_attributes = $this->getFunctionAttributes()) {
-      $function_code = array_merge($function_code, $function_attributes->render());
+      $function_code = array_merge(
+        $function_code,
+        ...array_map(
+          fn ($attribute) => $attribute->render(),
+          $function_attributes,
+        ),
+      );
     }
 
     // If the declaration isn't set, built it from property values and contained
@@ -346,15 +352,17 @@ class PHPFunction extends BaseGenerator {
   /**
    * Produces the function attributes.
    *
-   * @return \DrupalCodeBuilder\Generator\Render\PhpAttributes|null
-   *   An attribute object if this function has attributes.
+   * @return \DrupalCodeBuilder\Generator\Render\PhpAttributes[]
+   *   An array of attribute objects if this function has attributes.
    */
-  protected function getFunctionAttributes(): ?PhpAttributes {
+  protected function getFunctionAttributes(): array {
     if ($this->component_data->attribute->isEmpty()) {
-      return NULL;
+      return [];
     }
     else {
-      return PhpAttributes::method($this->component_data->attribute->value);
+      return [
+        PhpAttributes::method($this->component_data->attribute->value),
+      ];
     }
   }
 
