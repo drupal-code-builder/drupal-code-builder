@@ -9,6 +9,8 @@ use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
+use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionDefinition;
 
@@ -19,7 +21,7 @@ use MutableTypedData\Definition\OptionDefinition;
 #[DrupalCoreVersion(10)]
 #[DrupalCoreVersion(9)]
 #[RelatedBaseClass('DrushCommand')]
-class DrushCommand extends BaseGenerator {
+class DrushCommand extends PHPFunction {
 
   use NameFormattingTrait;
 
@@ -52,13 +54,6 @@ class DrushCommand extends BaseGenerator {
         ->setLabel("Command options")
         ->setDescription("Enter each option as 'option_name: default', where for the default, a plain string will be quoted, a numeric is left as numeric, and string in ALL_CAPS are taken to be constants, including 'NULL', 'TRUE', 'FALSE'.")
         ->setMultiple(TRUE),
-      'command_method_name' => PropertyDefinition::create('string')
-        ->setInternal(TRUE)
-        ->setCallableDefault(function ($component_data) {
-          $command_name = preg_replace('@.+:@', '', $component_data->getParent()->command_name->value);
-
-          return CaseString::snake($command_name)->camel();
-        }),
       'inflected_injection' => PropertyDefinition::create('string')
         ->setLabel("Inflection interfaces")
         ->setMultiple(TRUE)
@@ -134,6 +129,20 @@ class DrushCommand extends BaseGenerator {
       'commands_class' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommandsClass')
         ->setInternal(TRUE),
     ]);
+
+    $definition->getProperty('function_name')
+      ->setInternal(TRUE)
+      ->setCallableDefault(function ($component_data) {
+        $command_name = preg_replace('@.+:@', '', $component_data->getParent()->command_name->value);
+
+        return CaseString::snake($command_name)->camel();
+      });
+
+    $definition->getProperty('containing_component')
+      ->setLiteralDefault('commands_class');
+
+    $definition->getProperty('prefixes')
+      ->setLiteralDefault(['public']);
   }
 
   /**
@@ -159,10 +168,6 @@ class DrushCommand extends BaseGenerator {
     if (strpos($this->component_data->command_name->value, ':') === FALSE) {
       $this->component_data->command_name = $this->component_data->root_component_name->value . ':' . $this->component_data->command_name->value;
     }
-
-    $docblock_lines = [
-      $this->component_data['command_description'],
-    ];
 
     $usage_line = "drush {$this->component_data['command_name']}";
 
@@ -225,18 +230,94 @@ class DrushCommand extends BaseGenerator {
       $doxygen_tag_lines[] = ['aliases', implode(',', $this->component_data['command_name_aliases']), ''];
     }
 
-    $components['command_method'] = [
-      'component_type' => 'PHPFunction',
-      'function_name' => $this->component_data['command_method_name'],
-      'containing_component' => '%requester:commands_class',
-      'declaration' => "public function {$this->component_data['command_method_name']}()",
-      'function_docblock_lines' => $docblock_lines,
-      'doxygen_tag_lines' => $doxygen_tag_lines,
-      'parameters' => $parameters_data,
-      'body' => [],
-    ];
-
     return $components;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFunctionDocBlockLines() {
+    $docblock = DocBlock::method();
+
+    $docblock[] = $this->component_data->command_description->value;
+
+    return $docblock->render();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFunctionAttributes(): array {
+    // Don't use $this->component_data->attribute at all!
+    $attributes = [];
+
+    $command_attribute_parameters = [
+      'name' => $this->component_data->command_name->value,
+    ];
+    if (!$this->component_data->command_name_aliases->isEmpty()) {
+      $command_attribute_parameters['aliases'] = $this->component_data->command_name_aliases->values();
+    }
+
+    $attributes[] = PhpAttributes::method('\Drush\Attributes\Command', $command_attribute_parameters);
+
+    foreach ($this->component_data->command_parameters->values() as $parameter) {
+      $attributes[] = PhpAttributes::method('\Drush\Attributes\Argument', [
+        'name' => $parameter,
+        'description' => "TODO: description of {$parameter} parameter.",
+      ]);
+    }
+
+    foreach ($this->component_data->command_options->values() as $option) {
+      [$option_name, ] = explode(':', $option);
+      $attributes[] = PhpAttributes::method('\Drush\Attributes\Option', [
+        'name' => $option_name,
+        'description' => "TODO: description of {$parameter} option.",
+      ]);
+    }
+
+    $attributes[] = PhpAttributes::method('\Drush\Attributes\Usage', [
+      'name' => 'drush ' . $this->component_data->command_name->value,
+      'description' => 'TODO: add a description',
+    ]);
+
+    // Make all the attributes inline, as this is the Drush style.
+    array_walk($attributes, fn ($attribute) => $attribute->forceInline());
+
+    return $attributes;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function buildMethodDeclaration($name, $parameters = [], $options = [], string $return_type = NULL): array {
+    $parameters = [];
+
+    // Add command parameters.
+    foreach ($this->component_data->command_parameters->values() as $parameter) {
+      $parameters[] = [
+        'name' => $parameter,
+      ];
+    }
+
+    // Add a final parameter for the options.
+    if (!$this->component_data->command_options->isEmpty()) {
+      $options_default_value = [];
+      foreach ($this->component_data->command_options as $option) {
+        [$option_name, $option_default] = explode(':', $option->value);
+        $option_name = trim($option_name);
+        $option_default = trim($option_default);
+
+        $options_default_value[$option_name] = $option_default;
+      }
+
+      $parameters[] = [
+        'name' => 'options',
+        'default_value' => $options_default_value,
+      ];
+
+    }
+
+    return parent::buildMethodDeclaration($name, $parameters, $options, $return_type);
   }
 
 }

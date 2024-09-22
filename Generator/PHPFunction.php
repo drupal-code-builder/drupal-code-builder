@@ -72,6 +72,7 @@ class PHPFunction extends BaseGenerator {
       // after the first one.
       // Or multiple string?
       'function_docblock_lines' => PropertyDefinition::create('mapping')
+        ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
           ->setCallable([static::class, 'defaultDocblockLines'])
       ),
@@ -88,10 +89,12 @@ class PHPFunction extends BaseGenerator {
       // An array of prefixes such as 'static', 'public'.
       // Not yet compatible with 'declaration' property.
       'prefixes' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
         ->setMultiple(TRUE),
       // Not yet compatible with 'declaration' property.
       // Has no effect if 'parameters' is empty.
       'break_declaration' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
         ->setDescription('If TRUE, the declaration parameters are each on a single line.'),
       'parameters' => PropertyDefinition::create('complex')
         ->setMultiple(TRUE)
@@ -116,9 +119,11 @@ class PHPFunction extends BaseGenerator {
       // Whether to put parameter type declarations for PHP primitive types.
       // Defaults to FALSE as lots of Drupal functions do this for BC.
       'use_primitive_parameter_type_declarations' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
           ->setLiteralDefault(FALSE),
       // NOTE: only works when 'declaration' is not used.
-      'return_type' => PropertyDefinition::create('string'),
+      'return_type' => PropertyDefinition::create('string')
+        ->setInternal(TRUE),
       'body' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setInternal(TRUE),
