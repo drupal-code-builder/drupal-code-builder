@@ -20,7 +20,7 @@ class RenderAttributesTest extends TestCase {
         'id' => 'cat',
         'admin_label' => PhpAttributes::object(
           'Drupal\Core\StringTranslation\TranslatableMarkup',
-          "Miaow",
+          'Miaow',
         ),
         'extra' => [
           'purr' => 'value',
@@ -46,13 +46,13 @@ class RenderAttributesTest extends TestCase {
     $expected_attribute = <<<EOT
     #[\Drupal\Core\Block\Attribute\Block(
       // The plugin ID.
-      id: "cat",
+      id: 'cat',
       // The noise it makes.
       admin_label: new \Drupal\Core\StringTranslation\TranslatableMarkup("Miaow"),
       // This is a comment that is too long because it is going over the limit of 80
       // characters in a line here we go.
       extra: [
-        'purr' => "value",
+        'purr' => 'value',
       ],
     )]
     EOT;

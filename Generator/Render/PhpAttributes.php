@@ -71,12 +71,12 @@ class PhpAttributes {
     elseif (is_scalar($this->data)) {
       $lines[] = '#[' .
         $class_name .
-        '(' . $this->renderScalarValue($this->data) . ')]';
+        '(' . PhpValue::create($this->data)->renderInline() . ')]';
     }
     else {
       $lines[] = '#[' . $class_name . '(';
 
-      $this->renderArray($lines, $this->data);
+      $this->renderAttributeParameters($lines, $this->data);
 
       $lines[] = ')]';
     }
@@ -108,7 +108,7 @@ class PhpAttributes {
   }
 
   /**
-   * Recursively renders this attribute's data.
+   * Recursively renders this attribute's parameters.
    *
    * @param array &$lines
    *   The lines of code, passed by reference.
@@ -116,10 +116,8 @@ class PhpAttributes {
    *   The data to render.
    * @param int $nesting
    *   The nesting level.
-   * @param bool $attribute_nesting
-   *   Whether this is nested data in an attribute or not.
    */
-  public function renderArray(&$lines, $data, $nesting = 0, $attribute_nesting = FALSE): void {
+  public function renderAttributeParameters(&$lines, $data, $nesting = 0): void {
     $indent = str_repeat('  ', $this->indentLevel + $nesting + 1);
 
     foreach ($data as $key => $value) {
@@ -131,35 +129,19 @@ class PhpAttributes {
         // Render a comment if there is a description for this key.
         // Comments only go on the top-level keys of the attribute, not inner
         // data arrays.
-        if (!$attribute_nesting) {
-          // dump($thicomments);
-          if (isset($this->comments[$key])) {
-            $wrapped_comment_lines = $this->wrapLine($this->comments[$key], $nesting);
-            foreach ($wrapped_comment_lines as $comment_line) {
-              $lines[] = $indent. '// ' . $comment_line;
-            }
+        // dump($thicomments);
+        if (isset($this->comments[$key])) {
+          $wrapped_comment_lines = $this->wrapLine($this->comments[$key], $nesting);
+          foreach ($wrapped_comment_lines as $comment_line) {
+            $lines[] = $indent. '// ' . $comment_line;
           }
         }
 
-        // Keys need to be quoted for all levels except the first level of an
-        // attribute.
-        if ($attribute_nesting) {
-          $key = "'$key'";
-        }
-
-        $declaration_line = "{$indent}{$key}";
-
-        // Argh too much switching on this - change to two separate methods??
-        if ($attribute_nesting) {
-          $declaration_line .= ' => ';
-        }
-        else {
-          $declaration_line .= ': ';
-        }
+        $declaration_line = "{$indent}{$key}: ";
       }
 
       if (is_scalar($value)) {
-        $declaration_line .= $this->renderScalarValue($value) . ',';
+        $declaration_line .= PhpValue::create($value)->renderInline() . ',';
         $lines[] = $declaration_line;
       }
       elseif (is_object($value)) {
@@ -170,7 +152,7 @@ class PhpAttributes {
         $declaration_line .= '[';
         $lines[] = $declaration_line;
 
-        $this->renderArray($lines, $value, $nesting + 1, attribute_nesting: TRUE);
+        $lines = array_merge($lines, PhpValue::create($value, embedded_level: $nesting + 1)->renderMultiline());
 
         $lines[] = $indent . "],";
       }
