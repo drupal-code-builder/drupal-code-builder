@@ -377,6 +377,8 @@ class PHPFunction extends BaseGenerator {
    *    - 'name'
    *    - 'typehint'
    *    - 'by_reference'
+   *    - 'nullable'
+   *    - 'default_value'
    * @param array $options
    *   An array of options:
    *    - 'prefixes': An array of the function's prefixes.
