@@ -59,6 +59,32 @@ class DrushCommand extends PHPFunction {
         ->setMultiple(TRUE)
         ->setPresets(
           PresetDefinition::create(
+            'logger',
+            'LoggerAwareInterface',
+            "Allows injecting a logger."
+          )
+          ->setForceValues([
+            'service_interfaces' => [
+              'value' => '\Psr\Log\LoggerAwareInterface',
+            ],
+            'service_traits' => [
+              'value' => '\Psr\Log\LoggerAwareTrait',
+            ],
+          ]),
+          PresetDefinition::create(
+            'stdin',
+            'StdinAwareInterface',
+            "Allows reading from standard input."
+          )
+          ->setForceValues([
+            'service_interfaces' => [
+              'value' => '\Consolidation\AnnotatedCommand\Input\StdinAwareInterface',
+            ],
+            'service_traits' => [
+              'value' => '\Consolidation\AnnotatedCommand\Input\StdinAwareTrait',
+            ],
+          ]),
+          PresetDefinition::create(
             'autoloader',
             'AutoloaderAwareInterface',
             "Provides access to the class loader."
