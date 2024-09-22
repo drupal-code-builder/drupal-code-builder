@@ -60,4 +60,20 @@ class RenderAttributesTest extends TestCase {
     $this->assertEquals($expected_attribute, $attribute);
   }
 
+  public function testAttributeInline() {
+    $attribute = PhpAttributes::class(
+      'Drupal\Core\Block\Attribute\Block',
+      [
+        'id' => 'cat',
+        'label' => 'Dog',
+      ],
+    );
+    $attribute->forceInline();
+
+    $lines = $attribute->render();
+
+    $this->assertCount(1, $lines);
+    $this->assertEquals("#[\Drupal\Core\Block\Attribute\Block(id: 'cat', label: 'Dog')]", $lines[0]);
+  }
+
 }

@@ -7,6 +7,8 @@ namespace DrupalCodeBuilder\Generator\Render;
  */
 class PhpAttributes {
 
+  protected bool $forceInline = FALSE;
+
   /**
    * Constructor.
    *
@@ -57,6 +59,16 @@ class PhpAttributes {
   }
 
   /**
+   * Sets the rendering to be inline even for an array of parameters.
+   *
+   * @return self
+   */
+  public function forceInline(): self {
+    $this->forceInline = TRUE;
+    return $this;
+  }
+
+  /**
    * Renders the attribute to an array of code lines.
    */
   public function render() {
@@ -72,6 +84,13 @@ class PhpAttributes {
       $lines[] = '#[' .
         $class_name .
         '(' . PhpValue::create($this->data)->renderInline() . ')]';
+    }
+    elseif ($this->forceInline) {
+      $lines[] = '#[' .
+        $class_name .
+        '(' .
+        $this->renderAttributeParametersInline($this->data) .
+        ')]';
     }
     else {
       $lines[] = '#[' . $class_name . '(';
@@ -157,6 +176,30 @@ class PhpAttributes {
         $lines[] = $indent . "],";
       }
     }
+  }
+
+  /**
+   * Renders attribute parameters as a single line.
+   *
+   * @param array $data
+   *
+   * @return string
+   *   The rendered parameters.
+   */
+  protected function renderAttributeParametersInline(array $data): string {
+    $pieces = [];
+    foreach ($data as $key => $value) {
+      $piece = '';
+      if (!is_numeric($key)) {
+        $piece .= "{$key}: ";
+      }
+
+      $piece .= PhpValue::create($value)->renderInline();
+
+      $pieces[] = $piece;
+    }
+
+    return implode(', ', $pieces);
   }
 
   /**
