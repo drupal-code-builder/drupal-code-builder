@@ -237,7 +237,7 @@ class ComponentDrushCommand11Test extends TestBase {
           'command_name' => 'alpha',
           'command_description' => 'Do alpha.',
           'inflected_injection' => [
-            'autoloader',
+            'logger',
             'site_alias',
           ],
         ],
@@ -270,11 +270,11 @@ class ComponentDrushCommand11Test extends TestBase {
     $php_tester->assertHasMethod('beta');
     $php_tester->assertClassHasInterfaces([
       "Drush\SiteAlias\SiteAliasManagerAwareInterface",
-      "Drush\Boot\AutoloaderAwareInterface",
+      'Psr\Log\LoggerAwareInterface',
     ]);
     $php_tester->assertClassHasTraits([
-      "Drush\Boot\AutoloaderAwareTrait",
       "Consolidation\SiteAlias\SiteAliasManagerAwareTrait",
+      'Psr\Log\LoggerAwareTrait',
     ]);
   }
 

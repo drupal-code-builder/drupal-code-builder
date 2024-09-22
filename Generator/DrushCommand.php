@@ -85,19 +85,6 @@ class DrushCommand extends PHPFunction {
             ],
           ]),
           PresetDefinition::create(
-            'autoloader',
-            'AutoloaderAwareInterface',
-            "Provides access to the class loader."
-          )
-          ->setForceValues([
-            'service_interfaces' => [
-              'value' => '\Drush\Boot\AutoloaderAwareInterface',
-            ],
-            'service_traits' => [
-              'value' => '\Drush\Boot\AutoloaderAwareTrait',
-            ],
-          ]),
-          PresetDefinition::create(
             'site_alias',
             'SiteAliasManagerAwareInterface',
             "The site alias manager allows alias records to be obtained."
