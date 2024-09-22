@@ -565,6 +565,12 @@ class ComponentCollector {
 
       $local_names[$required_item_name] = TRUE;
 
+      // erm how come we didn't need to lock serialization
+
+      $component_data->disableSerialization()->graft($required_item_data);
+      // !!! works!
+      // now try getting parent data stuff.
+
       // dump($required_item_data);
 
       $this->getComponentsFromData($required_item_data, $generator);
