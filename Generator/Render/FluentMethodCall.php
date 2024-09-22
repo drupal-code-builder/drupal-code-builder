@@ -73,7 +73,6 @@ class FluentMethodCall {
         // Put the last line for the array parameter in the ongoing line.
         $fluent_call_line = ']';
       }
-      // £ is unicode apparently.
       elseif (str_starts_with($parameter, '£')) {
         $fluent_call_line .= $parameter;
       }
