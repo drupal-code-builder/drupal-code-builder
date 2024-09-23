@@ -68,6 +68,11 @@ class PluginAnnotationDiscovery extends PluginClassDiscovery {
         continue;
       }
 
+      // Deriver is handled separately.
+      if ($annotation_variable == 'deriver') {
+        continue;
+      }
+
       if ($annotation_variable == $this->plugin_type_data['plugin_label_property']) {
         $annotation_data[$annotation_variable] = ClassAnnotation::Translation($this->component_data->plugin_label->value);
         continue;
