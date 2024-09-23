@@ -231,6 +231,7 @@ class ExtensionCodeFile extends PHPFile {
    * {@inheritdoc}
    */
   function fileDocblockSummary() {
+    // use root!
     $filename_pieces = explode('.', $this->component_data['filename']);
 
     return match (end($filename_pieces)) {
