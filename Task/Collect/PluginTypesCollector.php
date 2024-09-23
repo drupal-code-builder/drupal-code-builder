@@ -610,7 +610,12 @@ class PluginTypesCollector extends CollectorBase  {
    * Analyse the plugin attribute class.
    *
    * This adds:
-   *  - 'plugin_properties': The properties from the annotation class.
+   *  - 'plugin_properties': The properties from the annotation class. The array
+   *    is keyed by the property name, and each one contains:
+   *    - name: The property name.
+   *    - description: The description from the docblock.
+   *    - type: The PHP type as a string.
+   *    - optional: (optional) TRUE if the property is optional.
    *
    * @param &$data
    *  The data for a single plugin type.
@@ -634,7 +639,7 @@ class PluginTypesCollector extends CollectorBase  {
     // Each property of the annotation class describes a property for the
     // plugin annotation.
     $attribute_reflection = new \ReflectionClass($data['plugin_definition_attribute_name']);
-    $properties_reflection = $attribute_reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+    $constructor_parameters = $attribute_reflection->getConstructor()->getParameters();
     $constructor_doc_comment = $attribute_reflection->getConstructor()->getDocComment();
 
     // Assemble descriptions from the constructor docblock.
@@ -669,26 +674,33 @@ class PluginTypesCollector extends CollectorBase  {
       }
     }
 
-    // The reflection properties are the authority for building the array, not
-    // the docblock as the latter may be badly-formed.
-    foreach ($properties_reflection as $property_reflection) {
+    // The reflection constructor parameters are the authority for building the
+    // array, not the docblock as the latter may be badly-formed. We use the
+    // constructor parameters and not the class properties because WTF promoted
+    // constructor parameters with a default value don't register as being
+    // properties with a default value.
+    foreach ($constructor_parameters as $index => $constructor_parameter_reflection) {
       // Assemble data about this annotation property.
       $annotation_property_data = [];
-      $annotation_property_data['name'] = $property_reflection->name;
+      $annotation_property_data['name'] = $constructor_parameter_reflection->name;
 
-      if (isset($descriptions[$property_reflection->name])) {
-        $annotation_property_data['description'] = implode(' ', $descriptions[$property_reflection->name]);
+      if (isset($descriptions[$constructor_parameter_reflection->name])) {
+        $annotation_property_data['description'] = implode(' ', $descriptions[$constructor_parameter_reflection->name]);
       }
       else {
         $annotation_property_data['description'] = '';
       }
 
-      $type_reflection = $property_reflection->getType();
+      $type_reflection = $constructor_parameter_reflection->getType();
       if ($type_reflection) {
         $annotation_property_data['type'] = $this->getTypeStringFromReflection($type_reflection);
       }
 
-      $data['plugin_properties'][$property_reflection->name] = $annotation_property_data;
+      if ($constructor_parameters[$index]->isOptional()) {
+        $annotation_property_data['optional'] = TRUE;
+      }
+
+      $data['plugin_properties'][$constructor_parameter_reflection->name] = $annotation_property_data;
     }
   }
 
