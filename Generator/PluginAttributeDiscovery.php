@@ -58,13 +58,17 @@ class PluginAttributeDiscovery extends PluginClassDiscovery {
         continue;
       }
 
+      $todo_string = empty($attribute_variable_info['optional'])
+        ? 'TODO: replace this with a value'
+        :  'OPTIONAL: replace this with a value';
+
       if (str_starts_with($attribute_variable_info['type'], '\\')) {
         // Object type.
         $attribute_data[$attribute_variable] = PhpAttributes::object(
           $attribute_variable_info['type'],
           // TODO: This will fail if the object's parameter is not a single
           // string! But so far it's usually always TranslatableMarkup.
-          "TODO: replace this with a value",
+          $todo_string,
         );
       }
       else {
@@ -73,11 +77,11 @@ class PluginAttributeDiscovery extends PluginClassDiscovery {
           'int' => '42',
           'float' => '42.0',
           'bool' => 'FALSE',
-          'string' => "TODO: replace this with a value",
+          'string' => $todo_string,
           'array' => [
-            "TODO: key" => "TODO: replace this with a value",
+            "TODO: key" => $todo_string,
           ],
-          default => "TODO: replace this with a value",
+          default => $todo_string,
         };
 
         $attribute_data[$attribute_variable] = $attribute_sample_value;
