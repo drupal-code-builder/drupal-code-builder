@@ -3,8 +3,6 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
-use DrupalCodeBuilder\Task\Collect\MethodCollector;
-use DrupalCodeBuilder\Test\Fixtures\MethodCollectorInterface;
 
 /**
  * Unit tests for the DependencyInjection analysis class.

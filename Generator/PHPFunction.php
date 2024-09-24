@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
-use CaseConverter\CaseString;
 use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;

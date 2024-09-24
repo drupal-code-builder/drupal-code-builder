@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Test\Fixtures\Generator\Mogrifier;
 
 use DrupalCodeBuilder\Generator\BaseGenerator;
-use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class MogrifierBooleanComponent extends BaseGenerator {

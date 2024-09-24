@@ -2,8 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Installation;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Tests a module that has a content entity type.

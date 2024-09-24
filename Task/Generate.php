@@ -12,7 +12,6 @@ use MutableTypedData\Data\DataItem;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use DrupalCodeBuilder\Task\Generate\ComponentCollector;
 use DrupalCodeBuilder\Task\Generate\FileAssembler;
-use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 
 /**

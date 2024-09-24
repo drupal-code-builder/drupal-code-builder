@@ -4,7 +4,6 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\File\CodeFile;
 use MutableTypedData\Definition\PropertyListInterface;
-use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
 use DrupalCodeBuilder\Generator\Render\PhpAttributes;

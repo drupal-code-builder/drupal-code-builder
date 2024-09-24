@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Definition;
 
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Exception\InvalidDefinitionException;
 
 /**
  * Defines a single preset.

@@ -2,9 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use \DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
-use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Drush command component.

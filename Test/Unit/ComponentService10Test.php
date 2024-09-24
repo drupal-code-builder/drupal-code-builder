@@ -5,8 +5,6 @@ namespace DrupalCodeBuilder\Test\Unit;
 use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
-use MutableTypedData\Exception\InvalidInputException;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests for Service component.

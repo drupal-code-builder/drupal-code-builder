@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Fixtures\Generator;
 
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Dummy generator class for tests.

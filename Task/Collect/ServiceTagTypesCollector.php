@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
-use CaseConverter\CaseString;
 use CaseConverter\StringAssembler;
 
 /**

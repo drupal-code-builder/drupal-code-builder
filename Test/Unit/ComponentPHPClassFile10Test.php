@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
-use DrupalCodeBuilder\Generator\PHPClassFile;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
 

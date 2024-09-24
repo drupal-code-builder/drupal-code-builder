@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
-use DrupalCodeBuilder\Test\Fixtures\Drupal\TestModuleExtensionList;
 
 /**
  * Tests plugin collection with a dummy module.

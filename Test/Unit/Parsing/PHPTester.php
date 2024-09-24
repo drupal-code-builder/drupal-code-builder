@@ -10,17 +10,11 @@ use PHPUnit\Framework\Assert;
 use PHP_CodeSniffer;
 use PhpParser\Comment\Doc;
 use PhpParser\Error;
-use PhpParser\NodeDumper;
 use PhpParser\ParserFactory;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\Function_;
-use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
 use PHP_CodeSniffer\Runner;
 use PHP_CodeSniffer\Config;
 use PHP_CodeSniffer\Reporter;
-use PHP_CodeSniffer\Files\DummyFile;
 
 /**
  * Helper class for parsing and testing PHP.

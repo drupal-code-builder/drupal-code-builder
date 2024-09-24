@@ -10,7 +10,6 @@ use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Generator for an older Drush command.

@@ -3,9 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Exception\InvalidInputException;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use CaseConverter\StringAssembler;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 

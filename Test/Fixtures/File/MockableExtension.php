@@ -6,7 +6,6 @@ use DrupalCodeBuilder\File\DrupalExtension;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 /**
  * Mock for an existing Drupal extension in tests.

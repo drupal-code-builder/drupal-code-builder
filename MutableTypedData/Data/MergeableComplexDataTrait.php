@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\MutableTypedData\Data;
 
-use DrupalCodeBuilder\Exception\MergeDataLossException;
 
 /**
  * Implements merge() for complex data.

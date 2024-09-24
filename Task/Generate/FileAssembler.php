@@ -2,11 +2,8 @@
 
 namespace DrupalCodeBuilder\Task\Generate;
 
-use DrupalCodeBuilder\Environment\EnvironmentInterface;
-use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
-use DrupalCodeBuilder\Generator\RootComponent;
 
 /**
  * Task helper for generating files.

@@ -2,8 +2,6 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use MutableTypedData\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator class for controllers.

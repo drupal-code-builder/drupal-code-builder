@@ -3,8 +3,6 @@
 namespace DrupalCodeBuilder\Test\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Framework\Assert;
-use PHP_CodeSniffer;
 use PHP_CodeSniffer\Runner;
 use PHP_CodeSniffer\Config;
 use PHP_CodeSniffer\Reporter;

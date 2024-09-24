@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator class for hook implementations for Drupal 6.

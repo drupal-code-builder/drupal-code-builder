@@ -18,11 +18,7 @@ use DrupalCodeBuilder\MutableTypedData\Validator\PluginExists;
 use DrupalCodeBuilder\MutableTypedData\Validator\PluginName;
 use DrupalCodeBuilder\MutableTypedData\Validator\ServiceName;
 use DrupalCodeBuilder\MutableTypedData\Validator\YamlPluginName;
-use MutableTypedData\Data\MutableData;
-use MutableTypedData\Data\DataItem;
 use MutableTypedData\DataItemFactory;
-use MutableTypedData\Definition\DataDefinition;
-use MutableTypedData\Exception\InvalidDefinitionException;
 use MutableTypedData\ExpressionLanguage\DataAddressLanguageProvider;
 
 /**

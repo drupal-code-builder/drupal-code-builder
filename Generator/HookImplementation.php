@@ -4,7 +4,6 @@ namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Utility\InsertArray;
 
 /**
  * Generator for a single hook implementation.

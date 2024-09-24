@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Exception\MergeDataLossException;

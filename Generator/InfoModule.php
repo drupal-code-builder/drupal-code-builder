@@ -4,7 +4,6 @@ namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use Ckr\Util\ArrayMerger;
 
 /**
  * Abstract generator for module info data.

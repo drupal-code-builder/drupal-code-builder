@@ -3,12 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
-use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
-use CaseConverter\CaseString;
-use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionsSortOrder;
 
 /**

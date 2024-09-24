@@ -3,8 +3,6 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Attribute\InjectImplementations;
-use DrupalCodeBuilder\Environment\EnvironmentInterface;
-use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting a summary of all stored analysis data.

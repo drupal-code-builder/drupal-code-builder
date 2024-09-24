@@ -4,9 +4,6 @@ namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
 use PHPUnit\Framework\Assert;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Return_;
-use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Expr\Variable;
 
 /**
  * Helper class for testing a content entity baseFieldDefinitions() method.

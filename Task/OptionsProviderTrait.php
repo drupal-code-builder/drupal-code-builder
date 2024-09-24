@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Task;
 
 use MutableTypedData\Definition\OptionDefinition;
-use MutableTypedData\Definition\OptionSetDefininitionInterface;
 
 /**
  * Trait for \MutableTypedData\Definition\OptionSetDefininitionInterface.

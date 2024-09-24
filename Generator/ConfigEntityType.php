@@ -4,10 +4,6 @@ namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
-use DrupalCodeBuilder\Utility\InsertArray;
-use CaseConverter\CaseString;
-use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionsSortOrder;
 

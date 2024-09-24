@@ -3,9 +3,6 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
-use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
-use DrupalCodeBuilder\Generator\BaseGenerator;
-use DrupalCodeBuilder\Generator\RootComponent;
 use Prophecy\PhpUnit\ProphecyTrait;
 use MutableTypedData\Test\VarDumperSetupTrait;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;

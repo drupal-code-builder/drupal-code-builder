@@ -3,9 +3,6 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
-use CaseConverter\CaseString;
-use MutableTypedData\Definition\DefaultDefinition;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for a service provider.

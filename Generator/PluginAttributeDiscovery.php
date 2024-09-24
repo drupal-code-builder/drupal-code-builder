@@ -2,18 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
-use MutableTypedData\Definition\PropertyListInterface;
-use \DrupalCodeBuilder\Exception\InvalidInputException;
-use DrupalCodeBuilder\Generator\Render\ClassAnnotation;
-use DrupalCodeBuilder\Generator\Render\Docblock;
 use DrupalCodeBuilder\Generator\Render\PhpAttributes;
-use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
-use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
-use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
-use CaseConverter\CaseString;
-use MutableTypedData\Data\DataItem;
-use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for an attribute plugin.

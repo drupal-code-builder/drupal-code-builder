@@ -6,7 +6,6 @@ use MutableTypedData\Data\DataItem;
 use MutableTypedData\Exception\InvalidAccessException;
 use MutableTypedData\Exception\InvalidInputException;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
-use DrupalCodeBuilder\Utility\NestedArray;
 
 /**
  * Represents arbitrarily-structured data.

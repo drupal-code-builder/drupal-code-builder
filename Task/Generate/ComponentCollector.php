@@ -9,11 +9,9 @@ use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
-use DrupalCodeBuilder\Generator\RootComponent;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DataDefinition;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use DrupalCodeBuilder\Generator\BaseGenerator;
 use DrupalCodeBuilder\Generator\GeneratorInterface;
 
 /**

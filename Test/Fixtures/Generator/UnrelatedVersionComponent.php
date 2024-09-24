@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Test\Fixtures\Generator;
 
 use DrupalCodeBuilder\Generator\BaseGenerator;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 use PHPUnit\Framework\Assert;
 
 /**

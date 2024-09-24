@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests ReportSummary task.

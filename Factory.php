@@ -8,7 +8,6 @@
 namespace DrupalCodeBuilder;
 
 use DrupalCodeBuilder\Exception\InvalidInputException;
-use CaseConverter\CaseString;
 
 // Include the Composer autoloader for our classes.
 // We use this if we're not being used as a Composer library, for example if

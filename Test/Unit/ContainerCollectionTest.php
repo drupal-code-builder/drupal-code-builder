@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
-use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the container collection.

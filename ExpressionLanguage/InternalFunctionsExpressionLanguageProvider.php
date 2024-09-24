@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\ExpressionLanguage;
 
 use CaseConverter\CaseString;
-use MutableTypedData\Data\DataItem;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 

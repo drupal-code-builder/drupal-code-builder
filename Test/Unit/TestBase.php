@@ -12,8 +12,6 @@ use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Test\VarDumperSetupTrait;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\ExpectationFailedException;
-use PHP_CodeSniffer;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**

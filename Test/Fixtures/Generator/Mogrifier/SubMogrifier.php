@@ -2,8 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Fixtures\Generator\Mogrifier;
 
-use DrupalCodeBuilder\Generator\BaseGenerator;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 class SubMogrifier extends Mogrifier {
 

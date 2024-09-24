@@ -3,13 +3,9 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
-use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\AdoptableInterface;
-use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
-use DrupalCodeBuilder\Task\Generate\ComponentCollector;
-use DrupalCodeBuilder\Task\Generate\FileAssembler;
 use MutableTypedData\Data\DataItem;
 
 /**

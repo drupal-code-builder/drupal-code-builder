@@ -8,7 +8,6 @@
 namespace DrupalCodeBuilder\Task\Testing;
 
 use DrupalCodeBuilder\Task\Collect;
-use DrupalCodeBuilder\Factory;
 
 /**
  * Collect hook definitions to be stored as a file in our tests folder.

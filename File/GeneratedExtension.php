@@ -2,11 +2,6 @@
 
 namespace DrupalCodeBuilder\File;
 
-use Symfony\Component\Yaml\Yaml;
-use PhpParser\ParserFactory;
-use PhpParser\Error;
-use PhpParser\Node\Stmt\Function_;
-use PhpParser\Node\Stmt\Use_;
 
 /**
  * Represents a generated extension.

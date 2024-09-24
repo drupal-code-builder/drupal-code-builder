@@ -3,16 +3,8 @@
 namespace DrupalCodeBuilder\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
-use MutableTypedData\Data\DataItem;
-use MutableTypedData\Data\StringData;
-use MutableTypedData\Data\ArrayData;
-use MutableTypedData\Data\ComplexData;
-use MutableTypedData\Data\MutableData;
-use MutableTypedData\DataItemFactory;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Definition\DataDefinition;
-use MutableTypedData\Definition\VariantDefinition;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Test\VarDumperSetupTrait;
 

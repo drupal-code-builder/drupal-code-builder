@@ -3,8 +3,6 @@
 namespace DrupalCodeBuilder\Definition;
 
 use DrupalCodeBuilder\Utility\InsertArray;
-use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
-use MutableTypedData\Definition\OptionDefinition;
 use MutableTypedData\Exception\InvalidDefinitionException;
 
 /**

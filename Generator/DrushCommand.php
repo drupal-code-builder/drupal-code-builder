@@ -12,7 +12,6 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
 use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\OptionDefinition;
 
 /**
  * Generator for a Drush 12/13 command.

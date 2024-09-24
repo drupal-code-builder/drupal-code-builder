@@ -5,7 +5,6 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
-use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
 use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 

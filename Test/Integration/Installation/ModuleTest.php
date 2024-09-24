@@ -2,7 +2,6 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Installation;
 
-use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests a basic module.

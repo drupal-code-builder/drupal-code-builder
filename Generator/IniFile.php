@@ -4,8 +4,6 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\File\CodeFile;
 use Ckr\Util\ArrayMerger;
-use MutableTypedData\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Generator for ini files used for pre-D8 info files.
