@@ -409,13 +409,11 @@ class ContentEntityType extends EntityTypeBase {
     $method_body[] = '';
 
     // Add a 'created' field.
+    // The 'created' field is not revisionable.
     $method_body[] = "£fields['created'] = \Drupal\Core\Field\BaseFieldDefinition::create('created')";
     $created_field_calls = new FluentMethodCall;
     $created_field_calls->setLabel(FluentMethodCall::t('Created'))
       ->setDescription(FluentMethodCall::t('The time that the entity was created.'));
-    if ($use_revisionable) {
-      $created_field_calls->setRevisionable(TRUE);
-    }
     if ($use_translatable) {
       $created_field_calls->setTranslatable(TRUE);
     }
