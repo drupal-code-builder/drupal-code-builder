@@ -396,6 +396,7 @@ class PluginType extends BaseGenerator {
 
     $plugin_relative_namespace_pieces = explode('\\', $this->component_data['plugin_relative_namespace']);
 
+    // name clashes with property! grafting fails!
     $components['interface'] = [
       'component_type' => 'PHPInterfaceFile',
       'plain_class_name' => $this->component_data->plugin_plain_class_name->value . 'Interface',
