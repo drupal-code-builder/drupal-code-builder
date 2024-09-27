@@ -231,10 +231,9 @@ class ExtensionCodeFile extends PHPFile {
    * {@inheritdoc}
    */
   function fileDocblockSummary() {
-    // use root!
-    $filename_pieces = explode('.', $this->component_data['filename']);
+    $nearest_root = $this->getNearestRootData();
 
-    return match (end($filename_pieces)) {
+    return match ($nearest_root->base->value) {
       'module',
       'profile' => 'Contains hook implementations for the %readable %base.',
       'install' => 'Contains install and update hooks for the %readable %base.',
