@@ -491,6 +491,8 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
+      $graft_into_requester = TRUE;
+
       // dump("Converting $required_item_name");
       // Conversion to data items!
       if (is_array($required_item_data)) {
@@ -499,6 +501,8 @@ class ComponentCollector {
         // This has to be requested explicitly rather than relying on matching
         // property names, as there are too many that happen to coincide.
         if (!empty($required_item_data['use_data_definition'])) {
+          $graft_into_requester = FALSE;
+
           unset($required_item_data['component_type']);
           unset($required_item_data['use_data_definition']);
 
@@ -565,9 +569,10 @@ class ComponentCollector {
 
       $local_names[$required_item_name] = TRUE;
 
-      // erm how come we didn't need to lock serialization
+      if ($graft_into_requester) {
+        $component_data->disableSerialization()->graft($required_item_data);
+      }
 
-      $component_data->disableSerialization()->graft($required_item_data);
       // !!! works!
       // now try getting parent data stuff.
 
