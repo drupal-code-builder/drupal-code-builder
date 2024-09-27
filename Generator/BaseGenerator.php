@@ -264,6 +264,19 @@ abstract class BaseGenerator implements GeneratorInterface {
     return FALSE;
   }
 
+  protected function getNearestRootData(): DataItem {
+    $data = $this->component_data;
+    do {
+      if ($data->hasProperty('root')) {
+        break;
+      }
+
+      $data = $data->getParent();
+    } while (TRUE);
+
+    return $data;
+  }
+
   /**
    * Gets the type of the component.
    *
