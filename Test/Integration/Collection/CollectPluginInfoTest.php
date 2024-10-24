@@ -33,9 +33,10 @@ class CollectPluginInfoTest extends CollectionTestBase {
    * @var array
    */
   protected static $modules = [
-    // Modules for the help section service.
-    'help',
-    'tour',
+    // Module which provides a plugin type, and a module which has a plugin of
+    // that type.
+    'filter',
+    'media',
     // Provides a queue worker plugin.
     'media',
   ];
@@ -153,25 +154,28 @@ class CollectPluginInfoTest extends CollectionTestBase {
 
   /**
    * In a module, and other modules provide plugins.
+   *
+   * Having an implementation of a plugin allows the analysis to detect the
+   * likely plugin base class.
    */
   protected function pluginTypeHelpSection() {
     $plugin_types_info = $this->getPluginTypeInfoFromCollector(
       [
-        'service_id' => 'plugin.manager.help_section',
-        'type_id' => 'help_section',
+        'service_id' => 'plugin.manager.filter',
+        'type_id' => 'filter',
       ]
     );
 
-    $this->assertArrayHasKey('help_section', $plugin_types_info, "The plugin types list has the help_section plugin type.");
+    $this->assertArrayHasKey('filter', $plugin_types_info, "The plugin types list has the filter plugin type.");
 
-    $help_section_type_info = $plugin_types_info['help_section'];
-    $this->assertEquals('help_section', $help_section_type_info['type_id']);
-    $this->assertEquals('help_section', $help_section_type_info['type_label']);
-    $this->assertEquals('plugin.manager.help_section', $help_section_type_info['service_id']);
-    $this->assertEquals('Plugin/HelpSection', $help_section_type_info['subdir']);
-    $this->assertEquals('Drupal\help\HelpSectionPluginInterface', $help_section_type_info['plugin_interface']);
-    $this->assertEquals('Drupal\help\Annotation\HelpSection', $help_section_type_info['plugin_definition_annotation_name']);
-    $this->assertEquals('Drupal\help\Plugin\HelpSection\HelpSectionPluginBase', $help_section_type_info['base_class']);
+    $help_section_type_info = $plugin_types_info['filter'];
+    $this->assertEquals('filter', $help_section_type_info['type_id']);
+    $this->assertEquals('filter', $help_section_type_info['type_label']);
+    $this->assertEquals('plugin.manager.filter', $help_section_type_info['service_id']);
+    $this->assertEquals('Plugin/Filter', $help_section_type_info['subdir']);
+    $this->assertEquals('Drupal\filter\Plugin\FilterInterface', $help_section_type_info['plugin_interface']);
+    $this->assertEquals('Drupal\filter\Annotation\Filter', $help_section_type_info['plugin_definition_annotation_name']);
+    $this->assertEquals('Drupal\filter\Plugin\FilterBase', $help_section_type_info['base_class']);
   }
 
 }
