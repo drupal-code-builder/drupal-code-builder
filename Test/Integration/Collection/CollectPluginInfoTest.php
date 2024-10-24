@@ -2,10 +2,17 @@
 
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
+use DrupalCodeBuilder\Task\Collect\PluginTypesCollector;
+use ReflectionMethod;
+
 /**
  * Tests collecting data on plugin types from Drupal.
  */
 class CollectPluginInfoTest extends CollectionTestBase {
+
+  protected ?PluginTypesCollector $pluginTypesCollector;
+
+  protected ?ReflectionMethod $gatherPluginTypeInfoMethod;
 
   /**
    * {@inheritdoc}

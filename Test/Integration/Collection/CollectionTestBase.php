@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Test\Integration\Collection;
 
 use Drupal\KernelTests\KernelTestBase;
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Test\Fixtures\Drupal\TestModuleExtensionList;
 
 /**
@@ -16,6 +17,8 @@ use DrupalCodeBuilder\Test\Fixtures\Drupal\TestModuleExtensionList;
  * @endcode
  */
 class CollectionTestBase extends KernelTestBase {
+
+  protected ?EnvironmentInterface $environment;
 
   /**
    * {@inheritdoc}
