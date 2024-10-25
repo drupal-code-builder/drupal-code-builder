@@ -417,12 +417,12 @@ class ComponentPluginType10Test extends TestBase {
       ],
       'plugin_types' => [
         0 => [
-          // Use annotation type for both, as that generates more things.
-          'discovery_type' => 'annotation',
+          // Use attribute type for both, as that generates more things.
+          'discovery_type' => 'attribute',
           'plugin_type' => 'alpha',
         ],
         1 => [
-          'discovery_type' => 'annotation',
+          'discovery_type' => 'attribute',
           'plugin_type' => 'beta',
         ],
       ],
