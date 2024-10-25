@@ -19,8 +19,6 @@ use PhpParser\NodeFinder;
  */
 class Form extends PHPClassFileWithInjection implements AdoptableInterface {
 
-  protected $hasStaticFactoryMethod = TRUE;
-
   /**
    * {@inheritdoc}
    */
@@ -50,6 +48,9 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
 
     // Put the rest of the parent definitions after ours.
     $definition->addProperties($properties);
+
+    $definition->getProperty('use_static_factory_method')
+      ->setLiteralDefault(TRUE);
 
     // Put the class in the 'Form' relative namespace.
     $definition->getProperty('relative_namespace')

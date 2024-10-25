@@ -12,13 +12,6 @@ use DrupalCodeBuilder\Generator\Render\Docblock;
 class PHPClassFileWithInjection extends PHPClassFile {
 
   /**
-   * Sets whether this class needs a create() static factory method.
-   *
-   * @var bool
-   */
-  protected $hasStaticFactoryMethod = FALSE;
-
-  /**
    * The interface to use for the static create() method's container parameter.
    *
    * @var string
@@ -48,6 +41,10 @@ class PHPClassFileWithInjection extends PHPClassFile {
     parent::addToGeneratorDefinition($definition);
 
     $properties = [
+      // Whether this class needs a create() static factory method.
+      'use_static_factory_method' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
       'injected_services' => PropertyDefinition::create('string')
         ->setLabel('Injected services')
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
@@ -82,14 +79,14 @@ class PHPClassFileWithInjection extends PHPClassFile {
           'component_type' => 'InjectedService',
           'containing_component' => '%requester',
           'service_id' => $service_id,
-          'class_has_static_factory' => $this->hasStaticFactoryMethod,
+          'class_has_static_factory' => $this->component_data->use_static_factory_method->value,
           'class_has_constructor' => TRUE,
           'class_name' => $this->component_data->qualified_class_name->value,
         ];
       }
 
       // The static factory create() method.
-      if ($this->hasStaticFactoryMethod) {
+      if ($this->component_data->use_static_factory_method->value) {
         $create_parameters = [
           [
             'name' => 'container',

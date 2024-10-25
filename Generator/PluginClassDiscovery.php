@@ -15,11 +15,6 @@ use MutableTypedData\Definition\DefaultDefinition;
 abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $hasStaticFactoryMethod = TRUE;
-
-  /**
    * The plugin type data.
    *
    * @var array
@@ -79,6 +74,9 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
 
     $definition->getProperty('relative_class_name')->setInternal(TRUE);
+
+    $definition->getProperty('use_static_factory_method')
+      ->setLiteralDefault(TRUE);
 
     $definition->addPropertyBefore(
       'plain_class_name',
