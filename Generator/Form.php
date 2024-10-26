@@ -59,7 +59,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
     $definition->getProperty('plain_class_name')
       ->setLiteralDefault('MyForm');
 
-      $definition->getProperty('relative_class_name')->setInternal(TRUE);
+    $definition->getProperty('relative_class_name')->setInternal(TRUE);
 
     // Set the parent class.
     $definition->getProperty('parent_class_name')
