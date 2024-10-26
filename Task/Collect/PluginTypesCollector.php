@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Utility\CodeAnalysis\ClassLike;
+use DrupalCodeBuilder\Utility\CodeAnalysis\Variables;
 use Throwable;
 
 /**
@@ -694,7 +695,7 @@ class PluginTypesCollector extends CollectorBase  {
 
       $type_reflection = $constructor_parameter_reflection->getType();
       if ($type_reflection) {
-        $annotation_property_data['type'] = $this->getTypeStringFromReflection($type_reflection);
+        $annotation_property_data['type'] = Variables::getTypeStringFromReflection($type_reflection);
       }
 
       if ($constructor_parameters[$index]->isOptional()) {
@@ -703,36 +704,6 @@ class PluginTypesCollector extends CollectorBase  {
 
       $data['plugin_properties'][$constructor_parameter_reflection->name] = $annotation_property_data;
     }
-  }
-
-  /**
-   * Produces the string representation of type from the ReflectionType.
-   *
-   * @param \ReflectionType $type_reflection
-   *   The reflection type. If this is a compound type, this method calls itself
-   *   with each of the subtypes.
-   *
-   * @return string
-   *   The the string representation of type, usable in code.
-   */
-  protected function getTypeStringFromReflection(\ReflectionType $type_reflection): string {
-    if ($type_reflection instanceof \ReflectionNamedType) {
-      $type = $type_reflection->getName();
-
-      // Prefix a class with a '\'. We can assume that class types start with
-      // an uppercase letter, and that there are no static / self etc types.
-      if (ctype_upper(substr($type, 0, 1))) {
-        $type = '\\' . $type;
-      }
-
-      return $type;
-    }
-    elseif ($type_reflection instanceof \ReflectionUnionType) {
-      $union_types = array_map(fn (\ReflectionType $map_type) => $this->getTypeStringFromReflection($map_type), $type_reflection->getTypes());
-      return implode('|', $union_types);
-    }
-
-    assert(FALSE, 'Unsupported ReflectionType class.');
   }
 
   /**
