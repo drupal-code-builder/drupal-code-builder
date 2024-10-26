@@ -447,4 +447,58 @@ class ComponentPluginType10Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['services', "plugin.manager.test_module_beta", 'class'], 'Drupal\test_module\BetaManager');
   }
 
+  /**
+   * Test Plugin Type with DI in the plugin base class.
+   *
+   * @group di
+   */
+  function testAttributePluginTypeWithServices() {
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugin_types' => [
+        0 => [
+          'discovery_type' => 'attribute',
+          'plugin_type' => 'cat_feeder',
+          'attribute_properties' => [
+            0 => [
+              'name' => 'fishiness',
+              'type' => 'int',
+              'description' => 'How fishy is it?',
+            ],
+          ],
+          'base_class_injected_services' => [
+            'entity_type.manager',
+          ],
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    // Check the plugin base class file.
+    $plugin_base_file = $files['src/Plugin/CatFeeder/CatFeederBase.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_base_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\CatFeeder\CatFeederBase');
+    $php_tester->assertClassIsAbstract();
+    $php_tester->assertClassHasInterfaces([
+      'Drupal\test_module\Plugin\CatFeeder\CatFeederInterface',
+      'Drupal\Core\Plugin\ContainerFactoryPluginInterface',
+    ]);
+    $php_tester->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
+  }
+
 }

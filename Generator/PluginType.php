@@ -187,6 +187,11 @@ class PluginType extends BaseGenerator {
       ]);
 
     $common_properties = [
+      'base_class_injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Plugin base class injected services')
+        ->setDescription("Services to inject into the plugin base class.")
+        ->setMultiple(TRUE)
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // TODO: move these 3 universal properties to a helper method.
       'root_component_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
@@ -409,14 +414,21 @@ class PluginType extends BaseGenerator {
       ]
     ];
 
+    $base_class_interfaces = [
+      $this->component_data->interface->value,
+    ];
+    if (!$this->component_data->base_class_injected_services->isEmpty()) {
+      $base_class_interfaces[] = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
+    }
+
     $components['base_class'] = [
-      'component_type' => 'PHPClassFile',
+      'component_type' => 'PHPClassFileWithInjection',
       'plain_class_name' => $this->component_data['base_class_short_name'],
       'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
-      'interfaces' => [
-        $this->component_data['interface'],
-      ],
+      'interfaces' => $base_class_interfaces,
+      'injected_services' => $this->component_data->base_class_injected_services->values(),
+      'use_static_factory_method' => TRUE,
       // Abstract for annotation or attribute plugins, where each plugin
       // provides a class; for YAML plugins, each plugin will typically just use
       // this class.
