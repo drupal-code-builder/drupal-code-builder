@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Task\Collect;
 
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Utility\CodeAnalysis\ClassLike;
 use Throwable;
 
 /**
@@ -1374,9 +1375,11 @@ class PluginTypesCollector extends CollectorBase  {
    */
   protected function getFixedParametersFromManager($service_class_name) {
     $method_ref = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($service_class_name, 'createInstance');
-    if ($method_ref->getDeclaringClass()->getName() != $service_class_name) {
-      // The plugin manager does not override createInstance(), therefore the
-      // plugin class construct() method must have the normal parameters.
+
+    if (!ClassLike::classesInSameNamespace($method_ref->getDeclaringClass()->getName(), $service_class_name)) {
+      // The plugin manager, or a common manager base class in the same
+      // namespace, does not override createInstance(), therefore the plugin
+      // class construct() method must have the normal parameters.
       return;
     }
 
@@ -1386,15 +1389,32 @@ class PluginTypesCollector extends CollectorBase  {
     // the syntax tree.
     $body = $method_ref->getBody();
 
-    if (!str_contains($body, 'return new')) {
+    if (!str_contains($body, 'new')) {
       // The method doesn't construct an object: therefore the paramters for
       // the plugin constructor are the standard ones.
       return;
     }
 
+    $match_regexes = [
+      // Try to find a 'return new' statement first.
+      '@return new .+\((.+)\)@',
+      // Fall back on any 'new' statement, as some manager classes assign the
+      // plugin to a variable then retur that.
+      '@new .+\((.+)\)@',
+    ];
     $matches = [];
-    preg_match('@return new .+\((.+)\)@', $body, $matches);
-    $construction_params = $matches[1];
+    foreach ($match_regexes as $regex) {
+      $matched = preg_match($regex, $body, $matches);
+
+      if ($matched) {
+        $construction_params = $matches[1];
+        break;
+      }
+    }
+
+    if (!$matched) {
+      return;
+    }
 
     // Use preg_split() rather than explode() in case the code has formatting
     // errors or uses linebreaks.
