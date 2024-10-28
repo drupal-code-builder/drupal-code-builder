@@ -125,7 +125,12 @@ class DrupalExtension {
 
     $yml = $this->getFileContents($relative_file_path);
 
-    $value = Yaml::parse($yml);
+    try {
+      $value = Yaml::parse($yml);
+    }
+    catch (\Symfony\Component\Yaml\Exception\ParseException $exception) {
+      return [];
+    }
 
     // Cast to array in case the .yml file is empty.
     return (array) $value;
