@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Utility\NestedArray;
 use Ckr\Util\ArrayMerger;
+use DrupalCodeBuilder\Generator\Render\Yaml;
 use MutableTypedData\Data\DataItem;
 
 /**
@@ -380,7 +381,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       $line_break_between_blocks_level = 1;
     }
     else {
-      $line_break_between_blocks_level = NULL;
+      $line_break_between_blocks_level = Yaml::NEVER;
     }
 
     $yaml_inline_levels = [

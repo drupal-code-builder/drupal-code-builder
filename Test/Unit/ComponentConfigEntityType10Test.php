@@ -242,8 +242,7 @@ class ComponentConfigEntityType10Test extends TestBase {
     $schema_file = $files['config/schema/test_module.schema.yml'];
 
     $yaml_tester = new YamlTester($schema_file);
-    // The YAML dumper will incorrectly quote this property because of the '*'.
-    $yaml_tester->assertPropertyHasBlankLineBefore(["'test_module.beta.*'"]);
+    $yaml_tester->assertPropertyHasBlankLineBefore(["test_module.beta.*"]);
   }
 
   /**

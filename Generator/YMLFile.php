@@ -8,6 +8,7 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
 use Ckr\Util\ArrayMerger;
+use DrupalCodeBuilder\Generator\Render\Yaml;
 
 /**
  * Generator for general YML files.
@@ -19,13 +20,6 @@ use Ckr\Util\ArrayMerger;
  * apparently  unnecessarily once the token is replaced.
  */
 class YMLFile extends File {
-
-  /**
-   * The value of the indent parameter to pass to the YAML dumper.
-   *
-   * @var int
-   */
-  const YAML_INDENT = 2;
 
   /**
    * {@inheritdoc}
@@ -47,7 +41,8 @@ class YMLFile extends File {
       //  - NULL to add no linebreaks.
       // TODO: fix data type!
       'line_break_between_blocks_level' => PropertyDefinition::create('string')
-        ->setInternal(TRUE),
+        ->setInternal(TRUE)
+        ->setLiteralDefault(Yaml::NEVER),
       'inline_levels_extra' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
     ]);
@@ -123,38 +118,20 @@ class YMLFile extends File {
    *  An array containing the YAML string.
    */
   protected function getYamlBody($yaml_data_array) {
-    $yaml_parser = new \Symfony\Component\Yaml\Yaml;
+    $this->expandInlineItems($yaml_data_array);
 
-    $yaml_parser_inline_switch_level = $this->component_data['yaml_inline_level'];
+    $yaml = Yaml::create(
+      $yaml_data_array,
+      inline_from_level: $this->component_data->yaml_inline_level->value,
+      blank_lines_until_level: $this->component_data->line_break_between_blocks_level->value,
+    );
 
-    $yaml = $yaml_parser->dump($yaml_data_array, $yaml_parser_inline_switch_level, static::YAML_INDENT);
+    $yaml_lines = $yaml->render();
 
-    $this->expandInlineItems($yaml_data_array, $yaml);
+    // Add a terminal newline.
+    $yaml_lines[] = '';
 
-    $yaml_lines = explode("\n", $yaml);
-
-    if (!is_null($this->component_data['line_break_between_blocks_level'])) {
-      // $indent = str_repeat('  ', $this->component_data['line_break_between_blocks_level']);
-      $line_break_indent = $this->component_data['line_break_between_blocks_level'] * 2;
-
-      $body = [];
-      $line_indent = NULL;
-      foreach ($yaml_lines as $index => $line) {
-        $previous_line_indent = $line_indent;
-        $line_indent = strlen($line) - strlen(ltrim($line));
-
-        if ($line_indent == $line_break_indent && $previous_line_indent > $line_indent) {
-          $body[] = '';
-        }
-
-        $body[] = $line;
-      }
-    }
-    else {
-      $body = $yaml_lines;
-    }
-
-    return $body;
+    return $yaml_lines;
   }
 
   /**
@@ -183,15 +160,10 @@ class YMLFile extends File {
    *    This supports verbatim address pieces, and a '*' for a wildcard.
    *  - 'level': NOT YET USED.
    *
-   * TODO: this is not currently run for YAML which puts line breaks between
-   * blocks: there's no use case for this yet.
-   *
-   * @param array $yaml_data_array
-   *   The original YAML data array.
-   * @param string &$yaml
-   *   The generated YAML text.
+   * @param array &$yaml_data_array
+   *   The YAML data array, passed by reference.
    */
-  protected function expandInlineItems($yaml_data_array, &$yaml) {
+  protected function expandInlineItems(&$yaml_data_array) {
     if (empty($this->component_data['inline_levels_extra'])) {
       return;
     }
@@ -241,34 +213,12 @@ class YMLFile extends File {
       foreach ($properties_to_expand as $property) {
         // Get the value for the property.
         $value = NestedArray::getValue($yaml_data_array, $property);
-        // Create a YAML subarray that has the key for the value.
-        $key = end($property);
-        $yaml_data_sub_array = [
-          $key => $value,
-        ];
 
-        $yaml_parser = new \Symfony\Component\Yaml\Yaml;
+        // Create a nested YAML renderer.
+        $nested_yaml = Yaml::create($value, inline_from_level: 1);
 
-        $original = $yaml_parser->dump($yaml_data_sub_array, 1, static::YAML_INDENT);
-        $replacement = $yaml_parser->dump($yaml_data_sub_array, 2, static::YAML_INDENT);
-
-        // We need to put the right indent at the front of all lines.
-        // The indent is one level less than the level of the address, which
-        // itself is one less than the count of the address array.
-        $indent = str_repeat('  ', static::YAML_INDENT * (count($property) - 2));
-        $original = $indent . $original;
-        $replacement = preg_replace('@^@m', $indent, $replacement);
-
-        // Replace the inlined original YAML text with the multi-line
-        // replacement.
-        // WARNING: this is a bit dicey, as we might be replacing multiple
-        // instances of this data, at ANY level!
-        // However, since the only use of this so far is for services.yml
-        // file tags, that's not a problem: YAGNI.
-        // A better way to do this -- but far more complicated -- might be to
-        // replace the data with a  placeholder token before we  generate the
-        // YAML, so we are sure we are replacing the right thing.
-        $yaml = str_replace($original, $replacement, $yaml);
+        // Put it back in the data array.
+        NestedArray::setValue($yaml_data_array, $property, $nested_yaml);
       }
     }
   }
