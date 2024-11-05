@@ -132,13 +132,13 @@ class VersionHelper11 {
         if (!\Drupal::moduleHandler()->moduleExists($name)) {
           return;
         }
-        \Drupal::service('extension.list.module')->getPath($name);
+        return \Drupal::service('extension.list.module')->getPath($name);
 
       case 'theme':
         if (!\Drupal::service('theme_handler')->themeExists($name)) {
           return;
         }
-        \Drupal::service('extension.list.theme')->getPath($name);
+        return \Drupal::service('extension.list.theme')->getPath($name);
 
       case 'profile':
         // TODO.
