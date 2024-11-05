@@ -169,7 +169,7 @@ class ConfigEntityType extends EntityTypeBase {
         'element_description' => "The human-readable name of this entity",
         'element_array' => [
           'default_value' => "£this->entity->get('label')",
-          'required' => 'TRUE',
+          'required' => TRUE,
         ],
       ];
 
@@ -182,7 +182,7 @@ class ConfigEntityType extends EntityTypeBase {
         'element_description' => "A unique machine-readable name for this entity. It must only contain lowercase letters, numbers, and underscores.",
         'element_array' => [
           'default_value' => "£this->entity->id()",
-          'required' => 'TRUE',
+          'required' => TRUE,
           'machine_name' => [
             'exists' => "['{$this->component_data['qualified_class_name']}', 'load']",
             'source' => "['label']",
