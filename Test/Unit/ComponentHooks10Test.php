@@ -31,7 +31,7 @@ class ComponentHooks10Test extends TestBase {
    *
    * @var int
    */
-  protected $drupalMajorVersion = 10;
+  protected $drupalMajorVersion = 8;
 
   /**
    * Tests generating a single hook implementation.
@@ -114,6 +114,11 @@ class ComponentHooks10Test extends TestBase {
       // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
       // is fixed.
       'Drupal.Files.LineLength.TooLong',
+      // These both need to be excluded because D8 coding standards don't like
+      // the callback_batch_operation() implementation (which is requested by
+      // hook_update_N).
+      'Drupal.Commenting.HookComment.HookRepeat',
+      'Drupal.NamingConventions.ValidFunctionName.InvalidPrefix',
     ];
     $php_tester->assertDrupalCodingStandards($phpcs_excluded_sniffs);
     $php_tester->assertHasHookImplementation('hook_help', $module_name);
