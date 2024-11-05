@@ -81,6 +81,8 @@ class ComponentHooks11Test extends TestBase {
       // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
       // is fixed.
       'Drupal.Files.LineLength.TooLong',
+      // Probably hard to fix because of tokens, arrrgh.
+      'SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses.IncorrectlyOrderedUses',
     ]);
 
     $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
@@ -139,7 +141,9 @@ class ComponentHooks11Test extends TestBase {
     $module_file = $files['test_module.module'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards([
+      'SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses.IncorrectlyOrderedUses',
+    ]);
     $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
 
     $function_tester = $php_tester->getFunctionTester('test_module_block_access');
