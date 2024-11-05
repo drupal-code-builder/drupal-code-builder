@@ -283,7 +283,7 @@ class Module extends RootComponent {
         ->setMultiple(TRUE),
       'api' => DeferredGeneratorDefinition::createFromGeneratorType('API', 'boolean')
         ->setLabel("api.php file")
-        ->setDescription('An api.php file documents hooks and callbacks that this module invents.'),
+        ->setDescription("An api.php file documents hooks and callbacks that this module invents. This will detect any hook invocations in this module's existing code."),
       'readme' => DeferredGeneratorDefinition::createFromGeneratorType('Readme', 'boolean')
         ->setLabel("README file")
         ->setLiteralDefault(TRUE),
