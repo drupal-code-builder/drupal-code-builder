@@ -260,7 +260,13 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
     protected function get8()
     {
         return [
-            11 => 'Hooks11',
+            11 => 'HooksOoWithLegacy',
+            10 => 'HooksOoWithLegacy',
+            9 => 'HooksProcedural',
+            8 => 'HooksProcedural',
+            7 => 'HooksProcedural',
+            6 => 'HooksProcedural',
+            5 => 'HooksProcedural',
         ];
     }
 

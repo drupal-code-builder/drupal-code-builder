@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
+use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -21,7 +23,10 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  *      setting for selecting which type)
  *    - Hooks10AndLower
  */
-class Hooks11 extends Hooks {
+#[DrupalCoreVersion(11)]
+#[DrupalCoreVersion(10)]
+#[RelatedBaseClass('Hooks')]
+class HooksOoWithLegacy extends HooksProcedural {
 
   /**
    * Theme hooks which remain procedural.

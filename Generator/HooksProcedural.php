@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
@@ -25,7 +27,13 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  *
  * @see DrupalCodeBuilder\Generator\ExtensionCodeFile
  */
-class Hooks extends BaseGenerator {
+#[DrupalCoreVersion(9)]
+#[DrupalCoreVersion(8)]
+#[DrupalCoreVersion(7)]
+#[DrupalCoreVersion(6)]
+#[DrupalCoreVersion(5)]
+#[RelatedBaseClass('Hooks')]
+class HooksProcedural extends BaseGenerator {
 
   /**
    * {@inheritdoc}
