@@ -27,7 +27,7 @@ class Filter extends FilterBase {
     // Returns the processing type of this filter plugin.
     module_invoke_all('test_analyze_plugin_all', $param);
     module_invoke('other_module', 'test_analyze_plugin_single', $param);
-    drupal_alter('test_analyze_plugin_alter', $param);
+    drupal_alter('test_analyze_plugin', $param);
   }
 
   /**

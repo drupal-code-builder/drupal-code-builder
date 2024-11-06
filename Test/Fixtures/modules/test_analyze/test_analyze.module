@@ -13,7 +13,7 @@ use Drupal\Core\Block\BlockPluginInterface;
 function test_analyze_block_view_alter(array &$build, BlockPluginInterface $block) {
   module_invoke_all('test_analyze_module_all', $param);
   module_invoke('other_module', 'test_analyze_module_single', $param);
-  drupal_alter('test_analyze_module_alter', $param);
+  drupal_alter('test_analyze_module', $param);
 
   // Remove the contextual links on all blocks that provide them.
   if (isset($build['#contextual_links'])) {

@@ -32,22 +32,22 @@ class UnitAnalyzeModuleTest extends TestCase {
     $this->assertEqualsCanonicalizing([
       'test_analyze_tokens_all' => '$param',
       'test_analyze_tokens_single' => '$param',
-      'test_analyze_tokens_alter_alter' => '$param',
+      'test_analyze_tokens_alter' => '$param',
       'test_analyze_install_all' => '$param',
       'test_analyze_install_single' => '$param',
-      'test_analyze_install_alter_alter' => '$param',
+      'test_analyze_install_alter' => '$param',
       'test_analyze_module_all' => '$param',
       'test_analyze_module_single' => '$param',
-      'test_analyze_module_alter_alter' => '$param',
+      'test_analyze_module_alter' => '$param',
       'test_analyze_views_all' => '$param',
       'test_analyze_views_single' => '$param',
-      'test_analyze_views_alter_alter' => '$param',
+      'test_analyze_views_alter' => '$param',
       'test_analyze_service_all' => '$param',
       'test_analyze_service_single' => '$param',
-      'test_analyze_service_alter_alter' => '$param',
+      'test_analyze_service_alter' => '$param',
       'test_analyze_plugin_all' => '$param',
       'test_analyze_plugin_single' => '$param',
-      'test_analyze_plugin_alter_alter' => '$param',
+      'test_analyze_plugin_alter' => '$param',
     ], $hooks);
   }
 
