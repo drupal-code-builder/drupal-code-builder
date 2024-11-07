@@ -92,7 +92,7 @@ class ComponentAPI10Test extends TestBase {
     $analyze_module->getSanityLevel()->willReturn('component_data_processed');
     $analyze_module->getInventedHooks('test_module')
       ->willReturn([
-        'analysed_hook' => 'array $foo, array $bar',
+        'analysed_hook' => '$foo, $bar',
       ]);
 
     $container = \DrupalCodeBuilder\Factory::getContainer();
