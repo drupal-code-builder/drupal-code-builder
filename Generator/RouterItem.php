@@ -524,6 +524,10 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
         'prefixes' => ['public'],
         'parameters' => $content_method_parameters,
         'function_docblock_lines' => ["Callback for the {$this->component_data['route_name']} route."],
+        // Route controllers typically omit the @return.
+        'return' => [
+          'omit_return_tag' => TRUE,
+        ],
       ];
     }
 

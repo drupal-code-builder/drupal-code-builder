@@ -129,6 +129,9 @@ class ServiceEventSubscriber extends Service {
             'description' => 'The event. TODO: Change this to the specific event class.',
           ],
         ],
+        'return' => [
+          'return_type' => 'void',
+        ],
         'containing_component' => '%requester',
       ];
     }

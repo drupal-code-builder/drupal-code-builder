@@ -48,6 +48,10 @@ abstract class HookImplementationBase extends PHPFunction {
     // there are contained components, these should override the sample code.
     $definition->getProperty('body_overriden_by_contained')
       ->setLiteralDefault(TRUE);
+
+    // Hook implementations have no @return documentation.
+    $definition->getProperty('return')->getProperty('omit_return_tag')
+      ->setLiteralDefault(TRUE);
   }
 
   /**

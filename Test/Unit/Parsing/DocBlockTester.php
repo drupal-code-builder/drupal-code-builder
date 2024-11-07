@@ -45,6 +45,19 @@ class DocBlockTester {
   }
 
   /**
+   * Asserts the documented return type.
+   *
+   * @param string $type
+   *   The expected return type in the docblock.
+   *
+   * @param string|null $message
+   *   (optional) The assertion message.
+   */
+  public function assertReturnType(string $type, ?string $message = NULL) {
+    $this->assertHasLine('@return ' . $type, $message);
+  }
+
+  /**
    * Assert the docblock contains a line.
    *
    * @param string $line

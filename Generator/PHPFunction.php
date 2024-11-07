@@ -120,9 +120,21 @@ class PHPFunction extends BaseGenerator {
       'use_primitive_parameter_type_declarations' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
           ->setLiteralDefault(FALSE),
-      // NOTE: only works when 'declaration' is not used.
-      'return_type' => PropertyDefinition::create('string')
-        ->setInternal(TRUE),
+      // NOTE: only affects the code return type when 'declaration' is not used.
+      'return' => PropertyDefinition::create('complex')
+        ->setInternal(TRUE)
+        ->setProperties([
+          // Forces no return tag in the docblock.
+          'omit_return_tag' => PropertyDefinition::create('boolean')
+            ->setLiteralDefault(FALSE),
+          // The type used in the declaration.
+          'return_type' => PropertyDefinition::create('string'),
+          // The type used in the docblock, if this is different from the type
+          // in the declaration. E.g '\Class[]' where the declaration would have
+          // 'array'.
+          'doc_type' => PropertyDefinition::create('string'),
+          'description' => PropertyDefinition::create('string'),
+        ]),
       'body' => PropertyDefinition::create('string')
         ->setMultiple(TRUE)
         ->setInternal(TRUE),
@@ -205,7 +217,7 @@ class PHPFunction extends BaseGenerator {
           'prefixes' => $this->component_data->prefixes->values(),
           'break_declaration' => $this->component_data->break_declaration->value,
         ],
-        $this->component_data->return_type->value,
+        $this->component_data->return->return_type->value,
       );
 
       $function_code = array_merge($function_code, $declaration_lines);
@@ -340,6 +352,42 @@ class PHPFunction extends BaseGenerator {
         $parameter_data = $parameter_component->getContents();
 
         $docblock->param($parameter_data['typehint'], $parameter_data['parameter_name'], $parameter_data['description'], $parameter_data['by_reference'] ?? FALSE);
+      }
+    }
+
+    // Add a @return tag to the docblock, unless one of the following applies:
+    //  - the function is a constructor
+    //  - omit_return_tag is TRUE,
+    //  - the docblock is an @inheritdoc,
+    //  - the return type is 'void'.
+    if (
+      $this->component_data->function_name->value != '__construct'
+      && !$this->component_data->return->omit_return_tag->value
+      && !$this->component_data->docblock_inherit->value
+      && $this->component_data->return->return_type->value != 'void'
+    ) {
+      if (!$this->component_data->return->doc_type->isEmpty()) {
+        // Use a documentation-specific return type if there is one.
+        $doc_return_type = $this->component_data->return->doc_type->value;
+      }
+      elseif (!$this->component_data->return->return_type->isEmpty()) {
+        // Otherwise, use a code return type if there is one.
+        $doc_return_type = $this->component_data->return->return_type->value;
+      }
+      else {
+        $doc_return_type = NULL;
+      }
+
+      if ($doc_return_type) {
+        $docblock->return(
+          $doc_return_type,
+          $this->component_data->return->description->value ?: 'TODO: write return documentation.',
+        );
+      }
+      else {
+        $docblock->return(
+          $this->component_data->return->description->value ?: 'TODO: write return documentation.',
+        );
       }
     }
 

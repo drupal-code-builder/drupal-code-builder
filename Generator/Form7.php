@@ -52,6 +52,9 @@ class Form7 extends BaseGenerator {
         'containing_component' => '%module.module',
         'function_docblock_lines' => ['Form builder.'],
         'declaration' => "function $form_builder(£form, &£form_state)",
+        'return' => [
+          'omit_return_tag' => TRUE,
+        ],
         'body' => [
           "£form['element'] = array(",
           "  '#type' => 'textfield',",
@@ -68,6 +71,9 @@ class Form7 extends BaseGenerator {
         'containing_component' => '%module.module',
         'function_docblock_lines' => ['Form validate handler.'],
         'declaration' => "function $form_validate(£form, &£form_state)",
+        'return' => [
+          'omit_return_tag' => TRUE,
+        ],
         'body' => [
           "if (£form_state['values']['element'] != 'hello') {",
           "  form_set_error('element', t('Please say hello?'));",
@@ -80,6 +86,9 @@ class Form7 extends BaseGenerator {
         'containing_component' => '%module.module',
         'function_docblock_lines' => ['Form submit handler.'],
         'declaration' => "function $form_submit(£form, &£form_state)",
+        'return' => [
+          'omit_return_tag' => TRUE,
+        ],
         'body' => '',
       ],
     ];

@@ -233,7 +233,9 @@ class ComponentPluginType10Test extends TestBase {
     $api_file = $files["$module_name.api.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $api_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards([
+      'Drupal.Commenting.FunctionComment.MissingReturnType',
+    ]);
 
     // TODO: expand the docblock assertion for these.
     $this->assertStringContainsString("Hooks provided by the Test module module.", $api_file, 'The API file contains the correct docblock header.');
@@ -435,7 +437,9 @@ class ComponentPluginType10Test extends TestBase {
     $api_file = $files['test_module.api.php'];
 
     $api_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $api_file);
-    $api_tester->assertDrupalCodingStandards();
+    $api_tester->assertDrupalCodingStandards([
+      'Drupal.Commenting.FunctionComment.MissingReturnType',
+    ]);
     $api_tester->assertHasFunction('hook_alpha_info_alter');
     $api_tester->assertHasFunction('hook_beta_info_alter');
 

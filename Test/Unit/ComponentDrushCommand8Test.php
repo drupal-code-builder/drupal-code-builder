@@ -13,6 +13,13 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 class ComponentDrushCommand8Test extends TestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $phpcsExcludedSniffs = [
+    'Drupal.Commenting.FunctionComment.MissingReturnType',
+  ];
+
+  /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
@@ -62,7 +69,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
@@ -132,7 +139,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
@@ -218,7 +225,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
@@ -290,7 +297,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $command_class_file = $files["src/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
-    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');

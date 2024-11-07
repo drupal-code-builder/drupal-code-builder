@@ -65,7 +65,10 @@ class RouteCallback extends BaseGenerator {
       'function_name' => 'routes',
       'containing_component' => "%requester:route_provider",
       'prefixes' => ['public'],
-      'return_type' => 'array',
+      'return' => [
+        'return_type' => 'array',
+        'doc_type' => '\Symfony\Component\Routing\Route[]',
+      ],
       'function_docblock_lines' => ["Returns an array of routes."],
       'body' => explode("\n", <<<EOT
         £routes = [];

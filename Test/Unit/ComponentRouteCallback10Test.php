@@ -58,8 +58,9 @@ class ComponentRouteCallback10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Routing\MyRouteProvider');
 
-    $method_tester = $php_tester->getMethodTester('routes');
-    $method_tester->getDocBlockTester()->assertHasLine('Returns an array of routes.');
+    $docblock_tester = $php_tester->getMethodTester('routes')->getDocBlockTester();
+    $docblock_tester->assertHasLine('Returns an array of routes.');
+    $docblock_tester->assertReturnType('\Symfony\Component\Routing\Route[]');
   }
 
 }

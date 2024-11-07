@@ -247,7 +247,9 @@ class PHPUnitTest extends PHPClassFile {
       'function_name' => 'setUp',
       'docblock_inherit' => TRUE,
       'prefixes' => ['protected'],
-      'return_type' => 'void',
+      'return' => [
+        'return_type' => 'void',
+      ],
       // 'body' is set later, in classCodeBody().
     ];
 
@@ -259,6 +261,9 @@ class PHPUnitTest extends PHPClassFile {
         'Tests the TODO.',
       ],
       'prefixes' => ['public'],
+      'return' => [
+        'return_type' => 'void',
+      ],
       'body' => [
         '// TODO: test code here.',
       ],
