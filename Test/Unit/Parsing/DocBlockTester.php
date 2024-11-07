@@ -11,6 +11,13 @@ use PHPUnit\Framework\Assert;
 class DocBlockTester {
 
   /**
+   * An array of the docblock lines, without the docblock markers.
+   *
+   * @var array|null
+   */
+  protected ?array $docblockLines;
+
+  /**
    * Constructor.
    *
    * @param \PhpParser\Comment\Doc $docblockNode
@@ -78,26 +85,30 @@ class DocBlockTester {
       "The docblock does not the line '{$line}'."
     );
 
-    $docblock_text = $this->docblockNode->getReformattedText();
-    $docblock_lines = explode("\n", $docblock_text);
+    if (!isset($this->docblockLines)) {
+      $docblock_text = $this->docblockNode->getReformattedText();
+      $docblock_lines = explode("\n", $docblock_text);
 
-    // Slice off first and last lines, which are the '/**' and '*/'.
-    $docblock_lines = array_slice($docblock_lines, 1, -1);
-    // Trim off the docblock formatting.
-    array_walk($docblock_lines, function(&$line) {
-      $line = preg_replace('/^ \* /', '', $line);
-    });
+      // Slice off first and last lines, which are the '/**' and '*/'.
+      $docblock_lines = array_slice($docblock_lines, 1, -1);
+      // Trim off the docblock formatting.
+      array_walk($docblock_lines, function(&$line) {
+        $line = preg_replace('/^ \* /', '', $line);
+      });
+
+      $this->docblockLines = $docblock_lines;
+    }
 
     // Work around assertContains() not outputting the array on failure by
     // putting it in the message.
     // TODO: still needed with assertContains()?
-    $message .= " Given docblock was: " . print_r($docblock_lines, TRUE);
+    $message .= " Given docblock was: " . print_r($this->docblockLines, TRUE);
 
     if ($assert) {
-      Assert::assertContains($line, $docblock_lines, $message);
+      Assert::assertContains($line, $this->docblockLines, $message);
     }
     else {
-      Assert::assertNotContains($line, $docblock_lines, $message);
+      Assert::assertNotContains($line, $this->docblockLines, $message);
     }
   }
 
