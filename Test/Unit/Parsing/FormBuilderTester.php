@@ -74,7 +74,7 @@ class FormBuilderTester extends PHPMethodTester {
     }
 
     // All form builders implement an interface method.
-    $this->assertMethodDocblockHasInheritdoc();
+    $this->getDocBlockTester()->assertHasInheritdoc();
 
     $this->assertReturnsVariable('form', "The form builder returns the completed form.");
 

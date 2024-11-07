@@ -305,7 +305,7 @@ class ComponentConfigEntityType10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatAccess');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityAccessControlHandler');
-    $php_tester->assertClassDocBlockHasLine("Provides the access handler for the Kitty Cat entity.");
+    $php_tester->getClassDocBlockTester()->assertHasLine("Provides the access handler for the Kitty Cat entity.");
 
     $storage_class_file = $files['src/Entity/Handler/KittyCatStorage.php'];
 
@@ -313,7 +313,7 @@ class ComponentConfigEntityType10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatStorage');
     $php_tester->assertClassHasParent('Drupal\Core\Config\Entity\ConfigEntityStorage');
-    $php_tester->assertClassDocBlockHasLine("Provides the storage handler for the Kitty Cat entity.");
+    $php_tester->getClassDocBlockTester()->assertHasLine("Provides the storage handler for the Kitty Cat entity.");
 
     $list_builder_class_file = $files['src/Entity/Handler/KittyCatListBuilder.php'];
 
@@ -321,7 +321,7 @@ class ComponentConfigEntityType10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Entity\Handler\KittyCatListBuilder');
     $php_tester->assertClassHasParent('Drupal\Core\Entity\EntityListBuilder');
-    $php_tester->assertClassDocBlockHasLine("Provides the list builder handler for the Kitty Cat entity.");
+    $php_tester->getClassDocBlockTester()->assertHasLine("Provides the list builder handler for the Kitty Cat entity.");
     $php_tester->assertHasMethods(['buildHeader', 'buildRow']);
 
     // TODO: add some more precise assertions for these.

@@ -75,44 +75,23 @@ class PHPMethodTester {
   }
 
   /**
-   * Assert the method docblock has an 'inheritdoc' tag.
+   * Gets a docblock tester for this method's docblock.
    *
-   * @param string $message
-   *   (optional) The assertion message.
+   * @return DocBlockTester
+   *   The tester object.
    */
-  public function assertMethodDocblockHasInheritdoc($message = NULL) {
-    $message = $message ?? "The method {$this->methodName} has an 'inheritdoc' docblock.";
-
-    $this->assertMethodHasDocblockLine('{@inheritdoc}', $message);
-  }
-
-  /**
-   * Assert the method docblock contains the line.
-   *
-   * @param string $line
-   *   The expected line.
-   * @param string $message
-   *   (optional) The assertion message.
-   */
-  public function assertMethodHasDocblockLine($line, $message = NULL) {
+  public function getDocBlockTester(): DocBlockTester {
     $comments = $this->methodNode->getAttribute('comments');
-    $docblock = $comments[0]->getReformattedText();
-    $docblock_lines = explode("\n", $docblock);
 
-    // Slice off first and last lines, which are the '/**' and '*/'.
-    $docblock_lines = array_slice($docblock_lines, 1, -1);
-    $docblock_lines = array_map(function($line) {
-      return preg_replace('/^ \* /', '', $line);
-    }, $docblock_lines);
+    // Workaround for issue with PHP Parser: if the function is the first in the
+    // file, and there are no import statements, then the @file docblock will
+    // be treated as one of the function's comments. Therefore, we need to take
+    // the last comment in the array to be sure of having the actual function
+    // docblock.
+    // @see https://github.com/nikic/PHP-Parser/issues/445
+    $function_docblock = end($comments);
 
-    $message = $message ?? sprintf(
-      "The method %s has the docblock line '%s' within docblock '%s'.",
-      $this->methodName,
-      $line,
-      implode('¶', $docblock_lines)
-    );
-
-    Assert::assertContains($line, $docblock_lines, $message);
+    return new DocBlockTester($function_docblock, $this->methodName);
   }
 
   /**

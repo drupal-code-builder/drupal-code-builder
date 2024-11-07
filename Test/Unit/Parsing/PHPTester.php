@@ -397,50 +397,6 @@ class PHPTester {
   }
 
   /**
-   * Asserts that the class's docblock contains the given line.
-   *
-   * @param string $line
-   *   The line to search for, without the docblock formatting, i.e. without
-   *   the '*' or margin space. Indented lines will need to include their
-   *   indentation, however.
-   * @param string $message
-   *   (optional) The assertion message.
-   */
-  public function assertClassDocBlockHasLine($line, $message = NULL) {
-    $message = $message ?? "The class docblock has the line '{$line}'";
-
-    // All the class files we generate contain only one class.
-    Assert::assertCount(1, $this->parser_nodes['classes']);
-    $class_node = reset($this->parser_nodes['classes']);
-
-    $docblock = $class_node->getAttribute('comments')[0];
-
-    $this->assertDocblockHasLine($line, $docblock, $message);
-  }
-
-  /**
-   * Asserts that the class's docblock does not contain the given line.
-   *
-   * @param string $line
-   *   The line to search for, without the docblock formatting, i.e. without
-   *   the '*' or margin space. Indented lines will need to include their
-   *   indentation, however.
-   * @param string $message
-   *   (optional) The assertion message.
-   */
-  public function assertClassDocBlockNotHasLine($line, $message = NULL) {
-    $message = $message ?? "The class docblock has the line '{$line}'";
-
-    // All the class files we generate contain only one class.
-    Assert::assertCount(1, $this->parser_nodes['classes']);
-    $class_node = reset($this->parser_nodes['classes']);
-
-    $docblock = $class_node->getAttribute('comments')[0];
-
-    $this->assertDocblockNotHasLine($line, $docblock, $message);
-  }
-
-  /**
    * Gets an annotation tester for the class annotation.
    *
    * @return \DrupalCodeBuilder\Test\Unit\Parsing\AnnotationTester
@@ -1135,6 +1091,25 @@ class PHPTester {
         // TODO! check a constainer extraction.
       }
     }
+  }
+
+  /**
+   * Gets a docblock tester for the class's docblock.
+   *
+   * @return DocBlockTester
+   *   The tester object.
+   */
+  public function getClassDocBlockTester(): DocBlockTester {
+    // All the class files we generate contain only one class.
+    Assert::assertCount(1, $this->parser_nodes['classes']);
+    $class_node = reset($this->parser_nodes['classes']);
+    $class_name = array_key_first($this->parser_nodes['classes']);
+
+    // The class files we generate do not have a @file docblock. If they did,
+    // it would also be in this array if the file has no import statements.
+    $docblock = $class_node->getAttribute('comments')[0];
+
+    return new DocBlockTester($docblock, $class_name);
   }
 
   /**

@@ -428,36 +428,6 @@ class ParserPHPTest extends TestCase {
   }
 
   /**
-   * Tests the assertClassDocBlockHasLine() assertion.
-   *
-   * @group php_tester_docblocks
-   */
-  public function testAssertClassDocblockHasLineAssertion() {
-    $php = <<<EOT
-      <?php
-
-      /**
-       * Class docblock.
-       *
-       * Further line.
-       * Partial line.
-       */
-      class Foo {
-
-      }
-
-      EOT;
-
-    $php_tester = new PHPTester(8, $php);
-
-    $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Class docblock.');
-    $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Further line.');
-    $this->assertAssertion(TRUE, $php_tester, 'assertClassDocBlockHasLine', 'Further line.');
-    $this->assertAssertion(FALSE, $php_tester, 'assertClassDocBlockHasLine', 'not this line');
-    $this->assertAssertion(FALSE, $php_tester, 'assertClassDocBlockHasLine', 'Partial');
-  }
-
-  /**
    * Tests the assertFileDocblockHasLine() assertion.
    *
    * @group php_tester_docblocks

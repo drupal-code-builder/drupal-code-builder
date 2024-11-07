@@ -380,7 +380,7 @@ class ComponentPluginsAnnotated9Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Element\Alpha');
     $php_tester->assertClassHasParent('Drupal\somemodule\Element\ParentElement');
     // There should be no annotation.
-    $php_tester->assertClassDocBlockNotHasLine('@Element(');
+    $php_tester->getClassDocBlockTester()->assertNotHasLine('@Element(');
 
     $module_file = $files['test_module.module'];
 

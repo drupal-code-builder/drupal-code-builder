@@ -53,7 +53,7 @@ class ComponentEventTest extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Event\TestModuleEvents');
     $php_tester->assertClassHasNoParent();
-    $php_tester->assertClassDocBlockHasLine('Defines events for the Test Module module.');
+    $php_tester->getClassDocBlockTester()->assertHasLine('Defines events for the Test Module module.');
     $php_tester->assertClassHasConstant('COW_MOO');
     $php_tester->assertClassHasConstant('CAT_MIAOW');
 

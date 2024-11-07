@@ -68,8 +68,9 @@ class ComponentPluginType10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Attribute\CatFeeder');
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Attribute\Plugin');
-    $php_tester->assertClassDocBlockHasLine('Defines a Cat Feeder attribute object.');
-    $php_tester->assertClassDocBlockHasLine('Plugin namespace: CatFeeder.');
+    $docblock_tester = $php_tester->getClassDocBlockTester();
+    $docblock_tester->assertHasLine('Defines a Cat Feeder attribute object.');
+    $docblock_tester->assertHasLine('Plugin namespace: CatFeeder.');
     $php_tester->assertClassHasAttribute('\Attribute');
 
     $construct_tester = $php_tester->getMethodTester('__construct');
@@ -198,9 +199,10 @@ class ComponentPluginType10Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Component\Annotation\Plugin');
     $php_tester->assertClassHasPublicProperty('id', 'string');
     $php_tester->assertClassHasPublicProperty('label', 'Drupal\Core\Annotation\Translation');
-    $php_tester->assertClassDocBlockHasLine('Defines the Cat Feeder plugin annotation object.');
-    $php_tester->assertClassDocBlockHasLine('Plugin namespace: CatFeeder.');
-    $php_tester->assertClassDocBlockHasLine('@Annotation');
+    $docblock_tester = $php_tester->getClassDocBlockTester();
+    $docblock_tester->assertHasLine('Defines the Cat Feeder plugin annotation object.');
+    $docblock_tester->assertHasLine('Plugin namespace: CatFeeder.');
+    $docblock_tester->assertHasLine('@Annotation');
 
     // Check the plugin base class file.
     $plugin_base_file = $files["src/Plugin/CatFeeder/CatFeederBase.php"];

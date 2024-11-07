@@ -65,17 +65,17 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
-    $php_tester->assertClassDocBlockHasLine('Test module Drush commands.');
+    $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');
 
-    $alpha_method_tester = $php_tester->getMethodTester('alpha');
-    $alpha_method_tester->assertMethodHasDocblockLine('@command test_module:alpha');
-    $alpha_method_tester->assertMethodHasDocblockLine('@usage drush test_module:alpha');
+    $docblock_tester = $php_tester->getMethodTester('alpha')->getDocBlockTester();
+    $docblock_tester->assertHasLine('@command test_module:alpha');
+    $docblock_tester->assertHasLine('@usage drush test_module:alpha');
 
-    $beta_method_tester = $php_tester->getMethodTester('beta');
-    $beta_method_tester->assertMethodHasDocblockLine('@command my_group:beta');
-    $beta_method_tester->assertMethodHasDocblockLine('@usage drush my_group:beta');
+    $docblock_tester = $php_tester->getMethodTester('beta')->getDocBlockTester();
+    $docblock_tester->assertHasLine('@command my_group:beta');
+    $docblock_tester->assertHasLine('@usage drush my_group:beta');
   }
 
   /**
@@ -135,13 +135,14 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
-    $php_tester->assertClassDocBlockHasLine('Test module Drush commands.');
+    $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');
 
     $alpha_method_tester = $php_tester->getMethodTester('alpha');
-    $alpha_method_tester->assertMethodHasDocblockLine('@command test_module:alpha');
-    $alpha_method_tester->assertMethodHasDocblockLine('@usage drush test_module:alpha alpha_one alpha_two --option_string --option_numeric --option_bool');
+    $docblock_tester = $alpha_method_tester->getDocBlockTester();
+    $docblock_tester->assertHasLine('@command test_module:alpha');
+    $docblock_tester->assertHasLine('@usage drush test_module:alpha alpha_one alpha_two --option_string --option_numeric --option_bool');
     $alpha_method_tester->assertHasParameters([
       'alpha_one' => 'string',
       'alpha_two' => 'string',
@@ -150,13 +151,14 @@ class ComponentDrushCommand8Test extends TestBase {
       'option_bool' => 'bool',
     ]);
     // TODO: test default values of options.
-    $alpha_method_tester->assertMethodHasDocblockLine('@option option_string Option description.');
-    $alpha_method_tester->assertMethodHasDocblockLine('@option option_numeric Option description.');
-    $alpha_method_tester->assertMethodHasDocblockLine('@option option_bool Option description.');
+    $docblock_tester->assertHasLine('@option option_string Option description.');
+    $docblock_tester->assertHasLine('@option option_numeric Option description.');
+    $docblock_tester->assertHasLine('@option option_bool Option description.');
 
     $beta_method_tester = $php_tester->getMethodTester('beta');
-    $beta_method_tester->assertMethodHasDocblockLine('@command my_group:beta');
-    $beta_method_tester->assertMethodHasDocblockLine('@usage drush my_group:beta beta_one');
+    $docblock_tester = $beta_method_tester->getDocBlockTester();
+    $docblock_tester->assertHasLine('@command my_group:beta');
+    $docblock_tester->assertHasLine('@usage drush my_group:beta beta_one');
     $beta_method_tester->assertHasParameters([
       'beta_one' => 'string',
     ]);
@@ -219,7 +221,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
-    $php_tester->assertClassDocBlockHasLine('Test module Drush commands.');
+    $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');
     $php_tester->assertInjectedServices([
@@ -291,7 +293,7 @@ class ComponentDrushCommand8Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
-    $php_tester->assertClassDocBlockHasLine('Test module Drush commands.');
+    $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');
     $php_tester->assertClassHasInterfaces([

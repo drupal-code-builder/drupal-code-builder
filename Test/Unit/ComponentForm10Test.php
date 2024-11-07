@@ -58,7 +58,7 @@ class ComponentForm10Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
 
     $method_tester = $php_tester->getMethodTester('getFormId');
-    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->getDocBlockTester()->assertHasInheritdoc();
     $method_tester->assertReturnsString('test_module_my_form');
 
     $form_builder_tester = $php_tester->getFormBuilderTester('buildForm');
@@ -67,10 +67,10 @@ class ComponentForm10Test extends TestBase {
     $form_builder_tester->assertAllElementsHaveDefaultValue();
 
     $method_tester = $php_tester->getMethodTester('validateForm');
-    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->getDocBlockTester()->assertHasInheritdoc();
 
     $method_tester = $php_tester->getMethodTester('submitForm');
-    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->getDocBlockTester()->assertHasInheritdoc();
   }
 
   /**
@@ -117,7 +117,7 @@ class ComponentForm10Test extends TestBase {
     $php_tester->assertClassHasParent('Drupal\Core\Form\FormBase');
 
     $method_tester = $php_tester->getMethodTester('getFormId');
-    $method_tester->assertMethodDocblockHasInheritdoc();
+    $method_tester->getDocBlockTester()->assertHasInheritdoc();
     $method_tester->assertReturnsString('test_module_my_form');
 
     // TODO: Can't use FormBuilderTester because the assertions in its

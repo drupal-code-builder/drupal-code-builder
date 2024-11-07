@@ -147,7 +147,7 @@ class ComponentHooks11Test extends TestBase {
     $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
 
     $function_tester = $php_tester->getFunctionTester('test_module_block_access');
-    $function_tester->assertMethodHasDocblockLine('Legacy hook implementation.');
+    $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
     $function_tester->assertHasLine('\Drupal::service(TestModuleHooks::class)->blockAccess($block, $operation, $account);');
   }
 

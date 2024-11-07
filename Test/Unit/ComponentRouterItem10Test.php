@@ -119,7 +119,7 @@ class ComponentRouterItem10Test extends TestBase {
     $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathController");
 
     $method_tester = $php_tester->getMethodTester('content');
-    $method_tester->assertMethodHasDocblockLine('Callback for the test_module.my.path route.');
+    $method_tester->getDocBlockTester()->assertHasLine('Callback for the test_module.my.path route.');
 
     $controller_file = $files['src/Controller/MyPathWithDotsAndDashesAndUnderscoresController.php'];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
@@ -286,7 +286,7 @@ class ComponentRouterItem10Test extends TestBase {
         $php_tester->assertHasMethod($method_name);
 
         $method_tester = $php_tester->getMethodTester($method_name);
-        $method_tester->assertMethodHasDocblockLine(match ($method_name) {
+        $method_tester->getDocBlockTester()->assertHasLine(match ($method_name) {
           'content' => 'Callback for the test_module.my.path.controller route.',
           'access' => 'Checks access for the test_module.my.path.controller route.',
         });
