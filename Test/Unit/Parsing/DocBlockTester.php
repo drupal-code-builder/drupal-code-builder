@@ -93,7 +93,7 @@ class DocBlockTester {
       $docblock_lines = array_slice($docblock_lines, 1, -1);
       // Trim off the docblock formatting.
       array_walk($docblock_lines, function(&$line) {
-        $line = preg_replace('/^ \* /', '', $line);
+        $line = preg_replace('/^ \* ?/', '', $line);
       });
 
       $this->docblockLines = $docblock_lines;
