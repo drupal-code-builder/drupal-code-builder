@@ -56,14 +56,16 @@ class API extends PHPFile {
     // Add a function component for each invented hook found in existing code.
     $existing_code_invented_hooks = $mb_task_handler_analyze->getInventedHooks($this->component_data->root_component_name->value);
     foreach ($existing_code_invented_hooks as $hook_short_name => $parameters_string) {
+      $is_alter_hook = str_ends_with($hook_short_name, '_alter');
+
       $parameters = array_map(
         fn ($parameter) => [
           'name' => trim($parameter, '$'),
+          // Alter hooks take parameters by reference.
+          'by_reference' => $is_alter_hook,
         ],
         explode(', ', $parameters_string)
       );
-
-      $is_alter_hook = str_ends_with($hook_short_name, '_alter');
 
       $components[$hook_short_name] = [
         'component_type' => 'PHPFunction',

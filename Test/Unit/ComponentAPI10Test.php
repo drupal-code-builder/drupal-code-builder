@@ -143,6 +143,10 @@ class ComponentAPI10Test extends TestBase {
     $php_tester->assertHasFunction('hook_cat_feeder_info_alter');
     $php_tester->assertHasFunction('hook_existing_hook');
 
+    // Alter hooks have parameters by reference.
+    $this->assertStringContainsString('function hook_analysed_hook_alter(&$purr, &$miaow)', $api_file);
+    $this->assertStringContainsString('function hook_cat_feeder_info_alter(array &$info)', $api_file);
+
     // Alter hooks have no @return tag.
     $php_tester->getFunctionTester('hook_analysed_hook_alter')->getDocBlockTester()->assertNoReturnType();
     $php_tester->getFunctionTester('hook_cat_feeder_info_alter')->getDocBlockTester()->assertNoReturnType();
