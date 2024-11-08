@@ -3,8 +3,6 @@
 namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
-use MutableTypedData\Definition\PropertyListInterface;
-use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Hooks component for Drupal 11.
@@ -35,18 +33,6 @@ class Hooks11 extends Hooks {
     'hook_process_hook',
     'hook_theme_suggestions_HOOK_alter',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
-    parent::addToGeneratorDefinition($definition);
-
-    $definition->addProperties([
-      'hook_implementation_type' => PropertyDefinition::create('string')
-        ->setAutoAcquiredFromRequester(),
-    ]);
-  }
 
   /**
    * {@inheritdoc}

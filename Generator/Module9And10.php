@@ -20,9 +20,11 @@ class Module9And10 extends Module {
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
-    // Remove the hook implementation type config setting, as OO hooks are new
-    // in Drupal 11.
-    $definition->removeProperty('hook_implementation_type');
+    // Make the hook implementation type internal with a default value, as OO
+    // hooks are new in Drupal 11.
+    $definition->getProperty('hook_implementation_type')
+      ->setInternal(TRUE)
+      ->setLiteralDefault('procedural');
   }
 
 }

@@ -350,13 +350,18 @@ class Module extends RootComponent {
       'component_type' => 'InfoModule',
     ];
 
-    // Turn the hooks property into the Hooks component.
-    if (!$this->component_data->hooks->isEmpty()) {
-      $components['hooks'] = [
-        'component_type' => 'Hooks',
-        'hooks' => $this->component_data['hooks'],
-      ];
-    }
+    // Turn the hooks property into the Hooks component. We add this even if no
+    // hooks were selected in the input data, because other components may
+    // request hooks, and requesting the component here ensures it has a value
+    // for hook_implementation_type, which deeper requesters won't have. The
+    // requester's Hooks component will merge with this one, and because it
+    // won't have a value for 'hook_implementation_type', the merge will take
+    // the value from here.
+    $components['hooks'] = [
+      'component_type' => 'Hooks',
+      'hooks' => $this->component_data->hooks->values(),
+      'hook_implementation_type' => $this->component_data->hook_implementation_type->value,
+    ];
 
     // Add hook_help if help text is given.
     // TODO dirty hack because TestModule child class doesn't have this
@@ -372,6 +377,7 @@ class Module extends RootComponent {
           'hooks' => [
             'hook_help',
           ],
+          'hook_implementation_type' => $this->component_data->hook_implementation_type->value,
         ];
       }
     }

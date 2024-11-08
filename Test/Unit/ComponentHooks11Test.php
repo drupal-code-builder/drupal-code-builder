@@ -105,6 +105,57 @@ class ComponentHooks11Test extends TestBase {
   }
 
   /**
+   * Tests generating OO hooks requested indirectly.
+   */
+  public function testIndirectOOHooks() {
+    // Same technique as testPluginsGenerationReplacePluginClass().
+    $drupal_container = $this->prophesize(\Psr\Container\ContainerInterface::class);
+    $drupal_container
+      ->get('plugin.manager.element_info')
+      ->willReturn(new class {
+        public function getDefinition($plugin_id) {
+          return [
+            // The definition doesn't have the initial '\'.
+            'class' => 'Drupal\somemodule\Element\ParentElement',
+          ];
+        }
+      });
+    $this->container->get('environment')->setContainer($drupal_container->reveal());
+
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      // Request a plugin type so we get the plugin info alter hook requested
+      // indirectly by the plugin type generator.
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'element_info',
+          'plugin_name' => 'alpha',
+          'parent_plugin_id' => 'parent',
+          'replace_parent_plugin' => TRUE,
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey('src/Hooks/TestModuleHooks.php', $files);
+
+    $hooks_file = $files['src/Hooks/TestModuleHooks.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
+    $php_tester->assertDrupalCodingStandards([
+      // Probably hard to fix because of tokens, arrrgh.
+      'SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses.IncorrectlyOrderedUses',
+    ]);
+    $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
+    $php_tester->assertHasMethod('elementPluginAlter');
+  }
+
+  /**
    * Tests generation of legacy hooks.
    */
   public function testHookImplementationLegacy() {

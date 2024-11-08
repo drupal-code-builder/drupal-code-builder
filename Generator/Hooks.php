@@ -38,6 +38,10 @@ class Hooks extends BaseGenerator {
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE),
+      // This can't be auto-acquired, as various components request a Hooks
+      // component which don't have access to the matching property on the
+      // module component.
+      'hook_implementation_type' => PropertyDefinition::create('string'),
     ]);
   }
 
