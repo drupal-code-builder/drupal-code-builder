@@ -44,6 +44,40 @@ class ParserDocBlockTest extends TestCase {
   }
 
   /**
+   * Tests the assert(Not)HasLineMatchingRegularExpression() assertions.
+   */
+  public function testAssertHasLineMatchingRegularExpressionAssertions() {
+    $php = <<<EOT
+      <?php
+
+      /**
+       * Class docblock.
+       *
+       * Further line.
+       * Partial line.
+       */
+      class Foo {
+
+      }
+
+      EOT;
+
+    $docblock_tester = (new PHPTester(8, $php))->getClassDocBlockTester();
+
+    $this->assertAssertion(TRUE, $docblock_tester, 'assertHasLineMatchingRegularExpression', '/Class .+./');
+    $this->assertAssertion(TRUE, $docblock_tester, 'assertHasLineMatchingRegularExpression', '/.+ line./');
+    $this->assertAssertion(TRUE, $docblock_tester, 'assertHasLineMatchingRegularExpression', '/.+tial.+/');
+    $this->assertAssertion(FALSE, $docblock_tester, 'assertHasLineMatchingRegularExpression', '/not this line/');
+    $this->assertAssertion(TRUE, $docblock_tester, 'assertHasLineMatchingRegularExpression', '/Partial/');
+
+    $this->assertAssertion(FALSE, $docblock_tester, 'assertNotHasLineMatchingRegularExpression', '/Class .+./');
+    $this->assertAssertion(FALSE, $docblock_tester, 'assertNotHasLineMatchingRegularExpression', '/.+ line./');
+    $this->assertAssertion(FALSE, $docblock_tester, 'assertNotHasLineMatchingRegularExpression', '/.+tial.+/');
+    $this->assertAssertion(FALSE, $docblock_tester, 'assertNotHasLineMatchingRegularExpression', '/Partial/');
+    $this->assertAssertion(TRUE, $docblock_tester, 'assertNotHasLineMatchingRegularExpression', '/not this line/');
+  }
+
+  /**
    * Helper for tests that test custom assertions.
    *
    * @param bool $pass

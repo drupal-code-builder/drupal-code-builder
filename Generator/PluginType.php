@@ -470,6 +470,9 @@ class PluginType extends BaseGenerator {
           'description' => "Array of information on {$this->component_data['plugin_label']} plugins.",
         ],
       ],
+      'return' => [
+        'omit_return_tag' => TRUE,
+      ],
       'body' => [
         "// Change the class of the 'foo' plugin.",
         "£info['foo']['class'] = SomeOtherClass::class;",

@@ -10,8 +10,9 @@ use DrupalCodeBuilder\File\DrupalExtension;
  * Component generator: api.php file for documention hooks and callbacks.
  *
  * This component should be requested once module code has been written. It
- * looks for calls to module_invoke_all() and generates scaffold hook
- * documentation for hook names that have the module's name as a prefix.
+ * looks for function calls which invoke hooks (e.g. invoke(), alter()) and
+ * generates scaffold hook documentation for hook names that have the module's
+ * name as a prefix.
  */
 class API extends PHPFile {
 
@@ -47,8 +48,50 @@ class API extends PHPFile {
    * Return an array of subcomponent types.
    */
   public function requiredComponents(): array {
-    // We have no subcomponents.
-    return [];
+    $components = [];
+
+    // Sanity checks already done at this point; no need to catch exception.
+    $mb_task_handler_analyze = \DrupalCodeBuilder\Factory::getTask('AnalyzeModule');
+
+    // Add a function component for each invented hook found in existing code.
+    $existing_code_invented_hooks = $mb_task_handler_analyze->getInventedHooks($this->component_data->root_component_name->value);
+    foreach ($existing_code_invented_hooks as $hook_short_name => $parameters_string) {
+      $parameters = array_map(
+        fn ($parameter) => [
+          'name' => trim($parameter, '$'),
+        ],
+        explode(', ', $parameters_string)
+      );
+
+      $is_alter_hook = str_ends_with($hook_short_name, '_alter');
+
+      $components[$hook_short_name] = [
+        'component_type' => 'PHPFunction',
+        'function_name' => "hook_{$hook_short_name}",
+        'function_docblock_lines' => [
+          'TODO: write summary line.',
+          'TODO: longer description.',
+        ],
+        'containing_component' => '%requester',
+        'parameters' => $parameters,
+        'body' => [
+          '// TODO: write sample code.',
+        ],
+      ];
+
+      if ($is_alter_hook) {
+        $components[$hook_short_name]['return'] = [
+          'omit_return_tag' => TRUE,
+        ];
+      }
+      else {
+        $components[$hook_short_name]['return'] = [
+          'description' => 'TODO: Document return value if there is one.',
+        ];
+      }
+    }
+
+    return $components;
   }
 
   /**
@@ -124,12 +167,6 @@ class API extends PHPFile {
 
     // Track the names of functions we generate.
     $generated_function_names = [];
-
-    foreach ($hooks as $hook_short_name => $parameters) {
-      $code_pieces['hook_' . $hook_short_name] = $this->hookCode($hook_short_name, $parameters);
-
-      $generated_function_names['hook_' . $hook_short_name] = TRUE;
-    }
 
     // Add lines from child function components.
     foreach ($this->containedComponents['function'] as $key => $child_item) {

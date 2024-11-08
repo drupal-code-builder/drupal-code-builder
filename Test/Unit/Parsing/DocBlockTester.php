@@ -2,8 +2,10 @@
 
 namespace DrupalCodeBuilder\Test\Unit\Parsing;
 
+use DrupalCodeBuilder\Test\Constraint\TraversableContainsMatchesRegularExpression;
 use PhpParser\Comment\Doc;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Constraint\LogicalNot;
 
 /**
  * Helper class for making assertions on a docblock.
@@ -58,6 +60,16 @@ class DocBlockTester {
   }
 
   /**
+   * Asserts there is no documented return type.
+   *
+   * @param string|null $message
+   *   (optional) The assertion message.
+   */
+  public function assertNoReturnType(?string $message = NULL) {
+    $this->assertNotHasLineMatchingRegularExpression('/^@return/', $message);
+  }
+
+  /**
    * Assert the docblock contains a line.
    *
    * @param string $line
@@ -82,6 +94,46 @@ class DocBlockTester {
   }
 
   /**
+   * Assert the docblock contains a line matching a regular expression.
+   *
+   * @param string $pattern
+   *   The expected regular expression.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasLineMatchingRegularExpression(string $pattern, $message = NULL) {
+    $message ??= "The docblock has a line matching pattern '$pattern'.";
+
+    $this->ensureDocBlockLines();
+
+    $constraint = new TraversableContainsMatchesRegularExpression($pattern);
+
+    Assert::assertThat($this->docblockLines, $constraint, $message);
+  }
+
+  /**
+   * Assert the docblock does not containt a line matching a regular expression.
+   *
+   * @param string $pattern
+   *   The regular expression that is not expected.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertNotHasLineMatchingRegularExpression(string $pattern, $message = NULL) {
+    $message ??= "The docblock does not have a line matching pattern '$pattern'.";
+
+    $this->ensureDocBlockLines();
+
+    Assert::assertThat(
+      $this->docblockLines,
+      new LogicalNot(
+          new TraversableContainsMatchesRegularExpression($pattern),
+      ),
+      $message,
+    );
+  }
+
+  /**
    * Helper for asserting a line.
    *
    * @param string $line
@@ -98,6 +150,27 @@ class DocBlockTester {
       "The docblock does not the line '{$line}'."
     );
 
+    $this->ensureDocBlockLines();
+
+    // Work around assertContains() not outputting the array on failure by
+    // putting it in the message.
+    // TODO: still needed with assertContains()?
+    $message .= " Given docblock was: " . print_r($this->docblockLines, TRUE);
+
+    if ($assert) {
+      Assert::assertContains($line, $this->docblockLines, $message);
+    }
+    else {
+      Assert::assertNotContains($line, $this->docblockLines, $message);
+    }
+  }
+
+  /**
+   * Splits the docblock into an array and strips docblock formatting.
+   *
+   * This needs to be called before any assertion.
+   */
+  protected function ensureDocBlockLines() {
     if (!isset($this->docblockLines)) {
       $docblock_text = $this->docblockNode->getReformattedText();
       $docblock_lines = explode("\n", $docblock_text);
@@ -110,18 +183,6 @@ class DocBlockTester {
       });
 
       $this->docblockLines = $docblock_lines;
-    }
-
-    // Work around assertContains() not outputting the array on failure by
-    // putting it in the message.
-    // TODO: still needed with assertContains()?
-    $message .= " Given docblock was: " . print_r($this->docblockLines, TRUE);
-
-    if ($assert) {
-      Assert::assertContains($line, $this->docblockLines, $message);
-    }
-    else {
-      Assert::assertNotContains($line, $this->docblockLines, $message);
     }
   }
 

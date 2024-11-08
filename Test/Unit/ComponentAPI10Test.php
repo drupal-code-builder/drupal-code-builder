@@ -93,6 +93,7 @@ class ComponentAPI10Test extends TestBase {
     $analyze_module->getInventedHooks('test_module')
       ->willReturn([
         'analysed_hook' => '$foo, $bar',
+        'analysed_hook_alter' => '$purr, $miaow',
       ]);
 
     $container = \DrupalCodeBuilder\Factory::getContainer();
@@ -138,8 +139,13 @@ class ComponentAPI10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards(['Drupal.Commenting.FunctionComment.MissingReturnType']);
 
     $php_tester->assertHasFunction('hook_analysed_hook');
+    $php_tester->assertHasFunction('hook_analysed_hook_alter');
     $php_tester->assertHasFunction('hook_cat_feeder_info_alter');
     $php_tester->assertHasFunction('hook_existing_hook');
+
+    // Alter hooks have no @return tag.
+    $php_tester->getFunctionTester('hook_analysed_hook_alter')->getDocBlockTester()->assertNoReturnType();
+    $php_tester->getFunctionTester('hook_cat_feeder_info_alter')->getDocBlockTester()->assertNoReturnType();
 
     // TODO: expand the docblock assertion for these.
     $this->assertStringContainsString("Hooks provided by the Test Module module.", $api_file, 'The API file contains the correct docblock header.');
