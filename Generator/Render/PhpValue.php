@@ -198,49 +198,4 @@ class PhpValue extends PhpRenderer {
     return $lines;
   }
 
-  /**
-   * Renders a scalar value as a PHP string.
-   *
-   * @param mixed $value
-   *   The value to render.
-   *
-   * @return string
-   *   A string of PHP code representing the value.
-   */
-  protected function renderScalar(mixed $value): string {
-    // Handle natives which are represented as strings.
-    if (is_numeric($value)) {
-      return $value;
-    }
-    elseif (in_array($value, ['TRUE', 'FALSE', 'NULL'])) {
-      return $value;
-    }
-
-    if (is_string($value)) {
-      // Special case for class constants: we assume a string starting with a
-      // '\' is such and thus is not quoted.
-      if (!str_starts_with($value, '\\')) {
-        $value_string = $this->quoteString($value);
-      }
-      else {
-        $value_string = $value;
-      }
-    }
-    elseif (is_numeric($value)) {
-      $value_string = (string) $value;
-    }
-    elseif (is_bool($value)) {
-      $value_string = $value ? 'TRUE' : 'FALSE';
-    }
-    elseif (is_null($value)) {
-      return 'NULL';
-    }
-    else {
-      dump($value);
-      throw new \Exception("Scalar value not handled!");
-    }
-
-    return $value_string;
-  }
-
 }

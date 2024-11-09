@@ -14,7 +14,7 @@ namespace DrupalCodeBuilder\Generator\Render;
  *
  * TODO: move more of the work from FormBuilder / FormElement here.
  */
-class FormAPIArrayRenderer {
+class FormAPIArrayRenderer extends PhpRenderer {
 
   /**
    * The original data array.
@@ -86,7 +86,7 @@ class FormAPIArrayRenderer {
         $render[] = "$indent'$key' => [";
       }
       else {
-        $value = $this->renderScalarValue($value);
+        $value = $this->renderScalar($value);
 
         $render[] = "$indent'$key' => $value,";
 
@@ -99,53 +99,6 @@ class FormAPIArrayRenderer {
     }
 
     return $render;
-  }
-
-  /**
-   * Renders a scalar value as a PHP string.
-   *
-   * TODO Move this to common code for other renderers.
-   *
-   * @param mixed $value
-   *   The value to render.
-   *
-   * @return string
-   *   A string of PHP code representing the value.
-   */
-  protected function renderScalarValue(mixed $value): string {
-    if (is_numeric($value)) {
-      $value_string = $value;
-    }
-    elseif (is_string($value)) {
-      $quote_string = TRUE;
-      // Special case for class constants: we assume a string starting with a
-      // '\' is such and thus is not quoted.
-      $quote_string &= !str_starts_with($value, '\\');
-      // A string starting with £ will get replaced as a variable and should
-      // not be quoted.
-      $quote_string &= !str_starts_with($value, '£');
-      // An array should not be quoted and probably shouldn't be passed as a
-      // string but this is here for BC.
-      $quote_string &= !str_starts_with($value, '[');
-
-      if ($quote_string) {
-        $value_string = '"' . $value . '"';
-      }
-      else {
-        $value_string = $value;
-      }
-    }
-    elseif (is_bool($value)) {
-      $value_string = $value ? 'TRUE' : 'FALSE';
-    }
-    elseif (is_null($value)) {
-      $value_string = 'NULL';
-    }
-    else {
-      throw new \Exception("Can't render form element property value.");
-    }
-
-    return $value_string;
   }
 
 }

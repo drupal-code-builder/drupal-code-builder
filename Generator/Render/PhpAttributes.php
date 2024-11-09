@@ -203,35 +203,6 @@ class PhpAttributes extends PhpRenderer {
   }
 
   /**
-   * Renders a scalar value as a PHP string.
-   *
-   * TODO Move this to common code for other renderers.
-   *
-   * @param mixed $value
-   *   The value to render.
-   *
-   * @return string
-   *   A string of PHP code representing the value.
-   */
-  protected function renderScalarValue(mixed $value): string {
-    if (is_string($value)) {
-      // Special case for class constants: we assume a string starting with a
-      // '\' is such and thus is not quoted.
-      if (!str_starts_with($value, '\\')) {
-        $value_string = '"' . $value . '"';
-      }
-      else {
-        $value_string = $value;
-      }
-    }
-    elseif (is_bool($value)) {
-      $value_string = $value ? 'TRUE' : 'FALSE';
-    }
-
-    return $value_string;
-  }
-
-  /**
    * Wraps a line to the specified width.
    *
    * @param string $line
