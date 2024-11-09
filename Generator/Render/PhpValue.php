@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Generator\FormattingTrait\PHPFormattingTrait;
  * Furthermore, an array of lines can be embedded in an outer render such as a
  * PHP attribute, with its own indentation level.
  */
-class PhpValue {
+class PhpValue extends PhpRenderer {
 
   use PHPFormattingTrait;
 
@@ -220,7 +220,7 @@ class PhpValue {
       // Special case for class constants: we assume a string starting with a
       // '\' is such and thus is not quoted.
       if (!str_starts_with($value, '\\')) {
-        $value_string = '\'' . $value . '\'';
+        $value_string = $this->quoteString($value);
       }
       else {
         $value_string = $value;

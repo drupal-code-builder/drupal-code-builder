@@ -25,6 +25,7 @@ class RenderAttributesTest extends TestCase {
         'extra' => [
           'purr' => 'value',
         ],
+        'star_trek_name' => "T'Pau",
       ],
       [
         'id' => 'The plugin ID.',
@@ -48,12 +49,13 @@ class RenderAttributesTest extends TestCase {
       // The plugin ID.
       id: 'cat',
       // The noise it makes.
-      admin_label: new \Drupal\Core\StringTranslation\TranslatableMarkup("Miaow"),
+      admin_label: new \Drupal\Core\StringTranslation\TranslatableMarkup('Miaow'),
       // This is a comment that is too long because it is going over the limit of 80
       // characters in a line here we go.
       extra: [
         'purr' => 'value',
       ],
+      star_trek_name: "T'Pau",
     )]
     EOT;
 

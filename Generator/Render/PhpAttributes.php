@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator\Render;
 /**
  * Renderer for PHP attributes.
  */
-class PhpAttributes {
+class PhpAttributes extends PhpRenderer {
 
   protected bool $forceInline = FALSE;
 
@@ -118,7 +118,7 @@ class PhpAttributes {
     $declaration_line .= 'new ' . $class_name_prefix . $this->attributeClassName . '(';
 
     if (is_string($this->data)) {
-      $declaration_line .= '"' . $this->data . '"';
+      $declaration_line .= $this->quoteString($this->data);
       $declaration_line .= '),';
     }
     // TODO: support nested arrays. Not needed yet.
