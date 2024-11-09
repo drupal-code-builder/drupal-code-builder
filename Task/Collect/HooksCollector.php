@@ -156,6 +156,7 @@ abstract class HooksCollector extends CollectorBase {
              // TODO: Don't store this, just use it to figure out
              // callback dependencies!
              //'documentation' => $hook_data_raw['documentation'][$key],
+             'procedural'  => procedural
              'destination' => $destination,
              'dependencies'  => $hook_dependencies,
              'group'       => $group,
@@ -247,6 +248,33 @@ abstract class HooksCollector extends CollectorBase {
           }
         }
 
+        // Determine if the hook is obligate procedural. This list and the checking
+        // code is taken from
+        // \Drupal\Core\Hook\HookCollectorPass::checkForProceduralOnlyHooks(), but
+        // we can't call that because we need this information on lower versions of
+        // core to properly generate forward-compatible hooks with the legacy
+        // option.
+        $obligate_procedural_hooks = [
+          'cache_flush',
+          'hook_info',
+          'install',
+          'module_implements_alter',
+          'module_preinstall',
+          'module_preuninstall',
+          'modules_installed',
+          'modules_uninstalled',
+          'requirements',
+          'schema',
+          'uninstall',
+          'update_last_removed',
+        ];
+
+        $procedural = (
+          in_array($short_name, $obligate_procedural_hooks)
+          ||
+          preg_match('/^(post_update_|preprocess_|process_|update_\d+$)/', $short_name)
+        );
+
         // Because we're working through the raw data array, we keep the incoming
         // sort order.
         // But if there are multiple hook files for one module / group, then
@@ -260,6 +288,7 @@ abstract class HooksCollector extends CollectorBase {
           // Don't store this!! TODO!! just use it for callback dependencies!!!
           //'documentation' => $hook_data_raw['documentation'][$key],
           'destination' => $destination,
+          'procedural'  => $procedural,
           'dependencies'  => $hook_dependencies,
           'group'       => $group,
           'core'        => $file_data['core'] ?? NULL,

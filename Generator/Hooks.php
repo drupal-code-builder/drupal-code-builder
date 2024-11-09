@@ -157,6 +157,8 @@ class Hooks extends BaseGenerator {
       // If the hook implementation type is set to procedural, then it's
       // procedural.
       ($this->component_data->hook_implementation_type->value == 'procedural')
+      // Hooks marked as procedural in analysis data.
+      || !empty($hook_info['procedural'])
       // Hooks that go in the .install file are always procedural.
       || ($hook_info['destination'] == '%module.install')
       // Other random hooks that aren't documented as such are always procedural.
