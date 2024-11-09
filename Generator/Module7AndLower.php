@@ -54,6 +54,12 @@ class Module7AndLower extends Module8 {
         ->setLabel("Admin settings form")
         ->setDescription("A form for setting the module's general settings. Also produces a permission and a menu item."),
     ]);
+
+    // Make the hook implementation type internal with a default value, as on D7
+    // and lower hooks can only be procedural.
+    $definition->getProperty('hook_implementation_type')
+      ->setInternal(TRUE)
+      ->setLiteralDefault('procedural');
   }
 
   /**

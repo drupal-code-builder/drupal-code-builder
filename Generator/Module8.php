@@ -22,6 +22,9 @@ class Module8 extends Module9And10 {
         ->setDescription('NOTICE: These are deprecated in Drupal 8.'),
     ]);
 
+    $definition->getProperty('hook_implementation_type')
+      ->setLiteralDefault('procedural');
+
     $definition->removeProperty('lifecycle');
   }
 

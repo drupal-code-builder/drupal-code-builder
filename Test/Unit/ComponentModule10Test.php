@@ -148,6 +148,7 @@ class ComponentModule10Test extends TestBase {
       ],
       'readme' => FALSE,
       'module_help_text' => $help_text,
+      'hook_implementation_type' => 'procedural',
     ];
     $files = $this->generateModuleFiles($module_data);
     $file_names = array_keys($files);

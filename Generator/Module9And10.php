@@ -20,11 +20,12 @@ class Module9And10 extends Module {
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
-    // Make the hook implementation type internal with a default value, as OO
-    // hooks are new in Drupal 11.
-    $definition->getProperty('hook_implementation_type')
-      ->setInternal(TRUE)
-      ->setLiteralDefault('procedural');
+    // In Drupal 10 and lower, we can still generate OO hooks as long as they
+    // have legacy support. Remove the option for OO-only hooks.
+    $definition->getProperty('hook_implementation_type')->setOptionsArray([
+      'procedural' => 'Functions in procedural files, such as .module',
+      'oo_legacy' => 'Class methods on a Hooks class, with legacy support for Drupal core < 11.1',
+    ]);
   }
 
 }

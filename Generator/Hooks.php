@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use CaseConverter\CaseString;
 
 /**
  * Generator base class for module hooks.
@@ -26,6 +27,19 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  * @see DrupalCodeBuilder\Generator\ExtensionCodeFile
  */
 class Hooks extends BaseGenerator {
+
+  /**
+   * Theme hooks which remain procedural.
+   *
+   * TODO: Move this to analysis? Although there's no sodding documentation.
+   */
+  const PROCEDURAL_HOOKS = [
+    'hook_theme',
+    'hook_theme_suggestion_HOOK',
+    'hook_preprocess_hook',
+    'hook_process_hook',
+    'hook_theme_suggestions_HOOK_alter',
+  ];
 
   /**
    * {@inheritdoc}
@@ -64,6 +78,15 @@ class Hooks extends BaseGenerator {
    *  An array of subcomponent names and types.
    */
   public function requiredComponents(): array {
+    // Dirty hack: bail early if we don't have a the hook implementation type
+    // set. This happens if this component is requested indirectly. In such a
+    // case, we will return here when this component is merged with the Hooks
+    // component requested by the Module component, and then the value will be
+    // set.
+    if ($this->component_data->hook_implementation_type->isEmpty()) {
+      return [];
+    }
+
     // We add components of type HookImplementation: each of these is a single
     // function. From this point on, these subcomponents are the authority on
     // which hooks we generate. Each HookImplementation component will add the
@@ -129,12 +152,68 @@ class Hooks extends BaseGenerator {
    *   The array of hook info.
    */
   protected function addHookComponents(array &$components, array $hook_info): void {
-    // On versions prior to 11 with no OO hooks, the hook is always procedural.
-    $this->addProceduralHookComponent($components, $hook_info);
+    // Determine whether to use a procedural hook.
+    $use_procedural_hook =
+      // If the hook implementation type is set to procedural, then it's
+      // procedural.
+      ($this->component_data->hook_implementation_type->value == 'procedural')
+      // Hooks that go in the .install file are always procedural.
+      || ($hook_info['destination'] == '%module.install')
+      // Other random hooks that aren't documented as such are always procedural.
+      || in_array($hook_info['name'], static::PROCEDURAL_HOOKS);
+
+    if ($use_procedural_hook) {
+      $this->addProceduralHookComponent($components, $hook_info);
+    }
+    else {
+      $this->addOoHookComponent($components, $hook_info);
+
+      // If we want legacy procedural hooks too.
+      if ($this->component_data->hook_implementation_type->value == 'oo_legacy') {
+        $this->addLegacyProceduralHookComponent($components, $hook_info);
+      }
+    }
+  }
+
+  /**
+   * Adds the components for an OO hook in a class.
+   *
+   * Helper for addHookComponents().
+   *
+   * @param array &$components
+   *   The array of requested components, passed by reference.
+   * @param array $hook_info
+   *   The array of hook info.
+   */
+  protected function addOoHookComponent(array &$components, array $hook_info): void {
+    $hook_name = $hook_info['name'];
+
+    // Make the method name out of the short hook name in camel case.
+    // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
+    // formFORMIDAlter().
+    $hook_method_name = CaseString::snake($hook_info['short_hook_name'])->camel();
+
+    // Make the class method hook.
+    $components[$hook_name . '_method'] = [
+      // There are no specialised hook generators for class method hooks.
+      'component_type' => 'HookImplementationClassMethod',
+      'code_file' => $hook_info['destination'],
+      'hook_name' => $hook_name,
+      'hook_method_name' => $hook_method_name,
+      'declaration' => $hook_info['definition'],
+      'description' => $hook_info['description'],
+      // Set the hook template as the method body.
+      'body' => $hook_info['template'],
+      // The code is a single string, already indented. Ensure we don't
+      // indent it again.
+      'body_indented' => TRUE,
+    ];
   }
 
   /**
    * Adds a component for a procedural function hook implementation.
+   *
+   * Helper for addHookComponents().
    *
    * @param array &$components
    *   The array of requested components, passed by reference.
@@ -156,6 +235,67 @@ class Hooks extends BaseGenerator {
       // The code is a single string, already indented. Ensure we don't
       // indent it again.
       'body_indented' => TRUE,
+    ];
+  }
+
+  /**
+   * Adds the components for a legacy procedural hook.
+   *
+   * Helper for addHookComponents().
+   *
+   * @param array &$components
+   *   The array of requested components, passed by reference.
+   * @param array $hook_info
+   *   The array of hook info.
+   */
+  protected function addLegacyProceduralHookComponent(array &$components, array $hook_info): void {
+    // Start with the procedural hook component.
+    $this->addProceduralHookComponent($components, $hook_info);
+
+    $hook_name = $hook_info['name'];
+
+    // Make the method name out of the short hook name in camel case.
+    // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
+    // formFORMIDAlter().
+    $hook_method_name = CaseString::snake($hook_info['short_hook_name'])->camel();
+
+    $components[$hook_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
+
+    $components[$hook_name]['function_docblock_lines'] = [
+      'Legacy hook implementation.',
+      '@todo Remove this method when support for Drupal core < 11.1 is dropped.',
+    ];
+
+    // Replace the hook body with a call to the Hooks class.
+    // Get the parameters.
+    $matches = [];
+    preg_match_all('@(\$\w+)@', $hook_info['definition'], $matches);
+    $arguments = implode(', ', $matches[0]);
+
+    $components[$hook_name]['body'] = [
+      "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}({$arguments});",
+    ];
+    $components[$hook_name]['body_indented'] = FALSE;
+
+    // Explicitly declare the Hooks class as a service.
+    // ARGH, can't use the 'Service' generator, as that will want to create a
+    // class!
+    $yaml_data = [
+      'services' => [
+        // Argh DRY class name!
+        // TODO: move the class name to being created in this generator.
+        'Drupal\%extension\Hooks\%PascalHooks' => [
+          'class' => 'Drupal\%extension\Hooks\%PascalHooks',
+          'autowire' => TRUE,
+        ],
+      ],
+    ];
+    $components['%module.services.yml'] = [
+      'component_type' => 'YMLFile',
+      // Probably have to use this deprecated token so the component merge
+      // works?
+      'filename' => '%module.services.yml',
+      'yaml_data' => $yaml_data,
     ];
   }
 

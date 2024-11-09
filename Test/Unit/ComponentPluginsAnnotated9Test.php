@@ -356,6 +356,7 @@ class ComponentPluginsAnnotated9Test extends TestBase {
       'short_description' => 'Test Module description',
       'hooks' => [
       ],
+      'hook_implementation_type' => 'procedural',
       'plugins' => [
         0 => [
           'plugin_type' => 'element_info',

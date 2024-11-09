@@ -578,6 +578,7 @@ class ComponentTestsPHPUnit10Test extends TestBase {
         'main' => ['hook_form_alter'],
         'test' => [],
       },
+      'hook_implementation_type' => 'procedural',
       'phpunit_tests' => [
         0 => [
           'test_type' => 'kernel',
@@ -589,6 +590,7 @@ class ComponentTestsPHPUnit10Test extends TestBase {
                 'main' => [],
                 'test' => ['hook_form_alter'],
               },
+              'hook_implementation_type' => 'procedural',
             ],
           ],
         ],
