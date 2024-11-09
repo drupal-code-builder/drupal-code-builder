@@ -158,6 +158,8 @@ class ConfigEntityType extends EntityTypeBase {
       }
     }
 
+    $label_singular = strtolower($this->component_data->entity_type_label->value);
+
     foreach ($form_handlers_to_add_form_elements_to as $data_key) {
       // Special handling for the id and label properties.
       $components[$data_key . '-label'] = [
@@ -166,7 +168,7 @@ class ConfigEntityType extends EntityTypeBase {
         'form_key' => 'label',
         'element_type' => 'textfield',
         'element_title' => "Name",
-        'element_description' => "The human-readable name of this entity",
+        'element_description' => "The human-readable name of this {$label_singular}",
         'element_array' => [
           'default_value' => "£this->entity->get('label')",
           'required' => TRUE,
@@ -179,7 +181,7 @@ class ConfigEntityType extends EntityTypeBase {
         'form_key' => 'id',
         'element_type' => 'machine_name',
         'element_title' => 'Name',
-        'element_description' => "A unique machine-readable name for this entity. It must only contain lowercase letters, numbers, and underscores.",
+        'element_description' => "A unique machine-readable name for this {$label_singular}. It must only contain lowercase letters, numbers, and underscores.",
         'element_array' => [
           'default_value' => "£this->entity->id()",
           'required' => TRUE,
