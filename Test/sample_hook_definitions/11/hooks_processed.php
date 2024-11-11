@@ -9,6 +9,7 @@ array (
       'definition' => 'function hook_block_view_alter(array &$build, \\Drupal\\Core\\Block\\BlockPluginInterface $block)',
       'description' => 'Alter the result of \\Drupal\\Core\\Block\\BlockBase::build().',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -30,6 +31,7 @@ array (
       'definition' => 'function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \\Drupal\\Core\\Block\\BlockPluginInterface $block)',
       'description' => 'Provide a block plugin specific block_view alteration.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -49,6 +51,7 @@ array (
       'definition' => 'function hook_block_build_alter(array &$build, \\Drupal\\Core\\Block\\BlockPluginInterface $block)',
       'description' => 'Alter the result of \\Drupal\\Core\\Block\\BlockBase::build().',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -70,6 +73,7 @@ array (
       'definition' => 'function hook_block_build_BASE_BLOCK_ID_alter(array &$build, \\Drupal\\Core\\Block\\BlockPluginInterface $block)',
       'description' => 'Provide a block plugin specific block_build alteration.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -89,6 +93,7 @@ array (
       'definition' => 'function hook_block_access(\\Drupal\\block\\Entity\\Block $block, $operation, \\Drupal\\Core\\Session\\AccountInterface $account)',
       'description' => 'Control access to a block instance.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -114,6 +119,7 @@ array (
       'definition' => 'function hook_block_alter(&$definitions)',
       'description' => 'Allow modules to alter the block plugin definitions.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -140,6 +146,7 @@ array (
       'definition' => 'function callback_batch_operation($multiple_params, &$context)',
       'description' => 'Perform a single batch operation.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -197,6 +204,7 @@ array (
       'definition' => 'function callback_batch_finished($success, $results, $operations, $elapsed)',
       'description' => 'Complete a batch process.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -238,6 +246,7 @@ array (
       'definition' => 'function hook_ajax_render_alter(array &$data)',
       'description' => 'Alter the Ajax command data that is sent to the client.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -259,6 +268,7 @@ array (
       'definition' => 'function hook_form_alter(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state, $form_id)',
       'description' => 'Perform alterations before a form is rendered.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -287,6 +297,7 @@ array (
       'definition' => 'function hook_form_FORM_ID_alter(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state, $form_id)',
       'description' => 'Provide a form-specific alteration instead of the global hook_form_alter().',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -314,6 +325,7 @@ array (
       'definition' => 'function hook_form_BASE_FORM_ID_alter(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state, $form_id)',
       'description' => 'Provide a form-specific alteration for shared (\'base\') forms.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -341,6 +353,7 @@ array (
       'definition' => 'function hook_batch_alter(&$batch)',
       'description' => 'Alter batch information before a batch is processed.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -361,6 +374,7 @@ array (
       'definition' => 'function hook_hook_info()',
       'description' => 'Defines one or more hooks that are exposed by a module.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -385,6 +399,7 @@ array (
       'definition' => 'function hook_module_implements_alter(&$implementations, $hook)',
       'description' => 'Alter the registry of modules implementing a hook.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -412,6 +427,7 @@ array (
       'definition' => 'function hook_system_info_alter(array &$info, \\Drupal\\Core\\Extension\\Extension $file, $type)',
       'description' => 'Alter the information parsed from module and theme .info.yml files.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -433,6 +449,7 @@ array (
       'definition' => 'function hook_module_preinstall($module, bool $is_syncing)',
       'description' => 'Perform necessary actions before a module is installed.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -451,6 +468,7 @@ array (
       'definition' => 'function hook_modules_installed($modules, $is_syncing)',
       'description' => 'Perform necessary actions after modules are installed.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -474,6 +492,7 @@ array (
       'definition' => 'function hook_install($is_syncing)',
       'description' => 'Perform setup tasks when the module is installed.',
       'destination' => '%module.install',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -493,6 +512,7 @@ array (
       'definition' => 'function hook_module_preuninstall($module, bool $is_syncing)',
       'description' => 'Perform necessary actions before a module is uninstalled.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -511,6 +531,7 @@ array (
       'definition' => 'function hook_modules_uninstalled($modules, $is_syncing)',
       'description' => 'Perform necessary actions after modules are uninstalled.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -535,6 +556,7 @@ array (
       'definition' => 'function hook_uninstall($is_syncing)',
       'description' => 'Remove any information that the module sets.',
       'destination' => '%module.install',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -554,6 +576,7 @@ array (
       'definition' => 'function hook_install_tasks(&$install_state)',
       'description' => 'Return an array of tasks to be performed by an installation profile.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -629,6 +652,7 @@ array (
       'definition' => 'function hook_install_tasks_alter(&$tasks, $install_state)',
       'description' => 'Alter the full list of installation tasks.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -649,6 +673,7 @@ array (
       'definition' => 'function hook_update_N(&$sandbox)',
       'description' => 'Perform a single update between minor versions.',
       'destination' => '%module.install',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -718,6 +743,7 @@ array (
       'definition' => 'function hook_post_update_NAME(&$sandbox)',
       'description' => 'Executes an update which is intended to update data, like entities.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -749,6 +775,7 @@ array (
       'definition' => 'function hook_removed_post_updates()',
       'description' => 'Return an array of removed hook_post_update_NAME() function names.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -771,6 +798,7 @@ array (
       'definition' => 'function hook_update_dependencies()',
       'description' => 'Return an array of information about module update dependencies.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -805,6 +833,7 @@ array (
       'definition' => 'function hook_update_last_removed()',
       'description' => 'Return a number which is no longer available as hook_update_N().',
       'destination' => '%module.install',
+      'has_return' => true,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -825,6 +854,7 @@ array (
       'definition' => 'function hook_updater_info()',
       'description' => 'Provide information on Updaters (classes that can update Drupal).',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -854,6 +884,7 @@ array (
       'definition' => 'function hook_updater_info_alter(&$updaters)',
       'description' => 'Alter the Updater information array.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -874,6 +905,7 @@ array (
       'definition' => 'function hook_requirements($phase)',
       'description' => 'Check installation requirements and do status reporting.',
       'destination' => '%module.install',
+      'has_return' => true,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -933,6 +965,7 @@ array (
       'definition' => 'function hook_requirements_alter(array &$requirements): void',
       'description' => 'Alters requirements data.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -961,6 +994,7 @@ array (
       'definition' => 'function hook_form_system_theme_settings_alter(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state)',
       'description' => 'Allow themes to alter the theme-specific settings form.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -985,6 +1019,7 @@ array (
       'definition' => 'function hook_preprocess(&$variables, $hook)',
       'description' => 'Preprocess theme variables for templates.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1033,6 +1068,7 @@ array (
       'definition' => 'function hook_preprocess_HOOK(&$variables)',
       'description' => 'Preprocess theme variables for a specific theme hook.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => true,
       'dependencies' => 
       array (
@@ -1057,6 +1093,7 @@ array (
       'definition' => 'function hook_theme_suggestions_HOOK(array $variables)',
       'description' => 'Provides alternate named suggestions for a specific theme hook.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1079,6 +1116,7 @@ array (
       'definition' => 'function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $hook)',
       'description' => 'Alters named suggestions for all theme hooks.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1098,6 +1136,7 @@ array (
       'definition' => 'function hook_theme_suggestions_HOOK_alter(array &$suggestions, array &$variables)',
       'description' => 'Alters named suggestions for a specific theme hook.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1118,6 +1157,7 @@ array (
       'definition' => 'function hook_themes_installed($theme_list)',
       'description' => 'Respond to themes being installed.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1138,6 +1178,7 @@ array (
       'definition' => 'function hook_themes_uninstalled(array $themes)',
       'description' => 'Respond to themes being uninstalled.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1159,6 +1200,7 @@ array (
       'definition' => 'function hook_extension()',
       'description' => 'Declare a template file extension to be used with a theme engine.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1178,6 +1220,7 @@ array (
       'definition' => 'function hook_render_template($template_file, $variables)',
       'description' => 'Render a template using the theme engine.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1198,6 +1241,7 @@ array (
       'definition' => 'function hook_element_info_alter(array &$info)',
       'description' => 'Alter the element type information returned from modules.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1219,6 +1263,7 @@ array (
       'definition' => 'function hook_element_plugin_alter(array &$definitions)',
       'description' => 'Alter Element plugin definitions.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1238,6 +1283,7 @@ array (
       'definition' => 'function hook_js_alter(&$javascript, \\Drupal\\Core\\Asset\\AttachedAssetsInterface $assets, \\Drupal\\Core\\Language\\LanguageInterface $language)',
       'description' => 'Alters JavaScript before it is presented on the page.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1257,6 +1303,7 @@ array (
       'definition' => 'function hook_library_info_build()',
       'description' => 'Add dynamic library definitions.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1327,6 +1374,7 @@ array (
       'definition' => 'function hook_js_settings_build(array &$settings, \\Drupal\\Core\\Asset\\AttachedAssetsInterface $assets)',
       'description' => 'Modify the JavaScript settings (drupalSettings).',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1348,6 +1396,7 @@ array (
       'definition' => 'function hook_js_settings_alter(array &$settings, \\Drupal\\Core\\Asset\\AttachedAssetsInterface $assets)',
       'description' => 'Perform necessary alterations to the JavaScript settings (drupalSettings).',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1372,6 +1421,7 @@ array (
       'definition' => 'function hook_library_info_alter(&$libraries, $extension)',
       'description' => 'Alter libraries provided by an extension.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1417,6 +1467,7 @@ array (
       'definition' => 'function hook_css_alter(&$css, \\Drupal\\Core\\Asset\\AttachedAssetsInterface $assets, \\Drupal\\Core\\Language\\LanguageInterface $language)',
       'description' => 'Alter CSS files before they are output on the page.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1437,6 +1488,7 @@ array (
       'definition' => 'function hook_page_attachments(array &$attachments)',
       'description' => 'Add attachments (typically assets) to a page before it is rendered.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1461,6 +1513,7 @@ array (
       'definition' => 'function hook_page_attachments_alter(array &$attachments)',
       'description' => 'Alter attachments (typically assets) to a page before it is rendered.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1483,6 +1536,7 @@ array (
       'definition' => 'function hook_page_top(array &$page_top)',
       'description' => 'Add a renderable array to the top of the page.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1501,6 +1555,7 @@ array (
       'definition' => 'function hook_page_bottom(array &$page_bottom)',
       'description' => 'Add a renderable array to the bottom of the page.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1519,6 +1574,7 @@ array (
       'definition' => 'function hook_theme($existing, $type, $theme, $path)',
       'description' => 'Register a module or theme\'s theme implementations.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1551,6 +1607,7 @@ array (
       'definition' => 'function hook_theme_registry_alter(&$theme_registry)',
       'description' => 'Alter the theme registry information returned from hook_theme().',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1574,6 +1631,7 @@ array (
       'definition' => 'function hook_template_preprocess_default_variables_alter(&$variables)',
       'description' => 'Alter the default, hook-independent variables for all templates.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1595,6 +1653,7 @@ array (
       'definition' => 'function hook_tokens($type, $tokens, array $data, array $options, \\Drupal\\Core\\Render\\BubbleableMetadata $bubbleable_metadata)',
       'description' => 'Provide replacement values for placeholder tokens.',
       'destination' => '%module.tokens.inc',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1666,6 +1725,7 @@ array (
       'definition' => 'function hook_tokens_alter(array &$replacements, array $context, \\Drupal\\Core\\Render\\BubbleableMetadata $bubbleable_metadata)',
       'description' => 'Alter replacement values for placeholder tokens.',
       'destination' => '%module.tokens.inc',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1693,6 +1753,7 @@ array (
       'definition' => 'function hook_token_info()',
       'description' => 'Provide information about available placeholder tokens and token types.',
       'destination' => '%module.tokens.inc',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1743,6 +1804,7 @@ array (
       'definition' => 'function hook_token_info_alter(&$data)',
       'description' => 'Alter the metadata about available placeholder tokens and token types.',
       'destination' => '%module.tokens.inc',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1779,6 +1841,7 @@ array (
       'definition' => 'function hook_help($route_name, \\Drupal\\Core\\Routing\\RouteMatchInterface $route_match)',
       'description' => 'Provide online user help.',
       'destination' => '%module.module',
+      'has_return' => true,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1805,6 +1868,7 @@ array (
       'definition' => 'function hook_help_section_info_alter(array &$info)',
       'description' => 'Perform alterations on help page section plugin definitions.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (
@@ -1826,6 +1890,7 @@ array (
       'definition' => 'function hook_help_topics_info_alter(array &$info)',
       'description' => 'Perform alterations on help topic definitions.',
       'destination' => '%module.module',
+      'has_return' => false,
       'procedural' => false,
       'dependencies' => 
       array (

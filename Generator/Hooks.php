@@ -274,8 +274,11 @@ class Hooks extends BaseGenerator {
     preg_match_all('@(\$\w+)@', $hook_info['definition'], $matches);
     $arguments = implode(', ', $matches[0]);
 
+    // Use a return statement if the hook returns a value.
+    $return = !empty($hook_info['has_return']) ? 'return ' : '';
+
     $components[$hook_name]['body'] = [
-      "\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}({$arguments});",
+      "{$return}\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}({$arguments});",
     ];
     $components[$hook_name]['body_indented'] = FALSE;
 

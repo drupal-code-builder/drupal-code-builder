@@ -157,6 +157,7 @@ abstract class HooksCollector extends CollectorBase {
              // callback dependencies!
              //'documentation' => $hook_data_raw['documentation'][$key],
              'procedural'  => procedural
+             'has_return'  => Whether the hook returns a value. This is used for legacy hooks.
              'destination' => $destination,
              'dependencies'  => $hook_dependencies,
              'group'       => $group,
@@ -288,6 +289,7 @@ abstract class HooksCollector extends CollectorBase {
           // Don't store this!! TODO!! just use it for callback dependencies!!!
           //'documentation' => $hook_data_raw['documentation'][$key],
           'destination' => $destination,
+          'has_return'  => str_contains($hook_data_raw['documentation'][$key], '@return'),
           'procedural'  => $procedural,
           'dependencies'  => $hook_dependencies,
           'group'       => $group,

@@ -168,6 +168,7 @@ class ComponentHooks11Test extends TestBase {
       'hook_implementation_type' => 'oo_legacy',
       'hooks' => [
         'hook_block_access',
+        'hook_block_view_alter',
       ],
       'readme' => FALSE,
     ];
@@ -199,7 +200,11 @@ class ComponentHooks11Test extends TestBase {
 
     $function_tester = $php_tester->getFunctionTester('test_module_block_access');
     $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
-    $function_tester->assertHasLine('\Drupal::service(TestModuleHooks::class)->blockAccess($block, $operation, $account);');
+    $function_tester->assertHasLine('return \Drupal::service(TestModuleHooks::class)->blockAccess($block, $operation, $account);');
+
+    $function_tester = $php_tester->getFunctionTester('test_module_block_view_alter');
+    $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
+    $function_tester->assertHasLine('\Drupal::service(TestModuleHooks::class)->blockViewAlter($build, $block);');
   }
 
   /**
