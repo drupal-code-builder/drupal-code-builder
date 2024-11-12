@@ -69,10 +69,10 @@ class ComponentHooks11Test extends TestBase {
     $this->assertFiles([
       'test_module.info.yml',
       'test_module.install',
-      'src/Hooks/TestModuleHooks.php',
+      'src/Hook/TestModuleHooks.php',
     ], $files);
 
-    $hooks_file = $files['src/Hooks/TestModuleHooks.php'];
+    $hooks_file = $files['src/Hook/TestModuleHooks.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
     $php_tester->assertDrupalCodingStandards([
@@ -85,7 +85,7 @@ class ComponentHooks11Test extends TestBase {
       'SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses.IncorrectlyOrderedUses',
     ]);
 
-    $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
+    $php_tester->assertHasClass('Drupal\test_module\Hook\TestModuleHooks');
     $php_tester->assertHasMethod('formAlter');
     $php_tester->assertHasMethod('blockAccess');
     $php_tester->assertNotHasMethod('install');
@@ -142,16 +142,16 @@ class ComponentHooks11Test extends TestBase {
 
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertArrayHasKey('src/Hooks/TestModuleHooks.php', $files);
+    $this->assertArrayHasKey('src/Hook/TestModuleHooks.php', $files);
 
-    $hooks_file = $files['src/Hooks/TestModuleHooks.php'];
+    $hooks_file = $files['src/Hook/TestModuleHooks.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
     $php_tester->assertDrupalCodingStandards([
       // Probably hard to fix because of tokens, arrrgh.
       'SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses.IncorrectlyOrderedUses',
     ]);
-    $php_tester->assertHasClass('Drupal\test_module\Hooks\TestModuleHooks');
+    $php_tester->assertHasClass('Drupal\test_module\Hook\TestModuleHooks');
     $php_tester->assertHasMethod('elementPluginAlter');
   }
 
@@ -179,16 +179,16 @@ class ComponentHooks11Test extends TestBase {
       'test_module.info.yml',
       'test_module.module',
       'test_module.services.yml',
-      'src/Hooks/TestModuleHooks.php',
+      'src/Hook/TestModuleHooks.php',
     ], $files);
 
     $services_file = $files["$module_name.services.yml"];
 
     $yaml_tester = new YamlTester($services_file);
     $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', 'Drupal\test_module\Hooks\TestModuleHooks']);
-    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'class'], 'Drupal\test_module\Hooks\TestModuleHooks');
-    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'autowire'], 'true');
+    $yaml_tester->assertHasProperty(['services', 'Drupal\test_module\Hook\TestModuleHooks']);
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hook\TestModuleHooks', 'class'], 'Drupal\test_module\Hook\TestModuleHooks');
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hook\TestModuleHooks', 'autowire'], 'true');
 
     $module_file = $files['test_module.module'];
 
@@ -236,16 +236,16 @@ class ComponentHooks11Test extends TestBase {
       'test_module.module',
       'test_module.services.yml',
       'src/MyService.php',
-      'src/Hooks/TestModuleHooks.php',
+      'src/Hook/TestModuleHooks.php',
     ], $files);
 
     $services_file = $files["$module_name.services.yml"];
 
     $yaml_tester = new YamlTester($services_file);
     $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', 'Drupal\test_module\Hooks\TestModuleHooks']);
-    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'class'], 'Drupal\test_module\Hooks\TestModuleHooks');
-    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hooks\TestModuleHooks', 'autowire'], 'true');
+    $yaml_tester->assertHasProperty(['services', 'Drupal\test_module\Hook\TestModuleHooks']);
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hook\TestModuleHooks', 'class'], 'Drupal\test_module\Hook\TestModuleHooks');
+    $yaml_tester->assertPropertyHasValue(['services', 'Drupal\test_module\Hook\TestModuleHooks', 'autowire'], 'true');
 
     $yaml_tester->assertHasProperty(['services', "$module_name.my_service"]);
     $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");

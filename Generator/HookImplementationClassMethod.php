@@ -33,7 +33,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
       'class' => [
         'component_type' => 'PHPClassFile',
         'plain_class_name' => '%PascalHooks',
-        'relative_namespace' => 'Hooks',
+        'relative_namespace' => 'Hook',
         'class_docblock_lines' => [
           'Contains hook implementations for the %readable %base.'
         ],

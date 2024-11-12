@@ -278,7 +278,7 @@ class Hooks extends BaseGenerator {
     $return = !empty($hook_info['has_return']) ? 'return ' : '';
 
     $components[$hook_name]['body'] = [
-      "{$return}\Drupal::service(\Drupal\%extension\Hooks\%PascalHooks::class)->{$hook_method_name}({$arguments});",
+      "{$return}\Drupal::service(\Drupal\%extension\Hook\%PascalHooks::class)->{$hook_method_name}({$arguments});",
     ];
     $components[$hook_name]['body_indented'] = FALSE;
 
@@ -289,8 +289,8 @@ class Hooks extends BaseGenerator {
       'services' => [
         // Argh DRY class name!
         // TODO: move the class name to being created in this generator.
-        'Drupal\%extension\Hooks\%PascalHooks' => [
-          'class' => 'Drupal\%extension\Hooks\%PascalHooks',
+        'Drupal\%extension\Hook\%PascalHooks' => [
+          'class' => 'Drupal\%extension\Hook\%PascalHooks',
           'autowire' => TRUE,
         ],
       ],
