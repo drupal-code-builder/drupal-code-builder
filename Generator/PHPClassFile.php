@@ -185,7 +185,7 @@ class PHPClassFile extends PHPFile {
       // to have parents be a qualified class name.
       'parent_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
-        ->setRequired(TRUE),
+        ->setRequired(FALSE),
       // Cheat and use mapping for now, as multi-valued properties don't do
       // defaults. But should -- TODO.
       // List of interfaces this class implements, as fully-qualified names
