@@ -439,20 +439,18 @@ class ContentEntityType extends EntityTypeBase {
     foreach ($this->component_data['base_fields'] as $base_field_data) {
       $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
 
-      $fluent_calls = [];
-      $fluent_calls[] = "  ->setLabel(t('{$base_field_data['label']}'))";
-      $fluent_calls[] = "  ->setDescription(t('TODO: description of field.'))";
+      $custom_base_field_calls = new FluentMethodCall();
+      $custom_base_field_calls
+        ->setLabel(FluentMethodCall::t($base_field_data['label']))
+        ->setDescription(FluentMethodCall::t('TODO: description of field.'));
       if ($use_revisionable) {
-        $fluent_calls[] = "  ->setRevisionable(TRUE)";
+        $custom_base_field_calls->setRevisionable(TRUE);
       }
       if ($use_translatable) {
-        $fluent_calls[] = "  ->setTranslatable(TRUE)";
+        $custom_base_field_calls->setTranslatable(TRUE);
       }
 
-      // Add a terminal ';' to the last of the fluent method calls.
-      $fluent_calls[count($fluent_calls) - 1] .= ';';
-
-      $method_body = array_merge($method_body, $fluent_calls);
+      $method_body = array_merge($method_body, $custom_base_field_calls->getCodeLines());
 
       $method_body[] = '';
     }
