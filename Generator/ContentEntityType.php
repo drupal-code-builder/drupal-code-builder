@@ -449,6 +449,9 @@ class ContentEntityType extends EntityTypeBase {
       if ($use_translatable) {
         $custom_base_field_calls->setTranslatable(TRUE);
       }
+      $custom_base_field_calls
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayConfigurable('view', TRUE);
 
       $method_body = array_merge($method_body, $custom_base_field_calls->getCodeLines());
 

@@ -101,6 +101,13 @@ class ComponentContentEntityType10Test extends TestBase {
       'setDisplayConfigurable',
     ], 'title');
 
+    $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
+      "setLabel",
+      'setDescription',
+      'setDisplayConfigurable',
+      'setDisplayConfigurable',
+    ], 'colour');
+
     // Test the entity annotation.
     $annotation_tester = $php_tester->getAnnotationTesterForClass();
     $annotation_tester->assertAnnotationClass('ContentEntityType');
@@ -432,11 +439,15 @@ class ComponentContentEntityType10Test extends TestBase {
       "setLabel",
       "setDescription",
       "setTranslatable",
+      'setDisplayConfigurable',
+      'setDisplayConfigurable',
     ], 'breed');
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       "setDescription",
       "setTranslatable",
+      'setDisplayConfigurable',
+      'setDisplayConfigurable',
     ], 'colour');
 
     // Test the entity annotation.
@@ -551,11 +562,15 @@ class ComponentContentEntityType10Test extends TestBase {
       "setLabel",
       "setDescription",
       "setRevisionable",
+      'setDisplayConfigurable',
+      'setDisplayConfigurable',
     ], 'breed');
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       "setDescription",
       "setRevisionable",
+      'setDisplayConfigurable',
+      'setDisplayConfigurable',
     ], 'colour');
 
     // Test the entity annotation.
