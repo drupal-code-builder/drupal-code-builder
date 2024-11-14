@@ -55,38 +55,8 @@ class FluentMethodCall {
         // self::t().
         $fluent_call_line .= $parameter();
       }
-      elseif (is_array($parameter)) {
-        // Hack! Abusing the FormAPI renderer as a general array renderer!
-        $fluent_call_line .= '[';
-
-        $array_renderer = new FormAPIArrayRenderer($parameter);
-
-        // Cheat, and put this in the array of rendered lines now, as this case
-        // needs to output more than one line.
-        $this->lines[] = $fluent_call_line;
-
-        $array_lines = $array_renderer->render();
-        $array_lines = $this->indentCodeLines($array_lines);
-
-        $this->lines = array_merge($this->lines, $array_lines);
-
-        // Put the last line for the array parameter in the ongoing line.
-        $fluent_call_line = ']';
-      }
-      elseif (str_starts_with($parameter, '£')) {
-        $fluent_call_line .= $parameter;
-      }
-      elseif (str_starts_with($parameter, 't(')) {
-        $fluent_call_line .= $parameter;
-      }
-      elseif (is_string($parameter)) {
-        $fluent_call_line .= '"' . $parameter . '"';
-      }
-      elseif (is_bool($parameter)) {
-        $fluent_call_line .= $parameter ? 'TRUE' : 'FALSE';
-      }
       else {
-        $fluent_call_line .= $parameter;
+        $fluent_call_line .= PhpValue::create($parameter)->renderInline();
       }
 
       if ($index != count($parameters) - 1) {
