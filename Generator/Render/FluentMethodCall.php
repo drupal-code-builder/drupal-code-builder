@@ -51,8 +51,8 @@ class FluentMethodCall {
       // Do checking whether this is a non-string first, as substr() will
       // complain if it's checked first.
       if (is_callable($parameter)) {
-        // If the parameter is a callable, then it's the return value of either
-        // ::code or ::quote.
+        // If the parameter is a callable, then it's the return value of
+        // self::t().
         $fluent_call_line .= $parameter();
       }
       elseif (is_array($parameter)) {
@@ -114,36 +114,6 @@ class FluentMethodCall {
     $this->lines = $this->indentCodeLines($this->lines);
 
     return $this->lines;
-  }
-
-  /**
-   * Treats the given string as the actual code to output.
-   *
-   * @param $string
-   *   The string of code.
-   *
-   * @return callable
-   *   An anonymous function that will return the given code string.
-   */
-  static public function code($string) {
-    return function () use ($string) {
-      return $string;
-    };
-  }
-
-  /**
-   * Treats the given string as a value to be quoted.
-   *
-   * @param $string
-   *   The string value.
-   *
-   * @return callable
-   *   An anonymous function that will return the given string, quoted.
-   */
-  static public function quote($string) {
-    return function () use ($string) {
-      return '"' . $string . '"';
-    };
   }
 
   /**
