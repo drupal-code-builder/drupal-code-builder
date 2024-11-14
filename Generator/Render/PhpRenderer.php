@@ -18,7 +18,7 @@ abstract class PhpRenderer {
    */
   protected function renderScalar(mixed $value): string {
     // Handle natives which are represented as strings.
-    if (in_array($value, ['TRUE', 'FALSE', 'NULL'])) {
+    if (in_array($value, ['TRUE', 'FALSE', 'NULL'], TRUE)) {
       return $value;
     }
 

@@ -17,6 +17,7 @@ class RenderPHPValueTest extends TestCase {
     $this->assertSame('42', PhpValue::create(42)->renderInline());
     $this->assertSame("'foo'", PhpValue::create('foo')->renderInline());
     $this->assertSame('FALSE', PhpValue::create(FALSE)->renderInline());
+    $this->assertSame('TRUE', PhpValue::create(TRUE)->renderInline());
     $this->assertSame('NULL', PhpValue::create(NULL)->renderInline());
 
     $this->assertSame("[42]", PhpValue::create([42])->renderInline());
