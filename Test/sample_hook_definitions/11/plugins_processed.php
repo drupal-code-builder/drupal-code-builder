@@ -14,7 +14,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Block\\Annotation\\Block',
     'plugin_definition_attribute_name' => 'Drupal\\Core\\Block\\Attribute\\Block',
     'yaml_file_suffix' => NULL,
-    'annotation_id_only' => NULL,
+    'annotation_id_only' => false,
     'plugin_label_property' => 'admin_label',
     'yaml_properties' => 
     array (
@@ -163,7 +163,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Render\\Annotation\\RenderElement',
     'plugin_definition_attribute_name' => 'Drupal\\Core\\Render\\Attribute\\RenderElement',
     'yaml_file_suffix' => NULL,
-    'annotation_id_only' => NULL,
+    'annotation_id_only' => true,
     'plugin_label_property' => NULL,
     'yaml_properties' => 
     array (
@@ -215,7 +215,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Field\\Annotation\\FieldFormatter',
     'plugin_definition_attribute_name' => 'Drupal\\Core\\Field\\Attribute\\FieldFormatter',
     'yaml_file_suffix' => NULL,
-    'annotation_id_only' => NULL,
+    'annotation_id_only' => false,
     'plugin_label_property' => 'label',
     'yaml_properties' => 
     array (
@@ -397,7 +397,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\filter\\Annotation\\Filter',
     'plugin_definition_attribute_name' => 'Drupal\\filter\\Attribute\\Filter',
     'yaml_file_suffix' => NULL,
-    'annotation_id_only' => NULL,
+    'annotation_id_only' => false,
     'plugin_label_property' => 'title',
     'yaml_properties' => 
     array (
@@ -522,7 +522,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\image\\Annotation\\ImageEffect',
     'plugin_definition_attribute_name' => 'Drupal\\image\\Attribute\\ImageEffect',
     'yaml_file_suffix' => NULL,
-    'annotation_id_only' => NULL,
+    'annotation_id_only' => false,
     'plugin_label_property' => 'label',
     'yaml_properties' => 
     array (
@@ -770,7 +770,7 @@ array (
     'plugin_definition_annotation_name' => 'Drupal\\Core\\Validation\\Annotation\\Constraint',
     'plugin_definition_attribute_name' => 'Drupal\\Core\\Validation\\Attribute\\Constraint',
     'yaml_file_suffix' => NULL,
-    'annotation_id_only' => NULL,
+    'annotation_id_only' => false,
     'plugin_label_property' => 'label',
     'yaml_properties' => 
     array (

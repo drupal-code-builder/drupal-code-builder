@@ -637,6 +637,14 @@ class PluginTypesCollector extends CollectorBase  {
     // checks if it's set.
     $data['plugin_properties'] = [];
 
+    // Detect whether the attribute is just an ID.
+    if (is_a($data['plugin_definition_attribute_name'], \Drupal\Component\Plugin\Attribute\PluginID::class, TRUE)) {
+      $data['annotation_id_only'] = TRUE;
+    }
+    else {
+      $data['annotation_id_only'] = FALSE;
+    }
+
     // Get a reflection class for the annotation class.
     // Each property of the annotation class describes a property for the
     // plugin annotation.
@@ -703,6 +711,12 @@ class PluginTypesCollector extends CollectorBase  {
       }
 
       $data['plugin_properties'][$constructor_parameter_reflection->name] = $annotation_property_data;
+    }
+
+    // Special case for plugins which don't get picked up as annotation_id_only
+    // but only have 'deriver' as their additional property, e.g. element_info.
+    if (array_keys($data['plugin_properties']) == ['id', 'deriver']) {
+      $data['annotation_id_only'] = TRUE;
     }
   }
 
