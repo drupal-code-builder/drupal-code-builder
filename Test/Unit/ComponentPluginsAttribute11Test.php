@@ -16,14 +16,14 @@ use Psr\Container\ContainerInterface;
  * @group yaml
  * @group plugin
  */
-class ComponentPluginsAttribute10Test extends TestBase {
+class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 10;
+  protected $drupalMajorVersion = 11;
 
   /**
    * Test Plugins component.
