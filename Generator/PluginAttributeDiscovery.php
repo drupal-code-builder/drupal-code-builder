@@ -19,6 +19,19 @@ class PluginAttributeDiscovery extends PluginClassDiscovery {
     $attribute_class = $this->plugin_type_data['plugin_definition_attribute_name'];
     $attribute_variables = $this->plugin_type_data['plugin_properties'];
 
+    // Special case: attribute that's just the plugin ID.
+    if (!empty($this->plugin_type_data['annotation_id_only'])) {
+      $attribute = PhpAttributes::class(
+        $attribute_class,
+        [
+          $this->component_data->prefixed_plugin_name->value
+        ],
+      );
+      $attribute->forceInline();
+
+      return $attribute;
+    }
+
     $attribute_data = [];
     $attribute_comments = [];
     foreach ($attribute_variables as $attribute_variable => $attribute_variable_info) {
