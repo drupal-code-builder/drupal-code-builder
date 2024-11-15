@@ -45,8 +45,9 @@ class PluginTypesCollector extends CollectorBase  {
     'plugin.manager.field.formatter',
     // ... with a create() method.
     'plugin.manager.image.effect',
-    // Annotation plugin using only the plugin ID in its annotation.
+    // Class-based plugin using only the plugin ID in its annotation.
     'plugin.manager.element_info',
+    'plugin.manager.views.area',
     // YAML plugins. Need all of these for entity type generators.
     'plugin.manager.menu.link',
     'plugin.manager.menu.local_task',

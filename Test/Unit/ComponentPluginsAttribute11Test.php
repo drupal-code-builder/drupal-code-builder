@@ -78,6 +78,44 @@ class ComponentPluginsAttribute11Test extends TestBase {
   }
 
   /**
+   * Tests a plugin type where the attribute is just the ID.
+   */
+  function testPluginWithOnlyId() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugins' => [
+        // Analysed as ID only.
+        0 => [
+          'plugin_type' => 'views.area',
+          'plugin_name' => 'alpha',
+        ],
+        // Deduced as ID only because of number of properties.
+        1 => [
+          'plugin_type' => 'element_info',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey("src/Plugin/views/area/Alpha.php", $files);
+    $this->assertArrayHasKey("src/Element/Alpha.php", $files);
+
+    $plugin_file = $files['src/Plugin/views/area/Alpha.php'];
+    $this->assertStringContainsString("#[ViewsArea('test_module_alpha')]", $plugin_file);
+
+    $plugin_file = $files["src/Element/Alpha.php"];
+    $this->assertStringContainsString("#[RenderElement('test_module_alpha')]", $plugin_file);
+  }
+
+  /**
    * Tests sample values for a plugin attribute.
    *
    * TODO Expand this.

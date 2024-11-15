@@ -808,4 +808,242 @@ array (
     array (
     ),
   ),
+  'views.area' => 
+  array (
+    'type_id' => 'views.area',
+    'service_id' => 'plugin.manager.views.area',
+    'service_class_name' => 'Drupal\\views\\Plugin\\ViewsHandlerManager',
+    'service_component_namespace' => 'Drupal\\views',
+    'type_label' => 'views.area',
+    'alter_hook_name' => 'views_plugins_area_alter',
+    'discovery' => 'Drupal\\Core\\Plugin\\Discovery\\AttributeDiscoveryWithAnnotations',
+    'subdir' => 'Plugin/views/area',
+    'plugin_interface' => 'Drupal\\views\\Plugin\\views\\ViewsHandlerInterface',
+    'plugin_definition_annotation_name' => 'Drupal\\views\\Annotation\\ViewsArea',
+    'plugin_definition_attribute_name' => 'Drupal\\views\\Attribute\\ViewsArea',
+    'yaml_file_suffix' => NULL,
+    'annotation_id_only' => true,
+    'plugin_label_property' => NULL,
+    'yaml_properties' => 
+    array (
+    ),
+    'base_class' => 'Drupal\\views\\Plugin\\views\\area\\AreaPluginBase',
+    'base_class_has_di' => true,
+    'plugin_properties' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'description' => 'The attribute class ID.',
+        'type' => 'string',
+      ),
+    ),
+    'plugin_interface_methods' => 
+    array (
+      'preQuery' => 
+      array (
+        'name' => 'preQuery',
+        'declaration' => 'public function preQuery();',
+        'description' => 'Run before the view is built.',
+      ),
+      'getEntityType' => 
+      array (
+        'name' => 'getEntityType',
+        'declaration' => 'public function getEntityType();',
+        'description' => 'Determines the entity type used by this handler.',
+      ),
+      'broken' => 
+      array (
+        'name' => 'broken',
+        'declaration' => 'public function broken();',
+        'description' => 'Determines if the handler is considered \'broken\'.',
+      ),
+      'ensureMyTable' => 
+      array (
+        'name' => 'ensureMyTable',
+        'declaration' => 'public function ensureMyTable();',
+        'description' => 'Ensures that the main table for this handler is in the query.',
+      ),
+      'access' => 
+      array (
+        'name' => 'access',
+        'declaration' => 'public function access(\\Drupal\\Core\\Session\\AccountInterface $account);',
+        'description' => 'Check whether given user has access to this handler.',
+      ),
+      'getJoin' => 
+      array (
+        'name' => 'getJoin',
+        'declaration' => 'public function getJoin();',
+        'description' => 'Get the join object that should be used for this handler.',
+      ),
+      'sanitizeValue' => 
+      array (
+        'name' => 'sanitizeValue',
+        'declaration' => 'public function sanitizeValue($value, $type = NULL);',
+        'description' => 'Sanitize the value for output.',
+      ),
+      'getTableJoin' => 
+      array (
+        'name' => 'getTableJoin',
+        'declaration' => 'public static function getTableJoin($table, $base_table);',
+        'description' => 'Fetches a handler to join one table to a primary table from the data cache.',
+      ),
+      'getField' => 
+      array (
+        'name' => 'getField',
+        'declaration' => 'public function getField($field = NULL);',
+        'description' => 'Shortcut to get a handler\'s raw field value.',
+      ),
+      'postExecute' => 
+      array (
+        'name' => 'postExecute',
+        'declaration' => 'public function postExecute(&$values);',
+        'description' => 'Run after the view is executed, before the result is cached.',
+      ),
+      'showExposeForm' => 
+      array (
+        'name' => 'showExposeForm',
+        'declaration' => 'public function showExposeForm(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Shortcut to display the exposed options form.',
+      ),
+      'setRelationship' => 
+      array (
+        'name' => 'setRelationship',
+        'declaration' => 'public function setRelationship();',
+        'description' => 'Sets up any needed relationship.',
+      ),
+      'adminLabel' => 
+      array (
+        'name' => 'adminLabel',
+        'declaration' => 'public function adminLabel($short = FALSE);',
+        'description' => 'Return a string representing this handler\'s name in the UI.',
+      ),
+      'breakString' => 
+      array (
+        'name' => 'breakString',
+        'declaration' => 'public static function breakString($str, $force_int = FALSE);',
+        'description' => 'Breaks x,y,z and x+y+z into an array.',
+      ),
+      'adminSummary' => 
+      array (
+        'name' => 'adminSummary',
+        'declaration' => 'public function adminSummary();',
+        'description' => 'Provide text for the administrative summary.',
+      ),
+      'getProvider' => 
+      array (
+        'name' => 'getProvider',
+        'declaration' => 'public function getProvider();',
+        'description' => 'Returns the plugin provider.',
+      ),
+      'pluginTitle' => 
+      array (
+        'name' => 'pluginTitle',
+        'declaration' => 'public function pluginTitle();',
+        'description' => 'Return the human readable name of the display.',
+      ),
+      'usesOptions' => 
+      array (
+        'name' => 'usesOptions',
+        'declaration' => 'public function usesOptions();',
+        'description' => 'Returns the usesOptions property.',
+      ),
+      'filterByDefinedOptions' => 
+      array (
+        'name' => 'filterByDefinedOptions',
+        'declaration' => 'public function filterByDefinedOptions(array &$storage);',
+        'description' => 'Filter out stored options depending on the defined options.',
+      ),
+      'validateOptionsForm' => 
+      array (
+        'name' => 'validateOptionsForm',
+        'declaration' => 'public function validateOptionsForm(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Validate the options form.',
+      ),
+      'summaryTitle' => 
+      array (
+        'name' => 'summaryTitle',
+        'declaration' => 'public function summaryTitle();',
+        'description' => 'Returns the summary of the settings in the display.',
+      ),
+      'preRenderAddFieldsetMarkup' => 
+      array (
+        'name' => 'preRenderAddFieldsetMarkup',
+        'declaration' => 'public static function preRenderAddFieldsetMarkup(array $form);',
+        'description' => 'Moves form elements into fieldsets for presentation purposes.',
+      ),
+      'init' => 
+      array (
+        'name' => 'init',
+        'declaration' => 'public function init(\\Drupal\\views\\ViewExecutable $view, \\Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase $display, ?array &$options = NULL);',
+        'description' => 'Initialize the plugin.',
+      ),
+      'submitOptionsForm' => 
+      array (
+        'name' => 'submitOptionsForm',
+        'declaration' => 'public function submitOptionsForm(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Handle any special handling on the validate form.',
+      ),
+      'globalTokenForm' => 
+      array (
+        'name' => 'globalTokenForm',
+        'declaration' => 'public function globalTokenForm(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Adds elements for available core tokens to a form.',
+      ),
+      'getAvailableGlobalTokens' => 
+      array (
+        'name' => 'getAvailableGlobalTokens',
+        'declaration' => 'public function getAvailableGlobalTokens($prepared = FALSE, array $types = []);',
+        'description' => 'Returns an array of available token replacements.',
+      ),
+      'preRenderFlattenData' => 
+      array (
+        'name' => 'preRenderFlattenData',
+        'declaration' => 'public static function preRenderFlattenData($form);',
+        'description' => 'Flattens the structure of form elements.',
+      ),
+      'globalTokenReplace' => 
+      array (
+        'name' => 'globalTokenReplace',
+        'declaration' => 'public function globalTokenReplace($string = \'\', array $options = []);',
+        'description' => 'Returns a string with any core tokens replaced.',
+      ),
+      'destroy' => 
+      array (
+        'name' => 'destroy',
+        'declaration' => 'public function destroy();',
+        'description' => 'Clears a plugin.',
+      ),
+      'validate' => 
+      array (
+        'name' => 'validate',
+        'declaration' => 'public function validate();',
+        'description' => 'Validate that the plugin is correct and can be saved.',
+      ),
+      'query' => 
+      array (
+        'name' => 'query',
+        'declaration' => 'public function query();',
+        'description' => 'Add anything to the query that we might need to.',
+      ),
+      'unpackOptions' => 
+      array (
+        'name' => 'unpackOptions',
+        'declaration' => 'public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE);',
+        'description' => 'Unpacks options over our existing defaults.',
+      ),
+      'buildOptionsForm' => 
+      array (
+        'name' => 'buildOptionsForm',
+        'declaration' => 'public function buildOptionsForm(&$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state);',
+        'description' => 'Provide a form to edit options for this plugin.',
+      ),
+      'themeFunctions' => 
+      array (
+        'name' => 'themeFunctions',
+        'declaration' => 'public function themeFunctions();',
+        'description' => 'Provide a full list of possible theme templates used by this style.',
+      ),
+    ),
+  ),
 );
