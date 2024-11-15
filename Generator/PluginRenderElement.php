@@ -10,10 +10,10 @@ namespace DrupalCodeBuilder\Generator;
  * This is a variant generator for the Plugin generator, and should not be
  * used directly.
  */
-class PluginRenderElement extends PluginAnnotationDiscovery {
+class PluginRenderElement extends PluginClassDiscoveryHybrid {
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
@@ -24,7 +24,6 @@ class PluginRenderElement extends PluginAnnotationDiscovery {
         'theme_hook_name' => $this->component_data['plugin_name'],
       ];
     }
-
 
     return $components;
   }

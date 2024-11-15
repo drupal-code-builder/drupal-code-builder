@@ -11,7 +11,7 @@ namespace DrupalCodeBuilder\Generator;
  * This is a variant generator for the Plugin generator, and should not be
  * used directly.
  */
-class PluginValidationConstraint extends PluginAnnotationDiscovery {
+class PluginValidationConstraint extends PluginClassDiscoveryHybrid {
 
   /**
    * Return an array of subcomponent types.
