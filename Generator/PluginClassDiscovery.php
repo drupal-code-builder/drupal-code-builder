@@ -12,40 +12,7 @@ use MutableTypedData\Definition\DefaultDefinition;
 /**
  * Common base class for annotation and attribute plugins.
  */
-abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
-
-  /**
-   * The plugin type data.
-   *
-   * @var array
-   */
-  protected $plugin_type_data;
-
-  /**
-   * The standard fixed create() parameters.
-   *
-   * These are the parameters to create() that come after the $container
-   * parameter.
-   *
-   * @var array
-   */
-  const STANDARD_FIXED_PARAMS = [
-    [
-      'name' => 'configuration',
-      'description' => 'A configuration array containing information about the plugin instance.',
-      'typehint' => 'array',
-    ],
-    [
-      'name' => 'plugin_id',
-      'description' => 'The plugin_id for the plugin instance.',
-      'typehint' => 'string',
-    ],
-    [
-      'name' => 'plugin_definition',
-      'description' => 'The plugin implementation definition.',
-      'typehint' => 'mixed',
-    ]
-  ];
+abstract class PluginClassDiscovery extends PluginClassBase {
 
   function __construct($component_data) {
     // Set some default properties.
@@ -394,13 +361,6 @@ abstract class PluginClassDiscovery extends PHPClassFileWithInjection {
     }
 
     return $parameters;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getCreateParameters() {
-    return self::STANDARD_FIXED_PARAMS;
   }
 
   /**

@@ -505,6 +505,19 @@ class ComponentPluginType10Test extends TestBase {
         'parameter_name' => 'entity_type_manager',
       ],
     ]);
+
+    $create_tester = $php_tester->getMethodTester('create');
+    $create_tester->assertHasParameters([
+      'container' => 'Symfony\Component\DependencyInjection\ContainerInterface',
+      'configuration' => 'array',
+      'plugin_id' => NULL,
+      'plugin_definition' => NULL,
+    ]);
+    $php_tester->assertConstructorBaseParameters([
+      'configuration' => 'array',
+      'plugin_id' => NULL,
+      'plugin_definition' => NULL,
+    ]);
   }
 
 }

@@ -422,7 +422,7 @@ class PluginType extends BaseGenerator {
     }
 
     $components['base_class'] = [
-      'component_type' => 'PHPClassFileWithInjection',
+      'component_type' => 'PluginClassBase',
       'plain_class_name' => $this->component_data['base_class_short_name'],
       'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
