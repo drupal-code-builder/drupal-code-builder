@@ -27,6 +27,7 @@ class ConfigBundleEntityType extends ConfigEntityType {
     'admin_permission',
     'bundle_of',
     'entity_keys',
+    'config_prefix',
     'config_export',
     'links',
   ];

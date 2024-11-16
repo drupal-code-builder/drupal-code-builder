@@ -30,6 +30,7 @@ class ConfigEntityType extends EntityTypeBase {
     'handlers',
     'admin_permission',
     'entity_keys',
+    'config_prefix',
     'config_export',
     'links',
   ];
@@ -327,6 +328,8 @@ class ConfigEntityType extends EntityTypeBase {
       $annotation_data['links']["edit-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/edit";
       $annotation_data['links']["delete-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/delete";
     }
+
+    $annotation_data['config_prefix'] = $this->component_data->entity_type_id->value;
 
     $config_export_values = [];
     foreach ($this->component_data['entity_properties'] as $schema_item) {

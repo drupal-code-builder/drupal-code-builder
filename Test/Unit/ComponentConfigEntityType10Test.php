@@ -69,6 +69,7 @@ class ComponentConfigEntityType10Test extends TestBase {
       'label_plural',
       'label_count',
       'entity_keys',
+      'config_prefix',
       'config_export',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
@@ -85,6 +86,7 @@ class ComponentConfigEntityType10Test extends TestBase {
     $annotation_tester->assertPropertyHasValue(['label_count', 'plural'], '@count kitty cats');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'label'], 'label');
+    $annotation_tester->assertPropertyHasValue('config_prefix', 'kitty_cat');
     $annotation_tester->assertPropertyHasValue('config_export', ['id', 'label']);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
@@ -163,6 +165,7 @@ class ComponentConfigEntityType10Test extends TestBase {
       'label_plural',
       'label_count',
       'entity_keys',
+      'config_prefix',
       'config_export',
     ]);
     $annotation_tester->assertPropertyHasValue('id', 'kitty_cat');
@@ -294,6 +297,7 @@ class ComponentConfigEntityType10Test extends TestBase {
       'label_count',
       'handlers',
       'entity_keys',
+      'config_prefix',
       'config_export',
     ]);
     $annotation_tester->assertPropertyHasValue(['handlers', 'access'], 'Drupal\test_module\Entity\Handler\KittyCatAccess');
@@ -407,6 +411,7 @@ class ComponentConfigEntityType10Test extends TestBase {
       'handlers',
       'admin_permission',
       'entity_keys',
+      'config_prefix',
       'config_export',
       'links',
     ]);
