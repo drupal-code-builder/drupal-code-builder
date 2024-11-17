@@ -112,6 +112,9 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
             ->setExpression("parent.service_name_prefix.get() ~ '.' ~ parent.service_name.get()")
             ->setDependencies('..:root_component_name')
         ),
+      'decorates' => PropertyDefinition::create('string')
+        ->setLabel('Decorated service')
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
@@ -291,9 +294,37 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
    * Return an array of subcomponent types.
    */
   public function requiredComponents(): array {
+    // Set things up for a decorating service before we call the parent method.
+    if (!$this->component_data->decorates->isEmpty()) {
+      // Force a constructor, as we always inject at least the decorated inner
+      // service.
+      $this->forceConstructComponent = TRUE;
+
+      $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+      $services_data = $task_handler_report_services->listServiceData();
+
+      $decorated_service_data = $services_data[$this->component_data->decorates->value];
+
+      // dump($decorated_service_data);
+
+      $this->component_data->parent_class_name = $decorated_service_data['class'];
+
+      // parent_class_name
+    }
+
     $components = parent::requiredComponents();
 
-    $yaml_data_arguments = [];
+    if (!$this->component_data->decorates->isEmpty()) {
+      $components['inner'] = [
+        'component_type' => 'InjectedService',
+        'containing_component' => '%requester',
+        'service_id' => $this->component_data->decorates->value,
+        'decorated' => TRUE,
+        'class_has_static_factory' => $this->component_data->use_static_factory_method->value,
+        'class_has_constructor' => TRUE,
+        'class_name' => $this->component_data->qualified_class_name->value,
+      ];
+    }
 
     $requested_services = [];
     foreach ($this->component_data['injected_services'] as $service_id) {
@@ -331,6 +362,14 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       unset($components['service_' . $service_id]);
     }
 
+    // Build the YAMl data arguments.
+    $yaml_data_arguments = [];
+
+    // If there is a decorated service, this goes first.
+    if (!$this->component_data->decorates->isEmpty()) {
+      $yaml_data_arguments[] = '@.inner';
+    }
+
     foreach ($service_ids as $service_id) {
       // Put the service components in the right order.
       $components['service_' . $service_id] = $service_components[$service_id];
@@ -356,6 +395,11 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     $yaml_service_definition = [
       'class' => $this->component_data['qualified_class_name'],
     ];
+
+    if (!$this->component_data->decorates->isEmpty()) {
+      $yaml_service_definition['decorates'] = $this->component_data->decorates->value;
+    }
+
     if ($yaml_data_arguments) {
       $yaml_service_definition['arguments'] = $yaml_data_arguments;
     }

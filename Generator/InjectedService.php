@@ -24,6 +24,8 @@ class InjectedService extends BaseGenerator {
       'service_id' => PropertyDefinition::create('string')
         ->setLabel('Service name')
         ->setRequired(TRUE),
+      'decorated' => PropertyDefinition::create('boolean')
+        ->setLiteralDefault(FALSE),
       'service_info' => PropertyDefinition::create('mapping')
         ->setDefault(DefaultDefinition::create()
           ->setCallable([static::class, 'defaultServiceInfo'])
@@ -57,6 +59,12 @@ class InjectedService extends BaseGenerator {
     $service_info['interface']      = $services_data[$service_id]['interface'];
     $service_info['class']          = $services_data[$service_id]['class'] ?? '';
     $service_info['property_name']  = CaseString::snake($service_info['variable_name'])->camel();
+
+    if ($data_item->getParent()->decorated->value) {
+      $service_info['variable_name'] = 'decorated';
+      $service_info['property_name'] = 'decorated';
+      $service_info['description'] = 'The decorated ' . $services_data[$service_id]['label'];
+    }
 
     if (substr_count($service_id, ':') != 0) {
       // If the service name contains a ':' then it's a pseudoservice, that

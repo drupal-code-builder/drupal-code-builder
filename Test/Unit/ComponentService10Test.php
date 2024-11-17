@@ -786,6 +786,109 @@ class ComponentService10Test extends TestBase {
   }
 
   /**
+   * Test a service that decorates another.
+   *
+   * @group di
+   */
+  function testServiceGenerationWithDecoration() {
+    // Assemble module data: decoration without any injected services.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => [
+        0 => [
+          'service_name' => 'my_service',
+          'decorates' => 'entity_type.manager',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyService.php",
+    ], $files);
+
+    $services_file = $files['test_module.services.yml'];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', 'test_module.my_service']);
+    $yaml_tester->assertPropertyHasValue(['services', 'test_module.my_service', 'decorates'], 'entity_type.manager');
+
+    $service_class_file = $files["src/MyService.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertInjectedServices([
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'decorated',
+        'property_name' => 'decorated',
+        'parameter_name' => 'decorated',
+      ],
+    ]);
+
+    // Assemble module data: decoration with an injected service.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => [
+        0 => [
+          'service_name' => 'my_service',
+          'decorates' => 'entity_type.manager',
+          'injected_services' => [
+            'current_user',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      "src/MyService.php",
+    ], $files);
+
+    $services_file = $files['test_module.services.yml'];
+
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', 'test_module.my_service']);
+    $yaml_tester->assertPropertyHasValue(['services', 'test_module.my_service', 'decorates'], 'entity_type.manager');
+
+    $service_class_file = $files["src/MyService.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertInjectedServices([
+      // Decorated service goes first.
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'decorated',
+        'property_name' => 'decorated',
+        'parameter_name' => 'decorated',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+    ]);
+  }
+
+  /**
    * Tests with an existing services file.
    *
    * @param string|null $existing
