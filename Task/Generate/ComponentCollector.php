@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Task\Generate;
 use DrupalCodeBuilder\Definition\GeneratorDefinitionInterface;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Exception\MergeDataLossException;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
 use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
@@ -286,7 +287,21 @@ class ComponentCollector {
       // We determine whether our data needs to be merged in with it.
       $this->debug($chain, "record has matching existing component name $name; type: $component_type");
 
-      $differences_merged = $existing_matching_component->mergeComponentData($component_data);
+      try {
+        $differences_merged = $existing_matching_component->mergeComponentData($component_data);
+      }
+      catch (MergeDataLossException $e) {
+        throw new \LogicException(
+          sprintf(
+            "Failed to merge component name %s; type: %s with request chain %s into existing component %s.",
+            $name,
+            $component_type,
+            implode('>>', $chain),
+            $existing_matching_component->component_data->getAddress(),
+          ),
+          previous: $e,
+        );
+      }
 
       if (!$differences_merged) {
         // There was nothing new in our component's data that needed to be
