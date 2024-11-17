@@ -152,7 +152,15 @@ class ComponentHooks11Test extends TestBase {
       'SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses.IncorrectlyOrderedUses',
     ]);
     $php_tester->assertHasClass('Drupal\test_module\Hook\TestModuleHooks');
-    $php_tester->assertHasMethod('elementPluginAlter');
+    $method_tester = $php_tester->getMethodTester('elementPluginAlter');
+    // The OO hook has the generated code for plugin replacement.
+    $method_tester->assertHasLine("\$info['parent']['class'] = Alpha::class;");
+
+    // The legacy hook has the call to the OO hook.
+    $module_file = $files['test_module.module'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
+    $function_tester = $php_tester->getFunctionTester('test_module_element_plugin_alter');
+    $function_tester->assertHasLine('\Drupal::service(TestModuleHooks::class)->elementPluginAlter($definitions);');
   }
 
   /**
