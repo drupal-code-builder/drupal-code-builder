@@ -66,8 +66,8 @@ class Alpha extends ActionBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function executeMultiple(array $objects) {
-    $this->moduleHandler->invokeAll('test_analyze_9_di_all_cats', $purr, $miaow);
-    $this->moduleHandler->invoke('kitty_module', 'test_analyze_9_di_one_cat', $purr, $miaow);
+    $this->moduleHandler->invokeAll('test_analyze_9_di_all_cats', [$purr, $miaow]);
+    $this->moduleHandler->invoke('kitty_module', 'test_analyze_9_di_one_cat', [$purr, $miaow]);
     $this->moduleHandler->alter('test_analyze_9_di_change_cat', $purr, $miaow);
     $this->moduleHandler->alter(['test_analyze_9_di_change_cat_1', 'test_analyze_9_di_change_cat_2'], $purr, $miaow);
     // Executes the plugin for an array of objects.

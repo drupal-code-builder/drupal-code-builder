@@ -85,9 +85,11 @@ class AnalyzeModule extends Base {
               ' ( $hook_prefix \w+ ) ' # Hook name, with the hook prefix.
               (?:
                 , \s*
-                (
-                  [^)]* # Capture further parameters: anything up to the closing ')'.
-                )
+                \[ # invokeAll parameters are passed in an array.
+                  (
+                    [^)]* # Capture further parameters: anything up to the closing '])'.
+                  )
+                \]
               )? # The further parameters are optional.
           /x",
         ],
@@ -100,9 +102,11 @@ class AnalyzeModule extends Base {
               ' ( $hook_prefix \w+ ) ' # Hook name, with the hook prefix.
               (?:
                 , \s*
-                (
-                  [^)]* # Capture further parameters: anything up to the closing ')'.
-                )
+                \[ # invokeAll parameters are passed in an array.
+                  (
+                    [^)]* # Capture further parameters: anything up to the closing '])'.
+                  )
+                \]
               )? # The further parameters are optional.
             /x",
         ],
@@ -210,6 +214,9 @@ class AnalyzeModule extends Base {
           },
         ],
       ];
+
+      // Debugging.
+      // $hook_invocation_patterns = array_intersect_key($hook_invocation_patterns, ['invokeAll' => TRUE]);
 
       // Process the file for each pattern.
       foreach ($hook_invocation_patterns as $pattern_info) {
