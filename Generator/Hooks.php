@@ -168,7 +168,7 @@ class Hooks extends BaseGenerator {
       $this->addProceduralHookComponent($components, $hook_info);
     }
     else {
-      $this->addOoHookComponent($components, $hook_info);
+      $this->addOoHookComponents($components, $hook_info);
 
       // If we want legacy procedural hooks too.
       if ($this->component_data->hook_implementation_type->value == 'oo_legacy') {
@@ -187,8 +187,18 @@ class Hooks extends BaseGenerator {
    * @param array $hook_info
    *   The array of hook info.
    */
-  protected function addOoHookComponent(array &$components, array $hook_info): void {
+  protected function addOoHookComponents(array &$components, array $hook_info): void {
     $hook_name = $hook_info['name'];
+
+    // Make the hooks class.
+    $components['hooks_class'] = [
+      'component_type' => 'PHPClassFile',
+      'plain_class_name' => '%PascalHooks',
+      'relative_namespace' => 'Hook',
+      'class_docblock_lines' => [
+        'Contains hook implementations for the %readable %base.'
+      ],
+    ];
 
     // Make the method name out of the short hook name in camel case.
     // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
@@ -211,6 +221,7 @@ class Hooks extends BaseGenerator {
       // The code is a single string, already indented. Ensure we don't
       // indent it again.
       'body_indented' => TRUE,
+      'containing_component' => '%requester:hooks_class',
     ];
   }
 

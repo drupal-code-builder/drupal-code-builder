@@ -28,29 +28,6 @@ class HookImplementationClassMethod extends HookImplementationBase {
   /**
    * {@inheritdoc}
    */
-  public function requiredComponents(): array {
-    return [
-      'class' => [
-        'component_type' => 'PHPClassFile',
-        'plain_class_name' => '%PascalHooks',
-        'relative_namespace' => 'Hook',
-        'class_docblock_lines' => [
-          'Contains hook implementations for the %readable %base.'
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function containingComponent() {
-    return '%self:class';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getContents(): array {
     // Replace the hook name from the hook info's declaration with the method
     // name.
