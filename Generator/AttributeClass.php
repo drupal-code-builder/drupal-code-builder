@@ -15,9 +15,7 @@ class AttributeClass extends PHPClassFile {
   protected function getClassAttributes(): ?PhpAttributes {
     return PhpAttributes::class(
       '\Attribute',
-      [
-        '\Attribute::TARGET_CLASS',
-      ]
+      '\Attribute::TARGET_CLASS',
     );
   }
 

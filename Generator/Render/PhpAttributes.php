@@ -21,7 +21,8 @@ class PhpAttributes extends PhpRenderer {
    *   stored without, and plugin property types are stored with, WTF.)
    * @param mixed $data
    *   The data for the attribute. For an attribute with no parameters, use
-   *   NULL.
+   *   NULL. A scalar value will be rendered inline with the attribute class.
+   *   An array value will be rendered over multiple indented lines.
    * @param $comments
    *   An array of comments for the attribute's top-level properties. Keys are
    *   property names, values are the comment text.

@@ -63,6 +63,17 @@ class RenderAttributesTest extends TestCase {
   }
 
   public function testAttributeInline() {
+    // With inline implicit.
+    $attribute = PhpAttributes::class(
+      '\Attribute',
+      '\Attribute::TARGET_CLASS'
+    );
+    $lines = $attribute->render();
+
+    $this->assertCount(1, $lines);
+    $this->assertEquals('#[\Attribute(\Attribute::TARGET_CLASS)]', $lines[0]);
+
+    // With inline forced.
     $attribute = PhpAttributes::class(
       'Drupal\Core\Block\Attribute\Block',
       [
