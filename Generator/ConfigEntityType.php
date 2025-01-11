@@ -322,8 +322,8 @@ class ConfigEntityType extends EntityTypeBase {
     if (!empty($this->component_data['entity_ui'])) {
       $annotation_data['links'] = [];
       $entity_path_component = $this->component_data['entity_type_id'];
+      // Config entities typically don't have a canonical link template.
       $annotation_data['links']["add-form"] = "/admin/structure/{$entity_path_component}/add";
-      $annotation_data['links']["canonical"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}";
       $annotation_data['links']["collection"] = "/admin/structure/{$entity_path_component}";
       $annotation_data['links']["edit-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/edit";
       $annotation_data['links']["delete-form"] = "/admin/structure/{$entity_path_component}/{{$entity_path_component}}/delete";
