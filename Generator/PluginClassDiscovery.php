@@ -148,11 +148,15 @@ abstract class PluginClassDiscovery extends PluginClassBase {
     $plugin_type_manager_service_id = $data_item->getParent()->plugin_type_data->value['service_id'];
     $plugin_type_manager_service = \DrupalCodeBuilder\Factory::getEnvironment()->getContainer()->get($plugin_type_manager_service_id);
 
-    // Validation should already have checked this, no need to catch an
-    // exception.
-    $plugin_definition = $plugin_type_manager_service->getDefinition($data_item->getParent()->parent_plugin_id->value);
-
-    return $plugin_definition['class'];
+    // Validation should already have checked this, but in a development
+    // enviromment, plugins can change.
+    try {
+      $plugin_definition = $plugin_type_manager_service->getDefinition($data_item->getParent()->parent_plugin_id->value);
+      return $plugin_definition['class'];
+    }
+    catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $e) {
+      return '';
+    }
   }
 
   /**
