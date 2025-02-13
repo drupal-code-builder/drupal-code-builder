@@ -207,13 +207,11 @@ class ComponentCollector {
    *
    * Provided this data does not duplicate already created components, the
    * populates the $this->component_collection property with:
-   * - The component itself given by the component_type property.
-   * - Components that are specified by properties which themselves have
-   *   component_type set.
+   * - The component defined by the data's definition.
+   * - Components that are specified by child data items which themselves have
+   *   data definitions which specify a generator.
    * - Components which the component itself requests in its
    *   requiredComponents() method.
-   *
-   * The new component is added to the current component collection.
    *
    * @param \MutableTypedData\Data\DataItem $component_data
    *   The component data array.
