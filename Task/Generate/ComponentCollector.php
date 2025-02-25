@@ -18,10 +18,9 @@ use DrupalCodeBuilder\Generator\GeneratorInterface;
 /**
  * Task helper for collecting components recursively.
  *
- * This takes a structured array of data for the root component, and produces
- * an array of components, that is, instantiated Generator objects. These are
- * added to the ComponentCollection object, which keeps track of the
- * relationships between them.
+ * This takes the data item for the root component, and produces a component
+ * collection object, which holds instantiated Generator objects and keeps track
+ * of the relationships between them.
  *
  * TODO:
  * This is all a big mess, because it's been retrofitted to work with MTD and
@@ -160,7 +159,7 @@ class ComponentCollector {
   }
 
   /**
-   * Get the list of required components for an initial request.
+   * Assembles the collection of components for an initial request.
    *
    * This iterates down the tree of component requests: starting with the root
    * component, each component may request further components, and then those
