@@ -18,7 +18,7 @@ class SimpleGenerator implements GeneratorInterface {
 
   public $component_data;
 
-  public static function getDefinitionDataType() {
+  public static function getDefinitionDataType(): string {
     return 'complex';
   }
 
