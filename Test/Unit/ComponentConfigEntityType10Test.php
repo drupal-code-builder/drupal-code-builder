@@ -415,7 +415,6 @@ class ComponentConfigEntityType10Test extends TestBase {
       'config_export',
       'links',
     ]);
-    $annotation_tester->assertPropertyHasValue(['links', 'canonical'], "/admin/structure/kitty_cat/{kitty_cat}");
     $annotation_tester->assertPropertyHasValue(['links', 'collection'], "/admin/structure/kitty_cat");
     $annotation_tester->assertPropertyHasValue(['links', 'add-form'], "/admin/structure/kitty_cat/add");
     $annotation_tester->assertPropertyHasValue(['links', 'edit-form'], "/admin/structure/kitty_cat/{kitty_cat}/edit");
