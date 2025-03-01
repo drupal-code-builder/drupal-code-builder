@@ -16,6 +16,24 @@ use MutableTypedData\Data\DataItem;
 class PHPClassFile extends PHPFile {
 
   /**
+   * Names of code sections.
+   *
+   * These are collected by static::collectSectionBlocks() and
+   * assembled by static::classCodeBody(), and correctpond to names of class
+   * properties.
+   */
+  protected const SECTION_TYPES = [
+    // TODO: change these to being roles in the child components.
+    'traits',
+    'constants',
+    'properties',
+    // Most functions are made with contained components, but some remain
+    // created with section blocks, in particular, those for dependency
+    // injection.
+    'functions',
+  ];
+
+  /**
    * The collected traits.
    *
    * @var array
@@ -356,18 +374,7 @@ class PHPClassFile extends PHPFile {
     // Let the class collect its section blocks.
     $this->collectSectionBlocks();
 
-    $section_types = [
-      // These are the names of class properties.
-      // TODO: change these to being roles in the child components.
-      'traits',
-      'constants',
-      'properties',
-      // Most functions are made with contained components, but some remain
-      // created with section blocks, in particular, those for dependency
-      // injection.
-      'functions',
-    ];
-    foreach ($section_types as $section_type) {
+    foreach (static::SECTION_TYPES as $section_type) {
       $section_blocks = $this->getSectionBlocks($section_type);
       $code_body = array_merge($code_body, $this->mergeSectionCode($section_blocks));
     }
