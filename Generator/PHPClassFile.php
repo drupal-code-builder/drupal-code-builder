@@ -267,7 +267,7 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Produces the namespace and 'use' lines.
+   * Produces the namespace line.
    */
   function codeNamespace() {
     $code = [];
