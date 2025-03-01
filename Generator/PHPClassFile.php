@@ -284,10 +284,10 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
-   * Gets the !!! lines to format as the docblock.
+   * Gets the class docblock.
    *
-   * @return string[] !!
-   *   An array of lines.
+   * @return \DrupalCodeBuilder\Generator\Render\DocBlock
+   *   A docblock object with its data set.
    */
   protected function getClassDocBlock(): DocBlock {
     $docblock = DocBlock::class();
