@@ -14,26 +14,21 @@ namespace DrupalCodeBuilder\Generator\Collection;
  */
 class ContainedComponentCollection implements \ArrayAccess {
 
-  protected $containedComponents;
-
-  protected $requestPath;
-
   /**
    * Constructor.
    *
-   * @param array $contained_components
+   * @param array $containedComponents
    *   The array of contained components, keyed first by content type then by
    *   request path.
-   * @param string $component_request_path
+   * @param string $requestPath
    *   The request path of the containing component. Used for debugging.
    */
-  public function __construct(array $contained_components, string $component_request_path) {
-    $this->containedComponents = $contained_components;
-
+  public function __construct(
+    protected array $containedComponents,
+    protected string $requestPath,
+  ) {
     // Check all keys are non-empty.
-    assert(count($contained_components) == count(array_filter(array_keys($contained_components))));
-
-    $this->requestPath = $component_request_path;
+    assert(count($this->containedComponents) == count(array_filter(array_keys($this->containedComponents))));
   }
 
   /**
