@@ -182,7 +182,12 @@ class ComponentCollection implements \IteratorAggregate {
    */
   public function addComponent(string $local_name, GeneratorInterface $component, $requesting_component) {
     if (self::DEBUG) {
-      dump("adding {$component->getAddress()} as local $local_name");
+      dump(sprintf("request by '%s' for %s '%s' as local '%s'",
+        $requesting_component?->getAddress() ?? 'root',
+        $component->getType(),
+        $component->getAddress(),
+        $local_name,
+      ));
     }
     // Components may not be added once the collection is locked.
     if ($this->locked) {
