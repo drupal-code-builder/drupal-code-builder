@@ -444,6 +444,18 @@ class PHPClassFile extends PHPFile {
     foreach ($this->containedComponents['constant'] as $key => $child_item) {
       $this->constants[] = $child_item->getContents();
     }
+
+    // Add any properties from constructor set properties.
+    foreach ($this->containedComponents['constructor_set_property'] as $key => $child_item) {
+      $docblock = DocBlock::property();
+      $docblock[] = $child_item->component_data->property_description->value;
+      $docblock->var($child_item->component_data->property_type->value);
+
+      $property_code = $docblock->render();
+      $property_code[] = 'protected $' . $child_item->component_data->property_name->value . ';';
+
+      $this->properties[] = $property_code;
+    }
   }
 
   /**

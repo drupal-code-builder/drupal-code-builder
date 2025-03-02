@@ -106,48 +106,34 @@ class InjectedService extends BaseGenerator {
     $service_info = $this->component_data->service_info->value;
 
     if ($this->component_data->class_has_constructor->value) {
-
-      $components['constructor_param'] = [
-        'component_type' => 'PHPFunctionParameter',
-        'containing_component' => '%requester:%requester:construct',
-        'parameter_name' => $service_info['variable_name'],
-        'typehint' => $service_info['typehint'],
-        'description' => $service_info['description'] . '.',
+      $components['constructor_set_property'] = [
+        'component_type' => 'PHPClassConstructorSetProperty',
+        'containing_component' => '%requester:%requester',
         'class_name' => $this->component_data->class_name->value,
-        'method_name' => '__construct',
+        'property_name' => $service_info['property_name'],
+        'parameter_name' => $service_info['variable_name'],
+        'type' => $service_info['typehint'],
+        'description' => $service_info['description'] . '.',
+        'omit_assignment' => $this->component_data->omit_assignment->value,
       ];
 
-      $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
+      // Determine whether the constructor property needs an expression.
+      if ($this->component_data->omit_assignment->isEmpty()
+        && $service_info['type'] != 'service'
+        && !$this->component_data->class_has_static_factory->value
+      ) {
+        // With a pseudoservice and no static factory, the constructor receives
+        // the real service. We have to extract it in the constructor body.
+        $components['constructor_set_property']['expression'] = "£{$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}')";
 
-      if ($this->component_data->omit_assignment->isEmpty()) {
-        if ($service_info['type'] == 'service') {
-          $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
-        }
-        else {
-          // Pseudoservice: needs to be extracted from a real service.
-          if ($this->component_data->class_has_static_factory->value) {
-            // The static factory method has got the pseudoservice object from the
-            // real service, and passes it to the constructor.
-            $code_line = "\$this->{$service_info['property_name']} = \${$service_info['variable_name']};";
-          }
-          else {
-            // There is no static factory, so the constructor receives the real
-            // service. We have to extract it here.
-            $code_line = "\$this->{$service_info['property_name']} = \${$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}');";
+        // Also, the constructor parameter is the real service, not the
+        // pseudoservice.
+        $components['constructor_set_property']['parameter_name'] = $service_info['real_service_variable_name'];
+        $components['constructor_set_property']['type'] = $service_info['real_service_typehint'];
+        $components['constructor_set_property']['description'] = $service_info['real_service_description'] . '.';
 
-            // Also, the constructor parameter is the real service, not the
-            // pseudoservice.
-            $components['constructor_param']['parameter_name'] = $service_info['real_service_variable_name'];
-            $components['constructor_param']['typehint'] = $service_info['real_service_typehint'];
-            $components['constructor_param']['description'] = $service_info['real_service_description'] . '.';
-          }
-        }
-
-        $components['constructor_line'] = [
-          'component_type' => 'PHPFunctionBodyLines',
-          'containing_component' => '%requester:%requester:construct',
-          'code' => $code_line,
-        ];
+        $components['constructor_set_property']['property_description'] = $service_info['description'] . '.';
+        $components['constructor_set_property']['property_type'] = $service_info['typehint'];
       }
     }
 

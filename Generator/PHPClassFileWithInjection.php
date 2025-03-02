@@ -250,33 +250,4 @@ class PHPClassFileWithInjection extends PHPClassFile {
     return [];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function collectSectionBlocks() {
-    parent::collectSectionBlocks();
-
-    $this->collectSectionBlocksForDependencyInjection();
-  }
-
-  /**
-   * Helper for collectSectionBlocks().
-   */
-  protected function collectSectionBlocksForDependencyInjection() {
-    // Injected services.
-    if (isset($this->containedComponents['injected_service'])) {
-      // Service class property.
-      foreach ($this->getContentsElement('service_property') as $service_property) {
-        $docblock = DocBlock::property();
-        $docblock[] = $service_property['description'] . '.';
-        $docblock->var($service_property['typehint']);
-
-        $property_code = $docblock->render();
-        $property_code[] = 'protected $' . $service_property['property_name'] . ';';
-
-        $this->properties[] = $property_code;
-      }
-    }
-  }
-
 }

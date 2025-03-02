@@ -103,6 +103,8 @@ class PluginTypeManager extends Service {
     if ($this->component_data->discovery_type->value == 'yaml') {
       // The cache doesn't get assigned normally but in a custom code line
       // set further down.
+      // TODO: set this directly as an expression on the
+      // PHPClassConstructorSetProperty.
       $components['service_cache.discovery']['omit_assignment'] = TRUE;
     }
 
@@ -222,7 +224,7 @@ class PluginTypeManager extends Service {
 
     // Call this last so the plugin $defaults property is above any injected
     // services.
-    $this->collectSectionBlocksForDependencyInjection();
+    parent::collectSectionBlocks();
   }
 
 }
