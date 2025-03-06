@@ -115,9 +115,9 @@ class ComponentCollection implements \IteratorAggregate {
    * The containment tree.
    *
    * A tree of parentage data for components, as an array keyed by the parent
-   * component name, where each value is an array of the names of the child
-   * components. So for example, the list of children of component 'foo' is
-   * given by $tree['foo'].
+   * component ID, where each value is an array of the IDs of the child
+   * components. So for example, the list of children of component 42 is
+   * given by $tree[42].
    *
    * Do not access this directly, but use getContainmentTree(), which checks
    * that the tree has been assembled and is available.
