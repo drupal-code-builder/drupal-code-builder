@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator\Collection;
 
 use DrupalCodeBuilder\Generator\GeneratorInterface;
 use DrupalCodeBuilder\Generator\RootComponent;
+use DrupalCodeBuilder\Utility\Debug\TreeDumper;
 
 /**
  * The collection of components for a generate execution.
@@ -384,12 +385,34 @@ class ComponentCollection implements \IteratorAggregate {
     $this->locked = TRUE;
 
     $this->tree = [];
+
     if (self::DEBUG) {
-      dump("-- Components with request paths prior to assembling containment tree");
+      /**
+       * Gets a debug string representation of a component in the collection.
+       */
+      $component_to_debug_string = function(int $component_id): string {
+        return $component_id . ': ' . $this->components[$component_id]->getType() . ': ' . $this->requestPaths[$component_id];
+      };
+
+      dump("== Components with request paths prior to assembling containment tree");
       foreach ($this->components as $id => $component) {
         dump($id . ' - ' . $this->requestPaths[$id]);
       }
-      dump("-- Assembling containment tree");
+
+      $tree_dumper = new TreeDumper();
+
+      // Dump the request tree.
+      dump('== Request tree');
+      $tree_dumper->dumpTree(
+        $this->rootGeneratorId,
+        function ($parent_id): array {
+          return array_keys($this->requesters, $parent_id);
+        },
+        $component_to_debug_string,
+        \Symfony\Component\VarDumper\VarDumper::class . '::dump',
+      );
+
+      dump("== Assembling containment tree");
     }
 
     foreach ($this->components as $id => $component) {
@@ -408,6 +431,19 @@ class ComponentCollection implements \IteratorAggregate {
       assert(isset($this->components[$containing_component_id]), "Containing component '$containing_component_id' given by '$id' is not a component ID.");
 
       $this->tree[$containing_component_id][] = $id;
+    }
+
+    if (self::DEBUG) {
+      // Dump the containment tree.
+      dump('== Containment tree');
+      $tree_dumper->dumpTree(
+        $this->rootGeneratorId,
+        function ($parent_id): array {
+          return $this->tree[$parent_id] ?? [];
+        },
+        $component_to_debug_string,
+        \Symfony\Component\VarDumper\VarDumper::class . '::dump',
+      );
     }
 
     return $this->tree;
