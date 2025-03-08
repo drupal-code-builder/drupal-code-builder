@@ -490,6 +490,7 @@ class ComponentCollection implements \IteratorAggregate {
     foreach ($token_pieces as $index => $token_piece) {
       if ($token_piece == '%requester') {
         // if requester, get requester of CURRENT ID.
+        assert(isset($this->requesters[$current_id]), "Invalid %requester token at position $index in '$containing_component_token': no requester for {$this->requestPaths[$current_id]}");
         $current_id = $this->requesters[$current_id];
         continue;
       }
