@@ -183,7 +183,7 @@ class ComponentCollection implements \IteratorAggregate {
    */
   public function addComponent(string $local_name, GeneratorInterface $component, $requesting_component) {
     if (self::DEBUG) {
-      dump(sprintf("request by '%s' for %s '%s' as local '%s'",
+      dump(sprintf("add request by '%s' for %s '%s' as local '%s'",
         $requesting_component?->getAddress() ?? 'root',
         $component->getType(),
         $component->getAddress(),
@@ -640,6 +640,10 @@ class ComponentCollection implements \IteratorAggregate {
       return NULL;
     }
 
+    if (self::DEBUG) {
+      dump("- try to match $component_merge_tag");
+    }
+
     // We've not added $component yet (and might not), so we don't know have
     // any data about it. So we need to use the requesting component to get the
     // closest requesting root.
@@ -656,6 +660,11 @@ class ComponentCollection implements \IteratorAggregate {
 
     if (isset($this->mergeTags[$closest_requesting_root_id][$component->getType()][$component_merge_tag])) {
       $matching_component_id = $this->mergeTags[$closest_requesting_root_id][$component->getType()][$component_merge_tag];
+
+      if (self::DEBUG) {
+        dump("- found match {$this->requestPaths[$matching_component_id]}");
+      }
+
       return $this->components[$matching_component_id];
     }
     else {
