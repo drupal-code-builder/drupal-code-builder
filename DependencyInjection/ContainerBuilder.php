@@ -257,7 +257,9 @@ class ContainerBuilder {
     }
 
     // Add the classmap to service definitions as a constant value.
-    static::$definitions['generator_classmap'] = $component_type_mapping;
+    // Declare explicitly as a value so the container builder doesn't create
+    // multiple accessors. See https://github.com/PHP-DI/PHP-DI/issues/894.
+    static::$definitions['generator_classmap'] = \DI\value($component_type_mapping);
   }
 
   /**
