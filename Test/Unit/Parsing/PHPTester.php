@@ -938,6 +938,7 @@ class PHPTester {
         $assign_node = $stmt_node->expr;
         Assert::assertEquals($injected_services[$assign_index]['property_name'], $assign_node->var->name);
         if (isset($injected_services[$assign_index]['extraction_method'])) {
+          Assert::assertObjectHasProperty('var', $assign_node->expr);
           Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $assign_node->expr->var->name);
           Assert::assertEquals($injected_services[$assign_index]['extraction_method'], $assign_node->expr->name);
           Assert::assertEquals($injected_services[$assign_index]['extraction_method_param'], $assign_node->expr->args[0]->value->value);
@@ -1308,6 +1309,8 @@ class PHPTester {
         // safe to assume there is only one part to the class name.
         $actual_parameter_types_slice[] = $param_node->type->getParts()[0];
 
+        Assert::assertArrayHasKey($index, $expected_parameter_typehints);
+        Assert::assertIsString($expected_parameter_typehints[$index], $param_node->type->name);
         $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
 
         if (count($expected_typehint_parts) == 1) {
