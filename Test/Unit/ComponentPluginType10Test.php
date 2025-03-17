@@ -80,6 +80,12 @@ class ComponentPluginType10Test extends TestBase {
       'description' => 'Drupal\Core\StringTranslation\TranslatableMarkup',
       'fishiness' => 'int',
     ]);
+    $construct_tester->assertPromotedParameters([
+      'id' => 'public readonly',
+      'label' => 'public readonly',
+      'description' => 'public readonly',
+      'fishiness' => 'public readonly',
+    ]);
 
     // Check the services.yml file.
     $services_file = $files["test_module.services.yml"];

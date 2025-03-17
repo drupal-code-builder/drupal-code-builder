@@ -125,6 +125,46 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts parameters are promoted.
+   *
+   * @param array $parameters
+   *   An array of parameters: keys are the parameter names, values are a space-
+   *   separated list of modifiers.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertPromotedParameters(array $parameters, $message = NULL) {
+    $expected_parameter_names = array_keys($parameters);
+
+    $parameter_names_string = implode(", ", $expected_parameter_names);
+    $message = $message ?? "The method {$this->methodName} has the promoted parameters {$parameter_names_string}.";
+
+    $param_nodes = $this->methodNode->params;
+    $seen = [];
+    foreach ($param_nodes as $index => $param_node) {
+      if (!isset($parameters[$param_node->var->name])) {
+        continue;
+      }
+
+      $seen[$param_node->var->name] = TRUE;
+
+      $modifiers = explode(' ', $parameters[$param_node->var->name]);
+
+      foreach ($modifiers as $modifier) {
+        match ($modifier) {
+          'public' => Assert::assertTrue($param_node->isPublic(), $message),
+          'protected' => Assert::assertTrue($param_node->isProtected(), $message),
+          'readonly' => Assert::assertTrue($param_node->isReadonly(), $message),
+          default => Assert::fail("Nothing to handle modifier '$modifier'."),
+        };
+      }
+    }
+
+    // Sanity check that we didn't get non-existent parameters to check.
+    Assert::assertEmpty(array_diff_key($parameters, $seen));
+  }
+
+  /**
    * Asserts a subset of the parameters of a method of the parsed class.
    *
    * Helper for assertMethodHasParameters() and other assertions.
