@@ -23,8 +23,6 @@ use MutableTypedData\Definition\DefaultDefinition;
  *   is that analysis data will have the declaration string, but for functions
  *   completely assembled in code it's easier to define each element of the
  *   declaration.
- * - For the parameters, both the property value and contained
- *   PHPFunctionParameter components are combined in that order.
  * - The code of the function can either come from:
  *    - The getFunctionBody() method if a subclass overrides it.
  *    - The property value.
@@ -206,10 +204,6 @@ class PHPFunction extends BaseGenerator {
         $parameters[] = $parameter_data->export();
       }
 
-      foreach ($this->containedComponents['parameter'] as $parameter_component) {
-        $parameters[] = $parameter_component->getContents();
-      }
-
       $declaration_lines = $this->buildMethodDeclaration(
         $this->component_data->function_name->value,
         $parameters,
@@ -250,46 +244,7 @@ class PHPFunction extends BaseGenerator {
       $function_code[] = $declaration . ' {';
     }
 
-    $body = [];
-    if ($body = $this->getFunctionBody()) {
-      // Do nothing; assignment suffices.
-    }
-    else {
-      // There may be both property data and contained components. Contained
-      // components override the body if it is set and if
-      // 'body_overriden_by_contained' is TRUE.
-      $has_body_from_component_data = !$this->component_data->body->isEmpty();
-      $has_body_from_contained_components = $this->hasContainedComponentsOfContentType('line');
-
-      $let_body_from_contained_components_override_body_from_component_data =
-        $this->component_data->body_overriden_by_contained->value
-        &&
-        $has_body_from_contained_components;
-
-      if ($has_body_from_component_data && !$let_body_from_contained_components_override_body_from_component_data) {
-        $body = is_array($this->component_data['body'])
-          ? $this->component_data['body']
-          : [$this->component_data['body']];
-      }
-
-      if (isset($this->containedComponents['line'])) {
-        $contained_component_code_lines = [];
-        foreach ($this->containedComponents['line'] as $parameter_component) {
-          $contained_component_code_lines = array_merge($contained_component_code_lines, $parameter_component->getContents());
-        }
-
-        // Contained component content lines are either added at the end, or
-        // to replace the magic 'CONTAINED_COMPONENTS' lines.
-        if (in_array('CONTAINED_COMPONENTS', $body)) {
-          $index = array_search('CONTAINED_COMPONENTS', $body);
-
-          array_splice($body, $index, 1, $contained_component_code_lines);
-        }
-        else {
-          $body = array_merge($body, $contained_component_code_lines);
-        }
-      }
-    }
+    $body = $this->getFunctionBody();
 
     // Little bit of sugar: to save endless escaping of $ in front of
     // variables in code body, you can use £.
@@ -341,7 +296,16 @@ class PHPFunction extends BaseGenerator {
 
     if (!$this->component_data->parameters->isEmpty() || isset($this->containedComponents['parameter'])) {
       // Handle parameters set as a property first, then contained components.
+      $seen_parameters = [];
       foreach ($this->component_data->parameters as $parameter_data) {
+        // Property parameters may be repeated if they are injected dependencies
+        // which assign to multiple properties, e.g. pseudoservices.
+        if (isset($seen_parameters[$parameter_data->name->value])) {
+          continue;
+        }
+        $seen_parameters[$parameter_data->name->value] = TRUE;
+
+
         // ARGH TODO! Shouldn't this happen somewhere else???
         $parameter_data->typehint->applyDefault();
 
@@ -468,7 +432,13 @@ class PHPFunction extends BaseGenerator {
     }
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
+    $seen_parameters = [];
     foreach ($parameters as $parameter_info) {
+      if (isset($seen_parameters[$parameter_info['name']])) {
+        continue;
+      }
+      $seen_parameters[$parameter_info['name']] = TRUE;
+
       $declaration_line_params[] = $this->buildParameter($parameter_info);
     }
 
@@ -504,12 +474,6 @@ class PHPFunction extends BaseGenerator {
    *   prefixes and the type.
    */
   protected function buildParameter(array $parameter_info): string {
-    // Allow for parameter info from both code analysis and from a
-    // PHPFunctionParameter component, which don't use the same key (because
-    // using 'name' as a data property name causes issues as it's also a class
-    // property name on the DataItem class.
-    $parameter_name = $parameter_info['parameter_name'] ?? $parameter_info['name'];
-
     $parameter_pieces = [];
 
     $parameter_has_type = !empty($parameter_info['typehint']);
@@ -530,7 +494,7 @@ class PHPFunction extends BaseGenerator {
     $parameter_symbol =
       (!empty($parameter_info['by_reference']) ? '&' : '')
       . '$'
-      . $parameter_name;
+      . $parameter_info['name'];
 
     $parameter_pieces[] = $parameter_symbol;
 
@@ -544,14 +508,51 @@ class PHPFunction extends BaseGenerator {
   /**
    * Gets body lines of the function.
    *
-   * Helper to allow classes to override the code lines from the property
-   * value and contents.
+   * Overriding this method will override the code lines from the property value
+   * and contents.
    *
    * @return string[]
    *   An array of lines.
    */
   protected function getFunctionBody(): array {
-    return [];
+    $body = [];
+
+    // There may be both property data and contained components. Contained
+    // components override the body if it is set and if
+    // 'body_overriden_by_contained' is TRUE.
+    $has_body_from_component_data = !$this->component_data->body->isEmpty();
+    $has_body_from_contained_components = $this->hasContainedComponentsOfContentType('line');
+
+    $let_body_from_contained_components_override_body_from_component_data =
+      $this->component_data->body_overriden_by_contained->value
+      &&
+      $has_body_from_contained_components;
+
+    if ($has_body_from_component_data && !$let_body_from_contained_components_override_body_from_component_data) {
+      $body = is_array($this->component_data['body'])
+        ? $this->component_data['body']
+        : [$this->component_data['body']];
+    }
+
+    if (isset($this->containedComponents['line'])) {
+      $contained_component_code_lines = [];
+      foreach ($this->containedComponents['line'] as $parameter_component) {
+        $contained_component_code_lines = array_merge($contained_component_code_lines, $parameter_component->getContents());
+      }
+
+      // Contained component content lines are either added at the end, or
+      // to replace the magic 'CONTAINED_COMPONENTS' lines.
+      if (in_array('CONTAINED_COMPONENTS', $body)) {
+        $index = array_search('CONTAINED_COMPONENTS', $body);
+
+        array_splice($body, $index, 1, $contained_component_code_lines);
+      }
+      else {
+        $body = array_merge($body, $contained_component_code_lines);
+      }
+    }
+
+    return $body;
   }
 
 }

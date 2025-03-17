@@ -57,4 +57,18 @@ class PluginClassBase extends PHPClassFileWithInjection {
     return static::STANDARD_FIXED_PARAMS;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    // TODO: remove this once tests are updated.
+    if (isset($components['construct'])) {
+      $components['construct']['use_primitive_parameter_type_declarations'] = FALSE;
+    }
+
+    return $components;
+  }
+
 }

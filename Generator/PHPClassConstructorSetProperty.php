@@ -12,6 +12,8 @@ use MutableTypedData\Definition\DefaultDefinition;
  *
  * This is a bit fuzzy, and also covers properties that are extracted from a
  * constructor parameter, in the case of injected pseudoservices.
+ *
+ * TODO: not entirely sure we need this in addition to InjectedService.
  */
 class PHPClassConstructorSetProperty extends BaseGenerator {
 
@@ -66,42 +68,37 @@ class PHPClassConstructorSetProperty extends BaseGenerator {
   /**
    * {@inheritdoc}
    */
-  public function getContentType(): string {
-    return 'constructor_set_property';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    $components['constructor_param'] = [
-      'component_type' => 'PHPFunctionParameter',
-      'containing_component' => '%requester:%requester:%requester:construct',
-      'parameter_name' => $this->component_data->parameter_name->value,
+    $parameter_data = [
+      'name' => $this->component_data->parameter_name->value,
       'typehint' => $this->component_data->type->value,
       'description' => $this->component_data->description->value,
-      'class_name' => $this->component_data->class_name->value,
-      'method_name' => '__construct',
     ];
 
-    if ($this->component_data->omit_assignment->isEmpty()) {
-      $code_line =
-        '$this->' . $this->component_data->property_name->value .
-        ' = ' .
-        (
-          $this->component_data->expression->value ?:
-          '$' . $this->component_data->parameter_name->value
-        ) .
-        ';';
-
-      $components['constructor_line'] = [
-        'component_type' => 'PHPFunctionBodyLines',
-        'containing_component' => '%requester:%requester:%requester:construct',
-        'code' => $code_line,
+    if (!$this->component_data->omit_assignment->value) {
+      $parameter_data['property_assignment'] = [
+        'name' => $this->component_data->property_name->value,
+        'type' => $this->component_data->property_type->value
+          ?: $this->component_data->type->value,
+        'description' => $this->component_data->property_description->value
+          ?: $this->component_data->description->value,
       ];
+
+      if ($this->component_data->expression->value) {
+        $parameter_data['property_assignment']['assignment_expression'] = $this->component_data->expression->value;
+      }
     }
+
+    // This will merge with the constructor requested by the class.
+    $components['construct'] = [
+      'component_type' => 'PHPConstructor',
+      'class_name' => $this->component_data->class_name->value,
+      'parameters' => [
+        0 => $parameter_data,
+      ],
+    ];
 
     return $components;
   }

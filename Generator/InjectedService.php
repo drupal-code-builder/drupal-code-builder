@@ -9,6 +9,8 @@ use MutableTypedData\Definition\DefaultDefinition;
 
 /**
  * Generator for a service injection into a class.
+ *
+ * TODO: probably no longer needs to have a containing component?
  */
 class InjectedService extends BaseGenerator {
 
@@ -108,7 +110,9 @@ class InjectedService extends BaseGenerator {
     if ($this->component_data->class_has_constructor->value) {
       $components['constructor_set_property'] = [
         'component_type' => 'PHPClassConstructorSetProperty',
-        'containing_component' => '%requester:%requester',
+        // We expect the requesting PHP class generator to have requested a
+        // constructor.
+        'containing_component' => '%requester:%requester:construct',
         'class_name' => $this->component_data->class_name->value,
         'property_name' => $service_info['property_name'],
         'parameter_name' => $service_info['variable_name'],

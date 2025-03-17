@@ -74,6 +74,13 @@ class PHPClassFileWithInjection extends PHPClassFile {
     $components = parent::requiredComponents();
 
     if (!$this->component_data->injected_services->isEmpty() || $this->getExistingInjectedServices() || $this->forceConstructComponent) {
+      // The constructor has to be before the injected services in the array, so
+      // that its  '%requester' for its containing component references this
+      // generator, and not the request chain from InjectedService. Put a
+      // placeholder in which we fill in later.
+      // TODO: This is brittle! See https://github.com/drupal-code-builder/drupal-code-builder/issues/387.
+      $components['construct'] = [];
+
       foreach ($this->component_data->injected_services->values() as $service_id) {
         $components['service_' . $service_id] = [
           'component_type' => 'InjectedService',
@@ -155,25 +162,18 @@ class PHPClassFileWithInjection extends PHPClassFile {
       $base_parameters = $this->getConstructBaseParameters();
       $parent_injected_services = $this->getConstructParentInjectedServices();
 
+      // Both the base parameters and the parent injected services are passed
+      // to the parent call.
+      foreach ($base_parameters as $i => $parameter) {
+        $base_parameters[$i]['parent_call'] = TRUE;
+      }
+      foreach ($parent_injected_services as $i => $parameter) {
+        $parent_injected_services[$i]['parent_call'] = TRUE;
+      }
+
       $parameters = [];
       $parameters = array_merge($parameters, $base_parameters);
       $parameters = array_merge($parameters, $parent_injected_services);
-
-      $body = [];
-      // Parent call line.
-      if ($base_parameters || $parent_injected_services) {
-        $parent_call_args = [];
-
-        foreach ($base_parameters as $parameter) {
-          $parent_call_args[] = '$' . $parameter['name'];
-        }
-
-        foreach ($parent_injected_services as $parameter) {
-          $parent_call_args[] = '$' . $parameter['name'];
-        }
-
-        $body[] = 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
-      }
 
       // Remove keys which don't have data properties.
       foreach ($parameters as &$parameter) {
@@ -185,18 +185,16 @@ class PHPClassFileWithInjection extends PHPClassFile {
       // Parameters and body are supplied by components requested by
       // the InjectedService component.
       $components['construct'] = [
-        'component_type' => 'PHPFunction',
-        'function_name' => '__construct',
+        'component_type' => 'PHPConstructor',
         'containing_component' => '%requester',
+        'class_name' => $this->component_data->qualified_class_name->value,
         'function_docblock_lines' => ["Creates a {$this->component_data->plain_class_name->value} instance."],
-        'prefixes' => ['public'],
         // We want the __construct() method declaration's parameter to be
         // broken over multiple lines for legibility.
         // This is a Drupal coding standard still under discussion: see
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
         'parameters' => $parameters,
-        'body' => $body,
       ];
     }
 

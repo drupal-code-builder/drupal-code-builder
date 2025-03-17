@@ -386,6 +386,10 @@ class PluginType extends BaseGenerator {
         ];
       }
 
+      foreach ($attribute_constructor_parameters as &$parameter) {
+        $parameter['property_assignment']['name'] = $parameter['name'];
+      }
+
       $components['attribute_constructor'] = [
         'component_type' => 'PHPConstructor',
         'containing_component' => '%requester:attribute',
@@ -396,6 +400,7 @@ class PluginType extends BaseGenerator {
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
         'parameters' => $attribute_constructor_parameters,
+        'promote_properties' => TRUE,
       ];
     }
 

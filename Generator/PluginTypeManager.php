@@ -147,10 +147,13 @@ class PluginTypeManager extends Service {
       $code[] = '';
     }
     else {
-      $code[] = '// Skip calling the parent constructor, since that assumes annotation-based';
-      $code[] = '// discovery.';
-      // YAML managers have more code here from InjectedService components.
-      $code[] = 'CONTAINED_COMPONENTS';
+      $components['construct']['initial_comments'] = [
+        '// Skip calling the parent constructor, since that assumes annotation-based',
+        '// discovery.',
+      ];
+
+      // YAML discovery plugin managers have promoted constructor parameters
+      // here.
       $code[] = '';
     }
 
