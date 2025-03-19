@@ -59,6 +59,15 @@ class UnitDataItemMergeTest extends TestCase {
     $result = $data->merge($other_data);
     $this->assertEquals($end_values, $data->export());
     $this->assertEquals($expected_result, $result);
+
+    // Check that all the delta items have the right structural metadata.
+    if ($result) {
+      foreach ($data as $delta => $delta_item) {
+        $this->assertEquals($data, $delta_item->getParent());
+        $this->assertEquals($delta, $delta_item->getName());
+        $this->assertEquals("data:$delta", $delta_item->getAddress());
+      }
+    }
   }
 
   /**

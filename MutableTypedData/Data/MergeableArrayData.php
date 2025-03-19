@@ -19,6 +19,7 @@ class MergeableArrayData extends ArrayData implements MergeableDataInterface {
     $other_deltas_to_merge = [];
     foreach ($other_values as $other_delta => $other_item) {
       foreach ($this->value as $delta => $item) {
+        // Skip a delta item which is identical to one already present.
         if ($item->getRaw() == $other_item->getRaw()) {
           continue 2;
         }
@@ -28,7 +29,17 @@ class MergeableArrayData extends ArrayData implements MergeableDataInterface {
     }
 
     foreach ($other_deltas_to_merge as $delta) {
-      $this->value[] = $other_values[$delta];
+      $new_item = $other_values[$delta];
+
+      $this->value[] = $new_item;
+
+      // Update the parent, delta, name, and address of the added delta item.
+      $new_item->parent = $this;
+      $new_item->delta = array_key_last($this->value);
+      $new_item->name = $new_item->delta;
+      // We only need to zap the address; the next call to getAddress() will
+      // rebuild it.
+      $new_item->address = NULL;
     }
 
     return (bool) $other_deltas_to_merge;
