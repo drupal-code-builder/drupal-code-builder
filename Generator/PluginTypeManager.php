@@ -78,7 +78,7 @@ class PluginTypeManager extends Service {
       ];
     }
 
-    $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data['plain_class_name']}Manager."];
+    $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data['plain_class_name']}."];
 
     if (in_array($this->component_data->discovery_type->value, ['annotation', 'attribute'])) {
       $components['construct']['parameters'] = [
