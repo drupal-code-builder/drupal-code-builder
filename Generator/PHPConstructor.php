@@ -75,6 +75,13 @@ class PHPConstructor extends PHPFunction {
             'type' => PropertyDefinition::create('string'),
             'assignment_expression' => PropertyDefinition::create('string'),
           ]),
+        'promote' => PropertyDefinition::create('boolean')
+          // A particular parameter gets promoted if:
+          // - This generator is set to promote parameters
+          // - The parameter has the 'property_assignment:name' set
+          // - The paramter does not have the
+          //   'property_assignment:assignment_expression' set.
+          ->setExpressionDefault("get('..:..:..:promote_properties') && get('..:property_assignment:name') && !get('..:property_assignment:assignment_expression')"),
       ]);
   }
 
@@ -89,13 +96,26 @@ class PHPConstructor extends PHPFunction {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
+    // Override the set value with configuration. Can't do this in defaults, as
+    // the configuration value doesn't exist on all versions of the Module
+    // component.
+    if ($this->component_data->getItem('module:configuration:property_promotion')->value) {
+      $this->component_data->promote_properties->value = TRUE;
+    }
+
+    // Access to get the default.
+    // TODO: Remove this when buildMethodDeclaration() is changed to use
+    // the parameter data item instead of an export array.
+    foreach ($this->component_data->parameters as $parameter_data) {
+      $parameter_data->promote->value;
+    }
+
     $components = parent::requiredComponents();
 
     // Parameters that assign to a property request that property, unless we're
     // set to promote properties.
-    $declare_properties = !$this->component_data->promote_properties->value;
     foreach ($this->component_data->parameters as $parameter_data) {
-      if ($declare_properties && $parameter_data->property_assignment->name->value) {
+      if (!$parameter_data->promote->value && !$parameter_data->property_assignment->name->isEmpty()) {
         $components[$parameter_data->property_assignment->name->value] = [
           'component_type' => 'PHPClassProperty',
           // We only need to go up twice because we get requested by the class,
@@ -117,12 +137,45 @@ class PHPConstructor extends PHPFunction {
   /**
    * {@inheritdoc}
    */
+  public function getContents(): array {
+    // Massage the parameters to handle promotion. First, make an array of the
+    // promoted parameters, with their original parameter names (that is, the
+    // snake_case parameter name, not the camelCase property name). This is to
+    // match with any identical parameter that is used with an assignment
+    // expression.
+    $seen_promoted = [];
+    foreach ($this->component_data->parameters as $index => $parameter) {
+      if ($parameter->promote->value) {
+        $seen_promoted[$parameter->name->value] = $parameter->property_assignment->name->value;
+      }
+    }
+
+    // Change the parameter name to the property name for promoted parameters,
+    // and parameters that match a promoted parameters. If an assigned parameter
+    // is also used for a parameter with extraction, the docblock and the
+    // declaration building code handes collapsing them.
+    foreach ($this->component_data->parameters as $parameter) {
+      if (isset($seen_promoted[$parameter->name->value])) {
+        $parameter->name = $seen_promoted[$parameter->name->value];
+      }
+    }
+
+    return parent::getContents();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildParameter(array $parameter_info): string {
     $parameter_string = parent::buildParameter($parameter_info);
 
     $prefixes = [];
     if (isset($parameter_info['visibility'])) {
       $prefixes[] = $parameter_info['visibility'];
+    }
+    elseif ($parameter_info['promote']) {
+      // Promotion requires a visibility prefix. Assume protected.
+      $prefixes[] = 'protected';
     }
 
     if (!empty($parameter_info['readonly'])) {
@@ -136,6 +189,9 @@ class PHPConstructor extends PHPFunction {
     return $parameter_string;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getFunctionBody(): array {
     $body = [];
 
@@ -155,16 +211,9 @@ class PHPConstructor extends PHPFunction {
       $body[] = 'parent::__construct(' . implode(', ', $parent_call_args) . ');';
     }
 
-    // Assign to properties if we're not set to promote parameters to
-    // properties, or if the parameter uses an expression to assign to a
-    // property.
-    $assign_to_properties = !$this->component_data->promote_properties->value;
-
     foreach ($this->component_data->parameters as $parameter_data) {
-      // Write an assignment line if:
-      // - This constructor does not promote properties
-      // - This parameter assigns to a property.
-      if ($assign_to_properties && !$parameter_data->property_assignment->name->isEmpty()) {
+      // Write an assignment line the parameter is assigned and is not promoted.
+      if (!$parameter_data->promote->value && $parameter_data->property_assignment->name->value) {
         $assignment_line =
           '$this->' . $parameter_data->property_assignment->name->value .
           ' = ' .

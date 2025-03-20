@@ -897,11 +897,13 @@ class PHPTester {
    *    - 'service_name': The name of the service.
    *    - 'property_name': The name of the property for the service.
    *    - 'parameter_name': The name of the parameter for the service.
-   *
+   * @param bool $property_promotion
+   *   (optional) Whether properties are expected to be promoted where possible.
+   *   Defaults to FALSE.
    * @param string $message
    *   The assertion message.
    */
-  public function assertInjectedServices(array $injected_services, $message = NULL) {
+  public function assertInjectedServices(array $injected_services, ?bool $property_promotion = FALSE, $message = NULL) {
     $service_count = count($injected_services);
 
     // Assert the constructor method.
@@ -925,39 +927,62 @@ class PHPTester {
     // Check that the constructor has parameters for all the services, after
     // any basic parameters.
     foreach ($construct_service_params as $index => $param) {
-      Assert::assertEquals($expected_injected_services_constructor_params[$index]['parameter_name'], $param->var->name);
+      if ($property_promotion && !isset($injected_services[$index]['extraction_method'])) {
+        // A promoted parameter uses the property name and is protected.
+        Assert::assertEquals($expected_injected_services_constructor_params[$index]['property_name'], $param->var->name);
+        Assert::assertTrue($param->isProtected());
+      }
+      else {
+        Assert::assertEquals($expected_injected_services_constructor_params[$index]['parameter_name'], $param->var->name);
+      }
     }
 
     // TODO: should check that __construct() calls its parent, though this is
     // not always the case!
+
+    // Build a list of assigned services, re-indexed.
+    $assigned_services = [];
+    foreach ($injected_services as $injected_service) {
+      // Skip this service if it should not have an assign statement.
+      if (empty($injected_service['extraction_method']) && $property_promotion) {
+        continue;
+      }
+
+      $assigned_services[] = $injected_service;
+    }
 
     // Check the class property assignments in the constructor.
     $assign_index = 0;
     foreach ($construct_node->stmts as $stmt_node) {
       if (get_class($stmt_node->expr) == \PhpParser\Node\Expr\Assign::class) {
         $assign_node = $stmt_node->expr;
-        Assert::assertEquals($injected_services[$assign_index]['property_name'], $assign_node->var->name);
-        if (isset($injected_services[$assign_index]['extraction_method'])) {
+        Assert::assertEquals($assigned_services[$assign_index]['property_name'], $assign_node->var->name);
+        if (isset($assigned_services[$assign_index]['extraction_method'])) {
           Assert::assertObjectHasProperty('var', $assign_node->expr);
-          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $assign_node->expr->var->name);
-          Assert::assertEquals($injected_services[$assign_index]['extraction_method'], $assign_node->expr->name);
-          Assert::assertEquals($injected_services[$assign_index]['extraction_method_param'], $assign_node->expr->args[0]->value->value);
+          Assert::assertEquals($assigned_services[$assign_index]['parameter_name'], $assign_node->expr->var->name);
+          Assert::assertEquals($assigned_services[$assign_index]['extraction_method'], $assign_node->expr->name);
+          Assert::assertEquals($assigned_services[$assign_index]['extraction_method_param'], $assign_node->expr->args[0]->value->value);
         }
         else {
-          Assert::assertEquals($injected_services[$assign_index]['parameter_name'], $assign_node->expr->name);
+          if (!$property_promotion) {
+            Assert::assertEquals($assigned_services[$assign_index]['parameter_name'], $assign_node->expr->name);
+          }
         }
 
         $assign_index++;
       }
     }
 
-    // Rough attempt at checking we don't have any assignments missing.
-    // TODO: this doesn't tell us which ones!
-    Assert::assertEquals($service_count, $assign_index, 'Number of assignment statements does not match number of services.');
+    if (!$property_promotion) {
+      // Rough attempt at checking we don't have any assignments missing.
+      // TODO: this doesn't tell us which ones!
+      // TODO: doesn't work if promoting properties!
+      Assert::assertEquals($service_count, $assign_index, 'Number of assignment statements does not match number of services.');
 
-    // For each service, assert the property.
-    foreach ($injected_services as $injected_service_details) {
-      $this->assertClassHasProtectedProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
+      // For each service, assert the property.
+      foreach ($injected_services as $injected_service_details) {
+        $this->assertClassHasProtectedProperty($injected_service_details['property_name'], $injected_service_details['typehint']);
+      }
     }
   }
 

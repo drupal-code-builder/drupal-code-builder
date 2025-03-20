@@ -62,9 +62,9 @@ class ComponentPluginType10Test extends TestBase {
     ], $files);
 
     // Check the attribute class file.
-    $annotation_file = $files["src/Attribute/CatFeeder.php"];
+    $attribute_file = $files["src/Attribute/CatFeeder.php"];
 
-    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $annotation_file);
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $attribute_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Attribute\CatFeeder');
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Attribute\Plugin');
@@ -98,6 +98,64 @@ class ComponentPluginType10Test extends TestBase {
     $yaml_tester->assertNotHasProperty(['services', "plugin.manager.test_module_cat_feeder", 'arguments'], "The plugin manager service has no injected arguments.");
 
     // TODO: Move/copy more testing from testAnnotationPluginTypeBasic().
+
+    // Check the plugin manager file.
+    $plugin_manager_file = $files["src/CatFeederManager.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_manager_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\CatFeederManager');
+    $php_tester->assertClassHasParent('Drupal\Core\Plugin\DefaultPluginManager');
+
+    $constructor_tester = $php_tester->getMethodTester('__construct');
+    // Check the __construct() method's parameters.
+    $constructor_tester->assertHasParameters([
+      'namespaces' => 'Traversable',
+      'cache_backend' => 'Drupal\Core\Cache\CacheBackendInterface',
+      'module_handler' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+    ]);
+    $constructor_tester->assertPromotedParameters([], 'No plugin manager parameters are promoted.');
+
+    // Check the __construct() method's statements.
+    $php_tester->assertStatementIsParentCall('__construct', 0);
+    $php_tester->assertCallHasArgs([
+      'Plugin/CatFeeder' => 'string',
+      'namespaces' => 'var',
+      'module_handler' => 'var',
+      'Drupal\test_module\Plugin\CatFeeder\CatFeederInterface' => 'class',
+      'Drupal\test_module\Attribute\CatFeeder' => 'class',
+    ],
+    '__construct', 0);
+
+    $php_tester->assertStatementIsLocalMethodCall('alterInfo', '__construct', 1);
+    $php_tester->assertCallHasArgs([
+      'cat_feeder_info' => 'string',
+    ],
+    '__construct', 1);
+
+    $php_tester->assertStatementIsLocalMethodCall('setCacheBackend', '__construct', 2);
+    $php_tester->assertCallHasArgs([
+      'cache_backend' => 'var',
+      'cat_feeder_plugins' => 'string',
+    ],
+    '__construct', 2);
+
+    // Check the plugin manager's constructor parameters when property_promotion
+    // is set.
+    $module_data['configuration'] = [
+      'property_promotion' => TRUE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_manager_file);
+    $constructor_tester = $php_tester->getMethodTester('__construct');
+    // Check the __construct() method's parameters.
+    $constructor_tester->assertHasParameters([
+      'namespaces' => 'Traversable',
+      'cache_backend' => 'Drupal\Core\Cache\CacheBackendInterface',
+      'module_handler' => 'Drupal\Core\Extension\ModuleHandlerInterface',
+    ]);
+    $constructor_tester->assertPromotedParameters([], 'No plugin manager parameters are promoted.');
   }
 
   /**

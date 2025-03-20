@@ -125,7 +125,12 @@ class PHPMethodTester {
   }
 
   /**
-   * Asserts parameters are promoted.
+   * Asserts that only the specified parameters are promoted.
+   *
+   * This fails if:
+   * - a specified parameter is not promoted,
+   * - a specified parameter is not promoted with the expected modifiers,
+   * - a non-specified parameter is promoted.
    *
    * @param array $parameters
    *   An array of parameters: keys are the parameter names, values are a space-
@@ -143,6 +148,8 @@ class PHPMethodTester {
     $seen = [];
     foreach ($param_nodes as $index => $param_node) {
       if (!isset($parameters[$param_node->var->name])) {
+        Assert::assertEquals(0,$param_node->flags);
+
         continue;
       }
 

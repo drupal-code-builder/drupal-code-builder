@@ -182,8 +182,6 @@ class PHPClassFileWithInjection extends PHPClassFile {
         }
       }
 
-      // Parameters and body are supplied by components requested by
-      // the InjectedService component.
       $components['construct'] = [
         'component_type' => 'PHPConstructor',
         'containing_component' => '%requester',

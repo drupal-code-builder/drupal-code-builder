@@ -64,6 +64,10 @@ class Module extends RootComponent {
     return PropertyDefinition::create('complex')
       ->setLabel("Module settings")
       ->setProperties([
+        'property_promotion' => PropertyDefinition::create('boolean')
+          ->setLabel("Use constructor property promotion")
+          ->setDescription('This is <a href="https://www.drupal.org/project/drupal/issues/3278431">proposed as an addition</a> to Drupal coding standards.')
+          ->setLiteralDefault(FALSE),
         'service_namespace' => PropertyDefinition::create('string')
           ->setLabel("Service class namespace")
           ->setDescription("The relative namespace within a module in which to place services. Do not include '\\' at either end. Leave empty to place in the module namespace.")

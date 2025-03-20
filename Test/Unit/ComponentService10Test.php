@@ -343,12 +343,16 @@ class ComponentService10Test extends TestBase {
    * Data provider for testServiceGenerationWithServices().
    */
   public static function providerServiceGenerationWithServices() {
-    return [
+    $data = [
       // Basic service.
       'basic' => [
         'injected_services' => [
           'entity_type.manager',
         ],
+        // This is only here to get the order of parameters in a sensible order.
+        // TODO: Remove this when we're on a version of PHPUnit that supports
+        // named parameters.
+        'property_promotion' => FALSE,
         'yaml_arguments' => [
           '@entity_type.manager',
         ],
@@ -368,6 +372,7 @@ class ComponentService10Test extends TestBase {
           'entity_type.manager',
           'storage:node',
         ],
+        'property_promotion' => FALSE,
         'yaml_arguments' => [
           0 => '@current_user',
           1 => '@entity_type.manager',
@@ -403,6 +408,7 @@ class ComponentService10Test extends TestBase {
           'current_user',
           'storage:node',
         ],
+        'property_promotion' => FALSE,
         'yaml_arguments' => [
           0 => '@current_user',
           1 => '@entity_type.manager',
@@ -428,6 +434,7 @@ class ComponentService10Test extends TestBase {
         'injected_services' => [
           'storage:node',
         ],
+        'property_promotion' => FALSE,
         'yaml_arguments' => [
           0 => '@entity_type.manager',
         ],
@@ -443,6 +450,14 @@ class ComponentService10Test extends TestBase {
         ],
       ],
     ];
+
+    foreach ($data as $name => $case) {
+      $case['property_promotion'] = FALSE;
+      yield $name => $case;
+
+      $case['property_promotion'] = TRUE;
+      yield $name . '-promoted' => $case;
+    }
   }
 
   /**
@@ -452,7 +467,7 @@ class ComponentService10Test extends TestBase {
    *
    * @dataProvider providerServiceGenerationWithServices
    */
-  function testServiceGenerationWithServices($injected_services, $yaml_arguments, $assert_injected_services) {
+  function testServiceGenerationWithServices($injected_services, bool $property_promotion, $yaml_arguments, $assert_injected_services) {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = [
@@ -467,6 +482,9 @@ class ComponentService10Test extends TestBase {
         ],
       ],
       'readme' => FALSE,
+      'configuration' => [
+        'property_promotion' => $property_promotion,
+      ],
     ];
 
     $files = $this->generateModuleFiles($module_data);
@@ -494,7 +512,7 @@ class ComponentService10Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\MyService');
 
     // Check service injection.
-    $php_tester->assertInjectedServices($assert_injected_services);
+    $php_tester->assertInjectedServices($assert_injected_services, $property_promotion);
   }
 
  /**
