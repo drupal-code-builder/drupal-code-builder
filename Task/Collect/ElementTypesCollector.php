@@ -25,6 +25,7 @@ class ElementTypesCollector extends CollectorBase {
   protected $testingIds = [
     'textfield',
     'textarea',
+    'machine_name',
   ];
 
   public function __construct(

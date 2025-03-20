@@ -1,12 +1,18 @@
 <?php $data =
 array (
-  'textarea' => 
+  'machine_name' =>
+  array (
+    'type' => 'machine_name',
+    'label' => 'machine_name',
+    'form' => true,
+  ),
+  'textarea' =>
   array (
     'type' => 'textarea',
     'label' => 'textarea',
     'form' => true,
   ),
-  'textfield' => 
+  'textfield' =>
   array (
     'type' => 'textfield',
     'label' => 'textfield',
