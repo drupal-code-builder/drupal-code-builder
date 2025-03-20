@@ -18,10 +18,11 @@ class PHPConstant extends BaseGenerator {
     parent::addToGeneratorDefinition($definition);
 
     $definition->addProperties([
+      // This has no validator as it's only internal and there's no validator
+      // suitable yet.
       'name' => PropertyDefinition::create('string')
         ->setLabel('Constant name')
-        ->setRequired(TRUE)
-        ->setValidators('machine_name'),
+        ->setRequired(TRUE),
       'value' => PropertyDefinition::create('string')
         ->setLabel('Constant value')
         ->setRequired(TRUE),
