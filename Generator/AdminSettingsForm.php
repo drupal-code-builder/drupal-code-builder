@@ -129,7 +129,7 @@ class AdminSettingsForm extends Form {
 
     $parent_route_data = $admin_routes[$this->component_data['parent_route']];
 
-    $settings_form_path = ltrim($parent_route_data['path'], '/') . '/%module';
+    $settings_form_path = $parent_route_data['path'] . '/%module';
 
     $components['route'] = [
       'component_type' => 'RouterItem',
