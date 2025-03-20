@@ -148,7 +148,8 @@ class DrushCommandUsingService extends BaseGenerator {
       'component_type' => 'DrushCommandsService',
       // Makes this get matched up with the data definition.
       'use_data_definition' => TRUE,
-      'prefixed_service_name' => $this->component_data->root_component_name->value . '.commands',
+      'service_name' => $this->component_data->root_component_name->value . '.commands',
+      'service_name_prefix' => '',
       'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
       'relative_namespace' => 'Commands',
       'parent_class_name' => '\Drush\Commands\DrushCommands',

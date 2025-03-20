@@ -101,16 +101,22 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
         ->setDescription("The name of the service, without the module name prefix.")
         ->setRequired(TRUE)
         ->setValidators('service_name'),
+      // The prefix to apply to the given service name. Defaults to the module
+      // name and a '.'. Set to an empty string for no prefix.
       'service_name_prefix' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
-        ->setExpressionDefault("parent.root_component_name.get()"),
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setExpression("parent.root_component_name.get() ~ '.'")
+            ->setDependencies('..:root_component_name')
+        ),
       'prefixed_service_name' => PropertyDefinition::create('string')
         ->setLabel('The plain class name, e.g. "MyClass"')
         ->setInternal(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("parent.service_name_prefix.get() ~ '.' ~ parent.service_name.get()")
-            ->setDependencies('..:root_component_name')
+            ->setExpression("parent.service_name_prefix.get() ~ parent.service_name.get()")
+            ->setDependencies('..:service_name_prefix')
         ),
       'decorates' => PropertyDefinition::create('string')
         ->setLabel('Decorated service')

@@ -288,7 +288,8 @@ class PluginType extends BaseGenerator {
     $components['manager'] = [
       'component_type' => 'PluginTypeManager',
       'use_data_definition' => TRUE,
-      'prefixed_service_name' => $this->component_data->plugin_manager_service_id->value,
+      'service_name' => $this->component_data->plugin_manager_service_id->value,
+      'service_name_prefix' => '',
       'plain_class_name' => CaseString::snake($this->component_data->plugin_type->value)->pascal() . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data['plugin_label']} plugins.",
