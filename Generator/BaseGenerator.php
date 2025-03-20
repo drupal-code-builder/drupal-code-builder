@@ -248,7 +248,16 @@ abstract class BaseGenerator implements GeneratorInterface {
    *   The basic definition.
    */
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
-    // Add the basic properties.
+    self::addBasePropertiesToPropertyDefinition($definition);
+  }
+
+  /**
+   * Adds the basic properties to a definition.
+   *
+   * This is a separate method so it can be called for non-generator definitions
+   * too, such as variant definitions.
+   */
+  final public static function addBasePropertiesToPropertyDefinition(PropertyListInterface $definition) {
     $definition->addProperties([
       'root_component_name' => PropertyDefinition::create('string')
         ->setAcquiringExpression("getRootComponentName(requester)"),
@@ -257,6 +266,10 @@ abstract class BaseGenerator implements GeneratorInterface {
       // The path of the nearest root component.
       'component_base_path' => PropertyDefinition::create('string')
         ->setAutoAcquiredFromRequester(),
+      // Requested components are grafted in as children of this property.
+      // This ensures no property name clashes.
+      'requests' => PropertyDefinition::create('complex')
+        ->setInternal(TRUE),
     ]);
   }
 

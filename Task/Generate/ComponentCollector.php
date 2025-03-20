@@ -503,6 +503,8 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
+      $graft = TRUE;
+
       // dump("Converting $required_item_name");
       // Conversion to data items!
       if (is_array($required_item_data)) {
@@ -517,6 +519,7 @@ class ComponentCollector {
           assert($component_data->hasProperty($required_item_name), "Use of 'use_data_definition' on required item named '$required_item_name', but matching property does not exist.");
 
           $component_data->{$required_item_name}->set($required_item_data);
+          $graft = FALSE;
 
           $required_item_data = $component_data->{$required_item_name};
         }
@@ -560,6 +563,13 @@ class ComponentCollector {
         // we could be adding more than one local ymlfile data item!
       }
       assert($required_item_data instanceof DataItem, 'Items returned by requiredComponents() must be arrays or DataItem objects, got ' . gettype($required_item_data));
+
+      // Graft a requested item into its requester. This is mostly so that
+      // everything can access the root component's configuration.
+      if ($graft) {
+        $component_data->requests->disableSerialization();
+        $component_data->requests->graft($required_item_data);
+      }
 
       // Validate so defaults are filled in.
       // TODO: This doesn't actually validate internal properties, so not that

@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Definition;
 
+use \DrupalCodeBuilder\Generator\BaseGenerator;
+
 /**
  * Defines a data property from a generator.
  *
@@ -77,6 +79,11 @@ class MergingGeneratorDefinition extends PropertyDefinition implements Generator
 
       // Allow the generator class to add or change properties.
       $this->generatorClass::addToGeneratorDefinition($this);
+
+      // Add the base properties to variants.
+      foreach ($this->getVariants() as $variant_definition) {
+        BaseGenerator::addToGeneratorDefinition($variant_definition);
+      }
 
       // Recurse into child generators.
       // This is needed for MB but not for tests. This is because the first
