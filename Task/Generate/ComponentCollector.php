@@ -184,10 +184,6 @@ class ComponentCollector {
 
     $this->extension = $extension;
 
-    // Fiddly different handling for the type in the root component...
-    // $component_type = $component_data->getName();
-    // $component_data['component_type'] = $component_type;
-
     // The name for the root component is its root name, which will be the
     // name of the Drupal extension.
     $this->getComponentsFromData($component_data, NULL);
