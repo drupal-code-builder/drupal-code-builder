@@ -36,10 +36,6 @@ use DrupalCodeBuilder\Generator\GeneratorInterface;
  *   (see AdminSettingsForm for a hack/possible solution)
  * - possibly rethink the acquired data system entirely anyway: can it be
  *   replaced with dynamic defaults?
- * - resolve the weird parallel systems of main structure and requested
- *   components which are standalone data items. Data items could have their
- *   structure added to dynamically? Or have internal properties for components
- *   that will get requested?
  *
  * Brief notes on how 4.x.x works:
  * - Generator classes define a data structure together (which itself is an
