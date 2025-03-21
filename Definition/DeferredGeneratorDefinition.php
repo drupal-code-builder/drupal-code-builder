@@ -50,11 +50,4 @@ class DeferredGeneratorDefinition extends PropertyDefinition implements Generato
     return new static($data_type, $generator_type, $generator_class);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getComponentType(): string {
-    return $this->componentType;
-  }
-
 }

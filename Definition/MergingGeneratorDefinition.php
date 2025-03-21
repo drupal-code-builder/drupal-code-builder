@@ -63,14 +63,6 @@ class MergingGeneratorDefinition extends PropertyDefinition implements Generator
   /**
    * {@inheritdoc}
    */
-  public function getComponentType(): string {
-    // TODO: Handle mutable data and switch the component class here!
-    return $this->componentType;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getProperties(): array {
     if (!$this->generatorPropertiesLoaded) {
       // Set this to TRUE now to avoid recursion, as addToGeneratorDefinition()

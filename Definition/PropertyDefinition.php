@@ -27,6 +27,13 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
 
   protected $autoAcquired = FALSE;
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getComponentType(): string {
+    return $this->componentType;
+  }
+
   public function getDeltaDefinition(): self {
     $delta_definition = parent::getDeltaDefinition();
 
