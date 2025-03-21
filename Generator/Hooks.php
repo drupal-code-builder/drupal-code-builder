@@ -190,10 +190,12 @@ class Hooks extends BaseGenerator {
   protected function addOoHookComponents(array &$components, array $hook_info): void {
     $hook_name = $hook_info['name'];
 
+    $hooks_class_name = $this->component_data->getItem('module:root_name_pascal')->value . 'Hooks';
+
     // Make the hooks class.
     $components['hooks_class'] = [
       'component_type' => 'PHPClassFile',
-      'plain_class_name' => '%PascalHooks',
+      'plain_class_name' => $hooks_class_name,
       'relative_namespace' => 'Hook',
       'class_docblock_lines' => [
         'Contains hook implementations for the %readable %base.'
@@ -269,6 +271,7 @@ class Hooks extends BaseGenerator {
   protected function addLegacyProceduralHookComponent(array &$components, array $hook_info): void {
     $hook_name = $hook_info['name'];
     $component_name = $hook_name . '_legacy';
+    $hooks_class_name = $this->component_data->getItem('module:root_name_pascal')->value . 'Hooks';
 
     // Start with the procedural hook component.
     $this->addProceduralHookComponent($components, $hook_info, $component_name);
@@ -295,7 +298,7 @@ class Hooks extends BaseGenerator {
     $return = !empty($hook_info['has_return']) ? 'return ' : '';
 
     $components[$component_name]['body'] = [
-      "{$return}\Drupal::service(\Drupal\%extension\Hook\%PascalHooks::class)->{$hook_method_name}({$arguments});",
+      "{$return}\Drupal::service(\Drupal\%extension\Hook\\{$hooks_class_name}::class)->{$hook_method_name}({$arguments});",
     ];
     $components[$component_name]['body_indented'] = FALSE;
 
@@ -306,8 +309,8 @@ class Hooks extends BaseGenerator {
       'services' => [
         // Argh DRY class name!
         // TODO: move the class name to being created in this generator.
-        'Drupal\%extension\Hook\%PascalHooks' => [
-          'class' => 'Drupal\%extension\Hook\%PascalHooks',
+        'Drupal\%extension\Hook\\' . $hooks_class_name => [
+          'class' => 'Drupal\%extension\Hook\\' . $hooks_class_name,
           'autowire' => TRUE,
         ],
       ],
