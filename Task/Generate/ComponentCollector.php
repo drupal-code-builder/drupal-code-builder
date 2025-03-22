@@ -3,7 +3,6 @@
 namespace DrupalCodeBuilder\Task\Generate;
 
 use DrupalCodeBuilder\Definition\GeneratorDefinitionInterface;
-use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
 use DrupalCodeBuilder\ExpressionLanguage\AcquisitionExpressionLanguageProvider;
@@ -238,12 +237,6 @@ class ComponentCollector {
     // $this->debug($chain, "collecting {$component_data['component_type']} $name", '-');
 
     $component_type = $component_data->getComponentType();
-    // AAAAARGH should be encapsulated in the data but running out of the will
-    // to live.
-    // AND AAAARGH class check URGH.
-    if ($component_data->getVariants() && is_a($component_data->getVariantDefinition(), VariantGeneratorDefinition::class)) {
-      $component_type = $component_data->getVariantDefinition()->getComponentType();
-    }
 
     // Acquire data from the requesting component. We call this even if there
     // isn't a requesting component, as in that case, an exception is thrown
