@@ -124,6 +124,9 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
+      'autowire' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
       'tags' => PropertyDefinition::create('complex')
         ->setInternal(TRUE)
         ->setMultiple(TRUE)
@@ -360,43 +363,13 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       ];
     }
 
-    // Rearrange the order of the generated services, so the existing ones go
-    // first and in the existing order.
-    $service_components = [];
-    foreach ($service_ids as $service_id) {
-      $service_components[$service_id] = $components['service_' . $service_id];
-      unset($components['service_' . $service_id]);
-    }
-
-    // Build the YAMl data arguments.
-    $yaml_data_arguments = [];
-
-    // If there is a decorated service, this goes first.
-    if (!$this->component_data->decorates->isEmpty()) {
-      $yaml_data_arguments[] = '@.inner';
-    }
-
-    foreach ($service_ids as $service_id) {
-      // Put the service components in the right order.
-      $components['service_' . $service_id] = $service_components[$service_id];
-
-      // Add the service ID to the arguments in the YAML data.
-      if (substr_count($service_id, ':') != 0) {
-        $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-        $services_data = $task_handler_report_services->listServiceData();
-        $real_service_id = $services_data[$service_id]['real_service'];
-
-        if (in_array("@{$real_service_id}", $yaml_data_arguments)) {
-          // Don't repeat it!
-          continue;
-        }
-
-        $yaml_data_arguments[] = '@' . $real_service_id;
-      }
-      else {
-        $yaml_data_arguments[] = '@' . $service_id;
-      }
-    }
+    $yaml_inline_levels = [
+      // Expand the tags property further than the others.
+      'tags' => [
+        'address' => ['services', '*', 'tags'],
+        'level' => 4,
+      ],
+    ];
 
     $yaml_service_definition = [
       'class' => $this->component_data['qualified_class_name'],
@@ -406,8 +379,60 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       $yaml_service_definition['decorates'] = $this->component_data->decorates->value;
     }
 
-    if ($yaml_data_arguments) {
-      $yaml_service_definition['arguments'] = $yaml_data_arguments;
+    if ($this->component_data->autowire->value) {
+      $yaml_service_definition['autowire'] = TRUE;
+    }
+    else {
+      // Build the YAMl data arguments if not autowired.
+      // Rearrange the order of the generated services, so the existing ones go
+      // first and in the existing order.
+      $service_components = [];
+      foreach ($service_ids as $service_id) {
+        $service_components[$service_id] = $components['service_' . $service_id];
+        unset($components['service_' . $service_id]);
+      }
+
+      $yaml_data_arguments = [];
+
+      // If there is a decorated service, this goes first.
+      if (!$this->component_data->decorates->isEmpty()) {
+        $yaml_data_arguments[] = '@.inner';
+      }
+
+      foreach ($service_ids as $service_id) {
+        // Put the service components in the right order.
+        $components['service_' . $service_id] = $service_components[$service_id];
+
+        // Add the service ID to the arguments in the YAML data.
+        if (substr_count($service_id, ':') != 0) {
+          $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+          $services_data = $task_handler_report_services->listServiceData();
+          $real_service_id = $services_data[$service_id]['real_service'];
+
+          if (in_array("@{$real_service_id}", $yaml_data_arguments)) {
+            // Don't repeat it!
+            continue;
+          }
+
+          $yaml_data_arguments[] = '@' . $real_service_id;
+        }
+        else {
+          $yaml_data_arguments[] = '@' . $service_id;
+        }
+      }
+
+      if ($yaml_data_arguments) {
+        $yaml_service_definition['arguments'] = $yaml_data_arguments;
+
+        if ($this->component_data->getItem('module:configuration:service_parameters_linebreaks')->value) {
+          $yaml_inline_levels += [
+            'arguments' => [
+              'address' => ['services', '*', 'arguments'],
+              'level' => 4,
+            ],
+          ];
+        }
+      }
     }
 
     // Service tags.
@@ -432,23 +457,6 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     }
     else {
       $line_break_between_blocks_level = Yaml::NEVER;
-    }
-
-    $yaml_inline_levels = [
-      // Expand the tags property further than the others.
-      'tags' => [
-        'address' => ['services', '*', 'tags'],
-        'level' => 4,
-      ],
-    ];
-
-    if ($this->component_data->getItem('module:configuration:service_parameters_linebreaks')->value) {
-      $yaml_inline_levels += [
-        'arguments' => [
-          'address' => ['services', '*', 'arguments'],
-          'level' => 4,
-        ],
-      ];
     }
 
     $components['%module.services.yml'] = [
