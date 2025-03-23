@@ -889,7 +889,15 @@ class ComponentCollector {
 
     // dump($component_data->export());
 
-    $processing($component_data);
+    if ($component_data->isMultiple()) {
+      foreach ($component_data as $delta_item) {
+        $processing($delta_item);
+      }
+    }
+    else {
+      $processing($component_data);
+    }
+
     // dump($component_data->export());
   }
 
