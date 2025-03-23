@@ -65,6 +65,14 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return parent::getOptions();
   }
 
+  /**
+   * Removes a default from the definition, if one was set.
+   */
+  public function removeDefault(): self {
+    $this->default = NULL;
+    return $this;
+  }
+
   public function setVariantMappingProvider(VariantMappingProviderInterface $provider): self {
     $this->variantMappingProvider = $provider;
     return $this;
