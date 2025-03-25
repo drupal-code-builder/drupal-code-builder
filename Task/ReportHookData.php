@@ -23,6 +23,8 @@ class ReportHookData extends ReportHookDataFolder implements OptionSetDefininiti
    */
   protected $sanity_level = 'component_data_processed';
 
+  protected $declarations;
+
    /**
    * {@inheritdoc}
    */
@@ -211,19 +213,21 @@ class ReportHookData extends ReportHookDataFolder implements OptionSetDefininiti
    *  - 'body': The hook function body, taken from the API file.
    */
   function getHookDeclarations() {
-    $data = $this->listHookData();
+    if (!isset($this->declarations)) {
+      $data = $this->listHookData();
 
-    $return = [];
-    foreach ($data as $group => $hooks) {
-      foreach ($hooks as $key => $hook) {
-        // Standardize to lowercase.
-        $hook_name = strtolower($hook['name']);
+      $this->declarations = [];
+      foreach ($data as $group => $hooks) {
+        foreach ($hooks as $key => $hook) {
+          // Standardize to lowercase.
+          $hook_name = strtolower($hook['name']);
 
-        $return[$hook_name] = $hook;
+          $this->declarations[$hook_name] = $hook;
+        }
       }
     }
 
-    return $return;
+    return $this->declarations;
   }
 
 }
