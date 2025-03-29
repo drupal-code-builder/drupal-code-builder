@@ -132,6 +132,25 @@ abstract class CollectorBase implements CollectorInterface {
   }
 
   /**
+   * Converts an absolute filepath into relative to the Drupal app root.
+   *
+   * @param string $filepath
+   *   The absolute filepath.
+   *
+   * @return string
+   *   The given filepath made relative to the Drupal app root, without an
+   *   initial '/'.
+   */
+  protected function makeFilepathRelative(string $filepath): string {
+    static $cwd;
+    if (!isset($cwd)) {
+      $cwd = getcwd();
+    }
+
+    return str_replace($cwd . '/', '', $filepath);
+  }
+
+  /**
    * Gets the first line from a docblock string.
    *
    * @param string $docblock

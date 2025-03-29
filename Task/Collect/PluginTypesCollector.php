@@ -224,6 +224,8 @@ class PluginTypesCollector extends CollectorBase  {
    *      E.g., 'Plugin/Filter'.
    *    - 'plugin_interface': The interface that plugin classes must implement,
    *      as a qualified name (but without initial '\').
+   *    - 'plugin_interface_filepath': The filepath of the interface class,
+   *      relative to the Drupal app root.
    *    - 'plugin_definition_annotation_name': The class that the plugin
    *      annotation uses, as a qualified name (but without initial '\').
    *      E.g, 'Drupal\filter\Annotation\Filter'.
@@ -472,6 +474,14 @@ class PluginTypesCollector extends CollectorBase  {
       case 'Drupal\Core\Plugin\Discovery\YamlDiscovery':
         $this->addPluginTypeServiceDataYaml($data, $service, $discovery);
         break;
+    }
+
+    // Add the file location of the interface file, to form an API link.
+    if ($data['plugin_interface']) {
+      $plugin_interface_reflection = new \ReflectionClass($data['plugin_interface']);
+      $interface_filepath = $plugin_interface_reflection->getFileName();
+
+      $data['plugin_interface_filepath'] = $this->makeFilepathRelative($interface_filepath);
     }
   }
 
