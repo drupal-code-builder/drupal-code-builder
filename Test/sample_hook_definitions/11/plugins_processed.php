@@ -19,6 +19,7 @@ array (
     'yaml_properties' => 
     array (
     ),
+    'plugin_interface_filepath' => 'core/lib/Drupal/Core/Block/BlockPluginInterface.php',
     'base_class' => 'Drupal\\Core\\Block\\BlockBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'block.settings.',
@@ -168,6 +169,7 @@ array (
     'yaml_properties' => 
     array (
     ),
+    'plugin_interface_filepath' => 'core/lib/Drupal/Core/Render/Element/ElementInterface.php',
     'base_class' => 'Drupal\\Core\\Render\\Element\\RenderElementBase',
     'base_class_has_di' => false,
     'plugin_properties' => 
@@ -220,6 +222,7 @@ array (
     'yaml_properties' => 
     array (
     ),
+    'plugin_interface_filepath' => 'core/lib/Drupal/Core/Field/FormatterInterface.php',
     'base_class' => 'Drupal\\Core\\Field\\FormatterBase',
     'base_class_has_di' => true,
     'config_schema_prefix' => 'field.formatter.settings.',
@@ -402,6 +405,7 @@ array (
     'yaml_properties' => 
     array (
     ),
+    'plugin_interface_filepath' => 'core/modules/filter/src/Plugin/FilterInterface.php',
     'base_class' => 'Drupal\\filter\\Plugin\\FilterBase',
     'base_class_has_di' => false,
     'config_schema_prefix' => 'filter_settings.',
@@ -527,6 +531,7 @@ array (
     'yaml_properties' => 
     array (
     ),
+    'plugin_interface_filepath' => 'core/modules/image/src/ImageEffectInterface.php',
     'base_class' => 'Drupal\\image\\ImageEffectBase',
     'base_class_has_di' => true,
     'config_schema_prefix' => 'image.effect.',
@@ -827,6 +832,7 @@ array (
     'yaml_properties' => 
     array (
     ),
+    'plugin_interface_filepath' => 'core/modules/views/src/Plugin/views/ViewsHandlerInterface.php',
     'base_class' => 'Drupal\\views\\Plugin\\views\\area\\AreaPluginBase',
     'base_class_has_di' => true,
     'plugin_properties' => 
