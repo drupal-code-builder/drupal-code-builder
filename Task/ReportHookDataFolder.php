@@ -70,4 +70,25 @@ class ReportHookDataFolder extends Base {
     return $files;
   }
 
+  /**
+   * Gets a URL to api.d.o for a class-like.
+   *
+   * @param string $class_like_filepath
+   *   The filepath to the class-like, relative to the Drupal app root.
+   * @param string $type
+   *   The type, e.g. 'interface'.
+   *
+   * @return string
+   *   A URL to the page on api.d.o for the given class-like, for the current
+   *   major version of Drupal.
+   */
+  protected function createClassLikeApiUrl(string $class_like_filepath, string $type): string {
+    return
+      'https://api.drupal.org/api/drupal/' .
+      str_replace('/', '!', $class_like_filepath) .
+      "/$type/" .
+      basename($class_like_filepath, '.php') .
+      '/' . $this->environment->getCoreMajorVersion();
+  }
+
 }
