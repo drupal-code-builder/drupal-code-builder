@@ -29,11 +29,6 @@ class ReportPluginData extends ReportHookDataFolder
   protected $sanity_level = 'component_data_processed';
 
   /**
-   * The name of the method providing an array of options as $value => $label.
-   */
-  protected static $optionsMethod = 'listPluginNamesOptions';
-
-  /**
    * Cached plugin type data.
    *
    * @var array
@@ -122,6 +117,31 @@ class ReportPluginData extends ReportHookDataFolder
       }
     }
     return $plugin_types_data_by_subdirectory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    $data = $this->listPluginData();
+
+    $options = [];
+    foreach ($data as $plugin_type_name => $plugin_type_info) {
+      $url = NULL;
+      if (isset($plugin_type_info['plugin_interface_filepath'])) {
+        if (str_starts_with($plugin_type_info['plugin_interface_filepath'], 'core')) {
+          $url = $this->createClassLikeApiUrl($plugin_type_info['plugin_interface_filepath'], 'interface');
+        }
+      }
+
+      $options[$plugin_type_name] = OptionDefinition::create(
+        $plugin_type_name,
+        $plugin_type_info['type_label'],
+        api_url: $url ?? NULL,
+      );
+    }
+
+    return $options;
   }
 
   /**
