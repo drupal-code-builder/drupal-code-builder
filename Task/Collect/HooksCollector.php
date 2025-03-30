@@ -122,9 +122,7 @@ abstract class HooksCollector extends CollectorBase {
    *    [module]      => node
    * @endcode
    */
-  protected function gatherHookDocumentationFiles($system_listing) {
-    // Needs to be overridden by subclasses.
-  }
+  abstract protected function gatherHookDocumentationFiles($system_listing);
 
   /**
    * Builds complete hook data array from downloaded files and stores in a file.
