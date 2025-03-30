@@ -105,7 +105,7 @@ class HooksCollector11 extends HooksCollector {
    */
   protected function gatherHookDocumentationFiles($api_files) {
     // Get the hooks directory.
-    $directory = \DrupalCodeBuilder\Factory::getEnvironment()->getDataDirectory();
+    $data_directory = \DrupalCodeBuilder\Factory::getEnvironment()->getDataDirectory();
 
     // Get Drupal root folder as a file path.
     // DRUPAL_ROOT is defined both by Drupal and Drush.
@@ -136,7 +136,7 @@ class HooksCollector11 extends HooksCollector {
 
       $hook_files[$filename] = [
         'original' => $drupal_root . '/' . $file['uri'], // no idea if useful
-        'path' => $directory . '/' . $file['filename'],
+        'path' => $data_directory . '/' . $file['filename'],
         'destination' => '%module.module', // Default. We override this below.
         'group'       => $file['group'],
         'module'      => $file['module'],
