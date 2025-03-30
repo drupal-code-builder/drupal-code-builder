@@ -122,10 +122,19 @@ class ReportHookData extends ReportHookDataFolder implements OptionSetDefininiti
     $data = $this->listHookData();
     foreach ($data as $group => $hooks) {
       foreach ($hooks as $key => $hook) {
+        if (!empty($hook['core']) && isset($hook['original_file_path'])) {
+          $url = 'https://api.drupal.org/api/drupal/' .
+            str_replace('/', '!', $hook['original_file_path']) .
+            '/function/' .
+            $hook['name'] .
+            '/' . $this->environment->getCoreMajorVersion();
+        }
+
         $options[$hook['name']] = OptionDefinition::create(
           $hook['name'],
           $hook['name'],
-          $hook['description'] ?? ''
+          description: $hook['description'] ?? '',
+          api_url: $url ?? NULL,
         );
       }
     }
