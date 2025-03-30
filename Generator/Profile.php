@@ -6,7 +6,7 @@ use CaseConverter\CaseString;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 
 /**
  * Component generator: profile.

@@ -7,7 +7,7 @@
 
 namespace DrupalCodeBuilder\Task;
 
-use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 use MutableTypedData\Definition\OptionSetDefininitionInterface;
 
 /**

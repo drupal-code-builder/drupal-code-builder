@@ -10,7 +10,7 @@ use DrupalCodeBuilder\Utility\NestedArray;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Data\DataItem;
-use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 
 /**
  * Base generator entity types.

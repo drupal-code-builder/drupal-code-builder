@@ -7,6 +7,7 @@
 
 namespace DrupalCodeBuilder\Task;
 
+use DrupalCodeBuilder\Definition\OptionDefinition;
 use MutableTypedData\Definition\OptionSetDefininitionInterface;
 use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;

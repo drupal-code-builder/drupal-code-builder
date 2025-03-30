@@ -10,7 +10,7 @@ use DrupalCodeBuilder\File\DrupalExtension;
 use DrupalCodeBuilder\MutableTypedData\DrupalCodeBuilderDataItemFactory;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 
 /**
  * Abstract Generator for root components.

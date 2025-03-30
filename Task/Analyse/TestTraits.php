@@ -7,7 +7,7 @@ use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Task\Collect\CollectorBase;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 use DrupalCodeBuilder\Task\SectionReportSimpleCountTrait;
-use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 
 /**
  * Task helper for analysing and reporting on traits intended for use in tests.

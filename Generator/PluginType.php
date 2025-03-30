@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
-use MutableTypedData\Definition\OptionDefinition;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use MutableTypedData\Definition\VariantDefinition;
