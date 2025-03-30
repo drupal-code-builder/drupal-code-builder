@@ -16,6 +16,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
+      'original_file_path' => 'core/modules/block/block.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/block.api.php',
       'body' => '
   // Remove the contextual links on all blocks that provide them.
@@ -38,6 +39,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
+      'original_file_path' => 'core/modules/block/block.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/block.api.php',
       'body' => '
   // Change the title of the specific block.
@@ -58,6 +60,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
+      'original_file_path' => 'core/modules/block/block.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/block.api.php',
       'body' => '
   // Add the \'user\' cache context to some blocks.
@@ -80,6 +83,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
+      'original_file_path' => 'core/modules/block/block.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/block.api.php',
       'body' => '
   // Explicitly enable placeholdering of the specific block.
@@ -100,6 +104,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
+      'original_file_path' => 'core/modules/block/block.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/block.api.php',
       'body' => '
   // Example code that would prevent displaying the \'Powered by Drupal\' block in
@@ -126,6 +131,7 @@ array (
       ),
       'group' => 'block',
       'core' => true,
+      'original_file_path' => 'core/modules/block/block.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/block.api.php',
       'body' => '
   foreach ($definitions as $id => $definition) {
@@ -155,6 +161,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
   $node_storage = \\Drupal::entityTypeManager()->getStorage(\'node\');
@@ -212,6 +219,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
   if ($success) {
@@ -253,6 +261,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
   // Inject any new status messages into the content area.
@@ -275,6 +284,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
   if (isset($form[\'type\']) && $form[\'type\'][\'#value\'] . \'_node_settings\' == $form_id) {
@@ -304,6 +314,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
   // Modification for the form with the given form ID goes here. For example, if
@@ -332,6 +343,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
   // Modification for the form with the given BASE_FORM_ID goes here. For
@@ -360,6 +372,7 @@ array (
       ),
       'group' => 'core:form',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Form/form.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_form.api.php',
       'body' => '
 ',
@@ -381,6 +394,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   $hooks[\'token_info\'] = [
@@ -406,6 +420,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   if ($hook == \'form_alter\') {
@@ -434,6 +449,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Only fill this in if the .info.yml file does not define a \'datestamp\'.
@@ -456,6 +472,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   my_module_cache_clear();
@@ -475,6 +492,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   if (in_array(\'lousy_module\', $modules)) {
@@ -499,6 +517,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Set general module variables.
@@ -519,6 +538,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   my_module_cache_clear();
@@ -538,6 +558,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   if (in_array(\'lousy_module\', $modules)) {
@@ -563,6 +584,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Delete remaining general module variables.
@@ -583,6 +605,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Here, we define a variable to allow tasks to indicate that a particular,
@@ -659,6 +682,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Replace the entire site configuration form provided by Drupal core
@@ -680,6 +704,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // For non-batch updates, the signature can simply be:
@@ -750,6 +775,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Example of updating some content.
@@ -782,6 +808,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   return [
@@ -805,6 +832,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Indicate that the my_module_update_8001() function provided by this module
@@ -840,6 +868,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // We\'ve removed the 8.x-1.x version of my_module, including database updates.
@@ -861,6 +890,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   return [
@@ -891,6 +921,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Adjust weight so that the theme Updater gets a chance to handle a given
@@ -912,6 +943,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   $requirements = [];
@@ -972,6 +1004,7 @@ array (
       ),
       'group' => 'core:module',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Extension/module.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_module.api.php',
       'body' => '
   // Change the title from \'PHP\' to \'PHP version\'.
@@ -1001,6 +1034,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Add a checkbox to toggle the breadcrumb trail.
@@ -1026,6 +1060,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   static $hooks;
@@ -1075,6 +1110,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // This example is from node_preprocess_html(). It adds the node type to
@@ -1100,6 +1136,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   $suggestions = [];
@@ -1123,6 +1160,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Add an interface-language specific suggestion to all theme hooks.
@@ -1143,6 +1181,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   if (empty($variables[\'header\'])) {
@@ -1164,6 +1203,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   foreach ($theme_list as $theme) {
@@ -1185,6 +1225,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Remove some state entries depending on the theme.
@@ -1207,6 +1248,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Extension for template base names in Twig.
@@ -1227,6 +1269,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   $twig_service = \\Drupal::service(\'twig\');
@@ -1248,6 +1291,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Decrease the default size of textfields.
@@ -1270,6 +1314,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Use a custom class for the LayoutBuilder element.
@@ -1290,6 +1335,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Swap out jQuery to use an updated version of the library.
@@ -1310,6 +1356,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   $libraries = [];
@@ -1381,6 +1428,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Manipulate settings.
@@ -1403,6 +1451,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Add settings.
@@ -1428,6 +1477,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Update imaginary library \'foo\' to version 2.0.
@@ -1474,6 +1524,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Remove defaults.css file.
@@ -1495,6 +1546,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Unconditionally attach an asset to the page.
@@ -1520,6 +1572,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Conditionally remove an asset.
@@ -1543,6 +1596,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   $page_top[\'my_module\'] = [\'#markup\' => \'This is the top.\'];
@@ -1562,6 +1616,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   $page_bottom[\'my_module\'] = [\'#markup\' => \'This is the bottom.\'];
@@ -1581,6 +1636,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   return [
@@ -1614,6 +1670,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   // Kill the next/previous my_module topic navigation links.
@@ -1638,6 +1695,7 @@ array (
       ),
       'group' => 'core:theme',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Render/theme.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_theme.api.php',
       'body' => '
   $variables[\'is_admin\'] = \\Drupal::currentUser()->hasPermission(\'access administration pages\');
@@ -1660,6 +1718,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Utility/token.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_token.api.php',
       'body' => '
   $token_service = \\Drupal::token();
@@ -1732,6 +1791,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Utility/token.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_token.api.php',
       'body' => '
   if ($context[\'type\'] == \'node\' && !empty($context[\'data\'][\'node\'])) {
@@ -1760,6 +1820,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Utility/token.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_token.api.php',
       'body' => '
   $type = [
@@ -1811,6 +1872,7 @@ array (
       ),
       'group' => 'core:token',
       'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Utility/token.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_token.api.php',
       'body' => '
   // Modify description of node tokens for our site.
@@ -1848,6 +1910,7 @@ array (
       ),
       'group' => 'help',
       'core' => true,
+      'original_file_path' => 'core/modules/help/help.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/help.api.php',
       'body' => '
   switch ($route_name) {
@@ -1875,6 +1938,7 @@ array (
       ),
       'group' => 'help',
       'core' => true,
+      'original_file_path' => 'core/modules/help/help.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/help.api.php',
       'body' => '
   // Alter the header for the module overviews section.
@@ -1897,6 +1961,7 @@ array (
       ),
       'group' => 'help',
       'core' => true,
+      'original_file_path' => 'core/modules/help/help.api.php',
       'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/help.api.php',
       'body' => '
   // Alter the help topic to be displayed on admin/help.
