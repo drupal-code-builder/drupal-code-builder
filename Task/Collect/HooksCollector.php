@@ -101,8 +101,7 @@ abstract class HooksCollector extends CollectorBase {
    *  Each item has the following properties:
    *  - path: The full path to this file
    *  - url: (internal to this handler) URL to download this file from.
-   *  - original: (probably not used; just here for interest) the full path this
-   *    file was copied from.
+   *  - original: The full path this file was copied from.
    *  - destination: The module code file where the hooks from this hook data
    *    file should be saved by code generation. This may contain placeholders,
    *    for instance, '%module.views.inc'.
@@ -292,6 +291,9 @@ abstract class HooksCollector extends CollectorBase {
           'dependencies'  => $hook_dependencies,
           'group'       => $group,
           'core'        => $file_data['core'] ?? NULL,
+          'original_file_path' => !empty($file_data['original'])
+            ? $this->makeFilepathRelative($file_data['original'])
+            : NULL,
           'file_path'   => $file_data['path'],
           'body'        => $hook_data_raw['bodies'][$key],
         ];
