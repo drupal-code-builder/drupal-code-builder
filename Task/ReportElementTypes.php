@@ -3,13 +3,13 @@
 namespace DrupalCodeBuilder\Task;
 
 use MutableTypedData\Definition\OptionSetDefininitionInterface;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
  * Task handler for reporting on render element types.
  */
 class ReportElementTypes extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
-  use OptionsProviderTrait;
   use SectionReportSimpleCountTrait;
 
   protected $data;
@@ -33,6 +33,29 @@ class ReportElementTypes extends ReportHookDataFolder implements OptionSetDefini
       'label' => 'Element types',
       'weight' => 20,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(): array {
+    if (!isset($this->data)) {
+      $this->data = $this->environment->getStorage()->retrieve($this->getInfo()['key']);
+    }
+
+    $options = [];
+    foreach ($this->data as $id => $item) {
+      $url = $this->createClassLikeApiUrl($item['class_filepath'], 'class');
+
+      $options[$id] = OptionDefinition::create(
+        $id,
+        $item['label'],
+        description: $item['description'],
+        api_url: $url,
+      );
+    }
+
+    return $options;
   }
 
   /**
