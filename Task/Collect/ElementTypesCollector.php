@@ -50,6 +50,9 @@ class ElementTypesCollector extends CollectorBase {
    *   - 'type': The type ID.
    *   - 'label': The label, which is the same as the type.
    *   - 'form': Whether the element is a form input element.
+   *   - class_filepath: The filepath to the element plugin's class.
+   *   - description: A description of the plugin, taken from the plugin class
+   *     docblock.
    */
   public function collect($job_list) {
     $element_types = \Drupal::service('plugin.manager.element_info')->getDefinitions();
@@ -59,10 +62,21 @@ class ElementTypesCollector extends CollectorBase {
       // We could use getInfo() on the plugin manager here, but it instantiates
       // each plugin which exhausts memory.
       $form = is_a($definition['class'], \Drupal\Core\Render\Element\FormElementInterface::class, TRUE);
+
+      $plugin_class_reflection = new \ReflectionClass($definition['class']);
+      if ($docblock = $plugin_class_reflection->getDocComment()) {
+        $description = $this->getDocblockFirstLine($docblock);
+      }
+      else {
+        $description = '';
+      }
+
       $data[$id] = [
         'type' => $id,
         'label' => $id,
         'form' => $form,
+        'class_filepath' => $this->makeFilepathRelative($plugin_class_reflection->getFileName()),
+        'description' => $description,
       ];
     }
 
