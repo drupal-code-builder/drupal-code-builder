@@ -5,6 +5,7 @@ array (
     'label' => 'Breadcrumb builder',
     'collector_type' => 'service_collector',
     'interface' => 'Drupal\\Core\\Breadcrumb\\BreadcrumbBuilderInterface',
+    'interface_filepath' => 'core/lib/Drupal/Core/Breadcrumb/BreadcrumbBuilderInterface.php',
     'methods' => 
     array (
       'applies' => 
