@@ -23,8 +23,8 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
    */
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     // Create the presets definition for service tag type property.
-    $task_handler_report_services = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
-    $service_types_data = $task_handler_report_services->listServiceTypeData();
+    $task_handler_report_service_tags = \DrupalCodeBuilder\Factory::getTask('ReportServiceTags');
+    $service_types_data = $task_handler_report_service_tags->listServiceTagData();
     $presets = [];
     foreach ($service_types_data as $type_tag => $type_data) {
       // Form the suggested service name from the last portion of the tag, thus:
@@ -35,6 +35,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       $presets[$type_tag] = [
         // Option label.
         'label' => $type_data['label'],
+        'api_url' => $type_data['api_url'] ?? '',
         'data' => [
           // Values that are forced on other properties.
           // These are set in the process stage.
