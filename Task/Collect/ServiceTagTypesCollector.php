@@ -77,6 +77,8 @@ class ServiceTagTypesCollector extends CollectorBase  {
    *      - 'service_id_collector: The collector has service IDs.
    *    - 'interface': The fully-qualified name (without leading slash) of the
    *      interface that each tagged service must implement.
+   *    - interface_filepath: (optional) The filepath to the interface, relative
+   *      to the Drupal app root.
    *    - 'methods': An array of the methods of this interface, in the same
    *      format as returned by MethodCollector::collectMethods().
    */
@@ -94,6 +96,7 @@ class ServiceTagTypesCollector extends CollectorBase  {
       'interface' => 'Symfony\Component\EventDispatcher\EventSubscriberInterface',
       'methods' => $this->methodCollector->collectMethods('Symfony\Component\EventDispatcher\EventSubscriberInterface'),
       // TODO: services of this type should go in the EventSubscriber namespace.
+      // No point adding the filepath, as api.d.o doesn't parse vendor code.
     ];
 
     foreach ($collectors_info as $service_name => $tag_infos) {
@@ -134,6 +137,13 @@ class ServiceTagTypesCollector extends CollectorBase  {
 
           // Hope there's only one interface...
           $service_interfaces = $service_class_reflection->getInterfaceNames();
+
+          // ThemeNegotiatorInterface doesn't even behave this way, rabbithole
+          // for later.
+          if (empty($service_interfaces)) {
+            continue;
+          }
+
           $collected_services_interface = array_shift($service_interfaces);
 
           if ($collected_services_interface) {
@@ -169,10 +179,13 @@ class ServiceTagTypesCollector extends CollectorBase  {
           $interface_methods = $this->methodCollector->collectMethods($collected_services_interface);
         }
 
+        $interface_reflection = new \ReflectionClass($collected_services_interface);
+
         $data[$tag] = [
           'label' => $label,
           'collector_type' => $collector_type,
           'interface' => $collected_services_interface,
+          'interface_filepath' => $this->makeFilepathRelative($interface_reflection->getFileName()),
           'methods' => $interface_methods ?? [],
         ];
       }
