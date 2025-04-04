@@ -2,8 +2,9 @@
 
 namespace DrupalCodeBuilder\Definition;
 
+use DrupalCodeBuilder\Definition\OptionDefinition;
 use MutableTypedData\Definition\DataDefinition as BasePropertyDefinition;
-use MutableTypedData\Definition\OptionDefinition;
+use MutableTypedData\Definition\OptionDefinition as BaseOptionDefinition;
 use MutableTypedData\Definition\PropertyListInterface;
 use MutableTypedData\Exception\InvalidDefinitionException;
 
@@ -45,7 +46,7 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return $delta_definition;
   }
 
-  public function addOption(OptionDefinition $option): self {
+  public function addOption(BaseOptionDefinition $option): self {
     if ($this->optionsProvider) {
       throw new InvalidDefinitionException("Can't add options if using an options provider.");
     }
@@ -212,7 +213,13 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
 
         $options = [];
         foreach ($presets as $key => $preset) {
-          $option = OptionDefinition::create($key, $preset['label'], $preset['description'] ?? NULL);
+          $option = OptionDefinition::create(
+            $key,
+            $preset['label'],
+            $preset['description'] ?? NULL,
+            // TODO: These are only supported for old-style array definitions!
+            api_url: $preset['api_url'] ?? NULL,
+          );
           $options[] = $option;
         }
       }
