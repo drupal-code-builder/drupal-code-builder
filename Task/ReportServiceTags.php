@@ -31,6 +31,28 @@ class ReportServiceTags extends ReportHookDataFolder implements SectionReportInt
   /**
    * {@inheritdoc}
    */
+  public function listServiceTagData(): array {
+    if (!isset($this->data)) {
+      $this->data = $this->environment->getStorage()->retrieve('service_tag_types');
+    }
+
+    $data = [];
+    foreach ($this->data as $tag => $item) {
+      if (isset($item['interface_filepath'])) {
+        if (str_starts_with($item['interface_filepath'], 'core')) {
+          $item['api_url'] = $this->createClassLikeApiUrl($item['interface_filepath'], 'interface');
+        }
+      }
+
+      $data[$tag] = $item;
+    }
+
+    return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDataSummary(): array {
     // TODO: move this to a trait.
     if (!isset($this->data)) {
