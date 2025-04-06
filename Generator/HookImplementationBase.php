@@ -2,11 +2,22 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use CaseConverter\CaseString;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
  * Abstract base class for hook implementations.
+ *
+ * This is specialised with child classes for:
+ * - class method hooks
+ * - procedural hooks
+ * - specific hooks that collect contents which are only procedural, e.g.
+ *   hook_menu()
+ * - hook_updateN() which needs to change the function name.
+ *
+ * Furthermore, hooks that collect contents and can be procedural or OO use
+ * a hook body class, e.g. hook_theme().
  */
 abstract class HookImplementationBase extends PHPFunction {
 
@@ -59,6 +70,29 @@ abstract class HookImplementationBase extends PHPFunction {
    */
   public function getMergeTag() {
     return $this->component_data['hook_name'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
+    // Determine if there is a hook body generator for this hook.
+    // We need dynamic hook bodies to be a separate generator so they are
+    // orthogonal to hook implementations being prodecural/class methods.
+    $long_hook_name = $this->component_data->hook_name->value;
+    $hook_class_name = 'HookBody' . CaseString::snake($long_hook_name)->pascal();
+    // Make the fully qualified class name.
+    $hook_class = $this->classHandler->getGeneratorClass($hook_class_name);
+    if (class_exists($hook_class)) {
+      $components['body'] = [
+        'component_type' => $hook_class_name,
+        'containing_component' => '%requester',
+      ];
+    }
+
+    return $components;
   }
 
   /**
