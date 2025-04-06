@@ -29,19 +29,6 @@ use CaseConverter\CaseString;
 class Hooks extends BaseGenerator {
 
   /**
-   * Theme hooks which remain procedural.
-   *
-   * TODO: Move this to analysis? Although there's no sodding documentation.
-   */
-  const PROCEDURAL_HOOKS = [
-    'hook_theme',
-    'hook_theme_suggestion_HOOK',
-    'hook_preprocess_hook',
-    'hook_process_hook',
-    'hook_theme_suggestions_HOOK_alter',
-  ];
-
-  /**
    * {@inheritdoc}
    */
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
@@ -157,12 +144,10 @@ class Hooks extends BaseGenerator {
       // If the hook implementation type is set to procedural, then it's
       // procedural.
       ($this->component_data->hook_implementation_type->value == 'procedural')
-      // Hooks marked as procedural in analysis data.
+      // Hooks marked as obligate procedural in analysis data.
       || !empty($hook_info['procedural'])
       // Hooks that go in the .install file are always procedural.
-      || ($hook_info['destination'] == '%module.install')
-      // Other random hooks that aren't documented as such are always procedural.
-      || in_array($hook_info['name'], static::PROCEDURAL_HOOKS);
+      || ($hook_info['destination'] == '%module.install');
 
     if ($use_procedural_hook) {
       $this->addProceduralHookComponent($components, $hook_info);

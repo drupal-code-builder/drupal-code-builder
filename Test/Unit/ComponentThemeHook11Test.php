@@ -32,31 +32,37 @@ class ComponentThemeHook11Test extends TestBase {
       'short_description' => 'Test Module description',
       'hooks' => [
       ],
+      // Set this to OO only, so we don't have the extra legacy code.
+      'hook_implementation_type' => 'oo',
       'theme_hooks' => [
         $theme_hook_name,
       ],
       'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
-    $file_names = array_keys($files);
 
-    $this->assertCount(3, $files, "Expected number of files is returned.");
-    $this->assertArrayHasKey("$module_name.info.yml", $files, "The files list has a .info.yml file.");
-    $this->assertArrayHasKey("$module_name.module", $files, "The files list has a .module file.");
-    $this->assertArrayHasKey("templates/my-themeable.html.twig", $files, "The files list has a twig file.");
+    $this->assertFiles([
+      'testmodule.info.yml',
+      'templates/my-themeable.html.twig',
+      'src/Hook/TestmoduleHooks.php',
+    ], $files);
 
-    // Check the .module file.
-    $module_file = $files["$module_name.module"];
-    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
+    // Check the hooks file.
+    $hooks_file = $files['src/Hook/TestmoduleHooks.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
 
     $php_tester->assertDrupalCodingStandards();
 
-    $php_tester->assertHasHookImplementation('hook_theme', $module_name);
+    $php_tester->assertHasMethod('theme');
+    // TODO: Attribute testing.
+    $this->assertStringContainsString("#[Hook('theme')]", $hooks_file);
+
+    $method_tester = $php_tester->getMethodTester('theme');
 
     // Check that the hook_theme() implementation has the generated code.
     // This covers the specialized HookTheme hook generator class getting used.
-    $this->assertFunctionCode($module_file, "{$module_name}_theme", "'$theme_hook_name' =>");
-    $this->assertFunctionCode($module_file, "{$module_name}_theme", "'render element' => 'elements',");
+    $method_tester->assertHasLine("'$theme_hook_name' =>");
+    $method_tester->assertHasLine("'render element' => 'elements',");
 
     // TODO: check the other file contents.
   }

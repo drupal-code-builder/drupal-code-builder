@@ -1175,7 +1175,7 @@ array (
       'description' => 'Alters named suggestions for a specific theme hook.',
       'destination' => '%module.module',
       'has_return' => false,
-      'procedural' => false,
+      'procedural' => true,
       'dependencies' => 
       array (
       ),

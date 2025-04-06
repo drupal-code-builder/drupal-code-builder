@@ -252,7 +252,7 @@ abstract class HooksCollector extends CollectorBase {
         // we can't call that because we need this information on lower versions of
         // core to properly generate forward-compatible hooks with the legacy
         // option.
-        $obligate_procedural_hooks = [
+        $hooks_collector_pass_obligate_procedural_hooks = [
           'cache_flush',
           'hook_info',
           'install',
@@ -266,6 +266,15 @@ abstract class HooksCollector extends CollectorBase {
           'uninstall',
           'update_last_removed',
         ];
+
+        // These are not enforced by HookCollectorPass, but the hook
+        // documentation states they must be procedural.
+        $unenforced_obligate_procedural_hooks = [
+          'theme_suggestion_HOOK',
+          'theme_suggestions_HOOK_alter',
+        ];
+
+        $obligate_procedural_hooks = array_merge($hooks_collector_pass_obligate_procedural_hooks, $unenforced_obligate_procedural_hooks);
 
         $procedural = (
           in_array($short_name, $obligate_procedural_hooks)

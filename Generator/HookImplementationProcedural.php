@@ -13,14 +13,16 @@ class HookImplementationProcedural extends HookImplementationBase {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
+    $components = parent::requiredComponents();
+
     $code_file = $this->component_data['code_file'];
 
-    return [
-      'code_file' => [
-        'component_type' => 'ExtensionCodeFile',
-        'filename' => $code_file,
-      ],
+    $components['code_file'] = [
+      'component_type' => 'ExtensionCodeFile',
+      'filename' => $code_file,
     ];
+
+    return $components;
   }
 
   /**
