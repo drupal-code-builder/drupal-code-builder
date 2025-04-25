@@ -236,6 +236,21 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return $this->presets;
   }
 
+  /**
+   * Sets a processing callback.
+   *
+   * Processing is applied to a component's data when it is instantiated from
+   * input data.
+   *
+   * Note that processing is not applied to default values!
+   *
+   * @param callable $callback
+   *   The callback to apply to data.
+   *
+   * @return self
+   *
+   * @see \DrupalCodeBuilder\Task\Generate\ComponentCollector::processComponentData()
+   */
   public function setProcessing(callable $callback): self {
     $this->processing = $callback;
 
