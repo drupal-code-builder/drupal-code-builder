@@ -520,7 +520,8 @@ class PHPFunction extends BaseGenerator {
     // There may be both property data and contained components. Contained
     // components override the body if it is set and if
     // 'body_overriden_by_contained' is TRUE.
-    $has_body_from_component_data = !$this->component_data->body->isEmpty();
+    // Check values() rather than isEmpty() so defaults get applied.
+    $has_body_from_component_data = !empty($this->component_data->body->values());
     $has_body_from_contained_components = $this->hasContainedComponentsOfContentType('line');
 
     $let_body_from_contained_components_override_body_from_component_data =

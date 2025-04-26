@@ -9,6 +9,7 @@ namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Definition\OptionDefinition;
 use MutableTypedData\Definition\OptionSetDefininitionInterface;
+use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
@@ -16,7 +17,8 @@ use DrupalCodeBuilder\Task\Report\SectionReportInterface;
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  */
-class ReportHookData extends ReportHookDataFolder implements OptionSetDefininitionInterface, SectionReportInterface {
+class ReportHookData extends ReportHookDataFolder
+  implements OptionSetDefininitionInterface, VariantMappingProviderInterface, SectionReportInterface {
 
   /**
    * The sanity level this task requires to operate.
@@ -142,6 +144,26 @@ class ReportHookData extends ReportHookDataFolder implements OptionSetDefininiti
     }
 
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVariantMapping(): array {
+    $mapping = [];
+
+    $data = $this->listHookData();
+    foreach ($data as $group => $hooks) {
+      foreach ($hooks as $key => $hook) {
+        $mapping[$key] = preg_match('@[[:upper:]]@', $key) ? 'tokenized' : 'literal';
+      }
+    }
+
+    // Special case for hook_update_N(): the uppercase 'N' is not a token, as
+    // it's derived automatically.
+    $mapping['hook_update_N'] = 'literal';
+
+    return $mapping;
   }
 
   /**

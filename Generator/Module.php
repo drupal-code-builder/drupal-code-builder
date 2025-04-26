@@ -222,6 +222,10 @@ class Module extends RootComponent {
           'oo_legacy' => 'Both types, with legacy support for Drupal core < 11.1',
         ])
         ->setLiteralDefault('oo_legacy'),
+      'hook_classes' => MergingGeneratorDefinition::createFromGeneratorType('HooksClass')
+        ->setLabel('Hook classes')
+        ->setDescription('Classes that hold hook implementation methods. Will also generate legacy procedural functions if Hook implementation type is set to do so.')
+        ->setMultiple(TRUE),
       'hooks' => PropertyDefinition::create('string')
         ->setLabel('Hook implementations')
         ->setMultiple(TRUE)

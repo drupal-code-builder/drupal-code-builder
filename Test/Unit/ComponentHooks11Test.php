@@ -20,6 +20,168 @@ class ComponentHooks11Test extends TestBase {
   protected $drupalMajorVersion = 11;
 
   /**
+   * Tests hooks in a custom class, without legacy support.
+   */
+  public function testHookClassesOnlyOO(): void {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo',
+
+      'hook_classes' => [
+        0 => [
+          'plain_class_name' => 'AlphaHooks',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+          'hook_methods' => [
+            0 => [
+              'hook_name' => 'hook_form_alter',
+            ],
+            1 => [
+              'hook_name' => 'hook_form_FORM_ID_alter',
+              'hook_name_parameters' => [
+                'node_form',
+              ],
+            ],
+            2 => [
+              'hook_name' => 'hook_form_FORM_ID_alter',
+              'hook_name_parameters' => [
+                'user_form',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'src/Hook/AlphaHooks.php',
+    ], $files);
+
+    $hooks_file = $files['src/Hook/AlphaHooks.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
+    $php_tester->assertDrupalCodingStandards([
+      // Temporarily exclude the sniff for comment lines being too long, as a
+      // comment in hook_form_alter() violates this.
+      // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
+      // is fixed.
+      'Drupal.Files.LineLength.TooLong',
+      // Sample code for hook_form_FORM_ID_alter() violates this.
+      'Drupal.Commenting.InlineComment.SpacingAfter',
+    ]);
+
+    $php_tester->assertHasClass('Drupal\test_module\Hook\AlphaHooks');
+    $php_tester->assertHasMethod('formAlter');
+    $php_tester->assertHasMethod('formNodeFormAlter');
+    $php_tester->assertHasMethod('formUserFormAlter');
+
+    // TODO: Attribute testing.
+    $this->assertStringContainsString("#[Hook('form_alter')]", $hooks_file);
+    $this->assertStringContainsString("#[Hook('form_node_form_alter')]", $hooks_file);
+    $this->assertStringContainsString("#[Hook('form_user_form_alter')]", $hooks_file);
+  }
+
+  /**
+   * Tests hooks in a custom class, with legacy support.
+   */
+  public function testHookClassesWithLegacy(): void {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo_legacy',
+      'hook_classes' => [
+        0 => [
+          'plain_class_name' => 'AlphaHooks',
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+          'hook_methods' => [
+            0 => [
+              'hook_name' => 'hook_form_alter',
+            ],
+            1 => [
+              'hook_name' => 'hook_form_FORM_ID_alter',
+              'hook_name_parameters' => [
+                'node_form',
+              ],
+            ],
+            2 => [
+              'hook_name' => 'hook_form_FORM_ID_alter',
+              'hook_name_parameters' => [
+                'user_form',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.module',
+      'test_module.services.yml',
+      'src/Hook/AlphaHooks.php',
+    ], $files);
+
+    $hooks_file = $files['src/Hook/AlphaHooks.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
+    $php_tester->assertDrupalCodingStandards([
+      // Temporarily exclude the sniff for comment lines being too long, as a
+      // comment in hook_form_alter() violates this.
+      // TODO: remove this when https://www.drupal.org/project/drupal/issues/2924184
+      // is fixed.
+      'Drupal.Files.LineLength.TooLong',
+      // Sample code for hook_form_FORM_ID_alter() violates this.
+      'Drupal.Commenting.InlineComment.SpacingAfter',
+    ]);
+
+    $php_tester->assertHasClass('Drupal\test_module\Hook\AlphaHooks');
+    $php_tester->assertHasMethod('formAlter');
+
+    // TODO: Attribute testing.
+    $this->assertStringContainsString("#[Hook('form_alter')]", $hooks_file);
+
+    $module_file = $files['test_module.module'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
+    $php_tester->assertDrupalCodingStandards([
+      // Generated method name for hook with name tokens violates this.
+      'Drupal.NamingConventions.ValidFunctionName.InvalidName',
+    ]);
+    $php_tester->assertFileDocblockHasLine("Contains hook implementations for the Test Module module.");
+
+    $function_tester = $php_tester->getFunctionTester('test_module_form_alter');
+    $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
+    $function_tester->assertHasLine('\Drupal::service(AlphaHooks::class)->formAlter($form, $form_state, $form_id);');
+
+    $function_tester = $php_tester->getFunctionTester('test_module_form_node_form_alter');
+    $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
+    $function_tester->assertHasLine('\Drupal::service(AlphaHooks::class)->formNodeFormAlter($form, $form_state, $form_id);');
+
+    $function_tester = $php_tester->getFunctionTester('test_module_form_user_form_alter');
+    $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
+    $function_tester->assertHasLine('\Drupal::service(AlphaHooks::class)->formUserFormAlter($form, $form_state, $form_id);');
+  }
+
+  /**
    * Tests procedural hooks can also be generated on 11.
    */
   public function testHookImplementationTypeProcedural() {

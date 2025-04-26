@@ -17,16 +17,20 @@ class HookUpdateN extends HookImplementationProcedural {
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
-    // The next schema number to use for the hook implementation.
-    $definition->addProperty(PropertyDefinition::create('string')
-      ->setName('schema_number')
-      ->setInternal(TRUE)
-      ->setCallableDefault(function ($component_data) {
-        // Get overwritten by detectExistence() if existing implementations are
-        // found.
-        return (\DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion() * 1000) + 1;
-      })
-    );
+    // This hook is plain, not tokenised, so we don't need to add the property
+    // on both variants.
+    foreach ($definition->getVariants() as $variant) {
+      // The next schema number to use for the hook implementation.
+      $variant->addProperty(PropertyDefinition::create('string')
+        ->setName('schema_number')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          // Get overwritten by detectExistence() if existing implementations are
+          // found.
+          return (\DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion() * 1000) + 1;
+        })
+      );
+    }
   }
 
   /**
@@ -72,9 +76,9 @@ class HookUpdateN extends HookImplementationProcedural {
    */
   public function getContents(): array {
     // Replace the '_N' part of the function declaration.
-    $this->component_data->declaration->value = preg_replace('/(?<=hook_update_)N/', $this->component_data->schema_number->value, $this->component_data->declaration->value);
+    $this->component_data->declaration->value = preg_replace('/(?<=_update_)N/', $this->component_data->schema_number->value, $this->component_data->declaration->value);
     // Also do the function name.
-    $this->component_data->function_name->value = preg_replace('/(?<=update_)N/', $this->component_data->schema_number->value, $this->component_data->function_name->value);
+    $this->component_data->function_name->value = preg_replace('/(?<=_update_)N/', $this->component_data->schema_number->value, $this->component_data->function_name->value);
 
     return parent::getContents();
   }

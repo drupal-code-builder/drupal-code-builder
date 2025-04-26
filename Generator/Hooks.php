@@ -99,8 +99,6 @@ class Hooks extends BaseGenerator {
 
       // Add components for each hook.
       foreach ($file_hook_list as $hook_name => $hook) {
-        $hook['short_hook_name'] = preg_replace('@^hook_@', '', $hook_name);
-
         // The body for the hook implementation can come either template  code,
         // or the hook documentation's example code. (Note that this will be
         // overridden further down the line if the HookImplementation component
@@ -187,11 +185,6 @@ class Hooks extends BaseGenerator {
       ],
     ];
 
-    // Make the method name out of the short hook name in camel case.
-    // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
-    // formFORMIDAlter().
-    $hook_method_name = CaseString::snake($hook_info['short_hook_name'])->camel();
-
     // Make the class method hook. This must have the same name as the component
     // added in self::addProceduralHookComponent(), so that other generators
     // that set this hook as their containing_component work in both cases.
@@ -200,7 +193,6 @@ class Hooks extends BaseGenerator {
       'component_type' => 'HookImplementationClassMethod',
       'code_file' => $hook_info['destination'],
       'hook_name' => $hook_name,
-      'hook_method_name' => $hook_method_name,
       'declaration' => $hook_info['definition'],
       'description' => $hook_info['description'],
       // Set the hook template as the method body.
@@ -209,6 +201,7 @@ class Hooks extends BaseGenerator {
       // indent it again.
       'body_indented' => TRUE,
       'containing_component' => '%requester:hooks_class',
+      'class_component_address' => '..:..:requests:hooks_class',
     ];
   }
 
@@ -222,14 +215,12 @@ class Hooks extends BaseGenerator {
    * @param array $hook_info
    *   The array of hook info.
    */
-  protected function addProceduralHookComponent(array &$components, array $hook_info, ?string $component_name = NULL): void {
+  protected function addProceduralHookComponent(array &$components, array $hook_info): void {
     $hook_name = $hook_info['name'];
-    $component_name ??= $hook_name;
-
     $hook_class_name = $this->getHookImplementationComponentType($hook_info);
 
     // Add a procedural hook implementation.
-    $components[$component_name] = [
+    $components[$hook_name] = [
       'component_type' => $hook_class_name,
       'code_file' => $hook_info['destination'],
       'hook_name' => $hook_name,
@@ -257,35 +248,6 @@ class Hooks extends BaseGenerator {
     $hook_name = $hook_info['name'];
     $component_name = $hook_name . '_legacy';
     $hooks_class_name = $this->component_data->getItem('module:root_name_pascal')->value . 'Hooks';
-
-    // Start with the procedural hook component.
-    $this->addProceduralHookComponent($components, $hook_info, $component_name);
-
-    // Make the method name out of the short hook name in camel case.
-    // TODO this is crap with e.g. hook_form_FORM_ID_alter becomes
-    // formFORMIDAlter().
-    $hook_method_name = CaseString::snake($hook_info['short_hook_name'])->camel();
-
-    $components[$component_name]['attribute'] = 'Drupal\Core\Hook\LegacyHook';
-
-    $components[$component_name]['function_docblock_lines'] = [
-      'Legacy hook implementation.',
-      '@todo Remove this method when support for Drupal core < 11.1 is dropped.',
-    ];
-
-    // Replace the hook body with a call to the Hooks class.
-    // Get the parameters.
-    $matches = [];
-    preg_match_all('@(\$\w+)@', $hook_info['definition'], $matches);
-    $arguments = implode(', ', $matches[0]);
-
-    // Use a return statement if the hook returns a value.
-    $return = !empty($hook_info['has_return']) ? 'return ' : '';
-
-    $components[$component_name]['body'] = [
-      "{$return}\Drupal::service(\Drupal\%extension\Hook\\{$hooks_class_name}::class)->{$hook_method_name}({$arguments});",
-    ];
-    $components[$component_name]['body_indented'] = FALSE;
 
     // Explicitly declare the Hooks class as a service.
     // ARGH, can't use the 'Service' generator, as that will want to create a

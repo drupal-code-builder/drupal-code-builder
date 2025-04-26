@@ -205,6 +205,9 @@ class ComponentPHPFile10Test extends TestBase {
         EOT,
       ],
     ]);
+    $report_hook_data->getVariantMapping(Argument::any())->willReturn([
+      'hook_cake' => 'literal',
+    ]);
     $report_hook_data->getOptions(Argument::any())->willReturn([
       'hook_cake' => 'hook_cake()',
     ]);

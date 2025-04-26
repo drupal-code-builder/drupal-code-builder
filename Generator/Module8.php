@@ -26,6 +26,7 @@ class Module8 extends Module9And10 {
       ->setLiteralDefault('procedural');
 
     $definition->removeProperty('lifecycle');
+    $definition->removeProperty('hook_classes');
   }
 
 }
