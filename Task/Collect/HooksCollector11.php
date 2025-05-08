@@ -17,6 +17,8 @@ class HooksCollector11 extends HooksCollector {
     'CORE_module.api.php' => TRUE,
     // Need this for hook_form_alter().
     'CORE_form.api.php' => TRUE,
+    // Need this for hook_ENTITY_TYPE_view().
+    'CORE_entity.api.php' => TRUE,
     // Need this for hook_tokens().
     'CORE_token.api.php' => TRUE,
     // Need this for hook_help().

@@ -54,6 +54,12 @@ class ComponentHooks11Test extends TestBase {
                 'user_form',
               ],
             ],
+            3 => [
+              'hook_name' => 'hook_ENTITY_TYPE_view',
+              'hook_name_parameters' => [
+                'node',
+              ],
+            ],
           ],
         ],
       ],
@@ -84,11 +90,13 @@ class ComponentHooks11Test extends TestBase {
     $php_tester->assertHasMethod('formAlter');
     $php_tester->assertHasMethod('formNodeFormAlter');
     $php_tester->assertHasMethod('formUserFormAlter');
+    $php_tester->assertHasMethod('nodeView');
 
     // TODO: Attribute testing.
     $this->assertStringContainsString("#[Hook('form_alter')]", $hooks_file);
     $this->assertStringContainsString("#[Hook('form_node_form_alter')]", $hooks_file);
     $this->assertStringContainsString("#[Hook('form_user_form_alter')]", $hooks_file);
+    $this->assertStringContainsString("#[Hook('node_view')]", $hooks_file);
   }
 
   /**
@@ -123,6 +131,12 @@ class ComponentHooks11Test extends TestBase {
               'hook_name' => 'hook_form_FORM_ID_alter',
               'hook_name_parameters' => [
                 'user_form',
+              ],
+            ],
+            3 => [
+              'hook_name' => 'hook_ENTITY_TYPE_view',
+              'hook_name_parameters' => [
+                'node',
               ],
             ],
           ],
@@ -179,6 +193,10 @@ class ComponentHooks11Test extends TestBase {
     $function_tester = $php_tester->getFunctionTester('test_module_form_user_form_alter');
     $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
     $function_tester->assertHasLine('\Drupal::service(AlphaHooks::class)->formUserFormAlter($form, $form_state, $form_id);');
+
+    $function_tester = $php_tester->getFunctionTester('test_module_node_view');
+    $function_tester->getDocBlockTester()->assertHasLine('Legacy hook implementation.');
+    $function_tester->assertHasLine('\Drupal::service(AlphaHooks::class)->nodeView($build, $entity, $display, $view_mode);');
   }
 
   /**

@@ -75,25 +75,34 @@ abstract class HookImplementationBase extends PHPFunction {
 
           $hook_name_parameters = $component_data->getParent()->hook_name_parameters->values();
 
-          // Split on an UPPER_CASE token in the hook name, without the bounding
-          // underscores, and include the token in the pieces. For example,
+          // Split on the token boundaries, leaving the underscore outside the
+          // token. For example,
           // 'form_FORM_ID_alter' becomes:
           // - form_
           // - FORM_ID
           // - _alter
+          // and 'ENTITY_TYPE_view' becomes
+          // - ENTITY_TYPE
+          // - _view
           $pieces = preg_split(
-            '@(?<=_)([[:upper:]_]+)(?=_)@',
+            '@(
+              # Token at the start of the hook name.
+              \b (?=[[:upper:]_])
+              |
+              # Left edge of a token.
+              (?<=[[:lower:]]_) (?=[[:upper:]_])
+              |
+              # Right edge of a token.
+              (?<=[[:upper:]_]) (?=_[[:lower:]])
+            )@x',
             $short_hook_name,
-            flags: PREG_SPLIT_DELIM_CAPTURE,
           );
 
-          // Because hook names never start with a token, we know that the
-          // tokens are all the odd-indexed pieces, and the fixed portions the
-          // even-indexed.
+          // Replace the tokens.
           foreach ($pieces as $i => &$piece) {
-            if ($i % 2 == 1) {
-              // An odd-indexed piece is replaced with hook name parameter if
-              // one exists.
+            // Replace each upper-cased piece with a parameter if there are
+            // enough parameters.
+            if (preg_match('@^[[:upper:]_]+$@', $piece)) {
               if ($hook_name_parameters) {
                 // Use up each parameter, so the array empties out.
                 $parameter = array_shift($hook_name_parameters);

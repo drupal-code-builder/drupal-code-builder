@@ -143,6 +143,1770 @@ array (
 ',
     ),
   ),
+  'core:entity' => 
+  array (
+    'hook_entity_access' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_access',
+      'definition' => 'function hook_entity_access(\\Drupal\\Core\\Entity\\EntityInterface $entity, $operation, \\Drupal\\Core\\Session\\AccountInterface $account)',
+      'description' => 'Control entity operation access.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // No opinion.
+  return \\Drupal\\Core\\Access\\AccessResult::neutral();
+',
+    ),
+    'hook_ENTITY_TYPE_access' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_access',
+      'definition' => 'function hook_ENTITY_TYPE_access(\\Drupal\\Core\\Entity\\EntityInterface $entity, $operation, \\Drupal\\Core\\Session\\AccountInterface $account)',
+      'description' => 'Control entity operation access for a specific entity type.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // No opinion.
+  return \\Drupal\\Core\\Access\\AccessResult::neutral();
+',
+    ),
+    'hook_entity_create_access' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_create_access',
+      'definition' => 'function hook_entity_create_access(\\Drupal\\Core\\Session\\AccountInterface $account, array $context, $entity_bundle)',
+      'description' => 'Control entity create access.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // No opinion.
+  return \\Drupal\\Core\\Access\\AccessResult::neutral();
+',
+    ),
+    'hook_ENTITY_TYPE_create_access' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_create_access',
+      'definition' => 'function hook_ENTITY_TYPE_create_access(\\Drupal\\Core\\Session\\AccountInterface $account, array $context, $entity_bundle)',
+      'description' => 'Control entity create access for a specific entity type.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // No opinion.
+  return \\Drupal\\Core\\Access\\AccessResult::neutral();
+',
+    ),
+    'hook_entity_type_build' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_type_build',
+      'definition' => 'function hook_entity_type_build(array &$entity_types)',
+      'description' => 'Add to entity type definitions.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  /** @var \\Drupal\\Core\\Entity\\EntityTypeInterface[] $entity_types */
+  // Add a form for a custom node form without overriding the default
+  // node form. To override the default node form, use hook_entity_type_alter().
+  $entity_types[\'node\']->setFormClass(\'my_module_foo\', \'Drupal\\my_module\\NodeFooForm\');
+',
+    ),
+    'hook_entity_type_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_type_alter',
+      'definition' => 'function hook_entity_type_alter(array &$entity_types)',
+      'description' => 'Alter the entity type definitions.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  /** @var \\Drupal\\Core\\Entity\\EntityTypeInterface[] $entity_types */
+  // Set the controller class for nodes to an alternate implementation of the
+  // Drupal\\Core\\Entity\\EntityStorageInterface interface.
+  $entity_types[\'node\']->setStorageClass(\'Drupal\\my_module\\MyCustomNodeStorage\');
+',
+    ),
+    'hook_entity_view_mode_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_view_mode_info_alter',
+      'definition' => 'function hook_entity_view_mode_info_alter(&$view_modes)',
+      'description' => 'Alter the view modes for entity types.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $view_modes[\'user\'][\'full\'][\'status\'] = TRUE;
+',
+    ),
+    'hook_entity_bundle_info' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_bundle_info',
+      'definition' => 'function hook_entity_bundle_info()',
+      'description' => 'Describe the bundles for entity types.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $bundles[\'user\'][\'user\'][\'label\'] = t(\'User\');
+  return $bundles;
+',
+    ),
+    'hook_entity_bundle_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_bundle_info_alter',
+      'definition' => 'function hook_entity_bundle_info_alter(&$bundles)',
+      'description' => 'Alter the bundles for entity types.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $bundles[\'user\'][\'user\'][\'label\'] = t(\'Full account\');
+  // Override the bundle class for the "article" node type in a custom module.
+  $bundles[\'node\'][\'article\'][\'class\'] = \'Drupal\\my_module\\Entity\\Article\';
+',
+    ),
+    'hook_entity_bundle_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_bundle_create',
+      'definition' => 'function hook_entity_bundle_create($entity_type_id, $bundle)',
+      'description' => 'Act on entity_bundle_create().',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // When a new bundle is created, the menu needs to be rebuilt to add the
+  // Field UI menu item tabs.
+  \\Drupal::service(\'router.builder\')->setRebuildNeeded();
+',
+    ),
+    'hook_entity_bundle_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_bundle_delete',
+      'definition' => 'function hook_entity_bundle_delete($entity_type_id, $bundle)',
+      'description' => 'Act on entity_bundle_delete().',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Remove the settings associated with the bundle in my_module.settings.
+  $config = \\Drupal::config(\'my_module.settings\');
+  $bundle_settings = $config->get(\'bundle_settings\');
+  if (isset($bundle_settings[$entity_type_id][$bundle])) {
+    unset($bundle_settings[$entity_type_id][$bundle]);
+    $config->set(\'bundle_settings\', $bundle_settings);
+  }
+',
+    ),
+    'hook_entity_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_create',
+      'definition' => 'function hook_entity_create(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Acts when creating a new entity.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  \\Drupal::logger(\'example\')->info(\'Entity created: @label\', [\'@label\' => $entity->label()]);
+',
+    ),
+    'hook_ENTITY_TYPE_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_create',
+      'definition' => 'function hook_ENTITY_TYPE_create(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Acts when creating a new entity of a specific type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  \\Drupal::logger(\'example\')->info(\'ENTITY_TYPE created: @label\', [\'@label\' => $entity->label()]);
+',
+    ),
+    'hook_entity_revision_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_revision_create',
+      'definition' => 'function hook_entity_revision_create(\\Drupal\\Core\\Entity\\EntityInterface $new_revision, \\Drupal\\Core\\Entity\\EntityInterface $entity, $keep_untranslatable_fields)',
+      'description' => 'Respond to entity revision creation.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Retain the value from an untranslatable field, which are by default
+  // synchronized from the default revision.
+  $new_revision->set(\'untranslatable_field\', $entity->get(\'untranslatable_field\'));
+',
+    ),
+    'hook_ENTITY_TYPE_revision_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_revision_create',
+      'definition' => 'function hook_ENTITY_TYPE_revision_create(\\Drupal\\Core\\Entity\\EntityInterface $new_revision, \\Drupal\\Core\\Entity\\EntityInterface $entity, $keep_untranslatable_fields)',
+      'description' => 'Respond to entity revision creation.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Retain the value from an untranslatable field, which are by default
+  // synchronized from the default revision.
+  $new_revision->set(\'untranslatable_field\', $entity->get(\'untranslatable_field\'));
+',
+    ),
+    'hook_entity_preload' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_preload',
+      'definition' => 'function hook_entity_preload(array $ids, $entity_type_id)',
+      'description' => 'Act on an array of entity IDs before they are loaded.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $entities = [];
+
+  foreach ($ids as $id) {
+    $entities[] = my_module_swap_revision($id);
+  }
+
+  return $entities;
+',
+    ),
+    'hook_entity_load' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_load',
+      'definition' => 'function hook_entity_load(array $entities, $entity_type_id)',
+      'description' => 'Act on entities when loaded.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  foreach ($entities as $entity) {
+    $entity->foo = my_module_add_something($entity);
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_load' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_load',
+      'definition' => 'function hook_ENTITY_TYPE_load($entities)',
+      'description' => 'Act on entities of a specific type when loaded.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  foreach ($entities as $entity) {
+    $entity->foo = my_module_add_something($entity);
+  }
+',
+    ),
+    'hook_entity_storage_load' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_storage_load',
+      'definition' => 'function hook_entity_storage_load(array $entities, $entity_type)',
+      'description' => 'Act on content entities when loaded from the storage.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  foreach ($entities as $entity) {
+    $entity->foo = my_module_add_something_uncached($entity);
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_storage_load' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_storage_load',
+      'definition' => 'function hook_ENTITY_TYPE_storage_load(array $entities)',
+      'description' => 'Act on content entities of a given type when loaded from the storage.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  foreach ($entities as $entity) {
+    $entity->foo = my_module_add_something_uncached($entity);
+  }
+',
+    ),
+    'hook_entity_presave' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_presave',
+      'definition' => 'function hook_entity_presave(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Act on an entity before it is created or updated.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($entity instanceof \\Drupal\\Core\\Entity\\ContentEntityInterface && $entity->isTranslatable()) {
+    $route_match = \\Drupal::routeMatch();
+    \\Drupal::service(\'content_translation.synchronizer\')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter(\'source_langcode\'));
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_presave' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_presave',
+      'definition' => 'function hook_ENTITY_TYPE_presave(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Act on a specific type of entity before it is created or updated.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($entity->isTranslatable()) {
+    $route_match = \\Drupal::routeMatch();
+    \\Drupal::service(\'content_translation.synchronizer\')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter(\'source_langcode\'));
+  }
+',
+    ),
+    'hook_entity_insert' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_insert',
+      'definition' => 'function hook_entity_insert(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to creation of a new entity.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Insert the new entity into a fictional table of all entities.
+  \\Drupal::database()->insert(\'example_entity\')
+    ->fields([
+      \'type\' => $entity->getEntityTypeId(),
+      \'id\' => $entity->id(),
+      \'created\' => \\Drupal::time()->getRequestTime(),
+      \'updated\' => \\Drupal::time()->getRequestTime(),
+    ])
+    ->execute();
+',
+    ),
+    'hook_ENTITY_TYPE_insert' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_insert',
+      'definition' => 'function hook_ENTITY_TYPE_insert(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to creation of a new entity of a particular type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Insert the new entity into a fictional table of this type of entity.
+  \\Drupal::database()->insert(\'example_entity\')
+    ->fields([
+      \'id\' => $entity->id(),
+      \'created\' => \\Drupal::time()->getRequestTime(),
+      \'updated\' => \\Drupal::time()->getRequestTime(),
+    ])
+    ->execute();
+',
+    ),
+    'hook_entity_update' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_update',
+      'definition' => 'function hook_entity_update(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to updates to an entity.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Update the entity\'s entry in a fictional table of all entities.
+  \\Drupal::database()->update(\'example_entity\')
+    ->fields([
+      \'updated\' => \\Drupal::time()->getRequestTime(),
+    ])
+    ->condition(\'type\', $entity->getEntityTypeId())
+    ->condition(\'id\', $entity->id())
+    ->execute();
+',
+    ),
+    'hook_ENTITY_TYPE_update' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_update',
+      'definition' => 'function hook_ENTITY_TYPE_update(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to updates to an entity of a particular type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Update the entity\'s entry in a fictional table of this type of entity.
+  \\Drupal::database()->update(\'example_entity\')
+    ->fields([
+      \'updated\' => \\Drupal::time()->getRequestTime(),
+    ])
+    ->condition(\'id\', $entity->id())
+    ->execute();
+',
+    ),
+    'hook_entity_translation_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_translation_create',
+      'definition' => 'function hook_entity_translation_create(\\Drupal\\Core\\Entity\\EntityInterface $translation)',
+      'description' => 'Acts when creating a new entity translation.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  \\Drupal::logger(\'example\')->info(\'Entity translation created: @label\', [\'@label\' => $translation->label()]);
+',
+    ),
+    'hook_ENTITY_TYPE_translation_create' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_translation_create',
+      'definition' => 'function hook_ENTITY_TYPE_translation_create(\\Drupal\\Core\\Entity\\EntityInterface $translation)',
+      'description' => 'Acts when creating a new entity translation of a specific type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  \\Drupal::logger(\'example\')->info(\'ENTITY_TYPE translation created: @label\', [\'@label\' => $translation->label()]);
+',
+    ),
+    'hook_entity_translation_insert' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_translation_insert',
+      'definition' => 'function hook_entity_translation_insert(\\Drupal\\Core\\Entity\\EntityInterface $translation)',
+      'description' => 'Respond to creation of a new entity translation.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $variables = [
+    \'@language\' => $translation->language()->getName(),
+    \'@label\' => $translation->getUntranslated()->label(),
+  ];
+  \\Drupal::logger(\'example\')->notice(\'The @language translation of @label has just been stored.\', $variables);
+',
+    ),
+    'hook_ENTITY_TYPE_translation_insert' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_translation_insert',
+      'definition' => 'function hook_ENTITY_TYPE_translation_insert(\\Drupal\\Core\\Entity\\EntityInterface $translation)',
+      'description' => 'Respond to creation of a new entity translation of a particular type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $variables = [
+    \'@language\' => $translation->language()->getName(),
+    \'@label\' => $translation->getUntranslated()->label(),
+  ];
+  \\Drupal::logger(\'example\')->notice(\'The @language translation of @label has just been stored.\', $variables);
+',
+    ),
+    'hook_entity_translation_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_translation_delete',
+      'definition' => 'function hook_entity_translation_delete(\\Drupal\\Core\\Entity\\EntityInterface $translation)',
+      'description' => 'Respond to entity translation deletion.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $variables = [
+    \'@language\' => $translation->language()->getName(),
+    \'@label\' => $translation->label(),
+  ];
+  \\Drupal::logger(\'example\')->notice(\'The @language translation of @label has just been deleted.\', $variables);
+',
+    ),
+    'hook_ENTITY_TYPE_translation_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_translation_delete',
+      'definition' => 'function hook_ENTITY_TYPE_translation_delete(\\Drupal\\Core\\Entity\\EntityInterface $translation)',
+      'description' => 'Respond to entity translation deletion of a particular type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $variables = [
+    \'@language\' => $translation->language()->getName(),
+    \'@label\' => $translation->label(),
+  ];
+  \\Drupal::logger(\'example\')->notice(\'The @language translation of @label has just been deleted.\', $variables);
+',
+    ),
+    'hook_entity_predelete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_predelete',
+      'definition' => 'function hook_entity_predelete(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Act before entity deletion.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $connection = \\Drupal::database();
+  // Count references to this entity in a custom table before they are removed
+  // upon entity deletion.
+  $id = $entity->id();
+  $type = $entity->getEntityTypeId();
+  $count = \\Drupal::database()->select(\'example_entity_data\')
+    ->condition(\'type\', $type)
+    ->condition(\'id\', $id)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  // Log the count in a table that records this statistic for deleted entities.
+  $connection->merge(\'example_deleted_entity_statistics\')
+    ->keys([\'type\' => $type, \'id\' => $id])
+    ->fields([\'count\' => $count])
+    ->execute();
+',
+    ),
+    'hook_ENTITY_TYPE_predelete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_predelete',
+      'definition' => 'function hook_ENTITY_TYPE_predelete(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Act before entity deletion of a particular entity type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $connection = \\Drupal::database();
+  // Count references to this entity in a custom table before they are removed
+  // upon entity deletion.
+  $id = $entity->id();
+  $type = $entity->getEntityTypeId();
+  $count = \\Drupal::database()->select(\'example_entity_data\')
+    ->condition(\'type\', $type)
+    ->condition(\'id\', $id)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  // Log the count in a table that records this statistic for deleted entities.
+  $connection->merge(\'example_deleted_entity_statistics\')
+    ->keys([\'type\' => $type, \'id\' => $id])
+    ->fields([\'count\' => $count])
+    ->execute();
+',
+    ),
+    'hook_entity_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_delete',
+      'definition' => 'function hook_entity_delete(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to entity deletion.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Delete the entity\'s entry from a fictional table of all entities.
+  \\Drupal::database()->delete(\'example_entity\')
+    ->condition(\'type\', $entity->getEntityTypeId())
+    ->condition(\'id\', $entity->id())
+    ->execute();
+',
+    ),
+    'hook_ENTITY_TYPE_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_delete',
+      'definition' => 'function hook_ENTITY_TYPE_delete(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to entity deletion of a particular type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Delete the entity\'s entry from a fictional table of all entities.
+  \\Drupal::database()->delete(\'example_entity\')
+    ->condition(\'type\', $entity->getEntityTypeId())
+    ->condition(\'id\', $entity->id())
+    ->execute();
+',
+    ),
+    'hook_entity_revision_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_revision_delete',
+      'definition' => 'function hook_entity_revision_delete(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to entity revision deletion.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_delete_file_usage($uuids, $entity, 1);
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_revision_delete' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_revision_delete',
+      'definition' => 'function hook_ENTITY_TYPE_revision_delete(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Respond to entity revision deletion of a particular type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_delete_file_usage($uuids, $entity, 1);
+  }
+',
+    ),
+    'hook_entity_view' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_view',
+      'definition' => 'function hook_entity_view(array &$build, \\Drupal\\Core\\Entity\\EntityInterface $entity, \\Drupal\\Core\\Entity\\Display\\EntityViewDisplayInterface $display, $view_mode)',
+      'description' => 'Act on entities being assembled before rendering.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a \'my_module_addition\' extra field has been defined for the
+  // entity bundle in hook_entity_extra_field_info().
+  if ($display->getComponent(\'my_module_addition\')) {
+    $build[\'my_module_addition\'] = [
+      \'#markup\' => my_module_addition($entity),
+      \'#theme\' => \'my_module_my_additional_field\',
+    ];
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_view' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_view',
+      'definition' => 'function hook_ENTITY_TYPE_view(array &$build, \\Drupal\\Core\\Entity\\EntityInterface $entity, \\Drupal\\Core\\Entity\\Display\\EntityViewDisplayInterface $display, $view_mode)',
+      'description' => 'Act on entities of a particular type being assembled before rendering.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a \'my_module_addition\' extra field has been defined for the
+  // entity bundle in hook_entity_extra_field_info().
+  if ($display->getComponent(\'my_module_addition\')) {
+    $build[\'my_module_addition\'] = [
+      \'#markup\' => my_module_addition($entity),
+      \'#theme\' => \'my_module_my_additional_field\',
+    ];
+  }
+',
+    ),
+    'hook_entity_view_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_view_alter',
+      'definition' => 'function hook_entity_view_alter(array &$build, \\Drupal\\Core\\Entity\\EntityInterface $entity, \\Drupal\\Core\\Entity\\Display\\EntityViewDisplayInterface $display)',
+      'description' => 'Alter the results of the entity build array.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($build[\'#view_mode\'] == \'full\' && isset($build[\'an_additional_field\'])) {
+    // Change its weight.
+    $build[\'an_additional_field\'][\'#weight\'] = -10;
+
+    // Add a #post_render callback to act on the rendered HTML of the entity.
+    // The object must implement \\Drupal\\Core\\Security\\TrustedCallbackInterface.
+    $build[\'#post_render\'][] = \'\\Drupal\\my_module\\NodeCallback::postRender\';
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_view_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_view_alter',
+      'definition' => 'function hook_ENTITY_TYPE_view_alter(array &$build, \\Drupal\\Core\\Entity\\EntityInterface $entity, \\Drupal\\Core\\Entity\\Display\\EntityViewDisplayInterface $display)',
+      'description' => 'Alter the results of the entity build array for a particular entity type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($build[\'#view_mode\'] == \'full\' && isset($build[\'an_additional_field\'])) {
+    // Change its weight.
+    $build[\'an_additional_field\'][\'#weight\'] = -10;
+
+    // Add a #post_render callback to act on the rendered HTML of the entity.
+    $build[\'#post_render\'][] = \'my_module_node_post_render\';
+  }
+',
+    ),
+    'hook_entity_prepare_view' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_prepare_view',
+      'definition' => 'function hook_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode)',
+      'description' => 'Act on entities as they are being prepared for view.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Load a specific node into the user object for later theming.
+  if (!empty($entities) && $entity_type_id == \'user\') {
+    // Only do the extra work if the component is configured to be
+    // displayed. This assumes a \'my_module_addition\' extra field has been
+    // defined for the entity bundle in hook_entity_extra_field_info().
+    $ids = [];
+    foreach ($entities as $id => $entity) {
+      if ($displays[$entity->bundle()]->getComponent(\'my_module_addition\')) {
+        $ids[] = $id;
+      }
+    }
+    if ($ids) {
+      $nodes = my_module_get_user_nodes($ids);
+      foreach ($ids as $id) {
+        $entities[$id]->user_node = $nodes[$id];
+      }
+    }
+  }
+',
+    ),
+    'hook_entity_view_mode_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_view_mode_alter',
+      'definition' => 'function hook_entity_view_mode_alter(&$view_mode, \\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Change the view mode of an entity that is being displayed.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // For nodes, change the view mode when it is teaser.
+  if ($entity->getEntityTypeId() == \'node\' && $view_mode == \'teaser\') {
+    $view_mode = \'my_custom_view_mode\';
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_view_mode_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_view_mode_alter',
+      'definition' => 'function hook_ENTITY_TYPE_view_mode_alter(string &$view_mode, \\Drupal\\Core\\Entity\\EntityInterface $entity): void',
+      'description' => 'Change the view mode of a specific entity type currently being displayed.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Change the view mode to teaser.
+  if ($view_mode == \'full\') {
+    $view_mode = \'teaser\';
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_build_defaults_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_build_defaults_alter',
+      'definition' => 'function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \\Drupal\\Core\\Entity\\EntityInterface $entity, $view_mode)',
+      'description' => 'Alter entity renderable values before cache checking during rendering.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+
+',
+    ),
+    'hook_entity_build_defaults_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_build_defaults_alter',
+      'definition' => 'function hook_entity_build_defaults_alter(array &$build, \\Drupal\\Core\\Entity\\EntityInterface $entity, $view_mode)',
+      'description' => 'Alter entity renderable values before cache checking during rendering.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+
+',
+    ),
+    'hook_entity_view_display_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_view_display_alter',
+      'definition' => 'function hook_entity_view_display_alter(\\Drupal\\Core\\Entity\\Display\\EntityViewDisplayInterface $display, array $context)',
+      'description' => 'Alter the settings used for displaying an entity.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Leave field labels out of the search index.
+  if ($context[\'entity_type\'] == \'node\' && $context[\'view_mode\'] == \'search_index\') {
+    foreach ($display->getComponents() as $name => $options) {
+      if (isset($options[\'label\'])) {
+        $options[\'label\'] = \'hidden\';
+        $display->setComponent($name, $options);
+      }
+    }
+  }
+',
+    ),
+    'hook_entity_display_build_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_display_build_alter',
+      'definition' => 'function hook_entity_display_build_alter(&$build, $context)',
+      'description' => 'Alter the render array generated by an EntityDisplay for an entity.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  /** @var \\Drupal\\Core\\Entity\\\\Drupal\\Core\\Entity\\ContentEntityInterface $entity */
+  $entity = $context[\'entity\'];
+  if ($entity->getEntityTypeId() === \'my_entity\' && $entity->bundle() === \'display_build_alter_bundle\') {
+    $build[\'entity_display_build_alter\'][\'#markup\'] = \'Content added in hook_entity_display_build_alter for entity id \' . $entity->id();
+  }
+',
+    ),
+    'hook_entity_prepare_form' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_prepare_form',
+      'definition' => 'function hook_entity_prepare_form(\\Drupal\\Core\\Entity\\EntityInterface $entity, $operation, \\Drupal\\Core\\Form\\FormStateInterface $form_state)',
+      'description' => 'Acts on an entity object about to be shown on an entity form.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($operation == \'edit\') {
+    $entity->label->value = \'Altered label\';
+    $form_state->set(\'label_altered\', TRUE);
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_prepare_form' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_prepare_form',
+      'definition' => 'function hook_ENTITY_TYPE_prepare_form(\\Drupal\\Core\\Entity\\EntityInterface $entity, $operation, \\Drupal\\Core\\Form\\FormStateInterface $form_state)',
+      'description' => 'Acts on a particular type of entity object about to be in an entity form.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($operation == \'edit\') {
+    $entity->label->value = \'Altered label\';
+    $form_state->set(\'label_altered\', TRUE);
+  }
+',
+    ),
+    'hook_entity_form_mode_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_form_mode_alter',
+      'definition' => 'function hook_entity_form_mode_alter(&$form_mode, \\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Change the form mode used to build an entity form.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Change the form mode for users with Administrator role.
+  if ($entity->getEntityTypeId() == \'user\' && $entity->hasRole(\'administrator\')) {
+    $form_mode = \'my_custom_form_mode\';
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_form_mode_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_form_mode_alter',
+      'definition' => 'function hook_ENTITY_TYPE_form_mode_alter(string &$form_mode, \\Drupal\\Core\\Entity\\EntityInterface $entity): void',
+      'description' => 'Change the form mode of a specific entity type currently being displayed.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Change the form mode for nodes with \'article\' bundle.
+  if ($entity->bundle() == \'article\') {
+    $form_mode = \'custom_article_form_mode\';
+  }
+',
+    ),
+    'hook_entity_form_display_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_form_display_alter',
+      'definition' => 'function hook_entity_form_display_alter(\\Drupal\\Core\\Entity\\Display\\EntityFormDisplayInterface $form_display, array $context)',
+      'description' => 'Alter the settings used for displaying an entity form.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Hide the \'user_picture\' field from the register form.
+  if ($context[\'entity_type\'] == \'user\' && $context[\'form_mode\'] == \'register\') {
+    $form_display->setComponent(\'user_picture\', [
+      \'region\' => \'hidden\',
+    ]);
+  }
+',
+    ),
+    'hook_entity_base_field_info' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_base_field_info',
+      'definition' => 'function hook_entity_base_field_info(\\Drupal\\Core\\Entity\\EntityTypeInterface $entity_type)',
+      'description' => 'Provides custom base field definitions for a content entity type.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($entity_type->id() == \'node\') {
+    $fields = [];
+    $fields[\'my_module_text\'] = \\Drupal\\Core\\Field\\BaseFieldDefinition::create(\'string\')
+      ->setLabel(t(\'The text\'))
+      ->setDescription(t(\'A text property added by my_module.\'))
+      ->setComputed(TRUE)
+      ->setClass(\'\\Drupal\\my_module\\EntityComputedText\');
+
+    return $fields;
+  }
+',
+    ),
+    'hook_entity_base_field_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_base_field_info_alter',
+      'definition' => 'function hook_entity_base_field_info_alter(&$fields, \\Drupal\\Core\\Entity\\EntityTypeInterface $entity_type)',
+      'description' => 'Alter base field definitions for a content entity type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Alter the my_module_text field to use a custom class.
+  if ($entity_type->id() == \'node\' && !empty($fields[\'my_module_text\'])) {
+    $fields[\'my_module_text\']->setClass(\'\\Drupal\\another_module\\EntityComputedText\');
+  }
+',
+    ),
+    'hook_entity_bundle_field_info' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_bundle_field_info',
+      'definition' => 'function hook_entity_bundle_field_info(\\Drupal\\Core\\Entity\\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions)',
+      'description' => 'Provides field definitions for a specific bundle within an entity type.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Add a property only to nodes of the \'article\' bundle.
+  if ($entity_type->id() == \'node\' && $bundle == \'article\') {
+    $fields = [];
+    $storage_definitions = my_module_entity_field_storage_info($entity_type);
+    $fields[\'my_module_bundle_field\'] = \\Drupal\\Core\\Field\\FieldDefinition::createFromFieldStorageDefinition($storage_definitions[\'my_module_bundle_field\'])
+      ->setLabel(t(\'Bundle Field\'));
+    return $fields;
+  }
+
+',
+    ),
+    'hook_entity_bundle_field_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_bundle_field_info_alter',
+      'definition' => 'function hook_entity_bundle_field_info_alter(&$fields, \\Drupal\\Core\\Entity\\EntityTypeInterface $entity_type, $bundle)',
+      'description' => 'Alter bundle field definitions.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($entity_type->id() == \'node\' && $bundle == \'article\' && !empty($fields[\'my_module_text\'])) {
+    // Alter the my_module_text field to use a custom class.
+    $fields[\'my_module_text\']->setClass(\'\\Drupal\\another_module\\EntityComputedText\');
+  }
+',
+    ),
+    'hook_entity_field_storage_info' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_field_storage_info',
+      'definition' => 'function hook_entity_field_storage_info(\\Drupal\\Core\\Entity\\EntityTypeInterface $entity_type)',
+      'description' => 'Provides field storage definitions for a content entity type.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if (\\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof \\Drupal\\Core\\Entity\\DynamicallyFieldableEntityStorageInterface) {
+    // Query by filtering on the ID as this is more efficient than filtering
+    // on the entity_type property directly.
+    $ids = \\Drupal::entityQuery(\'field_storage_config\')
+      ->condition(\'id\', $entity_type->id() . \'.\', \'STARTS_WITH\')
+      ->execute();
+    // Fetch all fields and key them by field name.
+    $field_storages = FieldStorageConfig::loadMultiple($ids);
+    $result = [];
+    foreach ($field_storages as $field_storage) {
+      $result[$field_storage->getName()] = $field_storage;
+    }
+
+    return $result;
+  }
+',
+    ),
+    'hook_entity_field_storage_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_field_storage_info_alter',
+      'definition' => 'function hook_entity_field_storage_info_alter(&$fields, \\Drupal\\Core\\Entity\\EntityTypeInterface $entity_type)',
+      'description' => 'Alter field storage definitions for a content entity type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Alter the max_length setting.
+  if ($entity_type->id() == \'node\' && !empty($fields[\'my_module_text\'])) {
+    $fields[\'my_module_text\']->setSetting(\'max_length\', 128);
+  }
+',
+    ),
+    'hook_entity_operation' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_operation',
+      'definition' => 'function hook_entity_operation(\\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Declares entity operations.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $operations = [];
+  $operations[\'translate\'] = [
+    \'title\' => t(\'Translate\'),
+    \'url\' => \\Drupal\\Core\\Url::fromRoute(\'foo_module.entity.translate\'),
+    \'weight\' => 50,
+  ];
+
+  return $operations;
+',
+    ),
+    'hook_entity_operation_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_operation_alter',
+      'definition' => 'function hook_entity_operation_alter(array &$operations, \\Drupal\\Core\\Entity\\EntityInterface $entity)',
+      'description' => 'Alter entity operations.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Alter the title and weight.
+  $operations[\'translate\'][\'title\'] = t(\'Translate @entity_type\', [
+    \'@entity_type\' => $entity->getEntityTypeId(),
+  ]);
+  $operations[\'translate\'][\'weight\'] = 99;
+',
+    ),
+    'hook_entity_field_access' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_field_access',
+      'definition' => 'function hook_entity_field_access($operation, \\Drupal\\Core\\Field\\FieldDefinitionInterface $field_definition, \\Drupal\\Core\\Session\\AccountInterface $account, ?\\Drupal\\Core\\Field\\FieldItemListInterface $items = NULL)',
+      'description' => 'Control access to fields.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($field_definition->getName() == \'field_of_interest\' && $operation == \'edit\') {
+    return \\Drupal\\Core\\Access\\AccessResult::allowedIfHasPermission($account, \'update field of interest\');
+  }
+  return \\Drupal\\Core\\Access\\AccessResult::neutral();
+',
+    ),
+    'hook_entity_field_access_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_field_access_alter',
+      'definition' => 'function hook_entity_field_access_alter(array &$grants, array $context)',
+      'description' => 'Alter the default access behavior for a given field.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  /** @var \\Drupal\\Core\\Field\\FieldDefinitionInterface $field_definition */
+  $field_definition = $context[\'field_definition\'];
+  if ($field_definition->getName() == \'field_of_interest\' && $grants[\'node\']->isForbidden()) {
+    // Override node module\'s restriction to no opinion (neither allowed nor
+    // forbidden). We don\'t want to provide our own access hook, we only want to
+    // take out node module\'s part in the access handling of this field. We also
+    // don\'t want to switch node module\'s grant to
+    // AccessResultInterface::isAllowed() , because the grants of other modules
+    // should still decide on their own if this field is accessible or not
+    $grants[\'node\'] = \\Drupal\\Core\\Access\\AccessResult::neutral()->inheritCacheability($grants[\'node\']);
+  }
+',
+    ),
+    'hook_entity_field_values_init' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_field_values_init',
+      'definition' => 'function hook_entity_field_values_init(\\Drupal\\Core\\Entity\\FieldableEntityInterface $entity)',
+      'description' => 'Acts when initializing a fieldable entity object.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($entity instanceof \\Drupal\\Core\\Entity\\\\Drupal\\Core\\Entity\\ContentEntityInterface && !$entity->foo->value) {
+    $entity->foo->value = \'some_initial_value\';
+  }
+',
+    ),
+    'hook_ENTITY_TYPE_field_values_init' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_ENTITY_TYPE_field_values_init',
+      'definition' => 'function hook_ENTITY_TYPE_field_values_init(\\Drupal\\Core\\Entity\\FieldableEntityInterface $entity)',
+      'description' => 'Acts when initializing a fieldable entity object.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if (!$entity->foo->value) {
+    $entity->foo->value = \'some_initial_value\';
+  }
+',
+    ),
+    'hook_entity_extra_field_info' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_extra_field_info',
+      'definition' => 'function hook_entity_extra_field_info()',
+      'description' => 'Exposes "pseudo-field" components on content entities.',
+      'destination' => '%module.module',
+      'has_return' => true,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $extra = [];
+  $module_language_enabled = \\Drupal::moduleHandler()->moduleExists(\'language\');
+  $description = t(\'Node module element\');
+
+  foreach (\\Drupal\\node\\Entity\\NodeType::loadMultiple() as $bundle) {
+
+    // Add also the \'language\' select if Language module is enabled and the
+    // bundle has multilingual support.
+    // Visibility of the ordering of the language selector is the same as on the
+    // node/add form.
+    if ($module_language_enabled) {
+      $configuration = \\Drupal\\language\\Entity\\ContentLanguageSettings::loadByEntityTypeBundle(\'node\', $bundle->id());
+      if ($configuration->isLanguageAlterable()) {
+        $extra[\'node\'][$bundle->id()][\'form\'][\'language\'] = [
+          \'label\' => t(\'Language\'),
+          \'description\' => $description,
+          \'weight\' => 0,
+        ];
+      }
+    }
+    $extra[\'node\'][$bundle->id()][\'display\'][\'language\'] = [
+      \'label\' => t(\'Language\'),
+      \'description\' => $description,
+      \'weight\' => 0,
+      \'visible\' => FALSE,
+    ];
+  }
+
+  return $extra;
+',
+    ),
+    'hook_entity_extra_field_info_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_extra_field_info_alter',
+      'definition' => 'function hook_entity_extra_field_info_alter(&$info)',
+      'description' => 'Alter "pseudo-field" components on content entities.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  // Force node title to always be at the top of the list by default.
+  foreach (\\Drupal\\node\\Entity\\NodeType::loadMultiple() as $bundle) {
+    if (isset($info[\'node\'][$bundle->id()][\'form\'][\'title\'])) {
+      $info[\'node\'][$bundle->id()][\'form\'][\'title\'][\'weight\'] = -20;
+    }
+  }
+',
+    ),
+    'hook_entity_query_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_query_alter',
+      'definition' => 'function hook_entity_query_alter(\\Drupal\\Core\\Entity\\Query\\QueryInterface $query): void',
+      'description' => 'Alter an entity query.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  if ($query->hasTag(\'entity_reference\')) {
+    $entityType = \\Drupal::entityTypeManager()->getDefinition($query->getEntityTypeId());
+    $query->sort($entityType->getKey(\'id\'), \'desc\');
+  }
+',
+    ),
+    'hook_entity_query_ENTITY_TYPE_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_query_ENTITY_TYPE_alter',
+      'definition' => 'function hook_entity_query_ENTITY_TYPE_alter(\\Drupal\\Core\\Entity\\Query\\QueryInterface $query): void',
+      'description' => 'Alter an entity query for a specific entity type.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $query->condition(\'id\', \'1\', \'<>\');
+',
+    ),
+    'hook_entity_query_tag__TAG_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_query_tag__TAG_alter',
+      'definition' => 'function hook_entity_query_tag__TAG_alter(\\Drupal\\Core\\Entity\\Query\\QueryInterface $query): void',
+      'description' => 'Alter an entity query that has a specific tag.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $entityType = \\Drupal::entityTypeManager()->getDefinition($query->getEntityTypeId());
+  $query->sort($entityType->getKey(\'id\'), \'desc\');
+',
+    ),
+    'hook_entity_query_tag__ENTITY_TYPE__TAG_alter' => 
+    array (
+      'type' => 'hook',
+      'name' => 'hook_entity_query_tag__ENTITY_TYPE__TAG_alter',
+      'definition' => 'function hook_entity_query_tag__ENTITY_TYPE__TAG_alter(\\Drupal\\Core\\Entity\\Query\\QueryInterface $query): void',
+      'description' => 'Alter an entity query for a specific entity type that has a specific tag.',
+      'destination' => '%module.module',
+      'has_return' => false,
+      'procedural' => false,
+      'dependencies' => 
+      array (
+      ),
+      'group' => 'core:entity',
+      'core' => true,
+      'original_file_path' => 'core/lib/Drupal/Core/Entity/entity.api.php',
+      'file_path' => '/Users/joachim/Sites/dcb-repos-9/repos/drupal-code-builder/Test/sample_hook_definitions/11/CORE_entity.api.php',
+      'body' => '
+  $query->condition(\'id\', \'1\', \'<>\');
+',
+    ),
+  ),
   'core:form' => 
   array (
     'callback_batch_operation' => 
