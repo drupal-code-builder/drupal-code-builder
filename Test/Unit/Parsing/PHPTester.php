@@ -479,7 +479,7 @@ class PHPTester {
    * @return string
    *   The full name, without the leading '\'.
    */
-  protected function resolveImportedClassLike($name) {
+  public function resolveImportedClassLike($name) {
     foreach ($this->parser_nodes['imports'] as $use_node) {
       if ($use_node->uses[0]->name->getLast() === $name) {
         return $use_node->uses[0]->name->toString();

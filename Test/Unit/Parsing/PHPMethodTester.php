@@ -278,6 +278,41 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts that the method has an attribute of the given class.
+   *
+   * @param string $expected_attribute_class
+   *   The full class name of the expected attribute class, WITH the leading '\'
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+  public function assertHasAttribute(string $expected_attribute_class, $message = NULL) {
+    assert(str_starts_with($expected_attribute_class, '\\'));
+
+    $message ??= "Attribute $expected_attribute_class not found on the method or function.";
+
+    Assert::assertNotEmpty($this->methodNode->attrGroups, $message);
+
+    // AFAICT, an AttributeGroup only has a single attribute in it, despite the
+    // class name -- even if there are multiple copies of the same attribute
+    // class, for instance.
+    /** @var \PhpParser\Node\AttributeGroup $attribute */
+    foreach ($this->methodNode->attrGroups as $attribute) {
+      if (substr_count($expected_attribute_class, '\\') > 1) {
+        $full_attribute_class_name = '\\' . $this->fileTester->resolveImportedClassLike($attribute->attrs[0]->name->name);
+      }
+      else {
+        $full_attribute_class_name = '\\' . $attribute->attrs[0]->name->name;
+      }
+
+      if ($expected_attribute_class === $full_attribute_class_name) {
+        return;
+      }
+    }
+
+    Assert::fail($message);
+  }
+
+  /**
    * Asserts the function body is not empty.
    *
    * @param string $message
