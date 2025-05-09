@@ -389,6 +389,46 @@ class ComponentHooks11Test extends TestBase {
     $function_tester->assertHasLine('\Drupal::service(TestModuleHooks::class)->blockViewAlter($build, $block);');
   }
 
+   /**
+   * Tests generation of legacy hooks with an explicit hooks class of same name.
+   */
+  public function testHookImplementationLegacyWithSameHooksClass() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo_legacy',
+      'hooks' => [
+        'hook_block_access',
+        'hook_block_view_alter',
+      ],
+      'hook_classes' => [
+        0 => [
+          // Hooks class name is the same as the one that will be generated
+          // automatically.
+          'plain_class_name' => 'TestModuleHooks',
+          'hook_methods' => [
+            0 => [
+              'hook_name' => 'hook_form_alter',
+            ],
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.module',
+      'test_module.services.yml',
+      'src/Hook/TestModuleHooks.php',
+    ], $files);
+  }
+
   /**
    * Tests generation of legacy hooks merges with other generated services.
    */

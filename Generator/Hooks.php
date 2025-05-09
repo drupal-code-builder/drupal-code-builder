@@ -151,12 +151,9 @@ class Hooks extends BaseGenerator {
       $this->addProceduralHookComponent($components, $hook_info);
     }
     else {
+      // The HooksClass and HookImplementationClassMethod generators take care
+      // of adding legacy components if needed.
       $this->addOoHookComponents($components, $hook_info);
-
-      // If we want legacy procedural hooks too.
-      if ($this->component_data->hook_implementation_type->value == 'oo_legacy') {
-        $this->addLegacyProceduralHookComponent($components, $hook_info);
-      }
     }
   }
 
@@ -177,7 +174,7 @@ class Hooks extends BaseGenerator {
 
     // Make the hooks class.
     $components['hooks_class'] = [
-      'component_type' => 'PHPClassFile',
+      'component_type' => 'HooksClass',
       'plain_class_name' => $hooks_class_name,
       'relative_namespace' => 'Hook',
       'class_docblock_lines' => [
@@ -231,43 +228,6 @@ class Hooks extends BaseGenerator {
       // The code is a single string, already indented. Ensure we don't
       // indent it again.
       'body_indented' => TRUE,
-    ];
-  }
-
-  /**
-   * Adds the components for a legacy procedural hook.
-   *
-   * Helper for addHookComponents().
-   *
-   * @param array &$components
-   *   The array of requested components, passed by reference.
-   * @param array $hook_info
-   *   The array of hook info.
-   */
-  protected function addLegacyProceduralHookComponent(array &$components, array $hook_info): void {
-    $hook_name = $hook_info['name'];
-    $component_name = $hook_name . '_legacy';
-    $hooks_class_name = $this->component_data->getItem('module:root_name_pascal')->value . 'Hooks';
-
-    // Explicitly declare the Hooks class as a service.
-    // ARGH, can't use the 'Service' generator, as that will want to create a
-    // class!
-    $yaml_data = [
-      'services' => [
-        // Argh DRY class name!
-        // TODO: move the class name to being created in this generator.
-        'Drupal\%extension\Hook\\' . $hooks_class_name => [
-          'class' => 'Drupal\%extension\Hook\\' . $hooks_class_name,
-          'autowire' => TRUE,
-        ],
-      ],
-    ];
-    $components['%module.services.yml'] = [
-      'component_type' => 'YMLFile',
-      // Probably have to use this deprecated token so the component merge
-      // works?
-      'filename' => '%module.services.yml',
-      'yaml_data' => $yaml_data,
     ];
   }
 
