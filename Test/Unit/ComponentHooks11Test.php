@@ -87,16 +87,14 @@ class ComponentHooks11Test extends TestBase {
     ]);
 
     $php_tester->assertHasClass('Drupal\test_module\Hook\AlphaHooks');
-    $php_tester->assertHasMethod('formAlter');
-    $php_tester->assertHasMethod('formNodeFormAlter');
-    $php_tester->assertHasMethod('formUserFormAlter');
-    $php_tester->assertHasMethod('nodeView');
-
-    // TODO: Attribute testing.
-    $this->assertStringContainsString("#[Hook('form_alter')]", $hooks_file);
-    $this->assertStringContainsString("#[Hook('form_node_form_alter')]", $hooks_file);
-    $this->assertStringContainsString("#[Hook('form_user_form_alter')]", $hooks_file);
-    $this->assertStringContainsString("#[Hook('node_view')]", $hooks_file);
+    $php_tester->getMethodTester('formAlter')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['form_alter']);
+    $php_tester->getMethodTester('formNodeFormAlter')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['form_node_form_alter']);
+    $php_tester->getMethodTester('formUserFormAlter')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['form_user_form_alter']);
+    $php_tester->getMethodTester('nodeView')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['node_view']);
   }
 
   /**
@@ -168,10 +166,8 @@ class ComponentHooks11Test extends TestBase {
     ]);
 
     $php_tester->assertHasClass('Drupal\test_module\Hook\AlphaHooks');
-    $php_tester->assertHasMethod('formAlter');
-
-    // TODO: Attribute testing.
-    $this->assertStringContainsString("#[Hook('form_alter')]", $hooks_file);
+    $php_tester->getMethodTester('formAlter')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['form_alter']);
 
     $module_file = $files['test_module.module'];
 
@@ -266,13 +262,11 @@ class ComponentHooks11Test extends TestBase {
     ]);
 
     $php_tester->assertHasClass('Drupal\test_module\Hook\TestModuleHooks');
-    $php_tester->assertHasMethod('formAlter');
-    $php_tester->assertHasMethod('blockAccess');
+    $php_tester->getMethodTester('formAlter')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['form_alter']);
+    $php_tester->getMethodTester('blockAccess')
+      ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['block_access']);
     $php_tester->assertNotHasMethod('install');
-
-    // TODO: Attribute testing.
-    $this->assertStringContainsString("#[Hook('form_alter')]", $hooks_file);
-    $this->assertStringContainsString("#[Hook('block_access')]", $hooks_file);
 
     // Check the .install file has a procedural implementation for
     // hook_install().

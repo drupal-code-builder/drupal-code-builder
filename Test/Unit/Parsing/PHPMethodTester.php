@@ -282,10 +282,15 @@ class PHPMethodTester {
    *
    * @param string $expected_attribute_class
    *   The full class name of the expected attribute class, WITH the leading '\'
+   * @param string[] $expected_attribute_parameters
+   *   (optional) An array of the attribute's expected parameters. Only scalar
+   *   parameter values are supported. If omitted, does not assert that there
+   *   are no parameters, but if specified, asserts the size of the array
+   *   matches the number of parameters.
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertHasAttribute(string $expected_attribute_class, $message = NULL) {
+  public function assertHasAttribute(string $expected_attribute_class, array $expected_attribute_parameters = [], $message = NULL) {
     assert(str_starts_with($expected_attribute_class, '\\'));
 
     $message ??= "Attribute $expected_attribute_class not found on the method or function.";
@@ -305,6 +310,20 @@ class PHPMethodTester {
       }
 
       if ($expected_attribute_class === $full_attribute_class_name) {
+        // Found the attribute. We return out of this condition, so that this
+        // method can fail if the expected attribute wasn't found among the
+        // attributes.
+        if (empty($expected_attribute_parameters)) {
+          return;
+        }
+
+
+        // Test its parameters.
+        Assert::assertEquals(count($expected_attribute_parameters), count($attribute->attrs[0]->args));
+        foreach ($expected_attribute_parameters as $index => $parameter_value) {
+          Assert::assertEquals($parameter_value, $attribute->attrs[0]->args[$index]->value->value);
+        }
+
         return;
       }
     }
