@@ -25,7 +25,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
    *
    * @var string
    */
-  protected string $containerInterface = '\\Symfony\\Component\\DependencyInjection\\ContainerInterface';
+  protected const CONTAINER_INTERFACE = '\\Symfony\\Component\\DependencyInjection\\ContainerInterface';
 
   /**
    * Forces the requesting of a constructor method component.
@@ -106,7 +106,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
         $create_parameters = [
           [
             'name' => 'container',
-            'typehint' => $this->containerInterface,
+            'typehint' => static::CONTAINER_INTERFACE,
           ],
         ];
 
