@@ -16,7 +16,15 @@ class ComponentClassHandler {
    *
    * @param array $generator_classmap
    *   The classmap of version-specific generator classes. Keys are the base
-   *   class name, then the version, value is the short class name.
+   *   class name, then the version, value is the short class name of the
+   *   version-specific class. For example:
+   *   @code
+   *   [
+   *     'AdminSettingsForm' => [
+   *       7 => AdminSettingsForm7,
+   *     ]
+   *   ]
+   *   @endcode
    */
   public function __construct(
     #[Inject('generator_classmap')]
