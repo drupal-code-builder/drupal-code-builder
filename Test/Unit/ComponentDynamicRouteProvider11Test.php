@@ -10,27 +10,27 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentRouteCallback10Test extends TestBase {
+class ComponentDynamicRouteProvider11Test extends TestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $drupalMajorVersion = 9;
+  protected $drupalMajorVersion = 11;
 
   /**
    * Test generating a module info file.
    */
-  public function testRouteCallback() {
+  public function testDynamicRouteProvider() {
     $module_data = [
       'base' => 'module',
       'root_name' => 'test_module',
       'readable_name' => 'Test Module',
       'dynamic_routes' => [
         0 => [
-          'provider_class_short_name' => 'MyRouteProvider',
+          'plain_class_name' => 'MyRouteProvider',
         ],
         1 => [
-          'provider_class_short_name' => 'OtherRouteProvider',
+          'plain_class_name' => 'OtherRouteProvider',
         ],
       ],
       'readme' => FALSE,

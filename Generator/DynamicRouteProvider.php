@@ -10,7 +10,12 @@ use MutableTypedData\Definition\DefaultDefinition;
 /**
  * Generator a dynamic route provider.
  */
-class RouteCallback extends BaseGenerator {
+class DynamicRouteProvider extends PHPClassFileWithInjection {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected const CLASS_DI_INTERFACE = '\Drupal\Core\DependencyInjection\ContainerInjectionInterface';
 
   /**
    * {@inheritdoc}
@@ -18,27 +23,19 @@ class RouteCallback extends BaseGenerator {
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
-    $definition->addProperties([
-      'provider_class_short_name' => PropertyDefinition::create('string')
-        ->setLabel('The short class name of the route provider')
-        ->setRequired(TRUE)
-        ->setLiteralDefault('RouteProvider'),
-      'provider_qualified_class_name' => PropertyDefinition::create('string')
-        ->setRequired(TRUE)
-        ->setInternal(TRUE)
-        ->setDefault(DefaultDefinition::create()
-          ->setCallable(function (DataItem $component_data) {
-            $default = implode('\\', [
-              'Drupal',
-              $component_data->getParent()->root_component_name->value,
-              'Routing',
-              $component_data->getParent()->provider_class_short_name->value,
-            ]);
-            return $default;
-          })
-          ->setDependencies('..:provider_class_short_name')
-      ),
-    ]);
+    $definition->getProperty('relative_namespace')
+      ->setLiteralDefault('Routing');
+
+    $definition->getProperty('plain_class_name')
+      ->setLabel('The short class name of the route provider')
+      ->setRequired(TRUE)
+      ->setLiteralDefault('RouteProvider');
+
+    $definition->getProperty('relative_class_name')
+      ->setInternal(TRUE);
+
+    $definition->getProperty('use_static_factory_method')
+      ->setLiteralDefault(TRUE);
   }
 
   /**
@@ -51,19 +48,17 @@ class RouteCallback extends BaseGenerator {
     // components.
     $components['%module.routing.yml'] = [
       'component_type' => 'Routing',
-    ];
-
-    $components['route_provider'] = [
-      'component_type' => 'PHPClassFile',
-      'plain_class_name' => $this->component_data['provider_class_short_name'],
-      'relative_namespace' => 'Routing',
-      'docblock_first_line' => "Defines dynamic routes.",
+      'yaml_data' => [
+        'route_callbacks' => [
+          '\\' . $this->component_data->qualified_class_name->value . '::routes',
+        ],
+      ],
     ];
 
     $components["route_provider_method"] = [
       'component_type' => 'PHPFunction',
       'function_name' => 'routes',
-      'containing_component' => "%requester:route_provider",
+      'containing_component' => "%requester",
       'prefixes' => ['public'],
       'return' => [
         'return_type' => 'array',
@@ -91,26 +86,6 @@ class RouteCallback extends BaseGenerator {
     ];
 
     return $components;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function containingComponent() {
-    return '%self:%module.routing.yml';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContents(): array {
-    $routing_data = [
-      'route_callbacks' => [
-        '\\' . $this->component_data['provider_qualified_class_name'] . '::routes',
-      ],
-    ];
-
-    return $routing_data;
   }
 
 }

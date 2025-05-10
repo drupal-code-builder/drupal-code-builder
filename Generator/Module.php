@@ -279,7 +279,7 @@ class Module extends RootComponent {
       'router_items' => MergingGeneratorDefinition::createFromGeneratorType('RouterItem')
         ->setLabel("Routes")
         ->setMultiple(TRUE),
-      'dynamic_routes' =>  MergingGeneratorDefinition::createFromGeneratorType('RouteCallback')
+      'dynamic_routes' =>  MergingGeneratorDefinition::createFromGeneratorType('DynamicRouteProvider')
         ->setLabel('Dynamic route providers')
         ->setMultiple(TRUE),
       'library' => MergingGeneratorDefinition::createFromGeneratorType('Library')
