@@ -195,6 +195,7 @@ class ComponentDrushCommand11Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
+    $php_tester->assertNotClassHasInterfaces(['Drupal\Core\DependencyInjection\ContainerInjectionInterface']);
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
     $php_tester->assertHasMethod('beta');

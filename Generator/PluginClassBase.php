@@ -11,6 +11,11 @@ namespace DrupalCodeBuilder\Generator;
 class PluginClassBase extends PHPClassFileWithInjection {
 
   /**
+   * {@inheritdoc}
+   */
+  protected const CLASS_DI_INTERFACE = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
+
+  /**
    * The plugin type data.
    *
    * @var array

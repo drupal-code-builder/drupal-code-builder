@@ -299,7 +299,13 @@ abstract class PluginClassDiscovery extends PluginClassBase {
       $this->component_data->parent_class_name->value = '\\' . $this->plugin_type_data['base_class'];
     }
 
-    // Set the DI interface if needed.
+    return parent::classDeclaration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function needsDiInterface(): bool {
     $use_di_interface = FALSE;
     // We need the DI interface if this class injects services, unless a parent
     // class also does so.
@@ -323,13 +329,7 @@ abstract class PluginClassDiscovery extends PluginClassBase {
       }
     }
 
-    if ($use_di_interface) {
-      // Numeric key will clobber, so make something up!
-      // TODO: fix!
-      $this->component_data->interfaces->add(['ContainerFactoryPluginInterface' => '\Drupal\Core\Plugin\ContainerFactoryPluginInterface']);
-    }
-
-    return parent::classDeclaration();
+    return $use_di_interface;
   }
 
   /**

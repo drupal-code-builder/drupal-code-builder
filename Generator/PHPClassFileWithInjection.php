@@ -12,6 +12,15 @@ use DrupalCodeBuilder\Generator\Render\Docblock;
 class PHPClassFileWithInjection extends PHPClassFile {
 
   /**
+   * The interface to use for the class if it has injected services.
+   *
+   * Set to NULL to not add an interface for a class with injected services.
+   *
+   * @var string|null
+   */
+  protected const CLASS_DI_INTERFACE = NULL;
+
+  /**
    * The interface to use for the static create() method's container parameter.
    *
    * @var string
@@ -197,6 +206,30 @@ class PHPClassFileWithInjection extends PHPClassFile {
     }
 
     return $components;
+  }
+
+  /**
+   * Produces the class declaration.
+   */
+  function classDeclaration() {
+    if (static::CLASS_DI_INTERFACE && $this->needsDiInterface()) {
+      // Numeric key will clobber, so make something up!
+      // TODO: fix!
+      $this->component_data->interfaces->add(['ContainerInjectionInterface' => static::CLASS_DI_INTERFACE]);
+    }
+
+    return parent::classDeclaration();
+  }
+
+  /**
+   * Determines whether the DI interface should be added.
+   *
+   * This is not called if static::CLASS_DI_INTERFACE is NULL.
+   *
+   * @return bool
+   */
+  protected function needsDiInterface(): bool {
+    return !$this->component_data->injected_services->isEmpty();
   }
 
   /**

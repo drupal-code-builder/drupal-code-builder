@@ -510,6 +510,7 @@ class ComponentService10Test extends TestBase {
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
     $php_tester->assertHasClass('Drupal\test_module\MyService');
+    $php_tester->assertNotClassHasInterfaces(['Drupal\Core\DependencyInjection\ContainerInjectionInterface']);
 
     // Check service injection.
     $php_tester->assertInjectedServices($assert_injected_services, $property_promotion);

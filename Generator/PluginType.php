@@ -420,19 +420,12 @@ class PluginType extends BaseGenerator {
       ]
     ];
 
-    $base_class_interfaces = [
-      $this->component_data->interface->value,
-    ];
-    if (!$this->component_data->base_class_injected_services->isEmpty()) {
-      $base_class_interfaces[] = '\Drupal\Core\Plugin\ContainerFactoryPluginInterface';
-    }
-
     $components['base_class'] = [
       'component_type' => 'PluginClassBase',
       'plain_class_name' => $this->component_data['base_class_short_name'],
       'relative_namespace' => 'Plugin\\' . $this->component_data['plugin_relative_namespace'],
       'parent_class_name' => '\Drupal\Component\Plugin\PluginBase',
-      'interfaces' => $base_class_interfaces,
+      'interfaces' => [$this->component_data->interface->value],
       'injected_services' => $this->component_data->base_class_injected_services->values(),
       'use_static_factory_method' => TRUE,
       // Abstract for annotation or attribute plugins, where each plugin
