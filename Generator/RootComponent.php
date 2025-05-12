@@ -117,6 +117,7 @@ abstract class RootComponent extends BaseGenerator implements RootComponentInter
         ->setInternal(TRUE),
       'lifecycle' => PropertyDefinition::create('string')
         ->setLabel('Lifecycle')
+        ->setDescription("Describes the stability of a module. Modules with a lifecycle value set will show with a warning on the module installation form.")
         ->setOptions(
           OptionDefinition::create('experimental', 'Experimental', weight: 0),
           OptionDefinition::create('deprecated', 'Deprecated', weight: 10),
