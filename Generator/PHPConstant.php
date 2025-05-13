@@ -69,7 +69,7 @@ class PHPConstant extends BaseGenerator {
       new Const_($this->component_data->name->value, $value_node),
     ]);
 
-    $printer = \DrupalPrettyPrinter\DrupalPrettyPrinter::getPrinter(['html' => FALSE]);
+    $printer = new \DrupalPrettyPrinter\DrupalPrettyPrinter(['html' => FALSE]);
 
     $lines[] = $printer->prettyPrint([$const_node]);
 
