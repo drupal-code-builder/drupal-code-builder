@@ -5,6 +5,10 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
+use PhpParser\Node\Const_;
+use PhpParser\Node\Scalar\LNumber;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\Const_ as ConstStmt;
 
 /**
  * Generator for PHP constants.
@@ -56,11 +60,18 @@ class PHPConstant extends BaseGenerator {
 
     $value = $this->component_data->value->value;
 
-    if (!is_numeric($value)) {
-      $value = "'$value'";
-    }
+    $value_node = match(TRUE) {
+      is_numeric($value) => new LNumber($value),
+      default => new String_($value),
+    };
 
-    $lines[] = 'const ' . $this->component_data->name->value . ' = ' . $value . ';';
+    $const_node = new ConstStmt([
+      new Const_($this->component_data->name->value, $value_node),
+    ]);
+
+    $printer = \DrupalPrettyPrinter\DrupalPrettyPrinter::getPrinter(['html' => FALSE]);
+
+    $lines[] = $printer->prettyPrint([$const_node]);
 
     return $lines;
   }
