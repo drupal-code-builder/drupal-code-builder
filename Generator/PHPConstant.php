@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
+use PhpParser\Comment;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
@@ -65,11 +66,24 @@ class PHPConstant extends BaseGenerator {
       default => new String_($value),
     };
 
-    $const_node = new ConstStmt([
-      new Const_($this->component_data->name->value, $value_node),
-    ]);
+    // $this->attributes = $attributes;
+    // $this->consts = $consts;
+
+    $const_node = new ConstStmt(
+      consts: [
+        new Const_($this->component_data->name->value, $value_node),
+      ],
+      attributes: [
+        'comments' => [
+          new Comment(
+            implode("\n", $docblock->render())
+          ),
+        ],
+      ],
+    );
 
     $printer = new \DrupalPrettyPrinter\DrupalPrettyPrinter(['html' => FALSE]);
+    dump($printer->prettyPrint([$const_node]));
 
     $lines[] = $printer->prettyPrint([$const_node]);
 
