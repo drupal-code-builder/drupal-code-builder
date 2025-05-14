@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator\Render;
 
 use CaseConverter\CaseString;
+use PhpParser\Comment;
 
 /**
  * Renderer for a docblock.
@@ -262,6 +263,19 @@ class DocBlock implements \ArrayAccess {
     $lines = $this->docBlock($lines);
 
     return $lines;
+  }
+
+  /**
+   * Creates a PhpParser comment node for this docblock.
+   *
+   * @return \PhpParser\Comment
+   *   The parser node. This can be pretty-printed to render the docblock.
+   */
+  public function toParserCommentNode(): Comment {
+    return new Comment(
+      // Comments expect a single string rather than lnes.
+      implode("\n", $this->render())
+    );
   }
 
   /**
