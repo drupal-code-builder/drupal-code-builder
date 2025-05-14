@@ -57,7 +57,7 @@ class PHPConstant extends BaseGenerator {
 
     $docblock->var($this->component_data->type->value);
 
-    $lines = $docblock->render();
+    // $lines = $docblock->render();
 
     $value = $this->component_data->value->value;
 
@@ -75,9 +75,7 @@ class PHPConstant extends BaseGenerator {
       ],
       attributes: [
         'comments' => [
-          new Comment(
-            implode("\n", $docblock->render())
-          ),
+          $docblock->toParserCommentNode(),
         ],
       ],
     );
