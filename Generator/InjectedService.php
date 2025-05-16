@@ -163,6 +163,8 @@ class InjectedService extends BaseGenerator {
         ];
       }
 
+      // Functions lines for the 'create' method get put inside the static
+      // create call: see PHPClassFileWithInjection.
       $components['create_line'] = [
         'component_type' => 'PHPFunctionBodyLines',
         'containing_component' => '%requester:%requester:create',
