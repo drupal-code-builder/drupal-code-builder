@@ -144,23 +144,10 @@ class InjectedService extends BaseGenerator {
     if ($this->component_data->class_has_static_factory->value) {
       if ($service_info['type'] == 'service') {
         $container_extraction = "\$container->get('{$service_info['id']}'),";
-
-        $property_assignment = [
-          'id'            => $service_info['id'],
-          'property_name' => $service_info['property_name'],
-          'variable_name' => $service_info['variable_name'],
-        ];
       }
       else {
         // Pseudoservice: needs to be extracted from a real service.
         $container_extraction = "\$container->get('{$service_info['real_service']}')->{$service_info['service_method']}('{$service_info['variant']}'),";
-
-        $property_assignment = [
-          'id'            => $service_info['id'],
-          'property_name' => $service_info['property_name'],
-          'variable_name' => $service_info['variable_name'],
-          'parameter_extraction' => "{$service_info['real_service_variable_name']}->{$service_info['service_method']}('{$service_info['variant']}')",
-        ];
       }
 
       // Functions lines for the 'create' method get put inside the static
