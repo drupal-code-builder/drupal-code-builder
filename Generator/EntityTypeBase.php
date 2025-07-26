@@ -81,13 +81,13 @@ abstract class EntityTypeBase extends PHPClassFile {
       // - the menu tasks
       'entity_ui' => PropertyDefinition::create('string')
         ->setLabel('Provide UI')
-        ->setDescription("Whether this entity has a UI. If selected, this will override the route provider, default form, list builder, and admin permission options if they are left empty.")
-        ->setOptionsArray([
+        ->setDescription("Whether this entity has a UI for listing, creating, editing, and viewing the entities. If selected, this will override the route provider, default form, list builder, and admin permission options if they are left empty.")
+        ->setOptions(
           // An empty value means processing won't be called.
-          '' => 'No UI',
-          'default' => 'Default UI',
-          'admin' => 'Admin UI',
-        ])
+          new OptionDefinition('', 'No UI'),
+          new OptionDefinition('default', 'Default UI', 'Uses the site theme for viewing and editing entities.'),
+          new OptionDefinition('admin', 'Admin UI', 'Uses the admin theme for viewing and editing entities.'),
+        )
         ->setProcessing(function(DataItem $component_data) {
           $entity_data = $component_data->getParent();
           if ($entity_data->handler_route_provider->isEmpty() ||
