@@ -54,6 +54,9 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
     // Put the rest of the parent definitions after ours.
     $definition->addProperties($properties);
 
+    // Move the injected services property lower down.
+    $definition->movePropertyAfter('injected_services', 'form_route');
+
     $definition->getProperty('use_static_factory_method')
       ->setLiteralDefault(TRUE);
 
