@@ -51,6 +51,66 @@ trait PropertyManipulationTrait {
   }
 
   /**
+   * Moves a property to be before another.
+   *
+   * @param string $move_property_name
+   *   The name of the property to move.
+   * @param string $before_property_name
+   *   The name of the property before which the moved property should go.
+   *
+   * @throws \InvalidArgumentException
+   *   Throws an exception if either property does not exist.
+   *
+   * @return \MutableTypedData\Definition\DataDefinition
+   *   Returns the same instance for chaining.
+   */
+  public function movePropertyBefore(string $move_property_name, string $before_property_name): self {
+    if (!isset($this->properties[$move_property_name])) {
+      throw new \InvalidArgumentException("No property '$move_property_name'.");
+    }
+    if (!isset($this->properties[$before_property_name])) {
+      throw new \InvalidArgumentException("No property '$before_property_name'.");
+    }
+    // TODO: Check not being put before variant property.
+
+    $moved_property = $this->properties[$move_property_name];
+    unset($this->properties[$move_property_name]);
+
+    InsertArray::insertBefore($this->properties, $before_property_name, [$move_property_name => $moved_property]);
+
+    return $this;
+  }
+
+  /**
+   * Moves a property to be after another.
+   *
+   * @param string $move_property_name
+   *   The name of the property to move.
+   * @param string $after_property_name
+   *   The name of the property after which the moved property should go.
+   *
+   * @throws \InvalidArgumentException
+   *   Throws an exception if either property does not exist.
+   *
+   * @return \MutableTypedData\Definition\DataDefinition
+   *   Returns the same instance for chaining.
+   */
+  public function movePropertyAfter(string $move_property_name, string $after_property_name): void {
+    if (!isset($this->properties[$move_property_name])) {
+      throw new \InvalidArgumentException("No property '$move_property_name'.");
+    }
+    if (!isset($this->properties[$after_property_name])) {
+      throw new \InvalidArgumentException("No property '$after_property_name'.");
+    }
+    // TODO: Check variant property is not being moved.
+
+    $moved_property = $this->properties[$move_property_name];
+    unset($this->properties[$move_property_name]);
+
+    InsertArray::insertAfter($this->properties, $after_property_name, [$move_property_name => $moved_property]);
+  }
+
+  /**
    * Helper for inserting properties.
    *
    * @param string $existing
