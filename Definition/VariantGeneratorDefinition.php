@@ -19,7 +19,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
  */
 class VariantGeneratorDefinition extends VariantDefinition implements PropertyListInterface {
 
-  use PropertyInsertTrait;
+  use PropertyManipulationTrait;
 
   /**
    * Whether properties have been obtained from the generator class yet.

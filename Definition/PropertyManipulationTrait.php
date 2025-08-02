@@ -8,7 +8,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 /**
  * Provides methods to insert properties.
  */
-trait PropertyInsertTrait {
+trait PropertyManipulationTrait {
 
   /**
    * Adds properties before the named property.

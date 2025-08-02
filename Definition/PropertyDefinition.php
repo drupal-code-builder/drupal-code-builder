@@ -21,7 +21,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
  */
 class PropertyDefinition extends BasePropertyDefinition implements PropertyListInterface, \ArrayAccess {
 
-  use PropertyInsertTrait;
+  use PropertyManipulationTrait;
 
   // TODO: can this be done with defaults instead??
   protected $acquiringExpression = FALSE;
