@@ -10,6 +10,14 @@ use MutableTypedData\Exception\InvalidDefinitionException;
 
 /**
  * Extends the basic property definition with DCB extras.
+ *
+ * These include:
+ *
+ * - Option providers
+ * - Variant mapping providers
+ * - Presets
+ * - Processing
+ * - Auto-acquisition
  */
 class PropertyDefinition extends BasePropertyDefinition implements PropertyListInterface, \ArrayAccess {
 
@@ -35,6 +43,9 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return $this->componentType;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getDeltaDefinition(): self {
     $delta_definition = parent::getDeltaDefinition();
 
@@ -46,6 +57,18 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return $delta_definition;
   }
 
+  /**
+   * Adds an option to this definition's list of options.
+   *
+   * This may not be called if this definition uses an options provider.
+   *
+   * @param \MutableTypedData\Definition\OptionDefinition $option
+   *
+   * @return self
+   *
+   * @throws \MutableTypedData\Exception\InvalidDefinitionException
+   *   Throws an exception if this definition uses an options provider.
+   */
   public function addOption(BaseOptionDefinition $option): self {
     if ($this->optionsProvider) {
       throw new InvalidDefinitionException("Can't add options if using an options provider.");
@@ -54,10 +77,17 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return parent::addOption($option);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasOptions(): bool {
+    // Handle options providers.
     return parent::hasOptions() || !empty($this->optionsProvider);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getOptions(): array {
     if (!$this->options && $this->optionsProvider) {
       $this->options = $this->optionsProvider->getOptions();
@@ -74,15 +104,29 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     return $this;
   }
 
+  /**
+   * Sets the variant mapping provider.
+   *
+   * @param VariantMappingProviderInterface $provider
+   *   The provider object.
+   *
+   * @return self
+   */
   public function setVariantMappingProvider(VariantMappingProviderInterface $provider): self {
     $this->variantMappingProvider = $provider;
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasVariantMapping(): bool {
     return parent::hasVariantMapping() || $this->variantMappingProvider;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getVariantMapping(): ?array {
     if (!$this->variantMapping && $this->variantMappingProvider) {
       $this->variantMapping = $this->variantMappingProvider->getVariantMapping();
