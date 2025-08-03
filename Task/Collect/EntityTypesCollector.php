@@ -61,8 +61,13 @@ class EntityTypesCollector extends CollectorBase {
     $data = [];
 
     foreach ($entity_types as $id => $entity_type) {
+      $label = $entity_type->getLabel();
+      if (is_object($label)) {
+        $label = $label->getUntranslatedString();
+      }
+
       $data[$id] = [
-        'label' => $entity_type->getLabel()->getUntranslatedString(),
+        'label' => $label,
         'group' => $entity_type->getGroup(),
       ];
 
