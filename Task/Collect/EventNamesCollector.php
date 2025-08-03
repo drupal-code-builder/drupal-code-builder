@@ -53,6 +53,8 @@ class EventNamesCollector extends CollectorBase {
     // We can instantiate this just the once, because the keys of the $events
     // array have the fully-qualified class names.
     $visitor = new class extends NodeVisitorAbstract {
+      // Array keyed by qualified event constants, whose values are the docblock
+      // text or NULL if the event constant is missing documentation.
       public $events = [];
 
       public function enterNode(Node $node) {
@@ -60,7 +62,7 @@ class EventNamesCollector extends CollectorBase {
           $class_name = '\\' . $node->namespacedName->toString();
 
           foreach ($node->getConstants() as $constant_node) {
-            $this->events[$class_name . '::' . $constant_node->consts[0]->name->name] = $constant_node->getDocComment()->getReformattedText();
+            $this->events[$class_name . '::' . $constant_node->consts[0]->name->name] = $constant_node->getDocComment()?->getReformattedText();
           }
 
           return NodeTraverser::STOP_TRAVERSAL;
@@ -90,7 +92,14 @@ class EventNamesCollector extends CollectorBase {
     }
 
     // Use just the first line of the docblock.
-    array_walk($visitor->events, fn (&$docblock) => $docblock = $this->getDocblockFirstLine($docblock));
+    array_walk(
+      $visitor->events,
+      fn (&$docblock, $name) => $docblock = $docblock
+        // If there's a docblock, take the first line.
+        ? $this->getDocblockFirstLine($docblock)
+        // If there isn't, take the constant name.
+        : explode('::', $name)[1]
+    );
 
     return $visitor->events;
   }
