@@ -216,10 +216,13 @@ interface EnvironmentInterface {
   public function getContainer();
 
   /**
-   * Gets the Drupal root.
+   * Gets the Drupal application root.
+   *
+   * This is the web root where Drupal is installed, rather than the Composer
+   * project root.
    *
    * @return string
-   *   The root path.
+   *   The absolute root path.
    */
   public function getRoot();
 
