@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 
 /**
- * Generator for a class holding Drus commands.
+ * Generator for a class holding Drush commands.
  */
 class DrushCommandsClass extends PHPClassFileWithInjection {
 
