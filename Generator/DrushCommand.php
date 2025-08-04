@@ -168,7 +168,7 @@ class DrushCommand extends PHPFunction {
       // Makes this get matched up with the data definition.
       'use_data_definition' => TRUE,
       'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
-      'relative_namespace' => 'Commands',
+      'relative_namespace' => 'Drush\Commands',
       'parent_class_name' => '\Drush\Commands\DrushCommands',
       'injected_services' => $this->component_data['injected_services'],
       'docblock_first_line' => "%sentence Drush commands.",
