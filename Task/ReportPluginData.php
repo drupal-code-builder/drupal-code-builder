@@ -13,7 +13,7 @@ use DrupalCodeBuilder\Definition\VariantMappingProviderInterface;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 
 /**
- * Task handler for reporting on hook data.
+ * Task handler for reporting on plugin data.
  *
  * TODO: revisit some of these and clean up names / clean up how many we have.
  * Consider merging into a ReportComponentData Task.
