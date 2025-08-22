@@ -18,28 +18,18 @@ class DrupalExtension {
 
   /**
    * The extension type, e.g. 'module'.
-   *
-   * TODO Make readonly in PHP 8.1.
-   *
-   * @var string
    */
-  public $type;
+  public readonly string $type;
 
   /**
    * The extension name.
-   *
-   * TODO Make readonly in PHP 8.1.
-   *
-   * @var string
    */
-  public $name;
+  public readonly string $name;
 
   /**
    * The given extension path.
-   *
-   * @var string
    */
-  protected $path;
+  protected readonly string $path;
 
   /**
    * Constructs a new extension.
