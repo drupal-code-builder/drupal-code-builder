@@ -370,6 +370,11 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
           continue;
         }
 
+        // Skip the 'definition' property from the parent class.
+        if ($name == 'definition') {
+          continue;
+        }
+
         $property_data = [
           'name' => $name,
         ];
