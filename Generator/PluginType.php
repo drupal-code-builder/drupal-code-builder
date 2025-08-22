@@ -91,6 +91,24 @@ class PluginType extends BaseGenerator {
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('machine_name'),
+            // Stupidly named so they switch between both class-based discovery
+            // variants.
+            'attribute_properties' => PropertyDefinition::create('complex')
+              ->setLabel("Annotation properties")
+              ->setDescription("Properties for the plugin type's annotation class. These do not produce generated code, but are here to facilitate the conversion to attribute plugin types.")
+              ->setMultiple(TRUE)
+              ->setProperties([
+                'name' => PropertyDefinition::create('string')
+                  ->setLabel('Parameter name')
+                  ->setRequired(TRUE),
+                'type' => PropertyDefinition::create('string')
+                  ->setLabel('Parameter type')
+                  ->setRequired(TRUE)
+                  ->setLiteralDefault('string'),
+                'description' => PropertyDefinition::create('string')
+                  ->setLabel('Parameter description')
+                  ->setLiteralDefault('TODO: parameter description.'),
+              ]),
         ]),
         'attribute' => VariantDefinition::create()
           ->setLabel('Attribute plugin')
