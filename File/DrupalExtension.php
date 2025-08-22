@@ -251,4 +251,36 @@ class DrupalExtension {
     return file_get_contents($this->getRealPath($relative_file_path));
   }
 
+  /**
+   * Loads the file for a class from this extension.
+   *
+   * For extensions which are not currently enabled, Drupal's autoloader will
+   * not be able to find the class. This will load the class even if the
+   * extension is not enabled.
+   *
+   * @param string $class_name
+   *   The fully-qualified class name.
+   *
+   * @internal
+   */
+  public function loadClass(string $class_name): void {
+    // Trim the class name up to the extension name piece.
+    $relative_class_name = preg_replace("@Drupal\\\\{$this->name}\\\\@", '', $class_name);
+    $relative_path = 'src/' . str_replace('\\', '/', $relative_class_name) . '.php';
+
+    $this->includeFile($relative_path);
+  }
+
+  /**
+   * Includes a file from this extension.
+   *
+   * @param string $relative_file_path
+   *   The filepath relative to the extension folder.
+   *
+   * @internal
+   */
+  public function includeFile(string $relative_file_path): void {
+    include_once $this->getRealPath($relative_file_path);
+  }
+
 }
