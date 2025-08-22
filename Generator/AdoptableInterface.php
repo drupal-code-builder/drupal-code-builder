@@ -27,10 +27,11 @@ interface AdoptableInterface {
   public static function findAdoptableComponents(DrupalExtension $extension): array;
 
   /**
-   * Adopt a component from an existing extension.
+   * Adopts a component from an existing extension.
    *
    * @param \MutableTypedData\Data\DataItem $component_data
-   *   The existing root component data.
+   *   The existing root component data. Values should be added to this for the
+   *   component being adopted.
    * @param \DrupalCodeBuilder\File\DrupalExtension $extension
    *   The existing extension to analyse.
    * @param string $property_name
