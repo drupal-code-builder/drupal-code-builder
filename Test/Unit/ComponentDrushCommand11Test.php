@@ -46,14 +46,14 @@ class ComponentDrushCommand11Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'src/Commands/TestModuleCommands.php',
+      'src/Drush/Commands/TestModuleCommands.php',
     ], $files);
 
-    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
+    $command_class_file = $files["src/Drush/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
+    $php_tester->assertHasClass('Drupal\test_module\Drush\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
@@ -111,10 +111,10 @@ class ComponentDrushCommand11Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'src/Commands/TestModuleCommands.php',
+      'src/Drush/Commands/TestModuleCommands.php',
     ], $files);
 
-    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
+    $command_class_file = $files["src/Drush/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards([
@@ -122,7 +122,7 @@ class ComponentDrushCommand11Test extends TestBase {
       // See https://www.drupal.org/project/coder/issues/3475912.
       'Drupal.Arrays.Array.LongLineDeclaration',
     ]);
-    $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
+    $php_tester->assertHasClass('Drupal\test_module\Drush\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
@@ -186,14 +186,14 @@ class ComponentDrushCommand11Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'src/Commands/TestModuleCommands.php',
+      'src/Drush/Commands/TestModuleCommands.php',
     ], $files);
 
-    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
+    $command_class_file = $files["src/Drush/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
+    $php_tester->assertHasClass('Drupal\test_module\Drush\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->assertNotClassHasInterfaces(['Drupal\Core\DependencyInjection\ContainerInjectionInterface']);
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
@@ -255,14 +255,14 @@ class ComponentDrushCommand11Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'src/Commands/TestModuleCommands.php',
+      'src/Drush/Commands/TestModuleCommands.php',
     ], $files);
 
-    $command_class_file = $files["src/Commands/TestModuleCommands.php"];
+    $command_class_file = $files["src/Drush/Commands/TestModuleCommands.php"];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards();
-    $php_tester->assertHasClass('Drupal\test_module\Commands\TestModuleCommands');
+    $php_tester->assertHasClass('Drupal\test_module\Drush\Commands\TestModuleCommands');
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
