@@ -8,12 +8,14 @@ use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\OptionDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\VariantDefinition;
 
 /**
  * Generator for a plugin type.
  */
-class PluginType extends BaseGenerator {
+class PluginType extends BaseGenerator implements AdoptableInterface {
 
   use NameFormattingTrait;
 
@@ -289,6 +291,128 @@ class PluginType extends BaseGenerator {
     foreach ($definition->getVariants() as $variant) {
       $variant->addProperties($common_properties);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    $services_filename = $extension->name . '.services.yml';
+    if (!$extension->hasFile($services_filename)) {
+      return [];
+    }
+
+    $yaml = $extension->getFileYaml($services_filename);
+    $service_names = array_keys($yaml['services']);
+    $plugin_manager_names = array_filter($service_names, fn ($name) => str_starts_with($name, 'plugin.manager.'));
+    $plugin_manager_names = array_map(fn ($name) => str_replace('plugin.manager.', '', $name), $plugin_manager_names);
+    return array_combine($plugin_manager_names, $plugin_manager_names);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function adoptComponent(DataItem $component_data, DrupalExtension $extension, string $property_name, string $name): void {
+    $services_filename = $extension->name . '.services.yml';
+    $yaml = $extension->getFileYaml($services_filename);
+    $service_yaml = $yaml['services']['plugin.manager.' . $name];
+    $manager_class = $service_yaml['class'];
+
+    // The module might not be enabled, so we can't rely on Drupal's autoloader
+    // to find the class.
+    $extension->loadClass($manager_class);
+
+    try {
+      $constructor_reflection = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($manager_class, '__construct');
+    }
+    catch (\ReflectionException $e) {
+      // TODO: complain.
+      return;
+    }
+
+    // Create the data for the plugin type.
+    $plugin_type_data_array = [
+      'plugin_type' => $name,
+    ];
+
+    $constructor_body = $constructor_reflection->getBody();
+
+    // Check for Attribute first, because of BC-compatible hybrids.
+    if (str_contains($constructor_body, "Drupal\\{$extension->name}\\Attribute")) {
+      // TODO
+      $plugin_type_data_array['discovery_type'] = 'attribute';
+
+      $matches = [];
+      preg_match("@Drupal\\\\{$extension->name}\\\\Attribute\\\\(\w+)@", $constructor_body, $matches);
+    }
+    elseif (str_contains($constructor_body, "Drupal\\{$extension->name}\\Annotation")) {
+      $plugin_type_data_array['discovery_type'] = 'annotation';
+
+      $matches = [];
+      preg_match("@Plugin/([\w/]+)@", $constructor_body, $matches);
+      $plugin_type_data_array['plugin_subdirectory'] = $matches['1'] ?? '';
+
+      $matches = [];
+      preg_match("@Drupal\\\\{$extension->name}\\\\Annotation\\\\([[\w\\]]+)@", $constructor_body, $matches);
+      $annotation_class = $matches[0];
+      $plugin_type_data_array['annotation_class'] = $matches['1'] ?? '';
+
+      $extension->loadClass($annotation_class);
+      $annotation_class_reflection = new \ReflectionClass($annotation_class);
+
+      // Get the properties from the annotation.
+      $annotation_property_relections = $annotation_class_reflection->getProperties();
+      foreach ($annotation_property_relections as $property_reflection) {
+        $name = $property_reflection->getName();
+
+        // Skip the properties which are added automatically.
+        if (in_array($name, ['id', 'label', 'description'])) {
+          continue;
+        }
+
+        $property_data = [
+          'name' => $name,
+        ];
+
+        // Get the type of the property, defaulting to 'string' if we can't.
+        if ($property_reflection->hasType()) {
+          $property_data['type'] = (string) $property_reflection->getType();
+        }
+        elseif ($docblock = $property_reflection->getDocComment()) {
+          $matches = [];
+          preg_match('/@var (\S+)$/m', $docblock, $matches);
+          if (!isset($matches[1])) {
+            $property_data['type'] = 'string';
+            continue;
+          }
+
+          $type = $matches[1];
+
+          if (str_ends_with($type, '[]')) {
+            $type = 'array';
+          }
+
+          $property_data['type'] = $type;
+        }
+        else {
+          // No sodding docs!
+          $property_data['type'] = 'string';
+        }
+        $plugin_type_data_array['attribute_properties'][] = $property_data;
+      }
+    }
+    else {
+      // TODO!
+      $plugin_type_data_array['discovery_type'] = 'yaml';
+    }
+
+    // TODO: Find an existing component and merge into it -- see Service
+    // generator for example.
+
+    // Bit of a WTF: this requires this generator class to know it's being used
+    // as a multi-valued item in the Module generator.
+    $item_data = $component_data->getItem($property_name)->createItem();
+    $item_data->set($plugin_type_data_array);
   }
 
   /**
