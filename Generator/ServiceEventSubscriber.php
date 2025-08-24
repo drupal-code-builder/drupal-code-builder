@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use CaseConverter\CaseString;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Definition\PropertyListInterface;
 use MutableTypedData\Definition\OptionsSortOrder;
 
@@ -53,6 +54,15 @@ class ServiceEventSubscriber extends Service {
 
     $definition->getProperty('relative_namespace')
       ->setLiteralDefault('EventSubscriber');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    // For now we don't adopt event subscribers, so override this method so we
+    // don't return the same as the parent class.
+    return [];
   }
 
   /**

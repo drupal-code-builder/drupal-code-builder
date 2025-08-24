@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use DrupalCodeBuilder\File\DrupalExtension;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\PropertyListInterface;
@@ -59,6 +60,15 @@ class HooksClass extends Service {
           $component_data->class_component_address = '..:..';
         }),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findAdoptableComponents(DrupalExtension $extension): array {
+    // For now we don't adopt hook classes, so override this method so we don't
+    // return the same as the parent class.
+    return [];
   }
 
   /**
