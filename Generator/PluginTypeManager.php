@@ -143,9 +143,15 @@ class PluginTypeManager extends Service {
         $this->component_data['root_component_name'],
         'Attribute',
         $this->component_data['metadata_class'],
-      ]) . '::class';
-      // Don't bother setting an annotation for BC, since we're generating a new
-      // plugin type.
+      ]) . '::class,';
+      // Add a comment about the annotation class for BC, for the case where
+      // this is an adopted plugin type that's being generated rather than a new
+      // one.
+      // Actually adding the annotation class is too complicated because of the
+      // class name clash - see
+      // https://github.com/drupal-code-builder/drupal-code-builder/issues/388.
+      $code[] = '  // @todo: Add the annotation class as a parameter here if this plugin';
+      $code[] = '  // type supports annotations for BC.';
       $code[] = ');';
       $code[] = '';
     }
