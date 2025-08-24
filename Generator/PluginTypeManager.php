@@ -108,7 +108,7 @@ class PluginTypeManager extends Service {
       $components['service_cache.discovery']['omit_assignment'] = TRUE;
     }
 
-    // Only annotation type plugins call the parent constructor.
+    // Only class-based discovery plugins call the parent constructor.
     $code = [];
     if ($this->component_data->discovery_type->value == 'annotation') {
       $code[] = 'parent::__construct(';
