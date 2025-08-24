@@ -114,11 +114,11 @@ class ComponentPHPFile10Test extends TestBase {
       ],
       'repeated' => [
         <<<'EOT'
-        $foo = new \Foo\Bar();
+        call(new \Foo\Bar(), new \Foo\Bar());
         $bar = new \Foo\Bar();
         EOT,
         <<<'EOT'
-        $foo = new Bar();
+        call(new Bar(), new Bar());
         $bar = new Bar();
         EOT,
         'Foo\Bar',
