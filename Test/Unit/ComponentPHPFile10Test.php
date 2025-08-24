@@ -46,8 +46,7 @@ class ComponentPHPFile10Test extends TestBase {
     $data_item = $this->prophesize(\MutableTypedData\Data\DataItem::class);
     $php_file_generator = new PHPFile($data_item->reveal());
 
-    // Our code is a single line, but the method expects an array of lines.
-    $code_lines = [$code];
+    $code_lines = explode("\n", $code);
 
     $imported_classes = [];
 
@@ -62,8 +61,7 @@ class ComponentPHPFile10Test extends TestBase {
       }
       $this->assertEquals($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
 
-      $changed_code = array_pop($code_lines);
-      $this->assertEquals($expected_changed_code, $changed_code, "The code was changed to use the short class name.");
+      $this->assertEquals(explode("\n", $expected_changed_code), $code_lines, "The code was changed to use the short class name.");
     }
   }
 
@@ -115,10 +113,14 @@ class ComponentPHPFile10Test extends TestBase {
         'Foo\Bar',
       ],
       'repeated' => [
-        '$foo = new \Foo\Bar();
-          $bar = new \Foo\Bar();',
-        '$foo = new Bar();
-          $bar = new Bar();',
+        <<<'EOT'
+        $foo = new \Foo\Bar();
+        $bar = new \Foo\Bar();
+        EOT,
+        <<<'EOT'
+        $foo = new Bar();
+        $bar = new Bar();
+        EOT,
         'Foo\Bar',
       ],
       'current' => [
