@@ -193,6 +193,8 @@ abstract class PHPFile extends File {
     }
     $clashes = array_filter($clashes, fn ($array) => count($array) > 1);
 
+    $component_namespace = '\Drupal\\' . $this->component_data->root_component_name->value;
+
     foreach ($clashes as $short_class => $clash_set) {
       // Rule 1: A non-Drupal class loses out to the Drupal class, and gets an
       // alias with a prefix of its top-level namespace.
@@ -204,6 +206,19 @@ abstract class PHPFile extends File {
           $replacements['@IMPORT' . $full_class . 'IMPORT@'] = $alias;
 
           // Set the alias into the list of imported classes.
+          $imported_classes[$full_class] = $alias;
+        }
+      }
+
+      // Rule 2: if multiple classes belong to the current module, prefix each
+      // one with the immediate parent namespace.
+      $clash_set_clashes_in_current_component = array_filter($clash_set, fn ($full_class) => str_starts_with($full_class, $component_namespace));
+      if (count($clash_set_clashes_in_current_component) > 1) {
+        foreach ($clash_set_clashes_in_current_component as $full_class) {
+          $pieces = explode('\\', $full_class);
+          $alias = implode('', array_slice($pieces, -2));
+
+          $replacements['@IMPORT' . $full_class . 'IMPORT@'] = $alias;
           $imported_classes[$full_class] = $alias;
         }
       }

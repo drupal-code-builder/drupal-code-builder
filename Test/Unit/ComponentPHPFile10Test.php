@@ -5,6 +5,9 @@ namespace DrupalCodeBuilder\Test\Unit;
 use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Generator\PHPFile as RealPHPFile;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use MutableTypedData\DataItemFactory;
+use MutableTypedData\Definition\DataDefinition;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use Prophecy\Argument;
 
 /**
@@ -18,6 +21,30 @@ class ComponentPHPFile10Test extends TestBase {
    * @var int
    */
   protected $drupalMajorVersion = 10;
+
+  /**
+   * The dummy component data item.
+   *
+   * @var \MutableTypedData\Data\DataItem
+   */
+  private static $mockedComponent;
+
+  /**
+   * Sets up a mocked component data item.
+   *
+   * This is needed for self::testQualifiedClassNameExtraction().
+   */
+  #[BeforeClass]
+  public static function setUpMockedComponent() {
+    $definition = DataDefinition::create('complex')
+      ->setLabel('Component')
+      ->setProperties([
+        'root_component_name' => DataDefinition::create('string'),
+      ]);
+
+    static::$mockedComponent =  DataItemFactory::createFromDefinition($definition);
+    static::$mockedComponent->root_component_name = 'my_module';
+  }
 
   /**
    * Test the qualified class name extraction.
@@ -42,9 +69,10 @@ class ComponentPHPFile10Test extends TestBase {
     $method = new \ReflectionMethod(PHPFile::class, 'extractFullyQualifiedClasses');
     $method->setAccessible(TRUE);
 
-    // Create a PHP file generator with some dummy constructor parameters.
-    $data_item = $this->prophesize(\MutableTypedData\Data\DataItem::class);
-    $php_file_generator = new PHPFile($data_item->reveal());
+    // Pass a component data item to PHPFile. Prophecy won't work as
+    // PHPFile::extractFullyQualifiedClasses() accesses a property, so we create
+    // one from a dummy defininition.
+    $php_file_generator = new PHPFile(static::$mockedComponent);
 
     $code_lines = explode("\n", $code);
 
@@ -132,6 +160,14 @@ class ComponentPHPFile10Test extends TestBase {
         [
           'Drupal\foo\Bar' => NULL,
           'Other\Foo\Bar' => 'OtherBar',
+        ]
+      ],
+      'clash-module' => [
+        '\Drupal\my_module\Foo\Bar::class; \Drupal\my_module\Biz\Bar::class',
+        'FooBar::class; BizBar::class',
+        [
+          'Drupal\my_module\Foo\Bar' => 'FooBar',
+          'Drupal\my_module\Biz\Bar' => 'BizBar',
         ]
       ],
       'current' => [
