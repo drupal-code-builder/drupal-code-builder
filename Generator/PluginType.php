@@ -449,6 +449,11 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
       // TODO: a service should be able to detect the parent class name from
       // service definitions.... if we had all of them.
       $components['manager']['parent_class_name'] = '\Drupal\Core\Plugin\DefaultPluginManager';
+
+      $components['manager']['metadata_class'] = match ($this->component_data->discovery_type->value) {
+        'attribute' => $this->component_data->attribute_class->value,
+        'annotation' => $this->component_data->annotation_class->value,
+      };
     }
     else {
       // YAML plugin managers need some services injecting.

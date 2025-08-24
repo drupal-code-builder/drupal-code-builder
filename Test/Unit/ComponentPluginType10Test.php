@@ -156,6 +156,39 @@ class ComponentPluginType10Test extends TestBase {
       'module_handler' => 'Drupal\Core\Extension\ModuleHandlerInterface',
     ]);
     $constructor_tester->assertPromotedParameters([], 'No plugin manager parameters are promoted.');
+
+    // Test with values instead of defaults.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugin_types' => [
+        0 => [
+          'discovery_type' => 'attribute',
+          'plugin_type' => 'cat_feeder',
+          'attribute_class' => 'Caaaaat',
+          'attribute_properties' => [
+            0 => [
+              'name' => 'fishiness',
+              'type' => 'int',
+              'description' => 'How fishy is it?',
+            ],
+          ],
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey('src/Attribute/Caaaaat.php', $files);
+
+    $plugin_manager_file = $files["src/CatFeederManager.php"];
+    // We know the syntax is fine from the earlier assertion, so just check the
+    // right class is there.
+    $this->assertStringContainsString('Caaaaat::class', $plugin_manager_file);
   }
 
   /**

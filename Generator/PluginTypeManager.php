@@ -41,6 +41,13 @@ class PluginTypeManager extends Service {
           ->setAutoAcquiredFromRequester()
       );
     }
+
+    // The short class name of the attribute or annotation.
+    // Can't acquire this, as the property in the requester is on the variant.
+    $definition->addProperty(
+      PropertyDefinition::create('string')
+        ->setName('metadata_class')
+    );
   }
 
   /**
@@ -120,9 +127,7 @@ class PluginTypeManager extends Service {
         'Drupal',
         $this->component_data['root_component_name'],
         'Annotation',
-        // We can't acquire the annotation class name, as it's a mutable
-        // property and so not always present. Use this instead.
-        $this->component_data['plugin_plain_class_name'],
+        $this->component_data['metadata_class'],
       ]) . '::class';
       $code[] = ');';
       $code[] = '';
@@ -137,9 +142,7 @@ class PluginTypeManager extends Service {
         'Drupal',
         $this->component_data['root_component_name'],
         'Attribute',
-        // We can't acquire the attribute class name, as it's a mutable
-        // property and so not always present. Use this instead.
-        $this->component_data['plugin_plain_class_name'],
+        $this->component_data['metadata_class'],
       ]) . '::class';
       // Don't bother setting an annotation for BC, since we're generating a new
       // plugin type.
