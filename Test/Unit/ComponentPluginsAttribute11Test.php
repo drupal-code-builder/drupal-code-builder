@@ -562,6 +562,51 @@ class ComponentPluginsAttribute11Test extends TestBase {
     // TODO: assert deeper into the YAML.
   }
 
+  /**
+   * Test the validation constraint plugin variant.
+   */
+  public function testPluginValidationConstraint(): void {
+    // Create a module.
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'plugins' => [
+        0 => [
+          'plugin_type' => 'validation.constraint',
+          'plugin_name' => 'alpha',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      "$module_name.info.yml",
+      "src/Plugin/Validation/Constraint/Alpha.php",
+      "src/Plugin/Validation/Constraint/AlphaValidator.php",
+    ], $files);
+
+    $plugin = $files['src/Plugin/Validation/Constraint/Alpha.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\Alpha');
+    // TODO: Quick hack because class tests don't support import aliases.
+    // $php_tester->assertClassHasParent('Symfony\Component\Validator\Constraint');
+    $this->assertStringContainsString('use Symfony\Component\Validator\Constraint as SymfonyConstraint;', $plugin);
+    $this->assertStringContainsString('extends SymfonyConstraint', $plugin);
+
+    $validator = $files["src/Plugin/Validation/Constraint/AlphaValidator.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $validator);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\AlphaValidator');
+    $php_tester->assertClassHasParent('Symfony\Component\Validator\ConstraintValidator');
+    $php_tester->assertHasMethod('validate');
+  }
+
 }
 
 namespace Drupal\Component\Plugin\Exception;

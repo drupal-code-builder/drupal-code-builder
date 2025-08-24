@@ -102,16 +102,29 @@ abstract class PHPFile extends File {
    *
    * @param &$class_code
    *  An array of PHP code lines to work on. All namespaced classes will be
-   *  replaced with plain classes.
+   *  replaced with plain classes or aliases.
    * @param &$imported_classes
-   *  An array to populate with the fully-qualified classnames which are
-   *  removed. These are without the initial namespace separator.
+   *  An array to populate with the list of fully-qualified classnames which
+   *  have been replaced with short classes in the class code. Keys are
+   *  fully-qualified classnames without the initial namespace separator. Values
+   *  are either the class alias used to replace the full class, or NULL if the
+   *  short class was used as a replacement.
    * @param string $current_namespace
    *  (optional) The namespace of the current file, without the initial '\'. If
    *  omitted, no comparison of namespace is done.
    */
   protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes, $current_namespace = '') {
     $current_namespace_pieces = explode('\\', $current_namespace);
+
+    // An array of replacements to make in the entire class code once all names
+    // have been extraced and clashes resolved. The search values are the full
+    // class names with markers surrounding them, to prevent inadvertent
+    // replacement.
+    $replacements = [];
+    // An array of the classes that are to be replaced. Keys are the full class
+    // name and value are the short class name. This is used to detect short
+    // name clashes.
+    $replaced_classes = [];
 
     foreach ($class_code as &$line) {
       // Skip lines which are part of a comment block.
@@ -127,6 +140,9 @@ abstract class PHPFile extends File {
         continue;
       }
 
+      // Replacements to make in the current line.
+      $line_marker_replacements = [];
+
       $matches = [];
       // Do not match after a ' or ", as then the class name is a quoted string
       // and should be left alone.
@@ -138,36 +154,101 @@ abstract class PHPFile extends File {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];
-          $line = preg_replace('@' . preg_quote($fully_qualified_class_name) . '@', $class_name, $line);
 
-          $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
-          $namespace_pieces = array_slice(explode('\\', $fully_qualified_class_name), 0, -1);
+          // Form a replacement string, which uses surrounding markers to ensure
+          // that we don't replace the class name in comments or typehints.
+          $marker_wrapped_search_string = '@IMPORT' . $fully_qualified_class_name . 'IMPORT@';
 
+          // Build an array of replacements for the line, so we do all the
+          // replacements in one go. This prevents re-wrapping a repeated class
+          // with the markers.
+          $line_marker_replacements[$fully_qualified_class_name] = $marker_wrapped_search_string;
+
+          // Add the marker-wrapped name to the list of all replacements, and
+          // the full class name to the list of all classes.
+          $replacements[$marker_wrapped_search_string] = $class_name;
+          $replaced_classes[$fully_qualified_class_name] = $class_name;
+
+          $namespace_pieces = array_slice(explode('\\', $fully_qualified_class_name), 1, -1);
+
+          // If the class isn't in the current namespace, then add it to the
+          // list of imported classes. We don't yet trim the leading '\' so
+          // that we can compare the keys when resolving clashes.
           if ($namespace_pieces != $current_namespace_pieces) {
-            $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
+            $imported_classes[$fully_qualified_class_name] = NULL;
           }
+        } // foreach matches
+
+        $line = str_replace(array_keys($line_marker_replacements), array_values($line_marker_replacements), $line);
+      }
+    } // foreach line
+
+    // Resolve any clashes in short class names. To use an alias instead of the
+    // short class name, we:
+    // - replace it in the $replacements array
+    // - set it as a value in the $imported_classes array.
+    $clashes = [];
+    foreach ($replaced_classes as $full_class => $short_class) {
+      $clashes[$short_class][] = $full_class;
+    }
+    $clashes = array_filter($clashes, fn ($array) => count($array) > 1);
+
+    $component_namespace = '\Drupal\\' . $this->component_data->root_component_name->value;
+
+    foreach ($clashes as $short_class => $clash_set) {
+      // Rule 1: A non-Drupal class loses out to the Drupal class, and gets an
+      // alias with a prefix of its top-level namespace.
+      foreach ($clash_set as $full_class) {
+        if (!str_starts_with($full_class, '\Drupal')) {
+          $pieces = explode('\\', $full_class);
+          $alias = $pieces[1] . $short_class;
+          // ARGH! need to remake the marker-wrapped name!
+          $replacements['@IMPORT' . $full_class . 'IMPORT@'] = $alias;
+
+          // Set the alias into the list of imported classes.
+          $imported_classes[$full_class] = $alias;
+        }
+      }
+
+      // Rule 2: if multiple classes belong to the current module, prefix each
+      // one with the immediate parent namespace.
+      $clash_set_clashes_in_current_component = array_filter($clash_set, fn ($full_class) => str_starts_with($full_class, $component_namespace));
+      if (count($clash_set_clashes_in_current_component) > 1) {
+        foreach ($clash_set_clashes_in_current_component as $full_class) {
+          $pieces = explode('\\', $full_class);
+          $alias = implode('', array_slice($pieces, -2));
+
+          $replacements['@IMPORT' . $full_class . 'IMPORT@'] = $alias;
+          $imported_classes[$full_class] = $alias;
         }
       }
     }
 
-    // Remove duplicates.
-    $imported_classes = array_unique($imported_classes);
+    // Replace the marker-wrapped full classes with the short classes in the
+    // whole code.
+    $class_code = str_replace(array_keys($replacements), array_values($replacements), $class_code);
+
+    // Trim the initial '\' from the list of imported classes.
+    $new_keys = array_map(fn ($full_class) => ltrim($full_class, '\\'), array_keys($imported_classes));
+    $imported_classes = array_combine($new_keys, array_values($imported_classes));
   }
 
   /**
    * Produces the namespace import statements.
    *
    * @param $imported_classes
-   *  (optional) An array of fully-qualified class names. The presence of the
-   *  leading slash is immaterial. Duplicates are removed.
+   *  An array of fully-qualified class names and aliases. Keys are fully-qualified class names,
+   *  either with or without the leading slash. Values are one of:
+   *  - NULL to indicate there is no alias.
+   *  - The class name alias to use.
    */
-  function imports($imported_classes = []) {
+  function imports($imported_classes) {
     $import_lines = [];
 
     if ($imported_classes) {
-      foreach ($imported_classes as $fully_qualified_class_name) {
+      foreach ($imported_classes as $fully_qualified_class_name => $alias) {
         $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
-        $import_lines[] = "use $fully_qualified_class_name;";
+        $import_lines[] = "use $fully_qualified_class_name" . ($alias ? " as $alias" : '') . ';';
       }
 
       // Bit of a hack. We have to perform token replacement before sorting the
@@ -189,9 +270,6 @@ abstract class PHPFile extends File {
 
       // Sort the imported classes.
       natcasesort($import_lines);
-
-      // Remove duplicates.
-      $import_lines = array_unique($import_lines);
 
       $import_lines[] = '';
     }

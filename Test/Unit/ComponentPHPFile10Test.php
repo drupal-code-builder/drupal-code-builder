@@ -5,6 +5,9 @@ namespace DrupalCodeBuilder\Test\Unit;
 use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Generator\PHPFile as RealPHPFile;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
+use MutableTypedData\DataItemFactory;
+use MutableTypedData\Definition\DataDefinition;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use Prophecy\Argument;
 
 /**
@@ -18,6 +21,30 @@ class ComponentPHPFile10Test extends TestBase {
    * @var int
    */
   protected $drupalMajorVersion = 10;
+
+  /**
+   * The dummy component data item.
+   *
+   * @var \MutableTypedData\Data\DataItem
+   */
+  private static $mockedComponent;
+
+  /**
+   * Sets up a mocked component data item.
+   *
+   * This is needed for self::testQualifiedClassNameExtraction().
+   */
+  #[BeforeClass]
+  public static function setUpMockedComponent() {
+    $definition = DataDefinition::create('complex')
+      ->setLabel('Component')
+      ->setProperties([
+        'root_component_name' => DataDefinition::create('string'),
+      ]);
+
+    static::$mockedComponent =  DataItemFactory::createFromDefinition($definition);
+    static::$mockedComponent->root_component_name = 'my_module';
+  }
 
   /**
    * Test the qualified class name extraction.
@@ -42,12 +69,12 @@ class ComponentPHPFile10Test extends TestBase {
     $method = new \ReflectionMethod(PHPFile::class, 'extractFullyQualifiedClasses');
     $method->setAccessible(TRUE);
 
-    // Create a PHP file generator with some dummy constructor parameters.
-    $data_item = $this->prophesize(\MutableTypedData\Data\DataItem::class);
-    $php_file_generator = new PHPFile($data_item->reveal());
+    // Pass a component data item to PHPFile. Prophecy won't work as
+    // PHPFile::extractFullyQualifiedClasses() accesses a property, so we create
+    // one from a dummy defininition.
+    $php_file_generator = new PHPFile(static::$mockedComponent);
 
-    // Our code is a single line, but the method expects an array of lines.
-    $code_lines = [$code];
+    $code_lines = explode("\n", $code);
 
     $imported_classes = [];
 
@@ -57,13 +84,15 @@ class ComponentPHPFile10Test extends TestBase {
       $this->assertEmpty($imported_classes, "No class name was extracted.");
     }
     else {
-      if (!is_array($expected_qualified_class_names)) {
-        $expected_qualified_class_names = [$expected_qualified_class_names];
+      if (is_array($expected_qualified_class_names)) {
+        $this->assertEquals($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
       }
-      $this->assertEquals($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
+      else {
+        $this->assertCount(1, $imported_classes, "The qualified class name was extracted.");
+        $this->assertArrayHasKey($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
+      }
 
-      $changed_code = array_pop($code_lines);
-      $this->assertEquals($expected_changed_code, $changed_code, "The code was changed to use the short class name.");
+      $this->assertEquals(explode("\n", $expected_changed_code), $code_lines, "The code was changed to use the short class name.");
     }
   }
 
@@ -95,8 +124,8 @@ class ComponentPHPFile10Test extends TestBase {
         'function myfunc(\Foo\Bar $param_1, \Bar\Bax\Biz $param_2, \BuiltIn $param_3) {',
         'function myfunc(Bar $param_1, Biz $param_2, \BuiltIn $param_3) {',
         [
-          'Foo\Bar',
-          'Bar\Bax\Biz',
+          'Foo\Bar' => NULL,
+          'Bar\Bax\Biz' => NULL,
         ]
       ],
       'static call' => [
@@ -115,11 +144,31 @@ class ComponentPHPFile10Test extends TestBase {
         'Foo\Bar',
       ],
       'repeated' => [
-        '$foo = new \Foo\Bar();
-          $bar = new \Foo\Bar();',
-        '$foo = new Bar();
-          $bar = new Bar();',
+        <<<'EOT'
+        call(new \Foo\Bar(), new \Foo\Bar());
+        $bar = new \Foo\Bar();
+        EOT,
+        <<<'EOT'
+        call(new Bar(), new Bar());
+        $bar = new Bar();
+        EOT,
         'Foo\Bar',
+      ],
+      'clash-vendor' => [
+        '\Other\Foo\Bar::class; \Drupal\foo\Bar::class',
+        'OtherBar::class; Bar::class',
+        [
+          'Drupal\foo\Bar' => NULL,
+          'Other\Foo\Bar' => 'OtherBar',
+        ]
+      ],
+      'clash-module' => [
+        '\Drupal\my_module\Foo\Bar::class; \Drupal\my_module\Biz\Bar::class',
+        'FooBar::class; BizBar::class',
+        [
+          'Drupal\my_module\Foo\Bar' => 'FooBar',
+          'Drupal\my_module\Biz\Bar' => 'BizBar',
+        ]
       ],
       'current' => [
         '$foo = new \Current\Namespace\Bar()',
