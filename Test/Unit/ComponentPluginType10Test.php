@@ -192,6 +192,40 @@ class ComponentPluginType10Test extends TestBase {
   }
 
   /**
+   * Tests a plugin type with BC handling for annotations.
+   *
+   * This relies on the
+   * \Drupal\test_module_plugin_type_with_bc\Annotation\Unique fixture class at
+   * the end of this file.
+   */
+  function testAttributePluginTypeBCHandling() {
+    $module_data = [
+      'base' => 'module',
+      // Use unique names so the fixture doesn't clash.
+      'root_name' => 'test_module_plugin_type_with_bc',
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [],
+      'plugin_types' => [
+        0 => [
+          'discovery_type' => 'attribute',
+          'plugin_type' => 'unique',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $plugin_manager_file = $files["src/UniqueManager.php"];
+
+    $this->assertStringContainsString('use Drupal\test_module_plugin_type_with_bc\Attribute\Unique as AttributeUnique;', $plugin_manager_file);
+    $this->assertStringContainsString('use Drupal\test_module_plugin_type_with_bc\Annotation\Unique as AnnotationUnique;', $plugin_manager_file);
+
+    $this->assertStringContainsString('AttributeUnique::class', $plugin_manager_file);
+    $this->assertStringContainsString('AnnotationUnique::class', $plugin_manager_file);
+  }
+
+  /**
    * Test Plugin Type component.
    */
   function testAnnotationPluginTypeBasic() {
@@ -618,3 +652,9 @@ class ComponentPluginType10Test extends TestBase {
   }
 
 }
+
+/**
+ * Fixture class for testAttributePluginTypeBCHandling().
+ */
+namespace Drupal\test_module_plugin_type_with_bc\Annotation;
+class Unique {}
