@@ -216,7 +216,7 @@ class ExtensionCodeFile extends PHPFile {
 
       foreach ($existing_import_nodes as $import_node) {
         $existing_import = $import_node->uses[0]->name->toString();
-        $imported_classes[] = $existing_import;
+        $imported_classes[$existing_import] = NULL;
       }
     }
 

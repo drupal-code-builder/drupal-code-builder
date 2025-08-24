@@ -56,10 +56,13 @@ class ComponentPHPFile10Test extends TestBase {
       $this->assertEmpty($imported_classes, "No class name was extracted.");
     }
     else {
-      if (!is_array($expected_qualified_class_names)) {
-        $expected_qualified_class_names = [$expected_qualified_class_names];
+      if (is_array($expected_qualified_class_names)) {
+        $this->assertEquals($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
       }
-      $this->assertEquals($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
+      else {
+        $this->assertCount(1, $imported_classes, "The qualified class name was extracted.");
+        $this->assertArrayHasKey($expected_qualified_class_names, $imported_classes, "The qualified class name was extracted.");
+      }
 
       $this->assertEquals(explode("\n", $expected_changed_code), $code_lines, "The code was changed to use the short class name.");
     }
@@ -93,8 +96,8 @@ class ComponentPHPFile10Test extends TestBase {
         'function myfunc(\Foo\Bar $param_1, \Bar\Bax\Biz $param_2, \BuiltIn $param_3) {',
         'function myfunc(Bar $param_1, Biz $param_2, \BuiltIn $param_3) {',
         [
-          'Foo\Bar',
-          'Bar\Bax\Biz',
+          'Foo\Bar' => NULL,
+          'Bar\Bax\Biz' => NULL,
         ]
       ],
       'static call' => [
@@ -122,6 +125,14 @@ class ComponentPHPFile10Test extends TestBase {
         $bar = new Bar();
         EOT,
         'Foo\Bar',
+      ],
+      'clash-vendor' => [
+        '\Other\Foo\Bar::class; \Drupal\foo\Bar::class',
+        'OtherBar::class; Bar::class',
+        [
+          'Drupal\foo\Bar' => NULL,
+          'Other\Foo\Bar' => 'OtherBar',
+        ]
       ],
       'current' => [
         '$foo = new \Current\Namespace\Bar()',
