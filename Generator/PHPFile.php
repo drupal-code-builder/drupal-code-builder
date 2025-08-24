@@ -162,12 +162,12 @@ abstract class PHPFile extends File {
    *  leading slash is immaterial. Duplicates are removed.
    */
   function imports($imported_classes = []) {
-    $imports = [];
+    $import_lines = [];
 
     if ($imported_classes) {
       foreach ($imported_classes as $fully_qualified_class_name) {
         $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
-        $imports[] = "use $fully_qualified_class_name;";
+        $import_lines[] = "use $fully_qualified_class_name;";
       }
 
       // Bit of a hack. We have to perform token replacement before sorting the
@@ -175,7 +175,7 @@ abstract class PHPFile extends File {
       // replacement is done later, during file assembly. Fortunately, in
       // class names we can be certain that only the %extension and %Pascal
       // tokens are used, so hackily replace those now.
-      $imports = str_replace(
+      $import_lines = str_replace(
         [
           '%extension',
           '%Pascal'
@@ -184,19 +184,19 @@ abstract class PHPFile extends File {
           $this->component_data->root_component_name->value,
           CaseString::snake($this->component_data->root_component_name->value)->pascal(),
         ],
-        $imports,
+        $import_lines,
       );
 
       // Sort the imported classes.
-      natcasesort($imports);
+      natcasesort($import_lines);
 
       // Remove duplicates.
-      $imports = array_unique($imports);
+      $import_lines = array_unique($import_lines);
 
-      $imports[] = '';
+      $import_lines[] = '';
     }
 
-    return $imports;
+    return $import_lines;
   }
 
   /**
