@@ -113,6 +113,12 @@ abstract class PHPFile extends File {
   protected function extractFullyQualifiedClasses(&$class_code, &$imported_classes, $current_namespace = '') {
     $current_namespace_pieces = explode('\\', $current_namespace);
 
+    // An array of replacements to make in the entire class code once all names
+    // have been extraced and clashes resolved. The search values are the full
+    // class names with markers surrounding them, to prevent inadvertent
+    // replacement.
+    $replacements = [];
+
     foreach ($class_code as &$line) {
       // Skip lines which are part of a comment block.
       if (preg_match('@^\s*\*@', $line)) {
@@ -127,6 +133,9 @@ abstract class PHPFile extends File {
         continue;
       }
 
+      // Replacements to make in the current line.
+      $line_marker_replacements = [];
+
       $matches = [];
       // Do not match after a ' or ", as then the class name is a quoted string
       // and should be left alone.
@@ -138,7 +147,18 @@ abstract class PHPFile extends File {
         foreach ($matches as $match_set) {
           $fully_qualified_class_name = $match_set[0];
           $class_name = $match_set[1];
-          $line = preg_replace('@' . preg_quote($fully_qualified_class_name) . '@', $class_name, $line);
+
+          // Form a replacement string, which uses surrounding markers to ensure
+          // that we don't replace the class name in comments or typehints.
+          $marker_wrapped_search_string = '@IMPORT' . $fully_qualified_class_name . 'IMPORT@';
+
+          // Build an array of replacements for the line, so we do all the
+          // replacements in one go. This prevents re-wrapping a repeated class
+          // with the markers.
+          $line_marker_replacements[$fully_qualified_class_name] = $marker_wrapped_search_string;
+
+          // Add the marker-wrapped name to the list of all replacements.
+          $replacements[$marker_wrapped_search_string] = $class_name;
 
           $fully_qualified_class_name = ltrim($fully_qualified_class_name, '\\');
           $namespace_pieces = array_slice(explode('\\', $fully_qualified_class_name), 0, -1);
@@ -146,9 +166,15 @@ abstract class PHPFile extends File {
           if ($namespace_pieces != $current_namespace_pieces) {
             $imported_classes[] = ltrim($fully_qualified_class_name, '\\');
           }
-        }
+        } // foreach matches
+
+        $line = str_replace(array_keys($line_marker_replacements), array_values($line_marker_replacements), $line);
       }
-    }
+    } // foreach line
+
+    // Replace the marker-wrapped full classes with the short classes in the
+    // whole code.
+    $class_code = str_replace(array_keys($replacements), array_values($replacements), $class_code);
 
     // Remove duplicates.
     $imported_classes = array_unique($imported_classes);
