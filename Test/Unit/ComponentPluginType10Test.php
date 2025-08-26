@@ -6,7 +6,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
- * Tests the Plugin Type generator class.
+ * Tests generation of plugin types.
  *
  * @group yaml
  * @group di
@@ -21,7 +21,7 @@ class ComponentPluginType10Test extends TestBase {
   protected $drupalMajorVersion = 10;
 
   /**
-   * Test Plugin Type component for attribute plugins.
+   * Test a plugin type with attribute plugins.
    */
   function testAttributePluginTypeBasic() {
     // Create a module.
@@ -192,7 +192,7 @@ class ComponentPluginType10Test extends TestBase {
   }
 
   /**
-   * Tests a plugin type with BC handling for annotations.
+   * Tests a plugin type with attributes and BC handling for annotations.
    *
    * This relies on the
    * \Drupal\test_module_plugin_type_with_bc\Annotation\Unique fixture class at
@@ -226,7 +226,7 @@ class ComponentPluginType10Test extends TestBase {
   }
 
   /**
-   * Test Plugin Type component.
+   * Test a plugin type for annotation plugins.
    */
   function testAnnotationPluginTypeBasic() {
     // Create a module.
