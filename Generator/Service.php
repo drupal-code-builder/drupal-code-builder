@@ -198,9 +198,18 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     $yaml = $extension->getFileYaml($services_filename);
     $service_names = array_keys($yaml['services']);
 
-    // Filter out plugin managers, as these are adopted as part of a plugin
-    // type.
-    $service_names = array_filter($service_names, fn ($name) => !str_starts_with($name, 'plugin.manager.'));
+    // Filter out services that are adopted by other components, or aren't yet
+    // adoptable.
+    $service_names = array_filter(
+      $service_names,
+      fn ($name) => !(
+        // Filter out plugin managers, as these are adopted as part of a plugin
+        // type.
+        str_starts_with($name, 'plugin.manager.') ||
+        // Filter out hook classes.
+        str_contains($name, '\Hook\\')
+      ),
+    );
 
     return array_combine($service_names, $service_names);
   }
