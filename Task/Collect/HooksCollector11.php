@@ -243,6 +243,9 @@ class HooksCollector11 extends HooksCollector {
             'hook_update_last_removed',
             'hook_uninstall',
           ],
+          '%module.post_update.php' => [
+            'hook_post_update_NAME',
+          ],
         ],
       ],
     ];
