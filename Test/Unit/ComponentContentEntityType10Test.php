@@ -1465,7 +1465,7 @@ class ComponentContentEntityType10Test extends TestBase {
 
     $yaml_tester = new YamlTester($action_links_file);
     $yaml_tester->assertHasProperty('entity.kitty_cat.add', 'The content entity type has an add action link.');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add kitty cat');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_form', "The route for adding a content entity is for the add form.");
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
 
@@ -1695,11 +1695,11 @@ class ComponentContentEntityType10Test extends TestBase {
 
     $yaml_tester = new YamlTester($action_links_file);
     $yaml_tester->assertHasProperty('entity.kitty_cat_type.add', 'The bundle entity type has an add action link.');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'title'], 'Add Kitty Cat Type');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'title'], 'Add kitty cat type');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'route_name'], 'entity.kitty_cat_type.add_form');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat_type.add', 'appears_on'], ['entity.kitty_cat_type.collection']);
     $yaml_tester->assertHasProperty('entity.kitty_cat.add', 'The content entity type has an add action link.');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add kitty cat');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_page', "The route for adding a content entity is for the add page, rather than the add form.");
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
 

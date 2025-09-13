@@ -451,7 +451,7 @@ class ComponentConfigEntityType10Test extends TestBase {
 
     $yaml_tester = new YamlTester($action_links_file);
     $yaml_tester->assertHasProperty('entity.kitty_cat.add', 'The entity type has an add action link.');
-    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add Kitty Cat');
+    $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'title'], 'Add kitty cat');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'route_name'], 'entity.kitty_cat.add_form');
     $yaml_tester->assertPropertyHasValue(['entity.kitty_cat.add', 'appears_on'], ['entity.kitty_cat.collection']);
 

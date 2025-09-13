@@ -462,7 +462,7 @@ abstract class EntityTypeBase extends PHPClassFile {
         'prefix_name' => FALSE,
         'plugin_name' => "entity.{$this->component_data['entity_type_id']}.add",
         'plugin_properties' => [
-          'title' => 'Add ' . $this->component_data['entity_type_label'],
+          'title' => 'Add ' . strtolower($this->component_data->entity_type_label->value),
           'route_name' => "entity.{$this->component_data['entity_type_id']}.add_form",
           // Media module sets 10 for its tab; go further along.
           'weight' => 15,
