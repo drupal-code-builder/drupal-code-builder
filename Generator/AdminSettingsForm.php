@@ -6,6 +6,7 @@ use MutableTypedData\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\Utility\InsertArray;
 use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
@@ -86,6 +87,15 @@ class AdminSettingsForm extends Form {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
+    InsertArray::insertBefore($components, 'buildForm', ['getEditableConfigNames' => [
+      'component_type' => 'PHPFunction',
+      'function_name' => 'getEditableConfigNames',
+      'containing_component' => '%requester',
+      'docblock_inherit' => TRUE,
+      'declaration' => 'protected function getEditableConfigNames()',
+      'body' => "return ['%module.settings'];",
+    ]]);
+
     // Restore the call to the parent method.
     $components['buildForm']['body'] = [
       "£form = parent::buildForm(£form, £form_state);",
@@ -113,15 +123,6 @@ class AdminSettingsForm extends Form {
       '}',
       '',
       '£config->save();',
-    ];
-
-    $components['getEditableConfigNames'] = [
-      'component_type' => 'PHPFunction',
-      'function_name' => 'getEditableConfigNames',
-      'containing_component' => '%requester',
-      'docblock_inherit' => TRUE,
-      'declaration' => 'protected function getEditableConfigNames()',
-      'body' => "return ['%module.settings'];",
     ];
 
     $task_handler_report_admin_routes = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');

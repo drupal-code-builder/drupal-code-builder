@@ -61,19 +61,24 @@ class ComponentAdminSettings10Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Form\AdminSettingsForm');
     $php_tester->assertClassHasParent('Drupal\Core\Form\ConfigFormBase');
 
+    $php_tester->assertHasMethodOrder([
+      'getFormId',
+      'getEditableConfigNames',
+      'buildForm',
+      'validateForm',
+      'submitForm',
+    ]);
+
     $method_tester = $php_tester->getMethodTester('getFormId');
     $method_tester->getDocBlockTester()->assertHasInheritdoc();
     $method_tester->assertReturnsString('test_module_settings_form');
 
-    $form_builder_tester = $php_tester->getFormBuilderTester('buildForm', 1);
-    $form_builder_tester->assertElementCount(1);
-
-    $php_tester->assertHasMethod('validateForm');
-    $php_tester->assertHasMethod('submitForm');
-
     $method_tester = $php_tester->getMethodTester('getEditableConfigNames');
     $method_tester->getDocBlockTester()->assertHasInheritdoc();
     $method_tester->assertHasNoParameters();
+
+    $form_builder_tester = $php_tester->getFormBuilderTester('buildForm', 1);
+    $form_builder_tester->assertElementCount(1);
 
     // Check the schema file.
     $config_schema_file = $files['config/schema/test_module.schema.yml'];
