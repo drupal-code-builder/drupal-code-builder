@@ -62,7 +62,9 @@ abstract class PHPFile extends File {
   /**
    * Return the PHP file header lines.
    */
-   function fileHeader()  {
+  function fileHeader()  {
+    // Don't use strict_types here, as some PHP files such as API files don't
+    // use it, and ExtensionCodeFile needs special handling.
      return [
        "<?php",
        '',

@@ -54,6 +54,7 @@ class ComponentAPI10Test extends TestBase {
     $php_tester->assertDrupalCodingStandards();
 
     // TODO: expand the docblock assertion for these.
+    $this->assertStringNotContainsString('declare(strict_types=1);', $api_file);
     $this->assertStringContainsString("Hooks provided by the Test Module module.", $api_file, 'The API file contains the correct docblock header.');
     $this->assertStringContainsString("@addtogroup hooks", $api_file, 'The API file contains the addtogroup docblock tag.');
     $this->assertStringContainsString('@} End of "addtogroup hooks".', $api_file, 'The API file contains the closing addtogroup docblock tag.');

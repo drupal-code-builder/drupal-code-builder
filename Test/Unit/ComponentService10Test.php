@@ -64,6 +64,7 @@ class ComponentService10Test extends TestBase {
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
     $php_tester->assertDrupalCodingStandards();
+    $this->assertStringContainsString('declare(strict_types=1);', $service_class_file);
     $php_tester->assertHasClass('Drupal\test_module\MyService');
   }
 

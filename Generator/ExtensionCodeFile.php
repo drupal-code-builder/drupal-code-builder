@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\Generator\Render\DocBlock;
 
 /**
  * Generator class for procedural code files.
@@ -57,6 +58,25 @@ class ExtensionCodeFile extends PHPFile {
       build_list_tags: ['code', $file_key_tag],
       merged: $this->merged,
     );
+  }
+
+  /**
+   * Return the file doxygen header and any custom header code.
+   */
+  function codeHeader() {
+    $docblock = DocBlock::file();
+
+    $docblock[] = $this->fileDocblockSummary();
+
+    $code = $docblock->render();
+    // Blank line after the file docblock.
+    $code[] = '';
+
+    // Coding standards need this to go AFTER the @file docblock.
+    $code[] = 'declare(strict_types=1);';
+    $code[] = '';
+
+    return $code;
   }
 
   /**

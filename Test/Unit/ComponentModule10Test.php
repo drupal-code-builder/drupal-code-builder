@@ -164,6 +164,7 @@ class ComponentModule10Test extends TestBase {
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
     $php_tester->assertDrupalCodingStandards();
 
+    $this->assertStringContainsString('declare(strict_types=1);', $module_file);
     $php_tester->assertHasHookImplementation('hook_help', $module_name);
 
     $this->assertFunctionCode($module_file, $module_name . '_help', $help_text, "The hook_help() implementation contains the requested help text.");

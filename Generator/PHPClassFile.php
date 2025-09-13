@@ -236,6 +236,18 @@ class PHPClassFile extends PHPFile {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  function fileHeader()  {
+    return [
+      "<?php",
+       '',
+       'declare(strict_types=1);',
+       '',
+    ];
+  }
+
+  /**
    * Returns file header code.
    */
   function codeHeader() {
