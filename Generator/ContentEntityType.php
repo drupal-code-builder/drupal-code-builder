@@ -205,7 +205,7 @@ class ContentEntityType extends EntityTypeBase {
               return 'entity.' . $entity_data->bundle_entity_type_id->value . '.edit_form';
             }
             else {
-              return 'entity.' . $entity_data->entity_type_id->value . '.admin_form';
+              return 'entity.' . $entity_data->entity_type_id->value . '.settings';
             }
           })
           ->setDependencies('..:functionality')
@@ -518,6 +518,37 @@ class ContentEntityType extends EntityTypeBase {
           ],
         ];
       }
+    }
+
+    // Add the Field UI base route definition and controller if there is no
+    // bundle entity type to provide a bundle entity collection as the Field UI
+    // base route.
+    if ($this->component_data->field_ui_base_route->value && $this->component_data->bundle_entity->isEmpty()) {
+      $components['field_ui_base_route'] = [
+        'component_type' => 'RouterItem',
+        'route_name' => $this->component_data->field_ui_base_route->value,
+        'path' => '/admin/structure/' . $this->component_data->entity_type_id->value,
+        'title' => $this->component_data->entity_type_label->value . ' settings',
+        'controller' => [
+          'controller_type' => 'controller',
+          'use_base' => TRUE,
+        ],
+        'access' => [
+          'access_type' => 'permission',
+          'routing_value' => $this->component_data->admin_permission_name->value,
+        ],
+      ];
+
+      // This will merge with the controller requested by the RouterItem.
+      $components['settings_controller'] = [
+        'component_type' => 'Controller',
+        'relative_class_name' => RouterItem::controllerRelativeClassFromRoutePath($components['field_ui_base_route']['path']),
+        'class_docblock_lines' => [
+          'Controller class for the FieldUI base route.',
+          "This needs to exist for FieldUI to attach its routes to. If the entity type has general settings, this route can be the config form for them instead.",
+          "You can also get rid of this route and use https://www.drupal.org/project/entity_admin_handlers to provide it automatically.",
+        ],
+      ];
     }
 
     return $components;

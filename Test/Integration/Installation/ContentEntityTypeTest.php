@@ -41,6 +41,7 @@ class ContentEntityTypeTest extends InstallationTestBase {
           'entity_type_id' => 'kitty_cat',
           'functionality' => [
             'owner',
+            'fieldable',
           ],
           'base_fields' => [
             0 => [
@@ -61,15 +62,20 @@ class ContentEntityTypeTest extends InstallationTestBase {
 
     $this->installModule($module_name);
 
+    \Drupal::service('entity_type.manager')->clearCachedDefinitions();
+    \Drupal::service('router.route_provider')->reset();
+
     // Get the entity type definition to check the entity class properly defines
     // it.
-    \Drupal::service('entity_type.manager')->clearCachedDefinitions();
-
     /** @var \Drupal\Core\Entity\EntityTypeInterface $definition */
     $definition = \Drupal::service('entity_type.manager')->getDefinition('kitty_cat');
     $this->assertIsObject($definition);
     $this->assertEquals('kitty_cat', $definition->id());
     $this->assertEquals('Kitty Cat', $definition->getLabel());
+    $this->assertEquals('entity.kitty_cat.settings', $definition->get('field_ui_base_route'));
+
+    $route = \Drupal::service('router.route_provider')->getRouteByName('entity.kitty_cat.settings');
+    $this->assertNotNull($route);
   }
 
 }
