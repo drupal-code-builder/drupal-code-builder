@@ -125,7 +125,9 @@ class InstallationTestBase extends KernelTestBase {
   protected function writeModuleFiles($module_name, $files) {
     $module_folder = $this->getModuleParentFolderPath() . '/' . $module_name;
 
-    mkdir($module_folder, 0777, TRUE);
+    if (!file_exists($module_folder)) {
+      mkdir($module_folder, 0777, TRUE);
+    }
 
     foreach ($files as $filepath => $code) {
       $relative_file_dir = dirname($filepath);
