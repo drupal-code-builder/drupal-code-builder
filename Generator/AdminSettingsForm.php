@@ -139,7 +139,7 @@ class AdminSettingsForm extends Form {
       // OK to use a token here, as the YAML value for this will be quoted
       // anyway.
       'path' => $settings_form_path,
-      'title' => 'Administer %lower',
+      'title' => '%Module settings' ,
       'controller' => [
         'controller_type' => 'form',
         'routing_value' => '\\' . $this->component_data['qualified_class_name'],
