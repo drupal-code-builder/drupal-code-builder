@@ -2,11 +2,15 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use MutableTypedData\Definition\PropertyListInterface;
+
 /**
  * General class for plugin classes.
  *
- * Used for plugin base classes, and as a base class for class-based discovery
- * plugins.
+ * Used for:
+ * - plugin base classes
+ * - base class for class-based discovery plugins
+ * - custom plugin class for Yaml-based discovery plugins.
  */
 class PluginClassBase extends PHPClassFileWithInjection {
 
@@ -47,6 +51,16 @@ class PluginClassBase extends PHPClassFileWithInjection {
       'typehint' => 'mixed',
     ]
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function addToGeneratorDefinition(PropertyListInterface $definition) {
+    parent::addToGeneratorDefinition($definition);
+
+    $definition->getProperty('use_static_factory_method')
+      ->setLiteralDefault(TRUE);
+  }
 
   /**
    * {@inheritdoc}

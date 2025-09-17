@@ -51,6 +51,47 @@ class PluginYamlDiscovery extends BaseGenerator {
               'Deriver';
           })
         ),
+      'plugin_custom_class' => PropertyDefinition::create('boolean')
+        ->setLabel('Use a custom plugin class')
+        ->setDescription("Adds a custom class for the plugin which inherits from the default."),
+      'plugin_custom_class_parent' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setCallableDefault(function ($component_data) {
+          $plugin_class_parent = '\\' . (
+            $component_data->getParent()->plugin_type_data->value['base_class']
+              ??
+              $component_data->getParent()->plugin_type_data->value['yaml_properties']['class']
+            );
+          return $plugin_class_parent;
+        }),
+      'plugin_custom_relative_class_name' => PropertyDefinition::create('string')
+        ->setInternal(TRUE)
+        ->setDefault(
+          DefaultDefinition::create()
+            ->setCallable(function (DataItem $component_data) {
+              // We need to use a reasonable namespace beneath Plugin for the
+              // class. Deriving it from the base class is too complex, as the
+              // class could be in the top-level namespace, or in Plugin.
+              // Instead, taking the type ID and forming namespaces from its
+              // dot-separated pieces is a best guess.
+              $plugin_type_id = $component_data->getParent()->plugin_type_data->value['type_id'];
+
+              $suffix_pieces = array_map(
+                fn ($piece) => CaseString::snake($piece)->pascal(),
+                explode('.', $plugin_type_id),
+              );
+
+              $plugin_subdir = implode('\\', $suffix_pieces);
+
+              $component_data->value = 'Plugin\\' . $plugin_subdir . '\\' . CaseString::snake($component_data->getParent()->plugin_name->value)->pascal();
+            })
+            ->setDependencies('..:plugin_custom_class')
+        ),
+      'injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Injected services for custom class')
+        ->setDescription("Services to inject if using a custom plugin class.")
+        ->setMultiple(TRUE)
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'prefix_name' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
         ->setLiteralDefault(TRUE),
@@ -125,6 +166,12 @@ class PluginYamlDiscovery extends BaseGenerator {
         $plugin_properties_with_defaults[$property_name] = $property_default;
       }
     }
+
+    // Set the class if we're generating a custom plugin class.
+    if (!empty($data_item->getParent()->plugin_custom_class->value)) {
+      $plugin_properties_with_defaults['class'] = '\\Drupal\%module\\' . $data_item->getParent()->plugin_custom_relative_class_name->value;
+    }
+
     return $plugin_properties_without_defaults + $plugin_properties_with_defaults;
   }
 
@@ -165,6 +212,25 @@ class PluginYamlDiscovery extends BaseGenerator {
             'name' => 'base_plugin_definition',
           ],
         ],
+      ];
+    }
+
+    if (!empty($this->component_data->plugin_custom_class->value)) {
+      $plugin_class_parent = '\\' . (
+        $this->component_data['plugin_type_data']['base_class']
+        ??
+        $this->component_data['plugin_type_data']['yaml_properties']['class']
+      );
+
+      $components['plugin_custom_class'] = [
+        'component_type' => 'PluginClassBase',
+        'class_docblock_lines' => [
+          'Plugin class for ' . $this->component_data->plugin_name->value . '.',
+        ],
+        // Use relative class name so we only compute one value.
+        'relative_class_name' => $this->component_data->plugin_custom_relative_class_name->value,
+        'parent_class_name' => $this->component_data->plugin_custom_class_parent->value,
+        'injected_services' => $this->component_data->injected_services->values(),
       ];
     }
 
