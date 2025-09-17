@@ -63,6 +63,8 @@ class ComponentContentEntityType10Test extends TestBase {
       'src/Entity/KittyCat.php',
       'src/Entity/KittyCatInterface.php',
       'test_module.permissions.yml',
+      'src/Controller/AdminStructureKittyCatController.php',
+      'test_module.routing.yml',
     ], $files);
 
     $entity_interface_file = $files['src/Entity/KittyCatInterface.php'];
@@ -401,6 +403,8 @@ class ComponentContentEntityType10Test extends TestBase {
       'src/Entity/KittyCat.php',
       'src/Entity/KittyCatInterface.php',
       'test_module.permissions.yml',
+      'src/Controller/AdminStructureKittyCatController.php',
+      'test_module.routing.yml',
     ], $files);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
@@ -524,6 +528,8 @@ class ComponentContentEntityType10Test extends TestBase {
       'src/Entity/KittyCat.php',
       'src/Entity/KittyCatInterface.php',
       'test_module.permissions.yml',
+      'src/Controller/AdminStructureKittyCatController.php',
+      'test_module.routing.yml',
     ], $files);
 
     $entity_class_file = $files['src/Entity/KittyCat.php'];
