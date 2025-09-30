@@ -228,11 +228,14 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
     $value = [
       'service_name' => preg_replace("@^{$extension->name}\.@", '', $name),
-      'injected_services' => array_map(fn ($service_name) => ltrim($service_name, '@'), $service_yaml['arguments']),
       // These properties are hidden in the UI but will be stored anyway.
       'plain_class_name' => end($class_name_pieces),
       'relative_namespace' => implode('\\', array_slice($class_name_pieces, 2, -1)),
     ];
+
+    if (!empty($service_yaml['arguments'])) {
+      $value['injected_services'] = array_map(fn ($service_name) => ltrim($service_name, '@'), $service_yaml['arguments']);
+    }
 
     foreach ($component_data->getItem($property_name) as $delta => $delta_item) {
       if ($delta_item->service_name->value == $value['service_name']) {
