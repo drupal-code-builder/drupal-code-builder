@@ -11,7 +11,7 @@ use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 class RenderAttributesTest extends TestCase {
 
   /**
-   * Tests an annotation with nested annotations.
+   * Tests an attribute with nested objects.
    */
   public function testAttributeWithNesting() {
     $attribute = PhpAttributes::class(
@@ -68,6 +68,9 @@ class RenderAttributesTest extends TestCase {
     $this->assertEquals($expected_attribute, $attribute);
   }
 
+  /**
+   * Test attributes with inline values.
+   */
   public function testAttributeInline() {
     // With inline implicit.
     $attribute = PhpAttributes::class(
