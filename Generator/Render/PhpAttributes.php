@@ -79,14 +79,17 @@ class PhpAttributes extends PhpRenderer {
     $class_name = $class_name_prefix . $this->attributeClassName;
 
     if (empty($this->data)) {
+      // Just the attribute class.
       $lines[] = '#[' . $class_name . ']';
     }
     elseif (is_scalar($this->data)) {
+      // Attribute with a single scalar value.
       $lines[] = '#[' .
         $class_name .
         '(' . PhpValue::create($this->data)->renderInline() . ')]';
     }
     elseif ($this->forceInline) {
+      // Attribute with an inline array.
       $lines[] = '#[' .
         $class_name .
         '(' .
@@ -94,6 +97,7 @@ class PhpAttributes extends PhpRenderer {
         ')]';
     }
     else {
+      // Attribute with multi-line data.
       $lines[] = '#[' . $class_name . '(';
 
       $this->renderAttributeParameters($lines, $this->data);
