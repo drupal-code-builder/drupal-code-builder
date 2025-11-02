@@ -26,6 +26,8 @@ class RenderAttributesTest extends TestCase {
           'purr' => 'value',
         ],
         'star_trek_name' => "T'Pau",
+        'fluffy' => TRUE,
+        'class' => '\Drupal\my_module\KittyHandler::class',
       ],
       [
         'id' => 'The plugin ID.',
@@ -44,6 +46,8 @@ class RenderAttributesTest extends TestCase {
 
     $attribute = implode("\n", $lines);
 
+    // Note that the class won't get extracted as fully-qualified class
+    // extraction is handled at the PHP file level.
     $expected_attribute = <<<EOT
     #[\Drupal\Core\Block\Attribute\Block(
       // The plugin ID.
@@ -56,6 +60,8 @@ class RenderAttributesTest extends TestCase {
         'purr' => 'value',
       ],
       star_trek_name: "T'Pau",
+      fluffy: TRUE,
+      class: \Drupal\my_module\KittyHandler::class,
     )]
     EOT;
 
