@@ -10,6 +10,16 @@ abstract class PhpRenderer {
   /**
    * Renders a scalar or NULL value as a PHP string.
    *
+   * To render:
+   *  - A class or an expression starting with a class such as a class constant
+   *    or the special '::class' expression, pass the fully-qualified classname
+   *    or class constant as a string starting with '\\'.
+   *  - A variable, pass the variable name as a string starting with '£' instead
+   *    of '$'.
+   *  - A boolean, pass either a literal boolean or a string such as 'TRUE'.
+   *  - NULL, either the NULL value or the string 'NULL'.
+   *  - A numeric value, either the value or the quoted value.
+   *
    * @param mixed $value
    *   The value to render.
    *
