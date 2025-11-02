@@ -785,15 +785,15 @@ class PHPTester {
    *
    * @param string $property_name
    *   The name of the property, without the initial '$'.
-   * @param string $typehint
-   *   The typehint for the property, without the initial '\' if a class or
-   *   interface.
+   * @param string|null $typehint
+   *   (optional) The typehint for the property, without the initial '\' if a
+   *   class or interface.
    * @param mixed $default
    *   (optional) The expected default value of the property, as a PHP value.
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertClassHasPublicProperty($property_name, $typehint, $default = NULL, $message = NULL) {
+  public function assertClassHasPublicProperty($property_name, ?string $typehint = NULL, $default = NULL, $message = NULL) {
     $message = $message ?? "The class defines the public property \${$property_name}";
 
     $this->assertClassHasProperty($property_name, $typehint, $default, $message);
@@ -807,15 +807,15 @@ class PHPTester {
    *
    * @param string $property_name
    *   The name of the property, without the initial '$'.
-   * @param string $typehint
-   *   The typehint for the property, without the initial '\' if a class or
-   *   interface.
+   * @param string|null $typehint
+   *   (optional) The typehint for the property, without the initial '\' if a
+   *   class or interface.
    * @param mixed $default
    *   (optional) The expected default value of the property, as a PHP value.
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertClassHasProtectedProperty($property_name, $typehint, $default = NULL, $message = NULL) {
+  public function assertClassHasProtectedProperty($property_name, ?string $typehint = NULL, $default = NULL, $message = NULL) {
     $message = $message ?? "The class defines the protected property \${$property_name}";
 
     $this->assertClassHasProperty($property_name, $typehint, $default, $message);
@@ -837,7 +837,7 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertClassHasProperty($property_name, $typehint, $default, $message = NULL) {
+  public function assertClassHasProperty($property_name, ?string $typehint = NULL, $default = NULL, $message = NULL) {
     $message = $message ?? "The class defines the property \${$property_name}";
 
     Assert::assertArrayHasKey($property_name, $this->parser_nodes['properties'], $message);
