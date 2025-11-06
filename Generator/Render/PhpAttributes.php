@@ -72,7 +72,7 @@ class PhpAttributes extends PhpRenderer {
   /**
    * Renders the attribute to an array of code lines.
    */
-  public function render() {
+  public function render(): array {
     $lines = [];
 
     $class_name_prefix = str_starts_with($this->attributeClassName, '\\') ? '' : '\\';
