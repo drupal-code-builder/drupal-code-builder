@@ -126,6 +126,11 @@ class PHPTester {
       $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
     }
 
+    if ($this->drupalMajorVersion <= 7) {
+      // Code for Drupal 7 and earlier uses long array syntax.
+      $excluded_sniffs[] = 'Generic.Arrays.DisallowLongArraySyntax';
+    }
+
     $constraint = new CodeAdheresToCodingStandards($this->drupalMajorVersion, $excluded_sniffs, $this->phpCodeFilePath);
 
     Assert::assertThat($this->phpCode, $constraint, "The code file {$this->phpCodeFilePath} adheres to Drupal coding standards.");
