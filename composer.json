@@ -20,8 +20,7 @@
     "symfony/yaml": "^6",
     "symfony/var-dumper": "^6",
     "morrislaptop/var-dumper-with-context": "^0.1.0",
-    "phpspec/prophecy-phpunit": "^2.0",
-    "dms/phpunit-arraysubset-asserts": "^0.3.0"
+    "phpspec/prophecy-phpunit": "^2.0"
   },
   "autoload": {
     "psr-4": {
