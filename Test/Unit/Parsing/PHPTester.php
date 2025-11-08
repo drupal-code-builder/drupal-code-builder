@@ -133,6 +133,10 @@ class PHPTester {
     if ($this->drupalMajorVersion <= 7) {
       // Code for Drupal 7 and earlier uses long array syntax.
       $excluded_sniffs[] = 'Generic.Arrays.DisallowLongArraySyntax';
+
+      // Drupal 7 typically has classes in .inc files, which do not match the
+      // class name.
+      $excluded_sniffs[] = 'Squiz.Classes.ClassFileName.NoMatch';
     }
 
     $constraint = new CodeAdheresToCodingStandards($this->drupalMajorVersion, $excluded_sniffs, $this->phpCodeFilePath);
