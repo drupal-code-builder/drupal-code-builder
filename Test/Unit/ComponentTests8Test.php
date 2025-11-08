@@ -65,7 +65,11 @@ class ComponentTests8Test extends TestBase {
     $tests_file = $files['src/Tests/TestModuleTestCase.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $tests_file);
-    $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
+
+    $excluded = $this->phpcsExcludedSniffs;
+    $excluded[] = 'Generic.Arrays.DisallowLongArraySyntax';
+
+    $php_tester->assertDrupalCodingStandards($excluded);
     $php_tester->assertHasClass('TestModuleTestCase', "The test class file contains the correct class");
     $php_tester->assertHasMethods(['getInfo', 'setUp', 'testTodoChangeThisName']);
   }

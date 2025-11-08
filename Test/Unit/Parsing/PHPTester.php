@@ -121,9 +121,22 @@ class PHPTester {
     // to stand out.
     $excluded_sniffs[] = 'Drupal.Commenting.TodoComment.TodoFormat';
 
+    // Temporarily remove this sniff because it's buggy with PHPCS 4.x.
+    // @see https://github.com/slevomat/coding-standard/issues/1810
+    $excluded_sniffs[] = 'SlevomatCodingStandard.Commenting.ForbiddenComments';
+
     if (empty($this->phpCodeFilePath)) {
       // Exclude this sniff if we don't have access to the file name.
-      $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
+      $excluded_sniffs[] = 'Squiz.Classes.ClassFileName.NoMatch';
+    }
+
+    if ($this->drupalMajorVersion <= 7) {
+      // Code for Drupal 7 and earlier uses long array syntax.
+      $excluded_sniffs[] = 'Generic.Arrays.DisallowLongArraySyntax';
+
+      // Drupal 7 typically has classes in .inc files, which do not match the
+      // class name.
+      $excluded_sniffs[] = 'Squiz.Classes.ClassFileName.NoMatch';
     }
 
     $constraint = new CodeAdheresToCodingStandards($this->drupalMajorVersion, $excluded_sniffs, $this->phpCodeFilePath);
