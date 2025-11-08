@@ -69,7 +69,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
-    $php_tester->assertClassHasProtectedProperty('modules', 'array', [
+    $php_tester->assertClassHasProtectedProperty('modules', NULL, [
       'system',
       'user',
       'dependency_one',
@@ -150,7 +150,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
     $php_tester->assertClassHasParent('Drupal\KernelTests\KernelTestBase');
-    $php_tester->assertClassHasProtectedProperty('modules', 'array', [
+    $php_tester->assertClassHasProtectedProperty('modules', NULL, [
       'system',
       'user',
       'test_module',
@@ -442,7 +442,7 @@ class ComponentTestsPHPUnit9Test extends TestBase {
       'generated_module',
       'my_test',
     ];
-    $php_tester->assertClassHasProtectedProperty('modules', 'array', $expected_modules_property_value);
+    $php_tester->assertClassHasProtectedProperty('modules', NULL, $expected_modules_property_value);
   }
 
   /**

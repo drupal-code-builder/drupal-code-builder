@@ -368,7 +368,7 @@ class PHPUnitTest extends PHPClassFile {
         'modules',
         'array',
         [
-          'docblock_first_line' => 'The modules to enable.',
+          'docblock_inherit' => TRUE,
           'prefixes' => ['protected', 'static'],
           'default' => $test_install_modules,
           'break_array_value' => TRUE,
