@@ -161,6 +161,11 @@ class CodeAdheresToCodingStandards extends Constraint {
     $runner->config->setConfigData('installed_paths', implode(',', [
       static::$composerVendorDir . '/drupal/coder/coder_sniffer',
       static::$composerVendorDir . '/slevomat/coding-standard',
+      // Need to register our config data dir for both the case where this repo
+      // is the main project in CI testing, and the case where this repo is
+      // installed as a library in local development. PHPCS does not seem to
+      // mind a directory that doesn't exist.
+      getcwd() . '/Test/PHP_CodeSniffer',
       static::$composerVendorDir . '/drupal-code-builder/drupal-code-builder/Test/PHP_CodeSniffer',
     ]));
 
