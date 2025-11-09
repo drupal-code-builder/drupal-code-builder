@@ -26,8 +26,9 @@ use CaseConverter\CaseString;
  *
  * @see DrupalCodeBuilder\Generator\ExtensionCodeFile
  */
-class Hooks extends BaseGenerator implements EnvironmentAware {
+class Hooks extends BaseGenerator implements ClassHandlerAware, EnvironmentAware {
 
+  use ClassHandlerAwareTrait;
   use EnvironmentAwareTrait;
 
   /**

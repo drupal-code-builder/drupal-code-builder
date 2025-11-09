@@ -21,7 +21,9 @@ use MutableTypedData\Definition\VariantDefinition;
  * Furthermore, hooks that collect contents and can be procedural or OO use
  * a hook body class, e.g. hook_theme().
  */
-abstract class HookImplementationBase extends PHPFunction {
+abstract class HookImplementationBase extends PHPFunction implements ClassHandlerAware {
+
+  use ClassHandlerAwareTrait;
 
   /**
    * {@inheritdoc}

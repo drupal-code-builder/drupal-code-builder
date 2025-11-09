@@ -6,6 +6,7 @@ use DI\Attribute\Inject;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
+use DrupalCodeBuilder\Generator\ClassHandlerAware;
 use DrupalCodeBuilder\Generator\EnvironmentAware;
 
 /**
@@ -101,8 +102,10 @@ class ComponentClassHandler {
 
     $generator = new $class($component_data, $this);
 
-    // Inject the class handler.
-    $generator->setClassHandler($this);
+    // Inject the class handler if needed.
+    if ($generator instanceof ClassHandlerAware) {
+      $generator->setClassHandler($this);
+    }
 
     // Inject the environment if needed.
     if ($generator instanceof EnvironmentAware) {

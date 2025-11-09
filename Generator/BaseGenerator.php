@@ -7,7 +7,6 @@ use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
 use DrupalCodeBuilder\File\DrupalExtension;
-use DrupalCodeBuilder\Task\Generate\ComponentClassHandler;
 use MutableTypedData\Data\DataItem;
 
 /**
@@ -161,13 +160,6 @@ abstract class BaseGenerator implements GeneratorInterface {
   protected $containedComponents = [];
 
   /**
-   * The class handler.
-   *
-   * @var \DrupalCodeBuilder\Task\Generate\ComponentClassHandler
-   */
-  protected $classHandler;
-
-  /**
    * The existing extension, if applicable.
    *
    * @var \DrupalCodeBuilder\File\DrupalExtension
@@ -205,16 +197,6 @@ abstract class BaseGenerator implements GeneratorInterface {
     $class_pieces = explode('\\', $class);
     $short_class = array_pop($class_pieces);
     $this->type = preg_replace('@\d+$@', '', $short_class);
-  }
-
-  /**
-   * Sets the class handler.
-   *
-   * @param \DrupalCodeBuilder\Task\Generate\ComponentClassHandler $class_handler
-   *   The class handler.
-   */
-  public function setClassHandler(ComponentClassHandler $class_handler) {
-    $this->classHandler = $class_handler;
   }
 
   /**

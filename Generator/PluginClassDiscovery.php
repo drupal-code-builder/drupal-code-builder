@@ -12,7 +12,9 @@ use MutableTypedData\Definition\DefaultDefinition;
 /**
  * Common base class for annotation and attribute plugins.
  */
-abstract class PluginClassDiscovery extends PluginClassBase {
+abstract class PluginClassDiscovery extends PluginClassBase implements ClassHandlerAware {
+
+  use ClassHandlerAwareTrait;
 
   function __construct($component_data) {
     // Set some default properties.
