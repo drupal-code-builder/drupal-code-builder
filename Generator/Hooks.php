@@ -26,7 +26,9 @@ use CaseConverter\CaseString;
  *
  * @see DrupalCodeBuilder\Generator\ExtensionCodeFile
  */
-class Hooks extends BaseGenerator {
+class Hooks extends BaseGenerator implements EnvironmentAware {
+
+  use EnvironmentAwareTrait;
 
   /**
    * {@inheritdoc}
@@ -107,7 +109,7 @@ class Hooks extends BaseGenerator {
         // Strip out INFO: comments for advanced users.
         // This has to be done before we split this into lines.
         // TODO: No need to do this if this is hook api.php file sample code!
-        if (!\DrupalCodeBuilder\Factory::getEnvironment()->getSetting('detail_level', 0)) {
+        if (!$this->environment->getSetting('detail_level', 0)) {
           // Used to strip INFO messages out of generated file for advanced users.
           $pattern = '#\s+/\* INFO:(.*?)\*/#ms';
           $hook['template'] = preg_replace($pattern, '', $hook['template']);
@@ -398,8 +400,8 @@ class Hooks extends BaseGenerator {
     // node.hooks.template will only override that same file in the module data;
     // if the hook is not requested as part of a group then that file will not be considered.
     // (Though groups are broken for now...)
-    $version = \DrupalCodeBuilder\Factory::getEnvironment()->getCoreMajorVersion();
-    $template_base_path_module = \DrupalCodeBuilder\Factory::getEnvironment()->getPath('templates') . '/' . $version;
+    $version = $this->environment->getCoreMajorVersion();
+    $template_base_path_module = $this->environment->getPath('templates') . '/' . $version;
     //print "base path: $template_base_path_module";
     // $template_base_paths['module']
     // $template_base_paths['user']

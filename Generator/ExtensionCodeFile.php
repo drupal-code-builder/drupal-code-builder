@@ -9,7 +9,9 @@ use DrupalCodeBuilder\Generator\Render\DocBlock;
 /**
  * Generator class for procedural code files.
  */
-class ExtensionCodeFile extends PHPFile {
+class ExtensionCodeFile extends PHPFile implements EnvironmentAware {
+
+  use EnvironmentAwareTrait;
 
   /**
    * Whether this file is merged with existing code.
@@ -265,7 +267,7 @@ class ExtensionCodeFile extends PHPFile {
    * {@inheritdoc}
    */
   function codeFooter() {
-    $footer = \DrupalCodeBuilder\Factory::getEnvironment()->getSetting('footer', NULL);
+    $footer = $this->environment->getSetting('footer', NULL);
     return $footer;
   }
 
