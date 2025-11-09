@@ -157,6 +157,15 @@ class ClassAnnotation {
         $declaration_line .= "{$value},";
         $docblock_lines[] = $declaration_line;
       }
+      elseif (is_bool($value) || is_null($value)) {
+        $declaration_line .= match ($value) {
+          NULL => 'NULL',
+          FALSE => 'FALSE',
+          TRUE => 'TRUE',
+        };
+        $declaration_line .= ',';
+        $docblock_lines[] = $declaration_line;
+      }
       elseif (is_object($value)) {
         // Child annotation. The nesting level doesn't increase here, as the
         // child annotation class is just on the same line as the key.
