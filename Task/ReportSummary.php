@@ -46,6 +46,18 @@ class ReportSummary extends ReportHookDataFolder {
   }
 
   /**
+   * Gets the timestamp of the last data analysis.
+   *
+   * @return
+   *  A unix timestamp, or NULL if the data analysis has never been done.
+   */
+  public function lastUpdatedDate(): ?int {
+    $metadata = $this->environment->getStorage()->retrieve('metadata');
+
+    return $metadata['timestamp'] ?? NULL;
+  }
+
+  /**
    * Returns a listing of all stored data, with counts.
    *
    * @return
