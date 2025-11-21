@@ -27,6 +27,9 @@ class ReportHookDataFolder extends Base {
    *
    * @return
    *  A unix timestamp, or NULL if the hooks have never been collected.
+   *
+   * @deprecated Use \DrupalCodeBuilder\Task\ReportSummary::lastUpdatedDate()
+   *   instead.
    */
   public function lastUpdatedDate() {
     $directory = $this->environment->getDataDirectory();
