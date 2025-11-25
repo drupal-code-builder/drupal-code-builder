@@ -121,6 +121,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
         ),
       'decorates' => PropertyDefinition::create('string')
         ->setLabel('Decorated service')
+        ->setDescription("The name of a service that this service decorates.")
         ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       // The parent service name.
       'parent' => PropertyDefinition::create('string')
