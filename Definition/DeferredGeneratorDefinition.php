@@ -26,7 +26,7 @@ class DeferredGeneratorDefinition extends PropertyDefinition implements Generato
   public function __construct(
     string $data_type,
     protected string $componentType,
-    protected string $generatorClass,
+    public readonly string $generatorClass,
   ) {
     parent::__construct($data_type);
   }

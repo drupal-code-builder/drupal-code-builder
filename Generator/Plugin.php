@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
@@ -91,6 +92,23 @@ class Plugin extends BaseGenerator {
           ->setLabel('Validaton constraint')
           ->setGenerator('PluginValidationConstraint'),
       ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    $label = [];
+    $label[] = $data->plugin_type->value;
+
+    if ($data->hasProperty('plugin_label')) {
+      $label[] = $data->plugin_label->value;
+    }
+    else {
+      $label[] = $data->plugin_name->value;
+    }
+
+    return implode(' - ', array_filter($label));
   }
 
 }

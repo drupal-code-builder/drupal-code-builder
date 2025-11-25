@@ -6,6 +6,7 @@ use MutableTypedData\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Generator for a module library.
@@ -53,6 +54,13 @@ class Library extends BaseGenerator {
             ->setExpression("machineToLabel(get('..:..:..:root_name'))")
         ),
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->library_name->value ?: NULL;
   }
 
   /**

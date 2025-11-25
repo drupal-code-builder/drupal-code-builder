@@ -374,6 +374,13 @@ abstract class EntityTypeBase extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->entity_type_id->value ?: NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 

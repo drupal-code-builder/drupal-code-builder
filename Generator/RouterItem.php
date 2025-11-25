@@ -410,6 +410,13 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
   /**
    * {@inheritdoc}
    */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->path->value ?: NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function findAdoptableComponents(DrupalExtension $extension): array {
     $routing_filename = $extension->name . '.routing.yml';
     if (!$extension->hasFile($routing_filename)) {

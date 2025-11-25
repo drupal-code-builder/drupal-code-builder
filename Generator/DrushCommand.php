@@ -11,6 +11,7 @@ use DrupalCodeBuilder\Definition\PresetDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\DocBlock;
 use DrupalCodeBuilder\Generator\Render\PhpAttributes;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 
 /**
@@ -155,6 +156,13 @@ class DrushCommand extends PHPFunction {
 
     $definition->getProperty('prefixes')
       ->setLiteralDefault(['public']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->command_name->value ?: NULL;
   }
 
   /**

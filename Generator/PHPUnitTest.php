@@ -238,6 +238,18 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    $label = [];
+    $label[] = $data->test_type->value;
+    $label[] = $data->plain_class_name->value;
+
+    return implode(' - ', array_filter($label));
+    return $data->test_type->value ?: NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 

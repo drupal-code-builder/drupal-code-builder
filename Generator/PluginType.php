@@ -296,6 +296,13 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
   /**
    * {@inheritdoc}
    */
+   public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->plugin_label->value ?: NULL;
+   }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function findAdoptableComponents(DrupalExtension $extension): array {
     $services_filename = $extension->name . '.services.yml';
     if (!$extension->hasFile($services_filename)) {

@@ -4,6 +4,7 @@ namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\OptionsSortOrder;
 
@@ -39,6 +40,13 @@ class FormElement extends BaseGenerator {
         ->setInternal(TRUE)
         ->setLiteralDefault([]),
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->form_key->value ?: NULL;
   }
 
   /**

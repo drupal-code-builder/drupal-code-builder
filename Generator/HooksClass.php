@@ -81,6 +81,13 @@ class HooksClass extends Service {
   /**
    * {@inheritdoc}
    */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->plain_class_name->value ?: NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function findAdoptableComponents(DrupalExtension $extension): array {
     // For now we don't adopt hook classes, so override this method so we don't
     // return the same as the parent class.

@@ -77,6 +77,13 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
   /**
    * {@inheritdoc}
    */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->plain_class_name->value ?: NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function findAdoptableComponents(DrupalExtension $extension): array {
     $finder = $extension->getFinder();
     $finder

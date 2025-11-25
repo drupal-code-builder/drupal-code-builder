@@ -9,6 +9,8 @@ class MergeableMutableDataWithArrayAccess extends MutableData implements \ArrayA
 
   use DataItemArrayAccessTrait;
 
+  use DeltaLabelTrait;
+
   use MergeableComplexDataTrait;
 
   /**

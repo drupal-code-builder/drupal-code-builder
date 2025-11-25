@@ -255,6 +255,26 @@ abstract class BaseGenerator implements GeneratorInterface {
     ]);
   }
 
+  /**
+   * Gets a diffentiated label suffix for a delta item.
+   *
+   * This allows different delta items to differentiate their labels in the UI
+   * with more than just a delta index.
+   *
+   * This may be called for incomplete data items (such as those added into a
+   * form) and so must account for even required data not being present.
+   *
+   * @param \MutableTypedData\Data\DataItem $data
+   *   The data item to get a label suffix for.
+   *
+   * @return string|null
+   *   The label suffix, or NULL if useful data is available. It does not need
+   *   any initial space or separator.
+   */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return NULL;
+  }
+
   public function isRootComponent(): bool {
     return FALSE;
   }

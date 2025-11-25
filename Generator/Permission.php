@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 use MutableTypedData\Definition\PropertyListInterface;
 use MutableTypedData\Definition\DefaultDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
+use MutableTypedData\Data\DataItem;
 
 /**
  * Generator for module permissions on Drupal 8 and higher.
@@ -44,6 +45,13 @@ class Permission extends BaseGenerator {
         ->setRequired(TRUE)
         ->setLiteralDefault(FALSE),
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDifferentiatedLabelSuffix(DataItem $data): ?string {
+    return $data->permission->value ?: NULL;
   }
 
   /**

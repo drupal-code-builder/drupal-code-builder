@@ -8,6 +8,8 @@ class MergeableComplexDataWithArrayAccess extends ComplexData implements \ArrayA
 
   use DataItemArrayAccessTrait;
 
+  use DeltaLabelTrait;
+
   use MergeableComplexDataTrait;
 
 }
