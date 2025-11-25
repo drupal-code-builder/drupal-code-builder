@@ -8,7 +8,7 @@ namespace DrupalCodeBuilder\File;
  * This may include the code of file on disk if this exists and the file is of
  * a type that we are able to merge.
  */
-interface CodeFileInterface {
+interface CodeFileInterface extends \Stringable {
 
   /**
    * Gets the code for the file.

@@ -13,7 +13,7 @@ use DrupalCodeBuilder\Generator\RootComponent;
  * This goes through a refinement process, with some properties being set later
  * and some which hold earlier versions of data being unset.
  */
-class CodeFile implements \Stringable, CodeFileInterface {
+class CodeFile implements CodeFileInterface {
 
   /**
    * The array of body pieces.
