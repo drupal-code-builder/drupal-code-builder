@@ -33,7 +33,7 @@ class ComponentHooks11Test extends TestBase {
 
       'hook_classes' => [
         0 => [
-          'plain_class_name' => 'AlphaHooks',
+          // Don't give a hooks class name to test the incrementing default.
           'injected_services' => [
             'current_user',
             'entity_type.manager',
@@ -62,6 +62,13 @@ class ComponentHooks11Test extends TestBase {
             ],
           ],
         ],
+        1 => [
+          'hook_methods' => [
+            0 => [
+              'hook_name' => 'hook_form_alter',
+            ],
+          ],
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -70,10 +77,11 @@ class ComponentHooks11Test extends TestBase {
 
     $this->assertFiles([
       'test_module.info.yml',
-      'src/Hook/AlphaHooks.php',
+      'src/Hook/TestModuleHooks.php',
+      'src/Hook/TestModuleHooks2.php',
     ], $files);
 
-    $hooks_file = $files['src/Hook/AlphaHooks.php'];
+    $hooks_file = $files['src/Hook/TestModuleHooks.php'];
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
     $php_tester->assertDrupalCodingStandards([
@@ -86,7 +94,7 @@ class ComponentHooks11Test extends TestBase {
       'Drupal.Commenting.InlineComment.SpacingAfter',
     ]);
 
-    $php_tester->assertHasClass('Drupal\test_module\Hook\AlphaHooks');
+    $php_tester->assertHasClass('Drupal\test_module\Hook\TestModuleHooks');
     $php_tester->getMethodTester('formAlter')
       ->assertHasAttribute('\Drupal\Core\Hook\Attribute\Hook', ['form_alter']);
     $php_tester->getMethodTester('formNodeFormAlter')

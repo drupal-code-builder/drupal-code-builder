@@ -31,7 +31,17 @@ class HooksClass extends Service {
       ->setLabel("Hooks class name")
       ->setInternal(FALSE)
       ->setDescription("The hooks class's plain class name, e.g. \"MyHooks\".")
-      ->removeDefault();
+      ->setCallableDefault(function ($component_data) {
+        // Add a suffix to the default class name based on the human-readable
+        // index.
+        $delta = $component_data->getParent()->getName();
+        $suffix = match ($delta) {
+          '0' => '',
+          default => $delta + 1,
+        };
+
+        return $component_data->getParent()->root_name_pascal->value . 'Hooks' . $suffix;
+      });
     $definition->getProperty('relative_namespace')
       ->setDefault(DefaultDefinition::create()
         ->setLiteral('Hook')
@@ -59,6 +69,12 @@ class HooksClass extends Service {
           $component_data->containing_component = '%requester';
           $component_data->class_component_address = '..:..';
         }),
+    );
+
+    $definition->addProperty(PropertyDefinition::create('string')
+      ->setName('root_name_pascal')
+      ->setInternal(TRUE)
+      ->setExpressionDefault("get('..:..:..:root_name_pascal')")
     );
   }
 
