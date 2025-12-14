@@ -277,7 +277,9 @@ class ComponentPluginsAttribute11Test extends TestBase {
       ],
       'plugins' => [
         0 => [
-          'plugin_type' => 'block',
+          // Use a plugin type whose name has a '.' in to test the formation of
+          // the deriver class name.
+          'plugin_type' => 'field.formatter',
           'plugin_name' => 'alpha',
           'deriver' => TRUE,
         ]
@@ -286,19 +288,19 @@ class ComponentPluginsAttribute11Test extends TestBase {
     ];
     $files = $this->generateModuleFiles($module_data);
 
-    $this->assertArrayHasKey('src/Plugin/Derivative/AlphaBlockDeriver.php', $files);
+    $this->assertArrayHasKey('src/Plugin/Derivative/AlphaFieldFormatterDeriver.php', $files);
 
-    $deriver = $files['src/Plugin/Derivative/AlphaBlockDeriver.php'];
+    $deriver = $files['src/Plugin/Derivative/AlphaFieldFormatterDeriver.php'];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
     $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
     $php_tester->assertHasMethod('getDerivativeDefinitions');
 
     // Check the plugin file declares the deriver.
-    $plugin_file = $files["src/Plugin/Block/Alpha.php"];
+    $plugin_file = $files["src/Plugin/Field/FieldFormatter/Alpha.php"];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
-    $php_tester->assertImportsClassLike(['Drupal\test_module\Plugin\Derivative\AlphaBlockDeriver']);
-    $php_tester->assertClassAttributeHasNamedParameterValue('deriver', 'AlphaBlockDeriver::class', 'Block');
+    $php_tester->assertImportsClassLike(['Drupal\test_module\Plugin\Derivative\AlphaFieldFormatterDeriver']);
+    $php_tester->assertClassAttributeHasNamedParameterValue('deriver', 'AlphaFieldFormatterDeriver::class', 'FieldFormatter');
   }
 
   /**

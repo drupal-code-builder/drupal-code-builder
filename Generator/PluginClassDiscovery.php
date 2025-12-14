@@ -97,9 +97,14 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
           ->setCallable(function (DataItem $component_data) {
             $plugin_data = $component_data->getParent();
 
+            $plugin_type_id = $plugin_data->plugin_type_data->value['type_id'];
+
+            // Plugin type ID can contain dots from the service name.
+            $plugin_type_id = str_replace('.', '_', $plugin_type_id);
+
             return
               $plugin_data->plain_class_name->value .
-              CaseString::snake($plugin_data->plugin_type_data->value['type_id'])->pascal() .
+              CaseString::snake($plugin_type_id)->pascal() .
               'Deriver';
           })
         ),
