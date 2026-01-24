@@ -8,8 +8,10 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\Attribute\InjectImplementations;
+use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Task\Collect\CollectorInterface;
-
+use DrupalCodeBuilder\Task\Collect\MetadataCollector;
+use DrupalCodeBuilder\Utility\ArrayOrder;
 /**
  * Task handler for collecting and processing definitions for Drupal components.
  *
@@ -51,6 +53,17 @@ class Collect extends Base {
    */
   #[InjectImplementations(CollectorInterface::class)]
   public function setCollectors(array $collectors) {
+    // Append the metadata controller so it runs last.
+    // This is faffy, but the faff is small and contained. The alternatives
+    // would be: a weight system for interface-based injection
+    // (over-engineered), or injecting this collector separately (but then it
+    // can't implement the interface or use the base class, which requires more
+    // code).
+    // WARNING: We rely on the array of collectors being keyed by the service
+    // name, which is only the case because of a bug in PHP-DI which doesn't
+    // allow us to use the splat operator for the collectors parameter!
+    ArrayOrder::moveKeyToEnd($collectors, 'Collect\\MetadataCollector');
+
     $this->collectors = $collectors;
   }
 
