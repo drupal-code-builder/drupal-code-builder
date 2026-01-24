@@ -31,6 +31,7 @@ class ServicesCollector extends CollectorBase  {
     'module_handler' => TRUE,
     'cache.discovery' => TRUE,
     'storage:node' => TRUE,
+    'Drupal\Core\DefaultContent\Importer' => TRUE,
   ];
 
   /**
@@ -251,7 +252,7 @@ class ServicesCollector extends CollectorBase  {
         $service_class = '\\' . $service_class;
       }
 
-      if (substr_count($service_id, '.') == 0) {
+      if (!str_contains($service_id, '.') && !str_contains($service_id, '\\')) {
         // If the service name does not contain any dots, in particular,
         // 'current_user', then use that, as it's usually clearer than the
         // class name.

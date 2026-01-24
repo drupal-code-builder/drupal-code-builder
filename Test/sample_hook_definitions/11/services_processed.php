@@ -32,6 +32,16 @@ array (
   ),
   'all' => 
   array (
+    'Drupal\\Core\\DefaultContent\\Importer' => 
+    array (
+      'id' => 'Drupal\\Core\\DefaultContent\\Importer',
+      'label' => 'Importer',
+      'static_method' => '',
+      'class' => '\\Drupal\\Core\\DefaultContent\\Importer',
+      'interface' => '\\Psr\\Log\\LoggerAwareInterface',
+      'description' => 'The importer service',
+      'variable_name' => 'importer',
+    ),
     'cache.discovery' => 
     array (
       'id' => 'cache.discovery',

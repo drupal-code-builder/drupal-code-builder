@@ -11,14 +11,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  *
  * @group yaml
  */
-class ComponentService10Test extends TestBase {
+class ComponentService11Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 10;
+  protected $drupalMajorVersion = 11;
 
   /**
    * Test generating a module with a service.
@@ -363,6 +363,26 @@ class ComponentService10Test extends TestBase {
             'service_name' => 'entity_type.manager',
             'property_name' => 'entityTypeManager',
             'parameter_name' => 'entity_type_manager',
+          ],
+        ],
+      ],
+      // Class name service.
+      'class-named' => [
+        'injected_services' => [
+          'Drupal\Core\DefaultContent\Importer',
+        ],
+        'property_promotion' => FALSE,
+        'yaml_arguments' => [
+          '@Drupal\Core\DefaultContent\Importer',
+        ],
+        'assert_injected_services' => [
+          [
+            // Eh this typehint is a whole other problem with this particular
+            // service.
+            'typehint' => 'Psr\Log\LoggerAwareInterface',
+            'service_name' => 'importer',
+            'property_name' => 'importer',
+            'parameter_name' => 'importer',
           ],
         ],
       ],
