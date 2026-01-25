@@ -91,7 +91,7 @@ class ComponentPluginsYAML10Test extends TestBase {
     $deriver = $files['src/Plugin/Derivative/AlphaMenuLinkDeriver.php'];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
-    $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
+    $php_tester->assertClassHasInterfaces(['Drupal\Component\Plugin\Derivative\DeriverInterface']);
     $php_tester->assertHasMethod('getDerivativeDefinitions');
 
     // Check the plugin YAML file declares the deriver.

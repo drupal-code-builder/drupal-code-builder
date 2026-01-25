@@ -91,6 +91,11 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
       'deriver' => PropertyDefinition::create('boolean')
         ->setLabel('Use deriver')
         ->setDescription("Adds a deriver class to dynamically derive plugins from a template."),
+      'deriver_injected_services' => PropertyDefinition::create('string')
+        ->setLabel('Deriver injected services')
+        ->setDescription("Services to inject into the deriver class.")
+        ->setMultiple(TRUE)
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
       'deriver_plain_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
@@ -236,16 +241,14 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
 
     if (!empty($this->component_data->deriver->value)) {
       $components['deriver'] = [
-        'component_type' => 'PHPClassFile',
+        'component_type' => 'PluginDeriver',
         'class_docblock_lines' => [
           'Plugin deriver for ' . $this->component_data->plugin_name->value . '.',
         ],
         'plain_class_name' => $this->component_data->deriver_plain_class_name->value,
         'relative_namespace' => 'Plugin\Derivative',
         'parent_class_name' => '\Drupal\Component\Plugin\Derivative\DeriverBase',
-        'interfaces' => [
-          '\Drupal\Core\Plugin\Discovery\ContainerDeriverInterface',
-        ],
+        'injected_services' => $this->component_data->deriver_injected_services->values(),
       ];
 
       $components['getDerivativeDefinitions'] = [
