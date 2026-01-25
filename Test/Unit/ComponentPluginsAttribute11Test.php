@@ -264,6 +264,8 @@ class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
    * Tests plugin derivers.
+   *
+   * @group di
    */
   function testPluginsGenerationDeriver() {
     // Create a module.
@@ -293,7 +295,7 @@ class ComponentPluginsAttribute11Test extends TestBase {
     $deriver = $files['src/Plugin/Derivative/AlphaFieldFormatterDeriver.php'];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
     $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
-    $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
+    $php_tester->assertClassHasInterfaces(['Drupal\Component\Plugin\Derivative\DeriverInterface']);
     $php_tester->assertHasMethod('getDerivativeDefinitions');
 
     // Check the plugin file declares the deriver.
@@ -301,6 +303,36 @@ class ComponentPluginsAttribute11Test extends TestBase {
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
     $php_tester->assertImportsClassLike(['Drupal\test_module\Plugin\Derivative\AlphaFieldFormatterDeriver']);
     $php_tester->assertClassAttributeHasNamedParameterValue('deriver', 'AlphaFieldFormatterDeriver::class', 'FieldFormatter');
+
+    // Add DI to the deriver class.
+    $module_data['plugins'][0]['deriver_injected_services'] = [
+      'current_user',
+      'entity_type.manager',
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertArrayHasKey('src/Plugin/Derivative/AlphaFieldFormatterDeriver.php', $files);
+    $deriver = $files['src/Plugin/Derivative/AlphaFieldFormatterDeriver.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $deriver);
+    $php_tester->assertClassHasParent('Drupal\Component\Plugin\Derivative\DeriverBase');
+    $php_tester->assertClassHasInterfaces(['Drupal\Core\Plugin\Discovery\ContainerDeriverInterface']);
+    // Check service injection.
+    $php_tester->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Session\AccountProxyInterface',
+        'service_name' => 'current_user',
+        'property_name' => 'currentUser',
+        'parameter_name' => 'current_user',
+      ],
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
   }
 
   /**
