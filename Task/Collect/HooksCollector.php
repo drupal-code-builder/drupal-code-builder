@@ -279,7 +279,7 @@ abstract class HooksCollector extends CollectorBase {
         $procedural = (
           in_array($short_name, $obligate_procedural_hooks)
           ||
-          preg_match('/^(post_update_|preprocess_|process_|update_\d+$)/', $short_name)
+          preg_match('/^(post_update_|process_|update_\d+$)/', $short_name)
         );
 
         // Because we're working through the raw data array, we keep the incoming
