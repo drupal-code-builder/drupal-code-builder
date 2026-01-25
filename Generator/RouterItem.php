@@ -56,7 +56,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
             ->setLabel('The title for the menu tab')
             ->setLiteralDefault('My Page'),
           'base_route' => PropertyDefinition::create('string')
-            ->setLabel('Route that this tab shows on')
+            ->setLabel('Base route that this tab shows on')
         ]),
 
       // TODO: remove this if possible? Probably need to allow PHPClassFile
