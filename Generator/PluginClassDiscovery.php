@@ -95,7 +95,10 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
         ->setLabel('Deriver injected services')
         ->setDescription("Services to inject into the deriver class.")
         ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData'))
+        ->setDependencyValue([
+          '..:deriver' => TRUE,
+        ]),
       'deriver_plain_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
@@ -126,7 +129,10 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
         ),
       'replace_parent_plugin' => PropertyDefinition::create('boolean')
         ->setLabel('Replace parent plugin')
-        ->setDescription("Replace the parent plugin's class with the generated class, rather than define a new plugin."),
+        ->setDescription("Replace the parent plugin's class with the generated class, rather than define a new plugin.")
+        ->setDependencyValue([
+          '..:parent_plugin_id' => TRUE,
+        ]),
       'class_docblock_lines' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE)
         ->setDefault(

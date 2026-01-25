@@ -37,7 +37,10 @@ class PluginYamlDiscovery extends BaseGenerator {
         ->setLabel('Deriver injected services')
         ->setDescription("Services to inject into the deriver class.")
         ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData'))
+        ->setDependencyValue([
+          '..:deriver' => TRUE,
+        ]),
       'deriver_plain_class_name' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setDefault(DefaultDefinition::create()
@@ -96,7 +99,10 @@ class PluginYamlDiscovery extends BaseGenerator {
         ->setLabel('Injected services for custom class')
         ->setDescription("Services to inject if using a custom plugin class.")
         ->setMultiple(TRUE)
-        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+        ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData'))
+        ->setDependencyValue([
+          '..:plugin_custom_class' => TRUE,
+        ]),
       'prefix_name' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
         ->setLiteralDefault(TRUE),
