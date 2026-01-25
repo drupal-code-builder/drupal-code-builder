@@ -18,6 +18,7 @@ use MutableTypedData\Exception\InvalidDefinitionException;
  * - Presets
  * - Processing
  * - Auto-acquisition
+ * - Dependency values
  */
 class PropertyDefinition extends BasePropertyDefinition implements PropertyListInterface, \ArrayAccess {
 
@@ -35,6 +36,8 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
   protected $variantMappingProvider;
 
   protected $autoAcquired = FALSE;
+
+  protected ?array $dependentValue = NULL;
 
   /**
    * {@inheritdoc}
@@ -320,6 +323,27 @@ class PropertyDefinition extends BasePropertyDefinition implements PropertyListI
     foreach ($this->getProperties() as $property) {
       $property->loadLazyProperties();
     }
+  }
+
+  /**
+   * Sets dependent values.
+   *
+   * UIs can use these to determine whether to show a property.
+   *
+   * @param array $dependent_value
+   *   An array of dependencies which this property may require to be shown.
+   *   Keys are relative addresses. Values are either the target value, or for
+   *   string data, TRUE to represent that the target property must be filled.
+   *
+   * @return self
+   */
+  public function setDependencyValue(array $dependent_value): self {
+    $this->dependentValue = $dependent_value;
+    return $this;
+  }
+
+  public function getDependencyValue(): ?array {
+    return $this->dependentValue;
   }
 
   public function offsetExists(mixed $offset): bool {
