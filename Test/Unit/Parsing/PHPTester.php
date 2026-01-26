@@ -126,8 +126,9 @@ class PHPTester {
     $excluded_sniffs[] = 'SlevomatCodingStandard.Commenting.ForbiddenComments';
 
     if (empty($this->phpCodeFilePath)) {
-      // Exclude this sniff if we don't have access to the file name.
+      // Exclude the class names sniff if we don't have access to the file name.
       $excluded_sniffs[] = 'Squiz.Classes.ClassFileName.NoMatch';
+      $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
     }
 
     if ($this->drupalMajorVersion <= 7) {
@@ -137,6 +138,7 @@ class PHPTester {
       // Drupal 7 typically has classes in .inc files, which do not match the
       // class name.
       $excluded_sniffs[] = 'Squiz.Classes.ClassFileName.NoMatch';
+      $excluded_sniffs[] = 'Drupal.Classes.ClassFileName.NoMatch';
     }
 
     $constraint = new CodeAdheresToCodingStandards($this->drupalMajorVersion, $excluded_sniffs, $this->phpCodeFilePath);
