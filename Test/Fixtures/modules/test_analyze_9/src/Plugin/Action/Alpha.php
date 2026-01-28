@@ -76,7 +76,7 @@ class Alpha extends ActionBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     // Checks object access.
   }
 

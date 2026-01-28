@@ -309,7 +309,7 @@ class DrushCommand extends PHPFunction {
   /**
    * {@inheritdoc}
    */
-  protected function buildMethodDeclaration($name, $parameters = [], $options = [], string $return_type = NULL): array {
+  protected function buildMethodDeclaration($name, $parameters = [], $options = [], ?string $return_type = NULL): array {
     $parameters = [];
 
     // Add command parameters.

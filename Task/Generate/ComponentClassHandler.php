@@ -54,7 +54,7 @@ class ComponentClassHandler {
    * @throws \InvalidArgumentException
    *   Throws an exception if there is no class found for the component type.
    */
-  public function getStandaloneComponentPropertyDefinition(string $component_type, string $machine_name = NULL): PropertyDefinition {
+  public function getStandaloneComponentPropertyDefinition(string $component_type, ?string $machine_name = NULL): PropertyDefinition {
     $definition = MergingGeneratorDefinition::createFromGeneratorType($component_type);
 
     if (!$definition->getName()) {

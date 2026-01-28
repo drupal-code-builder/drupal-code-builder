@@ -57,7 +57,7 @@ class PresetDefinition {
    *
    * @return static
    */
-  public static function create($value, string $label, string $description = NULL): self {
+  public static function create($value, string $label, ?string $description = NULL): self {
     return new static($value, $label, $description);
   }
 

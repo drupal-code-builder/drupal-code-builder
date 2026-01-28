@@ -23,7 +23,7 @@ class FileAssembler {
    *  are filepaths relative to the module folder (eg, 'foo.module',
    *  'tests/module.test').
    */
-  public function generateFiles($component_data, ComponentCollection $component_collection, DrupalExtension $existing_extension = NULL) {
+  public function generateFiles($component_data, ComponentCollection $component_collection, ?DrupalExtension $existing_extension = NULL) {
     $component_list = $component_collection->getComponents();
 
     // Let each file component in the tree gather data from its own children.
@@ -73,7 +73,7 @@ class FileAssembler {
    *   are filepaths relative to the module folder (eg, 'foo.module',
    *   'tests/module.test').
    */
-  protected function collectFiles(ComponentCollection $component_collection, DrupalExtension $existing_extension = NULL): array {
+  protected function collectFiles(ComponentCollection $component_collection, ?DrupalExtension $existing_extension = NULL): array {
     $code_files = [];
 
     // Components which provide a file should have registered themselves as

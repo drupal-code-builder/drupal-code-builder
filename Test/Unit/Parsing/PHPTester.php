@@ -776,7 +776,7 @@ class PHPTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertClassHasConstant(string $name, string $message = NULL) {
+  public function assertClassHasConstant(string $name, ?string $message = NULL) {
     $message ??= "The class has the constant '$name'.";
 
     Assert::assertArrayHasKey($name, $this->parser_nodes['constants'], $message);

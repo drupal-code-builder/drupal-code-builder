@@ -37,7 +37,7 @@ class OptionDefinition extends BaseOptionDefinition {
    *
    * @return static
    */
-  public static function create($value, string $label, string $description = NULL, int $weight = 0, ?string $api_url = NULL): self {
+  public static function create($value, string $label, ?string $description = NULL, int $weight = 0, ?string $api_url = NULL): self {
     return new static($value, $label, $description, $weight, $api_url);
   }
 

@@ -111,7 +111,7 @@ class Generate extends Base {
    * @throws \DrupalCodeBuilder\Exception\InvalidInputException
    *   Throws an exception if the given data is invalid.
    */
-  public function generateComponent(DataItem $component_data, $existing_module_files = [], DataItem $configuration = NULL, DrupalExtension $existing_extension = NULL) {
+  public function generateComponent(DataItem $component_data, $existing_module_files = [], ?DataItem $configuration = NULL, ?DrupalExtension $existing_extension = NULL) {
     // Validate to ensure defaults are filled in.
     $component_data->validate();
 

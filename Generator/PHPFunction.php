@@ -406,7 +406,7 @@ class PHPFunction extends BaseGenerator {
    * @return array
    *   An array of code lines.
    */
-  protected function buildMethodDeclaration($name, $parameters = [], $options = [], string $return_type = NULL): array {
+  protected function buildMethodDeclaration($name, $parameters = [], $options = [], ?string $return_type = NULL): array {
     $options += [
       'prefixes' => [],
       'break_declaration' => FALSE,

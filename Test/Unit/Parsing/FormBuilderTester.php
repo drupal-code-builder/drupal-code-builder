@@ -272,7 +272,7 @@ class FormBuilderTester extends PHPMethodTester {
    * @param string $message
    *   (optional) The assertion message.
    */
-  public function assertElementHasAttribute(string $attribute_name, string $element_name, string $message = NULL) {
+  public function assertElementHasAttribute(string $attribute_name, string $element_name, ?string $message = NULL) {
     $message = $message ?? "The form's '{$element_name}' element has the attribute '{$attribute_name}'.";
 
     $this->assertHasElementName($element_name);

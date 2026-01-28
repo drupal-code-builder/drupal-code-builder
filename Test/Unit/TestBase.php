@@ -121,7 +121,7 @@ abstract class TestBase extends TestCase {
    * @param
    *  An array of files.
    */
-  protected function generateComponentFilesFromData(DataItem $component_data, DrupalExtension $extension = NULL) {
+  protected function generateComponentFilesFromData(DataItem $component_data, ?DrupalExtension $extension = NULL) {
     $violations = $component_data->validate();
 
     if ($violations) {
@@ -146,7 +146,7 @@ abstract class TestBase extends TestCase {
    * @param
    *  An array of files.
    */
-  protected function generateModuleFiles(array $module_data, DrupalExtension $extension = NULL) {
+  protected function generateModuleFiles(array $module_data, ?DrupalExtension $extension = NULL) {
     $component_data = $this->getRootComponentBlankData('module');
 
     $component_data->set($module_data);
