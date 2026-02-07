@@ -234,6 +234,10 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
             'AdminSettingsForm' => [
             7 => 'AdminSettingsForm7',
         ],
+            'ContentEntityType' => [
+            9 => 'ContentEntityType9AndLower',
+            8 => 'ContentEntityType9AndLower',
+        ],
             'DrushCommand' => [
             11 => 'DrushCommand',
             10 => 'DrushCommand',

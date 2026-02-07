@@ -560,13 +560,18 @@ class ContentEntityType extends EntityTypeBase {
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
+    $revisionable = in_array('revisionable', $this->component_data['functionality']);
+    $translatable = in_array('translatable', $this->component_data['functionality']);
+    $ui = !empty($this->component_data['entity_ui']);
+
     // Add further annotation properties.
     // Use the entity type ID as the base table.
     $annotation_data['base_table'] = $this->component_data['entity_type_id'];
 
-    if (!empty($this->component_data['entity_ui'])) {
+    if ($ui) {
       $annotation_data['links'] = [];
       $entity_path_component = $this->component_data['entity_type_id'];
+      $entity_path_placeholder = "{{$entity_path_component}}";
 
       // The structure of the add UI depends on whether there is a bundle
       // entity.
@@ -584,21 +589,16 @@ class ContentEntityType extends EntityTypeBase {
         $annotation_data['links']["add-form"] = "/$entity_path_component/add";
       }
 
-      $annotation_data['links']["canonical"] = "/$entity_path_component/{{$entity_path_component}}";
+      $annotation_data['links']["canonical"] = "/$entity_path_component/$entity_path_placeholder";
       $annotation_data['links']["collection"] = "/admin/content/$entity_path_component";
-      $annotation_data['links']["delete-form"] = "/$entity_path_component/{{$entity_path_component}}/delete";
-      $annotation_data['links']["edit-form"] = "/$entity_path_component/{{$entity_path_component}}/edit";
-      // TODO: revision link template.
-      // $annotation_data['links']["revision"] = "/$entity_path_component/{}/revisions/{media_revision}/view";
+      $annotation_data['links']["delete-form"] = "/$entity_path_component/$entity_path_placeholder/delete";
+      $annotation_data['links']["edit-form"] = "/$entity_path_component/$entity_path_placeholder/edit";
     }
 
     if (!$this->component_data->bundle_entity->isEmpty()) {
       $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type_id'];
       $annotation_data['bundle_label'] = ClassAnnotation::Translation($this->component_data['bundle_label']);
     }
-
-    $revisionable = in_array('revisionable', $this->component_data['functionality']);
-    $translatable = in_array('translatable', $this->component_data['functionality']);
 
     if ($this->component_data->field_ui_base_route->value) {
       $annotation_data['field_ui_base_route'] = $this->component_data->field_ui_base_route->value;
@@ -617,7 +617,34 @@ class ContentEntityType extends EntityTypeBase {
       $annotation_data['revision_data_table'] = "{$annotation_data['base_table']}_field_revision";
     }
 
+    if ($ui && $revisionable) {
+      $this->addRevisionUiAnnotationData($annotation_data);
+    }
+
     return $annotation_data;
+  }
+
+  /**
+   * Adds annotation data for revisions UI.
+   *
+   * @param array &$annotation_data
+   *   The annotation data.
+   */
+  protected function addRevisionUiAnnotationData(&$annotation_data) {
+    $entity_path_component = $this->component_data->entity_type_id->value;
+    $entity_path_placeholder = "{{$entity_path_component}}";
+    $entity_revision_path_placeholder = "{{$entity_path_component}_revision}";
+
+    $annotation_data['handlers']['route_provider']['revision'] = 'Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider';
+
+    $annotation_data['handlers']['form']['revision-delete'] = 'Drupal\Core\Entity\Form\RevisionDeleteForm';
+    $annotation_data['handlers']['form']['revision-revert'] = 'Drupal\Core\Entity\Form\RevisionRevertForm';
+
+    $annotation_data['links']['version-history'] = "/$entity_path_component/$entity_path_placeholder/revisions";
+    $annotation_data['links']['revision'] = "/$entity_path_component/$entity_path_placeholder/revisions/$entity_revision_path_placeholder/view";
+    $annotation_data['links']['revision-delete-form'] = "/$entity_path_component/$entity_path_placeholder/revisions/$entity_revision_path_placeholder/view";
+    $annotation_data['links']['revision-revert-form'] = "/$entity_path_component/$entity_path_placeholder/revisions/$entity_revision_path_placeholder/revert";
+    $annotation_data['links']['version-history'] = "/$entity_path_component/$entity_path_placeholder/revisions";
   }
 
 }

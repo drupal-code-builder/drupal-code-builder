@@ -1500,6 +1500,47 @@ class ComponentContentEntityType10Test extends TestBase {
   }
 
   /**
+   * Tests creating a content entity with a revision UI.
+   *
+   * @group entity_ui
+   * @group form
+   */
+  public function testContentEntityTypeWithRevisionEntityUI() {
+    $module_name = 'test_module';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'content_entity_types' => [
+        0 => [
+          'entity_type_id' => 'kitty_cat',
+          'functionality' => [
+            'revisionable',
+          ],
+          'entity_ui' => 'admin',
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $entity_class_file = $files['src/Entity/KittyCat.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $entity_class_file);
+    $annotation_tester = $php_tester->getAnnotationTesterForClass();
+
+    $annotation_tester->assertPropertyHasValue(['handlers', 'route_provider', 'revision'], 'Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider');
+
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'revision-delete'], 'Drupal\Core\Entity\Form\RevisionDeleteForm');
+    $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'revision-revert'], 'Drupal\Core\Entity\Form\RevisionRevertForm');
+
+    $annotation_tester->assertPropertyHasValue(['links', 'revision'], '/kitty_cat/{kitty_cat}/revisions/{kitty_cat_revision}/view');
+    $annotation_tester->assertPropertyHasValue(['links', 'revision-delete-form'], '/kitty_cat/{kitty_cat}/revisions/{kitty_cat_revision}/view');
+    $annotation_tester->assertPropertyHasValue(['links', 'revision-revert-form'], '/kitty_cat/{kitty_cat}/revisions/{kitty_cat_revision}/revert');
+    $annotation_tester->assertPropertyHasValue(['links', 'version-history'], '/kitty_cat/{kitty_cat}/revisions');
+  }
+
+  /**
    * Tests creating a content entity with a bundle entity UI.
    *
    * @group entity_ui
