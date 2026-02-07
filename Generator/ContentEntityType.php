@@ -41,6 +41,7 @@ class ContentEntityType extends EntityTypeBase {
     'handlers',
     'admin_permission',
     'entity_keys',
+    'revision_metadata_keys',
     'bundle_entity_type',
     'field_ui_base_route',
     'links',
@@ -606,6 +607,12 @@ class ContentEntityType extends EntityTypeBase {
 
     if ($revisionable) {
       $annotation_data['revision_table'] = "{$annotation_data['base_table']}_revision";
+
+      $annotation_data['revision_metadata_keys'] = [
+        'revision_user' => 'revision_uid',
+        'revision_created' => 'revision_timestamp',
+        'revision_log_message' => 'revision_log'
+      ];
     }
 
     if ($translatable) {

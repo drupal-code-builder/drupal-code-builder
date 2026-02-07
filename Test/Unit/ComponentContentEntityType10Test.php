@@ -594,6 +594,7 @@ class ComponentContentEntityType10Test extends TestBase {
       'handlers',
       'admin_permission',
       'entity_keys',
+      'revision_metadata_keys',
       'field_ui_base_route',
     ]);
     $annotation_tester->assertPropertyHasValue('base_table', 'kitty_cat');
@@ -606,6 +607,10 @@ class ComponentContentEntityType10Test extends TestBase {
     ], 'entity_keys');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'id'], 'kitty_cat_id');
     $annotation_tester->assertPropertyHasValue(['entity_keys', 'revision'], 'revision_id');
+
+    $annotation_tester->assertPropertyHasValue(['revision_metadata_keys', 'revision_user'], 'revision_uid');
+    $annotation_tester->assertPropertyHasValue(['revision_metadata_keys', 'revision_created'], 'revision_timestamp');
+    $annotation_tester->assertPropertyHasValue(['revision_metadata_keys', 'revision_log_message'], 'revision_log');
   }
 
   /**
