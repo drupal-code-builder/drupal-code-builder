@@ -598,6 +598,8 @@ class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
    * Test the validation constraint plugin variant.
+   *
+   * @group di
    */
   public function testPluginValidationConstraint(): void {
     // Create a module.
@@ -611,6 +613,9 @@ class ComponentPluginsAttribute11Test extends TestBase {
         0 => [
           'plugin_type' => 'validation.constraint',
           'plugin_name' => 'alpha',
+          'injected_services' => [
+            'entity_type.manager',
+          ],
         ],
       ],
       'readme' => FALSE,
@@ -639,6 +644,20 @@ class ComponentPluginsAttribute11Test extends TestBase {
     $php_tester->assertHasClass('Drupal\test_module\Plugin\Validation\Constraint\AlphaValidator');
     $php_tester->assertClassHasParent('Symfony\Component\Validator\ConstraintValidator');
     $php_tester->assertHasMethod('validate');
+
+    // Check service injection.
+    $php_tester->assertClassHasInterfaces([
+      'Drupal\Core\DependencyInjection\ContainerInjectionInterface',
+    ]);
+    $php_tester->assertInjectedServicesWithFactory([
+      [
+        'typehint' => 'Drupal\Core\Entity\EntityTypeManagerInterface',
+        'service_name' => 'entity_type.manager',
+        'property_name' => 'entityTypeManager',
+        'parameter_name' => 'entity_type_manager',
+      ],
+    ]);
+
   }
 
 }
