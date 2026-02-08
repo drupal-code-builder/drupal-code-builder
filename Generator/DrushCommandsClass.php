@@ -12,6 +12,11 @@ class DrushCommandsClass extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
+  protected const CLASS_DI_INTERFACE = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
   protected const CONTAINER_INTERFACE = '\\Psr\\Container\\ContainerInterface';
 
   /**

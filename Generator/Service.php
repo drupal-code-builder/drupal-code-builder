@@ -16,6 +16,11 @@ use MutableTypedData\Data\DataItem;
  */
 class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected const CLASS_DI_INTERFACE = NULL;
+
   use NameFormattingTrait;
 
   /**

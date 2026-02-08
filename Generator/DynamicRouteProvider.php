@@ -15,11 +15,6 @@ class DynamicRouteProvider extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  protected const CLASS_DI_INTERFACE = '\Drupal\Core\DependencyInjection\ContainerInjectionInterface';
-
-  /**
-   * {@inheritdoc}
-   */
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 

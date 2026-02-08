@@ -18,7 +18,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
    *
    * @var string|null
    */
-  protected const CLASS_DI_INTERFACE = NULL;
+  protected const CLASS_DI_INTERFACE = '\Drupal\Core\DependencyInjection\ContainerInjectionInterface';
 
   /**
    * The interface to use for the static create() method's container parameter.
