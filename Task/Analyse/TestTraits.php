@@ -120,6 +120,12 @@ class TestTraits extends CollectorBase implements SectionReportInterface, Option
 
       $short_trait_name = $file->getFilenameWithoutExtension();
 
+      // Temporary workaround.
+      // See https://github.com/drupal-code-builder/drupal-code-builder/issues/420.
+      if ($short_trait_name == 'BlockContentCreationTrait') {
+        continue;
+      }
+
       // Files in test folders aren't in the regular Composer autoloader, so
       // include the file so we can use reflection on the class.
       include_once($relative_pathname);
