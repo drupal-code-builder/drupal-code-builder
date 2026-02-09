@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Generator\Collection\ComponentCollection;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
@@ -194,9 +195,16 @@ abstract class BaseGenerator implements GeneratorInterface {
     // Set the type. This is the short class name without the numeric version
     // suffix.
     $class = get_class($this);
-    $class_pieces = explode('\\', $class);
-    $short_class = array_pop($class_pieces);
-    $this->type = preg_replace('@\d+$@', '', $short_class);
+
+    $reflector = new \ReflectionClass($class);
+    if ($base_class_attributes = $reflector->getAttributes(RelatedBaseClass::class)) {
+      $this->type = $base_class_attributes[0]->newInstance()->base_class;
+    }
+    else {
+      $class_pieces = explode('\\', $class);
+      $short_class = array_pop($class_pieces);
+      $this->type = preg_replace('@\d+$@', '', $short_class);
+    }
   }
 
   /**
