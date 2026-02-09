@@ -74,17 +74,21 @@ class ReportPluginData extends ReportHookDataFolder
    *  The processed plugin data.
    *
    * @see \DrupalCodeBuilder\Task\Collect::gatherPluginTypeInfo()
+   *
+   * @todo Split this method into two.
    */
   function listPluginData($discovery_type = NULL) {
-    // We may come here several times, so cache this.
-    // TODO: look into finer-grained caching higher up.
-    if (isset($this->cache[$discovery_type])) {
-      return $this->cache[$discovery_type];
+    if ($discovery_type) {
+      // We may come here several times, so cache a filtered result.
+      // TODO: look into finer-grained caching higher up.
+      if (isset($this->cache[$discovery_type])) {
+        return $this->cache[$discovery_type];
+      }
     }
 
     $plugin_data = $this->environment->getStorage()->retrieve('plugins');
 
-    // Filter the plugins by the discovery type.
+    // Filter the plugins if there's a requested discovery type.
     if ($discovery_type) {
       $plugin_data = array_filter($plugin_data, function($item) use ($discovery_type) {
         $discovery_pieces = explode('\\', $item['discovery']);
@@ -92,9 +96,9 @@ class ReportPluginData extends ReportHookDataFolder
 
         return ($discovery_short_name == $discovery_type);
       });
-    }
 
-    $this->cache[$discovery_type] = $plugin_data;
+      $this->cache[$discovery_type] = $plugin_data;
+    }
 
     return $plugin_data;
   }
