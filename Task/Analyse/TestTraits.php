@@ -2,12 +2,14 @@
 
 namespace DrupalCodeBuilder\Task\Analyse;
 
-use MutableTypedData\Definition\OptionSetDefininitionInterface;
+use Composer\Autoload\ClassLoader;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Task\Collect\CollectorBase;
 use DrupalCodeBuilder\Task\Report\SectionReportInterface;
 use DrupalCodeBuilder\Task\SectionReportSimpleCountTrait;
 use DrupalCodeBuilder\Definition\OptionDefinition;
+use Drupal\Core\Extension\ExtensionDiscovery;
+use MutableTypedData\Definition\OptionSetDefininitionInterface;
 
 /**
  * Task helper for analysing and reporting on traits intended for use in tests.
@@ -74,6 +76,36 @@ class TestTraits extends CollectorBase implements SectionReportInterface, Option
    * {@inheritdoc}
    */
   public function collect($job_list) {
+    // Set up an autoloader, as test code is not included in Composer's project
+    // autoloader. Traits may extend other traits, so we can't just include
+    // files naively.
+    $loader = new ClassLoader();
+
+    $drupal_test_dir = $this->environment->getRoot() . '/core/tests';
+
+    $loader->add('Drupal\\BuildTests', $drupal_test_dir);
+    $loader->add('Drupal\\Tests', $drupal_test_dir);
+    $loader->add('Drupal\\TestSite', $drupal_test_dir);
+    $loader->add('Drupal\\KernelTests', $drupal_test_dir);
+    $loader->add('Drupal\\FunctionalTests', $drupal_test_dir);
+    $loader->add('Drupal\\FunctionalJavascriptTests', $drupal_test_dir);
+    $loader->add('Drupal\\TestTools', $drupal_test_dir);
+
+    $root = $this->environment->getRoot() . '/';
+
+    // We need to include all discovered modules, not just enabled ones, as our
+    // Finder looks at all code, and installed modules may have traits which
+    // inherit from non-installed modules.
+    // Safe to use this as ExtensionDiscovery was introduced in 8.0.0.
+    $discovery = new ExtensionDiscovery($root);
+    $discovery->setProfileDirectories([]);
+    $discovered_modules = $discovery->scan('module');
+    foreach ($discovered_modules as $module_name => $module_extension) {
+      $loader->addPsr4('Drupal\\Tests\\' . $module_name . '\\', $root . $module_extension->getPath() . '/tests/src');
+    }
+
+    $loader->register();
+
     $finder = new \Symfony\Component\Finder\Finder();
     $finder
       ->in($this->environment->getRoot())
@@ -119,16 +151,6 @@ class TestTraits extends CollectorBase implements SectionReportInterface, Option
       // TODO: Module in a profile.
 
       $short_trait_name = $file->getFilenameWithoutExtension();
-
-      // Temporary workaround.
-      // See https://github.com/drupal-code-builder/drupal-code-builder/issues/420.
-      if ($short_trait_name == 'BlockContentCreationTrait') {
-        continue;
-      }
-
-      // Files in test folders aren't in the regular Composer autoloader, so
-      // include the file so we can use reflection on the class.
-      include_once($relative_pathname);
 
       $class_reflection = new \ReflectionClass($classname);
       $docblock = $class_reflection->getDocComment();
