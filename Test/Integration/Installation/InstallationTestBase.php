@@ -153,7 +153,10 @@ class InstallationTestBase extends KernelTestBase {
     // ExtensionDiscovery keeps a cache of found files in a static property that
     // can only be cleared by hacking it with reflection.
     $reflection_property = new \ReflectionProperty(\Drupal\Core\Extension\ExtensionDiscovery::class, 'files');
-    $reflection_property->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $reflection_property->setAccessible(TRUE);
+    }
+
     $reflection_property->setValue(NULL, []);
 
     $result = $this->container->get('module_installer')->install([$module_name]);

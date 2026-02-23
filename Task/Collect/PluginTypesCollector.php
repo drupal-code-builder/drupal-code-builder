@@ -366,7 +366,9 @@ class PluginTypesCollector extends CollectorBase  {
     // Determine the alter hook name.
     if ($service_reflection->hasProperty('alterHook')) {
       $property_alter_hook = $service_reflection->getProperty('alterHook');
-      $property_alter_hook->setAccessible(TRUE);
+      if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+        $property_alter_hook->setAccessible(TRUE);
+      }
       $alter_hook_name = $property_alter_hook->getValue($service);
       if (!empty($alter_hook_name)) {
         $data['alter_hook_name'] = $alter_hook_name . '_alter';
@@ -376,7 +378,9 @@ class PluginTypesCollector extends CollectorBase  {
     // Determine the plugin discovery type.
     // Get the discovery object from the plugin manager.
     $method_getDiscovery = $service_reflection->getMethod('getDiscovery');
-    $method_getDiscovery->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $method_getDiscovery->setAccessible(TRUE);
+    }
     $discovery = $method_getDiscovery->invoke($service);
     $reflection_discovery = new \ReflectionClass($discovery);
 
@@ -396,7 +400,10 @@ class PluginTypesCollector extends CollectorBase  {
         break;
       }
 
-      $property_decorated->setAccessible(TRUE);
+      if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+        $property_decorated->setAccessible(TRUE);
+      }
+
       $decorated_discovery = $property_decorated->getValue($discovery);
 
       // We don't go in to a decorated class that's not in a Plugin component.
@@ -525,7 +532,10 @@ class PluginTypesCollector extends CollectorBase  {
       }
 
       $property = $reflection->getProperty($property_name);
-      $property->setAccessible(TRUE);
+      if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+        $property->setAccessible(TRUE);
+      }
+
       $data[$data_key] = $property->getValue($service) ?? '';
     }
 
@@ -570,7 +580,10 @@ class PluginTypesCollector extends CollectorBase  {
       }
 
       $property = $reflection->getProperty($property_name);
-      $property->setAccessible(TRUE);
+      if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+        $property->setAccessible(TRUE);
+      }
+
       $data[$data_key] = $property->getValue($service) ?? '';
     }
 
@@ -595,7 +608,10 @@ class PluginTypesCollector extends CollectorBase  {
   protected function addPluginTypeServiceDataYaml(&$data, $service, $discovery) {
     $service_reflection = new \ReflectionClass($service);
     $property = $service_reflection->getProperty('defaults');
-    $property->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $property->setAccessible(TRUE);
+    }
+
     $defaults = $property->getValue($service);
 
     // YAML plugins don't specify their ID; it's generated automatically.
@@ -608,12 +624,18 @@ class PluginTypesCollector extends CollectorBase  {
     // when recursively getting the decorated discovery.
     $discovery_reflection = new \ReflectionClass($discovery);
     $property = $discovery_reflection->getProperty('discovery');
-    $property->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $property->setAccessible(TRUE);
+    }
+
     $wrapped_discovery = $property->getValue($discovery);
 
     $wrapped_discovery_reflection = new \ReflectionClass($wrapped_discovery);
     $property = $wrapped_discovery_reflection->getProperty('name');
-    $property->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $property->setAccessible(TRUE);
+    }
+
     $name = $property->getValue($wrapped_discovery);
 
     $data['yaml_file_suffix'] = $name;
@@ -1492,7 +1514,10 @@ class PluginTypesCollector extends CollectorBase  {
     // Unfortunately, there's no accessor for this, so some reflection hackery
     // is required until https://www.drupal.org/node/2907862 is fixed.
     $reflection = new \ReflectionProperty(\Drupal\plugin\PluginType\PluginType::class, 'pluginManagerServiceId');
-    $reflection->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $reflection->setAccessible(TRUE);
+    }
+
 
     foreach ($plugin_types as $plugin_type) {
       // Get the service ID from the reflection, and then our ID.
