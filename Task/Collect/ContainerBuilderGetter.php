@@ -27,7 +27,9 @@ class ContainerBuilderGetter {
       $kernel_R = new \ReflectionClass($kernel);
 
       $compileContainer_R = $kernel_R->getMethod('compileContainer');
-      $compileContainer_R->setAccessible(TRUE);
+      if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+        $compileContainer_R->setAccessible(TRUE);
+      }
 
       $this->containerBuilder = $compileContainer_R->invoke($kernel);
     }

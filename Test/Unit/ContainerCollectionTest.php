@@ -18,7 +18,10 @@ class ContainerCollectionTest extends TestBase {
   public function testCollectorServices() {
     $collect = \DrupalCodeBuilder\Factory::getTask('Collect');
     $reflection = new \ReflectionProperty($collect, 'collectors');
-    $reflection->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $reflection->setAccessible(TRUE);
+    }
+
     $collectors = $reflection->getValue($collect);
 
     $collector_classes = [];

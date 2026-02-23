@@ -35,7 +35,10 @@ class CollectPluginInfoDummyModulesTest extends CollectionTestBase {
     // of plugin manager service IDs.
     $class = new \ReflectionObject($this->pluginTypesCollector);
     $this->gatherPluginTypeInfoMethod = $class->getMethod('gatherPluginTypeInfo');
-    $this->gatherPluginTypeInfoMethod->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $this->gatherPluginTypeInfoMethod->setAccessible(TRUE);
+    }
+
   }
 
   protected function getPluginTypeInfoFromCollector($job) {

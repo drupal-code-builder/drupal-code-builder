@@ -67,7 +67,10 @@ class ComponentPHPFile10Test extends TestBase {
   public function testQualifiedClassNameExtraction($code, $expected_changed_code, $expected_qualified_class_names) {
     // Make the protected method we're testing callable.
     $method = new \ReflectionMethod(PHPFile::class, 'extractFullyQualifiedClasses');
-    $method->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $method->setAccessible(TRUE);
+    }
+
 
     // Pass a component data item to PHPFile. Prophecy won't work as
     // PHPFile::extractFullyQualifiedClasses() accesses a property, so we create

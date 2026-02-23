@@ -34,7 +34,10 @@ class ContainerTest extends TestCase {
     $collect_task = $container->get('Collect');
     $collect_reflection = new \ReflectionObject($collect_task);
     $p = $collect_reflection->getProperty('collectors');
-    $p->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $p->setAccessible(TRUE);
+    }
+
     $collectors = $p->getValue($collect_task);
     $this->assertCount(1, $collectors);
     $this->assertArrayHasKey('Collect\HooksCollector', $p->getValue($collect_task));
@@ -61,7 +64,10 @@ class ContainerTest extends TestCase {
     $collect_task = $container->get('Collect');
     $collect_reflection = new \ReflectionObject($collect_task);
     $p = $collect_reflection->getProperty('collectors');
-    $p->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $p->setAccessible(TRUE);
+    }
+
     $collectors = $p->getValue($collect_task);
     $this->assertNotCount(1, $collectors);
 
@@ -70,7 +76,10 @@ class ContainerTest extends TestCase {
 
     $r = new \ReflectionObject($generate_module);
     $p = $r->getProperty('base');
-    $p->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $p->setAccessible(TRUE);
+    }
+
     $this->assertEquals('module', $p->getValue($generate_module));
 
     $generate_profile = $container->get('Generate|profile');
@@ -78,7 +87,10 @@ class ContainerTest extends TestCase {
 
     $r = new \ReflectionObject($generate_profile);
     $p = $r->getProperty('base');
-    $p->setAccessible(TRUE);
+    if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+      $p->setAccessible(TRUE);
+    }
+
     $this->assertEquals('profile', $p->getValue($generate_profile));
   }
 
