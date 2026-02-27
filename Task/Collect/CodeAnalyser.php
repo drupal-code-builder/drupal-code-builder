@@ -113,20 +113,22 @@ class CodeAnalyser {
     // This code is taken from DrupalKernel::attachSynthetic().
     $container = $this->environment->getContainer();
     $namespaces = $container->getParameter('container.namespaces');
+
+    // Build a list of data to pass to the script on STDIN.
     $psr4 = [];
     foreach ($namespaces as $prefix => $paths) {
       if (is_array($paths)) {
         foreach ($paths as $key => $value) {
-          $paths[$key] = $drupal_root . '/' . $value;
+          $path = $drupal_root . '/' . $value;
+
+          $psr4[] = $prefix . '\\' . '::' . $path;
         }
       }
       elseif (is_string($paths)) {
         $paths = $drupal_root . '/' . $paths;
-      }
 
-      // Build a list of data to pass to the script on STDIN.
-      // $paths is never an array, AFAICT.
-      $psr4[] = $prefix . '\\' . '::' . $paths;
+        $psr4[] = $prefix . '\\' . '::' . $paths;
+      }
     }
 
     // Debug option for the script.
