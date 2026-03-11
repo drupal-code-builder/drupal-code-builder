@@ -4,6 +4,9 @@ namespace DrupalCodeBuilder\Task\Collect;
 
 /**
  * Interface for collector task helpers.
+ *
+ * Task classes that implement this interface are automatically gathered and
+ * injected into the Collect task.
  */
 interface CollectorInterface {
 
