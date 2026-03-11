@@ -27,7 +27,11 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD)]
 final class InjectImplementations {
 
-  public function __construct(private string $interface) {}
+  public function __construct(private string $interface) {
+    if (!interface_exists($interface)) {
+      throw new \InvalidArgumentException("The interface '{$interface}' used in an InjectImplementations attribute does not exist.");
+    }
+  }
 
   /**
    * Gets the name of the interface the marked method collects.
