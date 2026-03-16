@@ -33,11 +33,6 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
           ->setDescription("The way in which plugins of this type are formed.")
           ->setOptions(
             OptionDefinition::create(
-              'annotation',
-              'Annotation plugin',
-              "Each plugin is a class with an annotation to declare the plugin data. WARNING: This plugin discovery type will soon be deprecated in Drupal core."
-            ),
-            OptionDefinition::create(
               'attribute',
               'Attribute plugin',
               "Each plugin is a class with an attribute to declare the plugin data."
@@ -46,7 +41,12 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               'yaml',
               'YAML plugin',
               "Plugins are declared in a single YAML file, and usually share the same class."
-            )
+            ),
+            OptionDefinition::create(
+              'annotation',
+              'Annotation plugin',
+              "Each plugin is a class with an annotation to declare the plugin data. WARNING: This plugin discovery type will soon be deprecated in Drupal core."
+            ),
           )
         ])
       ->setVariants([
