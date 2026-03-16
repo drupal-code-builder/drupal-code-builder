@@ -321,7 +321,7 @@ abstract class EntityTypeBase extends PHPClassFile {
           // Overwrite the label for the 'core' option which the mode provides.
           // This is OK because addOption() replaces an existing option.
           new OptionDefinition('core', 'Default core route provider', weight: 10),
-          new OptionDefinition('admin', 'Admin route provider', weight: 15),
+          new OptionDefinition('admin', 'Core admin route provider', weight: 15),
         ],
         'options_classes' => [
           'default' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
