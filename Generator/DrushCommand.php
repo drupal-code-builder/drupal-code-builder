@@ -291,7 +291,7 @@ class DrushCommand extends PHPFunction {
       [$option_name, ] = explode(':', $option);
       $attributes[] = PhpAttributes::method('\Drush\Attributes\Option', [
         'name' => $option_name,
-        'description' => "TODO: description of {$parameter} option.",
+        'description' => "TODO: description of {$option_name} option.",
       ]);
     }
 
