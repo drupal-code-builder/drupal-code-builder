@@ -99,7 +99,7 @@ class PHPUnitTest extends PHPClassFile {
         ],
       ],
       'javascript' => [
-        'label' => 'Javascript test',
+        'label' => 'JavaScript test',
         'data' => [
           'force' => [
             'relative_namespace' => [
