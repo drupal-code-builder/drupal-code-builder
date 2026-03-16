@@ -138,28 +138,34 @@ abstract class EntityTypeBase extends PHPClassFile {
           // builder handler.
           $handler_property = PropertyDefinition::create('string')
             ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
+            ->setRequired(TRUE)
             ->setOptionsArray([
+              // We use an explicit empty option and make this required, so we
+              // can control the label used for this in the UI.
               'none' => 'Do not use a handler',
               'core' => 'Use the core handler class',
               'custom' => 'Provide a custom handler class',
-            ]);
+            ])
+            ->setLiteralDefault('none');
           break;
 
         case 'custom_default':
           $default_handler_type = $handler_type_info['default_type'];
           $handler_property = PropertyDefinition::create('string')
             ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
+            ->setRequired(TRUE)
             ->setOptionsArray([
               'none' => 'Do not use a handler',
               'default' => "Use the '{$default_handler_type}' handler class (forces '{$default_handler_type}' to use the default if not set)",
               'custom' => "Provide a custom handler class (forces '{$default_handler_type}' to use the default if not set)",
             ])
+            ->setLiteralDefault('none')
             // Force the default type to at least be specified if it isn't
             // already.
             // TODO: this assumes the mode of the default handler type is
             // 'core_none'.
             ->setProcessing(function(DataItem $component_data) use ($default_handler_type) {
-              if ($component_data->isEmpty() || $component_data->value == 'none') {
+              if ($component_data->value == 'none') {
                 // Nothing to do; this isn't set to use anything.
                 return;
               }
