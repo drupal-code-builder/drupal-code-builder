@@ -112,7 +112,7 @@ class ConfigEntityType extends EntityTypeBase {
       $handler_types[$form_handler_type]['base_class'] = '\Drupal\Core\Entity\EntityForm';
 
       $handler_types[$form_handler_type]['handler_properties'] = [
-        // Config entity formss redirect to the collection page.
+        // Config entity forms redirect to the collection page.
         'redirect_link_template' => 'collection',
       ];
     }
