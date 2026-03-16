@@ -155,13 +155,14 @@ abstract class EntityTypeBase extends PHPClassFile {
           $default_handler_type = $handler_type_info['default_type'];
           $handler_property = PropertyDefinition::create('string')
             ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
+            ->setDescription("Setting a handler class here will force the '{$default_handler_type}' handler to be set to use the default handler class, if it is not set.'")
             ->setRequired(TRUE)
             ->setOptions(
               // We use an explicit empty option and make this required, so we
               // can control the label used for this in the UI.
               new OptionDefinition('none', 'Do not use a handler', weight: 0),
-              new OptionDefinition('default', "Use the '{$default_handler_type}' handler class (forces '{$default_handler_type}' to use the default if not set)", weight: 10),
-              new OptionDefinition('custom', "Provide a custom handler class (forces '{$default_handler_type}' to use the default if not set)", weight: 20),
+              new OptionDefinition('default', "Use the '{$default_handler_type}' handler class", weight: 10),
+              new OptionDefinition('custom', "Provide a custom handler class", weight: 20),
             )
             ->setLiteralDefault('none')
             // Force the default type to at least be specified if it isn't
@@ -340,7 +341,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'form_add' => [
         'label' => 'add form',
-        'description' => "The entity form class for the 'add' operation.",
+        'description' => "The entity form class for the 'add' operation. Setting a handler class here will force the 'default form' handler to be set to use the default handler class, if it is not set.",
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'add'],
         'class_name_suffix' => 'AddForm',
@@ -350,7 +351,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       ],
       'form_edit' => [
         'label' => 'edit form',
-        'description' => "The entity form class for the 'edit' operation.",
+        'description' => "The entity form class for the 'edit' operation. Setting a handler class here will force the 'default form' handler to be set to use the default handler class, if it is not set.",
         'component_type' => 'EntityForm',
         'property_path' => ['form', 'edit'],
         'class_name_suffix' => 'EditForm',
