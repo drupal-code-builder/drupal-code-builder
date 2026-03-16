@@ -1436,9 +1436,18 @@ class ComponentContentEntityType10Test extends TestBase {
       'label_plural',
       'label_count',
       'base_table',
+      // The next 4 lines are here only as a workaround for an MTD bug: see
+      // https://github.com/joachim-n/mutable-typed-data/issues/22.
+      'data_table',
+      'revision_table',
+      'revision_data_table',
+      'translatable',
       'handlers',
       'admin_permission',
       'entity_keys',
+      // Next 2 lines same as above.
+      'revision_metadata_keys',
+      'field_ui_base_route',
       'links',
     ]);
     $annotation_tester->assertPropertyHasValue(['handlers', 'form', 'default'], 'Drupal\test_module\Form\KittyCatForm');
@@ -1692,10 +1701,20 @@ class ComponentContentEntityType10Test extends TestBase {
       'label_count',
       'bundle_label',
       'base_table',
+      // The next 4 lines are here only as a workaround for an MTD bug: see
+      // https://github.com/joachim-n/mutable-typed-data/issues/22.
+      'data_table',
+      'revision_table',
+      'revision_data_table',
+      'translatable',
       'handlers',
       'admin_permission',
       'entity_keys',
+      // Next line same as above.
+      'revision_metadata_keys',
       'bundle_entity_type',
+      // Next line same as above.
+      'field_ui_base_route',
       'links',
     ]);
     $annotation_tester->assertPropertyHasValue('bundle_label', "Kitty Cat Type");
