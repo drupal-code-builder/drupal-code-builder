@@ -139,13 +139,15 @@ abstract class EntityTypeBase extends PHPClassFile {
           $handler_property = PropertyDefinition::create('string')
             ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
             ->setRequired(TRUE)
-            ->setOptionsArray([
+            ->setOptions(
               // We use an explicit empty option and make this required, so we
               // can control the label used for this in the UI.
-              'none' => 'Do not use a handler',
-              'core' => 'Use the core handler class',
-              'custom' => 'Provide a custom handler class',
-            ])
+              // Set weights and leave gaps so that static::getHandlerTypes()
+              // can insert options in between.
+              new OptionDefinition('none', 'Do not use a handler', weight: 0),
+              new OptionDefinition('core', 'Use the core handler class.', weight: 10),
+              new OptionDefinition('custom', 'Provide a custom handler class.', weight: 20),
+            )
             ->setLiteralDefault('none');
           break;
 
@@ -154,11 +156,13 @@ abstract class EntityTypeBase extends PHPClassFile {
           $handler_property = PropertyDefinition::create('string')
             ->setLabel(ucfirst("{$handler_type_info['label']} handler"))
             ->setRequired(TRUE)
-            ->setOptionsArray([
-              'none' => 'Do not use a handler',
-              'default' => "Use the '{$default_handler_type}' handler class (forces '{$default_handler_type}' to use the default if not set)",
-              'custom' => "Provide a custom handler class (forces '{$default_handler_type}' to use the default if not set)",
-            ])
+            ->setOptions(
+              // We use an explicit empty option and make this required, so we
+              // can control the label used for this in the UI.
+              new OptionDefinition('none', 'Do not use a handler', weight: 0),
+              new OptionDefinition('default', "Use the '{$default_handler_type}' handler class (forces '{$default_handler_type}' to use the default if not set)", weight: 10),
+              new OptionDefinition('custom', "Provide a custom handler class (forces '{$default_handler_type}' to use the default if not set)", weight: 20),
+            )
             ->setLiteralDefault('none')
             // Force the default type to at least be specified if it isn't
             // already.
@@ -186,8 +190,8 @@ abstract class EntityTypeBase extends PHPClassFile {
 
       // Add extra options specific to the handler type.
       if (isset($handler_type_info['options'])) {
-        foreach ($handler_type_info['options'] as $option_value => $option_label) {
-          $handler_property->addOption(new OptionDefinition($option_value, $option_label));
+        foreach ($handler_type_info['options'] as $option) {
+          $handler_property->addOption($option);
         }
       }
 
@@ -287,8 +291,9 @@ abstract class EntityTypeBase extends PHPClassFile {
    *      - 'custom_default': No handler is provided, but handler for another
    *        type can be used. The option is whether to use that, or create a
    *        custom handler. The 'default_type' property must also be given.
-   *   - 'options': An array of additional options for the handler property.
-   *     These are added to the options provided by the mode.
+   *   - 'options': A array of additional OptionDefinition objects for the
+   *     handler property. These are added to the options provided by the mode.
+   *     Array keys are ignored.
    *   - 'property_path': (optional) The path to set this into the annotation
    *      beneath the 'handlers' key. Only required if this is not simply the
    *      handler type key.
@@ -315,8 +320,8 @@ abstract class EntityTypeBase extends PHPClassFile {
         'options' => [
           // Overwrite the label for the 'core' option which the mode provides.
           // This is OK because addOption() replaces an existing option.
-          'core' => 'Default core route provider',
-          'admin' => 'Admin route provider',
+          new OptionDefinition('core', 'Default core route provider', weight: 10),
+          new OptionDefinition('admin', 'Admin route provider', weight: 15),
         ],
         'options_classes' => [
           'default' => '\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
