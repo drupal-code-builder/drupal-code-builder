@@ -34,7 +34,7 @@ class MappingData extends DataItem implements MergeableDataInterface {
   /**
    * {@inheritdoc}
    */
-  public function validate(): array {
+  public function validate(?bool $include_internal = FALSE): array {
     return [];
   }
 
