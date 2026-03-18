@@ -345,12 +345,9 @@ class ComponentRouterItem10Test extends TestBase {
         ],
         '_custom_access',
         '\Drupal\test_module\Controller\MyPathControllerController::access',
-        [
-          'controller_type' => 'controller',
-        ],
+        [],
         [
           'Controller\MyPathControllerController' => [
-            'content',
             'access',
           ],
         ],
@@ -365,9 +362,12 @@ class ComponentRouterItem10Test extends TestBase {
         ],
         '_custom_access',
         '\Drupal\test_module\Controller\MyPathControllerController::access',
-        [],
+        [
+          'controller_type' => 'controller',
+        ],
         [
           'Controller\MyPathControllerController' => [
+            'content',
             'access',
           ],
         ],
