@@ -2,15 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the AdminSettingsForm generator class.
- *
- * @group form
- * @group yaml
  */
+#[Group('form')]
+#[Group('yaml')]
 class ComponentAdminSettings10Test extends TestBase {
 
   /**

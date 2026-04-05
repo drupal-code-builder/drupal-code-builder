@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
@@ -15,13 +16,12 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Tests the assertNoTrailingWhitespace() assertion.
    *
-   * @dataProvider providerAssertNoTrailingWhitespace
-   *
    * @param $code
    *  The code to test with the assertion.
    * @param $pass
    *  Whether the assertion is expected to pass (TRUE) or fail (FALSE).
    */
+  #[DataProvider('providerAssertNoTrailingWhitespace')]
   public function testAssertNoTrailingWhitespace($code, $pass) {
     try {
       TestBase::assertNoTrailingWhitespace($code);
@@ -54,13 +54,12 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Tests the assertFunctionParameter() assertion.
    *
-   * @dataProvider providerAssertFunctionParameter
-   *
    * @param $code
    *  The code to test with the assertion.
    * @param $pass
    *  Whether the assertion is expected to pass (TRUE) or fail (FALSE).
    */
+  #[DataProvider('providerAssertFunctionParameter')]
   public function testAssertFunctionParameter($code, $pass) {
     // TODO: adapt these to cover PHPTester.
     $this->markTestSkipped();
@@ -102,8 +101,6 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Tests the assertDocBlock() assertion.
    *
-   * @dataProvider providerAssertDocBlock
-   *
    * @param $lines
    *  The docblock lines to test with the assertion.
    * @param $code
@@ -111,6 +108,7 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
    * @param $pass
    *  Whether the assertion is expected to pass (TRUE) or fail (FALSE).
    */
+  #[DataProvider('providerAssertDocBlock')]
   public function testAssertDocBlock($lines, $code, $indent, $pass) {
     // TODO: adapt these to cover PHPTester.
     $this->markTestSkipped();
@@ -251,13 +249,12 @@ class DrupalCodeBuilderAssertionsTest extends TestCase {
   /**
    * Tests the assertFunction() assertion.
    *
-   * @dataProvider providerAssertFunction
-   *
    * @param $code
    *  The code to test with the assertion.
    * @param $pass
    *  Whether the assertion is expected to pass (TRUE) or fail (FALSE).
    */
+  #[DataProvider('providerAssertFunction')]
   public function testAssertFunction($code, $pass) {
     // TODO: adapt these to cover PHPTester.
     $this->markTestSkipped();

@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
@@ -13,9 +14,8 @@ class ParserYamlTest extends TestCase {
 
   /**
    * Tests the assertHasProperty() assertion.
-   *
-   * @dataProvider providerAssertHasProperty
    */
+  #[DataProvider('providerAssertHasProperty')]
   public function testAssertHasProperty($property, $pass) {
     $yaml = <<<EOT
       alpha:
@@ -87,9 +87,8 @@ class ParserYamlTest extends TestCase {
 
   /**
    * Tests the assertPropertyIsExpanded()/assertPropertyIsInlined() assertions.
-   *
-   * @dataProvider providerAssertPropertyExpandedInline
    */
+  #[DataProvider('providerAssertPropertyExpandedInline')]
   public function testAssertPropertyExpandedInline($property, $expanded) {
     $yaml = <<<EOT
       services:

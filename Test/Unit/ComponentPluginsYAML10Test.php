@@ -2,15 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the PluginYAMLDiscovery generator class.
- *
- * @group yaml
- * @group plugin
  */
+#[Group('yaml')]
+#[Group('plugin')]
 class ComponentPluginsYAML10Test extends TestBase {
 
   /**
@@ -104,9 +104,8 @@ class ComponentPluginsYAML10Test extends TestBase {
 
   /**
    * Tests a custom plugin class with DI.
-   *
-   * @group di
    */
+  #[Group('di')]
   public function testCustomPluginClass(): void {
     // Create a module.
     $module_data = [

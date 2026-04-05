@@ -2,15 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the config entity type generator class.
- *
- * @group yaml
- * @group entity
  */
+#[Group('yaml')]
+#[Group('entity')]
 class ComponentConfigEntityType10Test extends TestBase {
 
   /**
@@ -340,10 +340,9 @@ class ComponentConfigEntityType10Test extends TestBase {
 
   /**
    * Test creating a config entity type with a UI.
-   *
-   * @group entity_ui
-   * @group form
    */
+  #[Group('entity_ui')]
+  #[Group('form')]
   public function testConfigEntityTypeWithUI() {
     // Create a module.
     $module_name = 'test_module';

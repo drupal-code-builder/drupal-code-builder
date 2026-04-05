@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -10,8 +11,8 @@ use PHPUnit\Framework\TestCase;
  * In particular, this needs to test that two separate test cases with different
  * core major versions set on the environment don't cross-pollute the
  * container's versionned services.
- * @group container
  */
+#[Group('container')]
 class ContainerTest extends TestCase {
 
   /**

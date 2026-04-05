@@ -2,16 +2,17 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests for Info component.
- *
- * @group yaml
- * @group info
  */
+#[Group('yaml')]
+#[Group('info')]
 class ComponentInfo9Test extends TestBase {
 
   /**
@@ -121,10 +122,9 @@ class ComponentInfo9Test extends TestBase {
   /**
    * Tests with an existing info file.
    *
-   * @group existing
-   *
-   * @dataProvider dataExistingInfoFile
    */
+  #[Group('existing')]
+  #[DataProvider('dataExistingInfoFile')]
   public function testExistingInfoFile($existing_dependencies, $generated_dependencies, $resulting_dependencies) {
     $module_name = 'test_module';
     $module_data = [

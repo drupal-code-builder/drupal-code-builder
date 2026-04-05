@@ -2,12 +2,12 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the container collection.
- *
- * @group container
  */
+#[Group('container')]
 class ContainerCollectionTest extends TestBase {
 
   protected $drupalMajorVersion = 9;

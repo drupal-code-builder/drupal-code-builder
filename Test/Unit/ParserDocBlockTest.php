@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\DocBlockTester;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -10,9 +11,8 @@ use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Unit tests for the DocBlockTester test helper.
- *
- * @group php_tester_docblocks
  */
+#[Group('php_tester_docblocks')]
 class ParserDocBlockTest extends TestCase {
 
   /**

@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests the Permissions generator class.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentPermissions10Test extends TestBase {
 
   /**

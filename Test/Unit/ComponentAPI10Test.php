@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Task\AnalyzeModule;
 use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
@@ -62,9 +63,8 @@ class ComponentAPI10Test extends TestBase {
 
   /**
    * Tests with an existing api file.
-   *
-   * @group existing
    */
+  #[Group('existing')]
   public function testExistingAPIFile() {
     // Assemble module data.
     $module_name = 'test_module';

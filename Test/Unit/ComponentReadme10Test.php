@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests the README file.
@@ -143,8 +144,6 @@ class ComponentReadme10Test extends TestBase {
   /**
    * Tests the README file with dependencies.
    *
-   * @dataProvider dataReadmeWithDependencies
-   *
    * @param boolean $readme
    *   The value for the readme property in the module data.
    * @param array $dependencies
@@ -156,6 +155,7 @@ class ComponentReadme10Test extends TestBase {
    * @param boolean $expect_requirements_dependencies
    *   Whether to expect a list of dependencies in the Requirements section.
    */
+  #[DataProvider('dataReadmeWithDependencies')]
   function testReadmeWithDependencies(bool $readme, array $dependencies, bool $expect_readme, bool $expect_requirements_section, bool $expect_requirements_dependencies) {
     // Create a module.
     $module_data = [

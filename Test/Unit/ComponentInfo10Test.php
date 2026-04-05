@@ -2,14 +2,14 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Info component.
- *
- * @group yaml
- * @group info
  */
+#[Group('yaml')]
+#[Group('info')]
 class ComponentInfo10Test extends TestBase {
 
   /**

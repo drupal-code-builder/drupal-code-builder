@@ -2,14 +2,14 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for dynamic route providers.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentDynamicRouteProvider11Test extends TestBase {
 
   /**

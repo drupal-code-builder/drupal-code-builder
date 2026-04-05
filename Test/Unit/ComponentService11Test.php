@@ -2,15 +2,16 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Service component.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentService11Test extends TestBase {
 
   /**
@@ -70,9 +71,8 @@ class ComponentService11Test extends TestBase {
 
   /**
    * Test namespace configuration for service generation.
-   *
-   * @group config
    */
+  #[Group('config')]
   public function testServiceGenerationNamespaceConfiguration() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -152,9 +152,8 @@ class ComponentService11Test extends TestBase {
 
   /**
    * Test YAML linebreaks configuration for service generation.
-   *
-   * @group config
    */
+  #[Group('config')]
   public function testServiceGenerationYamlLinebreaksConfiguration() {
     $module_data = [
       'base' => 'module',
@@ -192,9 +191,8 @@ class ComponentService11Test extends TestBase {
 
   /**
    * Test service parameter expansion configuration.
-   *
-   * @group config
    */
+  #[Group('config')]
   public function testServiceGenerationYamlParameterLinebreaksConfiguration() {
     $module_data = [
       'base' => 'module',
@@ -236,9 +234,8 @@ class ComponentService11Test extends TestBase {
 
   /**
    * Test generating a module with a service using a preset.
-   *
-   * @group presets
    */
+  #[Group('presets')]
   public function testServiceGenerationFromPreset() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -484,10 +481,9 @@ class ComponentService11Test extends TestBase {
   /**
    * Test a service with with injected services.
    *
-   * @group di
-   *
-   * @dataProvider providerServiceGenerationWithServices
    */
+  #[Group('di')]
+  #[DataProvider('providerServiceGenerationWithServices')]
   function testServiceGenerationWithServices($injected_services, bool $property_promotion, $yaml_arguments, $assert_injected_services) {
     // Assemble module data.
     $module_name = 'test_module';
@@ -539,9 +535,8 @@ class ComponentService11Test extends TestBase {
 
  /**
    * Test several services injecting the same services.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testServiceGenerationRepeatedInjectedServies() {
     $module_name = 'test_module';
     $module_data = [
@@ -827,9 +822,8 @@ class ComponentService11Test extends TestBase {
 
   /**
    * Test a service that decorates another.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testServiceGenerationWithDecoration() {
     // Assemble module data: decoration without any injected services.
     $module_data = [
@@ -941,11 +935,10 @@ class ComponentService11Test extends TestBase {
    *   The expected YAML defining the list of existing services, without the
    *   initial 'services' key. NULL if no file is expected to be generated.
    *
-   * @group existing
-   *
-   * @dataProvider dataExistingServicesYamlFile
    *
    */
+  #[Group('existing')]
+  #[DataProvider('dataExistingServicesYamlFile')]
   public function testExistingServicesYamlFile(?string $existing, ?array $generated, ?string $resulting) {
     $module_name = 'existing';
     $module_data = [
@@ -1079,9 +1072,6 @@ class ComponentService11Test extends TestBase {
   /**
    * Test merging of injected services in an existing service.
    *
-   * @group existing
-   *
-   * @dataProvider dataExistingServiceMerge
    *
    * @param array $existing_service_data
    *   The module data for a single service to generate as the mocked existing
@@ -1092,6 +1082,8 @@ class ComponentService11Test extends TestBase {
    *   The expected injected services, in the format expected by
    *   assertInjectedServices().
    */
+  #[Group('existing')]
+  #[DataProvider('dataExistingServiceMerge')]
   public function testExistingServiceMerge($existing_service_data, $generated_service_data, $expected_injected_services) {
     // First pass: generate the files we'll mock as existing.
     $module_name = 'existing';
@@ -1233,10 +1225,9 @@ class ComponentService11Test extends TestBase {
    * @param string $adopted_relative_class
    *   The relative class name of the adopted service.
    *
-   * @group adopt
-   *
-   * @dataProvider dataExistingServicesAdoption
    */
+  #[Group('adopt')]
+  #[DataProvider('dataExistingServicesAdoption')]
   public function testExistingServicesAdoption(array $data_services, string $adopted_relative_class) {
     // Mock an existing module.
     $extension = new MockableExtension('module', __DIR__ . '/../Fixtures/modules/existing/');

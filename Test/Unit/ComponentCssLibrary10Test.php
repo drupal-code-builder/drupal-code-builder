@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for library generation.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentCssLibrary10Test extends TestBase {
 
   /**

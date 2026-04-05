@@ -2,14 +2,14 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for event subscriber component.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentServiceEventSubscriber10Test extends TestBase {
 
   /**

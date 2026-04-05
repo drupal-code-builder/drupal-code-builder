@@ -2,14 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Form component.
- *
- * @group form
  */
+#[Group('form')]
 class ComponentForm10Test extends TestBase {
 
   /**
@@ -129,9 +130,8 @@ class ComponentForm10Test extends TestBase {
 
   /**
    * Test Form component with injected services.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testFormGenerationWithServices() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -255,10 +255,9 @@ class ComponentForm10Test extends TestBase {
    *   Whether a generated component exists to have the adopted component merged
    *   with.
    *
-   * @group adopt
-   *
-   * @dataProvider dataAdoptionMerge
    */
+  #[Group('adopt')]
+  #[DataProvider('dataAdoptionMerge')]
   public function testExistingFormAdoption(bool $merge) {
     // First pass: generate the files we'll mock as existing.
     $module_name = 'existing';

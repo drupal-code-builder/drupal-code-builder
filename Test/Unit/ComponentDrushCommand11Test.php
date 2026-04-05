@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests for Drush command component.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentDrushCommand11Test extends TestBase {
 
   /**
@@ -152,9 +152,8 @@ class ComponentDrushCommand11Test extends TestBase {
 
   /**
    * Test a command with with injected services.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testCommandGenerationWithServices() {
     // Assemble module data.
     $module_name = 'test_module';

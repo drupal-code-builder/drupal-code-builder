@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use MutableTypedData\Exception\InvalidInputException;
@@ -12,10 +14,9 @@ use Psr\Container\ContainerInterface;
  * Tests generation of attribute plugins.
  *
  * TODO: This is missing testing of the actual attributes!
- *
- * @group yaml
- * @group plugin
  */
+#[Group('yaml')]
+#[Group('plugin')]
 class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
@@ -206,9 +207,8 @@ class ComponentPluginsAttribute11Test extends TestBase {
    * Tests special cases where prefixing of the plugin name should be skipped.
    *
    * This also tests that derivative plugin IDs are handled correctly.
-   *
-   * @dataProvider providerPluginsGenerationNamePrefixing
    */
+  #[DataProvider('providerPluginsGenerationNamePrefixing')]
   public function testPluginsGenerationNamePrefixing(string $plugin_id, string $filename) {
     // Create a module.
     $module_name = 'test_module';
@@ -264,9 +264,8 @@ class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
    * Tests plugin derivers.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testPluginsGenerationDeriver() {
     // Create a module.
     $module_name = 'test_module';
@@ -465,9 +464,8 @@ class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
    * Test Plugins component with injected services.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testPluginsGenerationWithServices() {
     // Create a module.
     $module_name = 'test_module';
@@ -598,9 +596,8 @@ class ComponentPluginsAttribute11Test extends TestBase {
 
   /**
    * Test the validation constraint plugin variant.
-   *
-   * @group di
    */
+  #[Group('di')]
   public function testPluginValidationConstraint(): void {
     // Create a module.
     $module_name = 'test_module';

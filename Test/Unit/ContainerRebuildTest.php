@@ -2,12 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests rebuilding the cached container.
- * @group container
  */
+#[Group('container')]
 class ContainerRebuildTest extends TestCase {
 
   /**

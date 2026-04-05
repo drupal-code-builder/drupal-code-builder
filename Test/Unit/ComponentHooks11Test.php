@@ -2,14 +2,14 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Hooks component on Drupal 11.
- *
- * @group hooks
  */
+#[Group('hooks')]
 class ComponentHooks11Test extends TestBase {
 
   /**

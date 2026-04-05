@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use DrupalCodeBuilder\Task\Collect\MethodCollector;
 use DrupalCodeBuilder\Test\Fixtures\MethodCollectorInterface;
@@ -13,9 +14,8 @@ class UnitMethodCollectorTest extends TestCase {
 
   /**
    * Tests the method analysis.
-   *
-   * @dataProvider providerMethodCollector
    */
+  #[DataProvider('providerMethodCollector')]
   public function testMethodCollector($method_name, $declaration_result) {
     $method_collector = new MethodCollector();
 

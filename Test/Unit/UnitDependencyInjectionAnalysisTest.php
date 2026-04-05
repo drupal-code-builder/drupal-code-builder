@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,14 +13,13 @@ class UnitDependencyInjectionAnalysisTest extends TestCase {
   /**
    * Tests the method analysis.
    *
-   * @dataProvider dataDependencyInjection
-   *
    * @param object $class_object
    *   An instance of an anonymous class to analyse. This is an object because
    *   passing the class name of anonymous class is fiddly.
    * @param array $result
    *   The expected result.
    */
+  #[DataProvider('dataDependencyInjection')]
   public function testDependencyInjection($class_object, $result) {
     $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($class_object::class, 0);
 

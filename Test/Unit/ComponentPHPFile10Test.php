@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use DrupalCodeBuilder\File\CodeFile;
 use DrupalCodeBuilder\Generator\PHPFile as RealPHPFile;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
@@ -49,8 +50,6 @@ class ComponentPHPFile10Test extends TestBase {
   /**
    * Test the qualified class name extraction.
    *
-   * @dataProvider providerQualifiedClassNameExtraction
-   *
    * @param string $code
    *   The code to extract class names from.
    * @param string $expected_changed_code
@@ -64,6 +63,7 @@ class ComponentPHPFile10Test extends TestBase {
    *     extracted.
    *   - NULL if we do not expect extraction.
    */
+  #[DataProvider('providerQualifiedClassNameExtraction')]
   public function testQualifiedClassNameExtraction($code, $expected_changed_code, $expected_qualified_class_names) {
     // Make the protected method we're testing callable.
     $method = new \ReflectionMethod(PHPFile::class, 'extractFullyQualifiedClasses');

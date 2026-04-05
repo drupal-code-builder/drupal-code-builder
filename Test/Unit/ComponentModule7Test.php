@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests basic module generation.
- *
- * @group hooks
  */
+#[Group('hooks')]
 class ComponentModule7Test extends TestBase {
 
   /**

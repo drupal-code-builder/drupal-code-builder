@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use MutableTypedData\Definition\DataDefinition;
 use PHPUnit\Framework\TestCase;
 
@@ -33,9 +34,8 @@ class UnitValidatorTest extends TestCase {
 
   /**
    * Tests the class name validator.
-   *
-   * @dataProvider providerClassNameValidator
    */
+  #[DataProvider('providerClassNameValidator')]
   public function testClassNameValidator($value, $expected_pass) {
     $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\ClassName();
 
@@ -84,9 +84,8 @@ class UnitValidatorTest extends TestCase {
 
   /**
    * Tests the machine name validator.
-   *
-   * @dataProvider providerMachineNameValidator
    */
+  #[DataProvider('providerMachineNameValidator')]
   public function testMachineNameValidator($value, $expected_pass) {
     $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\MachineName();
 
@@ -166,9 +165,8 @@ class UnitValidatorTest extends TestCase {
 
   /**
    * Tests the plugin name validator.
-   *
-   * @dataProvider providerPluginNameValidator
    */
+  #[DataProvider('providerPluginNameValidator')]
   public function testPluginNameValidator($value, $expected_pass) {
     $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\PluginName();
 
@@ -233,9 +231,8 @@ class UnitValidatorTest extends TestCase {
 
   /**
    * Tests the YAML plugin name validator.
-   *
-   * @dataProvider providerYamlPluginNameValidator
    */
+  #[DataProvider('providerYamlPluginNameValidator')]
   public function testYamlPluginNameValidator($value, $expected_pass) {
     $validator = new \DrupalCodeBuilder\MutableTypedData\Validator\YamlPluginName();
 

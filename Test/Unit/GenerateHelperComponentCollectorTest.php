@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Definition\DeferredGeneratorDefinition;
@@ -180,9 +182,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
   /**
    * Request with nested component properties.
-   *
-   * @dataProvider providerGeneratorChildNoRequests
    */
+  #[DataProvider('providerGeneratorChildNoRequests')]
   public function testGeneratorChildNoRequests($data_value, $expected_paths) {
     $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setName('my_root')
@@ -256,9 +257,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
   /**
    * Request with only the root generator, with a single-value preset.
-   *
-   * @group presets
    */
+  #[Group('presets')]
   public function testSingleGeneratorSinglePresetsNoRequirements() {
     $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setProperties([
@@ -343,9 +343,8 @@ class GenerateHelperComponentCollectorTest extends TestBase {
 
   /**
    * Request with only the root generator, with a multi-valued preset.
-   *
-   * @group presets
    */
+  #[Group('presets')]
   public function testSingleGeneratorMultiPresetsNoRequirements() {
     $definition = MergingGeneratorDefinition::createFromGeneratorType('my_root')
       ->setProperties([

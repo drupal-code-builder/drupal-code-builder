@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use MutableTypedData\Data\DataItem;
 
@@ -67,9 +68,8 @@ class ComponentProfile10Test extends TestBase {
 
   /**
    * Tests getting module configuration data.
-   *
-   * @group config
    */
+  #[Group('config')]
   public function testConfiguration() {
     $config_data = \DrupalCodeBuilder\Factory::getTask('Configuration')->getConfigurationData('profile');
     $properties = $config_data->getProperties();

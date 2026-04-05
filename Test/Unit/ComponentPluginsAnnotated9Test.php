@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use MutableTypedData\Exception\InvalidInputException;
@@ -15,10 +17,9 @@ use Psr\Container\ContainerInterface;
  * types left.
  *
  * TODO: Restore this to Drupal 10 if I CBA.
- *
- * @group yaml
- * @group plugin
  */
+#[Group('yaml')]
+#[Group('plugin')]
 class ComponentPluginsAnnotated9Test extends TestBase {
 
   /**
@@ -128,9 +129,8 @@ class ComponentPluginsAnnotated9Test extends TestBase {
    * Tests special cases where prefixing of the plugin name should be skipped.
    *
    * This also tests that derivative plugin IDs are handled correctly.
-   *
-   * @dataProvider providerPluginsGenerationNamePrefixing
    */
+  #[DataProvider('providerPluginsGenerationNamePrefixing')]
   public function testPluginsGenerationNamePrefixing(string $plugin_id, string $filename) {
     // Create a module.
     $module_name = 'test_module';
@@ -496,9 +496,8 @@ class ComponentPluginsAnnotated9Test extends TestBase {
 
   /**
    * Test Plugins component with injected services.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testPluginsGenerationWithServices() {
     // Create a module.
     $module_name = 'test_module';
@@ -573,9 +572,8 @@ class ComponentPluginsAnnotated9Test extends TestBase {
 
   /**
    * Test Plugins component with a plugin base class with an existing create().
-   *
-   * @group di
    */
+  #[Group('di')]
   function testPluginsGenerationWithExistingCreate() {
     // Create a module.
     $module_name = 'test_module';
@@ -658,9 +656,8 @@ class ComponentPluginsAnnotated9Test extends TestBase {
 
   /**
    * Tests a plugin base class with nonstandard fixed constructor parameters.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testPluginsGenerationWithNonstandardFixedParameters() {
     // Create a module.
     $module_name = 'test_module';

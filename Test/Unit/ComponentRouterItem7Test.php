@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests for Router item component.
- *
- * @group hooks
  */
+#[Group('hooks')]
 class ComponentRouterItem7Test extends TestBase {
 
   /**

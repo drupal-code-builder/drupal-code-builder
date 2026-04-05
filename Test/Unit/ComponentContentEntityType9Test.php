@@ -2,16 +2,16 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the D8/9 entity type generator class.
- *
- * @group yaml
- * @group annotation
- * @group entity
  */
+#[Group('yaml')]
+#[Group('annotation')]
+#[Group('entity')]
 class ComponentContentEntityType9Test extends TestBase {
 
   /**
@@ -23,10 +23,9 @@ class ComponentContentEntityType9Test extends TestBase {
 
   /**
    * Tests creating a content entity with a revision UI.
-   *
-   * @group entity_ui
-   * @group form
    */
+  #[Group('entity_ui')]
+  #[Group('form')]
   public function testContentEntityTypeWithRevisionEntityUI() {
     $module_name = 'test_module';
     $module_data = [

@@ -2,14 +2,14 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use MutableTypedData\Data\DataItem;
 
 /**
  * Tests basic module generation.
- *
- * @group hooks
  */
+#[Group('hooks')]
 class ComponentModule10Test extends TestBase {
 
   /**
@@ -69,9 +69,8 @@ class ComponentModule10Test extends TestBase {
 
   /**
    * Tests getting module configuration data.
-   *
-   * @group config
    */
+  #[Group('config')]
   public function testConfiguration() {
     $config_data = \DrupalCodeBuilder\Factory::getTask('Configuration')->getConfigurationData('module');
     $properties = $config_data->getProperties();

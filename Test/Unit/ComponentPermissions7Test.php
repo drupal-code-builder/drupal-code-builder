@@ -2,13 +2,13 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the Permissions generator class.
- *
- * @group hooks
  */
+#[Group('hooks')]
 class ComponentPermissions7Test extends TestBase {
 
   /**

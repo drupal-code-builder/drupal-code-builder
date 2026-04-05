@@ -2,14 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Router item component.
- *
- * @group yaml
  */
+#[Group('yaml')]
 class ComponentRouterItem10Test extends TestBase {
 
   /**
@@ -227,9 +228,8 @@ class ComponentRouterItem10Test extends TestBase {
    * @param array $class_names_and_methods
    *   (optional) An array of data about expected classes and their methods.
    *   Keys are the relative class names. Values are arrays of method names.
-   *
-   * @dataProvider dataRouteAccessTypes
    */
+  #[DataProvider('dataRouteAccessTypes')]
   public function testRouteAccessTypes(
     array $access,
     string $yaml_property,
@@ -514,9 +514,8 @@ class ComponentRouterItem10Test extends TestBase {
 
   /**
    * Test options for the controller class
-   *
-   * @group di
    */
+  #[Group('di')]
   public function testRouteControllerClassWithDI() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -634,9 +633,8 @@ class ComponentRouterItem10Test extends TestBase {
 
   /**
    * Test generating a route with a menu link.
-   *
-   * @group plugin
    */
+  #[Group('plugin')]
   public function testRouteGenerationWithMenuLink() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -692,9 +690,8 @@ class ComponentRouterItem10Test extends TestBase {
 
   /**
    * Test generating a route with a menu tab.
-   *
-   * @group plugin
    */
+  #[Group('plugin')]
   public function testRouteGenerationWithMenuTab() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -742,9 +739,8 @@ class ComponentRouterItem10Test extends TestBase {
 
   /**
    * Tests adoption of existing form.
-   *
-   * @group adopt
    */
+  #[Group('adopt')]
   public function testExistingRouterItemAdoption() {
     // First pass: generate the files we'll mock as existing.
     $module_name = 'existing';

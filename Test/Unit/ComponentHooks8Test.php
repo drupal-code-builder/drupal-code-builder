@@ -2,15 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests for Hooks component.
- *
- * @group hooks
  */
+#[Group('hooks')]
 class ComponentHooks8Test extends TestBase {
 
   /**
@@ -173,9 +173,8 @@ class ComponentHooks8Test extends TestBase {
 
   /**
    * Tests with an existing code file.
-   *
-   * @group existing
    */
+  #[Group('existing')]
   public function testHooksWithExistingFunctions() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -255,9 +254,8 @@ class ComponentHooks8Test extends TestBase {
 
   /**
    * Tests hook_update_N() existing implementations.
-   *
-   * @group existing
    */
+  #[Group('existing')]
   public function testHooksWithExistingHookInstall() {
     // Assemble module data.
     $module_name = 'test_module';

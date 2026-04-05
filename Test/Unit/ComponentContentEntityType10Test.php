@@ -2,16 +2,17 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 
 /**
  * Tests the entity type generator class.
- *
- * @group yaml
- * @group annotation
- * @group entity
  */
+#[Group('yaml')]
+#[Group('annotation')]
+#[Group('entity')]
 class ComponentContentEntityType10Test extends TestBase {
 
   /**
@@ -173,9 +174,8 @@ class ComponentContentEntityType10Test extends TestBase {
    * Tests the parent interfaces.
    *
    * This covers the different combinations of options.
-   *
-   * @dataProvider providerContentEntityTypeFunctionalityOptions
    */
+  #[DataProvider('providerContentEntityTypeFunctionalityOptions')]
   public function testContentEntityTypeFunctionalityOptions(
     $interface_option,
     $expected_parent_interfaces,
@@ -780,9 +780,8 @@ class ComponentContentEntityType10Test extends TestBase {
    * Tests creating a content entity type with handlers.
    *
    * This covers the different combinations of options.
-   *
-   * @dataProvider providerHandlers
    */
+  #[DataProvider('providerHandlers')]
   public function testContentEntityTypeHandlers($handler_properties, $expected_handlers_annotation, $expected_files_base_classes) {
     // Create a module.
     $module_name = 'test_module';
@@ -1321,9 +1320,8 @@ class ComponentContentEntityType10Test extends TestBase {
 
   /**
    * Tests the handler namespace configuration setting.
-   *
-   * @group config
    */
+  #[Group('config')]
   public function testContentEntityTypeHandlerNamespaceConfiguration() {
     // Create a module.
     $module_name = 'test_module';
@@ -1396,10 +1394,9 @@ class ComponentContentEntityType10Test extends TestBase {
 
   /**
    * Tests creating a content entity with a UI.
-   *
-   * @group entity_ui
-   * @group form
    */
+  #[Group('entity_ui')]
+  #[Group('form')]
   public function testContentEntityTypeWithUI() {
     $module_name = 'test_module';
     $module_data = [
@@ -1515,10 +1512,9 @@ class ComponentContentEntityType10Test extends TestBase {
 
   /**
    * Tests creating a content entity with a revision UI.
-   *
-   * @group entity_ui
-   * @group form
    */
+  #[Group('entity_ui')]
+  #[Group('form')]
   public function testContentEntityTypeWithRevisionEntityUI() {
     $module_name = 'test_module';
     $module_data = [
@@ -1556,10 +1552,9 @@ class ComponentContentEntityType10Test extends TestBase {
 
   /**
    * Tests creating a content entity with a bundle entity UI.
-   *
-   * @group entity_ui
-   * @group form
    */
+  #[Group('entity_ui')]
+  #[Group('form')]
   public function testContentEntityTypeWithBundleEntityUI() {
     $module_name = 'test_module';
     $module_data = [
@@ -1631,10 +1626,9 @@ class ComponentContentEntityType10Test extends TestBase {
 
   /**
    * Test creating a content entity type with a bundle entity and UI for both.
-   *
-   * @group entity_ui
-   * @group form
    */
+  #[Group('entity_ui')]
+  #[Group('form')]
   public function testEntityTypeWithUIAndBundleEntity() {
     // Create a module.
     $module_name = 'test_module';

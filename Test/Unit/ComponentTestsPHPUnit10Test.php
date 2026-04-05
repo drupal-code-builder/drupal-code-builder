@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Fixtures\File\MockableExtension;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
@@ -271,10 +273,9 @@ class ComponentTestsPHPUnit10Test extends TestBase {
   /**
    * Create a test class with services.
    *
-   * @group di
-   *
-   * @dataProvider dataModuleGenerationTestsWithServices
    */
+  #[Group('di')]
+  #[DataProvider('dataModuleGenerationTestsWithServices')]
   function testModuleGenerationTestsWithServices(bool $container_services = FALSE, bool $mocked_services = FALSE) {
     // Create a module.
     $module_name = 'test_module';
@@ -340,9 +341,8 @@ class ComponentTestsPHPUnit10Test extends TestBase {
 
   /**
    * Create a test class with a test module.
-   *
-   * @group test
    */
+  #[Group('test')]
   function testModuleGenerationTestsWithBasicTestModule() {
     // Create a module.
     $module_name = 'generated_module';
@@ -375,9 +375,8 @@ class ComponentTestsPHPUnit10Test extends TestBase {
 
   /**
    * Create a test class with a test module and module components.
-   *
-   * @group test
    */
+  #[Group('test')]
   function testModuleGenerationTestsWithTestModuleComponents() {
     // Create a module.
     $module_name = 'generated_module';
@@ -554,11 +553,6 @@ class ComponentTestsPHPUnit10Test extends TestBase {
    * This generates a hook in either the main or the test module, with an
    * existing function is either the main or test module file.
    *
-   * @group existing
-   * @group test
-   *
-   * @dataProvider dataTestModuleWithExistingFunctions
-   *
    * @param string $generated
    *   Where the generated hook goes. One of:
    *    - 'main': The main generated module.
@@ -568,6 +562,9 @@ class ComponentTestsPHPUnit10Test extends TestBase {
    *    - 'main': The main generated module.
    *    - 'test': The test module.
    */
+  #[Group('existing')]
+  #[Group('test')]
+  #[DataProvider('dataTestModuleWithExistingFunctions')]
   public function testTestModuleWithExistingFunctions(string $generated, string $existing_code) {
     // Create a module.
     $module_data = [
@@ -680,11 +677,6 @@ class ComponentTestsPHPUnit10Test extends TestBase {
    * This generates a service in either the main or the test module, with an
    * existing service is either the main or test module.
    *
-   * @group existing
-   * @group test
-   *
-   * @dataProvider dataTestModuleWithExistingFunctions
-   *
    * @param string $generated
    *   Where the generated service goes. One of:
    *    - 'main': The main generated module.
@@ -694,6 +686,9 @@ class ComponentTestsPHPUnit10Test extends TestBase {
    *    - 'main': The main generated module.
    *    - 'test': The test module.
    */
+  #[Group('existing')]
+  #[Group('test')]
+  #[DataProvider('dataTestModuleWithExistingFunctions')]
   public function testTestModuleWithExistingServices(string $generated, string $existing_code) {
     $services_value = [
       [

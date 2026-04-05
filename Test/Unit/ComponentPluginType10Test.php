@@ -2,15 +2,15 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 
 /**
  * Tests generation of plugin types.
- *
- * @group yaml
- * @group di
  */
+#[Group('yaml')]
+#[Group('di')]
 class ComponentPluginType10Test extends TestBase {
 
   /**
@@ -586,9 +586,8 @@ class ComponentPluginType10Test extends TestBase {
 
   /**
    * Test Plugin Type with DI in the plugin base class.
-   *
-   * @group di
    */
+  #[Group('di')]
   function testAttributePluginTypeWithServices() {
     $module_data = [
       'base' => 'module',

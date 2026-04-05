@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
@@ -17,9 +19,8 @@ class ParserPHPTest extends TestCase {
    *
    * This is fairly simple for now, and is just to sanity check that Coder
    * and PHP Codersniffer run ok.
-   *
-   * @dataProvider providerAssertDrupalCodingStandards
    */
+  #[DataProvider('providerAssertDrupalCodingStandards')]
   public function testAssertDrupalCodingStandards($code, $pass) {
     $php_tester = new PHPTester(8, $code);
 
@@ -180,9 +181,8 @@ class ParserPHPTest extends TestCase {
 
   /**
    * Tests the assertClassHasInterfaces() assertion.
-   *
-   * @dataProvider providerAssertClassInterfaces
    */
+  #[DataProvider('providerAssertClassInterfaces')]
   public function testAssertClassInterfaces($expected_interfaces, $pass_has, $pass_has_not) {
     $php = <<<EOT
       <?php
@@ -429,9 +429,8 @@ class ParserPHPTest extends TestCase {
 
   /**
    * Tests the assertFileDocblockHasLine() assertion.
-   *
-   * @group php_tester_docblocks
    */
+  #[Group('php_tester_docblocks')]
   public function testAssertFileDocblockHasLineAssertion() {
     $php = <<<EOT
       <?php
@@ -464,9 +463,8 @@ class ParserPHPTest extends TestCase {
 
   /**
    * Tests the assertHasHookImplementation() assertion.
-   *
-   * @group php_tester_docblocks
    */
+  #[Group('php_tester_docblocks')]
   public function testAssertHasHookImplementationAssertion() {
     $php = <<<EOT
       <?php

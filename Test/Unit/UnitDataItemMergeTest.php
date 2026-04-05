@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Exception\MergeDataLossException;
@@ -43,9 +44,8 @@ class UnitDataItemMergeTest extends TestCase {
 
   /**
    * Tests multi-valued simple data.
-   *
-   * @dataProvider dataMultipleSimpleData
    */
+  #[DataProvider('dataMultipleSimpleData')]
   public function testMultipleSimpleData(array $original_values, array $other_values, ?array $end_values, ?bool $expected_result) {
     $definition = PropertyDefinition::create('string')
       ->setMultiple(TRUE);
@@ -147,9 +147,8 @@ class UnitDataItemMergeTest extends TestCase {
 
   /**
    * Tests single-valued complex data.
-   *
-   * @dataProvider dataSingleComplexData
    */
+  #[DataProvider('dataSingleComplexData')]
   public function testSingleComplexData(array $original_values, array $other_values, ?array $end_values, ?bool $expected_result, bool $expect_exception) {
     $definition = PropertyDefinition::create('complex')
       ->setProperties([
@@ -219,9 +218,8 @@ class UnitDataItemMergeTest extends TestCase {
 
   /**
    * Tests multi-valued complex data.
-   *
-   * @dataProvider dataMultipleComplexData
    */
+  #[DataProvider('dataMultipleComplexData')]
   public function testMultipleComplexData(array $original_values, array $other_values, ?array $end_values, ?bool $expected_result) {
     $definition = PropertyDefinition::create('complex')
       ->setMultiple(TRUE)
@@ -353,9 +351,8 @@ class UnitDataItemMergeTest extends TestCase {
    * Tests merging mapping data.
    *
    * We only cover single-valued as mapping data is rarely if ever multiple.
-   *
-   * @dataProvider dataMappingData
    */
+  #[DataProvider('dataMappingData')]
   public function testMappingData(array $original_values, array $other_values, ?array $end_values, ?bool $expected_result, bool $expect_exception) {
     $definition = PropertyDefinition::create('mapping');
 
