@@ -19,7 +19,7 @@ class ReportSummary extends ReportHookDataFolder {
   /**
    * The sanity level this task requires to operate.
    */
-  protected $sanity_level = 'component_data_processed';
+  protected $sanity_level = 'none';
 
   /**
    * Array of report helper services
