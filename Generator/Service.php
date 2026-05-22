@@ -209,7 +209,15 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     }
 
     $yaml = $extension->getFileYaml($services_filename);
+    $service_definitions = $yaml['services'];
     $service_names = array_keys($yaml['services']);
+
+    // Filter out services that are class or interface name aliases.
+    // Drupal\editor\Element: '@element.editor'
+    $service_names = array_filter(
+      $service_names,
+      fn ($name) => !(is_string($service_definitions[$name]) && str_starts_with($service_definitions[$name], '@')),
+    );
 
     // Filter out services that are adopted by other components, or aren't yet
     // adoptable.
