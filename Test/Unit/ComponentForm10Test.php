@@ -93,6 +93,10 @@ class ComponentForm10Test extends TestBase {
               'form_key' => 'my_element',
               'element_type' => 'textfield',
             ],
+            1 => [
+              'form_key' => 'my_options',
+              'element_type' => 'checkboxes',
+            ],
           ],
         ],
       ],
