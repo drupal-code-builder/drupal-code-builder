@@ -84,6 +84,12 @@ class FormElement extends BaseGenerator {
       $form_api_array['#' . $attribute] = $value;
     }
 
+    // Special handling for checkboxes & radios: they must have an #options
+    // property, or the form code will crash.
+    if (in_array($this->component_data->element_type->value, ['checkboxes', 'radios'])) {
+      $form_api_array['#options'] = [];
+    }
+
     return $form_api_array;
   }
 

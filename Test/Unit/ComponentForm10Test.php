@@ -93,6 +93,10 @@ class ComponentForm10Test extends TestBase {
               'form_key' => 'my_element',
               'element_type' => 'textfield',
             ],
+            1 => [
+              'form_key' => 'my_options',
+              'element_type' => 'checkboxes',
+            ],
           ],
         ],
       ],
@@ -126,6 +130,8 @@ class ComponentForm10Test extends TestBase {
     // https://github.com/drupal-code-builder/drupal-code-builder/issues/323.
     $form_builder_tester = $php_tester->getFormBuilderTester('buildForm', lenient_for_descriptions: TRUE);
     $form_builder_tester->assertHasLine('// $form = parent::buildForm($form, $form_state);');
+
+    $form_builder_tester->assertElementHasAttribute('#options', 'my_options');
   }
 
   /**

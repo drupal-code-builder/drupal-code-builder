@@ -1,5 +1,13 @@
 <?php $data =
 array (
+  'checkboxes' => 
+  array (
+    'type' => 'checkboxes',
+    'label' => 'checkboxes',
+    'form' => true,
+    'class_filepath' => 'core/lib/Drupal/Core/Render/Element/Checkboxes.php',
+    'description' => 'Provides a form element for a set of checkboxes.',
+  ),
   'machine_name' => 
   array (
     'type' => 'machine_name',
