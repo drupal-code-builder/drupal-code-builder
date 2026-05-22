@@ -83,7 +83,14 @@ class FormAPIArrayRenderer extends PhpRenderer {
       $indent = str_repeat('  ', $depth);
 
       if (is_array($value)) {
-        $render[] = "$indent'$key' => [";
+        if (empty($value)) {
+          // An empty array won't result in the iterator handling a lower depth,
+          // so we need to close the array here.
+          $render[] = "$indent'$key' => [],";
+        }
+        else {
+          $render[] = "$indent'$key' => [";
+        }
       }
       else {
         $value = $this->renderScalar($value);
