@@ -23,6 +23,9 @@ class RenderYamlTest extends TestCase {
           'null' => NULL,
           'empty' => [],
           'colon' => ':',
+          'at' => '@foo',
+          'backslash' => '\Backslash',
+          'percent' => '%parameter',
         ],
         'expected' => [
           'string: bar',
@@ -30,6 +33,9 @@ class RenderYamlTest extends TestCase {
           'null: null',
           'empty: {  }',
           "colon: ':'",
+          "at: '@foo'",
+          "backslash: '\Backslash'",
+          "percent: '%parameter'",
         ],
       ],
       'list' => [

@@ -249,7 +249,7 @@ class Yaml {
       // Determine whether to quote a string value.
       $quote = FALSE;
       // Starts with a special character.
-      $quote |= in_array(substr($value, 0, 1), ['@', '\\']);
+      $quote |= in_array(substr($value, 0, 1), ['@', '\\', '%']);
       // Contains a ':'.
       $quote |= str_contains($value, ':');
       // Is a string that would be interpreted as a boolean if bare.
