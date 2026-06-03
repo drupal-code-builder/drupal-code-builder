@@ -38,7 +38,7 @@ class PHPMethodTester {
   /**
    * The method code.
    *
-   * @var string[]
+   * @var string
    */
   protected $methodBody;
 
