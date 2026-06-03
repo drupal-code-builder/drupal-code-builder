@@ -481,4 +481,42 @@ class ComponentHooks11Test extends TestBase {
     $yaml_tester->assertPropertyHasValue(['services', "$module_name.my_service", 'class'], "Drupal\\$module_name\\MyService");
   }
 
+  /**
+   * Tests legacy hooks for those with a dedicated generator for the hook body.
+   */
+  public function testLegacyHookBodyGenerators(): void {
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'hook_implementation_type' => 'oo_legacy',
+      'hooks' => [
+        'hook_theme',
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.module',
+      'test_module.services.yml',
+      'src/Hook/TestModuleHooks.php',
+    ], $files);
+
+    $module_file = $files['test_module.module'];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $module_file);
+    $hook_tester = $php_tester->getFunctionTester('test_module_theme');
+    $hook_tester->assertHasLine('return \Drupal::service(TestModuleHooks::class)->theme', 'The legacy procedural hook calls the OO hook method.');
+
+    $hooks_class_file = $files['src/Hook/TestModuleHooks.php'];
+    $php_tester = new PHPTester($this->drupalMajorVersion, $hooks_class_file);
+    $hook_tester = $php_tester->getMethodTester('theme');
+    // The hook_theme() OO implementation returns only an empty array because
+    // there are no theme hooks.
+    $hook_tester->assertHasLine('return [];');
+  }
+
 }

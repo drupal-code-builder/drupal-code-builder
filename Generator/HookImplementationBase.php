@@ -179,18 +179,22 @@ abstract class HookImplementationBase extends PHPFunction implements ClassHandle
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    // Determine if there is a hook body generator for this hook.
-    // We need dynamic hook bodies to be a separate generator so they are
-    // orthogonal to hook implementations being prodecural/class methods.
-    $long_hook_name = $this->component_data->hook_name->value;
-    $hook_class_name = 'HookBody' . CaseString::snake($long_hook_name)->pascal();
-    // Make the fully qualified class name.
-    $hook_class = $this->classHandler->getGeneratorClass($hook_class_name);
-    if (class_exists($hook_class)) {
-      $components['body'] = [
-        'component_type' => $hook_class_name,
-        'containing_component' => '%requester',
-      ];
+    // For legacy procedural hooks, we already have the body which is the call
+    // to the OO method, so we don't want to add any specialised body code.
+    if ($this->component_data->attribute->value != 'Drupal\Core\Hook\LegacyHook') {
+      // Determine if there is a hook body generator for this hook.
+      // We need dynamic hook bodies to be a separate generator so they are
+      // orthogonal to hook implementations being prodecural/class methods.
+      $long_hook_name = $this->component_data->hook_name->value;
+      $hook_class_name = 'HookBody' . CaseString::snake($long_hook_name)->pascal();
+      // Make the fully qualified class name.
+      $hook_class = $this->classHandler->getGeneratorClass($hook_class_name);
+      if (class_exists($hook_class)) {
+        $components['body'] = [
+          'component_type' => $hook_class_name,
+          'containing_component' => '%requester',
+        ];
+      }
     }
 
     return $components;
