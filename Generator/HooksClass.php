@@ -11,6 +11,9 @@ use MutableTypedData\Definition\PropertyListInterface;
 
 /**
  * Generator for a hooks class for D11+.
+ *
+ * This adds HookImplementationClassMethod generators, each of which will take
+ * care of generating a legacy procedural hook if needed.
  */
 class HooksClass extends Service {
 

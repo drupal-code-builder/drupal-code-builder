@@ -5,7 +5,7 @@ namespace DrupalCodeBuilder\Generator;
 /**
  * Generator for hook_theme() implementation body lines.
  *
- * @see \DrupalCodeBuilder\Generator\HookImplementationBase
+ * @see \DrupalCodeBuilder\Generator\HookImplementationBase::requiredComponents()
  */
 class HookBodyHookTheme extends PHPFunctionBodyLines {
 
