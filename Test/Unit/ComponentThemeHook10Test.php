@@ -36,7 +36,9 @@ class ComponentThemeHook10Test extends TestBase {
       // Set this to procedural; the OO version is tested on D11.
       'hook_implementation_type' => 'procedural',
       'theme_hooks' => [
-        $theme_hook_name,
+        0 => [
+          'theme_hook_name' => $theme_hook_name,
+        ],
       ],
       'readme' => FALSE,
     ];

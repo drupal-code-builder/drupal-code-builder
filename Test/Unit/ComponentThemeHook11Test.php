@@ -22,8 +22,6 @@ class ComponentThemeHook11Test extends TestBase {
    * Test theme hook component.
    */
   function testThemeHook() {
-    $theme_hook_name = 'my_themeable';
-
     // Create a module.
     $module_name = 'testmodule';
     $module_data = [
@@ -36,7 +34,9 @@ class ComponentThemeHook11Test extends TestBase {
       // Set this to OO only, so we don't have the extra legacy code.
       'hook_implementation_type' => 'oo',
       'theme_hooks' => [
-        $theme_hook_name,
+        0 => [
+          'theme_hook_name' => 'my_themeable',
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -62,10 +62,68 @@ class ComponentThemeHook11Test extends TestBase {
 
     // Check that the hook_theme() implementation has the generated code.
     // This covers the specialized HookTheme hook generator class getting used.
-    $method_tester->assertHasLine("'$theme_hook_name' =>");
+    $method_tester->assertHasLine("'my_themeable' =>");
     $method_tester->assertHasLine("'render element' => 'elements',");
 
     // TODO: check the other file contents.
+  }
+
+  /**
+   * Test theme hook with a preprocessor.
+   */
+  function testThemeHookWithPreprocess() {
+    // Create a module.
+    $module_name = 'testmodule';
+    $module_data = [
+      'base' => 'module',
+      'root_name' => $module_name,
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      // Set this to OO only, so we don't have the extra legacy code.
+      'hook_implementation_type' => 'oo',
+      'theme_hooks' => [
+        0 => [
+          'theme_hook_name' => 'my_themeable',
+          'initial_preprocess' => TRUE,
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'testmodule.info.yml',
+      'testmodule.module',
+      'templates/my-themeable.html.twig',
+      'src/Hook/TestmoduleHooks.php',
+    ], $files);
+
+    // Check the hooks file.
+    $hooks_file = $files['src/Hook/TestmoduleHooks.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $hooks_file);
+
+    $php_tester->assertDrupalCodingStandards();
+
+    $php_tester->assertHasMethod('theme');
+    $this->assertStringContainsString("#[Hook('theme')]", $hooks_file);
+    $method_tester = $php_tester->getMethodTester('theme');
+    // Check that the hook_theme() implementation has the generated code.
+    // This covers the specialized HookTheme hook generator class getting used.
+    $method_tester->assertHasLine("'my_themeable' =>");
+    $method_tester->assertHasLine("'initial preprocess' => static::class . ':preprocessMyThemeable',");
+
+    $php_tester->assertHasMethod('preprocessMyThemeable');
+
+    // Check the legacy function.
+    $module_file = $files['testmodule.module'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $module_file);
+
+    $php_tester->assertDrupalCodingStandards();
+
+    $function_tester = $php_tester->getFunctionTester('template_preprocess_my_themeable');
+    $function_tester->assertHasLine('\Drupal::service(TestmoduleHooks::class)->preprocessMyThemeable($variables);');
   }
 
 }

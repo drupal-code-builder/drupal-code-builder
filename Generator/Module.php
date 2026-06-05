@@ -272,7 +272,7 @@ class Module extends RootComponent {
       'plugin_types' => MergingGeneratorDefinition::createFromGeneratorType('PluginType')
         ->setLabel('Plugin types')
         ->setMultiple(TRUE),
-      'theme_hooks' => DeferredGeneratorDefinition::createFromGeneratorType('ThemeHook', 'string')
+      'theme_hooks' => MergingGeneratorDefinition::createFromGeneratorType('ThemeHook')
         ->setLabel("Theme hooks")
         ->setDescription("The name of theme hooks, without the leading 'theme_'.")
         ->setMultiple(TRUE),
