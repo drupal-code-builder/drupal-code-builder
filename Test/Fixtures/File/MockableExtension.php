@@ -39,6 +39,18 @@ class MockableExtension extends DrupalExtension {
   }
 
   /**
+   * Sets all code files from a generated files array.
+   *
+   * @param \DrupalCodeBuilder\File\CodeFileInterface[] $code_files
+   *   An array of code files.
+   */
+  public function setCodeFiles(array $code_files): void {
+    foreach ($code_files as $relative_file_path => $code_file) {
+      $this->mockedFiles[$relative_file_path] = $code_file->getCode();
+    }
+  }
+
+  /**
    * Mocks an info file.
    *
    * WARNING: Assumes we're only testing modules!
