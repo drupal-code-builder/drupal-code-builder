@@ -41,7 +41,7 @@ class GeneratedExtension extends DrupalExtension {
   /**
    * {@inheritdoc}
    */
-  protected function getFileContents($relative_file_path) {
+  public function getFileContents($relative_file_path) {
     $relative_file_path = str_replace('%module', $this->name, $relative_file_path);
 
     return $this->files[$relative_file_path];

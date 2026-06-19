@@ -237,7 +237,7 @@ class DrupalExtension {
    * @return string
    *   The file contents.
    */
-  protected function getFileContents($relative_file_path) {
+  public function getFileContents($relative_file_path) {
     return file_get_contents($this->getRealPath($relative_file_path));
   }
 

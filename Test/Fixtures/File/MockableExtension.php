@@ -90,7 +90,7 @@ class MockableExtension extends DrupalExtension {
   /**
    * {@inheritdoc}
    */
-  protected function getFileContents($relative_file_path) {
+  public function getFileContents($relative_file_path) {
     if (isset($this->mockedFiles[$relative_file_path])) {
       return $this->mockedFiles[$relative_file_path];
     }
