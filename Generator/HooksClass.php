@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Generator;
 
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
@@ -92,9 +93,105 @@ class HooksClass extends Service {
    * {@inheritdoc}
    */
   public static function findAdoptableComponents(DrupalExtension $extension): array {
-    // For now we don't adopt hook classes, so override this method so we don't
-    // return the same as the parent class.
-    return [];
+    $finder = $extension->getFinder();
+    $finder
+      ->path(['src/Hook'])
+      ->files()
+      ->ignoreUnreadableDirs();
+
+    $adoptable_items = [];
+    foreach ($finder as $file) {
+      $relative_pathname = $file->getRelativePathname();
+
+      $adoptable_items[$relative_pathname] = $relative_pathname;
+    }
+
+    return $adoptable_items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function adoptComponent(DataItem $component_data, DrupalExtension $extension, string $property_name, string $name): void {
+    // Include the class file if necessary so we can use reflection on it.
+    $hooks_classname = $extension->getClassName($name);
+    if (!class_exists($hooks_classname)) {
+      $extension->includeFile($name);
+    }
+
+    $class_reflection = new \ReflectionClass($hooks_classname);
+
+    $adopted_data = [];
+
+    // Get the short class name.
+    $adopted_data['plain_class_name'] = basename($name, '.php');
+
+    // If the class has a constructor, then it is injecting services, which we
+    // need to analyse.
+    if ($class_reflection->hasMethod('__construct')) {
+      $container = \DrupalCodeBuilder\Factory::getEnvironment()->getContainer();
+      $reverse_container = $container->get(ReverseContainer::class);
+
+      $constructor_reflection = new \DrupalCodeBuilder\Utility\CodeAnalysis\Method($hooks_classname, '__construct');
+      $param_data = $constructor_reflection->getParamData();
+      foreach ($param_data as $param_data_item) {
+        // Rely on hook classes being autowired, so all their parameters' types
+        // must be registered as services.
+        $parameter_service = $container->get($param_data_item['type']);
+
+        // The service parameter types will typically be service aliases. Get
+        // the real service name from the reverse container.
+        $parameter_service_id = $reverse_container->getId($parameter_service);
+
+        $adopted_data['injected_services'][] = $parameter_service_id;
+      }
+    }
+
+    // Find hook methods.
+    $hook_names = \DrupalCodeBuilder\Factory::getTask('ReportHookData')->listHookNames('short');
+    $patterned_tokenized_hook_names = NULL;
+
+    $hooks_class_code = $extension->getFileContents($name);
+    $matches = [];
+    // Quick and dirty: get the Hook attribute parameter values.
+    // @todo This won't work with more complex hook implementation which use
+    // weights or delegate modules.
+    preg_match_all('@#\[Hook\(\'(\w+)\'@', $hooks_class_code, $matches);
+    if (!empty($matches[1])) {
+      $hook_matches = $matches[1];
+      foreach ($hook_matches as $attribute_hook_name) {
+        if (in_array($attribute_hook_name, $hook_names)) {
+          // The hook name in the attribute is a literal hook name.
+          $adopted_data['hook_methods'][] = [
+            'hook_name' => 'hook_' . $attribute_hook_name,
+          ];
+        }
+        else {
+          // The hook name in the attribute is tokenised.
+          // Lazily get the tokenised hook names.
+          if (!isset($patterned_tokenized_hook_names)) {
+            $patterned_tokenized_hook_names = \DrupalCodeBuilder\Factory::getTask('ReportHookData')->getRegexTokenisedHookNames();
+          }
+
+          foreach ($patterned_tokenized_hook_names as $hook_name => $hook_pattern) {
+            $matches = [];
+            if (preg_match($hook_pattern, $attribute_hook_name, $matches)) {
+              $adopted_data['hook_methods'][] = [
+                'hook_name' => $hook_name,
+                // Slice off the first of the matches array, as that's the whole
+                // pattern.
+                'hook_name_parameters' => array_slice($matches, 1),
+              ];
+
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // @todo Check if we already have an item for this class, and merge.
+    $component_data->hook_classes[] = $adopted_data;
   }
 
   /**

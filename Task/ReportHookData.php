@@ -118,6 +118,39 @@ class ReportHookData extends ReportHookDataFolder
   }
 
   /**
+   * Gets the list of names of tokenised hooks as regexes.
+   *
+   * @return array
+   *   An array of the hooks which are tokenised, where keys are the full hook
+   *   names, and values are the short hook names with their token part replaced
+   *   with a regex wildcard and capture group. E.g. 'hook_form_FORM_ID_alter'
+   *   is returned as 'form_(\w+)_alter'.
+   */
+  public function getRegexTokenisedHookNames(): array {
+    $hook_names = array_keys(array_merge(...array_values($this->listHookData())));
+
+    // Filter to only the tokenised hooks. These are the ones which have
+    // uppercase letters in their names.
+    $hook_names = array_filter($hook_names, fn ($hook_name) => preg_match('@[[:upper:]]@', $hook_name));
+
+    $short_hook_names = array_map(fn ($hook_name)  => str_replace('hook_', '', $hook_name), $hook_names);
+
+    $hook_names = array_combine($hook_names, $short_hook_names);
+
+    // Replace the token with a regex wildcard.
+    // The token must:
+    // - start with an uppercase letter
+    // - followed by uppercase letters and underscores (optionally, for the case
+    //   of hook_update_N)
+    // - end with either an underscore, which we don't include, or the end of
+    //   the string.
+    $hook_names = array_map(fn ($hook_name)  => preg_replace('@[[:upper:]][_[:upper:]]*((?=_)|\Z)@', '(\w+)', $hook_name), $hook_names);
+    $hook_names = array_map(fn ($hook_name)  => '@' . $hook_name . '@', $hook_names);
+
+    return $hook_names;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getOptions(): array {

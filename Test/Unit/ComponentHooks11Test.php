@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+use Psr\Container\ContainerInterface;
 
 /**
  * Tests for Hooks component on Drupal 11.
@@ -517,6 +518,112 @@ class ComponentHooks11Test extends TestBase {
     // The hook_theme() OO implementation returns only an empty array because
     // there are no theme hooks.
     $hook_tester->assertHasLine('return [];');
+  }
+
+  /**
+   * Tests adoption of existing hooks class.
+   */
+  #[Group('adopt')]
+  public function testExistingHooksClassAdoption(): void {
+    // First pass: generate the files we'll mock as existing.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'existing',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'hook_classes' => [
+        0 => [
+          'injected_services' => [
+            'current_user',
+            'entity_type.manager',
+          ],
+          'hook_methods' => [
+            0 => [
+              'hook_name' => 'hook_form_alter',
+            ],
+            1 => [
+              'hook_name' => 'hook_form_FORM_ID_alter',
+              'hook_name_parameters' => [
+                'node_form',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $existing_files = $this->generateModuleFiles($module_data);
+    $extension = $this->getMockedExtension('module');
+    $extension->setCodeFiles($existing_files);
+
+    // Now create the module data again, without the hooks value, and passing in
+    // the mocked existing code.
+    $component_data = $this->getRootComponentBlankData('module');
+    // Stash this for later.
+    $injected_service_names = $module_data['hook_classes'][0]['injected_services'];
+
+    unset($module_data['hook_classes']);
+    $component_data->set($module_data);
+
+    $task_handler_adopt = \DrupalCodeBuilder\Factory::getTask('Adopt');
+    $items = $task_handler_adopt->listAdoptableComponents($component_data, $extension);
+
+    // Check the hooks class was found as an adoptable component.
+    $this->assertArrayHasKey('module:hook_classes', $items);
+    $this->assertArrayHasKey('src/Hook/ExistingHooks.php', $items['module:hook_classes']);
+
+    // Mock the container, along with the reverse container and the services
+    // that HooksClass needs to do reverse look up for.
+    $drupal_container = $this->prophesize(ContainerInterface::class);
+
+    $service_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
+    $service_data = $service_data_task->listServiceData();
+
+    // Mock the injected services.
+    $mocked_services_reverse_lookup = [];
+    foreach ($injected_service_names as $service_name) {
+      // The service doesn't need to be the real class, it just needs to exist
+      // as an object. Our mocked reverse container matches on the PHP object
+      // ID.
+      $mocked_service = $this->prophesize(\stdClass::class)->reveal();
+
+      $service_interface = $service_data[$service_name]['interface'];
+      $service_interface = ltrim($service_interface, '\\');
+
+      // Mock the container to return the service from the interface (as that is
+      // what the adoption code works with, rather than service names).
+      $drupal_container->get($service_interface)->willReturn($mocked_service);
+
+      $mocked_services_reverse_lookup[spl_object_id($mocked_service)] = $service_name;
+    }
+
+    // Mock the reverse container, passing it a lookup array of the mocked
+    // services.
+    $drupal_container
+      ->get('Drupal\Component\DependencyInjection\ReverseContainer')
+      ->willReturn(new class($mocked_services_reverse_lookup) {
+        public function __construct(
+          protected array $mocked_services_reverse_lookup,
+        ) {}
+
+        public function getId(object $service_object): string {
+          return $this->mocked_services_reverse_lookup[spl_object_id($service_object)];
+        }
+      });
+    $this->container->get('environment')->setContainer($drupal_container->reveal());
+
+    $task_handler_adopt->adoptComponent($component_data, $extension, 'module:hook_classes', 'src/Hook/ExistingHooks.php');
+
+    // The component data has the adopted component data.
+    $this->assertEquals(1, $component_data->hook_classes->count());
+    $this->assertEquals('ExistingHooks', $component_data->hook_classes[0]['plain_class_name']);
+    $this->assertEquals(['current_user', 'entity_type.manager'], $component_data->hook_classes[0]->injected_services->export());
+    $this->assertEquals(2, $component_data->hook_classes[0]->hook_methods->count());
+    $this->assertEquals('hook_form_alter', $component_data->hook_classes[0]->hook_methods[0]['hook_name']);
+    $this->assertEquals('hook_form_FORM_ID_alter', $component_data->hook_classes[0]->hook_methods[1]['hook_name']);
+    $this->assertEquals(['node_form'], $component_data->hook_classes[0]->hook_methods[1]['hook_name_parameters']);
   }
 
 }

@@ -99,4 +99,14 @@ class MockableExtension extends DrupalExtension {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function includeFile(string $relative_file_path): void {
+    // This 'includes' a mocked file by eval()ing it. Which is evil, obviously.
+    // And will cause problems if multiple tests use the same mocked class name.
+    // Add a closing PHP tag so the opening one is OK.
+    eval('?>' . $this->mockedFiles[$relative_file_path]);
+  }
+
 }
