@@ -242,6 +242,34 @@ class DrupalExtension {
   }
 
   /**
+   * Gets the fully-qualified class name for a file in this extension.
+   *
+   * Warning: this does not sanity-check that the file exists!
+   *
+   * @param string $relative_file_path
+   *   The relative filepath.
+   *
+   * @return string
+   *   The fully-qualified class name.
+   */
+  public function getClassName(string $relative_file_path): string {
+    if (!str_starts_with($relative_file_path, 'src')) {
+      throw new \InvalidArgumentException("Given file path '$relative_file_path' is not for a class.");
+    };
+
+    // Remove the file extension.
+    $pieces = explode('/', pathinfo($relative_file_path, PATHINFO_DIRNAME));
+
+    // Ditch the initial 'src', replace with the extension namespace.
+    array_splice($pieces, 0, 1, ['Drupal', $this->name]);
+
+    // Put the filename back.
+    $pieces[] = pathinfo($relative_file_path, PATHINFO_FILENAME);
+
+    return implode('\\', $pieces);
+  }
+
+  /**
    * Loads the file for a class from this extension.
    *
    * For extensions which are not currently enabled, Drupal's autoloader will
