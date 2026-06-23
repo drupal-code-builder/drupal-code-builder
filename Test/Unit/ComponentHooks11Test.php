@@ -626,4 +626,61 @@ class ComponentHooks11Test extends TestBase {
     $this->assertEquals(['node_form'], $component_data->hook_classes[0]->hook_methods[1]['hook_name_parameters']);
   }
 
+  /**
+   * Tests adoption of existing hooks class with merging.
+   */
+  #[Group('adopt')]
+  public function testExistingHooksClassAdoptMerge(): void {
+    // First pass: generate the files we'll mock as existing.
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'existing',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'module_package' => 'Test Package',
+      'readme' => FALSE,
+      'hook_classes' => [
+        0 => [
+          'plain_class_name' => 'FormHooks',
+          // @todo merge services too.
+          'hook_methods' => [
+            0 => [
+              'hook_name' => 'hook_form_alter',
+            ],
+            1 => [
+              'hook_name' => 'hook_batch_alter',
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $existing_files = $this->generateModuleFiles($module_data);
+    $extension = $this->getMockedExtension('module');
+    $extension->setCodeFiles($existing_files);
+
+    // Now create the module data again, with fewer things in the hooks class.
+    $component_data = $this->getRootComponentBlankData('module');
+
+    unset($module_data['hook_classes'][0]['injected_services'][1]);
+    unset($module_data['hook_classes'][0]['hook_methods'][1]);
+    $component_data->set($module_data);
+
+    $task_handler_adopt = \DrupalCodeBuilder\Factory::getTask('Adopt');
+    $items = $task_handler_adopt->listAdoptableComponents($component_data, $extension);
+
+    // Check the hooks class was found as an adoptable component.
+    $this->assertArrayHasKey('module:hook_classes', $items);
+    $this->assertArrayHasKey('src/Hook/FormHooks.php', $items['module:hook_classes']);
+
+    $task_handler_adopt->adoptComponent($component_data, $extension, 'module:hook_classes', 'src/Hook/FormHooks.php');
+
+    // The component data has the adopted component data merged in.
+    $this->assertEquals(1, $component_data->hook_classes->count());
+    $this->assertEquals('FormHooks', $component_data->hook_classes[0]['plain_class_name']);
+    $this->assertEquals(2, $component_data->hook_classes[0]->hook_methods->count());
+    $this->assertEquals('hook_form_alter', $component_data->hook_classes[0]->hook_methods[0]['hook_name']);
+    $this->assertEquals('hook_batch_alter', $component_data->hook_classes[0]->hook_methods[1]['hook_name']);
+  }
+
 }

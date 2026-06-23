@@ -190,8 +190,40 @@ class HooksClass extends Service {
       }
     }
 
-    // @todo Check if we already have an item for this class, and merge.
-    $component_data->hook_classes[] = $adopted_data;
+    // Check if we already have this hooks class.
+    $adopted_class_exists = FALSE;
+    foreach ($component_data->hook_classes as $existing_hook_class) {
+      // Accessing the class name value will get the default if there is no
+      // user-set class name, and that can then be compared with the name of the
+      // adopted class.
+      if ($existing_hook_class->plain_class_name->value == $adopted_data['plain_class_name']) {
+        $adopted_class_exists = TRUE;
+
+        // We've found a matching hooks class we already have data for.
+        // Now see if any hooks already exist.
+        foreach ($adopted_data['hook_methods'] as $delta => $adopted_hook_method_data) {
+          foreach ($existing_hook_class->hook_methods as $existing_hook_method) {
+            if ($existing_hook_method->hook_name->value == $adopted_hook_method_data['hook_name']) {
+              // If the hook matches an existing one, remove it from the
+              // adopted data.
+              unset($adopted_data['hook_methods'][$delta]);
+              continue;
+            }
+          }
+        }
+
+        // Add any remaining hook methods to the existing hooks class.
+        foreach ($adopted_data['hook_methods'] as $adopted_hook_method_data) {
+          $existing_hook_class->hook_methods[] = $adopted_hook_method_data;
+        }
+      }
+    }
+
+    // Add the entire adopted data if we didn't find a matching existing hooks
+    // class.
+    if (!$adopted_class_exists) {
+      $component_data->hook_classes[] = $adopted_data;
+    }
   }
 
   /**
