@@ -109,6 +109,22 @@ class PhpAttributes extends PhpRenderer {
   }
 
   /**
+   * Append the rendered attribute into an existing array of lines.
+   *
+   * @param array $lines
+   */
+  public function renderIntoLines(array &$lines): void {
+    $attribute_lines = $this->render();
+
+    // WTF indent level. Figure this out when more things use this.
+    $indent = str_repeat('  ', $this->indentLevel);
+
+    foreach ($attribute_lines as $line) {
+      $lines[] = $indent . $line;
+    }
+  }
+
+  /**
    * Renders the attribute nested within another attribute.
    *
    * @param array &$lines
