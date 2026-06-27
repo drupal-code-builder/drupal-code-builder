@@ -52,6 +52,14 @@ class PhpAttributes extends PhpRenderer {
   }
 
   /**
+   * Creates a new attribute for a method parameter.
+   */
+  public static function parameter($attribute_class_name, $data = NULL, $comments = []) {
+    // WTF indent level. TODO figure this out when more things use this.
+    return new static($attribute_class_name, $data, $comments, 1);
+  }
+
+  /**
    * Creates a new attribute for a nested object.
    */
   public static function object($attribute_class_name, $data = NULL, $comments = []) {

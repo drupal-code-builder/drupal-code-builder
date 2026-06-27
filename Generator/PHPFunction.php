@@ -112,6 +112,7 @@ class PHPFunction extends BaseGenerator {
           'description' => PropertyDefinition::create('string')
             ->setLiteralDefault('Parameter description.'),
           'default_value' => PropertyDefinition::create('string'),
+          'attribute' => PropertyDefinition::create('mapping'),
         ]),
       // Whether to put parameter type declarations for PHP primitive types.
       // Defaults to FALSE as lots of Drupal functions do this for BC.
@@ -209,7 +210,7 @@ class PHPFunction extends BaseGenerator {
         $parameters,
         [
           'prefixes' => $this->component_data->prefixes->values(),
-          'break_declaration' => $this->component_data->break_declaration->value,
+          'break_declaration' => $this->component_data->break_declaration->value ?? FALSE,
         ],
         $this->component_data->return->return_type->value,
       );
@@ -395,6 +396,7 @@ class PHPFunction extends BaseGenerator {
    *    - 'by_reference'
    *    - 'nullable'
    *    - 'default_value'
+   *    - 'attribute'
    * @param array $options
    *   An array of options:
    *    - 'prefixes': An array of the function's prefixes.
@@ -417,6 +419,9 @@ class PHPFunction extends BaseGenerator {
       $options['break_declaration'] = FALSE;
     }
 
+    // Force break_declaration if any parameters have an attribute.
+    $options['break_declaration'] = array_reduce($parameters, fn ($carry, $item) => $carry || isset($item['attribute']), $options['break_declaration']);
+
     $code = [];
 
     if ($return_type) {
@@ -433,13 +438,17 @@ class PHPFunction extends BaseGenerator {
     $declaration_line .= 'function ' . $name . '(';
     $declaration_line_params = [];
     $seen_parameters = [];
+    $attributes = [];
     foreach ($parameters as $parameter_info) {
       if (isset($seen_parameters[$parameter_info['name']])) {
         continue;
       }
       $seen_parameters[$parameter_info['name']] = TRUE;
 
-      $declaration_line_params[] = $this->buildParameter($parameter_info);
+      $declaration_line_params[$parameter_info['name']] = $this->buildParameter($parameter_info);
+      if (isset($parameter_info['attribute'])) {
+        $attributes[$parameter_info['name']] = $parameter_info['attribute'];
+      }
     }
 
     if ($options['break_declaration']) {
@@ -447,7 +456,13 @@ class PHPFunction extends BaseGenerator {
       $code[] = $declaration_line;
 
       $last_index = count($declaration_line_params) - 1;
-      foreach ($declaration_line_params as $index => $param) {
+      foreach ($declaration_line_params as $parameter_name => $param) {
+        if (isset($attributes[$parameter_name])) {
+          $attribute = PhpAttributes::parameter($attributes[$parameter_name]['class'], $attributes[$parameter_name]['data']);
+          $attribute->forceInline();
+          $attribute->renderIntoLines($code);
+        }
+
         $code[] = '  ' . $param . ',';
       }
 
