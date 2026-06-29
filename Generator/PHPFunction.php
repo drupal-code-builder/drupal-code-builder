@@ -500,6 +500,11 @@ class PHPFunction extends BaseGenerator {
         $this->component_data->use_primitive_parameter_type_declarations->value;
     }
 
+    // Force the type to be nullable if the default is NULL.
+    if (isset($parameter_info['default_value']) && $parameter_info['default_value'] == 'NULL') {
+      $parameter_info['nullable'] = TRUE;
+    }
+
     if (!empty($parameter_should_use_type)) {
       $parameter_pieces[] =
         (!empty($parameter_info['nullable']) ? '?' : '')
