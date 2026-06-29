@@ -118,7 +118,7 @@ class PHPFunction extends BaseGenerator {
       // Defaults to FALSE as lots of Drupal functions do this for BC.
       'use_primitive_parameter_type_declarations' => PropertyDefinition::create('boolean')
         ->setInternal(TRUE)
-          ->setLiteralDefault(FALSE),
+        ->setLiteralDefault(FALSE),
       // NOTE: only affects the code return type when 'declaration' is not used.
       'return' => PropertyDefinition::create('complex')
         ->setInternal(TRUE)
