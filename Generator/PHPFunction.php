@@ -106,9 +106,9 @@ class PHPFunction extends BaseGenerator {
           'typehint' => PropertyDefinition::create('string')
             // Need to give a type, otherwise PHPCS will complain in tests!
             ->setLiteralDefault('string'),
+          'nullable' => PropertyDefinition::create('boolean'),
           // The description of the parameter. This may be omitted if
           // 'docblock_inherit' is TRUE.
-          'nullable' => PropertyDefinition::create('boolean'),
           'description' => PropertyDefinition::create('string')
             ->setLiteralDefault('Parameter description.'),
           'default_value' => PropertyDefinition::create('string'),
