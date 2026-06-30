@@ -218,15 +218,24 @@ class PHPMethodTester {
 
       if (is_null($param_node->type)) {
         $actual_parameter_types_slice[] = NULL;
+        continue;
       }
-      elseif ($param_node->type instanceof \PhpParser\Node\Identifier) {
+
+      $param_node_type = $param_node->type;
+
+      // Handle a nullable parameter, which is one level deeper.
+      if ($param_node_type instanceof \PhpParser\Node\NullableType) {
+        $param_node_type = $param_node_type->type;
+      }
+
+      if ($param_node_type instanceof \PhpParser\Node\Identifier) {
         // Native type.
-        $actual_parameter_types_slice[] = $param_node->type->name;
+        $actual_parameter_types_slice[] = $param_node_type->name;
       }
-      elseif ($param_node->type instanceof \PhpParser\Node\Name) {
+      elseif ($param_node_type instanceof \PhpParser\Node\Name) {
         // PHP CodeSniffer will have already caught a non-imported class, so
         // safe to assume there is only one part to the class name.
-        $actual_parameter_types_slice[] = $param_node->type->getParts()[0];
+        $actual_parameter_types_slice[] = $param_node_type->getParts()[0];
 
         $expected_typehint_parts = explode('\\', $expected_parameter_typehints[$index]);
 
@@ -236,7 +245,7 @@ class PHPMethodTester {
           // keep the initial '\' here. Rather, the param node will be a
           // PhpParser\Node\Name\FullyQualified rather than a
           // PhpParser\Node\Name.
-          Assert::assertInstanceOf(\PhpParser\Node\Name\FullyQualified::class, $param_node->type,
+          Assert::assertInstanceOf(\PhpParser\Node\Name\FullyQualified::class, $param_node_type,
             "The typehint for the parameter \${$param_node->var->name} is a fully-qualified class name.");
 
           $expected_parameter_typehints[$index] = $expected_parameter_typehints[$index];
@@ -252,7 +261,7 @@ class PHPMethodTester {
         }
       }
       else {
-        Assert::fail(sprintf("Unknown parameter object at index %s of class ", $index, get_class($param_node->type)));
+        Assert::fail(sprintf("Unknown parameter object at index %s of class ", $index, get_class($param_node_type)));
       }
     }
 
