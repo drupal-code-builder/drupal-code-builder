@@ -440,6 +440,7 @@ class PHPFunction extends BaseGenerator {
     $seen_parameters = [];
     $attributes = [];
     foreach ($parameters as $parameter_info) {
+      // @todo WTF is this faffing with seen parameters for???
       if (isset($seen_parameters[$parameter_info['name']])) {
         continue;
       }
