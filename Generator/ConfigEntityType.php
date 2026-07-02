@@ -187,7 +187,7 @@ class ConfigEntityType extends EntityTypeBase {
           'default_value' => "£this->entity->id()",
           'required' => TRUE,
           'machine_name' => [
-            'exists' => "['{$this->component_data['qualified_class_name']}', 'load']",
+            'exists' => "[\\{$this->component_data['qualified_class_name']}::class, 'load']",
             'source' => "['label']",
           ],
         ],
