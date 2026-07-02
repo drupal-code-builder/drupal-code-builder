@@ -169,7 +169,7 @@ class ConfigEntityType extends EntityTypeBase {
         'form_key' => 'label',
         'element_type' => 'textfield',
         'element_title' => "Name",
-        'element_description' => "The human-readable name of this {$label_singular}",
+        'element_description' => "The human-readable name of this {$label_singular}.",
         'element_array' => [
           'default_value' => "£this->entity->get('label')",
           'required' => TRUE,
