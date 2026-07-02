@@ -286,6 +286,9 @@ class Module extends RootComponent {
         ->setLabel('Libraries')
         ->setDescription("A collection of CSS and JS assets, declared in a libraries.yml file.")
         ->setMultiple(TRUE),
+      'cli_commands' => MergingGeneratorDefinition::createFromGeneratorType('CliCommand')
+        ->setLabel("Cli commands")
+        ->setMultiple(TRUE),
       'drush_commands' => MergingGeneratorDefinition::createFromGeneratorType('DrushCommand')
         ->setLabel("Drush commands")
         ->setMultiple(TRUE),

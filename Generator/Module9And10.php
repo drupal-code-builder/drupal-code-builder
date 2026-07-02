@@ -26,6 +26,8 @@ class Module9And10 extends Module {
       'procedural' => 'Functions in procedural files, such as .module',
       'oo_legacy' => 'Class methods on a Hooks class, with legacy support for Drupal core < 11.1',
     ]);
+
+    $definition->removeProperty('cli_commands');
   }
 
 }
