@@ -29,7 +29,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     $definition->addProperties([
       'path' => PropertyDefinition::create('string')
         ->setLabel("Route path")
-        ->setDescription("The path of the route. Include the initial '/'.")
+        ->setDescription("The path of the route. Include the initial '/'. Any path components enclosed in '{}' are passed to the callback as parameters. If such a component is an entity type ID, it is declared as such.")
         ->setRequired(TRUE)
         ->setValidators('path'),
       'route_name' => PropertyDefinition::create('string')
