@@ -406,7 +406,7 @@ class ComponentRouterItem10Test extends TestBase {
   /**
    * Test options for the controller class
    */
-  public function testRouteControllerClass() {
+  public function testRouteControllerClassOptions() {
     // Assemble module data.
     $module_name = 'test_module';
     $module_data = [
@@ -456,6 +456,20 @@ class ComponentRouterItem10Test extends TestBase {
             'access_type' => 'access',
           ],
         ],
+        [
+          'path' => '/my/path/with-special-params/{node}/{param}',
+          'title' => 'My Controller Base Page',
+          'controller' => [
+            'controller_type' => 'controller',
+            'special_parameters' => [
+              'request',
+              'route_match',
+            ],
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
       ],
       'readme' => FALSE,
     ];
@@ -469,6 +483,7 @@ class ComponentRouterItem10Test extends TestBase {
       "src/Controller/MyPathControllerBaseController.php",
       "src/Controller/MyPathStringTranslationController.php",
       "src/Controller/MyPathWithParamsNodeParamController.php",
+      "src/Controller/MyPathWithSpecialParamsNodeParamController.php",
     ], $files);
 
     $controller_file = $files["src/Controller/MyPathNoBaseController.php"];
@@ -507,6 +522,17 @@ class ComponentRouterItem10Test extends TestBase {
     $php_tester->assertClassHasNoParent();
     $method_tester = $php_tester->getMethodTester('content');
     $method_tester->assertHasParameters([
+      'node' => 'Drupal\node\NodeInterface',
+      'param' => NULL,
+    ]);
+
+    $controller_file = $files['src/Controller/MyPathWithSpecialParamsNodeParamController.php'];
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $method_tester = $php_tester->getMethodTester('content');
+    $method_tester->assertHasParameters([
+      'request' => 'Symfony\Component\HttpFoundation\Request',
+      'route_match' => 'Drupal\Core\Routing\RouteMatchInterface',
       'node' => 'Drupal\node\NodeInterface',
       'param' => NULL,
     ]);

@@ -3,6 +3,7 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Definition\OptionDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
 use CaseConverter\CaseString;
@@ -93,6 +94,14 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
                 ->setLabel('Use ControllerBase as the parent class'),
               'import_stringtranslation' => PropertyDefinition::create('boolean')
                 ->setLabel('Use StringTranslationTrait'),
+              'special_parameters' => PropertyDefinition::create('string')
+                ->setLabel('Callback method special parameters')
+                ->setDescription("In addition to parameters from the path, route callbacks can have certain objects passed into them.")
+                ->setMultiple(TRUE)
+                ->setOptions(
+                  new OptionDefinition('request', 'Request', 'The request object, allowing access to the query parameters.'),
+                  new OptionDefinition('route_match', 'Route match', 'The current route match.'),
+              ),
               'injected_services' => PropertyDefinition::create('string')
                 ->setLabel('Injected services')
                 ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
@@ -505,10 +514,30 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     if ($this->component_data->controller->controller_type->value == 'controller') {
       $controller_class_required = TRUE;
 
+      $content_method_parameters = [];
+
+      // Add special parameters.
+      // @see https://www.drupal.org/docs/8/api/routing-system/parameters-in-routes/using-parameters-in-routes
+      foreach ($this->component_data->controller->special_parameters->values() as $special_parameter) {
+        $parameter_definition = [
+          'name' => $special_parameter,
+          'typehint' => match ($special_parameter) {
+            'request' => '\Symfony\Component\HttpFoundation\Request',
+            'route_match' => '\Drupal\Core\Routing\RouteMatchInterface',
+          },
+          'description' => match ($special_parameter) {
+            'request' => 'The HTTP request.',
+            'route_match' => 'The current route match.',
+          },
+        ];
+
+        $content_method_parameters[] = $parameter_definition;
+      }
+
       $path = $this->component_data->path->value;
       $path_parameters = array_filter(explode('/', $path), fn ($piece) => str_starts_with($piece, '{'));
       $entity_types = \DrupalCodeBuilder\Factory::getTask('ReportEntityTypes')->getAllData();
-      $content_method_parameters = [];
+
       foreach ($path_parameters as $path_parameter) {
         $parameter_variable_name = trim($path_parameter, '{}');
         $parameter_definition = [
