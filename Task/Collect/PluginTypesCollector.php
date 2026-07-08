@@ -493,7 +493,7 @@ class PluginTypesCollector extends CollectorBase  {
   }
 
   /**
-   * Analyse the plugin type manager service for annotated plugins.
+   * Analyse the plugin type manager service for attribute plugins.
    *
    * This adds:
    *  - subdir
