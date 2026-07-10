@@ -26,7 +26,6 @@ class Plugin extends BaseGenerator {
     // item for this generator.
     // TODO: figure this out!
     $plugin_data_task = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
-    $services_data_task = \DrupalCodeBuilder\Factory::getTask('ReportServiceData');
 
     $definition->setProperties([
         'plugin_type' => PropertyDefinition::create('string')
