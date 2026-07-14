@@ -31,14 +31,14 @@ class RouterItem7 extends BaseGenerator {
         ->setInternal(TRUE),
       'file' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
-      'page callback' => PropertyDefinition::create('string')
+      'page_callback' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setLiteralDefault('example_page'),
-      'page arguments' => PropertyDefinition::create('string')
+      'page_arguments' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         // These have to be a code string, not an actual array!
         ->setLiteralDefault("array()"),
-      'access arguments' => PropertyDefinition::create('string')
+      'access_arguments' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
         ->setLiteralDefault("array('access content')"),
     ]);
@@ -82,11 +82,11 @@ class RouterItem7 extends BaseGenerator {
     if (isset($this->component_data['description'])) {
       $code[] = "  'description' => '{$this->component_data['description']}',";
     }
-    $code[] = "  'page callback' => '{$this->component_data['page callback']}',";
+    $code[] = "  'page callback' => '{$this->component_data['page_callback']}',";
     // This is an array, so not quoted.
-    $code[] = "  'page arguments' => {$this->component_data['page arguments']},";
+    $code[] = "  'page arguments' => {$this->component_data['page_arguments']},";
     // This is an array, so not quoted.
-    $code[] = "  'access arguments' => {$this->component_data['access arguments']},";
+    $code[] = "  'access arguments' => {$this->component_data['access_arguments']},";
     if (isset($this->component_data['file'])) {
       $code[] = "  'file' => '{$this->component_data['file']}',";
     }
