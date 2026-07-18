@@ -124,7 +124,7 @@ class ThemeHook extends BaseGenerator {
    */
   public function getContents(): array {
     // Return code for a single hook_theme() item.
-    $theme_hook_name = $this->component_data['theme_hook_name'];
+    $theme_hook_name = $this->component_data->theme_hook_name->value;
 
     $code = [];
 

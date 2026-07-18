@@ -44,7 +44,7 @@ class LibraryCSSAsset extends BaseGenerator {
     $components['asset_file'] = [
       'component_type' => 'AssetFile',
       // TODO: do this in property processing!
-      'filename' => 'css/' . $this->component_data['filename'] . '.css',
+      'filename' => 'css/' . $this->component_data->filename->value . '.css',
     ];
 
     return $components;
@@ -61,10 +61,10 @@ class LibraryCSSAsset extends BaseGenerator {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    $style_type = $this->component_data['style_type'];
+    $style_type = $this->component_data->style_type->value;
 
     $yaml_data['css'][$style_type] = [
-      'css/' . $this->component_data['filename'] . '.css' => [],
+      'css/' . $this->component_data->filename->value . '.css' => [],
     ];
 
     return $yaml_data;

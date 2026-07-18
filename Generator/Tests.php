@@ -40,7 +40,7 @@ class Tests extends PHPFile {
    * {@inheritdoc}
    */
   public function getFileInfo(): CodeFile {
-    $module_root_name = $this->component_data['root_name_pascal'];
+    $module_root_name = $this->component_data->root_name_pascal->value;
     $test_file_name = $module_root_name . "TestCase.php";
 
     return new CodeFile(
@@ -53,7 +53,7 @@ class Tests extends PHPFile {
    * Return the summary line for the file docblock.
    */
   function fileDocblockSummary() {
-    $module_readable_name = $this->component_data['readable_name'];
+    $module_readable_name = $this->component_data->readable_name->value;
     return "Contains tests for the $module_readable_name module.";
   }
 
@@ -61,9 +61,9 @@ class Tests extends PHPFile {
    * Return the main body of the file code.
    */
   function phpCodeBody() {
-    $module_root_name = $this->component_data['root_component_name'];
-    $module_camel_case = $this->component_data['root_name_pascal'];
-    $module_readable_name = $this->component_data['readable_name'];
+    $module_root_name = $this->component_data->root_component_name->value;
+    $module_camel_case = $this->component_data->root_name_pascal->value;
+    $module_readable_name = $this->component_data->readable_name->value;
 
     $code = <<<EOT
       /**

@@ -95,19 +95,21 @@ class Library extends BaseGenerator {
     }
 
     $library_data = [
-      'version' => $this->component_data['version'],
+      'version' => $this->component_data->version->value,
     ]
     + $assets_yaml_data;
 
-    if (!empty($this->component_data['dependencies'])) {
-      $library_data['dependencies'] = $this->component_data['dependencies'];
+    // Can't use isEmpty() because of how it doesn't trigger defaults.
+    // @see https://github.com/joachim-n/mutable-typed-data/issues/22
+    if ($dependencies = $this->component_data->dependencies->values()) {
+      $library_data['dependencies'] = $dependencies;
     }
-    if (!empty($this->component_data['header'])) {
+    if (!empty($this->component_data->header->value)) {
       $library_data['header'] = TRUE;
     }
 
     $yaml_data = [
-      $this->component_data['library_name'] => $library_data
+      $this->component_data->library_name->value => $library_data
     ];
 
     return $yaml_data;

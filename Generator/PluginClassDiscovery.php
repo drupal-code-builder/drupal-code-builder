@@ -213,14 +213,14 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
     if (empty($this->component_data->replace_parent_plugin->value)) {
       if (!empty($this->plugin_type_data['config_schema_prefix'])) {
         $schema_id = $this->plugin_type_data['config_schema_prefix']
-          . $this->component_data['prefixed_plugin_name'];
+          . $this->component_data->prefixed_plugin_name->value;
 
         $definition = $this->classHandler->getStandaloneComponentPropertyDefinition('ConfigSchema');
         $data = DrupalCodeBuilderDataItemFactory::createFromDefinition($definition);
         $data->yaml_data->set([
           $schema_id => [
             'type' => 'mapping',
-            'label' => $this->component_data['prefixed_plugin_name'],
+            'label' => $this->component_data->prefixed_plugin_name->value,
             'mapping' => [],
           ],
         ]);
@@ -234,7 +234,7 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
         //   'yaml_data' => [
         //      $schema_id => [
         //       'type' => 'mapping',
-        //       'label' => $this->component_data['plugin_name'],
+        //       'label' => $this->component_data->plugin_name->value,
         //       'mapping' => [
 
         //       ],
@@ -285,9 +285,9 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
           'component_type' => 'PHPFunctionBodyLines',
           'containing_component' => '%requester:hooks:' . $alter_hook_name,
           'code' => [
-            "// Override the class for the '{$this->component_data['parent_plugin_id']}' plugin.",
-            "if (isset(£info['{$this->component_data['parent_plugin_id']}'])) {",
-            "  £info['{$this->component_data['parent_plugin_id']}']['class'] = \\{$this->component_data['qualified_class_name']}::class;",
+            "// Override the class for the '{$this->component_data->parent_plugin_id->value}' plugin.",
+            "if (isset(£info['{$this->component_data->parent_plugin_id->value}'])) {",
+            "  £info['{$this->component_data->parent_plugin_id->value}']['class'] = \\{$this->component_data->qualified_class_name->value}::class;",
             "}",
           ],
         ];
@@ -306,7 +306,7 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
    */
   function classDeclaration() {
     if ($this->component_data->parent_plugin_class->value) {
-      $this->component_data->parent_class_name->value = '\\' . $this->component_data['parent_plugin_class'];
+      $this->component_data->parent_class_name->value = '\\' . $this->component_data->parent_plugin_class->value;
     }
     elseif (isset($this->plugin_type_data['base_class'])) {
       $this->component_data->parent_class_name->value = '\\' . $this->plugin_type_data['base_class'];
@@ -332,7 +332,7 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
       }
       elseif ($this->component_data->parent_plugin_class->value) {
         // TODO: violates DRY; we call this twice.
-        $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
+        $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data->parent_plugin_class->value, 3);
         if (!empty($parent_construction_parameters)) {
           $use_di_interface = FALSE;
         }
@@ -387,7 +387,7 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
     $parameters = [];
 
     if ($this->component_data->parent_plugin_class->value) {
-      $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data['parent_plugin_class'], 3);
+      $parent_construction_parameters = \DrupalCodeBuilder\Utility\CodeAnalysis\DependencyInjection::getInjectedParameters($this->component_data->parent_plugin_class->value, 3);
     }
     elseif (isset($this->plugin_type_data['construction'])) {
       $parent_construction_parameters = $this->plugin_type_data['construction'];

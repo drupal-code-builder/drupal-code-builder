@@ -396,10 +396,10 @@ abstract class EntityTypeBase extends PHPClassFile {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    $components["entity_type_{$this->component_data['entity_type_id']}_interface"] = [
+    $components["entity_type_{$this->component_data->entity_type_id->value}_interface"] = [
       'component_type' => 'PHPInterfaceFile',
-      'relative_class_name' => 'Entity\\' . $this->component_data['entity_interface_name'],
-      'docblock_first_line' => "Interface for {$this->component_data['entity_type_label']} entities.",
+      'relative_class_name' => 'Entity\\' . $this->component_data->entity_interface_name->value,
+      'docblock_first_line' => "Interface for {$this->component_data->entity_type_label->value} entities.",
       'parent_interface_names' => $this->component_data->interface_parents->values(),
     ];
 
@@ -408,19 +408,19 @@ abstract class EntityTypeBase extends PHPClassFile {
       $data_key = "handler_{$key}";
 
       // Skip if nothing in the data.
-      if (empty($this->component_data[$data_key])) {
+      if ($this->component_data->get($data_key)->isEmpty()) {
         continue;
       }
 
       // For handlers that core doesn't fill in, only provide a class if
       // for the 'custom' option.
       if ($handler_type_info['mode'] == 'core_none') {
-        if ($this->component_data[$data_key] != 'custom') {
+        if ($this->component_data->get($data_key)->value != 'custom') {
           continue;
         }
       }
       if ($handler_type_info['mode'] == 'custom_default') {
-        if ($this->component_data[$data_key] != 'custom') {
+        if ($this->component_data->get($data_key)->value != 'custom') {
           continue;
         }
       }
@@ -462,8 +462,8 @@ abstract class EntityTypeBase extends PHPClassFile {
     }
 
     // Admin permission.
-    if ($this->component_data['admin_permission']) {
-      $admin_permission_name = $this->component_data['admin_permission_name'];
+    if ($this->component_data->admin_permission->value) {
+      $admin_permission_name = $this->component_data->admin_permission_name->value;
 
       $components[$admin_permission_name] = [
         'component_type' => 'Permission',
@@ -473,20 +473,20 @@ abstract class EntityTypeBase extends PHPClassFile {
     }
 
     // Add menu plugins for the entity type if the UI option is set.
-    if ($this->component_data['entity_ui']) {
+    if ($this->component_data->entity_ui->value) {
       // Add the 'add' button to appear on the collection route.
-      $components['collection_menu_action' . $this->component_data['entity_type_id']] = [
+      $components['collection_menu_action' . $this->component_data->entity_type_id->value] = [
         'component_type' => 'Plugin',
         'plugin_type' => 'menu.local_action',
         'prefix_name' => FALSE,
-        'plugin_name' => "entity.{$this->component_data['entity_type_id']}.add",
+        'plugin_name' => "entity.{$this->component_data->entity_type_id->value}.add",
         'plugin_properties' => [
           'title' => 'Add ' . strtolower($this->component_data->entity_type_label->value),
-          'route_name' => "entity.{$this->component_data['entity_type_id']}.add_form",
+          'route_name' => "entity.{$this->component_data->entity_type_id->value}.add_form",
           // Media module sets 10 for its tab; go further along.
           'weight' => 15,
           'appears_on' => [
-             "entity.{$this->component_data['entity_type_id']}.collection",
+             "entity.{$this->component_data->entity_type_id->value}.collection",
           ],
         ],
       ];
@@ -530,16 +530,16 @@ abstract class EntityTypeBase extends PHPClassFile {
    */
   protected function getAnnotationData() {
     $annotation_data = [
-      'id' => $this->component_data['entity_type_id'],
-      'label' => ClassAnnotation::Translation($this->component_data['entity_type_label']),
-      'label_collection' => ClassAnnotation::Translation($this->component_data['entity_type_label'] . 's'),
-      'label_singular' => ClassAnnotation::Translation(strtolower($this->component_data['entity_type_label'])),
-      'label_plural' => ClassAnnotation::Translation(strtolower($this->component_data['entity_type_label']) . 's'),
+      'id' => $this->component_data->entity_type_id->value,
+      'label' => ClassAnnotation::Translation($this->component_data->entity_type_label->value),
+      'label_collection' => ClassAnnotation::Translation($this->component_data->entity_type_label->value . 's'),
+      'label_singular' => ClassAnnotation::Translation(strtolower($this->component_data->entity_type_label->value)),
+      'label_plural' => ClassAnnotation::Translation(strtolower($this->component_data->entity_type_label->value) . 's'),
       'label_count' => ClassAnnotation::PluralTranslation([
-        'singular' => "@count " . strtolower($this->component_data['entity_type_label']),
-        'plural' => "@count " . strtolower($this->component_data['entity_type_label']) . 's',
+        'singular' => "@count " . strtolower($this->component_data->entity_type_label->value),
+        'plural' => "@count " . strtolower($this->component_data->entity_type_label->value) . 's',
       ]),
-      'entity_keys' => $this->component_data['entity_keys'],
+      'entity_keys' => $this->component_data->entity_keys->value,
     ];
 
     // Handlers.
@@ -552,16 +552,16 @@ abstract class EntityTypeBase extends PHPClassFile {
       $data_key = "handler_{$key}";
 
       // Skip if nothing in the data.
-      if (empty($this->component_data[$data_key])) {
+      if ($this->component_data->get($data_key)->isEmpty()) {
         continue;
       }
 
       // Strict comparison, as could be TRUE.
-      if ($this->component_data[$data_key] === 'none') {
+      if ($this->component_data->get($data_key)->value  === 'none') {
         continue;
       }
 
-      $option_value = $this->component_data[$data_key];
+      $option_value = $this->component_data->get($data_key)->value ;
 
       switch ($handler_type_info['mode']) {
         case 'core_default':
@@ -606,8 +606,8 @@ abstract class EntityTypeBase extends PHPClassFile {
       $annotation_data['handlers'] = $handler_data;
     }
 
-    if ($this->component_data['admin_permission']) {
-      $annotation_data['admin_permission'] = $this->component_data['admin_permission_name'];
+    if ($this->component_data->admin_permission->value) {
+      $annotation_data['admin_permission'] = $this->component_data->admin_permission_name->value;
     }
 
     return $annotation_data;
@@ -626,10 +626,10 @@ abstract class EntityTypeBase extends PHPClassFile {
    */
   protected function makeShortHandlerClassName($handler_type_key, $handler_type_info) {
     if (isset($handler_type_info['class_name_suffix'])) {
-      $short_class_name = $this->component_data['plain_class_name'] .  $handler_type_info['class_name_suffix'];
+      $short_class_name = $this->component_data->plain_class_name->value .  $handler_type_info['class_name_suffix'];
     }
     else {
-      $short_class_name = $this->component_data['plain_class_name'] .  CaseString::snake($handler_type_key)->pascal();
+      $short_class_name = $this->component_data->plain_class_name->value .  CaseString::snake($handler_type_key)->pascal();
     }
 
     return $short_class_name;

@@ -153,7 +153,7 @@ class DrushCommandUsingService extends BaseGenerator {
       'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
       'relative_namespace' => 'Commands',
       'parent_class_name' => '\Drush\Commands\DrushCommands',
-      'injected_services' => $this->component_data['injected_services'],
+      'injected_services' => $this->component_data->injected_services->values(),
       'docblock_first_line' => "%sentence Drush commands.",
       'interfaces' => $this->component_data->service_interfaces->values(),
       'traits' => $this->component_data->service_traits->values(),
@@ -165,10 +165,10 @@ class DrushCommandUsingService extends BaseGenerator {
     }
 
     $docblock_lines = [
-      $this->component_data['command_description'],
+      $this->component_data->command_description->value,
     ];
 
-    $usage_line = "drush {$this->component_data['command_name']}";
+    $usage_line = "drush {$this->component_data->command_name->value}";
 
     $parameters_data = [];
     foreach ($this->component_data->command_parameters as $parameter) {
@@ -222,18 +222,18 @@ class DrushCommandUsingService extends BaseGenerator {
       $usage_line .= ' --' . $option_name;
     }
 
-    $doxygen_tag_lines[] = ['command', $this->component_data['command_name']];
-    $doxygen_tag_lines[] = ['usage', $usage_line, $this->component_data['command_description']];
+    $doxygen_tag_lines[] = ['command', $this->component_data->command_name->value];
+    $doxygen_tag_lines[] = ['usage', $usage_line, $this->component_data->command_description->value];
 
-    if (!empty($this->component_data['command_name_aliases'])) {
-      $doxygen_tag_lines[] = ['aliases', implode(',', $this->component_data['command_name_aliases']), ''];
+    if (!$this->component_data->command_name_aliases->isEmpty()) {
+      $doxygen_tag_lines[] = ['aliases', implode(',', $this->component_data->command_name_aliases->values()), ''];
     }
 
     $components['command_method'] = [
       'component_type' => 'PHPFunction',
-      'function_name' => $this->component_data['command_method_name'],
+      'function_name' => $this->component_data->command_method_name->value,
       'containing_component' => '%requester:commands_service',
-      'declaration' => "public function {$this->component_data['command_method_name']}()",
+      'declaration' => "public function {$this->component_data->command_method_name->value}()",
       'function_docblock_lines' => $docblock_lines,
       'doxygen_tag_lines' => $doxygen_tag_lines,
       'parameters' => $parameters_data,

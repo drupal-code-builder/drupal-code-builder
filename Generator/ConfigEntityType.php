@@ -187,15 +187,15 @@ class ConfigEntityType extends EntityTypeBase {
           'default_value' => "£this->entity->id()",
           'required' => TRUE,
           'machine_name' => [
-            'exists' => "[\\{$this->component_data['qualified_class_name']}::class, 'load']",
+            'exists' => "[\\{$this->component_data->qualified_class_name->value}::class, 'load']",
             'source' => "['label']",
           ],
         ],
       ];
 
       // Add a form element for each custom entity property.
-      foreach ($this->component_data['entity_properties'] as $schema_item) {
-        $property_name = $schema_item['name'];
+      foreach ($this->component_data->entity_properties as $schema_item) {
+        $property_name = $schema_item->name->value;
 
         // Skip id and label; done above.
         if ($property_name == 'id' || $property_name == 'label') {
@@ -207,7 +207,7 @@ class ConfigEntityType extends EntityTypeBase {
           'containing_component' => "%requester:{$data_key}:form",
           'form_key' => $property_name,
           'element_type' => 'textfield',
-          'element_title' => $schema_item['label'],
+          'element_title' => $schema_item->label->value,
           'element_description' => "TODO: enter a description.",
           'element_array' => [
             'default_value' => "£this->entity->get('{$property_name}')",
@@ -216,14 +216,14 @@ class ConfigEntityType extends EntityTypeBase {
       }
     }
 
-    $entity_config_key = $this->component_data['entity_type_id'];
-    $module = $this->component_data['root_component_name'];
+    $entity_config_key = $this->component_data->entity_type_id->value;
+    $module = $this->component_data->root_component_name->value;
 
     $schema_properties_yml = [];
-    foreach ($this->component_data['entity_properties'] as $schema_item) {
-      $schema_properties_yml[$schema_item['name']] = [
-        'type' => $schema_item['type'],
-        'label' => $schema_item['label'],
+    foreach ($this->component_data->entity_properties as $schema_item) {
+      $schema_properties_yml[$schema_item->name->value] = [
+        'type' => $schema_item->type->value,
+        'label' => $schema_item->label->value,
       ];
     }
 
@@ -232,24 +232,24 @@ class ConfigEntityType extends EntityTypeBase {
       'yaml_data' => [
         "{$module}.{$entity_config_key}.*"=> [
           'type' => 'config_entity',
-          'label' => $this->component_data['entity_type_label'],
+          'label' => $this->component_data->entity_type_label->value,
           'mapping' => $schema_properties_yml,
         ],
       ],
     ];
 
     // Add menu plugins for the entity type if the UI option is set.
-    if ($this->component_data['entity_ui']) {
+    if ($this->component_data->entity_ui->value) {
       // Name must be unique among the component type.
-      $components['collection_menu_link_' . $this->component_data['entity_type_id']] = [
+      $components['collection_menu_link_' . $this->component_data->entity_type_id->value] = [
         'component_type' => 'Plugin',
         'plugin_type' => 'menu.link',
         'prefix_name' => FALSE,
-        'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+        'plugin_name' => "entity.{$this->component_data->entity_type_id->value}.collection",
         'plugin_properties' => [
-          'title' => $this->component_data['entity_type_label'] . 's',
-          'description' => "Create and manage fields, forms, and display settings for {$this->component_data['entity_type_label']}s.",
-          'route_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+          'title' => $this->component_data->entity_type_label->value . 's',
+          'description' => "Create and manage fields, forms, and display settings for {$this->component_data->entity_type_label->value}s.",
+          'route_name' => "entity.{$this->component_data->entity_type_id->value}.collection",
           'parent' => 'system.admin_structure',
         ],
       ];
@@ -260,16 +260,16 @@ class ConfigEntityType extends EntityTypeBase {
         'edit_form' => 'Edit',
       ];
       foreach ($entity_tabs as $route_suffix => $title) {
-        $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
+        $components["collection_menu_task_{$route_suffix}_{$this->component_data->entity_type_id->value}"] = [
           'component_type' => 'Plugin',
           'plugin_type' => 'menu.local_task',
           'prefix_name' => FALSE,
-          'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+          'plugin_name' => "entity.{$this->component_data->entity_type_id->value}.{$route_suffix}",
           'plugin_properties' => [
             'title' => $title,
-            'route_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+            'route_name' => "entity.{$this->component_data->entity_type_id->value}.{$route_suffix}",
             // Unlike content entities, the base route is the same as the tab.
-            'base_route' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+            'base_route' => "entity.{$this->component_data->entity_type_id->value}.{$route_suffix}",
           ],
         ];
       }
@@ -283,30 +283,30 @@ class ConfigEntityType extends EntityTypeBase {
    */
   protected function collectSectionBlocks() {
     // Set up properties.
-    foreach ($this->component_data['entity_properties'] as $schema_item) {
+    foreach ($this->component_data->entity_properties as $schema_item) {
       // Just take the label as the description.
       // TODO: add a description property?
-      $description = $schema_item['label'];
+      $description = $schema_item->label->value;
       if (!str_ends_with($description, '.')) {
         $description .= '.';
       }
 
       // The PHP type is not the same as the config schema type!
-      switch ($schema_item['type']) {
+      switch ($schema_item->type->value) {
         case 'label':
         case 'text':
           $php_type = 'string';
           break;
 
         default:
-          $php_type = $schema_item['type'];
+          $php_type = $schema_item->type->value;
       }
 
       $this->properties[] = $this->createPropertyBlock(
-        $schema_item['name'],
+        $schema_item->name->value,
         $php_type,
         [
-          'docblock_first_line' => $schema_item['label'] . '.',
+          'docblock_first_line' => $schema_item->label->value . '.',
         ]
         // TODO: default value?
       );
@@ -319,9 +319,9 @@ class ConfigEntityType extends EntityTypeBase {
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
-    if (!empty($this->component_data['entity_ui'])) {
+    if (!empty($this->component_data->entity_ui->value)) {
       $annotation_data['links'] = [];
-      $entity_path_component = $this->component_data['entity_type_id'];
+      $entity_path_component = $this->component_data->entity_type_id->value;
       // Config entities typically don't have a canonical link template.
       $annotation_data['links']["add-form"] = "/admin/structure/{$entity_path_component}/add";
       $annotation_data['links']["collection"] = "/admin/structure/{$entity_path_component}";
@@ -332,8 +332,8 @@ class ConfigEntityType extends EntityTypeBase {
     $annotation_data['config_prefix'] = $this->component_data->entity_type_id->value;
 
     $config_export_values = [];
-    foreach ($this->component_data['entity_properties'] as $schema_item) {
-      $config_export_values[] = $schema_item['name'];
+    foreach ($this->component_data->entity_properties as $schema_item) {
+      $config_export_values[] = $schema_item->name->value;
     }
     if ($config_export_values) {
       $annotation_data['config_export'] = $config_export_values;

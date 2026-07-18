@@ -61,7 +61,7 @@ class HookUpdateN extends HookImplementationProcedural {
       $existing_function_name = (string) $function_node->name;
 
       $matches = [];
-      if (preg_match('@' . $this->component_data['root_component_name'] . '_update_(\d+)$@', $existing_function_name, $matches)) {
+      if (preg_match('@' . $this->component_data->root_component_name->value . '_update_(\d+)$@', $existing_function_name, $matches)) {
         $hook_update_schema_numbers[] = $matches[1];
       }
     }

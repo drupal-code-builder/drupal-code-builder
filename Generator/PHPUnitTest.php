@@ -281,7 +281,7 @@ class PHPUnitTest extends PHPClassFile {
       ],
     ];
 
-    foreach ($this->component_data['container_services'] as $service_id) {
+    foreach ($this->component_data->container_services->values() as $service_id) {
       $components['service_' . $service_id] = [
         'component_type' => 'TestContainerService',
         'containing_component' => '%requester',
@@ -290,7 +290,7 @@ class PHPUnitTest extends PHPClassFile {
         'class_has_static_factory' => FALSE,
       ];
     }
-    foreach ($this->component_data['mocked_services'] as $service_id) {
+    foreach ($this->component_data->mocked_services->values() as $service_id) {
       $components['service_' . $service_id] = [
         'component_type' => 'TestMockedService',
         'containing_component' => '%requester',
@@ -367,10 +367,8 @@ class PHPUnitTest extends PHPClassFile {
         ]
       );
       // Any test modules.
-      if (!empty($this->component_data['test_modules'])) {
-        foreach ($this->component_data['test_modules'] as $data) {
-          $test_install_modules[] = $data['root_name'];
-        }
+      foreach ($this->component_data->test_modules as $test_modules) {
+        $test_install_modules[] = $test_modules->root_name->value;
       }
 
       // Class properties.
@@ -415,7 +413,7 @@ class PHPUnitTest extends PHPClassFile {
       }
     }
 
-    foreach ($this->component_data['creation_traits'] as $data) {
+    foreach ($this->component_data->creation_traits->values() as $data) {
       $this->traits[] = [
         "use {$data};",
       ];

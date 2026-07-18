@@ -30,12 +30,12 @@ class JavaScriptFile extends AssetFile {
    * {@inheritdoc}
    */
   public function getFileInfo(): CodeFile {
-    $camel_name = CaseString::snake($this->component_data['root_component_name'])->camel();
+    $camel_name = CaseString::snake($this->component_data->root_component_name->value)->camel();
 
     $body = <<<EOT
       /**
        * @file
-       * Defines Javascript behaviors for the {$this->component_data['readable_name']} module.
+       * Defines Javascript behaviors for the {$this->component_data->readable_name->value} module.
        */
 
       (function ($, Drupal, drupalSettings) {

@@ -96,7 +96,7 @@ class InjectedService extends BaseGenerator {
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    return $this->component_data['containing_component'] . '-' . $this->component_data['service_id'];
+    return $this->component_data->containing_component->value . '-' . $this->component_data->service_id->value;
   }
 
   /**
@@ -176,7 +176,7 @@ class InjectedService extends BaseGenerator {
    *   An array of different elements, keyed by role.
    */
   public function getContents(): array {
-    $service_info = $this->component_data['service_info'];
+    $service_info = $this->component_data->service_info->value;
 
     $service_type = (substr_count($service_info['id'], ':') == 0) ? 'service' : 'pseudoservice';
 

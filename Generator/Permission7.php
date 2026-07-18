@@ -37,8 +37,8 @@ class Permission7 extends Permission {
     // Return code for a single permission item for the hook.
     $code = [];
 
-    $permission_name = $this->component_data['permission'];
-    $permission_description = $this->component_data['description'];
+    $permission_name = $this->component_data->permission->value;
+    $permission_description = $this->component_data->description->value;
     $code[] = "£permissions['$permission_name'] = array(";
     $code[] = "  'title' => t('$permission_description'),";
     $code[] = "  'description' => t('TODO: enter permission description'),";

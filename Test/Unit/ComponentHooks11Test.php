@@ -618,12 +618,12 @@ class ComponentHooks11Test extends TestBase {
 
     // The component data has the adopted component data.
     $this->assertEquals(1, $component_data->hook_classes->count());
-    $this->assertEquals('ExistingHooks', $component_data->hook_classes[0]['plain_class_name']);
+    $this->assertEquals('ExistingHooks', $component_data->hook_classes[0]->plain_class_name->value);
     $this->assertEquals(['current_user', 'entity_type.manager'], $component_data->hook_classes[0]->injected_services->export());
     $this->assertEquals(2, $component_data->hook_classes[0]->hook_methods->count());
-    $this->assertEquals('hook_form_alter', $component_data->hook_classes[0]->hook_methods[0]['hook_name']);
-    $this->assertEquals('hook_form_FORM_ID_alter', $component_data->hook_classes[0]->hook_methods[1]['hook_name']);
-    $this->assertEquals(['node_form'], $component_data->hook_classes[0]->hook_methods[1]['hook_name_parameters']);
+    $this->assertEquals('hook_form_alter', $component_data->hook_classes[0]->hook_methods[0]->hook_name->value);
+    $this->assertEquals('hook_form_FORM_ID_alter', $component_data->hook_classes[0]->hook_methods[1]->hook_name->value);
+    $this->assertEquals(['node_form'], $component_data->hook_classes[0]->hook_methods[1]->hook_name_parameters->values());
   }
 
   /**
@@ -677,10 +677,10 @@ class ComponentHooks11Test extends TestBase {
 
     // The component data has the adopted component data merged in.
     $this->assertEquals(1, $component_data->hook_classes->count());
-    $this->assertEquals('FormHooks', $component_data->hook_classes[0]['plain_class_name']);
+    $this->assertEquals('FormHooks', $component_data->hook_classes[0]->plain_class_name->value);
     $this->assertEquals(2, $component_data->hook_classes[0]->hook_methods->count());
-    $this->assertEquals('hook_form_alter', $component_data->hook_classes[0]->hook_methods[0]['hook_name']);
-    $this->assertEquals('hook_batch_alter', $component_data->hook_classes[0]->hook_methods[1]['hook_name']);
+    $this->assertEquals('hook_form_alter', $component_data->hook_classes[0]->hook_methods[0]->hook_name->value);
+    $this->assertEquals('hook_batch_alter', $component_data->hook_classes[0]->hook_methods[1]->hook_name->value);
   }
 
 }

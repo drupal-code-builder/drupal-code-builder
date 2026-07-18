@@ -21,12 +21,12 @@ class PluginValidationConstraint extends PluginClassDiscoveryHybrid {
 
     $components['validator'] = [
       'component_type' => 'PHPClassFileWithInjection',
-      'plain_class_name' => $this->component_data['plain_class_name'] . 'Validator',
+      'plain_class_name' => $this->component_data->plain_class_name->value . 'Validator',
       'injected_services' => $this->component_data->injected_services->values(),
       'use_static_factory_method' => TRUE,
-      'relative_namespace' => $this->component_data['relative_namespace'],
+      'relative_namespace' => $this->component_data->relative_namespace->value,
       'parent_class_name' => '\Symfony\Component\Validator\ConstraintValidator',
-      'docblock_first_line' => "Validates the {$this->component_data['plain_class_name']} constraint.",
+      'docblock_first_line' => "Validates the {$this->component_data->plain_class_name->value} constraint.",
       // TODO: validation message property. Needs the mishmash around components
       // and contents to be resolved first!
       // See https://github.com/drupal-code-builder/drupal-code-builder/issues/134

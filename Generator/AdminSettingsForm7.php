@@ -32,7 +32,7 @@ class AdminSettingsForm7 extends Form7 {
     $components = parent::requiredComponents();
 
     // Change the body of the form builder.
-    $form_name = $this->component_data['form_id'];
+    $form_name = $this->component_data->form_id->value;
     $form_builder = $form_name;
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';

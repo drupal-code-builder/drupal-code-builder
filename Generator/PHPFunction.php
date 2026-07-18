@@ -218,7 +218,7 @@ class PHPFunction extends BaseGenerator {
       $function_code = array_merge($function_code, $declaration_lines);
     }
     else {
-      $declaration = str_replace('£', '$', $this->component_data['declaration']);
+      $declaration = str_replace('£', '$', $this->component_data->declaration->value);
 
       if (!$this->component_data->parameters->isEmpty()) {
         // Remove the final closing ')'.
@@ -264,7 +264,7 @@ class PHPFunction extends BaseGenerator {
 
     // TODO: remove this when https://github.com/joachim-n/mutable-typed-data/issues/7
     // is fixed.
-    assert(!empty($this->component_data['function_name']));
+    assert(!empty($this->component_data->function_name->value));
 
     return $function_code;
   }
@@ -551,9 +551,7 @@ class PHPFunction extends BaseGenerator {
       $has_body_from_contained_components;
 
     if ($has_body_from_component_data && !$let_body_from_contained_components_override_body_from_component_data) {
-      $body = is_array($this->component_data['body'])
-        ? $this->component_data['body']
-        : [$this->component_data['body']];
+      $body = $this->component_data->body->values();
     }
 
     if (isset($this->containedComponents['line'])) {

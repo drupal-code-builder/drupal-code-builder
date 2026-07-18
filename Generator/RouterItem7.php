@@ -77,22 +77,22 @@ class RouterItem7 extends BaseGenerator {
     // Return code for a single menu item. Our parent in the component tree,
     // HookMenu, will merge it in.
     $code = [];
-    $code[] = "£items['{$this->component_data['path']}'] = array(";
-    $code[] = "  'title' => '{$this->component_data['title']}',";
-    if (isset($this->component_data['description'])) {
-      $code[] = "  'description' => '{$this->component_data['description']}',";
+    $code[] = "£items['{$this->component_data->path->value}'] = array(";
+    $code[] = "  'title' => '{$this->component_data->title->value}',";
+    if (isset($this->component_data->description->value)) {
+      $code[] = "  'description' => '{$this->component_data->description->value}',";
     }
-    $code[] = "  'page callback' => '{$this->component_data['page_callback']}',";
+    $code[] = "  'page callback' => '{$this->component_data->page_callback->value}',";
     // This is an array, so not quoted.
-    $code[] = "  'page arguments' => {$this->component_data['page_arguments']},";
+    $code[] = "  'page arguments' => {$this->component_data->page_arguments->value},";
     // This is an array, so not quoted.
-    $code[] = "  'access arguments' => {$this->component_data['access_arguments']},";
-    if (isset($this->component_data['file'])) {
-      $code[] = "  'file' => '{$this->component_data['file']}',";
+    $code[] = "  'access arguments' => {$this->component_data->access_arguments->value},";
+    if (isset($this->component_data->file->value)) {
+      $code[] = "  'file' => '{$this->component_data->file->value}',";
     }
-    if (isset($this->component_data['type'])) {
+    if (isset($this->component_data->type->value)) {
       // The type is a constant, so is not quoted.
-      $code[] = "  'type' => {$this->component_data['type']},";
+      $code[] = "  'type' => {$this->component_data->type->value},";
     }
     $code[] = ");";
 

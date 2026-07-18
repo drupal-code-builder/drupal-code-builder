@@ -128,21 +128,21 @@ class AdminSettingsForm extends Form {
     $task_handler_report_admin_routes = \DrupalCodeBuilder\Factory::getTask('ReportAdminRoutes');
     $admin_routes = $task_handler_report_admin_routes->listAdminRoutes();
 
-    $parent_route_data = $admin_routes[$this->component_data['parent_route']];
+    $parent_route_data = $admin_routes[$this->component_data->parent_route->value];
 
     $settings_form_path = $parent_route_data['path'] . '/%module';
 
     $components['route'] = [
       'component_type' => 'RouterItem',
       // Specify this so we can refer to it in the menu link.
-      'route_name' => $this->component_data['route_name'],
+      'route_name' => $this->component_data->route_name->value,
       // OK to use a token here, as the YAML value for this will be quoted
       // anyway.
       'path' => $settings_form_path,
       'title' => '%Module settings' ,
       'controller' => [
         'controller_type' => 'form',
-        'routing_value' => '\\' . $this->component_data['qualified_class_name'],
+        'routing_value' => '\\' . $this->component_data->qualified_class_name->value,
       ],
       'access' => [
         'access_type' => 'permission',
@@ -157,8 +157,8 @@ class AdminSettingsForm extends Form {
       'plugin_properties' => [
         'title' => '%sentence',
         'description' => 'Configure the settings for %lower.',
-        'route_name' => $this->component_data['route_name'],
-        'parent' => $this->component_data['parent_route'],
+        'route_name' => $this->component_data->route_name->value,
+        'parent' => $this->component_data->parent_route->value,
       ],
     ];
 
@@ -171,7 +171,7 @@ class AdminSettingsForm extends Form {
     $components['info_configuration'] = [
       'component_type' => 'InfoProperty',
       'property_name' => 'configure',
-      'property_value' => $this->component_data['route_name'],
+      'property_value' => $this->component_data->route_name->value,
     ];
 
     $components['readme_configure'] = [
@@ -189,7 +189,7 @@ class AdminSettingsForm extends Form {
     $components["config/schema/%module.schema.yml"] = [
       'component_type' => 'ConfigSchema',
       'yaml_data' => [
-        $this->component_data['route_name'] => [
+        $this->component_data->route_name->value => [
            'type' => 'config_object',
            'label' => '%sentence settings',
           'mapping' => [

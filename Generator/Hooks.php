@@ -85,7 +85,7 @@ class Hooks extends BaseGenerator implements ClassHandlerAware, EnvironmentAware
 
     // Convert the input data to the right format.
     // TODO: clean this up -- it used to be handled in property processing.
-    $requested_hook_list = array_fill_keys($this->component_data['hooks'], TRUE);
+    $requested_hook_list = array_fill_keys($this->component_data->hooks->values(), TRUE);
 
     // Get a set of hook declarations and function body templates for the hooks
     // we want. This is of the form:

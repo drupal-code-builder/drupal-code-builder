@@ -178,7 +178,7 @@ class DrushCommand extends PHPFunction {
       'plain_class_name' => CaseString::snake($this->component_data->root_component_name->value)->pascal() . 'Commands',
       'relative_namespace' => 'Drush\Commands',
       'parent_class_name' => '\Drush\Commands\DrushCommands',
-      'injected_services' => $this->component_data['injected_services'],
+      'injected_services' => $this->component_data->injected_services->values(),
       'docblock_first_line' => "%sentence Drush commands.",
       'interfaces' => $this->component_data->service_interfaces->values(),
       'traits' => $this->component_data->service_traits->values(),
@@ -189,7 +189,7 @@ class DrushCommand extends PHPFunction {
       $this->component_data->command_name = $this->component_data->root_component_name->value . ':' . $this->component_data->command_name->value;
     }
 
-    $usage_line = "drush {$this->component_data['command_name']}";
+    $usage_line = "drush {$this->component_data->command_name->value}";
 
     $parameters_data = [];
     foreach ($this->component_data->command_parameters as $parameter) {
@@ -243,11 +243,11 @@ class DrushCommand extends PHPFunction {
       $usage_line .= ' --' . $option_name;
     }
 
-    $doxygen_tag_lines[] = ['command', $this->component_data['command_name']];
-    $doxygen_tag_lines[] = ['usage', $usage_line, $this->component_data['command_description']];
+    $doxygen_tag_lines[] = ['command', $this->component_data->command_name->value];
+    $doxygen_tag_lines[] = ['usage', $usage_line, $this->component_data->command_description->value];
 
-    if (!empty($this->component_data['command_name_aliases'])) {
-      $doxygen_tag_lines[] = ['aliases', implode(',', $this->component_data['command_name_aliases']), ''];
+    if (!empty($this->component_data->command_name_aliases->values())) {
+      $doxygen_tag_lines[] = ['aliases', implode(',', $this->component_data->command_name_aliases->values()), ''];
     }
 
     return $components;

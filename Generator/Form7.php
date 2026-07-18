@@ -34,16 +34,16 @@ class Form7 extends BaseGenerator {
    * Return an array of subcomponent types.
    */
   public function requiredComponents(): array {
-    $form_name = $this->component_data['form_id'];
+    $form_name = $this->component_data->form_id->value;
     $form_builder   = $form_name;
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';
 
     $components = [
       // Request the file we belong to.
-      $this->component_data['code_file'] => [
+      $this->component_data->code_file->value => [
         'component_type' => 'ExtensionCodeFile',
-        'filename' => $this->component_data['code_file'],
+        'filename' => $this->component_data->code_file->value,
       ],
       // Request the form functions.
       $form_builder => [

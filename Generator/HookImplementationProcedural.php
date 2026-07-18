@@ -62,7 +62,7 @@ class HookImplementationProcedural extends HookImplementationBase {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    $code_file = $this->component_data['code_file'];
+    $code_file = $this->component_data->code_file->value;
 
     $components['code_file'] = [
       'component_type' => 'ExtensionCodeFile',

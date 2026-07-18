@@ -12,15 +12,15 @@ class InfoModule5 extends InfoModule6 {
    */
   function infoData(): array {
     $lines = [];
-    $lines['name'] =  $this->component_data['readable_name'];
-    $lines['description'] =  $this->component_data['short_description'];
+    $lines['name'] =  $this->component_data->readable_name->value;
+    $lines['description'] =  $this->component_data->short_description->value;
 
-    if (!empty( $this->component_data['module_dependencies'])) {
-      $lines['dependencies'] = implode(' ',  $this->component_data['module_dependencies']);
+    if (!$this->component_data->module_dependencies->isEmpty()) {
+      $lines['dependencies'] = implode(' ',  $this->component_data->module_dependencies->values());
     }
 
-    if (!empty( $this->component_data['module_package'])) {
-      $lines['package'] =  $this->component_data['module_package'];
+    if (!empty( $this->component_data->module_package->value)) {
+      $lines['package'] =  $this->component_data->module_package->value;
     }
 
     return $lines;

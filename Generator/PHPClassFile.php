@@ -266,7 +266,7 @@ class PHPClassFile extends PHPFile {
     // Replace any fully-qualified classes with short class names, and keep a
     // list of the replacements to make import statements with.
     $imported_classes = [];
-    $this->extractFullyQualifiedClasses($class_code, $imported_classes, $this->component_data['namespace']);
+    $this->extractFullyQualifiedClasses($class_code, $imported_classes, $this->component_data->namespace->value);
 
     $return = array_merge(
       $this->codeNamespace(),
@@ -284,7 +284,7 @@ class PHPClassFile extends PHPFile {
   function codeNamespace() {
     $code = [];
 
-    $code[] = 'namespace ' . $this->component_data['namespace'] . ';';
+    $code[] = 'namespace ' . $this->component_data->namespace->value . ';';
     $code[] = '';
 
     return $code;
@@ -329,7 +329,7 @@ class PHPClassFile extends PHPFile {
       }
     }
     elseif ($this->component_data->docblock_first_line->value) {
-      $docblock[] = $this->component_data['docblock_first_line'];
+      $docblock[] = $this->component_data->docblock_first_line->value;
     }
     else {
       // Complain here, as every class should have something for its first
@@ -355,14 +355,14 @@ class PHPClassFile extends PHPFile {
    */
   function classDeclaration() {
     $line = '';
-    if ($this->component_data['abstract']) {
+    if ($this->component_data->abstract->value) {
       $line .= 'abstract ';
     }
-    $line .= "class {$this->component_data['plain_class_name']}";
-    if ($this->component_data['parent_class_name']) {
-      $line .= " extends {$this->component_data['parent_class_name']}";
+    $line .= "class {$this->component_data->plain_class_name->value}";
+    if ($this->component_data->parent_class_name->value) {
+      $line .= " extends {$this->component_data->parent_class_name->value}";
     }
-    if ($this->component_data['interfaces']) {
+    if ($this->component_data->interfaces->value) {
       // Have to use export() instead of values() because of the hack with this
       // being mapping data, not multi-valued string.
       $line .= " implements " . implode(', ', $this->component_data->interfaces->export());
