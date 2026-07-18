@@ -36,6 +36,15 @@ class HooksClass extends Service {
       ->setInternal(FALSE)
       ->setDescription("The hooks class's plain class name, e.g. \"MyHooks\".")
       ->setCallableDefault(function ($component_data) {
+        // Default is not set if there is no root name for the module: this is
+        // the case for test modules.
+        // We have to check with empty() rather than isEmpty(), as that doesn't
+        // trigger defaults
+        // @see https://github.com/joachim-n/mutable-typed-data/issues/22
+        if (empty($component_data->getParent()->root_name_pascal->value)) {
+          return NULL;
+        }
+
         // Add a suffix to the default class name based on the human-readable
         // index.
         $delta = $component_data->getParent()->getName();
