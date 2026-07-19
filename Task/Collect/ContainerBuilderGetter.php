@@ -2,6 +2,8 @@
 
 namespace DrupalCodeBuilder\Task\Collect;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+
 /**
  * Task helper hacking the Drupal kernel to get a Container to inspect services.
  */
@@ -10,7 +12,7 @@ class ContainerBuilderGetter {
   /**
    * The container builder.
    */
-  protected $containerBuilder;
+  protected ContainerBuilder $containerBuilder;
 
   /**
    * Gets the ContainerBuilder by hacking the Drupal kernel.
@@ -18,7 +20,7 @@ class ContainerBuilderGetter {
    * @return \Drupal\Core\DependencyInjection\ContainerBuilder
    *   The compiled service container
    */
-  public function getContainerBuilder() {
+  public function getContainerBuilder(): ContainerBuilder {
     if (!isset($this->containerBuilder)) {
       // Get the kernel, and hack it to get a compiled container.
       // We need this rather than the normal cached container, as that doesn't
