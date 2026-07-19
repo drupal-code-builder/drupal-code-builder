@@ -125,6 +125,62 @@ class PHPMethodTester {
   }
 
   /**
+   * Asserts a parameter has a particular attribute.
+   *
+   * @param string $parameter_name
+   *   The name of the parameter to check.
+   * @param string $attribute_class
+   *   The literal class name of the attribute as seen in the code: this will be
+   *   the short class name if there is an import for it, and otherwise the
+   *   FQCN.
+   * @param string $message
+   *   (optional) The assertion message.
+   *
+   * @todo Assert the attribute value too.
+   */
+  public function assertParameterHasAttribute(string $parameter_name, string $attribute_class, ?string $message = NULL): void {
+    $message = $message ?? "The {$parameter_name} parameter of the method {$this->methodName} has the $attribute_class attribute.";
+
+    foreach ($this->methodNode->params as $index => $loop_param_node) {
+      if ($loop_param_node->var->name == $parameter_name) {
+        $parameter_node = $loop_param_node;
+      }
+    }
+
+    // Sanity checks.
+    Assert::assertTrue(isset($parameter_node), "The method has no $parameter_name parameter.");
+    Assert::assertNotEmpty($parameter_node->attrGroups, "The $parameter_name parameter has attributes.");
+
+    // Assume there is only one attribute!
+    $attribute_node = $parameter_node->attrGroups[0];
+
+    Assert::assertEquals($attribute_class, $attribute_node->attrs[0]->name->name, $message);
+  }
+
+  /**
+   * Asserts a parameter does not have an attribute.
+   *
+   * @param string $parameter_name
+   *   The name of the parameter to check.
+   * @param string $message
+   *   (optional) The assertion message.
+   */
+   public function assertParameterNotHasAttribute(string $parameter_name, ?string $message = NULL): void {
+    $message = $message ?? "The {$parameter_name} parameter of the method {$this->methodName} has no attribute.";
+
+    foreach ($this->methodNode->params as $index => $loop_param_node) {
+      if ($loop_param_node->var->name == $parameter_name) {
+        $parameter_node = $loop_param_node;
+      }
+    }
+
+    // Sanity check.
+    Assert::assertTrue(isset($parameter_node), "The method has no $parameter_name parameter.");
+
+    Assert::assertEmpty($parameter_node->attrGroups, $message);
+   }
+
+  /**
    * Asserts that only the specified parameters are promoted.
    *
    * This fails if:
