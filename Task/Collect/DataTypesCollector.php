@@ -97,6 +97,12 @@ class DataTypesCollector extends CollectorBase {
         continue;
       }
 
+      // Skip types that don't have a label as they're probably weird: so far
+      // this only includes 'mailer_dsn.options.null', whatever that is.
+      if (!isset($definition_item['label'])) {
+        continue;
+      }
+
       $data_types[$type] = [
         'type' => $type,
         'label' => $definition_item['label'],
