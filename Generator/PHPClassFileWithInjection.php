@@ -201,6 +201,9 @@ class PHPClassFileWithInjection extends PHPClassFile {
         // This is a Drupal coding standard still under discussion: see
         // https://www.drupal.org/node/1539712.
         'break_declaration' => TRUE,
+        // The DI parameters will come from the PHPClassConstructorSetProperty
+        // components which are requested via the InjectedService components
+        // requested above.
         'parameters' => $parameters,
       ];
     }

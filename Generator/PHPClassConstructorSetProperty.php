@@ -10,6 +10,11 @@ use MutableTypedData\Definition\DefaultDefinition;
 /**
  * Generator for a property that's set by a constructor.
  *
+ * This requests a PHPConstructor with data for the parameter. This will merge
+ * with the PHPConstructors requested by siblings of this component and the
+ * PHPConstructor component which was requested by the PHPClassFileWithInjection
+ * component.
+ *
  * This is a bit fuzzy, and also covers properties that are extracted from a
  * constructor parameter, in the case of injected pseudoservices.
  *
