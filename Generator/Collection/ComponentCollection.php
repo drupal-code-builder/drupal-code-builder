@@ -418,14 +418,14 @@ class ComponentCollection implements \IteratorAggregate {
     foreach ($this->components as $id => $component) {
       $containing_component_id = $this->getContainingComponentId($component);
 
-      if (self::DEBUG) {
-        dump($id . ' - ' . $this->requestPaths[$id] . ' - containing: ' . ($this->requestPaths[$containing_component_id] ?? 'NO CONTAINER'));
-      }
-
       // An empty containing component means the component does not participate
       // in the containment tree.
       if (empty($containing_component_id)) {
         continue;
+      }
+
+      if (self::DEBUG) {
+        dump($id . ' - ' . $this->requestPaths[$id] . ' - containing: ' . ($this->requestPaths[$containing_component_id] ?? 'NO CONTAINER'));
       }
 
       assert(isset($this->components[$containing_component_id]), "Containing component '$containing_component_id' given by '$id' is not a component ID.");
