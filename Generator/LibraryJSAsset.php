@@ -41,10 +41,10 @@ class LibraryJSAsset extends BaseGenerator {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    if (!filter_var($this->component_data['filename'], FILTER_VALIDATE_URL)) {
+    if (!filter_var($this->component_data->filename->value, FILTER_VALIDATE_URL)) {
       $components['asset_file'] = [
         'component_type' => 'JavaScriptFile',
-        'filename' => $this->component_data['filename'],
+        'filename' => $this->component_data->filename->value,
       ];
     }
 
@@ -62,7 +62,7 @@ class LibraryJSAsset extends BaseGenerator {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    if (filter_var($this->component_data['filename'], FILTER_VALIDATE_URL)) {
+    if (filter_var($this->component_data->filename->value, FILTER_VALIDATE_URL)) {
       $value = [
         'type' => 'external',
         'minified' => TRUE,
@@ -73,7 +73,7 @@ class LibraryJSAsset extends BaseGenerator {
     }
 
     $yaml_data['js'] = [
-      $this->component_data['filename'] => $value,
+      $this->component_data->filename->value => $value,
     ];
 
     return $yaml_data;

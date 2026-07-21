@@ -163,7 +163,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    $form_name = $this->component_data['form_id'];
+    $form_name = $this->component_data->form_id->value;
 
     $components += [
       // Request the form functions.

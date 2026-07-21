@@ -33,7 +33,7 @@ class EntityListBuilder extends EntityHandler {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $entity_type_is_config = ($this->component_data['entity_type_group'] === 'config');
+    $entity_type_is_config = ($this->component_data->entity_type_group->value === 'config');
 
     $columns = [];
 

@@ -367,8 +367,8 @@ class ContentEntityType extends EntityTypeBase {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    $use_revisionable = in_array('revisionable', $this->component_data['functionality']);
-    $use_translatable = in_array('translatable', $this->component_data['functionality']);
+    $use_revisionable = $this->component_data->functionality->hasValue('revisionable');
+    $use_translatable = $this->component_data->functionality->hasValue('translatable');
 
     $method_body = [];
     // Calling the parent defines fields for entity keys.
@@ -422,7 +422,7 @@ class ContentEntityType extends EntityTypeBase {
     $method_body[] = '';
 
     // Add a 'changed' field if entities use the changed interface.
-    if (in_array('changed', $this->component_data['functionality'])) {
+    if ($this->component_data->functionality->hasValue('changed')) {
       $method_body[] = "£fields['changed'] = \Drupal\Core\Field\BaseFieldDefinition::create('changed')";
       $changed_field_calls = new FluentMethodCall;
       $changed_field_calls->setLabel(FluentMethodCall::t('Changed'))
@@ -437,12 +437,12 @@ class ContentEntityType extends EntityTypeBase {
       $method_body[] = '';
     }
 
-    foreach ($this->component_data['base_fields'] as $base_field_data) {
-      $method_body[] = "£fields['{$base_field_data['name']}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data['type']}')";
+    foreach ($this->component_data->base_fields as $base_field_data) {
+      $method_body[] = "£fields['{$base_field_data->name->value}'] = \Drupal\Core\Field\BaseFieldDefinition::create('{$base_field_data->type->value}')";
 
       $custom_base_field_calls = new FluentMethodCall();
       $custom_base_field_calls
-        ->setLabel(FluentMethodCall::t($base_field_data['label']))
+        ->setLabel(FluentMethodCall::t($base_field_data->label->value))
         ->setDescription(FluentMethodCall::t('TODO: description of field.'));
       if ($use_revisionable) {
         $custom_base_field_calls->setRevisionable(TRUE);
@@ -473,20 +473,20 @@ class ContentEntityType extends EntityTypeBase {
     // TODO: other methods!
 
     // Add menu plugins for the entity type if the UI option is set.
-    if (!empty($this->component_data['entity_ui'])) {
+    if (!empty($this->component_data->entity_ui->value)) {
       // Add a menu task if there is a route provider handler.
       // Content entities don't get a menu item, but rather a task (i.e. a tab)
       // alongside the content admin for nodes.
       // is fixed.
       // TODO: Change this when https://www.drupal.org/project/drupal/issues/2862859
-      $components['collection_menu_task' . $this->component_data['entity_type_id']] = [
+      $components['collection_menu_task' . $this->component_data->entity_type_id->value] = [
         'component_type' => 'Plugin',
         'plugin_type' => 'menu.local_task',
         'prefix_name' => FALSE,
-        'plugin_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+        'plugin_name' => "entity.{$this->component_data->entity_type_id->value}.collection",
         'plugin_properties' => [
-          'title' => $this->component_data['entity_type_label'] . 's',
-          'route_name' => "entity.{$this->component_data['entity_type_id']}.collection",
+          'title' => $this->component_data->entity_type_label->value . 's',
+          'route_name' => "entity.{$this->component_data->entity_type_id->value}.collection",
           'base_route' => 'system.admin_content',
           // Media module sets 10 for its tab; go further along.
           'weight' => 15,
@@ -497,7 +497,7 @@ class ContentEntityType extends EntityTypeBase {
       // the add page route, where a bundle can be selected, rather than the
       // add form.
       if (!$this->component_data->bundle_entity->isEmpty()) {
-        $components['collection_menu_action' . $this->component_data['entity_type_id']]['plugin_properties']['route_name'] = "entity.{$this->component_data['entity_type_id']}.add_page";
+        $components['collection_menu_action' . $this->component_data->entity_type_id->value]['plugin_properties']['route_name'] = "entity.{$this->component_data->entity_type_id->value}.add_page";
       }
 
       // Make local tasks (aka tabs) for the view, edit, and delete routes.
@@ -507,15 +507,15 @@ class ContentEntityType extends EntityTypeBase {
         'delete_form' => 'Delete',
       ];
       foreach ($entity_tabs as $route_suffix => $title) {
-        $components["collection_menu_task_{$route_suffix}_{$this->component_data['entity_type_id']}"] = [
+        $components["collection_menu_task_{$route_suffix}_{$this->component_data->entity_type_id->value}"] = [
           'component_type' => 'Plugin',
           'plugin_type' => 'menu.local_task',
           'prefix_name' => FALSE,
-          'plugin_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
+          'plugin_name' => "entity.{$this->component_data->entity_type_id->value}.{$route_suffix}",
           'plugin_properties' => [
             'title' => $title,
-            'route_name' => "entity.{$this->component_data['entity_type_id']}.{$route_suffix}",
-            'base_route' => "entity.{$this->component_data['entity_type_id']}.canonical",
+            'route_name' => "entity.{$this->component_data->entity_type_id->value}.{$route_suffix}",
+            'base_route' => "entity.{$this->component_data->entity_type_id->value}.canonical",
           ],
         ];
       }
@@ -561,17 +561,17 @@ class ContentEntityType extends EntityTypeBase {
   protected function getAnnotationData() {
     $annotation_data = parent::getAnnotationData();
 
-    $revisionable = in_array('revisionable', $this->component_data['functionality']);
-    $translatable = in_array('translatable', $this->component_data['functionality']);
-    $ui = !empty($this->component_data['entity_ui']);
+    $revisionable = $this->component_data->functionality->hasValue('revisionable');
+    $translatable = $this->component_data->functionality->hasValue('translatable');
+    $ui = !empty($this->component_data->entity_ui->value);
 
     // Add further annotation properties.
     // Use the entity type ID as the base table.
-    $annotation_data['base_table'] = $this->component_data['entity_type_id'];
+    $annotation_data['base_table'] = $this->component_data->entity_type_id->value;
 
     if ($ui) {
       $annotation_data['links'] = [];
-      $entity_path_component = $this->component_data['entity_type_id'];
+      $entity_path_component = $this->component_data->entity_type_id->value;
       $entity_path_placeholder = "{{$entity_path_component}}";
 
       // The structure of the add UI depends on whether there is a bundle
@@ -579,7 +579,7 @@ class ContentEntityType extends EntityTypeBase {
       if (!$this->component_data->bundle_entity->isEmpty()) {
         // If there's a bundle entity, the add UI is made up of first a page to
         // select the bundle, and then a form with a bundle parameter.
-        $bundle_entity_type_path_argument = $this->component_data['bundle_entity_type_id'];
+        $bundle_entity_type_path_argument = $this->component_data->bundle_entity_type_id->value;
 
         $annotation_data['links']["add-page"] = "/$entity_path_component/add";
         $annotation_data['links']["add-form"] = "/$entity_path_component/add/{{$bundle_entity_type_path_argument}}";
@@ -597,8 +597,8 @@ class ContentEntityType extends EntityTypeBase {
     }
 
     if (!$this->component_data->bundle_entity->isEmpty()) {
-      $annotation_data['bundle_entity_type'] = $this->component_data['bundle_entity_type_id'];
-      $annotation_data['bundle_label'] = ClassAnnotation::Translation($this->component_data['bundle_label']);
+      $annotation_data['bundle_entity_type'] = $this->component_data->bundle_entity_type_id->value;
+      $annotation_data['bundle_label'] = ClassAnnotation::Translation($this->component_data->bundle_label->value);
     }
 
     if ($this->component_data->field_ui_base_route->value) {

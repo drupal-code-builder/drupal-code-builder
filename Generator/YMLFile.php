@@ -52,7 +52,7 @@ class YMLFile extends File {
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    return $this->component_data['filename'];
+    return $this->component_data->filename->value;
   }
 
   /**
@@ -164,11 +164,11 @@ class YMLFile extends File {
    *   The YAML data array, passed by reference.
    */
   protected function expandInlineItems(&$yaml_data_array) {
-    if (empty($this->component_data['inline_levels_extra'])) {
+    if (empty($this->component_data->inline_levels_extra->value)) {
       return;
     }
 
-    foreach ($this->component_data['inline_levels_extra'] as $extra_expansion_rule) {
+    foreach ($this->component_data->inline_levels_extra->value as $extra_expansion_rule) {
       // The rule address may use wildcards. Get a list of actual properties
       // to expand.
       $rule_address = $extra_expansion_rule['address'];

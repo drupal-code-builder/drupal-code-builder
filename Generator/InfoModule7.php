@@ -33,18 +33,16 @@ class InfoModule7 extends InfoModule {
    */
   function infoData(): array {
     $lines = $this->getInfoFileEmptyLines();
-    $lines['name'] =  $this->component_data['readable_name'];
-    $lines['description'] =  $this->component_data['short_description'];
-    if (!empty( $this->component_data['module_dependencies'])) {
+    $lines['name'] =  $this->component_data->readable_name->value;
+    $lines['description'] =  $this->component_data->short_description->value;
+    foreach ($this->component_data->module_dependencies as $dependency) {
       // For lines which form a set with the same key and array markers,
       // simply make an array.
-      foreach ( $this->component_data['module_dependencies'] as $dependency) {
-        $lines['dependencies'][] = $dependency;
-      }
+      $lines['dependencies'][] = $dependency->value;
     }
 
-    if (!empty( $this->component_data['module_package'])) {
-      $lines['package'] =  $this->component_data['module_package'];
+    if (!empty( $this->component_data->module_package->value)) {
+      $lines['package'] =  $this->component_data->module_package->value;
     }
 
     $lines['core'] = "7.x";

@@ -300,7 +300,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
     $services_yaml = $extension->getFileYaml($service_file_path);
 
-    if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']])) {
+    if (isset($services_yaml['services'][$this->component_data->prefixed_service_name->value])) {
       $this->exists = TRUE;
       $this->extension = $extension;
     }
@@ -328,8 +328,8 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
       $services_yaml = $this->extension->getFileYaml($services_yml_filename);
 
-      if (isset($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'])) {
-        foreach ($services_yaml['services'][$this->component_data['prefixed_service_name']]['arguments'] as $argument) {
+      if (isset($services_yaml['services'][$this->component_data->prefixed_service_name->value]['arguments'])) {
+        foreach ($services_yaml['services'][$this->component_data->prefixed_service_name->value]['arguments'] as $argument) {
           $service_id = ltrim($argument, '@');
           $this->existingServices[] = $service_id;
         }
@@ -375,7 +375,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     }
 
     $requested_services = [];
-    foreach ($this->component_data['injected_services'] as $service_id) {
+    foreach ($this->component_data->injected_services->values() as $service_id) {
       $requested_services[] = $service_id;
     }
 
@@ -411,7 +411,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     ];
 
     $yaml_service_definition = [
-      'class' => $this->component_data['qualified_class_name'],
+      'class' => $this->component_data->qualified_class_name->value,
     ];
 
     if (!$this->component_data->decorates->isEmpty()) {
@@ -475,10 +475,10 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
     }
 
     // Service tags.
-    if (isset($this->component_data['tags'])) {
-      foreach ($this->component_data['tags'] as $tag_value) {
-        $yaml_service_definition['tags'][] = $tag_value;
-      }
+    foreach ($this->component_data->tags as $tag) {
+      $yaml_service_definition['tags'][] = [
+        'name' => $tag->name->value,
+      ];
     }
 
     // TODO: document and declare this property!
@@ -488,7 +488,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
 
     $yaml_data = [];
     $yaml_data['services'] = [
-      $this->component_data['prefixed_service_name'] => $yaml_service_definition,
+      $this->component_data->prefixed_service_name->value => $yaml_service_definition,
     ];
 
     if ($this->component_data->getItem('module:configuration:service_linebreaks')->value) {
@@ -513,7 +513,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
       $service_types_data = $task_handler_report_services->listServiceTypeData();
 
       if (!empty($service_types_data[$this->component_data->service_tag_type->value]['methods'])) {
-        $service_type_interface_data = $service_types_data[$this->component_data['service_tag_type']]['methods'];
+        $service_type_interface_data = $service_types_data[$this->component_data->service_tag_type->value]['methods'];
         foreach ($service_type_interface_data as $method_name => $method_data) {
           $components['function-' . $method_name] = $this->createFunctionComponentFromMethodData($method_data);
         }

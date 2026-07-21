@@ -73,7 +73,7 @@ class EntityForm extends EntityHandler {
         'declaration' => 'public function save(array $form, \Drupal\Core\Form\FormStateInterface $form_state)',
         'body' => [
           '$saved = parent::save($form, $form_state);',
-          "£form_state->setRedirectUrl(£this->entity->toUrl('{$this->component_data['redirect_link_template']}'));",
+          "£form_state->setRedirectUrl(£this->entity->toUrl('{$this->component_data->redirect_link_template->value}'));",
           '',
           'return $saved;',
         ],

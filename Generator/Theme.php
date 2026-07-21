@@ -55,7 +55,7 @@ class Theme extends BaseGenerator {
     $theme_registry = theme_get_registry();
 
     $components = parent::requiredComponents();
-    foreach ($this->component_data['themeables'] as $theme_hook_name) {
+    foreach ($this->component_data->themeables->value as $theme_hook_name) {
       $hook = $theme_hook_name;
       // Iteratively strip everything after the last '--' delimiter, until an
       // implementation is found.
@@ -77,7 +77,7 @@ class Theme extends BaseGenerator {
         $components[$theme_hook_name] = 'themeTemplate';
 
         // Store data about this theme hook that we've found.
-        $this->component_data['theme_hook_bases'][$theme_hook_name] = $hook;
+        $this->component_data->theme_hook_bases->value[$theme_hook_name] = $hook;
       }
       else {
         // Fall through, as 'function' is optional in hook_theme().

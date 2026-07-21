@@ -93,7 +93,7 @@ class Profile extends RootComponent {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $root_name = $this->component_data['root_name'];
+    $root_name = $this->component_data->root_name->value;
 
     $components['info'] = [
       'component_type' => 'InfoProfile',

@@ -41,7 +41,7 @@ class API extends PHPFile {
    * {@inheritdoc}
    */
   public function getMergeTag() {
-    return $this->component_data['root_component_name'] . '.api.php';
+    return $this->component_data->root_component_name->value . '.api.php';
   }
 
   /**

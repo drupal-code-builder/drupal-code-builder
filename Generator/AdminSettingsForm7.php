@@ -32,7 +32,7 @@ class AdminSettingsForm7 extends Form7 {
     $components = parent::requiredComponents();
 
     // Change the body of the form builder.
-    $form_name = $this->component_data['form_id'];
+    $form_name = $this->component_data->form_id->value;
     $form_builder = $form_name;
     $form_validate  = $form_name . '_validate';
     $form_submit    = $form_name . '_submit';
@@ -61,9 +61,9 @@ class AdminSettingsForm7 extends Form7 {
       'path' => 'admin/config/TODO-SECTION/%module',
       'title' => 'Administer %readable',
       'description' => 'Configure settings for %readable.',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => "array('{$form_name}')",
-      'access arguments' => "array('administer %module')",
+      'page_callback' => 'drupal_get_form',
+      'page_arguments' => "array('{$form_name}')",
+      'access_arguments' => "array('administer %module')",
       'file' => '%module.admin.inc',
     ];
 

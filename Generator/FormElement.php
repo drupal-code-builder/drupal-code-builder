@@ -55,7 +55,7 @@ class FormElement extends BaseGenerator {
   function containingComponent() {
     // Allow this to be overriden by incoming data, for entity form handlers
     // where the request chain is different.
-    return $this->component_data['containing_component'] ?? '%requester:buildForm';
+    return $this->component_data->containing_component->value ?? '%requester:buildForm';
   }
 
   /**
@@ -70,17 +70,17 @@ class FormElement extends BaseGenerator {
    */
   public function getContents(): array {
     $form_api_array = [
-      '#type' => $this->component_data['element_type'],
+      '#type' => $this->component_data->element_type->value,
     ];
 
-    if (!empty($this->component_data['element_title'])) {
-      $form_api_array['#title'] = '£this->t("' . $this->component_data['element_title'] . '")';
+    if (!empty($this->component_data->element_title->value)) {
+      $form_api_array['#title'] = '£this->t("' . $this->component_data->element_title->value . '")';
     }
-    if (!empty($this->component_data['element_description'])) {
-      $form_api_array['#description'] = '£this->t("' . $this->component_data['element_description'] . '")';
+    if (!empty($this->component_data->element_description->value)) {
+      $form_api_array['#description'] = '£this->t("' . $this->component_data->element_description->value . '")';
     }
 
-    foreach ($this->component_data['element_array'] as $attribute => $value) {
+    foreach ($this->component_data->element_array->value as $attribute => $value) {
       $form_api_array['#' . $attribute] = $value;
     }
 

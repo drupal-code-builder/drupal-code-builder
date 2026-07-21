@@ -18,10 +18,10 @@ class PluginRenderElement extends PluginClassDiscoveryHybrid {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
-    if (empty($this->component_data['replace_parent_plugin'])) {
+    if (empty($this->component_data->replace_parent_plugin->value)) {
       $components['theme_hook'] = [
         'component_type' => 'ThemeHook',
-        'theme_hook_name' => $this->component_data['plugin_name'],
+        'theme_hook_name' => $this->component_data->plugin_name->value,
       ];
     }
 

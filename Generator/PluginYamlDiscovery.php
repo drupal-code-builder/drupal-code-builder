@@ -139,7 +139,7 @@ class PluginYamlDiscovery extends BaseGenerator {
    * {@inheritdoc}
    */
   function __construct($component_data) {
-    $plugin_type = $component_data['plugin_type'];
+    $plugin_type = $component_data->plugin_type->value;
 
     $mb_task_handler_report_plugins = \DrupalCodeBuilder\Factory::getTask('ReportPluginData');
     $plugin_types_data = $mb_task_handler_report_plugins->listPluginData();
@@ -190,7 +190,7 @@ class PluginYamlDiscovery extends BaseGenerator {
    * {@inheritdoc}
    */
   public function requiredComponents(): array {
-    $yaml_file_suffix = $this->component_data['plugin_type_data']['yaml_file_suffix'];
+    $yaml_file_suffix = $this->component_data->plugin_type_data->value['yaml_file_suffix'];
 
     $components = [
       "%module.{$yaml_file_suffix}.yml" => [
@@ -226,9 +226,9 @@ class PluginYamlDiscovery extends BaseGenerator {
 
     if (!empty($this->component_data->plugin_custom_class->value)) {
       $plugin_class_parent = '\\' . (
-        $this->component_data['plugin_type_data']['base_class']
+        $this->component_data->plugin_type_data->value['base_class']
         ??
-        $this->component_data['plugin_type_data']['yaml_properties']['class']
+        $this->component_data->plugin_type_data->value['yaml_properties']['class']
       );
 
       $components['plugin_custom_class'] = [
@@ -250,7 +250,7 @@ class PluginYamlDiscovery extends BaseGenerator {
    * {@inheritdoc}
    */
   function containingComponent() {
-    $yaml_file_suffix = $this->component_data['plugin_type_data']['yaml_file_suffix'];
+    $yaml_file_suffix = $this->component_data->plugin_type_data->value['yaml_file_suffix'];
 
     return "%self:%module.{$yaml_file_suffix}.yml";
   }
@@ -266,7 +266,7 @@ class PluginYamlDiscovery extends BaseGenerator {
       $plugin_name = $this->component_data->plugin_name->value;
     }
 
-    $yaml_data[$plugin_name] = $this->component_data['plugin_properties'];
+    $yaml_data[$plugin_name] = $this->component_data->plugin_properties->value;
 
     return $yaml_data;
   }

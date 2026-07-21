@@ -38,10 +38,10 @@ class PHPInterfaceFile extends PHPClassFile {
    */
   function classDeclaration() {
     $line = '';
-    $line .= "interface {$this->component_data['plain_class_name']}";
+    $line .= "interface {$this->component_data->plain_class_name->value}";
     if (!$this->component_data->parent_interface_names->isEmpty()) {
       $line .= ' extends ';
-      $line .= implode(', ', $this->component_data['parent_interface_names']);
+      $line .= implode(', ', $this->component_data->parent_interface_names->values());
     }
     $line .= ' {';
 

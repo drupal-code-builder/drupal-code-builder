@@ -371,7 +371,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     $component_data = $data_item->getParent();
 
     // Strip the initial slash so it's not turned into a surplus dot.
-    $path = ltrim($component_data['path'], '/');
+    $path = ltrim($component_data->path->value, '/');
 
     // Remove any parameter braces.
     $path = str_replace(['{', '}'], '', $path);
@@ -381,7 +381,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
 
     // Get the module name rather than using the token, to avoid the
     // property name getting quoted.
-    $module = $component_data['root_component_name'];
+    $module = $component_data->root_component_name->value;
     $route_name = $module . '.' . str_replace('/', '.', $path);
     return $route_name;
   }
@@ -559,7 +559,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
         'containing_component' => "%requester:controller",
         'prefixes' => ['public'],
         'parameters' => $content_method_parameters,
-        'function_docblock_lines' => ["Callback for the {$this->component_data['route_name']} route."],
+        'function_docblock_lines' => ["Callback for the {$this->component_data->route_name->value} route."],
         // Route controllers typically omit the @return.
         'return' => [
           'omit_return_tag' => TRUE,
@@ -636,8 +636,8 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     if (!$this->component_data->menu_link->isEmpty()) {
       // Strip off the module name prefix from the route name to make the plugin
       // name, as the plugin generator will add it back again.
-      $plugin_name = $this->component_data['route_name'];
-      $plugin_name = substr($plugin_name, strlen($this->component_data['root_component_name']) + 1);
+      $plugin_name = $this->component_data->route_name->value;
+      $plugin_name = substr($plugin_name, strlen($this->component_data->root_component_name->value) + 1);
 
       $components['menu_link'] = [
         'component_type' => 'Plugin',
@@ -653,8 +653,8 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     if (!$this->component_data->menu_tab->isEmpty()) {
       // Strip off the module name prefix from the route name to make the plugin
       // name, as the plugin generator will add it back again.
-      $plugin_name = $this->component_data['route_name'];
-      $plugin_name = substr($plugin_name, strlen($this->component_data['root_component_name']) + 1);
+      $plugin_name = $this->component_data->route_name->value;
+      $plugin_name = substr($plugin_name, strlen($this->component_data->root_component_name->value) + 1);
 
       $components['menu_tab'] = [
         'component_type' => 'Plugin',
@@ -662,7 +662,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
         'plugin_name' => $plugin_name,
         'plugin_properties' => [
           'title' => $this->component_data->menu_tab->title->value,
-          'route_name' => $this->component_data['route_name'],
+          'route_name' => $this->component_data->route_name->value,
           'base_route' => $this->component_data->menu_tab->base_route->value,
         ],
       ];
@@ -682,7 +682,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    $path = $this->component_data['path'];
+    $path = $this->component_data->path->value;
 
     $route_yaml = [];
 
@@ -691,7 +691,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
       $path  = '/' . $path;
     }
     $route_yaml['path'] = $path;
-    $route_yaml['defaults']['_title'] = $this->component_data['title'];
+    $route_yaml['defaults']['_title'] = $this->component_data->title->value;
 
     // Controller value.
     $controller_yaml_key = '_' . $this->component_data->controller->controller_type->value;
@@ -701,7 +701,7 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
     $access_yaml_key = '_' . $this->component_data->access->access_type->value;
     $route_yaml['requirements'][$access_yaml_key] = $this->component_data->access->routing_value->value;
 
-    $route_name = $this->component_data['route_name'];
+    $route_name = $this->component_data->route_name->value;
     $routing_data[$route_name] = $route_yaml;
 
     return $routing_data;

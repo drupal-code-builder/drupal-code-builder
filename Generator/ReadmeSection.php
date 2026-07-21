@@ -62,7 +62,7 @@ class ReadmeSection extends BaseGenerator {
    */
   public function getContents(): array {
     return [
-      $this->component_data['title'] => $this->component_data['text'],
+      $this->component_data->title->value => $this->component_data->text->values(),
     ];
   }
 

@@ -479,15 +479,15 @@ class Module extends RootComponent {
     return [
       '%base'         => $module_data->base->value,
       // Deprecated; remove.
-      '%module'       => $module_data['root_name'],
+      '%module'       => $module_data->root_name->value,
       '%extension'    => $module_data->root_name->value,
       '%readable'     => str_replace("'", "\'", $module_data->readable_name->value),
-      '%Module'       => CaseString::title($module_data['readable_name'])->title(),
-      '%sentence'     => CaseString::title($module_data['readable_name'])->sentence(),
-      '%lower'        => strtolower($module_data['readable_name']),
+      '%Module'       => CaseString::title($module_data->readable_name->value)->title(),
+      '%sentence'     => CaseString::title($module_data->readable_name->value)->sentence(),
+      '%lower'        => strtolower($module_data->readable_name->value),
       '%Pascal'       => CaseString::snake($module_data->root_name->value)->pascal(),
-      '%description'  => str_replace("'", "\'", $module_data['short_description']),
-      '%help'         => !empty($module_data['module_help_text']) ? str_replace('"', '\"', $module_data['module_help_text']) : 'TODO: Create admin help text.',
+      '%description'  => str_replace("'", "\'", $module_data->short_description->value),
+      '%help'         => !empty($module_data->module_help_text->value) ? str_replace('"', '\"', $module_data->module_help_text->value) : 'TODO: Create admin help text.',
     ];
   }
 

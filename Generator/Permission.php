@@ -79,13 +79,13 @@ class Permission extends BaseGenerator {
    * {@inheritdoc}
    */
   public function getContents(): array {
-    $permission_name = $this->component_data['permission'];
+    $permission_name = $this->component_data->permission->value;
 
     $permission_info = [
-      'title' => $this->component_data['title'],
-      'description' => $this->component_data['description'],
+      'title' => $this->component_data->title->value,
+      'description' => $this->component_data->description->value,
     ];
-    if (!empty($this->component_data['restrict_access'])) {
+    if (!empty($this->component_data->restrict_access->value)) {
       $permission_info['restrict access'] = TRUE;
     }
 

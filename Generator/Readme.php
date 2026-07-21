@@ -65,7 +65,7 @@ class Readme extends File {
    */
   function lines() {
     $body = [
-      '# ' . $this->component_data['readable_name'],
+      '# ' . $this->component_data->readable_name->value,
       '',
       'TODO: write some documentation.',
       '',

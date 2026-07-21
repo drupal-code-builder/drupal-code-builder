@@ -38,7 +38,7 @@ class TwigFile extends File {
   }
 
   protected function getTwigContents() {
-    $theme_hook_name = $this->component_data['theme_hook_name'];
+    $theme_hook_name = $this->component_data->theme_hook_name->value;
 
     $twig = <<<EOT
       {#

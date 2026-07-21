@@ -20,7 +20,7 @@ trait PluginAnnotationDiscoveryTrait {
     $docblock = parent::getClassDocBlock();
 
     // Do not include the annotation if this plugin is a class override.
-    if (!empty($this->component_data['replace_parent_plugin'])) {
+    if (!empty($this->component_data->replace_parent_plugin->value)) {
       return $docblock;
     }
 
@@ -43,7 +43,7 @@ trait PluginAnnotationDiscoveryTrait {
 
     // Special case: annotation that's just the plugin ID.
     if (!empty($this->plugin_type_data['annotation_id_only'])) {
-      $annotation = ClassAnnotation::{$annotation_class}($this->component_data['prefixed_plugin_name']);
+      $annotation = ClassAnnotation::{$annotation_class}($this->component_data->prefixed_plugin_name->value);
 
       return $annotation;
     }
@@ -57,7 +57,7 @@ trait PluginAnnotationDiscoveryTrait {
         // ARGH l
         // CRASH
         // lazy defaults not working with array acess thought I'd fuckkign fixed it!
-        $annotation_data['id'] = $this->component_data['prefixed_plugin_name'];
+        $annotation_data['id'] = $this->component_data->prefixed_plugin_name->value;
         continue;
       }
 

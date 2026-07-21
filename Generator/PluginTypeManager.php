@@ -64,11 +64,11 @@ class PluginTypeManager extends Service {
       'docblock_inherit' => TRUE,
       'prefixes' => ['protected'],
       'body' => [
-        "return '{$this->component_data['plugin_type']}';",
+        "return '{$this->component_data->plugin_type->value}';",
       ],
     ];
 
-    if ($this->component_data['discovery_type'] == 'yaml') {
+    if ($this->component_data->discovery_type->value == 'yaml') {
       $components['method-get-discovery'] = [
         'component_type' => 'PHPFunction',
         'function_name' => 'getDiscovery',
@@ -77,7 +77,7 @@ class PluginTypeManager extends Service {
         'prefixes' => ['protected'],
         'body' => [
           'if (!$this->discovery) {',
-          "  \$discovery = new \Drupal\Core\Plugin\Discovery\YamlDiscovery('{$this->component_data['plugin_type']}', \$this->moduleHandler->getModuleDirectories());",
+          "  \$discovery = new \Drupal\Core\Plugin\Discovery\YamlDiscovery('{$this->component_data->plugin_type->value}', \$this->moduleHandler->getModuleDirectories());",
           '  $this->discovery = new \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator($discovery);',
           '}',
           'return $this->discovery;',
@@ -85,7 +85,7 @@ class PluginTypeManager extends Service {
       ];
     }
 
-    $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data['plain_class_name']}."];
+    $components['construct']['function_docblock_lines'] = ["Constructs a new {$this->component_data->plain_class_name->value}."];
 
     if (in_array($this->component_data->discovery_type->value, ['annotation', 'attribute'])) {
       $components['construct']['parameters'] = [
@@ -119,36 +119,36 @@ class PluginTypeManager extends Service {
     $code = [];
     if ($this->component_data->discovery_type->value == 'annotation') {
       $code[] = 'parent::__construct(';
-      $code[] = '  ' . "'Plugin/{$this->component_data['plugin_subdirectory']}',";
+      $code[] = '  ' . "'Plugin/{$this->component_data->plugin_subdirectory->value}',";
       $code[] = '  $namespaces,';
       $code[] = '  $module_handler,';
-      $code[] = "  " . $this->component_data['interface'] . '::class' . ",";
+      $code[] = "  " . $this->component_data->interface->value . '::class' . ",";
       $code[] = "  " . '\\' . $this->makeQualifiedClassName([
         'Drupal',
-        $this->component_data['root_component_name'],
+        $this->component_data->root_component_name->value,
         'Annotation',
-        $this->component_data['metadata_class'],
+        $this->component_data->metadata_class->value,
       ]) . '::class';
       $code[] = ');';
       $code[] = '';
     }
     elseif ($this->component_data->discovery_type->value == 'attribute') {
       $code[] = 'parent::__construct(';
-      $code[] = '  ' . "'Plugin/{$this->component_data['plugin_subdirectory']}',";
+      $code[] = '  ' . "'Plugin/{$this->component_data->plugin_subdirectory->value}',";
       $code[] = '  $namespaces,';
       $code[] = '  $module_handler,';
-      $code[] = "  " . $this->component_data['interface'] . '::class' . ",";
+      $code[] = "  " . $this->component_data->interface->value . '::class' . ",";
       $code[] = "  " . '\\' . $this->makeQualifiedClassName([
         'Drupal',
-        $this->component_data['root_component_name'],
+        $this->component_data->root_component_name->value,
         'Attribute',
-        $this->component_data['metadata_class'],
+        $this->component_data->metadata_class->value,
       ]) . '::class,';
       $annotation_class_name = $this->makeQualifiedClassName([
         'Drupal',
-        $this->component_data['root_component_name'],
+        $this->component_data->root_component_name->value,
         'Annotation',
-        $this->component_data['metadata_class'],
+        $this->component_data->metadata_class->value,
       ]);
       // Add BC support for annotations if an annotation class exists. This may
       // happen when re-generating or adopting an existing plugin type.
@@ -170,8 +170,8 @@ class PluginTypeManager extends Service {
       $code[] = '';
     }
 
-    $code[] = "\$this->alterInfo('{$this->component_data['info_alter_hook']}');";
-    $code[] = "\$this->setCacheBackend(\$cache_backend, '{$this->component_data['plugin_type']}_plugins');";
+    $code[] = "\$this->alterInfo('{$this->component_data->info_alter_hook->value}');";
+    $code[] = "\$this->setCacheBackend(\$cache_backend, '{$this->component_data->plugin_type->value}_plugins');";
 
     $components['construct']['body'] = $code;
 
@@ -186,7 +186,7 @@ class PluginTypeManager extends Service {
 
     // For YAML plugin type, we need to hack out various bits of injection,
     // which is a PITA.
-    if ($this->component_data['discovery_type'] == 'yaml') {
+    if ($this->component_data->discovery_type->value == 'yaml') {
       // The cache.discover service is injected, but not set to a property.
       if ($type == 'service_property') {
         foreach ($subcontents as $key => $content) {
@@ -223,15 +223,15 @@ class PluginTypeManager extends Service {
    * {@inheritdoc}
    */
   protected function collectSectionBlocks() {
-    if ($this->component_data['discovery_type'] == 'yaml') {
+    if ($this->component_data->discovery_type->value == 'yaml') {
       $this->properties[] = $this->createPropertyBlock(
         'defaults',
         'array',
         [
-          'docblock_first_line' => "Provides some default values for all {$this->component_data['plugin_label']} plugins.",
+          'docblock_first_line' => "Provides some default values for all {$this->component_data->plugin_label->value} plugins.",
           'default' => [
             // Need to trim the initial backslash.
-            'class' => substr($this->component_data['base_class'], 1),
+            'class' => substr($this->component_data->base_class->value, 1),
           ],
           'break_array_value' => TRUE,
         ]
