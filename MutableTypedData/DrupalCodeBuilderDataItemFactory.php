@@ -35,9 +35,10 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   static protected $types = [
     'string' => MergeableStringData::class,
     'boolean' => MergeableBooleanData::class,
-    // Override to allow array access as a backwards-compatibility shim. This
-    // is basically just to save having to immediately convert ALL of the code
-    // in Generator classes that accesses component data.
+    // Override to allow array access as a backwards-compatibility shim. This is
+    // no longer needed in DCB, but Module Builder still was using this and so
+    // this should stay in for backwards compatibility until 5.x
+    // @todo Remove this in 5.x.
     'complex' => MergeableComplexDataWithArrayAccess::class,
     'mutable' => MergeableMutableDataWithArrayAccess::class,
     // Mapping data stores arbitrary arrays that don't need to have their

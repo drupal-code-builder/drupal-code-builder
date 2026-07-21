@@ -6,7 +6,10 @@ namespace DrupalCodeBuilder\MutableTypedData\Data;
  * Allows array access of complex data.
  *
  * This is a shim to allow 3.x code that access component data as an array to
- * still work, so conversion can be done gradually.
+ * still work. This is no longer used in DCB, but remains for
+ * backwards-compatibility.
+ *
+ * @todo Remove this in 5.x.
  */
 trait DataItemArrayAccessTrait {
 
