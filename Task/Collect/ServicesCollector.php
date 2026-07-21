@@ -78,6 +78,12 @@ class ServicesCollector extends CollectorBase  {
    *      implements, with the initial '\'.
    *    - 'variable_name': The string to use as the name of a variable holding
    *      the service.
+   *    - 'autowire': Boolean indicating whether the service can be autowired
+   *      based on its parameter type. This is the case if the container has an
+   *      alias for either the service's interface or class. If this is FALSE,
+   *      classes injecting this which use autowiring will need an Autowire
+   *      attribute specifying the service name for the autowiring system to
+   *      correctly handle it.
    *    - 'real_service': Set only for pseudoservices, which are not actual
    *      services but things that can be injected into class. In this case,
    *      this value is the ID of the actual service to get from the container.
@@ -277,14 +283,28 @@ class ServicesCollector extends CollectorBase  {
         $variable_name = CaseString::pascal($short_class)->snake();
       }
 
+      $interface = $this->getServiceInterface($service_class);
+
+      // Look for an alias for this service that is the interface or the class,
+      // which allows the service to be autowired based on its parameter type.
+      // The hasAlias() method is stupidly named; it actually means isAlias().
+      $autowire = FALSE;
+      if ($interface && $container_builder->hasAlias(ltrim($interface, '\\'))) {
+        $autowire = TRUE;
+      }
+      elseif ($container_builder->hasAlias(ltrim($service_class, '\\'))) {
+        $autowire = TRUE;
+      }
+
       $data[$service_id] = [
         'id' => $service_id,
         'label' => $label,
         'static_method' => '', // Not used.
         'class' => $service_class,
-        'interface' => $this->getServiceInterface($service_class),
+        'interface' => $interface,
         'description' => $description,
         'variable_name' => $variable_name,
+        'autowire' => $autowire,
       ];
     }
 
@@ -489,6 +509,7 @@ class ServicesCollector extends CollectorBase  {
         // TODO; no don't use labels in code.
         'description' => "The {$entity_type_id} storage handler",
         'variable_name' => "{$entity_type_id}_storage",
+        'autowire' => FALSE,
         'real_service' => 'entity_type.manager',
         'service_method' => 'getStorage',
       ];

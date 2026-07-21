@@ -38,6 +38,9 @@ class ComponentHooks11Test extends TestBase {
           'injected_services' => [
             'current_user',
             'entity_type.manager',
+            // Service that has no interface or class alias, and so needs an
+            // autowire attribute.
+            'cache.discovery',
           ],
           'hook_methods' => [
             0 => [
@@ -94,6 +97,16 @@ class ComponentHooks11Test extends TestBase {
       // Sample code for hook_form_FORM_ID_alter() violates this.
       'Drupal.Commenting.InlineComment.SpacingAfter',
     ]);
+
+    $constructor_tester = $php_tester->getMethodTester('__construct');
+    $constructor_tester->assertParameterNotHasAttribute('current_user');
+    $constructor_tester->assertParameterNotHasAttribute('entity_type_manager');
+    $constructor_tester->assertParameterHasAttribute('cache_backend', 'Autowire');
+
+    // Assert autowire attribute value hackily because I don't have the energy
+    // to write a whole system for pulling the value from the PHPParser
+    // structure.
+    $this->assertStringContainsString("service: 'cache.discovery'", $hooks_file);
 
     $php_tester->assertHasClass('Drupal\test_module\Hook\TestModuleHooks');
     $php_tester->getMethodTester('formAlter')

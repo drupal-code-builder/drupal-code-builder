@@ -41,6 +41,7 @@ class PHPClassConstructorSetProperty extends BaseGenerator {
       'description' => PropertyDefinition::create('string')
         ->setLabel('Description')
         ->setRequired(TRUE),
+      'parameter_attribute' => PropertyDefinition::create('mapping'),
       'class_name' => PropertyDefinition::create('string')
         ->setRequired(TRUE),
       // Assignment expression if not just the plain parameter. Must not include
@@ -93,6 +94,14 @@ class PHPClassConstructorSetProperty extends BaseGenerator {
 
       if ($this->component_data->expression->value) {
         $parameter_data['property_assignment']['assignment_expression'] = $this->component_data->expression->value;
+      }
+
+      // Pass on the autowire attribute if needed. The InjectedService component
+      // has to take care of determining this value, as it knows about the
+      // service and we don't (which is making me reconsider the component split
+      // here).
+      if ($this->component_data->parameter_attribute->value) {
+        $parameter_data['attribute'] = $this->component_data->parameter_attribute->value;
       }
     }
 

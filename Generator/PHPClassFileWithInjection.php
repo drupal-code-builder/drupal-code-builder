@@ -59,6 +59,11 @@ class PHPClassFileWithInjection extends PHPClassFile {
         ->setDescription("Services to inject. Additionally, use 'storage:TYPE' to inject entity storage handlers.")
         ->setMultiple(TRUE)
         ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportServiceData')),
+      // For now, this only applies to services, but the logic that makes use of
+      // this is in this generator class.
+      'autowire' => PropertyDefinition::create('boolean')
+        ->setInternal(TRUE)
+        ->setLiteralDefault(FALSE),
     ];
 
     $definition->addProperties($properties);
@@ -98,6 +103,7 @@ class PHPClassFileWithInjection extends PHPClassFile {
           'class_has_static_factory' => $this->component_data->use_static_factory_method->value,
           'class_has_constructor' => TRUE,
           'class_name' => $this->component_data->qualified_class_name->value,
+          'autowire' => $this->component_data->autowire->value,
         ];
       }
 

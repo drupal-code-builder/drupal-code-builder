@@ -41,6 +41,7 @@ array (
       'interface' => '\\Psr\\Log\\LoggerAwareInterface',
       'description' => 'The importer service',
       'variable_name' => 'importer',
+      'autowire' => false,
     ),
     'cache.discovery' => 
     array (
@@ -51,6 +52,7 @@ array (
       'interface' => '',
       'description' => 'The cache backend service',
       'variable_name' => 'cache_backend',
+      'autowire' => false,
     ),
     'current_user' => 
     array (
@@ -61,6 +63,7 @@ array (
       'interface' => '\\Drupal\\Core\\Session\\AccountProxyInterface',
       'description' => 'The current active user',
       'variable_name' => 'current_user',
+      'autowire' => true,
     ),
     'entity_type.manager' => 
     array (
@@ -71,6 +74,7 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityTypeManagerInterface',
       'description' => 'The entity type manager',
       'variable_name' => 'entity_type_manager',
+      'autowire' => true,
     ),
     'event_dispatcher' => 
     array (
@@ -81,6 +85,7 @@ array (
       'interface' => '\\Symfony\\Component\\EventDispatcher\\EventDispatcherInterface',
       'description' => 'The event dispatcher service',
       'variable_name' => 'event_dispatcher',
+      'autowire' => true,
     ),
     'module_handler' => 
     array (
@@ -91,6 +96,7 @@ array (
       'interface' => '\\Drupal\\Core\\Extension\\ModuleHandlerInterface',
       'description' => 'The module handler',
       'variable_name' => 'module_handler',
+      'autowire' => true,
     ),
     'storage:node' => 
     array (
@@ -100,6 +106,7 @@ array (
       'interface' => '\\Drupal\\Core\\Entity\\EntityStorageInterface',
       'description' => 'The node storage handler',
       'variable_name' => 'node_storage',
+      'autowire' => false,
       'real_service' => 'entity_type.manager',
       'service_method' => 'getStorage',
     ),

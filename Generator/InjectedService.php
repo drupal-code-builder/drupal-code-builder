@@ -42,6 +42,9 @@ class InjectedService extends BaseGenerator {
       // Allows special cases for assignment in the construct method.
       'omit_assignment' => PropertyDefinition::create('boolean'),
       'class_name' => PropertyDefinition::create('string'),
+      // Is set by the containing class to match its own value.
+      'autowire' => PropertyDefinition::create('boolean')
+        ->setLiteralDefault(FALSE),
     ]);
   }
 
@@ -60,6 +63,8 @@ class InjectedService extends BaseGenerator {
     $service_info['description']    = $services_data[$service_id]['description'];
     $service_info['interface']      = $services_data[$service_id]['interface'];
     $service_info['class']          = $services_data[$service_id]['class'] ?? '';
+    // Lazy hack: old versions of the test sample data don't have this property.
+    $service_info['autowire']       = $services_data[$service_id]['autowire'] ?? FALSE;
     $service_info['property_name']  = CaseString::snake($service_info['variable_name'])->camel();
 
     if ($data_item->getParent()->decorated->value) {
@@ -120,6 +125,19 @@ class InjectedService extends BaseGenerator {
         'description' => $service_info['description'] . '.',
         'omit_assignment' => $this->component_data->omit_assignment->value,
       ];
+
+      // Add an Autowire attribute if:
+      // - the class with the DI uses autowiring
+      // - the injected service does not have a class or interface alias which
+      //   allows it to be detected by autowiring.
+      if ($this->component_data->autowire->value && !$service_info['autowire']) {
+        $components['constructor_set_property']['parameter_attribute'] = [
+          'class' => '\Symfony\Component\DependencyInjection\Attribute\Autowire',
+          'data' => [
+            'service' => $this->component_data->service_id->value,
+          ],
+        ];
+      }
 
       // Determine whether the constructor property needs an expression.
       if ($this->component_data->omit_assignment->isEmpty()

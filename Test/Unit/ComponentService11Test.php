@@ -533,6 +533,51 @@ class ComponentService11Test extends TestBase {
     $php_tester->assertInjectedServices($assert_injected_services, $property_promotion);
   }
 
+  /**
+   * Tests (absence of) autowiring.
+   *
+   * We don't yet support autowiring for services, but DI generating code uses
+   * autowiring for hooks classes, so this tests that services don't have it.
+   */
+  #[Group('di')]
+  function testServiceGenerationAutowireInjection(): void {
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'test_module',
+      'readable_name' => 'Test Module',
+      'short_description' => 'Test Module description',
+      'services' => [
+        0 => [
+          'service_name' => 'my_service',
+          'injected_services' => [
+            'entity_type.manager',
+            // Service that has no interface or class alias, and so would have
+            // an autowire attribute if we had autowiring on services.
+            'cache.discovery',
+          ],
+        ],
+      ],
+      'readme' => FALSE,
+    ];
+
+    $files = $this->generateModuleFiles($module_data);
+
+    $this->assertFiles([
+      'test_module.info.yml',
+      'test_module.services.yml',
+      'src/MyService.php',
+    ], $files);
+
+    $service_class_file = $files['src/MyService.php'];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $service_class_file);
+    $php_tester->assertDrupalCodingStandards();
+
+    $constructor_tester = $php_tester->getMethodTester('__construct');
+    $constructor_tester->assertParameterNotHasAttribute('entity_type_manager');
+    $constructor_tester->assertParameterNotHasAttribute('cache_backend');
+  }
+
  /**
    * Test several services injecting the same services.
    */
