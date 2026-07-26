@@ -11,6 +11,7 @@ use Psr\Container\ContainerInterface;
  * Tests for Hooks component on Drupal 11.
  */
 #[Group('hooks')]
+#[Group('attributes')]
 class ComponentHooks11Test extends TestBase {
 
   /**

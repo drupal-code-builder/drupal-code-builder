@@ -17,6 +17,7 @@ use Psr\Container\ContainerInterface;
  */
 #[Group('yaml')]
 #[Group('plugin')]
+#[Group('attributes')]
 class ComponentPluginsAttribute11Test extends TestBase {
 
   /**

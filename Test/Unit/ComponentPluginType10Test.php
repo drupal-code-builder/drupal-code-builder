@@ -11,6 +11,7 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
  */
 #[Group('yaml')]
 #[Group('di')]
+#[Group('attributes')]
 class ComponentPluginType10Test extends TestBase {
 
   /**
