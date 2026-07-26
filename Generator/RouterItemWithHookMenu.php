@@ -3,6 +3,8 @@
 namespace DrupalCodeBuilder\Generator;
 
 use MutableTypedData\Definition\PropertyListInterface;
+use DrupalCodeBuilder\Attribute\DrupalCoreVersion;
+use DrupalCodeBuilder\Attribute\RelatedBaseClass;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 
 /**
@@ -11,7 +13,11 @@ use DrupalCodeBuilder\Definition\PropertyDefinition;
  * This class covers Drupal 6 and 7, where it is purely an intermediary which
  * adds a HookMenu component.
  */
-class RouterItem7 extends BaseGenerator {
+#[DrupalCoreVersion(7)]
+#[DrupalCoreVersion(6)]
+#[DrupalCoreVersion(5)]
+#[RelatedBaseClass('RouterItem')]
+class RouterItemWithHookMenu extends BaseGenerator {
 
   /**
    * {@inheritdoc}
