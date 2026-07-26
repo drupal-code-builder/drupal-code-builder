@@ -24,8 +24,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
           $array[] = $suffix;
           return $array;
        }),
-      new ExpressionFunction(
-        'arrayMerge',
+      new ExpressionFunction('arrayMerge',
         function (array $array1, array $array2) {
         },
         function ($arguments, array $array1, array $array2) {
@@ -48,8 +47,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
           $pieces = explode('\\', $qualified_class_name);
           return end($pieces);
        }),
-      new ExpressionFunction(
-        'pathFromQualifiedClassNamePieces',
+      new ExpressionFunction('pathFromQualifiedClassNamePieces',
         function (array $qualified_class_name_pieces) {},
         function ($arguments, array $qualified_class_name_pieces) {
           // Lop off the initial Drupal\module and the final class name to
@@ -62,8 +60,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
 
           return implode('/', $path_pieces);
       }),
-      new ExpressionFunction(
-        'namespaceFromPieces',
+      new ExpressionFunction('namespaceFromPieces',
         function (array $qualified_class_name_pieces) {
         },
         function ($arguments, array $qualified_class_name_pieces) {
@@ -73,8 +70,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
           return implode('\\', $path_pieces);
         }
       ),
-      new ExpressionFunction(
-        'machineFromPlainClassName',
+      new ExpressionFunction('machineFromPlainClassName',
         function (string $plain_classname) {
         },
         function ($arguments, string $plain_classname) {
