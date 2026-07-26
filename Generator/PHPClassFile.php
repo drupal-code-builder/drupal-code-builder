@@ -121,7 +121,7 @@ class PHPClassFile extends PHPFile {
       'plain_class_name' => PropertyDefinition::create('string')
         ->setLabel('The plain class name, e.g. "MyClass"')
         ->setDefault(DefaultDefinition::create()
-          ->setExpression("plainClassNameFromQualified(parent.relative_class_name.get())")
+          ->setExpression("qualifiedClassNameToPlain(parent.relative_class_name.get())")
           ->setDependencies('..:relative_class_name')
         )
         ->setValidators('class_name'),
@@ -163,7 +163,7 @@ class PHPClassFile extends PHPFile {
         ->setInternal(TRUE)
         ->setRequired(TRUE)
         ->setDefault(DefaultDefinition::create()
-          ->setExpression("namespaceFromPieces(parent.qualified_class_name_pieces.get())")
+          ->setExpression("qualifiedClassNamePiecesToNamespace(parent.qualified_class_name_pieces.get())")
           ->setDependencies('..:qualified_class_name_pieces')
       ),
       // E.g. 'Drupal\my_module\Form\MyFormClass'
@@ -179,7 +179,7 @@ class PHPClassFile extends PHPFile {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("pathFromQualifiedClassNamePieces(parent.qualified_class_name_pieces.get())")
+            ->setExpression("qualifiedClassNamePiecesToPath(parent.qualified_class_name_pieces.get())")
             ->setDependencies('..:qualified_class_name_pieces')
         ),
       'filename' => PropertyDefinition::create('string')

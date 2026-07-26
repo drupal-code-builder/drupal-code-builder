@@ -8,8 +8,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * Provides Expression Language custom functions for internal expressions.
- *
- * TODO WTF are all these AfromB? makes no fucking sense!! AtoB surely!
  */
 class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionProviderInterface {
 
@@ -41,13 +39,13 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
       // TODO: rename this class operations, and change all functions from
       // array-ish to class name manipulation??
       // This also works with relative qualified class names.
-      new ExpressionFunction('plainClassNameFromQualified',
+      new ExpressionFunction('qualifiedClassNameToPlain',
         function (string $qualified_class_name) {},
         function ($arguments, string $qualified_class_name) {
           $pieces = explode('\\', $qualified_class_name);
           return end($pieces);
        }),
-      new ExpressionFunction('pathFromQualifiedClassNamePieces',
+      new ExpressionFunction('qualifiedClassNamePiecesToPath',
         function (array $qualified_class_name_pieces) {},
         function ($arguments, array $qualified_class_name_pieces) {
           // Lop off the initial Drupal\module and the final class name to
@@ -60,7 +58,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
 
           return implode('/', $path_pieces);
       }),
-      new ExpressionFunction('namespaceFromPieces',
+      new ExpressionFunction('qualifiedClassNamePiecesToNamespace',
         function (array $qualified_class_name_pieces) {
         },
         function ($arguments, array $qualified_class_name_pieces) {
@@ -70,7 +68,7 @@ class InternalFunctionsExpressionLanguageProvider implements ExpressionFunctionP
           return implode('\\', $path_pieces);
         }
       ),
-      new ExpressionFunction('machineFromPlainClassName',
+      new ExpressionFunction('plainClassNameToMachine',
         function (string $plain_classname) {
         },
         function ($arguments, string $plain_classname) {

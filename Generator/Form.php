@@ -36,7 +36,7 @@ class Form extends PHPClassFileWithInjection implements AdoptableInterface {
         ->setRequired(TRUE)
         ->setDefault(
           DefaultDefinition::create()
-            ->setExpression("get('..:root_component_name') ~ '_' ~ machineFromPlainClassName(get('..:plain_class_name'))")
+            ->setExpression("get('..:root_component_name') ~ '_' ~ plainClassNameToMachine(get('..:plain_class_name'))")
             ->setDependencies('..:root_component_name', '..:plain_class_name')
         ),
       'form_elements' => MergingGeneratorDefinition::createFromGeneratorType('FormElement')
