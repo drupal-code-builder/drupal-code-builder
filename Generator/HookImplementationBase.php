@@ -38,6 +38,12 @@ abstract class HookImplementationBase extends PHPFunction implements ClassHandle
     $common_properties = PropertyDefinition::create('complex');
     parent::addToGeneratorDefinition($common_properties);
 
+    $common_properties->addProperty(PropertyDefinition::create('boolean')
+      ->setName('legacy_implementation')
+      ->setInternal(TRUE)
+      ->setLiteralDefault(FALSE)
+    );
+
     $variants = [
       'literal' => VariantDefinition::create()
         ->setLabel('Literal'),
@@ -181,7 +187,7 @@ abstract class HookImplementationBase extends PHPFunction implements ClassHandle
 
     // For legacy procedural hooks, we already have the body which is the call
     // to the OO method, so we don't want to add any specialised body code.
-    if ($this->component_data->attribute->value != 'Drupal\Core\Hook\LegacyHook') {
+    if (!$this->component_data->legacy_implementation->value) {
       // Determine if there is a hook body generator for this hook.
       // We need dynamic hook bodies to be a separate generator so they are
       // orthogonal to hook implementations being prodecural/class methods.

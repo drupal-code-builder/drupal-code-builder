@@ -155,6 +155,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
         // We don't need to check for specialised hook generators, as there's no
         // special function body for the legacy hook.
         'component_type' => 'HookImplementationProcedural',
+        'legacy_implementation' => TRUE,
         'code_file' => $hook_info['destination'],
         'hook_name' => $hook_name,
         'short_hook_name' => $this->component_data->short_hook_name->value,
