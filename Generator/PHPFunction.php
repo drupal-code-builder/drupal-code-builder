@@ -76,10 +76,10 @@ class PHPFunction extends BaseGenerator {
       'doxygen_tag_lines' => PropertyDefinition::create('mapping')
         ->setLabel("Doxygen tags to go after the standard ones")
         ->setInternal(TRUE),
-      // An attribute class for the method.
-      // WARNING: Only for methods, only supports one attribute, only supports
-      // a class with no parameters.
-      'attribute' => PropertyDefinition::create('string')
+      // An attribute for the method.
+      // WARNING: Only for methods, only supports one attribute.
+      // TODO: make attributes a custom data type?
+      'attribute' => PropertyDefinition::create('mapping')
         ->setInternal(TRUE),
       'declaration' => PropertyDefinition::create('string')
         ->setInternal(TRUE),
@@ -377,8 +377,10 @@ class PHPFunction extends BaseGenerator {
       return [];
     }
     else {
+      $attribute = $this->component_data->attribute->value;
+
       return [
-        PhpAttributes::method($this->component_data->attribute->value),
+        PhpAttributes::method($attribute['class'], $attribute['data'] ?? []),
       ];
     }
   }

@@ -159,7 +159,7 @@ class HookImplementationClassMethod extends HookImplementationBase {
         'code_file' => $hook_info['destination'],
         'hook_name' => $hook_name,
         'short_hook_name' => $this->component_data->short_hook_name->value,
-        'attribute' => 'Drupal\Core\Hook\LegacyHook',
+        'attribute' => ['class' => 'Drupal\Core\Hook\LegacyHook'],
         'description' => $hook_info['description'],
         'function_docblock_lines' => [
           'Legacy hook implementation.',
