@@ -20,12 +20,6 @@ class HookImplementationProcedural extends HookImplementationBase {
     $variants = $definition->getVariants();
 
     foreach ($variants as $variant) {
-      // The address to get the class component that holds this method.
-      $variant->addProperty(PropertyDefinition::create('string')
-        ->setName('class_component_address')
-        ->setInternal(TRUE)
-      );
-
       $variant->getProperty('declaration')
         ->setCallableDefault(function ($component_data) {
           $hook_info = $component_data->getParent()->hook_info->value;
