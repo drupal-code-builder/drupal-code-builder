@@ -48,7 +48,7 @@ class PhpAttributes extends PhpRenderer {
    * Creates a new attribute for a method.
    */
   public static function method($attribute_class_name, $data = NULL, $comments = []) {
-    return new static($attribute_class_name, $data, $comments, 2);
+    return new static($attribute_class_name, $data, $comments, 0);
   }
 
   /**

@@ -272,6 +272,9 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
             7 => 'Permission7',
         ],
             'RouterItem' => [
+            10 => 'RouterItem8To10',
+            9 => 'RouterItem8To10',
+            8 => 'RouterItem8To10',
             7 => 'RouterItemWithHookMenu',
             6 => 'RouterItemWithHookMenu',
             5 => 'RouterItemWithHookMenu',

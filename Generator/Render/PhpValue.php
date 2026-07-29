@@ -177,7 +177,14 @@ class PhpValue extends PhpRenderer {
       }
 
       // Render the value.
-      $value_render = $this->render($item_value, $level + 1);
+      if ($item_value instanceof PhpObject) {
+        // Handle an object here rather than in render(), because the code
+        // around is affected.
+        $value_render = $item_value->render($this->inline, $level + 1);
+      }
+      else {
+        $value_render = $this->render($item_value, $level + 1);
+      }
 
       if (is_string($value_render)) {
         $line .= $value_render;
@@ -186,12 +193,20 @@ class PhpValue extends PhpRenderer {
         $lines[] = $line;
       }
       else {
-        $line .= '[';
-        $lines[] = $line;
+        if ($item_value instanceof PhpObject) {
+          $line .= array_shift($value_render);
 
-        $lines = array_merge($lines, $value_render);
+          $lines = array_merge($lines, $value_render);
+        }
+        else {
+          $line .= '[';
+          $lines[] = $line;
 
-        $lines[] = $indent . "],";
+          $lines = array_merge($lines, $value_render);
+
+          $lines[] = $indent . "],";
+        }
+
       }
     }
 

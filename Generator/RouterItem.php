@@ -6,6 +6,9 @@ use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\OptionDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\File\DrupalExtension;
+use DrupalCodeBuilder\Generator\Render\PhpAttributes;
+use DrupalCodeBuilder\Generator\Render\PhpObject;
+use DrupalCodeBuilder\Generator\Render\PhpValue;
 use CaseConverter\CaseString;
 use MutableTypedData\Definition\DefaultDefinition;
 use MutableTypedData\Definition\VariantDefinition;
@@ -13,7 +16,7 @@ use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\OptionsSortOrder;
 
 /**
- * Generator for router item on Drupal 8 and higher.
+ * Generator for router item on Drupal 11 and higher.
  *
  * This adds a routing item to the routing component.
  */
@@ -90,6 +93,9 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
                     return $class . '::content';
                   })
                 ),
+              'use_route_attribute' => PropertyDefinition::create('boolean')
+                ->setLabel('Use a route attribute')
+                ->setDescription("Declares the route using an attribute on the controller callback, instead of in a routing YAML file."),
               'use_base' => PropertyDefinition::create('boolean')
                 ->setLabel('Use ControllerBase as the parent class'),
               'import_stringtranslation' => PropertyDefinition::create('boolean')
@@ -504,11 +510,22 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
+    $controller_type = $this->component_data->controller->controller_type->value;
+
+    if ($controller_type == 'controller' && $this->component_data->controller->use_route_attribute->value) {
+      $declaration_type = 'attribute';
+    }
+    else {
+      $declaration_type = 'yaml';
+    }
+
     // Each RouterItem that gets added will cause a repeat request of these
     // components.
-    $components['%module.routing.yml'] = [
-      'component_type' => 'Routing',
-    ];
+    if ($declaration_type == 'yaml') {
+      $components['%module.routing.yml'] = [
+        'component_type' => 'Routing',
+      ];
+    }
 
     // Controller class content callback.
     if ($this->component_data->controller->controller_type->value == 'controller') {
@@ -565,6 +582,25 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
           'omit_return_tag' => TRUE,
         ],
       ];
+
+      if ($declaration_type == 'attribute') {
+        // Make the controller attribute.
+        $route_definition = $this->getRouteDefinition();
+
+        // Make the title translatable.
+        $route_definition['defaults']['_title'] = PhpObject::new(
+          'Drupal\Core\StringTranslation\TranslatableMarkup',
+          $route_definition['defaults']['_title'],
+        );
+
+        // Remove the controller, since it's implicit.
+        unset($route_definition['defaults']['_controller']);
+
+        $components['controller-content']['attribute'] = [
+          'class' => 'Symfony\Component\Routing\Attribute\Route',
+          'data' => $route_definition,
+        ];
+      }
     }
 
     // Controller class access callback.
@@ -675,36 +711,65 @@ class RouterItem extends BaseGenerator implements AdoptableInterface {
    * {@inheritdoc}
    */
   function containingComponent() {
-    return '%self:%module.routing.yml';
+    if ($this->component_data->controller->controller_type->value == 'controller' && $this->component_data->controller->use_route_attribute->value) {
+      // If the controller is using a route attribute, then this component
+      // doesn't participage in the routing.yml file. This is weird, but easier
+      // than making another generator.
+      return NULL;
+    }
+    else {
+      return '%self:%module.routing.yml';
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getContents(): array {
-    $path = $this->component_data->path->value;
+    $route_definition = $this->getRouteDefinition();
 
-    $route_yaml = [];
+    // Move the route name from the array to be its key.
+    $route_name = $route_definition['name'];
+    unset($route_definition['name']);
+
+    $routing_data[$route_name] = $route_definition;
+
+    return $routing_data;
+  }
+
+  /**
+   * Gets the common parts of the route definition for YAML or attribute.
+   *
+   * @return array
+   *   A route definition array. Both YAML and attributes will need to massage
+   *   this a little, specifically:
+   *   - The route name is in a 'name' key.
+   *   - The title is not translated.
+   */
+  protected function getRouteDefinition(): array {
+    $route_definition = [];
 
     // Prepend a slash to the path for D8 if one not given.
+    $path = $this->component_data->path->value;
     if (!str_starts_with($path, '/')) {
       $path  = '/' . $path;
     }
-    $route_yaml['path'] = $path;
-    $route_yaml['defaults']['_title'] = $this->component_data->title->value;
+    $route_definition['path'] = $path;
+
+    // For YAML route definitions this becomes the key.
+    $route_definition['name'] = $this->component_data->route_name->value;
+
+    $route_definition['defaults']['_title'] = $this->component_data->title->value;
 
     // Controller value.
     $controller_yaml_key = '_' . $this->component_data->controller->controller_type->value;
-    $route_yaml['defaults'][$controller_yaml_key] = $this->component_data->controller->routing_value->value;
+    $route_definition['defaults'][$controller_yaml_key] = $this->component_data->controller->routing_value->value;
 
     // Access value.
     $access_yaml_key = '_' . $this->component_data->access->access_type->value;
-    $route_yaml['requirements'][$access_yaml_key] = $this->component_data->access->routing_value->value;
+    $route_definition['requirements'][$access_yaml_key] = $this->component_data->access->routing_value->value;
 
-    $route_name = $this->component_data->route_name->value;
-    $routing_data[$route_name] = $route_yaml;
-
-    return $routing_data;
+    return $route_definition;
   }
 
 }

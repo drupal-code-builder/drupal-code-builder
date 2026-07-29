@@ -406,6 +406,7 @@ class ComponentRouterItem11Test extends TestBase {
   /**
    * Test options for the controller class
    */
+  #[Group('attributes')]
   public function testRouteControllerClassOptions() {
     // Assemble module data.
     $module_name = 'test_module';
@@ -419,6 +420,16 @@ class ComponentRouterItem11Test extends TestBase {
           'path' => '/my/path/no-base',
           'controller' => [
             'controller_type' => 'controller',
+          ],
+          'access' => [
+            'access_type' => 'access',
+          ],
+        ],
+        [
+          'path' => '/my/path/attribute',
+          'controller' => [
+            'controller_type' => 'controller',
+            'use_route_attribute' => TRUE,
           ],
           'access' => [
             'access_type' => 'access',
@@ -480,6 +491,7 @@ class ComponentRouterItem11Test extends TestBase {
       "$module_name.info.yml",
       "$module_name.routing.yml",
       "src/Controller/MyPathNoBaseController.php",
+      'src/Controller/MyPathAttributeController.php',
       "src/Controller/MyPathControllerBaseController.php",
       "src/Controller/MyPathStringTranslationController.php",
       "src/Controller/MyPathWithParamsNodeParamController.php",
@@ -494,6 +506,24 @@ class ComponentRouterItem11Test extends TestBase {
     $php_tester->assertClassHasNoParent();
     $php_tester->assertHasMethod('content');
     $php_tester->assertClassHasTraits([]);
+
+    // Controller using route attribute.
+    $routing_file = $files['test_module.routing.yml'];
+    $yaml_tester = new YamlTester($routing_file);
+    $yaml_tester->assertNotHasProperty('test_module.my.path.attribute', 'The attribute route has no route definition in the YAML file.');
+
+    $controller_file = $files["src/Controller/MyPathAttributeController.php"];
+
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $controller_file);
+    $php_tester->assertDrupalCodingStandards();
+    $php_tester->assertHasClass("Drupal\\{$module_name}\Controller\MyPathAttributeController");
+    $php_tester->assertClassHasNoParent();
+    $method_tester = $php_tester->getMethodTester('content');
+    $method_tester->assertHasAttribute('\Symfony\Component\Routing\Attribute\Route');
+    // TODO: test attribute parameters properly.
+    $this->assertStringContainsString("path: '/my/path/attribute',", $controller_file);
+    $this->assertStringContainsString("name: 'test_module.my.path.attribute',", $controller_file);
+    $this->assertStringContainsString("'_title' => new TranslatableMarkup('myPage'),", $controller_file);
 
     $controller_file = $files["src/Controller/MyPathControllerBaseController.php"];
 
