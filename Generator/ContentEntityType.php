@@ -240,8 +240,21 @@ class ContentEntityType extends EntityTypeBase {
             ->setRequired(TRUE)
             ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes'))
             ->setOptionsSorting(OptionsSortOrder::Label),
-          // TODO: options for revisionable and translatable in 3.3.x once
-          // we have conditional properties.
+          'revisionable' => PropertyDefinition::create('boolean')
+            ->setLabel('Revisionable')
+            ->setDependencyValue([
+              '..:..:..:functionality' => 'revisionable',
+            ])
+            // This is changed to FALSE in the generator if the entity type
+            // doesn't support this.
+            ->setLiteralDefault(TRUE),
+          'translatable' => PropertyDefinition::create('boolean')
+            ->setLabel('Translatable')
+            ->setDependencyValue([
+              '..:..:..:functionality' => 'translatable',
+            ])
+            // Same as 'revisionable' property.
+            ->setLiteralDefault(TRUE),
         ]),
       // Helper methods from traits that baseFieldDefinitions() should call.
       PropertyDefinition::create('string')
@@ -367,6 +380,8 @@ class ContentEntityType extends EntityTypeBase {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
+    // still need this check, as UI might allow ticky and then hide it! we
+    // don't require UIs to empty out dependent values.
     $use_revisionable = $this->component_data->functionality->hasValue('revisionable');
     $use_translatable = $this->component_data->functionality->hasValue('translatable');
 
