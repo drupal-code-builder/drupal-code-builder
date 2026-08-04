@@ -145,8 +145,8 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
   /**
    * Asserts the method calls for a field's definition.
    *
-   * @param string $expected_type
-   *   The expected type.
+   * @param array $expected_calls
+   *   An array of the chained method calls the field definition should have.
    * @param string $field_name
    *   The name of the field to check.
    */
