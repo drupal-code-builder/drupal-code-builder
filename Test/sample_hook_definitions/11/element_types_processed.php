@@ -1,5 +1,13 @@
 <?php $data =
 array (
+  'button' => 
+  array (
+    'type' => 'button',
+    'label' => 'button',
+    'form' => true,
+    'class_filepath' => 'core/lib/Drupal/Core/Render/Element/Button.php',
+    'description' => 'Provides an action button form element.',
+  ),
   'checkboxes' => 
   array (
     'type' => 'checkboxes',

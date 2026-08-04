@@ -97,6 +97,11 @@ class ComponentForm10Test extends TestBase {
               'form_key' => 'my_options',
               'element_type' => 'checkboxes',
             ],
+            2 => [
+              'form_key' => 'make',
+              'element_type' => 'button',
+              'element_title' => 'Make cake'
+            ],
           ],
         ],
       ],
@@ -132,6 +137,8 @@ class ComponentForm10Test extends TestBase {
     $form_builder_tester->assertHasLine('// $form = parent::buildForm($form, $form_state);');
 
     $form_builder_tester->assertElementHasAttribute('#options', 'my_options');
+
+    $form_builder_tester->assertElementHasAttribute('#value', 'make');
   }
 
   /**

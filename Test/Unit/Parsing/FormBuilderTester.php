@@ -152,7 +152,14 @@ class FormBuilderTester extends PHPMethodTester {
       // Check some basic things about each form element.
       foreach ($this->formElements as $form_element_name => $form_element) {
         Assert::assertArrayHasKey('type', $form_element, "The form element {$form_element_name} has a type set.");
-        Assert::assertArrayHasKey('#title', $form_element['attributes'], "The form element {$form_element_name} has a title.");
+
+        if ($form_element['type'] == 'button' || $form_element['type'] == 'submit') {
+          Assert::assertArrayHasKey('#value', $form_element['attributes'], "The form button element {$form_element_name} has a value.");
+        }
+        else {
+          Assert::assertArrayHasKey('#title', $form_element['attributes'], "The form element {$form_element_name} has a title.");
+        }
+
         if (!$lenient_for_descriptions) {
           Assert::assertArrayHasKey('#description', $form_element['attributes'], "The form element {$form_element_name} has a description.");
         }

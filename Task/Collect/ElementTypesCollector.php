@@ -27,6 +27,7 @@ class ElementTypesCollector extends CollectorBase {
     'textarea',
     'machine_name',
     'checkboxes',
+    'button',
   ];
 
   public function __construct(

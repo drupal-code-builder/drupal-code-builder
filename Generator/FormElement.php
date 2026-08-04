@@ -74,8 +74,15 @@ class FormElement extends BaseGenerator {
     ];
 
     if (!empty($this->component_data->element_title->value)) {
-      $form_api_array['#title'] = '£this->t("' . $this->component_data->element_title->value . '")';
+      // Special case for buttons.
+      if (in_array($this->component_data->element_type->value, ['button', 'submit'])) {
+        $form_api_array['#value'] = '£this->t("' . $this->component_data->element_title->value . '")';
+      }
+      else {
+        $form_api_array['#title'] = '£this->t("' . $this->component_data->element_title->value . '")';
+      }
     }
+
     if (!empty($this->component_data->element_description->value)) {
       $form_api_array['#description'] = '£this->t("' . $this->component_data->element_description->value . '")';
     }
