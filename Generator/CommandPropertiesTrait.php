@@ -72,7 +72,7 @@ trait CommandPropertiesTrait {
             ->setOptionsArray($type_options)
             ->setRequired(TRUE),
           'default_value' => PropertyDefinition::create('string')
-            ->setLabel("Default value. Omit to make the parameter required.")
+            ->setLabel("Default value.")
             ->setDescription("A string, numeric value, or one of the strings 'TRUE', 'FALSE', 'NULL' for those constants."),
           'shortcut' => PropertyDefinition::create('string')
             ->setInternal(TRUE)
