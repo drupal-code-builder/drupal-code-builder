@@ -156,6 +156,26 @@ class BaseFieldDefinitionsTester extends PHPMethodTester {
   }
 
   /**
+   * Asserts a field's definition does not have the given method calls.
+   *
+   * @param string|array $not_expected_calls
+   *   Either an array of method names or a single method name.
+   * @param string $field_name
+   *   The name of the field to check.
+   */
+  public function assertNotFieldDefinitionMethodCalls(string|array $not_expected_calls, string $field_name) {
+    Assert::assertArrayHasKey($field_name, $this->baseFields, "The baseFieldDefinitions() method defines the field {$field_name}.");
+
+    if (is_string($not_expected_calls)) {
+      $not_expected_calls = [$not_expected_calls];
+    }
+
+    foreach ($not_expected_calls as $method_name) {
+      Assert::assertNotContains($method_name, $this->baseFieldMethodCalls[$field_name], "The definition for the field {$field_name} should not have the method call {$method_name}.");
+    }
+  }
+
+  /**
    * Asserts the helper method calls.
    *
    * These are methods that traits provide with additional field definitions,
