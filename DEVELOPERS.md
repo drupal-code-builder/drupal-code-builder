@@ -41,13 +41,18 @@ This is done as follows:
   $component_data = $task->getRootComponentData();
   // Iterate over the component data to present options to the user.
   foreach ($component_data as $property_name => $child_data) {
-    // Get label and description.
+    // Get label and description to show to the user in the UI.
     $child_data->getLabel();
     $child_data->getDescription();
-    // Get type.
+    // Get the data type. This may affect how to present a form element or CLI
+    // prompt to the user.
     $child_data->getType();
+    // Additionally, the property may have a list of available options.
+    if ($child_data->hasOptions()) {
+      $child_data->getOptions();
+    }
     // Etc.
-    // Set value.
+    // Set the user's value on the data.
     $child_data->value = 'foo_bar';
   }
   // Get the files of generated code.
