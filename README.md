@@ -43,8 +43,11 @@ Furthermore, complex subcomponents can generate multiple code elements:
 
 ## Installation
 
-Follow the instructions given in the component that requests Drupal Coder
-Builder (e.g., Module Builder, Drush command).
+Drupal Code Builder will typically be requested as a Composer dependency by
+another package (e.g. Module Builder, Drush command).
+
+For older versions of Drupal core which do not use Composer, follow the
+instructions given in the component that requests Drupal Coder Builder.
 
 Additionally, if [Plugin module](https://www.drupal.org/project/plugin) is
 present, plugin type definitions will be enhanced with its data.
