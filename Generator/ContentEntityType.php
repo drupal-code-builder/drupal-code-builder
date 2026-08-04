@@ -240,8 +240,22 @@ class ContentEntityType extends EntityTypeBase {
             ->setRequired(TRUE)
             ->setOptionSetDefinition(\DrupalCodeBuilder\Factory::getTask('ReportFieldTypes'))
             ->setOptionsSorting(OptionsSortOrder::Label),
-          // TODO: options for revisionable and translatable in 3.3.x once
-          // we have conditional properties.
+          'revisionable' => PropertyDefinition::create('boolean')
+            ->setLabel('Revisionable')
+            ->setDependencyValue([
+              '..:..:..:functionality' => 'revisionable',
+            ])
+            // This is changed to FALSE in the generator if the entity type
+            // doesn't support this. Easier than making the default depend on
+            // the functionality value.
+            ->setLiteralDefault(TRUE),
+          'translatable' => PropertyDefinition::create('boolean')
+            ->setLabel('Translatable')
+            ->setDependencyValue([
+              '..:..:..:functionality' => 'translatable',
+            ])
+            // Same as 'revisionable' property.
+            ->setLiteralDefault(TRUE),
         ]),
       // Helper methods from traits that baseFieldDefinitions() should call.
       PropertyDefinition::create('string')
@@ -444,10 +458,14 @@ class ContentEntityType extends EntityTypeBase {
       $custom_base_field_calls
         ->setLabel(FluentMethodCall::t($base_field_data->label->value))
         ->setDescription(FluentMethodCall::t('TODO: description of field.'));
-      if ($use_revisionable) {
+
+      // Check the entity type uses the relevant functionality, as the default
+      // value for these properties is TRUE, and UIs might not unset dependent
+      // properties when they hide them.
+      if ($use_revisionable && $base_field_data->revisionable->value) {
         $custom_base_field_calls->setRevisionable(TRUE);
       }
-      if ($use_translatable) {
+      if ($use_translatable && $base_field_data->translatable->value) {
         $custom_base_field_calls->setTranslatable(TRUE);
       }
       $custom_base_field_calls

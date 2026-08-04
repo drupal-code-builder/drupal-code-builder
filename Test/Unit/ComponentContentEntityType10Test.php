@@ -103,12 +103,20 @@ class ComponentContentEntityType10Test extends TestBase {
       'setDisplayConfigurable',
       'setDisplayConfigurable',
     ], 'title');
+    $base_fields_definitions_tester->assertNotFieldDefinitionMethodCalls([
+      'setRevisionable',
+      'setTranslatable',
+    ], 'title');
 
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       'setDescription',
       'setDisplayConfigurable',
       'setDisplayConfigurable',
+    ], 'colour');
+    $base_fields_definitions_tester->assertNotFieldDefinitionMethodCalls([
+      'setRevisionable',
+      'setTranslatable',
     ], 'colour');
 
     // Test the entity annotation.
@@ -385,10 +393,12 @@ class ComponentContentEntityType10Test extends TestBase {
             0 => [
               'name' => 'breed',
               'type' => 'string',
+              'translatable' => FALSE,
             ],
             1 => [
               'name' => 'colour',
               'type' => 'string',
+              'translatable' => TRUE,
             ],
           ],
         ],
@@ -442,10 +452,11 @@ class ComponentContentEntityType10Test extends TestBase {
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       "setDescription",
-      "setTranslatable",
       'setDisplayConfigurable',
       'setDisplayConfigurable',
     ], 'breed');
+    $base_fields_definitions_tester->assertNotFieldDefinitionMethodCalls('setTranslatable', 'breed');
+
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       "setDescription",
@@ -510,6 +521,7 @@ class ComponentContentEntityType10Test extends TestBase {
             0 => [
               'name' => 'breed',
               'type' => 'string',
+              'revisionable' => FALSE,
             ],
             1 => [
               'name' => 'colour',
@@ -567,10 +579,11 @@ class ComponentContentEntityType10Test extends TestBase {
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       "setDescription",
-      "setRevisionable",
       'setDisplayConfigurable',
       'setDisplayConfigurable',
     ], 'breed');
+    $base_fields_definitions_tester->assertNotFieldDefinitionMethodCalls('setRevisionable', 'breed');
+
     $base_fields_definitions_tester->assertFieldDefinitionMethodCalls([
       "setLabel",
       "setDescription",
