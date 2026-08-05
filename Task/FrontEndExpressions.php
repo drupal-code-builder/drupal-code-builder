@@ -11,10 +11,26 @@ class FrontEndExpressions extends Base {
   public function getFrontEndExpressionsCode(): string {
     $provider = new FrontEndFunctionsProvider();
     $functions = $provider->getHybridFunctions();
+
+    $code = '';
+    $code_pieces = [];
+    foreach ($functions as $name => $code_snippets) {
+      $code_pieces[] = $name . ': ' . $code_snippets['js'];
+    }
+
+    // machineToClass: function(value) {
+    //   var pieces = value.split('_');
+    //   pieces = pieces.map(x => x.charAt(0).toUpperCase() +  x.slice(1));
+    //   return pieces.join('');
+    // },
+
+
+
+
     /// return a JS code stuff.
     ///
     /// call getHybridFunctions(), extract JS code and build the code file string
-    return '';
+    return implode("\n", $code_pieces);
   }
 
 }

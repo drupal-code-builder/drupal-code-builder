@@ -18,16 +18,15 @@ class UnitFrontEndExpressionsTest extends TestCase {
   use ProphecyTrait;
 
   protected function setUp(): void {
-    // $this->setUpVarDumper();
     $environment = $this->prophesize(\DrupalCodeBuilder\Environment\EnvironmentInterface::class);
     \DrupalCodeBuilder\Factory::setEnvironment($environment->reveal());
-
-    // $this->setupDrupalCodeBuilder(11);
-    // $this->container = \DrupalCodeBuilder\Factory::getContainer();
   }
 
   public function testJavaScriptExpressionsCode(): void {
     $task = Factory::getTask('FrontEndExpressions');
+
+    $js_code = $task->getFrontEndExpressionsCode();
+    dump($js_code);
   }
 
 }
