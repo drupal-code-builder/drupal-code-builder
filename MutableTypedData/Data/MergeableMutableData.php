@@ -5,9 +5,7 @@ namespace DrupalCodeBuilder\MutableTypedData\Data;
 use DrupalCodeBuilder\Definition\VariantGeneratorDefinition;
 use MutableTypedData\Data\MutableData;
 
-class MergeableMutableDataWithArrayAccess extends MutableData implements \ArrayAccess, MergeableDataInterface {
-
-  use DataItemArrayAccessTrait;
+class MergeableMutableData extends MutableData implements MergeableDataInterface {
 
   use DeltaLabelTrait;
 
