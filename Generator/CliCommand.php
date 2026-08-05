@@ -124,6 +124,7 @@ class CliCommand extends PHPClassFileWithInjection {
         'attribute' => [
           'class' => 'Symfony\Component\Console\Attribute\Option',
           'data' => [
+            // description exists!
             "The {$option->name->value} option.",
             'shortcut' => $option->shortcut->value,
           ],
