@@ -23,6 +23,7 @@ use MutableTypedData\Definition\DefaultDefinition;
 #[RelatedBaseClass('DrushCommand')]
 class DrushCommand extends PHPFunction {
 
+  use CommandPropertiesTrait;
   use NameFormattingTrait;
 
   /**
@@ -31,29 +32,31 @@ class DrushCommand extends PHPFunction {
   public static function addToGeneratorDefinition(PropertyListInterface $definition) {
     parent::addToGeneratorDefinition($definition);
 
+    static::addCommandProperties($definition);
+
     $definition->addProperties([
-      'command_name' => PropertyDefinition::create('string')
-        ->setLabel("The command name")
-        ->setDescription("The full form of the command name, either in the format 'group:command', or just 'command' to prepend the module name as the group.")
-        ->setRequired(TRUE),
-      'command_name_aliases' => PropertyDefinition::create('string')
-        ->setLabel("Command aliases")
-        ->setDescription("Short aliases for the command.")
-        ->setMultiple(TRUE),
-      'command_description' => PropertyDefinition::create('string')
-        ->setLabel("Command description")
-        ->setRequired(TRUE)
-        ->setDefault(DefaultDefinition::create()
-          ->setExpression("'The ' ~ get('..:command_name') ~ ' command.'")
-          ->setDependencies('..:command_name')
-        ),
-      'command_parameters' => PropertyDefinition::create('string')
-        ->setLabel("Command parameter names")
-        ->setMultiple(TRUE),
-      'command_options' => PropertyDefinition::create('string')
-        ->setLabel("Command options")
-        ->setDescription("Enter each option as 'option_name: default', where for the default, a plain string will be quoted, a numeric is left as numeric, and string in ALL_CAPS are taken to be constants, including 'NULL', 'TRUE', 'FALSE'.")
-        ->setMultiple(TRUE),
+      // 'command_name' => PropertyDefinition::create('string')
+      //   ->setLabel("The command name")
+      //   ->setDescription("The full form of the command name, either in the format 'group:command', or just 'command' to prepend the module name as the group.")
+      //   ->setRequired(TRUE),
+      // 'command_name_aliases' => PropertyDefinition::create('string')
+      //   ->setLabel("Command aliases")
+      //   ->setDescription("Short aliases for the command.")
+      //   ->setMultiple(TRUE),
+      // 'command_description' => PropertyDefinition::create('string')
+      //   ->setLabel("Command description")
+      //   ->setRequired(TRUE)
+      //   ->setDefault(DefaultDefinition::create()
+      //     ->setExpression("'The ' ~ get('..:command_name') ~ ' command.'")
+      //     ->setDependencies('..:command_name')
+      //   ),
+      // 'command_parameters' => PropertyDefinition::create('string')
+      //   ->setLabel("Command parameter names")
+      //   ->setMultiple(TRUE),
+      // 'command_options' => PropertyDefinition::create('string')
+      //   ->setLabel("Command options")
+      //   ->setDescription("Enter each option as 'option_name: default', where for the default, a plain string will be quoted, a numeric is left as numeric, and string in ALL_CAPS are taken to be constants, including 'NULL', 'TRUE', 'FALSE'.")
+      //   ->setMultiple(TRUE),
       'inflected_injection' => PropertyDefinition::create('string')
         ->setLabel("Inflection interfaces")
         ->setMultiple(TRUE)
@@ -195,12 +198,12 @@ class DrushCommand extends PHPFunction {
     foreach ($this->component_data->command_parameters as $parameter) {
       $parameters_data[] = [
         // TODO -- allow these to take the DataItems!?
-        'name' => $parameter->value,
+        'name' => $parameter->name->value,
         // 'description' => "The {$parameter->value} parameter.",
       ];
 
       // Add the parameters to the @usage tag.
-      $usage_line .= ' ' . $parameter->value;
+      $usage_line .= ' ' . $parameter->name->value;
     }
 
     $doxygen_tag_lines = [];
@@ -208,39 +211,25 @@ class DrushCommand extends PHPFunction {
     // Put the @option tags first in the tag lines, so they come after the
     // @param lines that PHPFunction generator will put in.
     foreach ($this->component_data->command_options as $option) {
-      list($option_name, $option_default) = explode(':', $option->value);
-      $option_name = trim($option_name);
-      $option_default = trim($option_default);
-      if (is_numeric($option_default)) {
-        $option_type = 'int';
-      }
-      elseif (in_array($option_default, ['TRUE', 'FALSE'])) {
-        $option_type = 'bool';
-      }
-      elseif (preg_match('@^[[:upper:]]+$@', $option_default)) {
-        // Assume that a default value that's in all CAPS and not a boolean is
-        // a constant, and assume that defined constants are usually ints.
-        $option_type = 'int';
-      }
-      else {
-        $option_type = 'string';
-
-        // Quote a string variable.
+      $option_default = $option->default_value->value;
+      if (!is_numeric($option_default) && !preg_match('@^[[:upper:]]+$@', $option_default)) {
+        // Quote a default value that is assumed to be a string (because it is
+        // not numeric, nor a built-in constant, nor a user constant.
         $option_default = "'" . $option_default . "'";
       }
 
       // Each option is documented as a @param, but also as an @option.
       $parameters_data[] = [
-        'name' => $option_name,
-        'typehint' => $option_type,
+        'name' => $option->name->value,
+        'typehint' => $option->type->value,
         'default_value' => $option_default,
-        'description' => "The {$option_name} option.",
+        'description' => $option->description->value,
       ];
 
-      $doxygen_tag_lines[] = ['option', $option_name . ' Option description.', ''];
+      $doxygen_tag_lines[] = ['option', $option->name->value . ' ' . $option->description->value, ''];
 
       // Add the options to the @usage tag.
-      $usage_line .= ' --' . $option_name;
+      $usage_line .= ' --' . $option->name->value;
     }
 
     $doxygen_tag_lines[] = ['command', $this->component_data->command_name->value];
@@ -280,15 +269,15 @@ class DrushCommand extends PHPFunction {
 
     $attributes[] = PhpAttributes::method('\Drush\Attributes\Command', $command_attribute_parameters);
 
-    foreach ($this->component_data->command_parameters->values() as $parameter) {
+    foreach ($this->component_data->command_parameters as $parameter) {
       $attributes[] = PhpAttributes::method('\Drush\Attributes\Argument', [
-        'name' => $parameter,
-        'description' => "TODO: description of {$parameter} parameter.",
+        'name' => $parameter->name->value,
+        'description' => $parameter->description->value,
       ]);
     }
 
-    foreach ($this->component_data->command_options->values() as $option) {
-      [$option_name, ] = explode(':', $option);
+    foreach ($this->component_data->command_options as $option) {
+      $option_name = $option->name->value;
       $attributes[] = PhpAttributes::method('\Drush\Attributes\Option', [
         'name' => $option_name,
         'description' => "TODO: description of {$option_name} option.",
@@ -313,9 +302,9 @@ class DrushCommand extends PHPFunction {
     $parameters = [];
 
     // Add command parameters.
-    foreach ($this->component_data->command_parameters->values() as $parameter) {
+    foreach ($this->component_data->command_parameters as $parameter) {
       $parameters[] = [
-        'name' => $parameter,
+        'name' => $parameter->name->value,
       ];
     }
 
@@ -323,11 +312,7 @@ class DrushCommand extends PHPFunction {
     if (!$this->component_data->command_options->isEmpty()) {
       $options_default_value = [];
       foreach ($this->component_data->command_options as $option) {
-        [$option_name, $option_default] = explode(':', $option->value);
-        $option_name = trim($option_name);
-        $option_default = trim($option_default);
-
-        $options_default_value[$option_name] = $option_default;
+        $options_default_value[$option->name->value] = $option->default_value->value;
       }
 
       $parameters[] = [

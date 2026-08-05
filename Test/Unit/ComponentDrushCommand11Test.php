@@ -87,20 +87,43 @@ class ComponentDrushCommand11Test extends TestBase {
           ],
           'command_description' => 'Do alpha.',
           'command_parameters' => [
-            'alpha_one',
-            'alpha_two',
+            [
+              'name' => 'alpha_one',
+              'type' => 'string',
+            ],
+            [
+              'name' => 'alpha_two',
+              'type' => 'string',
+            ],
           ],
           'command_options' => [
-            'option_string: cake',
-            'option_numeric: 42',
-            'option_bool: FALSE',
+            [
+              'name' => 'option_string',
+              'type' => 'string',
+              'default_value' => 'cake',
+            ],
+            [
+              'name' => 'option_numeric',
+              'type' => 'int',
+              // Values come in from the UI as strings.
+              // BUG!
+              'default_value' => '42',
+            ],
+            [
+              'name' => 'option_bool',
+              'type' => 'bool',
+              'default_value' => 'FALSE',
+            ],
           ],
         ],
         1 => [
           'command_name' => 'my_group:beta',
           'command_description' => 'Do beta.',
           'command_parameters' => [
-            'beta_one',
+            [
+              'name' => 'beta_one',
+              'type' => 'string',
+            ],
           ],
         ],
       ),
@@ -115,6 +138,7 @@ class ComponentDrushCommand11Test extends TestBase {
     ], $files);
 
     $command_class_file = $files["src/Drush/Commands/TestModuleCommands.php"];
+    dump($command_class_file);
 
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $command_class_file);
     $php_tester->assertDrupalCodingStandards([
