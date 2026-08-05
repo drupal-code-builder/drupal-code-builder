@@ -13,6 +13,28 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
  */
 class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
 
+  // TODO! need JS version of DataAddressLanguageProvider too but that inMTD!
+  public function getHybridFunctions(): array {
+    return [
+      'machineToLabel' => [
+        'php' => function ($arguments, $str) {
+          if (!is_string($str)) {
+            return $str;
+          }
+
+          return CaseString::snake($str)->title();
+        },
+        'js' => <<<EOT
+          function(value) {
+            var pieces = value.split('_');
+            pieces = pieces.map(x => x.charAt(0).toUpperCase() +  x.slice(1));
+            return pieces.join(' ');
+          },
+        EOT,
+      ],
+    ];
+  }
+
   /**
    * {@inheritdoc}
    */
