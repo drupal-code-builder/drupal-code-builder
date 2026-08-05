@@ -14,9 +14,15 @@ class FrontEndExpressions extends Base {
 
     $code = '';
     $code_pieces = [];
+
+    // todo namespace!
+    $code_pieces[] = 'var DataAddressExpressionLanguage = {';
+
     foreach ($functions as $name => $code_snippets) {
       $code_pieces[] = $name . ': ' . $code_snippets['js'];
     }
+
+    $code_pieces[] = '};';
 
     // machineToClass: function(value) {
     //   var pieces = value.split('_');
