@@ -41,6 +41,56 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
           },
         EOT,
       ],
+
+      // Converts a machine name in snake case to a pascal case class name.
+      'machineToClass' => [
+        'php' => function ($arguments, $str) {
+          if (!is_string($str)) {
+            return $str;
+          }
+
+          return CaseString::snake($str)->pascal();
+        },
+        'js' => <<<EOT
+          function(value) {
+            TODO
+          },
+        EOT,
+      ],
+
+      // Converts a pascal class name to a machine name in snake case.
+      'classToMachine' => [
+        'php' => function ($arguments, $str) {
+          if (!is_string($str)) {
+            return $str;
+          }
+
+          return CaseString::pascal($str)->snake();
+        },
+        'js' => <<<EOT
+          function(value) {
+            TODO
+          },
+        EOT,
+      ],
+
+      // Removes the portion of the given string before the marker.
+      // For example, from 'prefix:main' get 'main'.
+      'stripBefore' => [
+        'php' => function ($arguments, $string, $marker) {
+          if (strpos($string, $marker) === FALSE) {
+            return $string;
+          }
+
+          $pieces = explode($marker, $string, 2);
+          return $pieces[1];
+        },
+        'js' => <<<EOT
+          function(value) {
+            TODO
+          },
+        EOT,
+      ],
     ];
   }
 
