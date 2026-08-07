@@ -8,7 +8,17 @@ class FrontEndExpressions extends Base {
 
   protected $sanity_level = 'none';
 
+  /**
+   * Produces JavaScript code for handling .... TODO
+   *
+   * @return string
+   *   JS snippet containing a declaration of the DrupalCodebuilderDataAddressExpressionLanguage object. This holds the methods which correspond to expression language functions.
+   *
+   */
   public function getFrontEndExpressionsCode(): string {
+    // TODO   // TODO! need JS version of DataAddressLanguageProvider too but that inMTD. Add it here!
+
+
     $provider = new FrontEndFunctionsProvider();
     $functions = $provider->getHybridFunctions();
 
