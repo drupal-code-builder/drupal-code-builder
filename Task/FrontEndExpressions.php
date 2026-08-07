@@ -19,7 +19,7 @@ class FrontEndExpressions extends Base {
     $code_pieces[] = 'var DataAddressExpressionLanguage = {';
 
     foreach ($functions as $name => $code_snippets) {
-      $code_pieces[] = $name . ': ' . $code_snippets['js'];
+      $code_pieces[] = '  ' . $name . ': ' . $code_snippets['js'];
     }
 
     $code_pieces[] = '};';
