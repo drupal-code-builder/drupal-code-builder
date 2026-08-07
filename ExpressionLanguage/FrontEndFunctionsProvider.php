@@ -18,12 +18,13 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
    *
    * @return array
    *   An array keyed by the function name. Values are an array with keys:
-   *   - php: The PHP callable suitable for use in an Expression Language
-   *     definition.
+   *   - php: The PHP callable suitable for use as a constructor parameter to
+   *     ExpressionFunction.
    *   - js: The JavaScript function.
    */
   public function getHybridFunctions(): array {
     return [
+      // Converts a machine name in snake case to a label in title case.
       'machineToLabel' => [
         'php' => function ($arguments, $str) {
           if (!is_string($str)) {
