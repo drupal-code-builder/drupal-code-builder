@@ -53,7 +53,9 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
         },
         'js' => <<<EOT
           function(value) {
-            TODO
+            var pieces = value.split('_');
+            pieces = pieces.map(x => x.charAt(0).toUpperCase() +  x.slice(1));
+            return pieces.join('');
           },
         EOT,
       ],
@@ -67,6 +69,8 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
 
           return CaseString::pascal($str)->snake();
         },
+        // This doesn't need to be implemented in JS (yet!) because it's only
+        // used during a form submit, in TestModule.
         'js' => <<<EOT
           function(value) {
             TODO
@@ -86,8 +90,8 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
           return $pieces[1];
         },
         'js' => <<<EOT
-          function(value) {
-            TODO
+          function(string, marker) {
+            return string.substring(string.indexOf(marker) + 1);
           },
         EOT,
       ],
@@ -97,6 +101,7 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
   /**
    * {@inheritdoc}
    */
+  // TODO convert to get them from above
   public function getFunctions(): array {
     return [
       // Converts a machine name in snake case to a label in title case.
