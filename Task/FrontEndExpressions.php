@@ -15,7 +15,7 @@ class FrontEndExpressions extends Base {
     $code = '';
     $code_pieces = [];
 
-    $code_pieces[] = 'var DrupalCodebuilderDataAddressExpressionLanguage = {';
+    $code_pieces[] = 'var DrupalCodeBuilderDataAddressExpressionLanguage = {';
 
     foreach ($functions as $name => $code_snippets) {
       $code_pieces[] = '  ' . $name . ': ' . $code_snippets['js'];
