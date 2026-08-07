@@ -16,35 +16,30 @@ class FrontEndExpressions extends Base {
    *
    */
   public function getFrontEndExpressionsCode(): string {
-    // TODO   // TODO! need JS version of DataAddressLanguageProvider too but that inMTD. Add it here!
+    $code_pieces = [];
+    $code_pieces[] = 'var DrupalCodeBuilderDataAddressExpressionLanguage = {';
 
+    // Add a JavaScript version of the function from
+    // MutableTypedData\ExpressionLanguage\DataAddressLanguageProvider.
+    $code_pieces[] = <<<'EOT'
+      get: function(address) {
+        let $item = jQuery("input[data-typed-data-address='" + address + "']");
 
+        return $item.val();
+      },
+    EOT;
+
+    // Get Expression Language functions from the provider.
     $provider = new FrontEndFunctionsProvider();
     $functions = $provider->getHybridFunctions();
 
-    $code = '';
-    $code_pieces = [];
-
-    $code_pieces[] = 'var DrupalCodeBuilderDataAddressExpressionLanguage = {';
-
+    // Get the JavaScript function from each item.
     foreach ($functions as $name => $code_snippets) {
       $code_pieces[] = '  ' . $name . ': ' . $code_snippets['js'];
     }
 
     $code_pieces[] = '};';
 
-    // machineToClass: function(value) {
-    //   var pieces = value.split('_');
-    //   pieces = pieces.map(x => x.charAt(0).toUpperCase() +  x.slice(1));
-    //   return pieces.join('');
-    // },
-
-
-
-
-    /// return a JS code stuff.
-    ///
-    /// call getHybridFunctions(), extract JS code and build the code file string
     return implode("\n", $code_pieces);
   }
 
