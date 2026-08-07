@@ -3,8 +3,13 @@
 namespace DrupalCodeBuilder\Task;
 
 use DrupalCodeBuilder\ExpressionLanguage\FrontEndFunctionsProvider;
+use MutableTypedData\Data\DataItem;
+use MutableTypedData\Definition\DefaultDefinition;
 
 class FrontEndExpressions extends Base {
+
+  // TODO DrupalCodeBuilderDataAddressExpressionLanguage as const.
+  const Foo = '';
 
   protected $sanity_level = 'none';
 
@@ -41,6 +46,21 @@ class FrontEndExpressions extends Base {
     $code_pieces[] = '};';
 
     return implode("\n", $code_pieces);
+  }
+
+  public function getDefaultExpressionAsJavaScript(DefaultDefinition $default_definition, DataItem $data): string {
+    $expression = $default_definition->getExpressionWithAbsoluteAddresses($data);
+
+    $provider = new FrontEndFunctionsProvider();
+
+    $function_names = array_keys($provider->getHybridFunctions());
+    $function_names[] = 'get';
+
+    foreach ($function_names as $function_name) {
+      $expression = str_replace("{$function_name}(", "DrupalCodeBuilderDataAddressExpressionLanguage.{$function_name}(", $expression);
+    }
+
+    return $expression;
   }
 
 }
