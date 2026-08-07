@@ -13,7 +13,15 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
  */
 class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
 
-  // TODO! need JS version of DataAddressLanguageProvider too but that inMTD!
+  /**
+   * Defines custom functions as both PHP and JavaScript code.
+   *
+   * @return array
+   *   An array keyed by the function name. Values are an array with keys:
+   *   - php: The PHP callable suitable for use in an Expression Language
+   *     definition.
+   *   - js: The JavaScript function.
+   */
   public function getHybridFunctions(): array {
     return [
       'machineToLabel' => [
