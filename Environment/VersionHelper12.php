@@ -3,11 +3,31 @@
 namespace DrupalCodeBuilder\Environment;
 
 /**
- * Environment helper for Drupal 11.
+ * @defgroup drupal_code_builder_environment_version_helpers Environment version helpers
+ * @{
+ * Wrapper objects for Drupal APIs that change between Drupal major versions.
+ *
+ * These allow the environment classes to work orthogonally across different
+ * environments (Drush, Drupal UI) and different core versions.
+ *
+ * Each major version of Drupal core needs a version helper class, set up with
+ * \DrupalCodeBuilder\Environment\EnvironmentInterface\setCoreVersionNumber().
+ * No direct calls should be made to the helper, rather, the environment base
+ * class should provide a wrapper.
+ *
+ * Version helper classes inherit in a cascade, with older versions inheriting
+ * from newer. This means that if, say, an API function does not change between
+ * Drupal 9 and 10, then its wrapper does not need to be present in the Drupal 9
+ * helper class.
+ * @} End of "defgroup drupal_code_builder_environment_version_helpers".
  */
-class VersionHelper11 {
 
-  protected $major_version = 11;
+/**
+ * Environment helper for Drupal 12.
+ */
+class VersionHelper12 {
+
+  protected $major_version = 12;
 
   /**
    * {@inheritdoc}
