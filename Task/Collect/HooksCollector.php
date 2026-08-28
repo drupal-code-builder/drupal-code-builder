@@ -253,17 +253,16 @@ abstract class HooksCollector extends CollectorBase {
         // core to properly generate forward-compatible hooks with the legacy
         // option.
         $hooks_collector_pass_obligate_procedural_hooks = [
-          'cache_flush',
           'hook_info',
           'install',
+          'install_tasks',
+          'install_tasks_alter',
           'module_implements_alter',
-          'module_preinstall',
-          'module_preuninstall',
-          'modules_installed',
-          'modules_uninstalled',
+          'removed_post_updates',
           'requirements',
           'schema',
           'uninstall',
+          'update_dependencies',
           'update_last_removed',
         ];
 
