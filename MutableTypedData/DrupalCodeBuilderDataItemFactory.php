@@ -4,8 +4,8 @@ namespace DrupalCodeBuilder\MutableTypedData;
 
 use DrupalCodeBuilder\ExpressionLanguage\InternalFunctionsExpressionLanguageProvider;
 use DrupalCodeBuilder\ExpressionLanguage\FrontEndFunctionsProvider;
-use DrupalCodeBuilder\MutableTypedData\Data\MergeableComplexDataWithArrayAccess;
-use DrupalCodeBuilder\MutableTypedData\Data\MergeableMutableDataWithArrayAccess;
+use DrupalCodeBuilder\MutableTypedData\Data\MergeableComplexData;
+use DrupalCodeBuilder\MutableTypedData\Data\MergeableMutableData;
 use DrupalCodeBuilder\MutableTypedData\Data\MappingData;
 use DrupalCodeBuilder\MutableTypedData\Data\MergeableArrayData;
 use DrupalCodeBuilder\MutableTypedData\Data\MergeableBooleanData;
@@ -35,12 +35,8 @@ class DrupalCodeBuilderDataItemFactory extends DataItemFactory {
   static protected $types = [
     'string' => MergeableStringData::class,
     'boolean' => MergeableBooleanData::class,
-    // Override to allow array access as a backwards-compatibility shim. This is
-    // no longer needed in DCB, but Module Builder still was using this and so
-    // this should stay in for backwards compatibility until 5.x
-    // @todo Remove this in 5.x.
-    'complex' => MergeableComplexDataWithArrayAccess::class,
-    'mutable' => MergeableMutableDataWithArrayAccess::class,
+    'complex' => MergeableComplexData::class,
+    'mutable' => MergeableMutableData::class,
     // Mapping data stores arbitrary arrays that don't need to have their
     // structure defined. This is basically for the YAML data.
     'mapping' => MappingData::class,
