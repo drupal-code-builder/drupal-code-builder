@@ -32,7 +32,12 @@ abstract class PhpRenderer {
       return $value;
     }
 
-    if (is_string($value)) {
+    if (is_numeric($value)) {
+      // Handle numerics before strings, as we treated quoted strings as a
+      // numeric.
+      $value_string = (string) $value;
+    }
+    elseif (is_string($value)) {
       $unquoted_string =
         // Special case for class constants: we assume a string starting with a
         // '\' is such and thus is not quoted.
@@ -50,9 +55,6 @@ abstract class PhpRenderer {
       else {
         $value_string = $this->quoteString($value);
       }
-    }
-    elseif (is_numeric($value)) {
-      $value_string = (string) $value;
     }
     elseif (is_bool($value)) {
       $value_string = $value ? 'TRUE' : 'FALSE';

@@ -15,6 +15,8 @@ class RenderPHPValueTest extends TestCase {
    */
   public function testInline(): void {
     $this->assertSame('42', PhpValue::create(42)->renderInline());
+    // A quoted numeric renders as a number, not a string.
+    $this->assertSame('42', PhpValue::create('42')->renderInline());
     $this->assertSame("'foo'", PhpValue::create('foo')->renderInline());
     $this->assertSame('FALSE', PhpValue::create(FALSE)->renderInline());
     $this->assertSame('TRUE', PhpValue::create(TRUE)->renderInline());
