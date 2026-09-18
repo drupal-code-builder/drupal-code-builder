@@ -51,7 +51,7 @@ class CliCommand extends PHPClassFileWithInjection {
   /**
    * {@inheritdoc}
    */
-  protected function getClassAttributes(): ?PhpAttributes {
+  protected function getClassAttributes(): PhpAttributes|array|null {
     // Prefix the command name with the module name.
     $command_name = '%module:' . $this->component_data->command_name->value;
 

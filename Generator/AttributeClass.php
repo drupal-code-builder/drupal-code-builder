@@ -12,7 +12,7 @@ class AttributeClass extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function getClassAttributes(): ?PhpAttributes {
+  protected function getClassAttributes(): PhpAttributes|array|null {
     return PhpAttributes::class(
       '\Attribute',
       '\Attribute::TARGET_CLASS',

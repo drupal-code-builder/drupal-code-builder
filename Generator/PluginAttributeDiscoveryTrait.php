@@ -12,7 +12,7 @@ trait PluginAttributeDiscoveryTrait {
   /**
    * {@inheritdoc}
    */
-  protected function getClassAttributes(): ?PhpAttributes {
+  protected function getClassAttributes(): PhpAttributes|array|null {
     $attribute_class = $this->plugin_type_data['plugin_definition_attribute_name'];
     $attribute_variables = $this->plugin_type_data['plugin_properties'];
 

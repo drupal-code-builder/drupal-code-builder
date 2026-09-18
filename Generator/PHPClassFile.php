@@ -300,15 +300,23 @@ class PHPClassFile extends PHPFile {
     $class_doc_block = $this->getClassDocBlock();
     $class_attributes = $this->getClassAttributes();
 
-    $class_code = array_merge(
-      $class_doc_block->render(),
-      $class_attributes?->render() ?? [],
-      $this->classDeclaration(),
-      $this->classCodeBody(),
-      [
-        '}',
-      ],
-    );
+    $code_chunks = [];
+    $code_chunks[] = $class_doc_block->render();
+    if (is_array($class_attributes)) {
+      foreach ($class_attributes as $attribute) {
+        $code_chunks[] = $attribute->render();
+      }
+    }
+    elseif (!empty($class_attributes)) {
+      $code_chunks[] = $class_attributes->render();
+    }
+    $code_chunks[] = $this->classDeclaration();
+    $code_chunks[] = $this->classCodeBody();
+    $code_chunks[] = [
+      '}',
+    ];
+
+    $class_code = array_merge(...$code_chunks);
 
     return $class_code;
   }
@@ -343,10 +351,11 @@ class PHPClassFile extends PHPFile {
   /**
    * Produces the class attributes.
    *
-   * @return \DrupalCodeBuilder\Generator\Render\PhpAttributes|null
-   *   An attribute object if this class has attributes.
+   * @return \DrupalCodeBuilder\Generator\Render\PhpAttributes|array|null
+   *   Either attribute object or an array of them if this class has attributes,
+   *   or NULL.
    */
-  protected function getClassAttributes(): ?PhpAttributes {
+  protected function getClassAttributes(): PhpAttributes|array|null {
     return NULL;
   }
 

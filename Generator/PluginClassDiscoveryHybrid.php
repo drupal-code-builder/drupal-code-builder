@@ -24,7 +24,7 @@ class PluginClassDiscoveryHybrid extends PluginClassDiscovery {
   /**
    * {@inheritdoc}
    */
-  protected function getClassAttributes(): ?PhpAttributes {
+  protected function getClassAttributes(): PhpAttributes|array|null {
     if (!empty($this->plugin_type_data['plugin_definition_attribute_name'])) {
       return $this->traitGetClassAttributes();
     }
