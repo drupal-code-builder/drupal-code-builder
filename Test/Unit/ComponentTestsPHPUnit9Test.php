@@ -70,6 +70,9 @@ class ComponentTestsPHPUnit9Test extends TestBase {
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
+    $php_tester->assertClassHasAttribute('\\PHPUnit\Framework\Attributes\Group');
+    $php_tester->assertClassHasAttribute('\\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses');
+    $php_tester->getClassDocBlockTester()->assertHasLine('@group test_module');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
     $php_tester->assertClassHasProtectedProperty('modules', NULL, [
       'system',

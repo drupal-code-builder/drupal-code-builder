@@ -6,6 +6,7 @@ use MutableTypedData\Definition\PropertyListInterface;
 use DrupalCodeBuilder\Definition\MergingGeneratorDefinition;
 use DrupalCodeBuilder\Definition\PropertyDefinition;
 use DrupalCodeBuilder\Generator\Render\Docblock;
+use DrupalCodeBuilder\Generator\Render\PhpAttributes;
 use MutableTypedData\Data\DataItem;
 use MutableTypedData\Definition\OptionsSortOrder;
 
@@ -306,12 +307,16 @@ class PHPUnitTest extends PHPClassFile {
   /**
    * {@inheritdoc}
    */
-  protected function getClassDocBlock(): DocBlock {
-    $docblock = parent::getClassDocBlock();
-
-    $docblock->group('%module');
-
-    return $docblock;
+  protected function getClassAttributes(): PhpAttributes|array|null {
+    return [
+      PhpAttributes::class(
+        '\PHPUnit\Framework\Attributes\Group',
+        '%module',
+      ),
+      PhpAttributes::class(
+        '\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses',
+      ),
+    ];
   }
 
   /**

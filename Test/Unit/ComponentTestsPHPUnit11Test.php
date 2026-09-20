@@ -11,14 +11,14 @@ use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
 /**
  * Tests the PHPUnit test class generator.
  */
-class ComponentTestsPHPUnit10Test extends TestBase {
+class ComponentTestsPHPUnit11Test extends TestBase {
 
   /**
    * The Drupal core major version to set up for this test.
    *
    * @var int
    */
-  protected $drupalMajorVersion = 10;
+  protected $drupalMajorVersion = 11;
 
   /**
    * The PHP CodeSniffer rules to exclude for this test class files.
@@ -70,6 +70,11 @@ class ComponentTestsPHPUnit10Test extends TestBase {
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $test_file);
     $php_tester->assertDrupalCodingStandards($this->phpcsExcludedSniffs);
     $php_tester->assertHasClass('Drupal\Tests\test_module\Kernel\MyTest');
+    $php_tester->assertClassHasAttribute('\\PHPUnit\Framework\Attributes\Group');
+    $php_tester->assertClassHasAttribute('\\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses');
+    // On 11 and later, we only have the PHPUnit attributes and not the
+    // annotations.
+    $php_tester->getClassDocBlockTester()->assertNotHasLine('@group test_module');
     $php_tester->assertHasMethods(['setUp', 'testMyTest']);
     $php_tester->assertClassHasProtectedProperty('modules', NULL, [
       'system',

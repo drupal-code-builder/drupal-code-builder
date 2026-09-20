@@ -270,6 +270,11 @@ class DrupalCodeBuilderCompiledContainer extends DI\CompiledContainer{
             10 => 'Module9And10',
             9 => 'Module9And10',
         ],
+            'PHPUnitTest' => [
+            10 => 'PHPUnitTestWithAnnotations',
+            9 => 'PHPUnitTestWithAnnotations',
+            8 => 'PHPUnitTestWithAnnotations',
+        ],
             'Permission' => [
             7 => 'Permission7',
         ],
