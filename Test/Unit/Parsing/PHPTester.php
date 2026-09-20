@@ -507,8 +507,6 @@ class PHPTester {
   /**
    * Asserts that the class has an attribute of the given class.
    *
-   * This expects the PHP file to contain only a single class.
-   *
    * @param string $expected_attribute_class
    *   The full class name of the expected attribute class, WITH the leading '\'
    * @param string $message
