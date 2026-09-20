@@ -146,9 +146,13 @@ class DrushCommand extends PHPFunction {
     $definition->getProperty('function_name')
       ->setInternal(TRUE)
       ->setCallableDefault(function ($component_data) {
+        // Remove the command group prefix.
         $command_name = preg_replace('@.+:@', '', $component_data->getParent()->command_name->value);
-
-        return CaseString::snake($command_name)->camel();
+        // Change any '-' to '_'.
+        $command_name = str_replace('-', '_', $command_name);
+        // Convert to camel case.
+        $command_name = CaseString::snake($command_name)->camel();
+        return $command_name;
       });
 
     $definition->getProperty('containing_component')

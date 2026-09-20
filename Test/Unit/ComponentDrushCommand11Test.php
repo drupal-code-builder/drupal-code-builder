@@ -35,7 +35,7 @@ class ComponentDrushCommand11Test extends TestBase {
           'command_description' => 'Do alpha.',
         ],
         1 => [
-          'command_name' => 'my_group:beta',
+          'command_name' => 'my_group:beta-thing',
           'command_description' => 'Do beta.',
         ],
       ),
@@ -57,7 +57,7 @@ class ComponentDrushCommand11Test extends TestBase {
     $php_tester->assertClassHasParent('Drush\Commands\DrushCommands');
     $php_tester->getClassDocBlockTester()->assertHasLine('Test module Drush commands.');
     $php_tester->assertHasMethod('alpha');
-    $php_tester->assertHasMethod('beta');
+    $php_tester->assertHasMethod('betaThing');
 
     // $alpha_method_tester = $php_tester->getMethodTester('alpha');
     // $alpha_method_tester->getDocBlockTester()->assertHasLine('@command test_module:alpha');
