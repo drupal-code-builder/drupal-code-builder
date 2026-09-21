@@ -955,7 +955,7 @@ class PluginTypesCollector extends CollectorBase  {
 
         $plugin_class = $definition['class'];
       }
-      elseif ($definition instanceof Drupal\Component\Plugin\Definition\PluginDefinition) {
+      elseif ($definition instanceof \Drupal\Component\Plugin\Definition\PluginDefinition) {
         $plugin_class = $definition->getClass();
       }
       else {
