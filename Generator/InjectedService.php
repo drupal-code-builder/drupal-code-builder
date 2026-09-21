@@ -57,6 +57,12 @@ class InjectedService extends BaseGenerator {
     $service_info['id'] = $service_id = $data_item->getParent()->service_id->value;
     $service_info['type']         = 'service';
 
+    // Bail if we don't have service info. This can happen if an injected
+    // service no longer exists in the site analysis data.
+    if (!isset($services_data[$service_id])) {
+      return [];
+    }
+
     // Copy these explicitly for maintainability and readability.
     $service_info['label']          = $services_data[$service_id]['label'];
     $service_info['variable_name']  = $services_data[$service_id]['variable_name'];
@@ -111,6 +117,12 @@ class InjectedService extends BaseGenerator {
     $components = parent::requiredComponents();
 
     $service_info = $this->component_data->service_info->value;
+
+    // Bail if we don't have service info. This can happen if an injected
+    // service no longer exists in the site analysis data.
+    if (empty($service_info)) {
+      return $components;
+    }
 
     if ($this->component_data->class_has_constructor->value) {
       $components['constructor_set_property'] = [

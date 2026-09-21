@@ -77,6 +77,12 @@ class PHPClassConstructorSetProperty extends BaseGenerator {
   public function requiredComponents(): array {
     $components = parent::requiredComponents();
 
+    // Bail if we don't have a parameter name. This can happen if an injected
+    // service no longer exists in the site analysis data.
+    if (empty($this->component_data->parameter_name->value)) {
+      return $components;
+    }
+
     $parameter_data = [
       'name' => $this->component_data->parameter_name->value,
       'typehint' => $this->component_data->type->value,
