@@ -34,6 +34,13 @@ class PluginTypesCollector extends CollectorBase  {
   ];
 
   /**
+   * Static cache of plugin classes, grouped by plugin type.
+   *
+   * @var array
+   */
+  protected $pluginClasses = [];
+
+  /**
    * The names of plugin type managers to collect for testing sample data.
    */
   protected $testingPluginManagerServiceIds = [
@@ -928,74 +935,9 @@ class PluginTypesCollector extends CollectorBase  {
    *   this cannot be determined.
    */
   protected function analysePluginTypeBaseClassFromPlugins(&$data) {
-    // Work over each plugin of this type, finding a suitable candidate for
-    // base class with each one.
-    $potential_base_classes = [];
+    $plugin_classes = $this->getPluginClasses($data);
 
-    $service = \Drupal::service($data['service_id']);
-    try {
-      $definitions = $service->getDefinitions();
-    }
-    // Catch errors as well as exceptions; some contrib plugin managers crash!
-    catch (Throwable $e) {
-      return FALSE;
-    }
-
-    // Keep track of the classes we've seen, so we can skip derivative plugins
-    // that have the same class.
-    $plugin_classes = [];
-
-    foreach ($definitions as $plugin_id => $definition) {
-      if (is_array($definition)) {
-        // We can't work with plugins that don't define a class: skip the whole
-        // plugin type.
-        if (empty($definition['class'])) {
-          return;
-        }
-
-        $plugin_class = $definition['class'];
-      }
-      elseif ($definition instanceof \Drupal\Component\Plugin\Definition\PluginDefinition) {
-        $plugin_class = $definition->getClass();
-      }
-      else {
-        // Skip the whole plugin type: no idea how to handle it.
-        return;
-      }
-
-      // Skip classes we've seen already.
-      if (isset($plugin_classes[$plugin_class])) {
-        continue;
-      }
-      $plugin_classes[$plugin_class] = TRUE;
-
-      // Skip any class that we can't attempt to load without a fatal. This will
-      // typically happen if the plugin is meant for use with another module,
-      // and inherits from a base class that doesn't exist in the current
-      // codebase.
-      if (!$this->codeAnalyser->classIsUsable($plugin_class)) {
-        $data['broken_plugins'][$plugin_id] = 'crashes';
-
-        continue;
-      }
-
-      // Babysit modules that have a broken plugin class. A number of things can
-      // go wrong, including the namespace being incorrect for the file
-      // location, preventing the class from being autoloaded.
-      try {
-        if (!class_exists($plugin_class)) {
-          $data['broken_plugins'][$plugin_id] = 'no class';
-
-          // Skip just this plugin.
-          continue;
-        }
-      }
-      catch (\Throwable $ex) {
-        $data['broken_plugins'][$plugin_id] = 'exception';
-
-        continue;
-      }
-
+    foreach ($plugin_classes as $plugin_class) {
       $plugin_component_namespace = $this->getClassComponentNamespace($plugin_class);
 
       // Get the full ancestry of the plugin's class.
@@ -1605,6 +1547,102 @@ class PluginTypesCollector extends CollectorBase  {
     else {
       return implode('\\', array_slice($pieces, 0, 2));
     }
+  }
+
+  /**
+   * Gets a list of usable plugin classes of the given plugin type.
+   *
+   * This keeps a static cache so it can be called several times for each plugin
+   * type.
+   *
+   * @param array $data
+   *   The plugin type data. This needs the following to already be set:
+   *    - type_id
+   *    - service_id
+   *
+   * @return array
+   *   An array of the plugin classes which are usable.
+   */
+  protected function getPluginClasses(array $data): array {
+    $plugin_type_id = $data['type_id'];
+
+    if (isset($this->pluginClasses[$plugin_type_id])) {
+      return $this->pluginClasses[$plugin_type_id];
+    }
+
+    $service = \Drupal::service($data['service_id']);
+    try {
+      $definitions = $service->getDefinitions();
+    }
+    // Catch errors as well as exceptions; some contrib plugin managers crash!
+    catch (\Throwable $e) {
+      $this->pluginClasses[$plugin_type_id] = [];
+
+      return [];
+    }
+
+    $plugin_classes = [];
+    foreach ($definitions as $plugin_id => $definition) {
+      if (is_array($definition)) {
+        // We can't work with plugins that don't define a class: skip the whole
+        // plugin type.
+        if (empty($definition['class'])) {
+          $this->pluginClasses[$plugin_type_id] = [];
+
+          return [];
+        }
+
+        $plugin_class = $definition['class'];
+      }
+      elseif ($definition instanceof \Drupal\Component\Plugin\Definition\PluginDefinition) {
+        $plugin_class = $definition->getClass();
+      }
+      else {
+        // Skip the whole plugin type: no idea how to handle it.
+        $this->pluginClasses[$plugin_type_id] = [];
+
+        return [];
+      }
+
+      // Skip classes we've seen already.
+      if (isset($plugin_classes[$plugin_class])) {
+        continue;
+      }
+      $plugin_classes[$plugin_class] = TRUE;
+
+      // Skip any class that we can't attempt to load without a fatal. This will
+      // typically happen if the plugin is meant for use with another module,
+      // and inherits from a base class that doesn't exist in the current
+      // codebase.
+      if (!$this->codeAnalyser->classIsUsable($plugin_class)) {
+        $data['broken_plugins'][$plugin_id] = 'crashes';
+
+        continue;
+      }
+
+      // Babysit modules that have a broken plugin class. A number of things can
+      // go wrong, including the namespace being incorrect for the file
+      // location, preventing the class from being autoloaded.
+      try {
+        if (!class_exists($plugin_class)) {
+          $data['broken_plugins'][$plugin_id] = 'no class';
+
+          // Skip just this plugin.
+          continue;
+        }
+      }
+      catch (\Throwable $ex) {
+        $data['broken_plugins'][$plugin_id] = 'exception';
+
+        continue;
+      }
+
+      $plugin_classes[$plugin_class] = $plugin_class;
+    }
+
+    $this->pluginClasses[$plugin_type_id] = array_values($plugin_classes);
+
+    return $this->pluginClasses[$plugin_type_id];
   }
 
 }
