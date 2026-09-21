@@ -1119,6 +1119,20 @@ class PluginTypesCollector extends CollectorBase  {
     // configurable.
     if (!empty($data['plugin_interface']) && $plugin_class_is_configurable($data['plugin_interface'])) {
       $data['configurable'] = TRUE;
+
+      return;
+    }
+
+    // Second chance: detect if some particular plugins are configurable.
+    $plugin_classes = $this->getPluginClasses($data);
+
+    foreach ($plugin_classes as $plugin_class) {
+      if ($plugin_class_is_configurable($plugin_class)) {
+        $data['configurable'] = TRUE;
+
+        // Bail once we've found one class.
+        return;
+      }
     }
   }
 
