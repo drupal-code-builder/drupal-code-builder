@@ -488,6 +488,13 @@ class ComponentCollector {
     // Each item in the list is itself a component data array. Recurse for each
     // one to get generators.
     foreach ($item_required_subcomponent_list as $required_item_name => $required_item_data) {
+      // Complain about something that will cause an MTD graft exception earlier
+      // so if things are totally broken we get a better error.
+      // See https://github.com/drupal-code-builder/drupal-code-builder/issues/451
+      if (empty($required_item_name)) {
+        throw new \LogicException("Required item data has no name.");
+      }
+
       $graft = TRUE;
 
       // dump("Converting $required_item_name");
