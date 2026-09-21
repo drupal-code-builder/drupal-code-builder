@@ -223,7 +223,8 @@ class PluginTypesCollector extends CollectorBase  {
    *    - 'subdir': The subdirectory of /src that plugin classes must go in.
    *      E.g., 'Plugin/Filter'.
    *    - 'plugin_interface': The interface that plugin classes must implement,
-   *      as a qualified name (but without initial '\').
+   *      as a qualified name (but without initial '\'). NULL if the plugin type
+   *      does not use an interface or if one could not be detected.
    *    - 'plugin_interface_filepath': The filepath of the interface class,
    *      relative to the Drupal app root.
    *    - 'plugin_definition_annotation_name': The class that the plugin
