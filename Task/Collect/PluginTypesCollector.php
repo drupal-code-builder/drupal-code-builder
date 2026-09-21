@@ -263,6 +263,8 @@ class PluginTypesCollector extends CollectorBase  {
    *      - 'name': The parameter name, without the $.
    *      - 'extraction': The code for getting the value to pass in from the
    *        parameters passed to create().
+   *    - 'configurable': Indicates whether the plugins of this type are
+   *      configurable.
    *    - 'config_schema_prefix': The prefix to use for creating a config schema
    *      ID for plugins of this type. The ID should be formed by appending the
    *      plugin ID with a '.'.
@@ -313,6 +315,9 @@ class PluginTypesCollector extends CollectorBase  {
 
       // Try to detect a base class for plugins
       $this->addPluginBaseClass($plugin_type_data[$plugin_type_id]);
+
+      // Try to detect if plugins are configurable.
+      $this->addConfigurable($plugin_type_data[$plugin_type_id]);
 
       // Try to detect a config schema prefix.
       $this->addConfigSchemaPrefix($plugin_type_data[$plugin_type_id]);
@@ -1151,20 +1156,42 @@ class PluginTypesCollector extends CollectorBase  {
   }
 
   /**
+   * Detects whether plugins are configurable.
+   *
+   * This adds a boolean property 'configurable' if the plugin interface shows
+   * that plugins of this type are configurable.
+   *
+   * @param array &$data
+   *   The array of data for the plugin type.
+   */
+  protected function addConfigurable(&$data) {
+    $plugin_class_is_configurable = fn (string $classname) => (
+      is_subclass_of($classname, \Drupal\Component\Plugin\ConfigurableInterface::class)
+      // Field module uses the equivalent, deprecated PluginSettingsInterface.
+      || is_subclass_of($classname, \Drupal\Core\Field\PluginSettingsInterface::class)
+      // Deprecated in Drupal 8.7.
+      || is_subclass_of($classname, \Drupal\Component\Plugin\ConfigurablePluginInterface::class)
+    );
+
+    // Detect if the base class means that all plugins of this type are
+    // configurable.
+    if (!empty($data['plugin_interface']) && $plugin_class_is_configurable($data['plugin_interface'])) {
+      $data['configurable'] = TRUE;
+    }
+  }
+
+  /**
    * Deduces the config schema ID prefix for configurable plugin types.
+   *
+   * This expects static::addConfigurable() to have been called already, to set
+   * the 'configurable' property.
    *
    * @param array $data
    *   The array of data for the plugin type.
    */
   protected function addConfigSchemaPrefix(&$data) {
-    if (!is_subclass_of($data['plugin_interface'], \Drupal\Core\Field\PluginSettingsInterface::class)
-      && !is_subclass_of($data['plugin_interface'], \Drupal\Component\Plugin\ConfigurableInterface::class)
-      // Deprecated in Drupal 8.7.
-      && !is_subclass_of($data['plugin_interface'], \Drupal\Component\Plugin\ConfigurablePluginInterface::class)
-    ) {
-      // Only look at configurable plugins, whose interface inherits from
-      // ConfigurablePluginInterface.
-      // (Field module uses the equivalent, deprecated PluginSettingsInterface.)
+    if (empty($data['configurable'])) {
+      // Only look at configurable plugins.
       return;
     }
 
