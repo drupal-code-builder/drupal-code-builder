@@ -2,6 +2,7 @@
 
 namespace DrupalCodeBuilder\Task\Collect;
 
+use DrupalCodeBuilder\Enum\PluginConfigurable;
 use DrupalCodeBuilder\Environment\EnvironmentInterface;
 use DrupalCodeBuilder\Utility\CodeAnalysis\ClassLike;
 use DrupalCodeBuilder\Utility\CodeAnalysis\Variables;
@@ -1100,8 +1101,8 @@ class PluginTypesCollector extends CollectorBase  {
   /**
    * Detects whether plugins are configurable.
    *
-   * This adds a boolean property 'configurable' if the plugin interface shows
-   * that plugins of this type are configurable.
+   * This adds a property 'configurable' if the plugin interface shows that
+   * plugins of this type are configurable.
    *
    * @param array &$data
    *   The array of data for the plugin type.
@@ -1118,7 +1119,11 @@ class PluginTypesCollector extends CollectorBase  {
     // Detect if the base class means that all plugins of this type are
     // configurable.
     if (!empty($data['plugin_interface']) && $plugin_class_is_configurable($data['plugin_interface'])) {
-      $data['configurable'] = TRUE;
+      // $data['configurable'] = 'base';
+      $data['configurable'] = PluginConfigurable::BaseConfigurable;
+
+      // IS THIS SUFFICIENT? What about the base class?
+      // what about crappy cases like inteface but no methods in the base??
 
       return;
     }
@@ -1128,9 +1133,11 @@ class PluginTypesCollector extends CollectorBase  {
 
     foreach ($plugin_classes as $plugin_class) {
       if ($plugin_class_is_configurable($plugin_class)) {
-        $data['configurable'] = TRUE;
+        $data['configurable'] = 'plugins';
 
         // Bail once we've found one class.
+        //
+        // IS THIS ENOUGH? What about if the methods are in the base class even though the interface doesn't have them???
         return;
       }
     }
