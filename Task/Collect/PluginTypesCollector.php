@@ -1133,7 +1133,7 @@ class PluginTypesCollector extends CollectorBase  {
 
     foreach ($plugin_classes as $plugin_class) {
       if ($plugin_class_is_configurable($plugin_class)) {
-        $data['configurable'] = 'plugins';
+        $data['configurable'] = PluginConfigurable::OptionallyConfigurable;
 
         // Bail once we've found one class.
         //
@@ -1141,6 +1141,8 @@ class PluginTypesCollector extends CollectorBase  {
         return;
       }
     }
+
+    $data['configurable'] = PluginConfigurable::NotConfigurable;
   }
 
   /**
