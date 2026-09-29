@@ -20,7 +20,7 @@ class ContentEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected $annotationClassName = 'ContentEntityType';
+  protected const string ANNOTATION_CLASS_NAME = 'ContentEntityType';
 
   /**
    * {@inheritdoc}

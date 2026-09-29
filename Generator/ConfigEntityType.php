@@ -15,7 +15,7 @@ class ConfigEntityType extends EntityTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected $annotationClassName = 'ConfigEntityType';
+  protected const string ANNOTATION_CLASS_NAME = 'ConfigEntityType';
 
   /**
    * {@inheritdoc}

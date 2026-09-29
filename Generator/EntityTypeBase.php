@@ -24,7 +24,7 @@ abstract class EntityTypeBase extends PHPClassFile {
    *
    * Child classes must override this.
    */
-  protected $annotationClassName = '';
+  protected const string ANNOTATION_CLASS_NAME = '';
 
   /**
    * The ordering to apply to annotation top-level properties.
@@ -515,7 +515,7 @@ abstract class EntityTypeBase extends PHPClassFile {
       return !is_null($item);
     });
 
-    $annotation = ClassAnnotation::{$this->annotationClassName}($annotation_data_ordered);
+    $annotation = ClassAnnotation::{static::ANNOTATION_CLASS_NAME}($annotation_data_ordered);
 
     $docblock->addAnnotation($annotation);
 
