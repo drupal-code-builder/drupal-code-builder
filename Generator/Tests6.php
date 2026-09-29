@@ -8,7 +8,7 @@ namespace DrupalCodeBuilder\Generator;
 class Tests6 extends Tests7 {
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     // We have no subcomponents.

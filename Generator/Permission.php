@@ -55,7 +55,7 @@ class Permission extends BaseGenerator {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = [

@@ -51,10 +51,7 @@ class RouterItemWithHookMenu extends BaseGenerator {
   }
 
   /**
-   * Declares the subcomponents for this component.
-   *
-   * @return
-   *  An array of subcomponent names and types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $return = [

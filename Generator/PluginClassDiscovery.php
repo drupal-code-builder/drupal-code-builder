@@ -205,7 +205,7 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();

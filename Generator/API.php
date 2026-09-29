@@ -45,7 +45,7 @@ class API extends PHPFile {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = [];

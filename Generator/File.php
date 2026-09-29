@@ -50,11 +50,10 @@ abstract class File extends BaseGenerator {
   }
 
   /**
-   * Return an empty array of subcomponent types.
-   *
-   * Files are (so far!) always terminal components.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
+    // Returns an empty array. Files are (so far!) always terminal components.
     return [];
   }
 

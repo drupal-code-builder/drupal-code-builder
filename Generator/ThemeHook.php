@@ -35,7 +35,7 @@ class ThemeHook extends BaseGenerator {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $theme_hook_name = $this->component_data->theme_hook_name->value;

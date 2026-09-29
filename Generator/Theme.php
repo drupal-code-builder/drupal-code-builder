@@ -40,12 +40,7 @@ class Theme extends BaseGenerator {
   public $component_data;
 
   /**
-   * Declares the subcomponents for this component.
-   *
-   * These are not necessarily child classes, just components this needs.
-   *
-   * @return
-   *  An array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $theme_data = $this->component_data;

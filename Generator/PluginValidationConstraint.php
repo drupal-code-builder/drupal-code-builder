@@ -14,7 +14,7 @@ namespace DrupalCodeBuilder\Generator;
 class PluginValidationConstraint extends PluginClassDiscoveryHybrid {
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = [];

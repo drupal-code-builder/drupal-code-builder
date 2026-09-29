@@ -20,7 +20,7 @@ class Tests7 extends Tests {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();

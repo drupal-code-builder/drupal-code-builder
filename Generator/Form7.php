@@ -31,7 +31,7 @@ class Form7 extends BaseGenerator {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $form_name = $this->component_data->form_id->value;

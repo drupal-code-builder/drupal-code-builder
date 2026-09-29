@@ -336,7 +336,7 @@ class Service extends PHPClassFileWithInjection implements AdoptableInterface {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     // Set things up for a decorating service before we call the parent method.

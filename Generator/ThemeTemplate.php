@@ -10,7 +10,7 @@ use DrupalCodeBuilder\File\CodeFile;
 class ThemeTemplate extends BaseGenerator {
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     // We have no subcomponents. This override is here just for clarity.

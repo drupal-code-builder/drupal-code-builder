@@ -8,7 +8,7 @@ namespace DrupalCodeBuilder\Generator;
 class Permission7 extends Permission {
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = [

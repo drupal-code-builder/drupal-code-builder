@@ -29,7 +29,7 @@ class Tests extends PHPFile {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     // We have no subcomponents.

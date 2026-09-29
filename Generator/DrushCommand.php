@@ -170,7 +170,7 @@ class DrushCommand extends PHPFunction {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();

@@ -82,7 +82,7 @@ class AdminSettingsForm extends Form {
   }
 
   /**
-   * Return an array of subcomponent types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
     $components = parent::requiredComponents();

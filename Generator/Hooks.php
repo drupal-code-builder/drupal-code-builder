@@ -57,17 +57,11 @@ class Hooks extends BaseGenerator implements ClassHandlerAware, EnvironmentAware
   }
 
   /**
-   * Declares the subcomponents for this component.
-   *
-   * These are not necessarily child classes, just components this needs.
-   *
-   * Further filtering of components based on the build request takes place
-   * here.
-   *
-   * @return
-   *  An array of subcomponent names and types.
+   * {@inheritdoc}
    */
   public function requiredComponents(): array {
+    // Further filtering of components based on the build request takes place
+    // here.
     // Dirty hack: bail early if we don't have a the hook implementation type
     // set. This happens if this component is requested indirectly. In such a
     // case, we will return here when this component is merged with the Hooks
