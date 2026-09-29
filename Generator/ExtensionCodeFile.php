@@ -84,7 +84,7 @@ class ExtensionCodeFile extends PHPFile implements EnvironmentAware {
   /**
    * Return the main body of the file code.
    *
-   * @return
+   * @return string[]
    *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
   function phpCodeBody() {

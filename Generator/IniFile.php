@@ -39,7 +39,7 @@ class IniFile extends File {
    *    name => module name
    *    dependencies => array(foo, bar)
    *
-   * @return
+   * @return string[]
    *  An array of lines for the .info file.
    */
   function processInfoLines($lines) {

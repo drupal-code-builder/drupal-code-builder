@@ -469,7 +469,7 @@ class Module extends RootComponent {
   /**
    * Provides replacement strings for tokens in code body.
    *
-   * @return
+   * @return array
    *  An array of tokens to replacements, suitable for use by strtr().
    */
   function getReplacements() {

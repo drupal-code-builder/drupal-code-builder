@@ -320,7 +320,7 @@ class DocBlock implements \ArrayAccess {
    *  An array of lines. Lines to be normally indented should have no leading
    *  whitespace.
    *
-   * @return
+   * @return string[]
    *  An array of lines for the docblock with start and end PHP comment markers.
    */
   function docBlock(array $lines): array {
@@ -344,7 +344,7 @@ class DocBlock implements \ArrayAccess {
    * @param array $lines
    *   An array of code lines.
    *
-   * @return
+   * @return string[]
    *   The array of code lines with the indentation applied.
    */
   function indentCodeLines(array $lines) {

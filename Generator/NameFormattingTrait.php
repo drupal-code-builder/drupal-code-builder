@@ -14,7 +14,7 @@ trait NameFormattingTrait {
    *  An array of the class name pieces. It is permissible for some pieces to
    *  contain more than one subnamespaces.
    *
-   * @return
+   * @return string
    *  The qualified class name string, without the initial slash, e.g.
    *  'Drupal\Foo\SomeClass'.
    */

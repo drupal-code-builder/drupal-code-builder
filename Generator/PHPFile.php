@@ -30,7 +30,7 @@ abstract class PHPFile extends File {
    *
    * Helper for subclasses. Serves to concatenate standard pieces of the file.
    *
-   * @return
+   * @return array
    *  An array of text strings, in the correct order for concatenation.
    */
   protected function fileContents() {
@@ -90,7 +90,7 @@ abstract class PHPFile extends File {
    *
    * This is everything after the opening '<php' tag.
    *
-   * @return
+   * @return array
    *  An array of code lines. Keys are immaterial but should avoid clashing.
    */
   abstract function phpCodeBody();
@@ -282,7 +282,7 @@ abstract class PHPFile extends File {
   /**
    * Returns the summary line for the file docblock.
    *
-   * @return
+   * @return string
    *   The text to go after the @file tag in the file's docblock.
    */
   function fileDocblockSummary() {

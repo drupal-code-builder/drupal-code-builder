@@ -275,7 +275,7 @@ class ComponentCollection implements \IteratorAggregate {
    * @param $key
    *   The ID of the component.
    *
-   * @return
+   * @return string
    *   The ID of the closest component in the request chain that is a root
    *   component.
    */
@@ -297,7 +297,7 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Gets the root component ID.
    *
-   * @return
+   * @return string
    *   The root component ID.
    */
   public function getRootComponentId() {
@@ -329,7 +329,7 @@ class ComponentCollection implements \IteratorAggregate {
   /**
    * Gets the root component.
    *
-   * @return
+   * @return \DrupalCodeBuilder\Generator\RootComponent
    *   The root component.
    */
   public function getRootComponent() {
@@ -342,7 +342,7 @@ class ComponentCollection implements \IteratorAggregate {
    * @param string $id
    *   The component unique ID.
    *
-   * @return
+   * @return \DrupalCodeBuilder\Generator\GeneratorInterface
    *   The component.
    */
   public function getComponent($id) {
@@ -370,7 +370,7 @@ class ComponentCollection implements \IteratorAggregate {
    * Not all components in the component list need to place themselves into the
    * tree, but this means that they will not participate in file assembly.
    *
-   * @return
+   * @return array
    *  A tree of parentage data for components, as an array keyed by the parent
    *  component name, where each value is an array of the names of the child
    *  components. So for example, the list of children of component 'foo' is
@@ -680,7 +680,7 @@ class ComponentCollection implements \IteratorAggregate {
    * @param GeneratorInterface $component
    *   The component to get children for.
    *
-   * @return
+   * @return \DrupalCodeBuilder\Generator\RootComponent
    *   The root component.
    *
    * @throws \LogicException

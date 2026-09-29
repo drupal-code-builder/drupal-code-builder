@@ -263,7 +263,7 @@ class Hooks extends BaseGenerator implements ClassHandlerAware, EnvironmentAware
    * This is handled live rather than in the Collect task to allow the user to
    * alter their custom hook templates.
    *
-   * @return
+   * @return array
    *   An array of hook data grouped by destination file, whose keys are the
    *   filenames of destination files with the token '%module', and whose values
    *   further arrays. The nested arrays' keys are long hook names and the

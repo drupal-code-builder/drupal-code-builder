@@ -17,7 +17,7 @@ trait PHPFormattingTrait {
    *   (optional) The number of indentation levels to add. Defaults to 1, that
    *   is, an indentation of two spaces.
    *
-   * @return
+   * @return string[]
    *   The array of code lines with the indentation applied.
    */
   function indentCodeLines(array $lines, int $indent = 1) {

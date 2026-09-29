@@ -517,7 +517,7 @@ class PHPClassFile extends PHPFile {
    *   An array of section blocks. Each block is itself an array of code lines. There should
    *   be no
    *
-   * @return
+   * @return array
    *   An array of code lines.
    */
   protected function mergeSectionCode($section_blocks) {
@@ -554,7 +554,7 @@ class PHPClassFile extends PHPFile {
    *  - 'break_array_value': (optional) If TRUE, the declaration parameters
    *    are each on a single line.
    *
-   * @return
+   * @return string[]
    *  An array suitable to be set for getSectionBlocks().
    */
   protected function createPropertyBlock($property_name, $type, $options) {

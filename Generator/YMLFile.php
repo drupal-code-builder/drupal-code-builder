@@ -114,7 +114,7 @@ class YMLFile extends File {
    * @param $yaml_data_array
    *  An array of data to convert to YAML.
    *
-   * @return
+   * @return string[]
    *  An array containing the YAML string.
    */
   protected function getYamlBody($yaml_data_array) {

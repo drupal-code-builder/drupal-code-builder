@@ -230,7 +230,7 @@ class API extends PHPFile {
    * @param $parameters_string
    *  A string of the hook's parameters.
    *
-   * @return
+   * @return string
    *  A string of formatted code for inclusion in the api.php file.
    */
   function hookCode($hook_short_name, $parameters_string) {

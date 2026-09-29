@@ -60,7 +60,7 @@ class Readme extends File {
   /**
    * Return an array of lines.
    *
-   * @return
+   * @return array
    *  An array of lines of text.
    */
   function lines() {
