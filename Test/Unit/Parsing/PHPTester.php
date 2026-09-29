@@ -619,7 +619,8 @@ class PHPTester {
           continue;
         }
 
-        if ($arg->value->value == $expected_value && $arg->name->name == $expected_name) {
+        if ($arg->name->name == $expected_name) {
+          Assert::assertEquals($expected_value, $arg->value->value, "The attribute parameter $expected_name has the expected value.");
           return;
         }
       }
