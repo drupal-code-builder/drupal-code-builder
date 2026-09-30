@@ -208,11 +208,19 @@ class ComponentPluginsAttribute11Test extends TestBase {
    * Tests special cases where prefixing of the plugin name should be skipped.
    *
    * This also tests that derivative plugin IDs are handled correctly.
+   *
+   * @param string $module_name
+   *   The generated module name.
+   * @param string $plugin_id
+   *   The generated plugin ID.
+   * @param string $expected_plugin_id
+   *   The expected plugin ID.
+   * @param string $expected_filename
+   *   The expected filename for the plugin class, without the path.
    */
   #[DataProvider('providerPluginsGenerationNamePrefixing')]
-  public function testPluginsGenerationNamePrefixing(string $plugin_id, string $filename) {
+  public function testPluginsGenerationNamePrefixing(string $module_name, string $plugin_id, string $expected_plugin_id, string $expected_filename) {
     // Create a module.
-    $module_name = 'test_module';
     $module_data = [
       'base' => 'module',
       'root_name' => $module_name,
@@ -232,15 +240,14 @@ class ComponentPluginsAttribute11Test extends TestBase {
 
     $this->assertFiles([
       "$module_name.info.yml",
-      "config/schema/test_module.schema.yml",
-      "src/Plugin/Block/$filename",
+      "config/schema/{$module_name}.schema.yml",
+      "src/Plugin/Block/$expected_filename",
     ], $files);
 
-    $plugin_file = $files["src/Plugin/Block/$filename"];
+    $plugin_file = $files["src/Plugin/Block/$expected_filename"];
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $plugin_file);
-    // $annotation_tester = $php_tester->getAnnotationTesterForClass();
-    // $annotation_tester->assertAnnotationClass('Block');
-    // $annotation_tester->assertPropertyHasValue('id', $plugin_id, "The plugin ID has no module prefix.");
+    $php_tester->assertClassHasAttribute('\Drupal\Core\Block\Attribute\Block');
+    $php_tester->assertClassAttributeHasNamedParameterValue('id', $expected_plugin_id, 'Block');
   }
 
   /**
@@ -249,16 +256,30 @@ class ComponentPluginsAttribute11Test extends TestBase {
   public static function providerPluginsGenerationNamePrefixing() {
     return [
       'derivative-plugin' => [
+        'test_module',
+        'system_menu_block:alpha',
         'system_menu_block:alpha',
         'Alpha.php'
       ],
       'module-name-prefix' => [
+        'test_module',
+        'test_module_cake',
         'test_module_cake',
         'TestModuleCake.php',
       ],
       'whole-module-name' => [
         'test_module',
+        'test_module',
+        'test_module',
         'TestModule.php',
+      ],
+      // The module that defines the plugin type doesn't need to prefix its own
+      // plugins.
+      'plugin-type-defining-module' => [
+        'block',
+        'cake',
+        'cake',
+        'Cake.php',
       ],
     ];
   }

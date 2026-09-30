@@ -193,15 +193,17 @@ abstract class PluginClassDiscovery extends PluginClassBase implements ClassHand
     }
 
     $module_name = $data_item->getParent()->root_component_name->value;
+    $plugin_type = $data_item->getParent()->plugin_type->value;
 
-    if (str_starts_with($plugin_name, $module_name)) {
-      // Don't if the plugin ID already has the module name as a prefix, or
-      // is entirely the module name.
+    if ($plugin_type == $module_name) {
+      // Don't prepend if the plugin is provided by the module that also
+      // provides the plugin type.
       return $plugin_name;
     }
 
-    // Prepend the module name.
-    return $module_name . '_' . $plugin_name;
+    // Don't if the plugin ID already has the module name as a prefix, or
+    // is entirely the module name.
+    return static::softPrepend($module_name, '_', $plugin_name);
   }
 
   /**
