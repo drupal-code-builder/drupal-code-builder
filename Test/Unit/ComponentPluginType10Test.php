@@ -193,6 +193,33 @@ class ComponentPluginType10Test extends TestBase {
   }
 
   /**
+   * Tests the plugin type manager service name.
+   */
+  function testPluginTypeManagerName() {
+    $module_data = [
+      'base' => 'module',
+      'root_name' => 'cat_feeder',
+      'readable_name' => 'Test module',
+      'short_description' => 'Test Module description',
+      'hooks' => [
+      ],
+      'plugin_types' => [
+        0 => [
+          'discovery_type' => 'attribute',
+          'plugin_type' => 'cat_feeder',
+        ]
+      ],
+      'readme' => FALSE,
+    ];
+    $files = $this->generateModuleFiles($module_data);
+
+    $services_file = $files["cat_feeder.services.yml"];
+    $yaml_tester = new YamlTester($services_file);
+    $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', "plugin.manager.cat_feeder"]);
+  }
+
+  /**
    * Tests a plugin type with attributes and BC handling for annotations.
    *
    * This relies on the

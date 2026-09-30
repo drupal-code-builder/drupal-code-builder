@@ -233,9 +233,11 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
           // Namespace the service name after the prefix.
           return
             'plugin.manager.'
-            . $component_data->getParent()->root_component_name->value
-            . '_'
-            . $component_data->getParent()->plugin_type->value;
+            . static::softPrepend(
+              $component_data->getParent()->root_component_name->value,
+              '_',
+              $component_data->getParent()->plugin_type->value,
+            );
         }),
       'plugin_relative_namespace' => PropertyDefinition::create('string')
         ->setInternal(TRUE)
