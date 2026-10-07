@@ -97,9 +97,25 @@ class YamlTester {
     });
 
     $property_string = $this->getPropertyString($property_address);
-    $message = $message ?? "The YAML file has the expected property $property_string.";
+    $message = $message ?? "The YAML file has a property with address '$property_string'.";
 
-    Assert::assertTrue(NestedArray::keyExists($this->parsedYamlData, $property_address), $message);
+    if (!NestedArray::keyExists($this->parsedYamlData, $property_address)) {
+      // If the assertion is going to fail, test the given address
+      // incrementally, so we can say at which level it fails and output the
+      // keys which were found.
+      $address_incremental = [];
+      while ($property_address) {
+        $previous_level_address = $address_incremental;
+        $address_incremental[] = array_shift($property_address);
+
+        $message_details = sprintf(" Keys at level '%s' are: %s.",
+          $this->getPropertyString($previous_level_address),
+          implode(', ', array_keys(NestedArray::getValue($this->parsedYamlData, $previous_level_address))),
+        );
+
+        Assert::assertTrue(NestedArray::keyExists($this->parsedYamlData, $address_incremental), $message . $message_details);
+      }
+    }
   }
 
   /**
