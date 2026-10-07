@@ -57,7 +57,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setLabel('Plugin type ID')
               ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
               ->setRequired(TRUE)
-              ->setValidators('machine_name'),
+              ->setValidators('plugin_type_name'),
             'plugin_label' => PropertyDefinition::create('string')
               ->setLabel('Plugin type label')
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
@@ -119,7 +119,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setLabel('Plugin type ID')
               ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
               ->setRequired(TRUE)
-              ->setValidators('machine_name'),
+              ->setValidators('plugin_type_name'),
             'plugin_label' => PropertyDefinition::create('string')
               ->setLabel('Plugin type label')
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
@@ -179,7 +179,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setLabel('Plugin type ID')
               ->setDescription("The identifier of the plugin type. This is used to form the name of the manager service by prepending 'plugin.manager.'.")
               ->setRequired(TRUE)
-              ->setValidators('machine_name'),
+              ->setValidators('plugin_type_name'),
             'plugin_label' => PropertyDefinition::create('string')
               ->setLabel('Plugin type label')
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
