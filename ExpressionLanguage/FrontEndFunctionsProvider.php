@@ -62,6 +62,8 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
         EOT,
       ],
 
+      // 'dotsToUnderscores' => []
+
       // Converts a pascal class name to a machine name in snake case.
       // Note that this doesn't need to be implemented in JS (yet!) because it's
       // only used during a form submit, in TestModule.
