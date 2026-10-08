@@ -5,6 +5,7 @@ namespace DrupalCodeBuilder\Test\Unit;
 use PHPUnit\Framework\Attributes\Group;
 use DrupalCodeBuilder\Test\Unit\Parsing\PHPTester;
 use DrupalCodeBuilder\Test\Unit\Parsing\YamlTester;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests generation of plugin types.
@@ -193,9 +194,10 @@ class ComponentPluginType10Test extends TestBase {
   }
 
   /**
-   * Tests the plugin type manager service name.
+   * Tests special cases for names.
    */
-  function testPluginTypeManagerName() {
+  #[DataProvider('providerPluginTypeNames')]
+  function testPluginTypeNames(string $plugin_type, string $expected_service_name) {
     $module_data = [
       'base' => 'module',
       'root_name' => 'cat_feeder',
@@ -206,17 +208,36 @@ class ComponentPluginType10Test extends TestBase {
       'plugin_types' => [
         0 => [
           'discovery_type' => 'attribute',
-          'plugin_type' => 'cat_feeder',
+          'plugin_type' => $plugin_type,
         ]
       ],
       'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
+    dump($files);
 
     $services_file = $files["cat_feeder.services.yml"];
     $yaml_tester = new YamlTester($services_file);
-    $yaml_tester->assertHasProperty('services');
-    $yaml_tester->assertHasProperty(['services', "plugin.manager.cat_feeder"]);
+    // $yaml_tester->assertHasProperty('services');
+    $yaml_tester->assertHasProperty(['services', $expected_service_name]);
+
+    // alter hook name in cat_feeder.api.php.
+    // attribute class files key src/Attribute/CatFeeder.crunchies.php. ARGH WHAT SHOULD IT BE?
+  }
+
+  public static function providerPluginTypeNames(): array {
+    return [
+      // Plugin type name matches module name.
+      'module_name' => [
+        'cat_feeder',
+        'plugin.manager.cat_feeder',
+      ],
+      'dot' => [
+        'cat_feeder.crunchies',
+        'plugin.manager.cat_feeder.crunchies',
+        // TODO other stuff like class names, alterhook etc etc
+      ],
+    ];
   }
 
   /**
