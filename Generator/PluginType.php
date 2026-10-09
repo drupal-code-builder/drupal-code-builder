@@ -89,7 +89,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("get('..:plugin_type') ~ '_info'")
+                ->setExpression("dotsToUnderscores(get('..:plugin_type')) ~ '_info'")
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('machine_name'),
@@ -151,7 +151,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("get('..:plugin_type') ~ '_info'")
+                ->setExpression("dotsToUnderscores(get('..:plugin_type')) ~ '_info'")
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('machine_name'),
@@ -199,7 +199,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The name of the hook used to alter the info for plugins of this type, without the 'hook_' prefix.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("get('..:plugin_type') ~ '_info'")
+                ->setExpression("dotsToUnderscores(get('..:plugin_type')) ~ '_info'")
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('machine_name'),
