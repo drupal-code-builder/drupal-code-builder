@@ -195,9 +195,19 @@ class ComponentPluginType10Test extends TestBase {
 
   /**
    * Tests special cases for names.
+   *
+   * @param string $plugin_type
+   *   The plugin type ID.
+   * @param string $expected_service_name
+   *   The expected service name for the plugin type manager.
+   * @param string $expected_class_name
+   *   The expected short class for attribute, plugin namespace, and root names
+   *   of plugin support classes.
+   * @param string $expected_hook_name
+   *   The expected plugin info alter hook name, as a long hook name.
    */
   #[DataProvider('providerPluginTypeNames')]
-  function testPluginTypeNames(string $plugin_type, string $expected_service_name, string $expected_attribute_class_name, string $expected_hook_name) {
+  function testPluginTypeNames(string $plugin_type, string $expected_service_name, string $expected_class_name, string $expected_hook_name) {
     $module_data = [
       'base' => 'module',
       'root_name' => 'cat_feeder',
@@ -214,27 +224,28 @@ class ComponentPluginType10Test extends TestBase {
       'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
-    // dump($files);
 
-    $services_file = $files["cat_feeder.services.yml"];
+    $services_file = $files['cat_feeder.services.yml'];
     $yaml_tester = new YamlTester($services_file);
-    // $yaml_tester->assertHasProperty('services');
     $yaml_tester->assertHasProperty(['services', $expected_service_name]);
 
-    // Attribute class name. (The other class names are all derived in the
-    // same way. does this cover them too?)
-    $this->assertArrayHasKey("src/Attribute/{$expected_attribute_class_name}.php", $files);
+    // Class names.
+    $this->assertArrayHasKey("src/Attribute/{$expected_class_name}.php", $files);
+    $this->assertArrayHasKey("src/Plugin/{$expected_class_name}/{$expected_class_name}Interface.php", $files);
+    $this->assertArrayHasKey("src/Plugin/{$expected_class_name}/{$expected_class_name}Base.php", $files);
 
     // Alter hook.
     $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $files['cat_feeder.api.php']);
     $php_tester->assertHasFunction($expected_hook_name);
-
-    // alter hook name in cat_feeder.api.php.
   }
 
+  /**
+   * Data provider for testPluginTypeNames().
+   */
   public static function providerPluginTypeNames(): array {
     return [
-      // Plugin type name matches module name.
+      // Plugin type name matches module name: the module name is not prefixed
+      // to the plugin name.
       'module_name' => [
         'cat_feeder',
         'plugin.manager.cat_feeder',
