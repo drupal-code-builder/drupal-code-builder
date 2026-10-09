@@ -224,14 +224,17 @@ class ComponentPluginType10Test extends TestBase {
       'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
+    dump($files |> array_keys(...));
 
     $services_file = $files['cat_feeder.services.yml'];
     $yaml_tester = new YamlTester($services_file);
     $yaml_tester->assertHasProperty(['services', $expected_service_name]);
 
     // Class names.
-    $this->assertArrayHasKey("src/Attribute/{$expected_class_name}.php", $files);
+    $this->assertArrayHasKey("src/Attribute/{$expected_class_name}.php", $files, 'The attribute class name is correct.');
+    $this->assertArrayHasKey("src/{$expected_class_name}Manager.php", $files, 'The plugin manager class name is correct.');
     $this->assertArrayHasKey("src/Plugin/{$expected_class_name}/{$expected_class_name}Interface.php", $files);
+    // src/Plugin/Crunchies/CrunchiesInterface.php is wrong!
     $this->assertArrayHasKey("src/Plugin/{$expected_class_name}/{$expected_class_name}Base.php", $files);
 
     // Alter hook.

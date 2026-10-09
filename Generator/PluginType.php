@@ -446,7 +446,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
       'use_data_definition' => TRUE,
       'service_name' => $this->component_data->plugin_manager_service_id->value,
       'service_name_prefix' => '',
-      'plain_class_name' => CaseString::snake($this->component_data->plugin_type->value)->pascal() . 'Manager',
+      'plain_class_name' => CaseString::snake(str_replace('.', '_', $this->component_data->plugin_type->value))->pascal() . 'Manager',
       'injected_services' => [],
       'docblock_first_line' => "Manages discovery and instantiation of {$this->component_data->plugin_label->value} plugins.",
     ];
