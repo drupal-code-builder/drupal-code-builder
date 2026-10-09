@@ -197,7 +197,7 @@ class ComponentPluginType10Test extends TestBase {
    * Tests special cases for names.
    */
   #[DataProvider('providerPluginTypeNames')]
-  function testPluginTypeNames(string $plugin_type, string $expected_service_name) {
+  function testPluginTypeNames(string $plugin_type, string $expected_service_name, string $expected_attribute_class_name, string $expected_hook_name) {
     $module_data = [
       'base' => 'module',
       'root_name' => 'cat_feeder',
@@ -214,15 +214,22 @@ class ComponentPluginType10Test extends TestBase {
       'readme' => FALSE,
     ];
     $files = $this->generateModuleFiles($module_data);
-    dump($files);
+    // dump($files);
 
     $services_file = $files["cat_feeder.services.yml"];
     $yaml_tester = new YamlTester($services_file);
     // $yaml_tester->assertHasProperty('services');
     $yaml_tester->assertHasProperty(['services', $expected_service_name]);
 
+    // Attribute class name. (The other class names are all derived in the
+    // same way. does this cover them too?)
+    $this->assertArrayHasKey("src/Attribute/{$expected_attribute_class_name}.php", $files);
+
+    // Alter hook.
+    $php_tester = PHPTester::fromCodeFile($this->drupalMajorVersion, $files['cat_feeder.api.php']);
+    $php_tester->assertHasFunction($expected_hook_name);
+
     // alter hook name in cat_feeder.api.php.
-    // attribute class files key src/Attribute/CatFeeder.crunchies.php. ARGH WHAT SHOULD IT BE?
   }
 
   public static function providerPluginTypeNames(): array {
@@ -231,10 +238,13 @@ class ComponentPluginType10Test extends TestBase {
       'module_name' => [
         'cat_feeder',
         'plugin.manager.cat_feeder',
+        'CatFeeder',
+        'hook_cat_feeder_info_alter',
       ],
       'dot' => [
         'cat_feeder.crunchies',
         'plugin.manager.cat_feeder.crunchies',
+        // attribute class files key src/Attribute/CatFeeder.crunchies.php. ARGH WHAT SHOULD IT BE?
         // TODO other stuff like class names, alterhook etc etc
       ],
     ];
