@@ -255,8 +255,8 @@ class ComponentPluginType10Test extends TestBase {
       'dot' => [
         'cat_feeder.crunchies',
         'plugin.manager.cat_feeder.crunchies',
-        // attribute class files key src/Attribute/CatFeeder.crunchies.php. ARGH WHAT SHOULD IT BE?
-        // TODO other stuff like class names, alterhook etc etc
+        'Crunchies',
+        'hook_cat_feeder_crunchies_info_alter',
       ],
     ];
   }
