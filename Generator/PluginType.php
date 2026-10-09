@@ -63,7 +63,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToLabel(stripBefore(get('..:plugin_type')), '.')")
+                ->setExpression("machineToLabel(stripBefore(get('..:plugin_type'), '.'))")
                 ->setDependencies('..:plugin_type')
               ),
             'plugin_subdirectory' => PropertyDefinition::create('string')
@@ -71,7 +71,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The subdirectory within the Plugins directory for plugins of this type.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(stripBefore(get('..:plugin_type')), '.')")
+                ->setExpression("machineToClass(stripBefore(get('..:plugin_type'), '.'))")
                 ->setDependencies('..:plugin_type')
               ),
             // TODO: 'plugin_relative_namespace' => PropertyDefinition::create('string')
@@ -80,7 +80,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setLabel('Annotation class name')
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(stripBefore(get('..:plugin_type')), '.')")
+                ->setExpression("machineToClass(stripBefore(get('..:plugin_type'), '.'))")
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('class_name'),
@@ -125,7 +125,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The human-readable label for plugins of this type. This is used in documentation text.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToLabel(get('..:plugin_type'))")
+                ->setExpression("machineToLabel(stripBefore(get('..:plugin_type'), '.'))")
                 ->setDependencies('..:plugin_type')
               ),
             'plugin_subdirectory' => PropertyDefinition::create('string')
@@ -133,7 +133,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setDescription("The subdirectory within the Plugins directory for plugins of this type.")
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(get('..:plugin_type'))")
+                ->setExpression("machineToClass(stripBefore(get('..:plugin_type'), '.'))")
                 ->setDependencies('..:plugin_type')
               ),
             // TODO: 'plugin_relative_namespace' => PropertyDefinition::create('string')
@@ -142,7 +142,7 @@ class PluginType extends BaseGenerator implements AdoptableInterface {
               ->setLabel('Attribute class name')
               ->setRequired(TRUE)
               ->setDefault(DefaultDefinition::create()
-                ->setExpression("machineToClass(get('..:plugin_type'))")
+                ->setExpression("machineToClass(stripBefore(get('..:plugin_type'), '.'))")
                 ->setDependencies('..:plugin_type')
               )
               ->setValidators('class_name'),
