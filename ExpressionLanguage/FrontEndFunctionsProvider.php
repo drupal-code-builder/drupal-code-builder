@@ -62,7 +62,20 @@ class FrontEndFunctionsProvider implements ExpressionFunctionProviderInterface {
         EOT,
       ],
 
-      // 'dotsToUnderscores' => []
+      'dotsToUnderscores' => [
+        'php' => function ($arguments, $str) {
+          if (!is_string($str)) {
+            return $str;
+          }
+
+          return str_replace('.', '_', $str);
+        },
+        'js' => <<<EOT
+        function(value) {
+            // TODO
+          },
+        EOT,
+      ],
 
       // Converts a pascal class name to a machine name in snake case.
       // Note that this doesn't need to be implemented in JS (yet!) because it's
